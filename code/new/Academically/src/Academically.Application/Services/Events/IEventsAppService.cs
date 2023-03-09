@@ -13,7 +13,7 @@ namespace Academically.Services.Events
     public interface IEventsAppService : IAsyncCrudAppService<EventDto, Guid, PagedEventResultRequestDto, CreateEventDto, UpdateEventDto>
     {
         Task<IEnumerable<AvailableServiceDto>> GetAllEvents();
-        Task<IEnumerable<AvailableServiceDto>> GetEventsByKeyword(string keyword);
+        Task<IEnumerable<AvailableServiceDto>> GetEventsByKeyword(string keyword, long? creatorUserId);
         Task<PagedResultDto<EventDto>> GetEventSchedules(PagedEventScheduleResultRequestDto input);
         Task<PagedResultDto<StudentEventDto>> GetAllPurchasedAsync(PagedStudentEventResultRequestDto input);
         Task<PagedResultDto<UserDto>> GetPresentersForInvite(PagedPresentersForInviteResultRequestDto input);

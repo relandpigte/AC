@@ -20,7 +20,7 @@ namespace Academically.Services.Articles
 		Task UpdateStatusAsync(Guid id, ArticleStatus status);
 		Task DeleteAsync(Guid id);
 		Task<IEnumerable<AvailableServiceDto>> GetAllArticles();
-		Task<IEnumerable<AvailableServiceDto>> GetArticlesByKeyword(string keyword);
+		Task<IEnumerable<AvailableServiceDto>> GetArticlesByKeyword(string keyword, long? creatorUserId);
 	}
 }
 

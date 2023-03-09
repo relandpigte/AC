@@ -1,5 +1,5 @@
 
-import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { FileUtils } from '@shared/helpers/file-utils';
@@ -9,6 +9,7 @@ import { takeUntil } from 'rxjs/operators';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import * as moment from 'moment';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { CommunityDiscussionsComponent } from '../community-discussions/community-discussions.component';
 
 @Component({
     selector: 'app-community-post-card',
@@ -22,6 +23,8 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     @Output() refresh = new EventEmitter();
     @Output() onUpdate = new EventEmitter();
     @Output() onChildrenUpdate = new EventEmitter();
+
+    @ViewChild(CommunityDiscussionsComponent) commentsContainer: CommunityDiscussionsComponent;
 
     fileAttachment: File;
     serviceAttachment: AvailableServiceDto;
@@ -106,6 +109,16 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
             this.data.isHidden = true;
             this.onUpdate.emit(this.data);
         }, 1000 * this.closeHiddenPostAfter);
+    }
+
+    doAddComment(): void {
+        this.showComments = true;
+        this.commentsContainer.doAddComment();
+    }
+
+    doToggleComments(): void {
+        this.showComments = !this.showComments;
+        if (this.showAddComment) this.commentsContainer.doAddComment();
     }
 
     goToDiscussion(): void {

@@ -16,14 +16,20 @@ using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
 using Academically.Hubs;
 using Academically.Services.Articles;
+using Academically.Services.Articles.Dto;
 using Academically.Services.Coachings;
+using Academically.Services.Coachings.Dto;
 using Academically.Services.Comments.Dto;
 using Academically.Services.Courses;
+using Academically.Services.Courses.Dto;
 using Academically.Services.Documents;
 using Academically.Services.Events;
+using Academically.Services.Events.Dto;
 using Academically.Services.Posts.Dto;
 using Academically.Services.Videos;
+using Academically.Services.Videos.Dto;
 using Academically.Services.Workshops;
+using Academically.Services.Workshops.Dto;
 using Academically.Users.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -39,6 +45,13 @@ namespace Academically.Services.Posts
         private readonly IRepository<PostVisibility, Guid> _postVisibilityRepository;
         private readonly IRepository<DisciplineTaxonomy, Guid> _disciplineTaxonomyRepository;
         private readonly IRepository<PostNotification, Guid> _postNotificationRepository;
+        private readonly IRepository<Comment, Guid> _commentsRepository;
+        private readonly IRepository<Article, Guid> _articlesRepository;
+        private readonly IRepository<Course, Guid> _coursesRepository;
+        private readonly IRepository<Coaching, Guid> _coachingRepository;
+        private readonly IRepository<Video, Guid> _videoRepository;
+        private readonly IRepository<Workshop, Guid> _workshopRepository;
+        private readonly IRepository<Event, Guid> _eventRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IArticlesAppService _articlesAppService;
         private readonly ICoachingsAppService _coachingsAppService;
@@ -46,7 +59,6 @@ namespace Academically.Services.Posts
         private readonly IVideosAppService _videosAppService;
         private readonly IEventsAppService _eventsAppService;
         private readonly IWorkshopsAppService _workshopsAppService;
-        private readonly IRepository<Comment, Guid> _commentsRepository;
 
         public PostsAppService(
             IRepository<Post, Guid> postRepository,
@@ -55,6 +67,12 @@ namespace Academically.Services.Posts
             IRepository<PostVisibility, Guid> postVisibilityRepository,
             IRepository<DisciplineTaxonomy, Guid> disciplineTaxonomyRepository,
             IRepository<PostNotification, Guid> postNotificationRepository,
+            IRepository<Article, Guid> articlesRepository,
+            IRepository<Course, Guid> coursesRepository,
+            IRepository<Coaching, Guid> coachingRepository,
+            IRepository<Video, Guid> videoRepository,
+            IRepository<Workshop, Guid> workshopRepository,
+            IRepository<Event, Guid> eventRepository,
             IDocumentsDomainService documentsDomainService,
             IArticlesAppService articlesAppService,
             ICoachingsAppService coachingsAppService,
@@ -78,6 +96,12 @@ namespace Academically.Services.Posts
             _eventsAppService = eventsAppService;
             _workshopsAppService = workshopsAppService;
             _commentsRepository = commentsRepository;
+            _articlesRepository = articlesRepository;
+            _coursesRepository = coursesRepository;
+            _coachingRepository = coachingRepository;
+            _videoRepository = videoRepository;
+            _workshopRepository = workshopRepository;
+            _eventRepository = eventRepository;
         }
 
         public async Task<List<PostDto>> GetAllPosts(PostType? type, Guid? parentId)
@@ -340,12 +364,13 @@ namespace Academically.Services.Posts
 
         public async Task<PagedResultDto<AvailableServiceDto>> GetAvailableServices(PagedGetAvailableServicesRequestDto request)
         {
-            var articles = await _articlesAppService.GetArticlesByKeyword(request.Keyword);
-            var courses = await _coursesAppService.GetCoursesByKeyword(request.Keyword);
-            var coaching = await _coachingsAppService.GetCoachingByKeyword(request.Keyword);
-            var videos = await _videosAppService.GetVideosByKeyword(request.Keyword);
-            var workshops = await _workshopsAppService.GetWorkshopByKeyword(request.Keyword);
-            var events = await _eventsAppService.GetEventsByKeyword(request.Keyword);
+            var currentUser = await GetCurrentUserAsync();
+            var articles = await _articlesAppService.GetArticlesByKeyword(request.Keyword, currentUser.Id);
+            var courses = await _coursesAppService.GetCoursesByKeyword(request.Keyword, currentUser.Id);
+            var coaching = await _coachingsAppService.GetCoachingByKeyword(request.Keyword, currentUser.Id);
+            var videos = await _videosAppService.GetVideosByKeyword(request.Keyword, currentUser.Id);
+            var workshops = await _workshopsAppService.GetWorkshopByKeyword(request.Keyword, currentUser.Id);
+            var events = await _eventsAppService.GetEventsByKeyword(request.Keyword, currentUser.Id);
 
             var query = articles.Union(courses)
                                 .Union(coaching)
@@ -426,12 +451,15 @@ namespace Academically.Services.Posts
                 })
                 .ToListAsync();
 
-            var comments = items.Select(e =>
+
+            var comments = new List<CommentDto>();
+            foreach (var commentWithChild in items)
             {
-                var comment = ObjectMapper.Map<CommentDto>(e.Comment);
-                comment.ReplyCount = e.ChildCount;
-                return comment;
-            }).ToList();
+                var comment = ObjectMapper.Map<CommentDto>(commentWithChild.Comment);
+                await FillInService(comment);
+                comment.ReplyCount = commentWithChild.ChildCount;
+                comments.Add(comment);
+            }
 
             return new PagedResultDto<CommentDto>(totalCount, comments);
         }
@@ -451,12 +479,15 @@ namespace Academically.Services.Posts
                 })
                 .ToListAsync();
 
-            return commentsWithReplyCount.Select(e =>
+            var list = new List<CommentDto>();
+            foreach (var commentWithChild in commentsWithReplyCount)
             {
-                var comment = ObjectMapper.Map<CommentDto>(e.Comment);
-                comment.ReplyCount = e.ChildCount;
-                return comment;
-            });
+                var comment = ObjectMapper.Map<CommentDto>(commentWithChild.Comment);
+                await FillInService(comment);
+                comment.ReplyCount = commentWithChild.ChildCount;
+                list.Add(comment);
+            }
+            return list;
         }
 
         public async Task<PagedResultDto<CommentDto>> GetAllCommentRepliesAsync(PagedCommentResultRequestDto input)
@@ -471,6 +502,12 @@ namespace Academically.Services.Posts
                 .Include(e => e.CommentReactions)
                 .Select(e => ObjectMapper.Map<CommentDto>(e))
                 .ToListAsync();
+
+            foreach (var comment in comments)
+            {
+                await FillInService(comment);
+            }
+
             return new PagedResultDto<CommentDto>(totalCount, comments);
         }
 
@@ -528,18 +565,52 @@ namespace Academically.Services.Posts
             await _postNotificationRepository.DeleteAsync(p => p.PostId == input.PostId && p.CreatorUserId == input.CreatorUserId);
         }
 
-        #region Pub/Sub Notifications
-
-        public async Task SubscribePostChanges()
+        private async Task FillInService(CommentDto comment)
         {
-           
-        }
+            if (comment == null || !comment.ServiceId.HasValue)
+                return;
 
-        public async Task UnsubscribePostChanges()
-        {
-         
+            switch (comment.ServiceType)
+            {
+                case Domain.Enums.ServicesType.Event:
+                    var event_ = await _eventRepository.GetAsync(comment.ServiceId.Value);
+                    comment.Event = ObjectMapper.Map<EventDto>(event_);
+                    if (comment.Event.ThumbnailDocumentId.HasValue)
+                        comment.Event.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(comment.Event.ThumbnailDocumentId.Value);
+                    break;
+                case Domain.Enums.ServicesType.Course:
+                    var course = await _coursesRepository.GetAsync(comment.ServiceId.Value);
+                    comment.Course = ObjectMapper.Map<CourseDto>(course);
+                    if (comment.Course.ImageDocumentId.HasValue)
+                        comment.Course.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(course.ImageDocumentId.Value);
+                    break;
+                case Domain.Enums.ServicesType.Tutorial:
+                    var video = await _videoRepository.GetAsync(comment.ServiceId.Value);
+                    comment.Video = ObjectMapper.Map<VideoDto>(video);
+                    if (comment.Video.ThumbnailDocumentId.HasValue)
+                        comment.Video.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(comment.Video.ThumbnailDocumentId.Value);
+                    break;
+                case Domain.Enums.ServicesType.Article:
+                    var article = await _articlesRepository.GetAsync(comment.ServiceId.Value);
+                    comment.Article = ObjectMapper.Map<ArticleDto>(article);
+                    if (comment.Article.ThumbnailDocumentId.HasValue)
+                        comment.Article.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(comment.Article.ThumbnailDocumentId.Value);
+                    break;
+                case Domain.Enums.ServicesType.Coaching:
+                    var coaching = await _coachingRepository.GetAsync(comment.ServiceId.Value);
+                    comment.Coaching = ObjectMapper.Map<CoachingDto>(coaching);
+                    if (comment.Coaching.ThumbnailDocumentId.HasValue)
+                        comment.Coaching.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(coaching.ThumbnailDocumentId.Value);
+                    break;
+                case Domain.Enums.ServicesType.Workshop:
+                    var workshop = await _workshopRepository.GetAsync(comment.ServiceId.Value);
+                    comment.Workshop = ObjectMapper.Map<WorkshopDto>(workshop);
+                    if (comment.Workshop.ThumbnailDocumentId.HasValue)
+                        comment.Workshop.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(comment.Workshop.ThumbnailDocumentId.Value);
+                    break;
+                default:
+                    break;
+            }
         }
-
-        #endregion
     }
 }

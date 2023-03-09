@@ -12,7 +12,7 @@ namespace Academically.Services.Videos
     {
         Task<PagedResultDto<VideoDto>> GetAll(PagedVideoResultRequestDto input);
         Task<IEnumerable<AvailableServiceDto>> GetAllVideos();
-        Task<IEnumerable<AvailableServiceDto>> GetVideosByKeyword(string keyword);
+        Task<IEnumerable<AvailableServiceDto>> GetVideosByKeyword(string keyword, long? creatorUserId);
         Task<PagedResultDto<VideoDto>> GetAllForSeries(PagedSeriesVideoResultRequestDto input);
         Task<IEnumerable<VideoDto>> GetOtherVideosForSeries(Guid id);
         Task<PagedResultDto<VideoDto>> GetAllForHome(PagedResultRequestDto input);

@@ -84,11 +84,12 @@ namespace Academically.Services.Videos
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<IEnumerable<AvailableServiceDto>> GetVideosByKeyword(string keyword)
+        public async Task<IEnumerable<AvailableServiceDto>> GetVideosByKeyword(string keyword, long? creatorUserId)
         {
             return await _videosRepository.GetAll()
                                     .WhereIf(!keyword.IsNullOrWhiteSpace(),
                                         x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Categories.Contains(keyword) || x.Id.ToString().Equals(keyword))
+                                    .WhereIf(creatorUserId.HasValue, x => x.CreatorUserId == creatorUserId)
                                     .AsNoTracking()
                                     .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
                                     .ToListAsync();

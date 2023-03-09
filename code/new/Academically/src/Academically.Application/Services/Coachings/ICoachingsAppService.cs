@@ -20,6 +20,6 @@ namespace Academically.Services.Coachings
         Task<IEnumerable<CoachingPresenterDto>> GetAllPresenters(Guid id);
         Task<CoachingDto> UpdateSettingsAsync(UpdateCoachingSettingsDto input);
         Task<IEnumerable<AvailableServiceDto>> GetAllCoaching();
-        Task<IEnumerable<AvailableServiceDto>> GetCoachingByKeyword(string keyword);
+        Task<IEnumerable<AvailableServiceDto>> GetCoachingByKeyword(string keyword, long? creatorUserId);
     }
 }

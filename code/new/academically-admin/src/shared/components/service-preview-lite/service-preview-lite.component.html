@@ -1,0 +1,12 @@
+<div class="service-preview d-flex cursor-pointer position-relative" [style.gap.px]="15" (click)="handleClicked()">
+    <div *ngIf="canRemove" class="service-preview-remove d-flex justify-content-center align-items-center cursor-pointer" (click)="removeService()">
+        <span class="fe fe-x"></span>
+    </div>
+    <div class="service-preview-image position-relative">
+        <img [src]="thumbnailImageUrl" />
+    </div>
+    <div class="service-preview-info d-flex flex-column justify-content-center">
+        <div class="service-preview-info-identity-name">{{ serviceName }}</div>
+        <div class="service-preview-info-identity-type d-flex align-items-center">{{ serviceType | titlecase }}</div>
+    </div>
+</div>

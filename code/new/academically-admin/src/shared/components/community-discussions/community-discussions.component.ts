@@ -2,10 +2,12 @@ import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input
 import { NgForm } from '@angular/forms';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CommentDto, PostsServiceProxy, PostType } from '@shared/service-proxies/service-proxies';
+import { AddServiceComponent } from '@shared/modals/add-service/add-service.component';
+import { AvailableServiceDto, CommentDto, PostsServiceProxy, PostType } from '@shared/service-proxies/service-proxies';
 import { CommentsStateService, MAX_COMMENT_LEVELS, MAX_REPLIES_TO_LOAD } from '@shared/services/comments-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Subject } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
 
@@ -43,10 +45,14 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   commentReplyId: string;
   inputLength = 0;
 
+  isShowServicePicker = false;
+  selectedService: AvailableServiceDto;
+
   constructor(
     injector: Injector,
     private _cdr: ChangeDetectorRef,
     private _elRef: ElementRef,
+    private _modalService: BsModalService,
     private _hubService: HubService,
     private _postsServiceProxy: PostsServiceProxy
   ) {
@@ -73,8 +79,8 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-      if ('show' in changes && changes?.show?.previousValue !== changes?.show?.currentValue) {
-        if (this.show) setTimeout(() => this.addCommentEl?.nativeElement.focus());
+      if ('show' in changes && changes?.show?.firstChange === false && changes?.show?.previousValue !== changes?.show?.currentValue) {
+        if (this.show) this.doAddComment();
         else this.foldSubject$.next();
       }
   }
@@ -128,12 +134,15 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       });
   }
 
-  onFormSubmit(message: any, parentId?: string): void {
+  protected onFormSubmit(message: any, parentId?: string): void {
     this.isPosting = true;
     const model = new CommentDto();
     model.referenceId = this.referenceId;
     model.parentId = parentId;
     model.body = message.value;
+    model.serviceId = this.selectedService?.id;
+    model.serviceType = this.selectedService?.serviceType;
+
     if (model.body && model.body.trim()) {
       this._postsServiceProxy.createComment(model)
         .pipe(
@@ -144,11 +153,12 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
         ).subscribe(() => {
           message.value = '';
           this.notify.success(this.l('SuccessfullyPosted'));
+          this.selectedService = null;
         });
     }
   }
 
-  onMessageKeydown(event: any, form: NgForm, post?: any): void {
+  protected onMessageKeydown(event: any, form: NgForm, post?: any): void {
     if (event.keyCode === 13 && (!this.ctrlEnterToSubmit || (this.ctrlEnterToSubmit && event.ctrlKey))) {
       form.ngSubmit.emit();
       event.preventDefault();
@@ -156,7 +166,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     if (post) setTimeout(() => this.inputLength = post.value.length);
   }
 
-  onFoldClick(): void {
+  protected onFoldClick(): void {
     this.commentsStateService.loading$.next(true);
     if (!this.isExpanded) {
       this._postsServiceProxy.getAllCommentsPaged(this.referenceId, this.parentId, this.comments.length, MAX_REPLIES_TO_LOAD)
@@ -169,10 +179,11 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     } else {
       this.commentsStateService.loading$.next(false);
       this.foldSubject$.next();
+      this.selectedService = null;
     }
   }
 
-  initiateReply(id: string): void {
+  protected initiateReply(id: string): void {
     if (this.level < MAX_COMMENT_LEVELS) {
       this.commentReplyId = this.commentReplyId === id ? null : id;
       if (this.commentReplyId === id) {
@@ -184,5 +195,34 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     } else {
       this.onReplyEmit.emit(this.parentId);
     }
+    this.selectedService = null;
+  }
+
+  protected toggleServicePicker(): void {
+    this.isShowServicePicker = !this.isShowServicePicker;
+    if (!this.isShowServicePicker) return;
+    const modalSettings = this.defaultModalSettings as ModalOptions<AddServiceComponent>;
+    modalSettings.class = 'modal-lg';
+    modalSettings.initialState = { selectedService: this.selectedService };
+
+    const modal = this._modalService.show(AddServiceComponent, modalSettings).content;
+    modal.onAdd.subscribe((service) => this.handleOnAddService(service));
+  }
+
+  private handleOnAddService(service: AvailableServiceDto): void {
+    this.selectedService = service;
+    this.isShowServicePicker = false;
+  }
+
+  protected hasAttachedService(comment: CommentDto): boolean {
+    return !!(comment?.article ?? comment?.coaching ?? comment?.course ?? comment?.event ?? comment?.video ?? comment?.workshop);
+  }
+
+  protected getAttachedService(comment: CommentDto): any {
+    return comment?.article ?? comment?.coaching ?? comment?.course ?? comment?.event ?? comment?.video ?? comment?.workshop;
+  }
+
+  doAddComment(): void {
+    setTimeout(() => this.addCommentEl?.nativeElement.focus());
   }
 }

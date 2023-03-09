@@ -272,11 +272,12 @@ namespace Academically.Services.Coachings
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<IEnumerable<AvailableServiceDto>> GetCoachingByKeyword(string keyword)
+        public async Task<IEnumerable<AvailableServiceDto>> GetCoachingByKeyword(string keyword, long? creatorUserId)
         {
             return await Repository.GetAll().Where(w => w.ParentId == null && w.Visible.Value && w.Status == CoachingStatus.Published)
                                   .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Price.ToString().Contains(keyword)
                                            || x.Id.ToString().Equals(keyword))
+                                  .WhereIf(creatorUserId.HasValue, x => x.CreatorUserId == creatorUserId)
                                   .AsNoTracking()
                                   .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
                                   .ToListAsync();

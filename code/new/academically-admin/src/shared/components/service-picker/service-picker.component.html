@@ -1,7 +1,7 @@
 <div class="card service-picker h-100">
     <div class="card-header">
         <div class="service-picker-header d-flex flex-row align-items-center gap-20">
-            <span class="fe fe-chevron-left service-picker-header-back cursor-pointer" (click)="handleOnBack()"></span>
+            <span *ngIf="isShowBack" class="fe fe-chevron-left service-picker-header-back cursor-pointer" (click)="handleOnBack()"></span>
             <div class="service-picker-header-title flex-grow-1">Add to your post</div>
             <span class="fe fe-x service-picker-header-close cursor-pointer" (click)="handleOnClose()"></span>
         </div>
@@ -23,7 +23,7 @@
         </div>
     </div>
     <div class="card-footer service-picker-footer d-flex justify-content-end align-items-center gap-20">
-        <button type="button" class="btn btn-light" (click)="handleOnBack()">
+        <button *ngIf="isShowBack" type="button" class="btn btn-light" (click)="handleOnBack()">
             {{ 'Back' | localize }}
         </button>
         <button type="button" class="btn btn-primary" (click)="handleOnAdd()" [disabled]="!selectedService">
