@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CreateWorkshopDto, WorkshopType } from '@shared/service-proxies/service-proxies';
+import { CreateEventDto, EventType } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -8,11 +8,11 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
   styleUrls: ['./create-workshop.component.less']
 })
 export class CreateWorkshopComponent implements OnInit {
-  @Input() model = new CreateWorkshopDto();
-  @Output() createWorkshop = new EventEmitter<CreateWorkshopDto>();
+  @Input() model = new CreateEventDto();
+  @Output() createWorkshop = new EventEmitter<CreateEventDto>();
   @Output() createCancel = new EventEmitter();
   isLoading = false;
-  WorkshopType = WorkshopType;
+  WorkshopType = EventType;
 
   constructor(
     private _modal: BsModalRef,

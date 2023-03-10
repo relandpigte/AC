@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ArticleDto, ArticlesServiceProxy, CoachingDto, CoachingsServiceProxy, CourseDto, CoursesServiceProxy, DateGrains, EventDto, EventsServiceProxy, PostsServiceProxy, UserDto, UserServiceProxy, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, ArticlesServiceProxy, CoachingDto, CoachingsServiceProxy, CourseDto, CoursesServiceProxy, DateGrains, EventCategory, EventDto, EventsServiceProxy, PostsServiceProxy, UserDto, UserServiceProxy, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
 
 import { Router } from '@angular/router';
 import { finalize, takeUntil } from 'rxjs/operators';
@@ -16,14 +16,16 @@ import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.comp
 })
 export class ExploreForYouComponent extends AppComponentBase implements OnInit {
   newUsers: UserDto[] = Array(5).fill([]).map(() => this.generateRandomUser()) as UserDto[];
-  upcomingEvents: EventDto[] = Array(4).fill([]).map(() => this.generateRandomEvent()) as EventDto[];
+  upcomingBroadcasts: EventDto[] = Array(4).fill([]).map(() => this.generateRandomEvent(EventCategory.Broadcast)) as EventDto[];
+  upcomingWorkshops: EventDto[] = Array(4).fill([]).map(() => this.generateRandomEvent(EventCategory.Workshop)) as EventDto[];
   recommendedCourses: CourseDto[] = Array(4).fill([]).map(() => this.generateRandomCourse()) as CourseDto[];
   newArticles: ArticleDto[] =  Array(4).fill([]).map(() => this.generateRandomArticle()) as ArticleDto[];
   recommendedTutorials: VideoDto[] = Array(4).fill([]).map(() => this.generateRandomTutorial()) as VideoDto[];
   newCoachings: CoachingDto[] = Array(4).fill([]).map(() => this.generateRandomCoaching()) as CoachingDto[];
 
   isLoading_newUsers = true;
-  isLoading_upcomingEvents = true;
+  isLoading_upcomingBroadcasts = true;
+  isLoading_upcomingWorkshops = true;
   isLoading_recommendedCourses = true;
   isLoading_newArticles = true;
   isLoading_recommendedTutorials = true;
@@ -32,7 +34,8 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
   isLoadingService = false;
 
   newUsersMaxItems: number = 0;
-  upcomingEventsMaxItems: number = 0;
+  upcomingBroadcastsMaxItems: number = 0;
+  upcomingWorkshopsMaxItems: number = 0;
   recommendedCoursesMaxItems: number = 0;
   newArticlesMaxItems: number = 0;
   recommendedTutorialsMaxItems: number = 0;
@@ -55,7 +58,8 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
 
   ngOnInit(): void {
     this.loadInfiniteData(this._usersService, 'getAll', ['', true, 'creationTime desc', 0, 6], 'newUsers');
-    this.loadInfiniteData(this._eventsService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4], 'upcomingEvents');
+    this.loadInfiniteData(this._eventsService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, EventCategory.Broadcast, 0, 4], 'upcomingBroadcasts');
+    this.loadInfiniteData(this._eventsService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, EventCategory.Workshop, 0, 4], 'upcomingWorkshops');
     this.loadInfiniteData(this._coursesService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4], 'recommendedCourses');
     this.loadInfiniteData(this._articlesService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4], 'newArticles');
     this.loadInfiniteData(this._videoService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4], 'recommendedTutorials');
@@ -66,9 +70,14 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
     this.loadInfiniteData(this._usersService, 'getAll', ['', true, 'creationTime desc', skipCount, 6], 'newUsers');
   }
 
-  handleUpcomingEventsRequestData(skipCount: number): void {
-    const lastItem = this.upcomingEvents.slice(-1)[0];
-    this.loadInfiniteData(this._eventsService, 'getByDates', [this.appSession.userId, undefined, lastItem.creationTime, undefined, DateGrains.Aged30, skipCount, 4], 'upcomingEvents');
+  handleUpcomingBroadcastsRequestData(skipCount: number): void {
+    const lastItem = this.upcomingBroadcasts.slice(-1)[0];
+    this.loadInfiniteData(this._eventsService, 'getByDates', [this.appSession.userId, undefined, lastItem.creationTime, undefined, DateGrains.Aged30, EventCategory.Broadcast, skipCount, 4], 'upcomingBroadcasts');
+  }
+
+  handleUpcomingWorkshopsRequestData(skipCount: number): void {
+    const lastItem = this.upcomingBroadcasts.slice(-1)[0];
+    this.loadInfiniteData(this._eventsService, 'getByDates', [this.appSession.userId, undefined, lastItem.creationTime, undefined, DateGrains.Aged30, EventCategory.Workshop, skipCount, 4], 'upcomingWorkshops');
   }
 
   handleRecommendedCoursesRequestData(skipCount: number): void {
@@ -91,8 +100,12 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
     this.loadInfiniteData(this._coachingsService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, skipCount, 4], 'newCoachings');
   }
 
-  handleEventServiceCardClick(event: EventDto): void {
+  handleBroadcastServiceCardClick(event: EventDto): void {
     this._router.navigate(['/app/dashboard/events/portal/broadcast/student', event.id, 'portal']);
+  }
+
+  handleWorkshopServiceCardClick(event: EventDto): void {
+    this._router.navigate(['/app/dashboard/events/portal/workshop/student', event.id, 'portal']);
   }
 
   handleCourseServiceCardClick(course: CourseDto): void {

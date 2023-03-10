@@ -1,5 +1,5 @@
 import { DefaultServiceCardActions, DefaultServiceCardOptions, ServiceCard, ServiceCardDates, ServiceCardType, ServiceCardButton, ServiceCardImage, ServiceCardOptions, ServiceCardPerson, ServiceCardPill, ServiceCardPrice, UserServiceCardActions, ServiceCardComposition, ServiceCardPeople, ServiceCardSlots, ServiceCardRsvp } from '@shared/models/service-card.model';
-import { ArticleDto, CoachingDto, CourseDto, EventDto, ServicesType, UserDto, VideoDto, WorkshopDto } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, CoachingDto, CourseDto, EventCategory, EventDto, ServicesType, UserDto, VideoDto, WorkshopDto } from '@shared/service-proxies/service-proxies';
 
 import * as _ from 'lodash';
 import { Utils } from './utils';
@@ -10,11 +10,14 @@ export class ServiceCardUtils {
       if (data.serviceType) {
         return Object.keys(ServicesType).find(k => ServicesType[k] === data.serviceType).toLowerCase() as ServiceCardType;
       } else {
-        if (data instanceof EventDto) return 'event';
+        if (data instanceof EventDto) {
+          const d = data as EventDto;
+          if (d.category === EventCategory.Broadcast) return 'broadcast';
+          return 'workshop';
+        }
         else if (data instanceof ArticleDto) return 'article';
         else if (data instanceof CoachingDto) return 'coaching';
         else if (data instanceof CourseDto) return 'course';
-        else if (data instanceof WorkshopDto) return 'workshop';
         else if (data instanceof VideoDto) return 'tutorial';
         else if (data instanceof UserDto) return 'user';
         return null;
@@ -71,6 +74,7 @@ export class ServiceCardUtils {
             break;
 
           case 'broadcast':
+            actions.splice(0, 0, { type: 'submit', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
             break;
 
           case 'coaching':

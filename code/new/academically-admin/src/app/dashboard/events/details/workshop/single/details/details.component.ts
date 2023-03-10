@@ -1,23 +1,17 @@
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
-import { WorkshopService } from '@app/dashboard/events/_services/workshop.service';
+import { EventService } from '@app/dashboard/events/_services/event.service';
 import { DefaultFile, DocumentUploaderComponent } from '@app/_shared/components/document-uploader/document-uploader.component';
 import { UploadService } from '@app/_shared/services/upload.service';
+import { AutoSaveComponentBase } from '@shared/auto-save-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import {
-  DocumentDto,
-  WorkshopsServiceProxy,
-  WorkshopType,
-  FileParameter,
+  DocumentDto, DocumentType, EventDto, EventsServiceProxy, EventType, FileParameter,
   PricingType,
   SpokenLanguageDto,
-  SpokenLanguagesServiceProxy,
-  UpdateWorkshopDto,
-  DocumentType,
-  WorkshopDto,
+  SpokenLanguagesServiceProxy, UpdateEventDto
 } from '@shared/service-proxies/service-proxies';
-import { finalize, takeUntil } from 'rxjs/operators';
-import { AutoSaveComponentBase } from '@shared/auto-save-component-base';
 import * as _ from 'lodash';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-details',
@@ -27,7 +21,7 @@ import * as _ from 'lodash';
 export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
   @ViewChild(DocumentUploaderComponent, { static: true }) documentUploader: DocumentUploaderComponent;
 
-  workshop: WorkshopDto;
+  workshop: EventDto;
 
   id: string;
   category: string;
@@ -36,20 +30,20 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
   defaultFile: DefaultFile;
   languages: SpokenLanguageDto[] = [];
 
-  model = new UpdateWorkshopDto();
+  model = new UpdateEventDto();
   isLoading = false;
   isUploadingImage = false;
   allowedImageExtensions = fileUploadConfiguration.allowedImageExtensions;
   PricingType = PricingType;
-  WorkshopType = WorkshopType;
+  WorkshopType = EventType;
   thumbnailDocument = new DocumentDto();
 
-  get workshopType(): WorkshopType { return this.workshop?.type ?? WorkshopType.Single; }
+  get workshopType(): EventType { return this.workshop?.type ?? EventType.Single; }
 
   constructor(
     injector: Injector,
-    private _workshopService: WorkshopService,
-    private _workshopsService: WorkshopsServiceProxy,
+    private _workshopService: EventService,
+    private _workshopsService: EventsServiceProxy,
     private _spokenLanguagesService: SpokenLanguagesServiceProxy,
     private _uploadService: UploadService,
   ) {
@@ -57,7 +51,7 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
-    this._workshopService.workshopCreated$
+    this._workshopService.eventCreated$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         if (response && response.id && this.id !== response.id) {
@@ -115,7 +109,7 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
 
   private uploadThumbnail(): void {
     this.isUploadingImage = true;
-    this._uploadService.upload(this.workshopThumbnailDocument.data, DocumentType.WorkshopThumbnail, this.model.id)
+    this._uploadService.upload(this.workshopThumbnailDocument.data, DocumentType.EventThumbnail, this.model.id)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
@@ -154,7 +148,7 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
     this._workshopsService.update(this.model)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
-        this._workshopService.workshopCreated = response;
+        this._workshopService.eventCreated = response;
       });
   }
 

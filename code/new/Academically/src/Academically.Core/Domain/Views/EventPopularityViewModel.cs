@@ -13,6 +13,7 @@ namespace Academically.Domain.Views
         public EventPopularityViewModel(Event _event, int popularityPoints)
         {
             Id = _event.Id;
+            Category = _event.Category;
             Type = _event.Type;
             Status = _event.Status;
             ParentId = _event.ParentId;
@@ -102,6 +103,7 @@ namespace Academically.Domain.Views
             AudienceEnableOffersTabDisplayNoOfPurchases = _event.AudienceEnableOffersTabDisplayNoOfPurchases;
             AudienceEnableHandoutsTab = _event.AudienceEnableHandoutsTab;
             AutoAdmitAttendees = _event.AutoAdmitAttendees;
+            NumberOfAttendees = _event.NumberOfAttendees;
             Parent = _event.Parent;
             ThumbnailDocument = _event.ThumbnailDocument;
             Language = _event.Language;

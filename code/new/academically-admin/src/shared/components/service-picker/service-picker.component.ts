@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
+import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 import { AvailableServiceDto, PostsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
@@ -58,7 +59,7 @@ export class ServicePickerComponent extends AppComponentBase implements OnChange
         this.searchFilter = searchFilter;
 
         this.isSearching = true;
-        this._postsService.getAvailableServices(searchFilter, 10, 'recent', 0, 10)
+        this._postsService.getAvailableServices(searchFilter, 10, this.appSession.userId, 'recent', 0, 10)
             .pipe(takeUntil(this.destroyed$))
             .pipe(finalize(() => this.isSearching = false))
             .subscribe(availableServices =>  this.availableServices = availableServices.items);
@@ -74,5 +75,9 @@ export class ServicePickerComponent extends AppComponentBase implements OnChange
 
     handleOnAdd(): void {
         this.onAdd.emit(this.selectedService);
+    }
+
+    protected getServiceType(item: any): string {
+        return ServiceCardUtils.getCardType(item);
     }
 }

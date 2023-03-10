@@ -1,10 +1,10 @@
 import { Component, Injector, OnInit } from '@angular/core';
-import { AppComponentBase } from '@shared/app-component-base';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { InvitePresenterComponent } from './_components/invite-presenter/invite-presenter.component';
 import { ActivatedRoute } from '@angular/router';
-import { takeUntil, finalize } from 'rxjs/operators';
-import { WorkshopPresenterDto, WorkshopsServiceProxy, WorkshopPresenterType, UpdateWorkshopPresenterTypeDto } from '@shared/service-proxies/service-proxies';
+import { AppComponentBase } from '@shared/app-component-base';
+import { EventPresenterDto, EventPresenterType, EventsServiceProxy, UpdatePresenterTypeDto } from '@shared/service-proxies/service-proxies';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { finalize, takeUntil } from 'rxjs/operators';
+import { InvitePresenterComponent } from './_components/invite-presenter/invite-presenter.component';
 
 @Component({
   selector: 'app-studio',
@@ -12,17 +12,17 @@ import { WorkshopPresenterDto, WorkshopsServiceProxy, WorkshopPresenterType, Upd
   styleUrls: ['./studio.component.less']
 })
 export class StudioComponent extends AppComponentBase implements OnInit {
-  presenters: WorkshopPresenterDto[] = [];
+  presenters: EventPresenterDto[] = [];
   workshopId: string;
   activeTab = 1;
   loading = false;
-  WorkshopPresenterType = WorkshopPresenterType;
+  WorkshopPresenterType = EventPresenterType;
 
   constructor(
     injector: Injector,
     route: ActivatedRoute,
     private _modalService: BsModalService,
-    private _workshopsService: WorkshopsServiceProxy,
+    private _workshopsService: EventsServiceProxy,
   ) {
     super(injector);
     route.parent.parent.paramMap
@@ -53,10 +53,10 @@ export class StudioComponent extends AppComponentBase implements OnInit {
     });
   }
 
-  onPresenterTypeChange(type: WorkshopPresenterType, presenter: WorkshopPresenterDto): void {
+  onPresenterTypeChange(type: EventPresenterType, presenter: EventPresenterDto): void {
     if (presenter.type !== type) {
       this.loading = true;
-      this._workshopsService.updatePresenterType(new UpdateWorkshopPresenterTypeDto({
+      this._workshopsService.updatePresenterType(new UpdatePresenterTypeDto({
         id: presenter.id,
         newType: type,
       }))
@@ -73,7 +73,7 @@ export class StudioComponent extends AppComponentBase implements OnInit {
     }
   }
 
-  onRemovePresenterClick(presenter: WorkshopPresenterDto): void {
+  onRemovePresenterClick(presenter: EventPresenterDto): void {
     this.loading = true;
     this._workshopsService.removePresenter(presenter.id)
       .pipe(

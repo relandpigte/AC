@@ -26,7 +26,7 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
   model = new UpdateEventSettingsDto();
   isLoading = false;
   datePickerConfig: BsDatepickerConfig;
-  eventType = EventType.SingleEvent;
+  eventType = EventType.Single;
   minTimesPerDay = 1;
   maxTimesPerDay = 5;
 

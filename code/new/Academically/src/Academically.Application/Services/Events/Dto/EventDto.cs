@@ -16,6 +16,7 @@ namespace Academically.Services.Events.Dto
     [AutoMapFrom(typeof(Event), typeof(EventPopularityViewModel))]
     public class EventDto : CreationAuditedEntityDto<Guid>, IHasTopic, IHasThumbnail, IHasCreationTime, IHasPopularityWeight
     {
+        public EventCategory Category { get; set; }
         public EventType Type { get; set; }
         public EventStatus Status { get; set; }
         public Guid? ParentId { get; set; }
@@ -105,7 +106,7 @@ namespace Academically.Services.Events.Dto
         public bool AudienceEnableOffersTabDisplayNoOfPurchases { get; set; }
         public bool AudienceEnableHandoutsTab { get; set; }
         public bool AutoAdmitAttendees { get; set; }
-
+        public int? NumberOfAttendees { get; set; }
         public long CreatorUserId { get; set; }
 
         public string ThumbnailImageUrl { get; set; }

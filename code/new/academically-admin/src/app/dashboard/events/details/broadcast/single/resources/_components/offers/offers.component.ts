@@ -1,11 +1,9 @@
-import { MyServiceViewDto } from '@shared/service-proxies/service-proxies';
-import { ServiceGroupedDropdownData } from './../../_models/serviceGroupedDropdownData';
-import { takeUntil, finalize } from 'rxjs/operators';
 import { Component, Injector, OnInit } from "@angular/core";
 import { EventService } from "@app/dashboard/events/_services/event.service";
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from "@shared/paged-listing-component-base";
-import { CoachingDto, CourseDto, EventDto, EventOfferDto, EventOffersServiceProxy, EventPollDto, WorkshopDto, VideoDto, ArticleDto, CoursesServiceProxy, CoachingsServiceProxy, WorkshopsServiceProxy, VideosServiceProxy, ArticlesServiceProxy, CourseStatus } from "@shared/service-proxies/service-proxies";
+import { ArticleDto, CoachingDto, CourseDto, EventDto, EventOfferDto, EventOffersServiceProxy, MyServiceViewDto, VideoDto } from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from "ngx-bootstrap/modal";
+import { finalize, takeUntil } from 'rxjs/operators';
 import { CreateEditOfferComponent } from '../create-edit-offer/create-edit-offer.component';
 
 class PagedEventOfferResultRequestDto extends PagedAndSortedRequestDto {
@@ -25,7 +23,7 @@ export class OffersComponent extends PagedListingComponentBase<EventOfferDto> im
   events: EventDto[] = [];
   courses: CourseDto[] = [];
   coachings: CoachingDto[] = [];
-  workshops: WorkshopDto[] = [];
+  workshops: EventDto[] = [];
   videos: VideoDto[] = [];
   articles: ArticleDto[] = [];
   allServices: MyServiceViewDto[] = [];

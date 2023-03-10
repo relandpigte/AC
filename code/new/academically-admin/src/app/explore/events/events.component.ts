@@ -107,7 +107,7 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
   }
 
   private loadGroupedByTopics(currentCount: number, topic?: string): void {
-    this._eventsService.getByTopics(this.appSession.userId, topic, currentCount, this.itemsPerGroup)
+    this._eventsService.getByTopics(this.appSession.userId, topic, undefined, currentCount, this.itemsPerGroup)
     .pipe(finalize(() => this.isLoading = false))
     .subscribe(events => {
       if (topic) {
@@ -119,14 +119,12 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
   }
 
   private loadGroupedByDates(currentCount: number, start?: moment.Moment, moving?: moment.Moment, end?: moment.Moment): void {
-    this._eventsService.getByDates(this.appSession.userId, start, moving, end, DateGrains.Aged30, currentCount, this.itemsPerGroup)
+    this._eventsService.getByDates(this.appSession.userId, start, moving, end, DateGrains.Aged30, undefined, currentCount, this.itemsPerGroup)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoading = false))
       .subscribe(groupedEvents => {
-
-        Object.keys(groupedEvents).forEach(range => {
+        Object.keys(groupedEvents ?? {}).forEach(range => {
           const [startDate] = range.split(' - ');
-
           if (moment().diff(moment(startDate), 'months')) {
             if (currentCount == 0) {
               this.latestStartDate = moment(startDate);
@@ -159,12 +157,12 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
 
   private loadPopular(currentCount: number): void {
     this.isPopularLoading = true;
-    this._eventsService.getByPopularity(this.appSession.userId, currentCount, this.popularItems)
+    this._eventsService.getByPopularity(this.appSession.userId, undefined, currentCount, this.popularItems)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isPopularLoading = false))
       .subscribe(groupedEvents => {
         if (groupedEvents) {
-          Object.keys(groupedEvents).forEach(label => {
+          Object.keys(groupedEvents ?? {}).forEach(label => {
             if (label == 'Popular') {
               if (currentCount == 0) {
                 this.popular = groupedEvents[label];
@@ -178,7 +176,6 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
             }
           });
         } else {
-          console.log('NO RESULT');
           this.setPopularShowMoreButtons(this.popular?.items?.length);
         }
       });

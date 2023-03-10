@@ -33,7 +33,6 @@ namespace Academically.Domain.Entities
         public string SessionTimes { get; set; }
         public string SessionDaysOfWeek { get; set; }
         public string SessionDaysOfMonth { get; set; }
-        public int? NumberOfAttendees { get; set; }
         public WorkshopReplayType? ReplayType { get; set; }
         public bool? QuestionsEnabled { get; set; }
         public QuestionType? QuestionType { get; set; }
@@ -82,6 +81,7 @@ namespace Academically.Domain.Entities
         public bool GuestsCreatePolls { get; set; }
         public bool GuestsCreateOffers { get; set; }
         public bool GuestsCreateHandouts { get; set; }
+
         public bool AudienceEnableMicrophone { get; set; }
         public bool AudienceEnableWebCam { get; set; }
         public bool AudienceEnablePresentationTools { get; set; }
@@ -101,6 +101,7 @@ namespace Academically.Domain.Entities
         public bool AudienceEnableOffersTab { get; set; }
         public bool AudienceEnableOffersTabDisplayNoOfPurchases { get; set; }
         public bool AudienceEnableHandoutsTab { get; set; }
+        public int? NumberOfAttendees { get; set; }
 
         [ForeignKey("ParentId")]
         public virtual Workshop Parent { get; set; }

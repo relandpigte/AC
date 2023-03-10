@@ -87,6 +87,6 @@ namespace Academically.Services.Events.Dto
         public bool AudienceEnableOffersTab { get; set; }
         public bool AudienceEnableOffersTabDisplayNoOfPurchases { get; set; }
         public bool AudienceEnableHandoutsTab { get; set; }
-
+        public int? NumberOfAttendees { get; set; }
     }
 }

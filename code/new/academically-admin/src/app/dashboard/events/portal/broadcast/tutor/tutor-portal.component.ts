@@ -39,7 +39,7 @@ export class TutorPortalComponent extends AppComponentBase implements OnInit {
   }
 
   get title(): string {
-    return this.model.type === EventType.SingleEvent ? 'Event' : 'EventSeries';
+    return this.model.type === EventType.Single ? 'Event' : 'EventSeries';
   }
 
   private getEvent(): void {

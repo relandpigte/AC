@@ -81,7 +81,8 @@ namespace Academically.Services.Events
                 .WhereIf(input.UserIdFilter.HasValue, e => e.CreatorUserId == input.UserIdFilter.Value)
                 .WhereIf(!string.IsNullOrWhiteSpace(input.SearchFilter), e => e.Name.ToLower().Contains(input.SearchFilter.ToLower())
                     || e.Description.ToLower().Contains(input.SearchFilter.ToLower()))
-                .WhereIf(input.StatusFilter.HasValue, e => e.Status == input.StatusFilter.Value);
+                .WhereIf(input.StatusFilter.HasValue, e => e.Status == input.StatusFilter.Value)
+                .WhereIf(input.CategoryFilter.HasValue, e => e.Category == input.CategoryFilter.Value);
         }
 
         protected override IQueryable<Event> ApplyPaging(IQueryable<Event> query, PagedEventResultRequestDto input)
@@ -127,7 +128,8 @@ namespace Academically.Services.Events
             {
                 var query = Repository.GetAll()
                     .Where(e => e.ParentId == null)
-                    .Where(c => c.Categories.Contains(topic));
+                    .Where(c => c.Categories.Contains(topic))
+                    .WhereIf(input.CategoryFilter.HasValue, e => e.Category == input.CategoryFilter.Value);
                 var totalCount = await query.CountAsync();
                 var events = await query
                     .PageBy(input)
@@ -151,7 +153,8 @@ namespace Academically.Services.Events
                 .Where(e => e.ParentId == null)
                 .Where(e => e.Status == EventStatus.Published)
                 .WhereIf(input.MovingDate.HasValue && input.StartDate.HasValue, v => v.CreationTime < input.MovingDate.Value && v.CreationTime >= input.StartDate.Value) // For next page of latest month
-                .WhereIf(input.MovingDate.HasValue && !input.StartDate.HasValue && !input.EndDate.HasValue, v => v.CreationTime < input.MovingDate.Value);
+                .WhereIf(input.MovingDate.HasValue && !input.StartDate.HasValue && !input.EndDate.HasValue, v => v.CreationTime < input.MovingDate.Value)
+                .WhereIf(input.CategoryFilter.HasValue, e => e.Category == input.CategoryFilter.Value);
             var totalCount = await query.CountAsync();
             var events = await query.Include(e => e.Children)
                 .Include(e => e.ThumbnailDocument)
@@ -170,6 +173,7 @@ namespace Academically.Services.Events
                 .Where(x => x.Event.Visible.Value)
                 .Where(e => e.Event.ParentId == null)
                 .Where(e => e.Event.Status == EventStatus.Published)
+                .WhereIf(input.CategoryFilter.HasValue, e => e.Event.Category == input.CategoryFilter.Value)
                 .Select(x => new
                     {
                         x.EventId,
@@ -241,10 +245,11 @@ namespace Academically.Services.Events
         public async Task<PagedResultDto<EventDto>> GetEventSchedules(PagedEventScheduleResultRequestDto input)
         {
             var query = Repository.GetAll()
-                .Where(e => e.Type == EventType.SingleEvent && e.EventDateTime != null)
+                .Where(e => e.Type == EventType.Single && e.EventDateTime != null)
                 .WhereIf(input.UserIdFilter.HasValue, e => e.CreatorUserId == input.UserIdFilter.Value)
                 .WhereIf(input.EventScheduleFilter.HasValue && input.EventScheduleFilter.Value == EventScheduleFilter.Upcoming, e => e.EventDateTime >= Clock.Now)
                 .WhereIf(input.EventScheduleFilter.HasValue && input.EventScheduleFilter.Value == EventScheduleFilter.Past, e => e.EventDateTime < Clock.Now)
+                .WhereIf(input.CategoryFilter.HasValue, e => e.Category == input.CategoryFilter.Value)
                 .OrderByDescending(e => e.EventDateTime)
                 .Concat(
                     _eventPresentersRepository.GetAll()

@@ -59,7 +59,7 @@
         <a [routerLink]="['/app/dashboard/events']" class="text-muted">
           <i class="fe fe-arrow-left"></i> {{ 'Exit' |localize }}
         </a>
-        <button [routerLink]="[(model.type === EventType.SingleEvent ? '/app/dashboard/events' : '/app/dashboard/events/details/broadcast/series'), id]"
+        <button [routerLink]="[(model.type === EventType.Single ? '/app/dashboard/events' : '/app/dashboard/events/details/broadcast/series'), id]"
           class="btn btn-sm btn-outline-primary">
           {{ 'EditEvent' | localize }}
         </button>

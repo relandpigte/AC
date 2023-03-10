@@ -99,7 +99,7 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
 
 
   private loadGroupedByTopics(currentCount: number, topic?: string): void {
-    this._videoService.getByTopic(this.appSession.userId, topic, currentCount, this.itemsPerGroup)
+    this._videoService.getByTopic(this.appSession.userId, topic, undefined, currentCount, this.itemsPerGroup)
     .pipe(takeUntil(this.destroyed$))
     .pipe(finalize(() => this.isLoading = false))
     .subscribe(videos => {
@@ -113,13 +113,12 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
 
   private loadGroupedByDates(currentCount: number, start?: moment.Moment, moving?: moment.Moment, end?: moment.Moment): void {
     this.isLoading = true;
-    this._videoService.getByDates(this.appSession.userId, start,moving, end, DateGrains.Aged30, currentCount, this.itemsPerGroup)
+    this._videoService.getByDates(this.appSession.userId, start,moving, end, DateGrains.Aged30, undefined, currentCount, this.itemsPerGroup)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoading = false))
       .subscribe(groupedVideos => {
-        Object.keys(groupedVideos).forEach(range => {
+        Object.keys(groupedVideos ?? {}).forEach(range => {
           const [startDate] = range.split(' - ');
-          console.log('GroupedVideos ----> ', groupedVideos[range]);
           if (moment().diff(moment(startDate), 'months')) {
             if (currentCount == 0) {
               this.latestStartDate = moment(startDate);
@@ -152,7 +151,7 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
 
   private loadPopular(currentCount: number): void {
     this.isPopularLoading = true;
-    this._videoService.getByPopularity(this.appSession.userId, currentCount, this.popularItems)
+    this._videoService.getByPopularity(this.appSession.userId, undefined, currentCount, this.popularItems)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isPopularLoading = false))
       .subscribe(groupedVideos => {

@@ -12,5 +12,6 @@ namespace Academically.Services.Events.Dto
         public bool? Visible { get; set; }
         public bool? Open { get; set; }
         public EventStatus? StatusFilter { get; set; }
+        public EventCategory? CategoryFilter { get; set; }
     }
 }

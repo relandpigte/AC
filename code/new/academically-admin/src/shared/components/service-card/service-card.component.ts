@@ -2,7 +2,7 @@ import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angul
 import { AppComponentBase } from '@shared/app-component-base';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { DefaultServiceCardActions, DefaultServiceCardOptions, ServiceCard, ServiceCardButton, ServiceCardComposition, ServiceCardDates, ServiceCardImage, ServiceCardOptions, ServiceCardPeople, ServiceCardPerson, ServiceCardPill, ServiceCardPrice, ServiceCardReview, ServiceCardRsvp, ServiceCardSlots, ServiceCardType, UserServiceCardActions } from '@shared/models/service-card.model';
-import { ArticleDto, CoachingDto, CourseDto, EventDto, PostsServiceProxy, UserDto, VideoDto, WorkshopDto } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, CoachingDto, CourseDto, EventCategory, EventDto, PostsServiceProxy, UserDto, VideoDto } from '@shared/service-proxies/service-proxies';
 
 import * as _ from 'lodash';
 import * as moment from 'moment';
@@ -94,11 +94,14 @@ import { finalize, takeUntil } from 'rxjs/operators';
     get people(): ServiceCardPeople { return this.sanitized?.people; }
 
     private getCardType(): ServiceCardType {
-      if (this.data instanceof EventDto) return 'event';
+      if (this.data instanceof EventDto) {
+        const d = this.data as EventDto;
+        if (d.category === EventCategory.Broadcast) return 'broadcast';
+        return 'workshop';
+      }
       else if (this.data instanceof ArticleDto) return 'article';
       else if (this.data instanceof CoachingDto) return 'coaching';
       else if (this.data instanceof CourseDto) return 'course';
-      else if (this.data instanceof WorkshopDto) return 'workshop';
       else if (this.data instanceof VideoDto) return 'tutorial';
       else if (this.data instanceof UserDto) return 'user';
       return null;
@@ -137,7 +140,7 @@ import { finalize, takeUntil } from 'rxjs/operators';
       this.sanitized.pill.label =  this.sanitized.pill.label ?? this.sanitized.type;
 
       this.sanitized.dates = {} as ServiceCardDates;
-      this.sanitized.dates.startDate = this.data.eventDateTime ?? this.data.workshopDateTime;
+      this.sanitized.dates.startDate = this.data.eventDateTime;
       this.sanitized.dates.endDate = this.data.endDate;
 
       this.sanitized.price = {} as ServiceCardPrice;
@@ -170,6 +173,7 @@ import { finalize, takeUntil } from 'rxjs/operators';
           break;
 
         case 'broadcast':
+          this.sanitizedActions.splice(0, 0, { type: 'submit', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
           break;
 
         case 'coaching':
