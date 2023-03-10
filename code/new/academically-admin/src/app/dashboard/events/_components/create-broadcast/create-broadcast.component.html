@@ -1,7 +1,7 @@
 <form class="form-horizontal" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
   <div class="modal-card card">
     <abp-modal-header
-      [title]="(model.type === EventType.SingleEvent ? 'NameYourBroadcast' : 'NameYourBroadcastSeries') | localize"
+      [title]="(model.type === EventType.Single ? 'NameYourBroadcast' : 'NameYourBroadcastSeries') | localize"
       (onCloseClick)="onCloseClick()">
     </abp-modal-header>
     <div class="card-body">

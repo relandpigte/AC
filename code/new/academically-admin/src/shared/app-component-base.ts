@@ -4,15 +4,15 @@ import {
   AbpMultiTenancyService, FeatureCheckerService, LocalizationService, MessageService, NotifyService, PermissionCheckerService, SettingService
 } from 'abp-ng2-module';
 
+import { DomSanitizer } from '@angular/platform-browser';
 import { UploadService } from '@app/_shared/services/upload.service';
 import { AppSessionService } from '@shared/session/app-session.service';
+import * as _ from 'lodash';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import { Observable, ReplaySubject } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
-import { ArticleDto, ArticleType, CoachingDto, CoachingType, CourseDto, CourseType, DocumentDto, EventDto, EventType, PricingType, UserDto, VideoDto, VideoType, WorkshopDto, WorkshopType } from './service-proxies/service-proxies';
-import * as _ from 'lodash';
-import { DomSanitizer } from '@angular/platform-browser';
+import { ArticleDto, ArticleType, CoachingDto, CoachingType, CourseDto, CourseType, DocumentDto, EventCategory, EventDto, EventType, PricingType, UserDto, VideoDto, VideoType } from './service-proxies/service-proxies';
 import { PubSubService } from './services/pub-sub.service';
 
 @Injectable()
@@ -328,30 +328,6 @@ export abstract class AppComponentBase implements OnDestroy {
     return course;
   }
 
-  generateRandomWorkshop(): WorkshopDto {
-    var workshop = new WorkshopDto();
-    var id = this.uuidv4();
-
-    workshop.id = id;
-    workshop.type = WorkshopType.Single;
-    workshop.name = `Test Workshop #${this.randomNonZero(1000)}`;
-    workshop.description = `Test Description #${this.randomNonZero(1000)}`;
-    workshop.pricingType = PricingType.FixedPrice;
-    workshop.price = this.randomNonZero(500);
-    workshop.duration = this.randomNonZero(10000);
-    workshop.endDate = moment().add(this.randomNonZero(20, 10), 'days');
-    workshop.workshopDateTime = moment().add(this.randomNonZero(6000), 'minutes');
-
-    var creator = new UserDto();
-    creator.id = this.randomNonZero(200);
-    creator.fullName = 'Creator User1';
-    creator.profilePictureUrl = `https://i.pravatar.cc/300?u=${id}`;
-
-    workshop.creatorUser = creator;
-
-    return workshop;
-  }
-
   generateRandomArticle(): ArticleDto {
     var article = new ArticleDto();
     var id = this.uuidv4();
@@ -392,12 +368,13 @@ export abstract class AppComponentBase implements OnDestroy {
     return coaching;
   }
 
-  generateRandomEvent(): EventDto {
+  generateRandomEvent(category?: EventCategory): EventDto {
     var event = new EventDto;
     var id = this.uuidv4();
 
     event.id = id;
-    event.type = EventType.SingleEvent;
+    event.category = category ?? this.randomNonZero(1, 0);
+    event.type = EventType.Single;
     event.name = `Test Event #${this.randomNonZero(1000)}`;
     event.description = `Test Description #${this.randomNonZero(1000)}`;
     event.pricingType = PricingType.FixedPrice;

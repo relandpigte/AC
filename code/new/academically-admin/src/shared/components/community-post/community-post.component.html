@@ -3,7 +3,7 @@
         <div class="post-heading d-flex flex-row flex-nowrap align-items-center">
             <div class="post-heading-avatar">
                 <a href="javascript: void(0);" class="avatar avatar-sm">
-                    <img [src]="getProfilePicture(data?.creatorUser?.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
+                    <img [src]="getProfilePictureFromDocument(data?.creatorUser?.profilePictureDocument, data?.creatorUser?.id)" class="avatar-img rounded-circle" alt="profile" />
                 </a>
             </div>
             <div class="post-heading-owner flex-grow-1 d-flex flex-column flex-nowrap gap-3">

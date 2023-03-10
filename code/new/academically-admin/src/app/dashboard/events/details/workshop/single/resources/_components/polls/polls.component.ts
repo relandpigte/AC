@@ -1,10 +1,10 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
+import { EventService } from '@app/dashboard/events/_services/event.service';
+import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
+import { EventDto, EventPollDto, EventPollsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { CreateEditPollComponent } from '../create-edit-poll/create-edit-poll.component';
-import { ModalOptions, BsModalService } from 'ngx-bootstrap/modal';
-import { WorkshopService } from '@app/dashboard/events/_services/workshop.service';
-import { WorkshopDto, WorkshopPollDto, WorkshopPollsServiceProxy } from '@shared/service-proxies/service-proxies';
-import { takeUntil, finalize } from 'rxjs/operators';
-import { PagedListingComponentBase, PagedAndSortedRequestDto } from '@shared/paged-listing-component-base';
 
 class PagedWorkshopPollRequestDto extends PagedAndSortedRequestDto {
   workshopIdFilter: string;
@@ -15,19 +15,19 @@ class PagedWorkshopPollRequestDto extends PagedAndSortedRequestDto {
   templateUrl: './polls.component.html',
   styleUrls: ['./polls.component.less']
 })
-export class PollsComponent extends PagedListingComponentBase<WorkshopPollDto> implements OnInit {
-  workshop = new WorkshopDto();
-  workshopPolls: WorkshopPollDto[] = [];
+export class PollsComponent extends PagedListingComponentBase<EventPollDto> implements OnInit {
+  workshop = new EventDto();
+  workshopPolls: EventPollDto[] = [];
   isLoading = false;
 
   constructor(
     injector: Injector,
     private _modalService: BsModalService,
-    private _workshopService: WorkshopService,
-    private _workshopPollsService: WorkshopPollsServiceProxy,
+    private _workshopService: EventService,
+    private _workshopPollsService: EventPollsServiceProxy,
   ) {
     super(injector);
-    this._workshopService.workshopCreated$
+    this._workshopService.eventCreated$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         if (response) {
@@ -55,7 +55,7 @@ export class PollsComponent extends PagedListingComponentBase<WorkshopPollDto> i
       });
   }
 
-  onDeleteClick(workshopPoll: WorkshopPollDto): void {
+  onDeleteClick(workshopPoll: EventPollDto): void {
     this.message.confirm(this.l('DeleteWorkshopPollConfirmationMessage'), undefined, (result => {
       if (result) {
         this.isLoading = true;

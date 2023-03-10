@@ -6,14 +6,14 @@
       <div class="card">
         <div class="card-header">
           <h4 class="card-header-title">
-            {{ (eventType === EventType.SingleEvent ? 'EventName' : 'EventSeriesName') | localize }}
+            {{ (eventType === EventType.Single ? 'EventName' : 'EventSeriesName') | localize }}
           </h4>
         </div>
         <div class="card-body">
           <div class="form-group required mb-0">
             <input [(ngModel)]="model.name" #nameModel="ngModel" #nameEl class="form-control" type="text" id="name"
               name="name" required
-              [placeholder]="(eventType === EventType.SingleEvent ? 'WriteYourEventNameHere' : 'WriteYourEventSeriesNameHere') | localize" />
+              [placeholder]="(eventType === EventType.Single ? 'WriteYourEventNameHere' : 'WriteYourEventSeriesNameHere') | localize" />
             <abp-validation-summary [control]="nameModel" [controlEl]="nameEl">
             </abp-validation-summary>
           </div>
@@ -67,7 +67,7 @@
       <div class="card" [loader]="isLoading || isUploadingImage">
         <div class="card-header">
           <h4 class="card-header-title">
-            {{ (eventType === EventType.SingleEvent ? 'EventThumbnail' : 'EventSeriesThumbnail') | localize }}
+            {{ (eventType === EventType.Single ? 'EventThumbnail' : 'EventSeriesThumbnail') | localize }}
           </h4>
         </div>
         <div class="card-body position-relative">

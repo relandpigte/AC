@@ -159,4 +159,5 @@
 	<include file="ddml-new/ddml.2023-01-04-02-create-postvisibility-table.xml" />
 	<include file="ddml-new/ddml.2023-03-02-01-alter-event-table.xml" />
 	<include file="ddml-new/ddml.2023-03-09-01-alter-comments-add-serviceid-field.xml" />
+	<include file="ddml-new/ddml.2023-03-09-02-alter-event-table-merge-workshop.xml" />
 </databaseChangeLog>

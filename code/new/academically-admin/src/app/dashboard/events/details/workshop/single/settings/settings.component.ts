@@ -1,20 +1,10 @@
 import { Component, Injector, OnInit } from '@angular/core';
+import { EventService } from '@app/dashboard/events/_services/event.service';
 import { AutoSaveComponentBase } from '@shared/auto-save-component-base';
-import {
-  WorkshopReplayType,
-  WorkshopsServiceProxy,
-  WorkshopType,
-  QuestionType,
-  UpdateWorkshopSettingsDto,
-  ServiceDelayType,
-  DayOfWeek,
-  WorkshopFrequencyType,
-  WorkshopRecursionType,
-} from '@shared/service-proxies/service-proxies';
+import { DayOfWeek, EventFrequencyType, EventRecursionType, EventReplayType, EventsServiceProxy, EventType, QuestionType, ServiceDelayType, UpdateEventSettingsDto } from '@shared/service-proxies/service-proxies';
+import * as _ from 'lodash';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { takeUntil } from 'rxjs/operators';
-import { WorkshopService } from '@app/dashboard/events/_services/workshop.service';
-import * as _ from 'lodash';
 
 @Component({
   selector: 'app-settings',
@@ -23,9 +13,9 @@ import * as _ from 'lodash';
 })
 export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
   id: string;
-  model = new UpdateWorkshopSettingsDto();
+  model = new UpdateEventSettingsDto();
   isLoading = false;
-  workshopType = WorkshopType.Single;
+  workshopType = EventType.Single;
 
   datePickerConfig: BsDatepickerConfig;
   minTimesPerDay = 1;
@@ -38,18 +28,18 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
   scheduleWeekValues: DayOfWeek[] = [];
   scheduleMonthsValues: Date[];
 
-  WorkshopFrequencyType = WorkshopFrequencyType;
-  WorkshopReplayType = WorkshopReplayType;
+  WorkshopFrequencyType = EventFrequencyType;
+  WorkshopReplayType = EventReplayType;
   QuestionType = QuestionType;
-  WorkshopType = WorkshopType;
+  WorkshopType = EventType;
   DelayType = ServiceDelayType;
-  WorkshopRecursionType = WorkshopRecursionType;
+  WorkshopRecursionType = EventRecursionType;
   DayOfWeek = DayOfWeek;
 
   constructor(
     injector: Injector,
-    private _workshopService: WorkshopService,
-    private _workshopsService: WorkshopsServiceProxy,
+    private _workshopService: EventService,
+    private _workshopsService: EventsServiceProxy,
   ) {
     super(injector);
     this.datePickerConfig = new BsDatepickerConfig();
@@ -58,7 +48,7 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
-    this._workshopService.workshopCreated$
+    this._workshopService.eventCreated$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         if (response && response.id && !this.id && this.id !== response.id) {
@@ -74,7 +64,7 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
 
   onWorkshopDateTimeChange(): void {
     if (this.workshopDateTime) {
-      this.model.workshopDateTime = this.convertDateToMoment(this.workshopDateTime);
+      this.model.eventDateTime = this.convertDateToMoment(this.workshopDateTime);
     }
   }
 
@@ -137,17 +127,17 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
 
   onRecursionTypeChange(): void {
     switch (this.model.recursionType) {
-      case WorkshopRecursionType.Daily:
+      case EventRecursionType.Daily:
         this.scheduleWeekValues = undefined;
         this.scheduleMonthsValues = undefined;
         this.convertSessionWeeks();
         this.convertSessionForMonth();
         break;
-      case WorkshopRecursionType.Weekly:
+      case EventRecursionType.Weekly:
         this.scheduleMonthsValues = undefined;
         this.convertSessionForMonth();
         break;
-      case WorkshopRecursionType.Monthly:
+      case EventRecursionType.Monthly:
         this.scheduleWeekValues = undefined;
         this.convertSessionWeeks();
         break;
@@ -188,8 +178,8 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
         this.model.init(response);
         this.workshopType = response.type;
 
-        if (response.workshopDateTime) {
-          this.workshopDateTime = this.convertMomentToDate(response.workshopDateTime);
+        if (response.eventDateTime) {
+          this.workshopDateTime = this.convertMomentToDate(response.eventDateTime);
         }
         if (response.endDate) {
           this.endDate = this.convertMomentToDate(response.endDate);

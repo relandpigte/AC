@@ -38,7 +38,7 @@
                     <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Add emoticon" [class.disabled]="true">
                       <i class="fas fa-smile"></i>
                     </a>
-                    <a class="cursor-pointer" data-toggle="tooltip" title="" data-original-title="Add service" [class.disabled]="false" (click)="toggleServicePicker()">
+                    <a class="cursor-pointer" data-toggle="tooltip" title="" data-original-title="Add service" [class.disabled]="!isShowAddService" (click)="toggleServicePicker()">
                       <i class="fe fe-plus"></i>
                     </a>
                   </div>
@@ -49,8 +49,8 @@
           </div>
         </div>
 
-        <div *ngIf="selectedService && !commentReplyId" class="row gap-15 mx-0">
-          <app-service-preview [service]="selectedService" [canRemove]="true" (onRemove)="selectedService = null"></app-service-preview>
+        <div *ngIf="selectedService" class="row gap-15" [style.marginTop.px]="5" [style.marginLeft.px]="55">
+          <app-service-preview-lite [service]="selectedService" [canRemove]="true" (onRemove)="selectedService = null"></app-service-preview-lite>
         </div>
 
         <div *ngIf="comments?.length" class="row sorting-section">
@@ -181,7 +181,7 @@
                           <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Add emoticon" [class.disabled]="true">
                             <i class="fas fa-smile"></i>
                           </a>
-                          <a class="cursor-pointer" data-toggle="tooltip" title="" data-original-title="Add service" [class.disabled]="false" (click)="toggleServicePicker()">
+                          <a class="cursor-pointer" data-toggle="tooltip" title="" data-original-title="Add service" [class.disabled]="!isShowAddService" (click)="toggleServicePicker(true)">
                             <i class="fe fe-plus"></i>
                           </a>
                         </div>
@@ -192,8 +192,8 @@
                 </div>
               </div>
 
-              <div *ngIf="selectedService && commentReplyId === comment.id" class="row gap-15 mx-0">
-                <app-service-preview [service]="selectedService" [canRemove]="true" (onRemove)="selectedService = null"></app-service-preview>
+              <div *ngIf="selectedServiceForChild && commentReplyId === comment.id" class="row gap-15" [style.marginTop.px]="-10" [style.marginLeft.px]="55">
+                <app-service-preview-lite [service]="selectedServiceForChild" [canRemove]="true" (onRemove)="selectedServiceForChild = null"></app-service-preview-lite>
               </div>
 
             </div>

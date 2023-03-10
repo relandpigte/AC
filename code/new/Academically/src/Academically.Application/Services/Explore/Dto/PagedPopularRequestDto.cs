@@ -1,12 +1,11 @@
 ﻿using Abp.Application.Services.Dto;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Academically.Domain.Enums;
 
 namespace Academically.Services.Explore.Dto
 {
     public class PagedPopularRequestDto: PagedResultRequestDto
     {
         public long? UserIdFilter { get; set; }
+        public EventCategory? CategoryFilter { get; set; }
     }
 }

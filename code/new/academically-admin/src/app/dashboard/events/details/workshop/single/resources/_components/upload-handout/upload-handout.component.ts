@@ -1,10 +1,10 @@
-import { Component, OnInit, Input, Output, EventEmitter, Injector } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
-import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
-import { CreateWorkshopResourceDto, WorkshopResourcesServiceProxy, FileParameter, DocumentType, WorkshopResourceType } from '@shared/service-proxies/service-proxies';
-import { AppComponentBase } from '@shared/app-component-base';
-import { takeUntil, finalize } from 'rxjs/operators';
+import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { UploadService } from '@app/_shared/services/upload.service';
+import { AppComponentBase } from '@shared/app-component-base';
+import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
+import { CreateEventResourceDto, DocumentType, EventResourcesServiceProxy, EventResourceType, FileParameter } from '@shared/service-proxies/service-proxies';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-upload-handout',
@@ -15,7 +15,7 @@ export class UploadHandoutComponent extends AppComponentBase implements OnInit {
   @Input() workshopId: string;
   @Output() modelSaved = new EventEmitter();
 
-  model = new CreateWorkshopResourceDto();
+  model = new CreateEventResourceDto();
   isLoading = false;
   allowedHandoutsExtension = fileUploadConfiguration.allowedFileExtensions;
   document: FileParameter;
@@ -23,7 +23,7 @@ export class UploadHandoutComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _modal: BsModalRef,
-    private _workshopResourcesService: WorkshopResourcesServiceProxy,
+    private _workshopResourcesService: EventResourcesServiceProxy,
     private _uploadService: UploadService,
   ) {
     super(injector);
@@ -34,12 +34,12 @@ export class UploadHandoutComponent extends AppComponentBase implements OnInit {
 
   onFormSubmit(): void {
     this.isLoading = true;
-    this.model.workshopId = this.workshopId;
-    this.model.type = WorkshopResourceType.Handout;
+    this.model.eventId = this.workshopId;
+    this.model.type = EventResourceType.Handout;
     this._workshopResourcesService.create(this.model)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
-        this._uploadService.upload(this.document.data, DocumentType.WorkshopResource, response.id)
+        this._uploadService.upload(this.document.data, DocumentType.EventResource, response.id)
           .pipe(
             takeUntil(this.destroyed$),
             finalize(() => {

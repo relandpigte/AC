@@ -147,7 +147,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   }
 
   getRecommendedCourses(): void {
-    this._coursesService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4)
+    this._coursesService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, undefined, 0, 4)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(pagedCourses => {
         const courses = pagedCourses;
@@ -162,7 +162,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   }
 
   getRecommendedArticles(): void {
-    this._articlesService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4)
+    this._articlesService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, undefined, 0, 4)
     .pipe(takeUntil(this.destroyed$))
     .subscribe(pagedArticles => {
       const articles = pagedArticles;
@@ -177,7 +177,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   }
 
   getRecommendedEvents(): void {
-    this._eventsService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4)
+    this._eventsService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, undefined, 0, 4)
     .pipe(takeUntil(this.destroyed$))
     .subscribe(pagedEvents => {
       const events = pagedEvents;
@@ -192,7 +192,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   }
 
   getRecommendedTutorials(): void {
-    this._videosService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4)
+    this._videosService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, undefined, 0, 4)
     .pipe(takeUntil(this.destroyed$))
     .subscribe(pagedTutorials => {
       const tutorials = pagedTutorials;

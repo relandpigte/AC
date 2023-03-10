@@ -22,21 +22,41 @@
           </app-carousel>
         </ng-container>
 
-        <ng-container *ngIf="upcomingEvents?.length > 0">
+        <ng-container *ngIf="upcomingBroadcasts?.length > 0">
           <div class="row align-items-center" [style.marginTop.px]="45" [style.marginBottom.px]="25">
             <div class="col d-flex flex-wrap align-items-center justify-content-between">
-              <span class="recommended-title">Upcoming Events</span>
+              <span class="recommended-title">Upcoming Broadcasts</span>
               <span class="view-all cursor-pointer" [routerLink]="['events']">View All</span>
             </div>
           </div>
           <app-carousel
-            [items]="upcomingEvents"
-            [maxItems]="upcomingEventsMaxItems"
+            [items]="upcomingBroadcasts"
+            [maxItems]="upcomingBroadcastsMaxItems"
             [itemWidth]="352"
             [itemSpacing]="30"
             [isAutoFit]="true"
             [isInfiteScroll]="true"
-            (onRequestNewData)="handleUpcomingEventsRequestData($event)"
+            (onRequestNewData)="handleUpcomingBroadcastsRequestData($event)"
+            (onServiceCardShareClick)="handleServiceCardShareClick($event)"
+            (onServiceCardClick)="handleEventServiceCardClick($event)">
+          </app-carousel>
+        </ng-container>
+
+        <ng-container *ngIf="upcomingWorkshops?.length > 0">
+          <div class="row align-items-center" [style.marginTop.px]="45" [style.marginBottom.px]="25">
+            <div class="col d-flex flex-wrap align-items-center justify-content-between">
+              <span class="recommended-title">Upcoming Workshops</span>
+              <span class="view-all cursor-pointer" [routerLink]="['events']">View All</span>
+            </div>
+          </div>
+          <app-carousel
+            [items]="upcomingWorkshops"
+            [maxItems]="upcomingWorkshopsMaxItems"
+            [itemWidth]="352"
+            [itemSpacing]="30"
+            [isAutoFit]="true"
+            [isInfiteScroll]="true"
+            (onRequestNewData)="handleUpcomingWorkshopsRequestData($event)"
             (onServiceCardShareClick)="handleServiceCardShareClick($event)"
             (onServiceCardClick)="handleEventServiceCardClick($event)">
           </app-carousel>

@@ -12,6 +12,8 @@ namespace Academically.Domain.Entities
     {
         [NotMapped]
         public ServicesType ServiceType { get; set; } = ServicesType.Event;
+
+        public EventCategory Category { get; set; }
         public EventType Type { get; set; }
         public EventStatus Status { get; set; }
         public Guid? ParentId { get; set; }
@@ -26,6 +28,13 @@ namespace Academically.Domain.Entities
         public DateTime? EventDateTime { get; set; }
         public DateTime? EndDate { get; set; }
         public int? Duration { get; set; }
+        public ServiceDelayType? DelayType { get; set; }
+        public string DelayValue { get; set; }
+        public EventRecursionType RecursionType { get; set; }
+        public int? TimesPerDay { get; set; }
+        public string SessionTimes { get; set; }
+        public string SessionDaysOfWeek { get; set; }
+        public string SessionDaysOfMonth { get; set; }
         public EventReplayType? ReplayType { get; set; }
         public bool? QuestionsEnabled { get; set; }
         public QuestionType? QuestionType { get; set; }
@@ -40,13 +49,6 @@ namespace Academically.Domain.Entities
         public bool? ReplayFollowUpNotification { get; set; }
         public bool? Visible { get; set; }
         public bool? Opened { get; set; }
-        public ServiceDelayType? DelayType { get; set; }
-        public string DelayValue { get; set; }
-        public EventRecursionType RecursionType { get; set; }
-        public int? TimesPerDay { get; set; }
-        public string SessionTimes { get; set; }
-        public string SessionDaysOfWeek { get; set; }
-        public string SessionDaysOfMonth { get; set; }
         public bool CohostsEnableMicrophone { get; set; }
         public bool CohostsEnableWebCam { get; set; }
         public bool CohostsEnablePresentationTools { get; set; }
@@ -101,7 +103,7 @@ namespace Academically.Domain.Entities
         public bool AudienceEnableOffersTabDisplayNoOfPurchases { get; set; }
         public bool AudienceEnableHandoutsTab { get; set; }
         public bool AutoAdmitAttendees { get; set; }
-
+        public int? NumberOfAttendees { get; set; }
 
         [ForeignKey("ParentId")]
         public virtual Event Parent { get; set; }
@@ -111,7 +113,6 @@ namespace Academically.Domain.Entities
         public virtual SpokenLanguage Language { get; set; }
         [ForeignKey("CreatorUserId")]
         public virtual User CreatorUser { get; set; }
-
         public virtual ICollection<Event> Children { get; set; }
         public virtual ICollection<StudentEvent> StudentEvents { get; set; }
         public virtual ICollection<EventPresenter> EventPresenters { get; set; }

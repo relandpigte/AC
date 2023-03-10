@@ -1,6 +1,6 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { EventPollQuestionType } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { WorkshopPollQuestionType } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-select-poll-question',
@@ -8,11 +8,11 @@ import { WorkshopPollQuestionType } from '@shared/service-proxies/service-proxie
   styleUrls: ['./select-poll-question.component.less']
 })
 export class SelectPollQuestionComponent implements OnInit {
-  @Output() typeSelected = new EventEmitter<WorkshopPollQuestionType>(undefined);
+  @Output() typeSelected = new EventEmitter<EventPollQuestionType>(undefined);
 
   isLoading = false;
 
-  WorkshopPollQuestionType = WorkshopPollQuestionType;
+  WorkshopPollQuestionType = EventPollQuestionType;
 
   constructor(
     private _modal: BsModalRef,
@@ -29,7 +29,7 @@ export class SelectPollQuestionComponent implements OnInit {
     this._modal.hide();
   }
 
-  onTypeClick(type: WorkshopPollQuestionType): void {
+  onTypeClick(type: EventPollQuestionType): void {
     this.typeSelected.emit(type);
     this._modal.hide();
   }

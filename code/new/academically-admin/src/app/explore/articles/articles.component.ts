@@ -104,7 +104,7 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
   }
 
   private loadGroupedByTopics(currentCount: number, topic?: string): void {
-    this._articleService.getByTopic(this.appSession.userId, topic, currentCount, this.itemsPerGroup)
+    this._articleService.getByTopic(this.appSession.userId, topic, undefined, currentCount, this.itemsPerGroup)
     .pipe(takeUntil(this.destroyed$))
     .pipe(finalize(() => this.isLoading = false))
     .subscribe(articles => {
@@ -118,13 +118,12 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
 
   private loadGroupedByDates(currentCount: number, start?: moment.Moment, moving?: moment.Moment, end?: moment.Moment): void {
     this.isLoading = true;
-    this._articleService.getByDates(this.appSession.userId, start,moving, end, DateGrains.Monthly, currentCount, this.itemsPerGroup)
+    this._articleService.getByDates(this.appSession.userId, start,moving, end, DateGrains.Monthly, undefined, currentCount, this.itemsPerGroup)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoading = false))
       .subscribe(groupedArticles => {
-        Object.keys(groupedArticles).forEach(range => {
+        Object.keys(groupedArticles ?? {}).forEach(range => {
           const [startDate] = range.split(' - ');
-          console.log('GroupedVideos ----> ', groupedArticles[range]);
           if (moment().diff(moment(startDate), 'months')) {
             if (currentCount == 0) {
               this.latestStartDate = moment(startDate);
@@ -157,7 +156,7 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
 
   private loadPopular(currentCount: number): void {
     this.isPopularLoading = true;
-    this._articleService.getByPopularity(this.appSession.userId, currentCount, this.popularItems)
+    this._articleService.getByPopularity(this.appSession.userId, undefined, currentCount, this.popularItems)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isPopularLoading = false))
       .subscribe(groupedArticles => {

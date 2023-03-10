@@ -6,6 +6,11 @@
         overflow: hidden;
         box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.05);
 
+        &.with-remove {
+            min-width: 340px;
+            max-width: 100%;
+        }
+
         &-remove {
             position: absolute;
             top: 14px;
@@ -16,8 +21,12 @@
             border-radius: 50%;
             background: #12263F;
             color: white;
-            opacity: 0.5;
+            opacity: 0.2;
             backdrop-filter: blur(2px);
+
+            &:hover {
+                opacity: 0.5;
+            }
         }
 
         &-image {

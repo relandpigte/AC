@@ -2,7 +2,7 @@
 {
     public enum EventType
     {
-        SingleEvent,
-        EventSeries,
+        Single,
+        Series,
     }
 }

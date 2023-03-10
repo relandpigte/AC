@@ -1,12 +1,7 @@
-import { Component, OnInit, Input, Injector, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
+import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
+import { CreateEventPresenterDto, EventPresenterType, EventsServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import {
-  UserDto,
-  WorkshopsServiceProxy,
-  CreateWorkshopPresenterDto,
-  WorkshopPresenterType,
-} from '@shared/service-proxies/service-proxies';
-import { PagedListingComponentBase, PagedAndSortedRequestDto } from '@shared/paged-listing-component-base';
 import { finalize, takeUntil } from 'rxjs/operators';
 
 class PagedUserRequestDto extends PagedAndSortedRequestDto {
@@ -29,7 +24,7 @@ export class InvitePresenterComponent extends PagedListingComponentBase<UserDto>
   constructor(
     injector: Injector,
     private _modal: BsModalRef,
-    private _workshopsService: WorkshopsServiceProxy,
+    private _workshopsService: EventsServiceProxy,
   ) {
     super(injector);
   }
@@ -40,9 +35,9 @@ export class InvitePresenterComponent extends PagedListingComponentBase<UserDto>
 
   onInviteClick(user: UserDto): void {
     this.isTableLoading = true;
-    this._workshopsService.invitePresenter(new CreateWorkshopPresenterDto({
-      type: WorkshopPresenterType.Guest,
-      workshopId: this.workshopId,
+    this._workshopsService.invitePresenter(new CreateEventPresenterDto({
+      type: EventPresenterType.Guest,
+      eventId: this.workshopId,
       email: user.emailAddress,
     }))
       .pipe(

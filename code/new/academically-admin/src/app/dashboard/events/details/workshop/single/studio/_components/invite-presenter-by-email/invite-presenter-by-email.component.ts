@@ -1,8 +1,8 @@
-import { Component, OnInit, Injector, Input, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
+import { CreateEventPresenterDto, EventPresenterType, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { WorkshopsServiceProxy, CreateWorkshopPresenterDto, WorkshopPresenterType } from '@shared/service-proxies/service-proxies';
-import { takeUntil, finalize } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-invite-presenter-by-email',
@@ -19,7 +19,7 @@ export class InvitePresenterByEmailComponent extends AppComponentBase implements
   constructor(
     injector: Injector,
     private _modal: BsModalRef,
-    private _workshopsService: WorkshopsServiceProxy,
+    private _workshopsService: EventsServiceProxy,
   ) {
     super(injector);
   }
@@ -29,9 +29,9 @@ export class InvitePresenterByEmailComponent extends AppComponentBase implements
 
   onFormSubmit(): void {
     this.loading = true;
-    this._workshopsService.invitePresenter(new CreateWorkshopPresenterDto({
-      workshopId: this.workshopId,
-      type: WorkshopPresenterType.Guest,
+    this._workshopsService.invitePresenter(new CreateEventPresenterDto({
+      eventId: this.workshopId,
+      type: EventPresenterType.Guest,
       email: this.email,
     }))
       .pipe(

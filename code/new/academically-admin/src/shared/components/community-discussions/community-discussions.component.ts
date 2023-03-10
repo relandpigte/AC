@@ -47,6 +47,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
 
   isShowServicePicker = false;
   selectedService: AvailableServiceDto;
+  selectedServiceForChild: AvailableServiceDto;
 
   constructor(
     injector: Injector,
@@ -72,6 +73,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   get isExpanded(): boolean { return (this.totalCommentsCount > 1 && this.comments?.length === this.totalCommentsCount) || (this.totalCommentsCount === 1 && this.childDiscussions.toArray().some(c => c.isPartiallyExpanded)); }
   get isPartiallyExpanded(): boolean { return this.comments.length > 0 && this.totalCommentsCount >= this.comments.length; }
   get hasChildren(): boolean { return this.comments?.some(c => c.children?.length); }
+  get isShowAddService(): boolean { return this.isTutor; }
 
   ngOnInit(): void {
     this.initCommentsAppStates();
@@ -79,10 +81,12 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-      if ('show' in changes && changes?.show?.firstChange === false && changes?.show?.previousValue !== changes?.show?.currentValue) {
+    if (changes?.show?.firstChange === false) {
+      if ('show' in changes && changes?.show?.previousValue !== changes?.show?.currentValue) {
         if (this.show) this.doAddComment();
         else this.foldSubject$.next();
       }
+    }
   }
 
   private async initCommentsAppStates() {
@@ -123,6 +127,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
 
     this.comments = this.isChild ? [] : this.commentsStateService.getAllComments({ direction: this.isChild ? 'asc' : 'desc' });
     this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
+    this.showAddComment = !!this.totalCommentsCount;
   }
 
   private initSubscriptions(): void {
@@ -140,8 +145,8 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     model.referenceId = this.referenceId;
     model.parentId = parentId;
     model.body = message.value;
-    model.serviceId = this.selectedService?.id;
-    model.serviceType = this.selectedService?.serviceType;
+    model.serviceId = parentId ? this.selectedServiceForChild?.id : this.selectedService?.id;
+    model.serviceType = parentId ? this.selectedServiceForChild?.serviceType : this.selectedService?.serviceType;
 
     if (model.body && model.body.trim()) {
       this._postsServiceProxy.createComment(model)
@@ -152,8 +157,9 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
           })
         ).subscribe(() => {
           message.value = '';
+          if (parentId) this.selectedServiceForChild = null;
+          else this.selectedService = null;
           this.notify.success(this.l('SuccessfullyPosted'));
-          this.selectedService = null;
         });
     }
   }
@@ -180,6 +186,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       this.commentsStateService.loading$.next(false);
       this.foldSubject$.next();
       this.selectedService = null;
+      this.selectedServiceForChild = null;
     }
   }
 
@@ -195,22 +202,23 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     } else {
       this.onReplyEmit.emit(this.parentId);
     }
-    this.selectedService = null;
+    this.selectedServiceForChild = null;
   }
 
-  protected toggleServicePicker(): void {
+  protected toggleServicePicker(isForChild?: boolean): void {
     this.isShowServicePicker = !this.isShowServicePicker;
     if (!this.isShowServicePicker) return;
     const modalSettings = this.defaultModalSettings as ModalOptions<AddServiceComponent>;
-    modalSettings.class = 'modal-lg';
-    modalSettings.initialState = { selectedService: this.selectedService };
+    modalSettings.class = 'modal-lg modal-dialog-centered';
+    modalSettings.initialState = { selectedService: isForChild ? this.selectedService : this.selectedServiceForChild };
 
     const modal = this._modalService.show(AddServiceComponent, modalSettings).content;
-    modal.onAdd.subscribe((service) => this.handleOnAddService(service));
+    modal.onAdd.subscribe((service) => this.handleOnAddService(service, isForChild));
   }
 
-  private handleOnAddService(service: AvailableServiceDto): void {
-    this.selectedService = service;
+  private handleOnAddService(service: AvailableServiceDto, isForChild?: boolean): void {
+    if (isForChild) this.selectedServiceForChild = service;
+    else this.selectedService = service;
     this.isShowServicePicker = false;
   }
 
@@ -223,6 +231,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   }
 
   doAddComment(): void {
+    this.showAddComment = true;
     setTimeout(() => this.addCommentEl?.nativeElement.focus());
   }
 }

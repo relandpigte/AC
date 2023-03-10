@@ -27,7 +27,7 @@ export class StudentPortalRouteGuard implements CanActivate, CanActivateChild {
       });
       this._eventsService.get(eventId)
         .subscribe(response => {
-          if (response.type === EventType.EventSeries && response.children && response.children.length) {
+          if (response.type === EventType.Series && response.children && response.children.length) {
             const seriesFirstEventId = response.children[0].id;
             if (seriesFirstEventId !== eventId) {
               if (this._appSession.userId === response.creatorUserId) {

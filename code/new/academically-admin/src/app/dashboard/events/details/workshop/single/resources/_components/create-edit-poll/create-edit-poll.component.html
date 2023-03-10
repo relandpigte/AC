@@ -14,7 +14,7 @@
           <div class="form-group">
             <label class="col-form-label">{{ 'Questions' | localize }}</label>
             <div class="question-list">
-              <div *ngFor="let question of model.workshopPollQuestions" class="question border rounded p-2">
+              <div *ngFor="let question of model.eventPollQuestions" class="question border rounded p-2">
                 <div class="row">
                   <div class="col-auto d-flex align-items-center">
                     <div class="drag-handle-container">
@@ -50,7 +50,7 @@
                 required #questionModel="ngModel" #questionEl />
               <abp-validation-summary [control]="questionModel" [controlEl]="questionEl"></abp-validation-summary>
             </div>
-            <div *ngFor="let option of currentQuestion.workshopPollQuestionOptions; let i = index" class="form-group">
+            <div *ngFor="let option of currentQuestion.eventPollQuestionOptions; let i = index" class="form-group">
               <label class="col-form-label" for="option_{{ i }}">{{ 'Option' | localize }} {{ i + 1 }}</label>
               <input [(ngModel)]="option.text" type="text" class="form-control" name="option_{{ i }}"
                 id="option_{{ i }}" required #optionModel="ngModel" #optionEl />
@@ -73,7 +73,7 @@
                     #minimumModel="ngModel" #minimumEl>
                     <option [value]="undefined">{{ 'SelectMinimum' | localize }}</option>
                     <option
-                      *ngFor="let item of createRange(currentQuestion.workshopPollQuestionOptions.length); let i = index">
+                      *ngFor="let item of createRange(currentQuestion.eventPollQuestionOptions.length); let i = index">
                       {{ i + 1 }}
                     </option>
                   </select>
@@ -87,7 +87,7 @@
                     #maximumModel="ngModel" #maximumEl>
                     <option [value]="undefined">{{ 'SelectMaximum' | localize }}</option>
                     <option
-                      *ngFor="let item of createRange(currentQuestion.workshopPollQuestionOptions.length); let i = index">
+                      *ngFor="let item of createRange(currentQuestion.eventPollQuestionOptions.length); let i = index">
                       {{ i + 1 }}
                     </option>
                   </select>
@@ -113,7 +113,7 @@
         {{ 'Cancel' | localize }}
       </button>
       <button
-        [disabled]="isLoading || !form.form.valid || !model.workshopPollQuestions || !model.workshopPollQuestions.length"
+        [disabled]="isLoading || !form.form.valid || !model.eventPollQuestions || !model.eventPollQuestions.length"
         type="button" class="btn btn-primary" (click)="onFormSubmit()">
         {{ 'Save' | localize }}
       </button>

@@ -1043,11 +1043,14 @@ export class ArticlesServiceProxy {
     /**
      * @param userIdFilter (optional) 
      * @param topic (optional) 
+     * @param categoryFilter (optional) 0 = Broadcast
+    
+    1 = Workshop
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getByTopic(userIdFilter: number | undefined, topic: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: ArticleDtoPagedResultDto; }> {
+    getByTopic(userIdFilter: number | undefined, topic: string | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: ArticleDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Articles/GetByTopic?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
@@ -1057,6 +1060,10 @@ export class ArticlesServiceProxy {
             throw new Error("The parameter 'topic' cannot be null.");
         else if (topic !== undefined)
             url_ += "Topic=" + encodeURIComponent("" + topic) + "&";
+        if (categoryFilter === null)
+            throw new Error("The parameter 'categoryFilter' cannot be null.");
+        else if (categoryFilter !== undefined)
+            url_ += "CategoryFilter=" + encodeURIComponent("" + categoryFilter) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -1132,11 +1139,14 @@ export class ArticlesServiceProxy {
     2 = Monthly
     
     3 = Aged30
+     * @param categoryFilter (optional) 0 = Broadcast
+    
+    1 = Workshop
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getByDates(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: ArticleDtoPagedResultDto; }> {
+    getByDates(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: ArticleDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Articles/GetByDates?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
@@ -1158,6 +1168,10 @@ export class ArticlesServiceProxy {
             throw new Error("The parameter 'grain' cannot be null.");
         else if (grain !== undefined)
             url_ += "Grain=" + encodeURIComponent("" + grain) + "&";
+        if (categoryFilter === null)
+            throw new Error("The parameter 'categoryFilter' cannot be null.");
+        else if (categoryFilter !== undefined)
+            url_ += "CategoryFilter=" + encodeURIComponent("" + categoryFilter) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -1223,16 +1237,23 @@ export class ArticlesServiceProxy {
 
     /**
      * @param userIdFilter (optional) 
+     * @param categoryFilter (optional) 0 = Broadcast
+    
+    1 = Workshop
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getByPopularity(userIdFilter: number | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: ArticleDtoPagedResultDto; }> {
+    getByPopularity(userIdFilter: number | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: ArticleDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Articles/GetByPopularity?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
         else if (userIdFilter !== undefined)
             url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (categoryFilter === null)
+            throw new Error("The parameter 'categoryFilter' cannot be null.");
+        else if (categoryFilter !== undefined)
+            url_ += "CategoryFilter=" + encodeURIComponent("" + categoryFilter) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -3209,11 +3230,14 @@ export class CoachingsServiceProxy {
     /**
      * @param userIdFilter (optional) 
      * @param topic (optional) 
+     * @param categoryFilter (optional) 0 = Broadcast
+    
+    1 = Workshop
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getByTopic(userIdFilter: number | undefined, topic: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CoachingDtoPagedResultDto; }> {
+    getByTopic(userIdFilter: number | undefined, topic: string | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CoachingDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Coachings/GetByTopic?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
@@ -3223,6 +3247,10 @@ export class CoachingsServiceProxy {
             throw new Error("The parameter 'topic' cannot be null.");
         else if (topic !== undefined)
             url_ += "Topic=" + encodeURIComponent("" + topic) + "&";
+        if (categoryFilter === null)
+            throw new Error("The parameter 'categoryFilter' cannot be null.");
+        else if (categoryFilter !== undefined)
+            url_ += "CategoryFilter=" + encodeURIComponent("" + categoryFilter) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -3298,11 +3326,14 @@ export class CoachingsServiceProxy {
     2 = Monthly
     
     3 = Aged30
+     * @param categoryFilter (optional) 0 = Broadcast
+    
+    1 = Workshop
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getByDates(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CoachingDtoPagedResultDto; }> {
+    getByDates(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CoachingDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Coachings/GetByDates?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
@@ -3324,6 +3355,10 @@ export class CoachingsServiceProxy {
             throw new Error("The parameter 'grain' cannot be null.");
         else if (grain !== undefined)
             url_ += "Grain=" + encodeURIComponent("" + grain) + "&";
+        if (categoryFilter === null)
+            throw new Error("The parameter 'categoryFilter' cannot be null.");
+        else if (categoryFilter !== undefined)
+            url_ += "CategoryFilter=" + encodeURIComponent("" + categoryFilter) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -3389,16 +3424,23 @@ export class CoachingsServiceProxy {
 
     /**
      * @param userIdFilter (optional) 
+     * @param categoryFilter (optional) 0 = Broadcast
+    
+    1 = Workshop
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getByPopularity(userIdFilter: number | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CoachingDtoPagedResultDto; }> {
+    getByPopularity(userIdFilter: number | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CoachingDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Coachings/GetByPopularity?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
         else if (userIdFilter !== undefined)
             url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (categoryFilter === null)
+            throw new Error("The parameter 'categoryFilter' cannot be null.");
+        else if (categoryFilter !== undefined)
+            url_ += "CategoryFilter=" + encodeURIComponent("" + categoryFilter) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -5883,11 +5925,14 @@ export class CoursesServiceProxy {
     /**
      * @param userIdFilter (optional) 
      * @param topic (optional) 
+     * @param categoryFilter (optional) 0 = Broadcast
+    
+    1 = Workshop
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getByTopic(userIdFilter: number | undefined, topic: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CourseDtoPagedResultDto; }> {
+    getByTopic(userIdFilter: number | undefined, topic: string | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CourseDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Courses/GetByTopic?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
@@ -5897,6 +5942,10 @@ export class CoursesServiceProxy {
             throw new Error("The parameter 'topic' cannot be null.");
         else if (topic !== undefined)
             url_ += "Topic=" + encodeURIComponent("" + topic) + "&";
+        if (categoryFilter === null)
+            throw new Error("The parameter 'categoryFilter' cannot be null.");
+        else if (categoryFilter !== undefined)
+            url_ += "CategoryFilter=" + encodeURIComponent("" + categoryFilter) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -5972,11 +6021,14 @@ export class CoursesServiceProxy {
     2 = Monthly
     
     3 = Aged30
+     * @param categoryFilter (optional) 0 = Broadcast
+    
+    1 = Workshop
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getByDates(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CourseDtoPagedResultDto; }> {
+    getByDates(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CourseDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Courses/GetByDates?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
@@ -5998,6 +6050,10 @@ export class CoursesServiceProxy {
             throw new Error("The parameter 'grain' cannot be null.");
         else if (grain !== undefined)
             url_ += "Grain=" + encodeURIComponent("" + grain) + "&";
+        if (categoryFilter === null)
+            throw new Error("The parameter 'categoryFilter' cannot be null.");
+        else if (categoryFilter !== undefined)
+            url_ += "CategoryFilter=" + encodeURIComponent("" + categoryFilter) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -6063,16 +6119,23 @@ export class CoursesServiceProxy {
 
     /**
      * @param userIdFilter (optional) 
+     * @param categoryFilter (optional) 0 = Broadcast
+    
+    1 = Workshop
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getByPopularity(userIdFilter: number | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CourseDtoPagedResultDto; }> {
+    getByPopularity(userIdFilter: number | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CourseDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Courses/GetByPopularity?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
         else if (userIdFilter !== undefined)
             url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (categoryFilter === null)
+            throw new Error("The parameter 'categoryFilter' cannot be null.");
+        else if (categoryFilter !== undefined)
+            url_ += "CategoryFilter=" + encodeURIComponent("" + categoryFilter) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -9656,11 +9719,14 @@ export class EventsServiceProxy {
     /**
      * @param userIdFilter (optional) 
      * @param topic (optional) 
+     * @param categoryFilter (optional) 0 = Broadcast
+    
+    1 = Workshop
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getByTopics(userIdFilter: number | undefined, topic: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: EventDtoPagedResultDto; }> {
+    getByTopics(userIdFilter: number | undefined, topic: string | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: EventDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Events/GetByTopics?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
@@ -9670,6 +9736,10 @@ export class EventsServiceProxy {
             throw new Error("The parameter 'topic' cannot be null.");
         else if (topic !== undefined)
             url_ += "Topic=" + encodeURIComponent("" + topic) + "&";
+        if (categoryFilter === null)
+            throw new Error("The parameter 'categoryFilter' cannot be null.");
+        else if (categoryFilter !== undefined)
+            url_ += "CategoryFilter=" + encodeURIComponent("" + categoryFilter) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -9745,11 +9815,14 @@ export class EventsServiceProxy {
     2 = Monthly
     
     3 = Aged30
+     * @param categoryFilter (optional) 0 = Broadcast
+    
+    1 = Workshop
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getByDates(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: EventDtoPagedResultDto; }> {
+    getByDates(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: EventDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Events/GetByDates?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
@@ -9771,6 +9844,10 @@ export class EventsServiceProxy {
             throw new Error("The parameter 'grain' cannot be null.");
         else if (grain !== undefined)
             url_ += "Grain=" + encodeURIComponent("" + grain) + "&";
+        if (categoryFilter === null)
+            throw new Error("The parameter 'categoryFilter' cannot be null.");
+        else if (categoryFilter !== undefined)
+            url_ += "CategoryFilter=" + encodeURIComponent("" + categoryFilter) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -9836,16 +9913,23 @@ export class EventsServiceProxy {
 
     /**
      * @param userIdFilter (optional) 
+     * @param categoryFilter (optional) 0 = Broadcast
+    
+    1 = Workshop
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getByPopularity(userIdFilter: number | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: EventDtoPagedResultDto; }> {
+    getByPopularity(userIdFilter: number | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: EventDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Events/GetByPopularity?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
         else if (userIdFilter !== undefined)
             url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (categoryFilter === null)
+            throw new Error("The parameter 'categoryFilter' cannot be null.");
+        else if (categoryFilter !== undefined)
+            url_ += "CategoryFilter=" + encodeURIComponent("" + categoryFilter) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -9914,11 +9998,14 @@ export class EventsServiceProxy {
      * @param eventScheduleFilter (optional) 1 = Upcoming
     
     2 = Past
+     * @param categoryFilter (optional) 0 = Broadcast
+    
+    1 = Workshop
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getEventSchedules(userIdFilter: number | undefined, eventScheduleFilter: EventScheduleFilter | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<EventDtoPagedResultDto> {
+    getEventSchedules(userIdFilter: number | undefined, eventScheduleFilter: EventScheduleFilter | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<EventDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Events/GetEventSchedules?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
@@ -9928,6 +10015,10 @@ export class EventsServiceProxy {
             throw new Error("The parameter 'eventScheduleFilter' cannot be null.");
         else if (eventScheduleFilter !== undefined)
             url_ += "EventScheduleFilter=" + encodeURIComponent("" + eventScheduleFilter) + "&";
+        if (categoryFilter === null)
+            throw new Error("The parameter 'categoryFilter' cannot be null.");
+        else if (categoryFilter !== undefined)
+            url_ += "CategoryFilter=" + encodeURIComponent("" + categoryFilter) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -11146,11 +11237,14 @@ export class EventsServiceProxy {
      * @param statusFilter (optional) 0 = Draft
     
     1 = Published
+     * @param categoryFilter (optional) 0 = Broadcast
+    
+    1 = Workshop
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAll(parentIdFilter: string | undefined, userIdFilter: number | undefined, searchFilter: string | undefined, visible: boolean | undefined, open: boolean | undefined, statusFilter: EventStatus | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<EventDtoPagedResultDto> {
+    getAll(parentIdFilter: string | undefined, userIdFilter: number | undefined, searchFilter: string | undefined, visible: boolean | undefined, open: boolean | undefined, statusFilter: EventStatus | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<EventDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Events/GetAll?";
         if (parentIdFilter === null)
             throw new Error("The parameter 'parentIdFilter' cannot be null.");
@@ -11176,6 +11270,10 @@ export class EventsServiceProxy {
             throw new Error("The parameter 'statusFilter' cannot be null.");
         else if (statusFilter !== undefined)
             url_ += "StatusFilter=" + encodeURIComponent("" + statusFilter) + "&";
+        if (categoryFilter === null)
+            throw new Error("The parameter 'categoryFilter' cannot be null.");
+        else if (categoryFilter !== undefined)
+            url_ += "CategoryFilter=" + encodeURIComponent("" + categoryFilter) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -11494,11 +11592,14 @@ export class EventsWorkshopsServiceProxy {
      * @param statusFilter (optional) 0 = Draft
     
     1 = Published
+     * @param categoryFilter (optional) 0 = Broadcast
+    
+    1 = Workshop
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAll(parentIdFilter: string | undefined, userIdFilter: number | undefined, searchFilter: string | undefined, visible: boolean | undefined, open: boolean | undefined, statusFilter: EventStatus | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<ObjectPagedResultDto> {
+    getAll(parentIdFilter: string | undefined, userIdFilter: number | undefined, searchFilter: string | undefined, visible: boolean | undefined, open: boolean | undefined, statusFilter: EventStatus | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<ObjectPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/EventsWorkshops/GetAll?";
         if (parentIdFilter === null)
             throw new Error("The parameter 'parentIdFilter' cannot be null.");
@@ -11524,6 +11625,10 @@ export class EventsWorkshopsServiceProxy {
             throw new Error("The parameter 'statusFilter' cannot be null.");
         else if (statusFilter !== undefined)
             url_ += "StatusFilter=" + encodeURIComponent("" + statusFilter) + "&";
+        if (categoryFilter === null)
+            throw new Error("The parameter 'categoryFilter' cannot be null.");
+        else if (categoryFilter !== undefined)
+            url_ += "CategoryFilter=" + encodeURIComponent("" + categoryFilter) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -13269,12 +13374,13 @@ export class PostsServiceProxy {
     /**
      * @param keyword (optional) 
      * @param take (optional) 
+     * @param creatorUserId (optional) 
      * @param sorting (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAvailableServices(keyword: string | undefined, take: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<AvailableServiceDtoPagedResultDto> {
+    getAvailableServices(keyword: string | undefined, take: number | undefined, creatorUserId: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<AvailableServiceDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Posts/GetAvailableServices?";
         if (keyword === null)
             throw new Error("The parameter 'keyword' cannot be null.");
@@ -13284,6 +13390,10 @@ export class PostsServiceProxy {
             throw new Error("The parameter 'take' cannot be null.");
         else if (take !== undefined)
             url_ += "Take=" + encodeURIComponent("" + take) + "&";
+        if (creatorUserId === null)
+            throw new Error("The parameter 'creatorUserId' cannot be null.");
+        else if (creatorUserId !== undefined)
+            url_ += "CreatorUserId=" + encodeURIComponent("" + creatorUserId) + "&";
         if (sorting === null)
             throw new Error("The parameter 'sorting' cannot be null.");
         else if (sorting !== undefined)
@@ -26936,11 +27046,14 @@ export class VideosServiceProxy {
     /**
      * @param userIdFilter (optional) 
      * @param topic (optional) 
+     * @param categoryFilter (optional) 0 = Broadcast
+    
+    1 = Workshop
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getByTopic(userIdFilter: number | undefined, topic: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: VideoDtoPagedResultDto; }> {
+    getByTopic(userIdFilter: number | undefined, topic: string | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: VideoDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Videos/GetByTopic?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
@@ -26950,6 +27063,10 @@ export class VideosServiceProxy {
             throw new Error("The parameter 'topic' cannot be null.");
         else if (topic !== undefined)
             url_ += "Topic=" + encodeURIComponent("" + topic) + "&";
+        if (categoryFilter === null)
+            throw new Error("The parameter 'categoryFilter' cannot be null.");
+        else if (categoryFilter !== undefined)
+            url_ += "CategoryFilter=" + encodeURIComponent("" + categoryFilter) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -27025,11 +27142,14 @@ export class VideosServiceProxy {
     2 = Monthly
     
     3 = Aged30
+     * @param categoryFilter (optional) 0 = Broadcast
+    
+    1 = Workshop
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getByDates(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: VideoDtoPagedResultDto; }> {
+    getByDates(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: VideoDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Videos/GetByDates?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
@@ -27051,6 +27171,10 @@ export class VideosServiceProxy {
             throw new Error("The parameter 'grain' cannot be null.");
         else if (grain !== undefined)
             url_ += "Grain=" + encodeURIComponent("" + grain) + "&";
+        if (categoryFilter === null)
+            throw new Error("The parameter 'categoryFilter' cannot be null.");
+        else if (categoryFilter !== undefined)
+            url_ += "CategoryFilter=" + encodeURIComponent("" + categoryFilter) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -27116,16 +27240,23 @@ export class VideosServiceProxy {
 
     /**
      * @param userIdFilter (optional) 
+     * @param categoryFilter (optional) 0 = Broadcast
+    
+    1 = Workshop
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getByPopularity(userIdFilter: number | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: VideoDtoPagedResultDto; }> {
+    getByPopularity(userIdFilter: number | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: VideoDtoPagedResultDto; }> {
         let url_ = this.baseUrl + "/api/services/app/Videos/GetByPopularity?";
         if (userIdFilter === null)
             throw new Error("The parameter 'userIdFilter' cannot be null.");
         else if (userIdFilter !== undefined)
             url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (categoryFilter === null)
+            throw new Error("The parameter 'categoryFilter' cannot be null.");
+        else if (categoryFilter !== undefined)
+            url_ += "CategoryFilter=" + encodeURIComponent("" + categoryFilter) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -34037,6 +34168,7 @@ export interface ICreateEditUserEducationDto {
 
 export class CreateEventDto implements ICreateEventDto {
     name: string | undefined;
+    category: EventCategory;
     type: EventType;
     parentId: string | undefined;
 
@@ -34052,6 +34184,7 @@ export class CreateEventDto implements ICreateEventDto {
     init(_data?: any) {
         if (_data) {
             this.name = _data["name"];
+            this.category = _data["category"];
             this.type = _data["type"];
             this.parentId = _data["parentId"];
         }
@@ -34067,6 +34200,7 @@ export class CreateEventDto implements ICreateEventDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
+        data["category"] = this.category;
         data["type"] = this.type;
         data["parentId"] = this.parentId;
         return data; 
@@ -34082,6 +34216,7 @@ export class CreateEventDto implements ICreateEventDto {
 
 export interface ICreateEventDto {
     name: string | undefined;
+    category: EventCategory;
     type: EventType;
     parentId: string | undefined;
 }
@@ -36158,10 +36293,17 @@ export enum EventAttributes {
     RTSpecialName = 1024,
 }
 
+/** 0 = Broadcast 1 = Workshop */
+export enum EventCategory {
+    Broadcast = 0,
+    Workshop = 1,
+}
+
 export class EventDto implements IEventDto {
     id: string;
     creationTime: moment.Moment;
     creatorUserId: number;
+    category: EventCategory;
     type: EventType;
     status: EventStatus;
     parentId: string | undefined;
@@ -36251,6 +36393,7 @@ export class EventDto implements IEventDto {
     audienceEnableOffersTabDisplayNoOfPurchases: boolean;
     audienceEnableHandoutsTab: boolean;
     autoAdmitAttendees: boolean;
+    numberOfAttendees: number | undefined;
     thumbnailImageUrl: string | undefined;
     parent: EventDto;
     thumbnailDocument: DocumentDto;
@@ -36273,6 +36416,7 @@ export class EventDto implements IEventDto {
             this.id = _data["id"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.creatorUserId = _data["creatorUserId"];
+            this.category = _data["category"];
             this.type = _data["type"];
             this.status = _data["status"];
             this.parentId = _data["parentId"];
@@ -36362,6 +36506,7 @@ export class EventDto implements IEventDto {
             this.audienceEnableOffersTabDisplayNoOfPurchases = _data["audienceEnableOffersTabDisplayNoOfPurchases"];
             this.audienceEnableHandoutsTab = _data["audienceEnableHandoutsTab"];
             this.autoAdmitAttendees = _data["autoAdmitAttendees"];
+            this.numberOfAttendees = _data["numberOfAttendees"];
             this.thumbnailImageUrl = _data["thumbnailImageUrl"];
             this.parent = _data["parent"] ? EventDto.fromJS(_data["parent"]) : <any>undefined;
             this.thumbnailDocument = _data["thumbnailDocument"] ? DocumentDto.fromJS(_data["thumbnailDocument"]) : <any>undefined;
@@ -36388,6 +36533,7 @@ export class EventDto implements IEventDto {
         data["id"] = this.id;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["creatorUserId"] = this.creatorUserId;
+        data["category"] = this.category;
         data["type"] = this.type;
         data["status"] = this.status;
         data["parentId"] = this.parentId;
@@ -36477,6 +36623,7 @@ export class EventDto implements IEventDto {
         data["audienceEnableOffersTabDisplayNoOfPurchases"] = this.audienceEnableOffersTabDisplayNoOfPurchases;
         data["audienceEnableHandoutsTab"] = this.audienceEnableHandoutsTab;
         data["autoAdmitAttendees"] = this.autoAdmitAttendees;
+        data["numberOfAttendees"] = this.numberOfAttendees;
         data["thumbnailImageUrl"] = this.thumbnailImageUrl;
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         data["thumbnailDocument"] = this.thumbnailDocument ? this.thumbnailDocument.toJSON() : <any>undefined;
@@ -36503,6 +36650,7 @@ export interface IEventDto {
     id: string;
     creationTime: moment.Moment;
     creatorUserId: number;
+    category: EventCategory;
     type: EventType;
     status: EventStatus;
     parentId: string | undefined;
@@ -36592,6 +36740,7 @@ export interface IEventDto {
     audienceEnableOffersTabDisplayNoOfPurchases: boolean;
     audienceEnableHandoutsTab: boolean;
     autoAdmitAttendees: boolean;
+    numberOfAttendees: number | undefined;
     thumbnailImageUrl: string | undefined;
     parent: EventDto;
     thumbnailDocument: DocumentDto;
@@ -37622,10 +37771,10 @@ export enum EventStatus {
     Published = 1,
 }
 
-/** 0 = SingleEvent 1 = EventSeries */
+/** 0 = Single 1 = Series */
 export enum EventType {
-    SingleEvent = 0,
-    EventSeries = 1,
+    Single = 0,
+    Series = 1,
 }
 
 export class EventUserDto implements IEventUserDto {
@@ -47492,6 +47641,7 @@ export class UpdateEventSettingsDto implements IUpdateEventSettingsDto {
     audienceEnableOffersTab: boolean;
     audienceEnableOffersTabDisplayNoOfPurchases: boolean;
     audienceEnableHandoutsTab: boolean;
+    numberOfAttendees: number | undefined;
 
     constructor(data?: IUpdateEventSettingsDto) {
         if (data) {
@@ -47583,6 +47733,7 @@ export class UpdateEventSettingsDto implements IUpdateEventSettingsDto {
             this.audienceEnableOffersTab = _data["audienceEnableOffersTab"];
             this.audienceEnableOffersTabDisplayNoOfPurchases = _data["audienceEnableOffersTabDisplayNoOfPurchases"];
             this.audienceEnableHandoutsTab = _data["audienceEnableHandoutsTab"];
+            this.numberOfAttendees = _data["numberOfAttendees"];
         }
     }
 
@@ -47674,6 +47825,7 @@ export class UpdateEventSettingsDto implements IUpdateEventSettingsDto {
         data["audienceEnableOffersTab"] = this.audienceEnableOffersTab;
         data["audienceEnableOffersTabDisplayNoOfPurchases"] = this.audienceEnableOffersTabDisplayNoOfPurchases;
         data["audienceEnableHandoutsTab"] = this.audienceEnableHandoutsTab;
+        data["numberOfAttendees"] = this.numberOfAttendees;
         return data; 
     }
 
@@ -47765,6 +47917,7 @@ export interface IUpdateEventSettingsDto {
     audienceEnableOffersTab: boolean;
     audienceEnableOffersTabDisplayNoOfPurchases: boolean;
     audienceEnableHandoutsTab: boolean;
+    numberOfAttendees: number | undefined;
 }
 
 export class UpdateForumDto implements IUpdateForumDto {

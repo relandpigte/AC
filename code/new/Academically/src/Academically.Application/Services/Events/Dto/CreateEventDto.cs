@@ -9,6 +9,7 @@ namespace Academically.Services.Events.Dto
     public class CreateEventDto
     {
         public string Name { get; set; }
+        public EventCategory Category { get; set; }
         public EventType Type { get; set; }
         public Guid? ParentId { get; set; }
     }

@@ -1,11 +1,11 @@
-import { Component, OnInit, Injector } from '@angular/core';
-import { ModalOptions, BsModalService } from 'ngx-bootstrap/modal';
-import { UploadHandoutComponent } from '../upload-handout/upload-handout.component';
-import { WorkshopDto, WorkshopResourceDto, WorkshopResourcesServiceProxy } from '@shared/service-proxies/service-proxies';
-import { WorkshopService } from '@app/dashboard/events/_services/workshop.service';
-import { takeUntil, finalize } from 'rxjs/operators';
-import { PagedListingComponentBase, PagedAndSortedRequestDto } from '@shared/paged-listing-component-base';
+import { Component, Injector, OnInit } from '@angular/core';
+import { EventService } from '@app/dashboard/events/_services/event.service';
 import { UploadService } from '@app/_shared/services/upload.service';
+import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
+import { EventDto, EventResourceDto, EventResourcesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { finalize, takeUntil } from 'rxjs/operators';
+import { UploadHandoutComponent } from '../upload-handout/upload-handout.component';
 
 class PagedWorkshopResourceRequestDto extends PagedAndSortedRequestDto {
   workshopIdFilter: string;
@@ -18,20 +18,20 @@ class PagedWorkshopResourceRequestDto extends PagedAndSortedRequestDto {
   templateUrl: './handouts.component.html',
   styleUrls: ['./handouts.component.less']
 })
-export class HandoutsComponent extends PagedListingComponentBase<WorkshopResourceDto> implements OnInit {
-  workshop = new WorkshopDto();
-  workshopResources: WorkshopResourceDto[] = [];
+export class HandoutsComponent extends PagedListingComponentBase<EventResourceDto> implements OnInit {
+  workshop = new EventDto();
+  workshopResources: EventResourceDto[] = [];
   isLoading = false;
 
   constructor(
     injector: Injector,
     private _modalService: BsModalService,
-    private _workshopService: WorkshopService,
+    private _workshopService: EventService,
     private _uploadService: UploadService,
-    private _workshopResourcesService: WorkshopResourcesServiceProxy
+    private _workshopResourcesService: EventResourcesServiceProxy
   ) {
     super(injector);
-    this._workshopService.workshopCreated$
+    this._workshopService.eventCreated$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         if (response) {
@@ -55,7 +55,7 @@ export class HandoutsComponent extends PagedListingComponentBase<WorkshopResourc
       });
   }
 
-  onDeleteClick(workshopResource: WorkshopResourceDto): void {
+  onDeleteClick(workshopResource: EventResourceDto): void {
     this.message.confirm(this.l('DeleteWorkshopResourceConfirmationMessage'), undefined, (result => {
       if (result) {
         this.isLoading = true;

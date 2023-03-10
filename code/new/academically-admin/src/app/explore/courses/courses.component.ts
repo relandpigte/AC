@@ -106,7 +106,7 @@ export class ExploreCoursesComponent extends AppComponentBase implements OnInit 
   }
 
   private loadGroupedByTopics(currentCount: number, topic?: string): void {
-    this._coursesService.getByTopic(this.appSession.userId, topic, currentCount, this.itemsPerGroup)
+    this._coursesService.getByTopic(this.appSession.userId, topic, undefined, currentCount, this.itemsPerGroup)
     .pipe(takeUntil(this.destroyed$))
     .pipe(finalize(() => this.isLoading = false))
     .subscribe(courses => {
@@ -120,13 +120,12 @@ export class ExploreCoursesComponent extends AppComponentBase implements OnInit 
 
   private loadGroupedByDates(currentCount: number, start?: moment.Moment, moving?: moment.Moment, end?: moment.Moment): void {
     this.isLoading = true;
-    this._coursesService.getByDates(this.appSession.userId, start, moving, end, DateGrains.Aged30, currentCount, this.itemsPerGroup)
+    this._coursesService.getByDates(this.appSession.userId, start, moving, end, DateGrains.Aged30, undefined, currentCount, this.itemsPerGroup)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoading = false))
       .subscribe(groupedCourses => {
-        Object.keys(groupedCourses).forEach(range => {
+        Object.keys(groupedCourses ?? {}).forEach(range => {
           const [startDate] = range.split(' - ');
-          console.log('GroupedCourses ----> ', groupedCourses[range]);
           if (moment().diff(moment(startDate), 'months')) {
             if (currentCount == 0) {
               this.latestStartDate = moment(startDate);
@@ -159,7 +158,7 @@ export class ExploreCoursesComponent extends AppComponentBase implements OnInit 
 
   private loadPopular(currentCount: number): void {
     this.isPopularLoading = true;
-    this._coursesService.getByPopularity(this.appSession.userId, currentCount, this.popularItems)
+    this._coursesService.getByPopularity(this.appSession.userId, undefined, currentCount, this.popularItems)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isPopularLoading = false))
       .subscribe(groupedCourses => {

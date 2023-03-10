@@ -1,7 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Academically.Domain.Enums;
 
 namespace Academically.Services.Explore.Dto
 {
@@ -9,5 +7,6 @@ namespace Academically.Services.Explore.Dto
     {
         public long? UserIdFilter { get; set; }
         public string Topic { get; set; }
+        public EventCategory? CategoryFilter { get; set; }
     }
 }

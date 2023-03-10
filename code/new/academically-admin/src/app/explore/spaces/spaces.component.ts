@@ -33,15 +33,14 @@ export class ExploreSpacesComponent extends AppComponentBase implements OnInit {
 
   private generateData(count?: number, type?: number): any[] {
     let data = Array(count).fill([]).map(() => {
-      const dataType = this.randomNonZero(6);
+      const dataType = this.randomNonZero(5);
       switch(type ?? dataType) {
         case 1: return this.generateRandomEvent();
         case 2: return this.generateRandomArticle();
         case 3: return this.generateRandomCoaching();
         case 4: return this.generateRandomCourse();
-        case 5: return this.generateRandomWorkshop();
-        case 6: return this.generateRandomTutorial();
-        case 7: return this.generateRandomSpace();
+        case 5: return this.generateRandomTutorial();
+        case 6: return this.generateRandomSpace();
       }
     });
     return data;

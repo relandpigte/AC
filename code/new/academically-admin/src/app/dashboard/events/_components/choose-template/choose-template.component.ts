@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { EventType, WorkshopType } from '@shared/service-proxies/service-proxies';
+import { EventType } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { EventsTemplate } from '../../_models/events-template';
 
@@ -19,13 +19,13 @@ export class ChooseTemplateComponent implements OnInit {
 
   ngOnInit(): void {
     const singleEventTemplate = new EventsTemplate();
-    singleEventTemplate.type = EventType.SingleEvent;
+    singleEventTemplate.type = EventType.Single;
     singleEventTemplate.name = `Single${ this.type }`;
     singleEventTemplate.description = `Single${ this.type }Description`;
     this.templates.push(singleEventTemplate);
 
     const eventSeriesTemplate = new EventsTemplate();
-    eventSeriesTemplate.type = EventType.EventSeries;
+    eventSeriesTemplate.type = EventType.Series;
     eventSeriesTemplate.name = `${ this.type }Series`;
     eventSeriesTemplate.description = `${ this.type }SeriesDescription`;
     this.templates.push(eventSeriesTemplate);

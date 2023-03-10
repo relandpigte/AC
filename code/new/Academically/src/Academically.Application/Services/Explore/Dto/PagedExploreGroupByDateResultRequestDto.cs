@@ -13,5 +13,6 @@ namespace Academically.Services.Explore.Dto
         public DateTime? MovingDate { get; set; }
         public DateTime? EndDate { get; set; }
         public DateGrains? Grain { get; set; }
+        public EventCategory? CategoryFilter { get; set; }
     }
 }

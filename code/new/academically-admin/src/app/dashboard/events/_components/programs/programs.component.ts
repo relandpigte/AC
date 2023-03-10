@@ -1,15 +1,15 @@
 import { Component, Injector, OnInit } from '@angular/core';
-import { WorkshopService } from '@app/dashboard/events/_services/workshop.service';
 import { UploadService } from '@app/_shared/services/upload.service';
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
-import { WorkshopStatus, WorkshopDto, WorkshopType, WorkshopsServiceProxy, WorkshopDtoPagedResultDto } from '@shared/service-proxies/service-proxies';
+import { EventCategory, EventDto, EventDtoPagedResultDto, EventsServiceProxy, EventStatus, EventType } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
-import { takeUntil, finalize } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
+import { EventService } from '../../_services/event.service';
 
 class PagedWorkshopRequestDto extends PagedAndSortedRequestDto {
   userIdFilter: number;
   searchFilter?: string;
-  statusFilter?: WorkshopStatus;
+  statusFilter?: EventStatus;
 }
 
 @Component({
@@ -17,25 +17,25 @@ class PagedWorkshopRequestDto extends PagedAndSortedRequestDto {
   templateUrl: './programs.component.html',
   styleUrls: ['./programs.component.less']
 })
-export class ProgramsComponent extends PagedListingComponentBase<WorkshopDto> implements OnInit {
+export class ProgramsComponent extends PagedListingComponentBase<EventDto> implements OnInit {
   nonce: number = Math.floor(Math.random() * 100) + 1;
 
-  workshops: WorkshopDto[] = [];
+  workshops: EventDto[] = [];
   searchFilter?: string;
   statusFilter?: number;
   thumbnailUrls: string[] = [];
 
-  Status = WorkshopStatus;
-  WorkshopType = WorkshopType;
+  Status = EventStatus;
+  WorkshopType = EventType;
 
   constructor(
     injector: Injector,
-    private _workshopsService: WorkshopsServiceProxy,
-    private _workshopService: WorkshopService,
+    private _workshopsService: EventsServiceProxy,
+    private _workshopService: EventService,
     private _uploadService: UploadService,
   ) {
     super(injector);
-    this._workshopService.workshopCreated$.subscribe(workshop => {
+    this._workshopService.eventCreated$.subscribe(workshop => {
       if (workshop) {
         this.refresh();
       }
@@ -78,7 +78,10 @@ export class ProgramsComponent extends PagedListingComponentBase<WorkshopDto> im
         undefined,
         request.userIdFilter,
         request.searchFilter,
+        undefined,
+        undefined,
         request.statusFilter,
+        undefined,
         request.skipCount,
         request.maxResultCount
       )
@@ -87,7 +90,7 @@ export class ProgramsComponent extends PagedListingComponentBase<WorkshopDto> im
           finishedCallback();
         })
       )
-      .subscribe((result: WorkshopDtoPagedResultDto) => {
+      .subscribe((result: EventDtoPagedResultDto) => {
         this.workshops = result.items;
         _.each(this.workshops, workshop => {
           this.thumbnailUrls[workshop.id] = this._uploadService.getFileUrl(workshop.thumbnailDocument);

@@ -1,10 +1,10 @@
-import { Component, OnInit, Injector, Output, EventEmitter, Input } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
-import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
-import { WorkshopResourcesServiceProxy, CreateWorkshopResourceDto, FileParameter, DocumentType, WorkshopDto, WorkshopResourceType } from '@shared/service-proxies/service-proxies';
+import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { UploadService } from '@app/_shared/services/upload.service';
-import { takeUntil, finalize } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/app-component-base';
+import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
+import { CreateEventResourceDto, DocumentType, EventResourcesServiceProxy, EventResourceType, FileParameter } from '@shared/service-proxies/service-proxies';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-upload-presentation-material',
@@ -15,17 +15,17 @@ export class UploadPresentationMaterialComponent extends AppComponentBase implem
   @Input() workshopId: string;
   @Output() modelSaved = new EventEmitter();
 
-  model = new CreateWorkshopResourceDto();
+  model = new CreateEventResourceDto();
   allowedPresentationMaterialExtension: string[];
   isLoading = false;
   document: FileParameter;
 
-  WorkshopResourceType = WorkshopResourceType;
+  WorkshopResourceType = EventResourceType;
 
   constructor(
     injector: Injector,
     private _modal: BsModalRef,
-    private _workshopResourcesService: WorkshopResourcesServiceProxy,
+    private _workshopResourcesService: EventResourcesServiceProxy,
     private _uploadService: UploadService,
   ) {
     super(injector);
@@ -38,9 +38,9 @@ export class UploadPresentationMaterialComponent extends AppComponentBase implem
     this._modal.hide();
   }
 
-  onTypeClick(type: WorkshopResourceType): void {
+  onTypeClick(type: EventResourceType): void {
     this.model.type = type;
-    if (type === WorkshopResourceType.Slides) {
+    if (type === EventResourceType.Slides) {
       this.allowedPresentationMaterialExtension = fileUploadConfiguration.powerPointExtensions;
     } else {
       this.allowedPresentationMaterialExtension = fileUploadConfiguration.videoExtensions;
@@ -54,11 +54,11 @@ export class UploadPresentationMaterialComponent extends AppComponentBase implem
 
   onFormSubmit(): void {
     this.isLoading = true;
-    this.model.workshopId = this.workshopId;
+    this.model.eventId = this.workshopId;
     this._workshopResourcesService.create(this.model)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
-        this._uploadService.upload(this.document.data, DocumentType.WorkshopResource, response.id)
+        this._uploadService.upload(this.document.data, DocumentType.EventResource, response.id)
           .pipe(
             takeUntil(this.destroyed$),
             finalize(() => {

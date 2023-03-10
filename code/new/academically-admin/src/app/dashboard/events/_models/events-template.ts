@@ -1,7 +1,7 @@
-import { EventType, WorkshopType } from '@shared/service-proxies/service-proxies';
+import { EventType } from '@shared/service-proxies/service-proxies';
 
 export class EventsTemplate {
-  type: WorkshopType | EventType;
+  type: EventType;
   name: string;
   description: string;
 }

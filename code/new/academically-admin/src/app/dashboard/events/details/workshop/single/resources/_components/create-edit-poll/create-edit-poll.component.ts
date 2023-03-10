@@ -1,9 +1,9 @@
-import { Component, OnInit, Injector, Output, EventEmitter, Input } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { BsModalRef, ModalOptions, BsModalService } from 'ngx-bootstrap/modal';
+import { CreateEventPollDto, EventPollQuestionDto, EventPollQuestionOptionDto, EventPollQuestionType, EventPollsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { SelectPollQuestionComponent } from '../select-poll-question/select-poll-question.component';
-import { WorkshopPollQuestionType, WorkshopPollQuestionDto, WorkshopPollQuestionOptionDto, WorkshopPollsServiceProxy, CreateWorkshopPollDto } from '@shared/service-proxies/service-proxies';
-import { takeUntil, finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-edit-poll',
@@ -14,24 +14,24 @@ export class CreateEditPollComponent extends AppComponentBase implements OnInit 
   @Input() workshopId: string;
   @Output() modelSaved = new EventEmitter();
 
-  model = new CreateWorkshopPollDto();
-  currentQuestion: WorkshopPollQuestionDto;
+  model = new CreateEventPollDto();
+  currentQuestion: EventPollQuestionDto;
   isLoading = false;
 
-  WorkshopPollQuestionType = WorkshopPollQuestionType;
+  WorkshopPollQuestionType = EventPollQuestionType;
 
   constructor(
     injector: Injector,
     private _modal: BsModalRef,
     private _modalService: BsModalService,
-    private _workshopPollsService: WorkshopPollsServiceProxy,
+    private _workshopPollsService: EventPollsServiceProxy,
   ) {
     super(injector);
-    this.model.workshopPollQuestions = [];
+    this.model.eventPollQuestions = [];
   }
 
   ngOnInit(): void {
-    this.model.workshopId = this.workshopId;
+    this.model.eventId = this.workshopId;
   }
 
   onCloseClick(): void {
@@ -60,23 +60,23 @@ export class CreateEditPollComponent extends AppComponentBase implements OnInit 
     modal.typeSelected
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
-        const newQuestion = new WorkshopPollQuestionDto();
+        const newQuestion = new EventPollQuestionDto();
         newQuestion.type = response;
-        newQuestion.workshopPollQuestionOptions = [];
-        this.model.workshopPollQuestions.push(newQuestion);
+        newQuestion.eventPollQuestionOptions = [];
+        this.model.eventPollQuestions.push(newQuestion);
         this.currentQuestion = newQuestion;
       });
   }
 
-  onEditQuestionClick(question: WorkshopPollQuestionDto): void {
+  onEditQuestionClick(question: EventPollQuestionDto): void {
     this.currentQuestion = question;
-    if (!this.currentQuestion.workshopPollQuestionOptions) {
-      this.currentQuestion.workshopPollQuestionOptions = [];
+    if (!this.currentQuestion.eventPollQuestionOptions) {
+      this.currentQuestion.eventPollQuestionOptions = [];
     }
   }
 
   onAddOptionClick(): void {
-    const newOption = new WorkshopPollQuestionOptionDto();
-    this.currentQuestion.workshopPollQuestionOptions.push(newOption);
+    const newOption = new EventPollQuestionOptionDto();
+    this.currentQuestion.eventPollQuestionOptions.push(newOption);
   }
 }

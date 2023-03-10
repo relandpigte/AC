@@ -49,7 +49,7 @@ export class SeriesComponent extends AppComponentBase implements OnInit {
 
   onAddEventClick(): void {
     const newEvent = new CreateEventDto();
-    newEvent.type = EventType.SingleEvent;
+    newEvent.type = EventType.Single;
     newEvent.name = '';
     newEvent.parentId = this.parentId;
 

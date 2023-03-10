@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { EventService } from '@app/dashboard/events/_services/event.service';
 import { UploadService } from '@app/_shared/services/upload.service';
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
-import { EventDto, EventStatus, EventType, EventsServiceProxy, EventDtoPagedResultDto } from '@shared/service-proxies/service-proxies';
+import { EventDto, EventStatus, EventType, EventsServiceProxy, EventDtoPagedResultDto, EventCategory } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import { finalize } from 'rxjs/operators';
 
@@ -70,6 +70,7 @@ export class BroadcastsComponent extends PagedListingComponentBase<EventDto> imp
         undefined,
         undefined,
         request.statusFilter,
+        EventCategory.Broadcast,
         request.skipCount,
         request.maxResultCount
       )
