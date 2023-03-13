@@ -7,7 +7,6 @@ using Academically.Services.Coachings.Dto;
 using Academically.Services.Courses.Dto;
 using Academically.Services.Events.Dto;
 using Academically.Services.Videos.Dto;
-using Academically.Services.Workshops.Dto;
 using Academically.Users.Dto;
 using System;
 using System.Collections.Generic;
@@ -51,8 +50,5 @@ namespace Academically.Services.Comments.Dto
 
         [NotMapped]
         public CoachingDto Coaching { get; set; }
-
-        [NotMapped]
-        public WorkshopDto Workshop { get; set; }
     }
 }

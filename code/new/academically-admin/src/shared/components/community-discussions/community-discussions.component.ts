@@ -223,11 +223,11 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   }
 
   protected hasAttachedService(comment: CommentDto): boolean {
-    return !!(comment?.article ?? comment?.coaching ?? comment?.course ?? comment?.event ?? comment?.video ?? comment?.workshop);
+    return !!(comment?.article ?? comment?.coaching ?? comment?.course ?? comment?.event ?? comment?.video);
   }
 
   protected getAttachedService(comment: CommentDto): any {
-    return comment?.article ?? comment?.coaching ?? comment?.course ?? comment?.event ?? comment?.video ?? comment?.workshop;
+    return comment?.article ?? comment?.coaching ?? comment?.course ?? comment?.event ?? comment?.video;
   }
 
   doAddComment(): void {

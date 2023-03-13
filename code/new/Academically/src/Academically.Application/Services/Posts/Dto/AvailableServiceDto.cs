@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace Academically.Services.Posts.Dto
 {
-    [AutoMap(typeof(Article), typeof(Event), typeof(Course), typeof(Video), typeof(Coaching), typeof(Workshop))]
+    [AutoMap(typeof(Article), typeof(Event), typeof(Course), typeof(Video), typeof(Coaching))]
     public class AvailableServiceDto : FullAuditedEntityDto<Guid>
     {
         #region Event

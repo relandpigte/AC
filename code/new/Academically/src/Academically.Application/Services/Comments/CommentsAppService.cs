@@ -11,7 +11,6 @@ using Academically.Services.Comments.Dto;
 using Academically.Services.Courses.Dto;
 using Academically.Services.Events.Dto;
 using Academically.Services.Videos.Dto;
-using Academically.Services.Workshops.Dto;
 using Academically.Users.Dto;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -30,7 +29,6 @@ namespace Academically.Services.Comments
         private readonly IRepository<Course, Guid> _coursesRepository;
         private readonly IRepository<Coaching, Guid> _coachingRepository;
         private readonly IRepository<Video, Guid> _videoRepository;
-        private readonly IRepository<Workshop, Guid> _workshopRepository;
         private readonly IRepository<Event, Guid> _eventRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
 
@@ -42,7 +40,6 @@ namespace Academically.Services.Comments
             IRepository<Course, Guid> coursesRepository,
             IRepository<Coaching, Guid> coachingRepository,
             IRepository<Video, Guid> videoRepository,
-            IRepository<Workshop, Guid> workshopRepository,
             IRepository<Event, Guid> eventRepository,
             IDocumentsDomainService documentsDomainService)
         {
@@ -53,7 +50,6 @@ namespace Academically.Services.Comments
             _coursesRepository = coursesRepository;
             _coachingRepository = coachingRepository;
             _videoRepository = videoRepository;
-            _workshopRepository = workshopRepository;
             _eventRepository = eventRepository;
             _documentsDomainService = documentsDomainService;
         }
@@ -140,6 +136,7 @@ namespace Academically.Services.Comments
             switch (comment.ServiceType)
             {
                 case Domain.Enums.ServicesType.Event:
+                case Domain.Enums.ServicesType.Workshop:
                     var event_ = await _eventRepository.GetAsync(comment.ServiceId.Value);
                     comment.Event = ObjectMapper.Map<EventDto>(event_);
                     if (comment.Event.ThumbnailDocumentId.HasValue)
@@ -168,12 +165,6 @@ namespace Academically.Services.Comments
                     comment.Coaching = ObjectMapper.Map<CoachingDto>(coaching);
                     if (comment.Coaching.ThumbnailDocumentId.HasValue)
                         comment.Coaching.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(coaching.ThumbnailDocumentId.Value);
-                    break;
-                case Domain.Enums.ServicesType.Workshop:
-                    var workshop = await _workshopRepository.GetAsync(comment.ServiceId.Value);
-                    comment.Workshop = ObjectMapper.Map<WorkshopDto>(workshop);
-                    if (comment.Workshop.ThumbnailDocumentId.HasValue)
-                        comment.Workshop.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(comment.Workshop.ThumbnailDocumentId.Value);
                     break;
                 default:
                     break;

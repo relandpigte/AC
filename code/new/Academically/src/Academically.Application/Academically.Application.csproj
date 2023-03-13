@@ -38,7 +38,6 @@
     <ProjectReference Include="..\Academically.EntityFrameworkCore\Academically.EntityFrameworkCore.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Services\Workshops\Enums\" />
     <Folder Include="Services\Coachings\Enums\" />
     <Folder Include="Services\Registrations\" />
     <Folder Include="Services\Registrations\Dto\" />

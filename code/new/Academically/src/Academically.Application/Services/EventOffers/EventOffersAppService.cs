@@ -20,7 +20,6 @@ namespace Academically.Services.EventOffers
         private readonly IRepository<Coaching, Guid> _coachingRepository;
         private readonly IRepository<Course, Guid> _courseRepository;
         private readonly IRepository<Video, Guid> _videoRepository;
-        private readonly IRepository<Workshop, Guid> _workshopRepository;
         private readonly IRepository<Article, Guid> _articleRepository;
 
         public EventOffersAppService(
@@ -29,7 +28,6 @@ namespace Academically.Services.EventOffers
             IRepository<Coaching, Guid> coachingRepository,
             IRepository<Course, Guid> courseRepository,
             IRepository<Video, Guid> videoRepository,
-            IRepository<Workshop, Guid> workshopRepository,
             IRepository<Article, Guid> articleRepository
             ) : base(repository)
         {
@@ -38,7 +36,6 @@ namespace Academically.Services.EventOffers
             _coachingRepository = coachingRepository;
             _courseRepository = courseRepository;
             _videoRepository = videoRepository;
-            _workshopRepository = workshopRepository;
             _articleRepository = articleRepository;
         }
 
@@ -60,7 +57,6 @@ namespace Academically.Services.EventOffers
             myServices.Add(await GetCoachings());
             myServices.Add(await GetEvents());
             myServices.Add(await GetArticles());
-            myServices.Add(await GetWorkshops());
             myServices.Add(await GetVideos());
 
             return myServices;
@@ -125,7 +121,7 @@ namespace Academically.Services.EventOffers
 
         private async Task<MyServiceViewDto> GetEvents()
         {
-            var events = await _articleRepository.GetAll().Select(c => new { c.Id, c.Name }).OrderBy(x => x.Name).ToListAsync();
+            var events = await _eventRepository.GetAll().Select(c => new { c.Id, c.Name }).OrderBy(x => x.Name).ToListAsync();
             var eventServices = new MyServiceViewDto();
 
             eventServices.Items = new List<MyServiceItemViewDto>();
@@ -142,28 +138,9 @@ namespace Academically.Services.EventOffers
             return eventServices;
         }
 
-        private async Task<MyServiceViewDto> GetWorkshops()
-        {
-            var workshops = await _workshopRepository.GetAll().Select(c => new { c.Id, c.Name }).OrderBy(x => x.Name).ToListAsync();
-            var workshopServices = new MyServiceViewDto();
-
-            workshopServices.Items = new List<MyServiceItemViewDto>();
-            workshopServices.ServiceType = ServiceTypeNames.Workshops;
-
-            foreach (var workshopItem in workshops)
-            {
-                var newWorkshopItem = new MyServiceItemViewDto();
-                newWorkshopItem.Id = workshopItem.Id;
-                newWorkshopItem.ServiceType = EventOfferServiceTypes.Workshop;
-                newWorkshopItem.Title = workshopItem.Name;
-                workshopServices.Items.Add(newWorkshopItem);
-            }
-            return workshopServices;
-        }
-
         private async Task<MyServiceViewDto> GetVideos()
         {
-            var videos = await _articleRepository.GetAll().Select(c => new { c.Id, c.Name }).OrderBy(x => x.Name).ToListAsync();
+            var videos = await _videoRepository.GetAll().Select(c => new { c.Id, c.Name }).OrderBy(x => x.Name).ToListAsync();
             var videoServices = new MyServiceViewDto();
 
             videoServices.Items = new List<MyServiceItemViewDto>();

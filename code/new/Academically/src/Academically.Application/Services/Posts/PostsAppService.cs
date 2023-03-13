@@ -28,8 +28,6 @@ using Academically.Services.Events.Dto;
 using Academically.Services.Posts.Dto;
 using Academically.Services.Videos;
 using Academically.Services.Videos.Dto;
-using Academically.Services.Workshops;
-using Academically.Services.Workshops.Dto;
 using Academically.Users.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -50,7 +48,6 @@ namespace Academically.Services.Posts
         private readonly IRepository<Course, Guid> _coursesRepository;
         private readonly IRepository<Coaching, Guid> _coachingRepository;
         private readonly IRepository<Video, Guid> _videoRepository;
-        private readonly IRepository<Workshop, Guid> _workshopRepository;
         private readonly IRepository<Event, Guid> _eventRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IArticlesAppService _articlesAppService;
@@ -58,7 +55,6 @@ namespace Academically.Services.Posts
         private readonly ICoursesAppService _coursesAppService;
         private readonly IVideosAppService _videosAppService;
         private readonly IEventsAppService _eventsAppService;
-        private readonly IWorkshopsAppService _workshopsAppService;
 
         public PostsAppService(
             IRepository<Post, Guid> postRepository,
@@ -71,7 +67,6 @@ namespace Academically.Services.Posts
             IRepository<Course, Guid> coursesRepository,
             IRepository<Coaching, Guid> coachingRepository,
             IRepository<Video, Guid> videoRepository,
-            IRepository<Workshop, Guid> workshopRepository,
             IRepository<Event, Guid> eventRepository,
             IDocumentsDomainService documentsDomainService,
             IArticlesAppService articlesAppService,
@@ -79,7 +74,6 @@ namespace Academically.Services.Posts
             ICoursesAppService coursesAppService,
             IVideosAppService videosAppService,
             IEventsAppService eventsAppService,
-            IWorkshopsAppService workshopsAppService,
             IRepository<Comment, Guid> commentsRepository)
         {
             _postRepository = postRepository;
@@ -94,13 +88,11 @@ namespace Academically.Services.Posts
             _coursesAppService = coursesAppService;
             _videosAppService = videosAppService;
             _eventsAppService = eventsAppService;
-            _workshopsAppService = workshopsAppService;
             _commentsRepository = commentsRepository;
             _articlesRepository = articlesRepository;
             _coursesRepository = coursesRepository;
             _coachingRepository = coachingRepository;
             _videoRepository = videoRepository;
-            _workshopRepository = workshopRepository;
             _eventRepository = eventRepository;
         }
 
@@ -374,13 +366,11 @@ namespace Academically.Services.Posts
             var courses = await _coursesAppService.GetCoursesByKeyword(request.Keyword, currentUser.Id);
             var coaching = await _coachingsAppService.GetCoachingByKeyword(request.Keyword, currentUser.Id);
             var videos = await _videosAppService.GetVideosByKeyword(request.Keyword, currentUser.Id);
-            var workshops = await _workshopsAppService.GetWorkshopByKeyword(request.Keyword, currentUser.Id);
             var events = await _eventsAppService.GetEventsByKeyword(request.Keyword, currentUser.Id);
 
             var query = articles.Union(courses)
                                 .Union(coaching)
                                 .Union(videos)
-                                .Union(workshops)
                                 .Union(events)
                                 .AsQueryable();
 
@@ -578,6 +568,7 @@ namespace Academically.Services.Posts
             switch (comment.ServiceType)
             {
                 case Domain.Enums.ServicesType.Event:
+                case Domain.Enums.ServicesType.Workshop:
                     var event_ = await _eventRepository.GetAsync(comment.ServiceId.Value);
                     comment.Event = ObjectMapper.Map<EventDto>(event_);
                     if (comment.Event.ThumbnailDocumentId.HasValue)
@@ -606,12 +597,6 @@ namespace Academically.Services.Posts
                     comment.Coaching = ObjectMapper.Map<CoachingDto>(coaching);
                     if (comment.Coaching.ThumbnailDocumentId.HasValue)
                         comment.Coaching.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(coaching.ThumbnailDocumentId.Value);
-                    break;
-                case Domain.Enums.ServicesType.Workshop:
-                    var workshop = await _workshopRepository.GetAsync(comment.ServiceId.Value);
-                    comment.Workshop = ObjectMapper.Map<WorkshopDto>(workshop);
-                    if (comment.Workshop.ThumbnailDocumentId.HasValue)
-                        comment.Workshop.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(comment.Workshop.ThumbnailDocumentId.Value);
                     break;
                 default:
                     break;

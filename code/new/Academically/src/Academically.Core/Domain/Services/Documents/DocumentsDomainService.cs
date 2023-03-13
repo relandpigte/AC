@@ -22,8 +22,6 @@ namespace Academically.Domain.Services.Documents
         private readonly IRepository<EventResource, Guid> _eventResourcesRepository;
         private readonly IRepository<Coaching, Guid> _coachingsRepository;
         private readonly IRepository<CoachingResource, Guid> _coachingResourcesRepository;
-        private readonly IRepository<Workshop, Guid> _workshopsRepository;
-        private readonly IRepository<WorkshopResource, Guid> _workshopResourcesRepository;
         private readonly IFileManagerService _fileManagerService;
 
         public DocumentsDomainService(
@@ -35,8 +33,6 @@ namespace Academically.Domain.Services.Documents
             IRepository<EventResource, Guid> eventResourcesRepository,
             IRepository<Coaching, Guid> coachingsRepository,
             IRepository<CoachingResource, Guid> coachingResourcesRepository,
-            IRepository<Workshop, Guid> workshopsRepository,
-            IRepository<WorkshopResource, Guid> workshopResourcesRepository,
             IFileManagerService fileManagerService
             )
         {
@@ -48,8 +44,6 @@ namespace Academically.Domain.Services.Documents
             _eventResourcesRepository = eventResourcesRepository;
             _coachingsRepository = coachingsRepository;
             _coachingResourcesRepository = coachingResourcesRepository;
-            _workshopsRepository = workshopsRepository;
-            _workshopResourcesRepository = workshopResourcesRepository;
             _fileManagerService = fileManagerService;
         }
 
@@ -126,6 +120,7 @@ namespace Academically.Domain.Services.Documents
                         await _articlesRepository.UpdateAsync(articleThumbnailReference);
                         break;
                     case DocumentType.EventThumbnail:
+                    case DocumentType.WorkshopThumbnail:
                         var eventThumbnailReference = await _eventsRepository.GetAsync(referenceId.Value);
                         eventThumbnailReference.ThumbnailDocumentId = document.Id;
                         await _eventsRepository.UpdateAsync(eventThumbnailReference);
@@ -136,6 +131,7 @@ namespace Academically.Domain.Services.Documents
                         await _courseSectionsRepository.UpdateAsync(courseSectionImageReference);
                         break;
                     case DocumentType.EventResource:
+                    case DocumentType.WorkshopResource:
                         var eventResrouceReference = await _eventResourcesRepository.GetAsync(referenceId.Value);
                         eventResrouceReference.DocumentId = document.Id;
                         await _eventResourcesRepository.UpdateAsync(eventResrouceReference);
@@ -149,16 +145,6 @@ namespace Academically.Domain.Services.Documents
                         var coachingResourceReference = await _coachingResourcesRepository.GetAsync(referenceId.Value);
                         coachingResourceReference.DocumentId = document.Id;
                         await _coachingResourcesRepository.UpdateAsync(coachingResourceReference);
-                        break;
-                    case DocumentType.WorkshopThumbnail:
-                        var workshopThumbnailReference = await _workshopsRepository.GetAsync(referenceId.Value);
-                        workshopThumbnailReference.ThumbnailDocumentId = document.Id;
-                        await _workshopsRepository.UpdateAsync(workshopThumbnailReference);
-                        break;
-                    case DocumentType.WorkshopResource:
-                        var workshopResourceReference = await _workshopResourcesRepository.GetAsync(referenceId.Value);
-                        workshopResourceReference.DocumentId = document.Id;
-                        await _workshopResourcesRepository.UpdateAsync(workshopResourceReference);
                         break;
                 }
             }
@@ -195,6 +181,7 @@ namespace Academically.Domain.Services.Documents
                         await _articlesRepository.UpdateAsync(articleThumbnailReference);
                         break;
                     case DocumentType.EventThumbnail:
+                    case DocumentType.WorkshopThumbnail:
                         var eventThumbnailReference = await _eventsRepository.GetAsync(referenceId.Value);
                         eventThumbnailReference.ThumbnailDocumentId = null;
                         await _eventsRepository.UpdateAsync(eventThumbnailReference);
@@ -205,6 +192,7 @@ namespace Academically.Domain.Services.Documents
                         await _courseSectionsRepository.UpdateAsync(courseSectionImageReference);
                         break;
                     case DocumentType.EventResource:
+                    case DocumentType.WorkshopResource:
                         var eventResourceReference = await _eventResourcesRepository.GetAsync(referenceId.Value);
                         eventResourceReference.DocumentId = null;
                         await _eventResourcesRepository.UpdateAsync(eventResourceReference);
@@ -218,16 +206,6 @@ namespace Academically.Domain.Services.Documents
                         var coachingResourceReference = await _coachingResourcesRepository.GetAsync(referenceId.Value);
                         coachingResourceReference.DocumentId = null;
                         await _coachingResourcesRepository.UpdateAsync(coachingResourceReference);
-                        break;
-                    case DocumentType.WorkshopThumbnail:
-                        var workshopThumbnailReference = await _workshopsRepository.GetAsync(referenceId.Value);
-                        workshopThumbnailReference.ThumbnailDocumentId = null;
-                        await _workshopsRepository.UpdateAsync(workshopThumbnailReference);
-                        break;
-                    case DocumentType.WorkshopResource:
-                        var workshopResourceReference = await _workshopResourcesRepository.GetAsync(referenceId.Value);
-                        workshopResourceReference.DocumentId = null;
-                        await _workshopResourcesRepository.UpdateAsync(workshopResourceReference);
                         break;
                 }
             }

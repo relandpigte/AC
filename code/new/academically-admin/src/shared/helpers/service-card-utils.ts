@@ -1,5 +1,5 @@
 import { DefaultServiceCardActions, DefaultServiceCardOptions, ServiceCard, ServiceCardDates, ServiceCardType, ServiceCardButton, ServiceCardImage, ServiceCardOptions, ServiceCardPerson, ServiceCardPill, ServiceCardPrice, UserServiceCardActions, ServiceCardComposition, ServiceCardPeople, ServiceCardSlots, ServiceCardRsvp } from '@shared/models/service-card.model';
-import { ArticleDto, CoachingDto, CourseDto, EventCategory, EventDto, ServicesType, UserDto, VideoDto, WorkshopDto } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, CoachingDto, CourseDto, EventCategory, EventDto, ServicesType, UserDto, VideoDto } from '@shared/service-proxies/service-proxies';
 
 import * as _ from 'lodash';
 import { Utils } from './utils';

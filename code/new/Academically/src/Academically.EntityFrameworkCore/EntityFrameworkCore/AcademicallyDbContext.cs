@@ -112,12 +112,6 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<CoachingPoll> CoachingPolls { get; set; }
         public virtual DbSet<CoachingPollQuestion> CoachingPollQuestions { get; set; }
         public virtual DbSet<CoachingPollQuestionOption> CoachingPollQuestionOptions { get; set; }
-        public virtual DbSet<Workshop> Workshops { get; set; }
-        public virtual DbSet<WorkshopPresenter> WorkshopPresenters { get; set; }
-        public virtual DbSet<WorkshopResource> WorkshopResources { get; set; }
-        public virtual DbSet<WorkshopPoll> WorkshopPolls { get; set; }
-        public virtual DbSet<WorkshopPollQuestion> WorkshopPollQuestions { get; set; }
-        public virtual DbSet<WorkshopPollQuestionOption> WorkshopPollQuestionOptions { get; set; }
         public virtual DbSet<EventOffer> EventOffer { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<PostTopic> PostTopics { get; set; }
