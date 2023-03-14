@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyAcademicLevelQualifications")]
+    [Table("AcademicLevelQualifications")]
     public class AcademicLevelQualification : CreationAuditedEntity<Guid>
     {
         public string Name { get; set; }

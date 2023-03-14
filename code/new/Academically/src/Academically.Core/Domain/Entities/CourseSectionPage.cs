@@ -4,7 +4,7 @@ using Abp.Domain.Entities.Auditing;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyCourseSectionPages")]
+    [Table("CourseSectionPages")]
     public class CourseSectionPage : CreationAuditedEntity<Guid>
     {
         public string PageContent { get; set; }

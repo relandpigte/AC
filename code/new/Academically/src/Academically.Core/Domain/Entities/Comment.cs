@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyComments")]
+    [Table("Comments")]
     public class Comment : CreationAuditedEntity<Guid>
     {
         public string Body { get; set; }

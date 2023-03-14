@@ -4,7 +4,7 @@ using Abp.Domain.Entities;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyPhoneVerifications")]
+    [Table("PhoneVerifications")]
     public class PhoneVerification : Entity<Guid>
     {
         public long UserId { get; set; }

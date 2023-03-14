@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyUserCalendarEvents")]
+    [Table("UserCalendarEvents")]
     public class UserCalendarEvent : Entity<Guid>
     {
         public long UserId { get; set; }

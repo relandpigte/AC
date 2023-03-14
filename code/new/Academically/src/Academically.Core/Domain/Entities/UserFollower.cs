@@ -5,7 +5,7 @@ using Academically.Authorization.Users;
 
 namespace Academically.Domain.Entities
 {
-	[Table("AcademicallyUserFollowers")]
+	[Table("UserFollowers")]
 	public class UserFollower : CreationAuditedEntity<Guid>
 	{
         public long UserId { get; set; }

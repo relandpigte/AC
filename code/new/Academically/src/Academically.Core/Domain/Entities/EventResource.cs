@@ -6,7 +6,7 @@ using Academically.Domain.Enums;
 
 namespace Academically.Domain.Entities
 {
-	[Table("AcademicallyEventResources")]
+	[Table("EventResources")]
     public class EventResource : CreationAuditedEntity<Guid>
 	{
         public string Name { get; set; }

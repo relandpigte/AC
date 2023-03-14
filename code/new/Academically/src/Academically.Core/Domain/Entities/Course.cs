@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyCourses")]
+    [Table("Courses")]
     public class Course : CreationAuditedEntity<Guid>
     {
         [NotMapped]

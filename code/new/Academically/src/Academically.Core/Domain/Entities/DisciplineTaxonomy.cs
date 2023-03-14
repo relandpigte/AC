@@ -6,7 +6,7 @@ using Abp.Domain.Entities.Auditing;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyDisciplineTaxonomies")]
+    [Table("DisciplineTaxonomies")]
     public class DisciplineTaxonomy : CreationAuditedEntity<Guid>
     {
         public DisciplineTaxonomy()

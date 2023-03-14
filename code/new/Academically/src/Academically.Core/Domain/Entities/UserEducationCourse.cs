@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyUserEducationCourses")]
+    [Table("UserEducationCourses")]
     public class UserEducationCourse : Entity<Guid>
     {
         public string Title { get; set; }

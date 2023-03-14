@@ -4,7 +4,7 @@ using Abp.Domain.Entities;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyUserResearchMethodologyResearchMethods")]
+    [Table("UserResearchMethodologyResearchMethods")]
     public class UserResearchMethodologyResearchMethod : Entity<Guid>
     {
         public Guid UserResearchMethodologyId { get; set; }

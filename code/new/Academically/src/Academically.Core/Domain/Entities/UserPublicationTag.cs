@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyUserPublicationTags")]
+    [Table("UserPublicationTags")]
     public class UserPublicationTag : Entity<Guid>
     {
         public Guid UserPublicationId { get; set; }

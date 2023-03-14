@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallySpokenLanguages")]
+    [Table("SpokenLanguages")]
     public class SpokenLanguage : Entity<Guid>
     {
         public SpokenLanguage()

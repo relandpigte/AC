@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyReferences")]
+    [Table("References")]
     public class Reference : CreationAuditedEntity<Guid>
     {
         public string Forename { get; set; }

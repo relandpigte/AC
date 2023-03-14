@@ -6,7 +6,7 @@ using Academically.Authorization.Users;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyUserResearchMethodologies")]
+    [Table("UserResearchMethodologies")]
     public class UserResearchMethodology : CreationAuditedEntity<Guid>
     {
         public UserResearchMethodology()

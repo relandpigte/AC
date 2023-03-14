@@ -5,7 +5,7 @@ using Academically.Authorization.Users;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyCourseAssignments")]
+    [Table("CourseAssignments")]
     public class CourseAssignment : CreationAuditedEntity<Guid>
     {
         public Guid StudentCourseSectionId { get; set; }

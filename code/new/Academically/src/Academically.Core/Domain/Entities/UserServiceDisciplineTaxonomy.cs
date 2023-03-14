@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyUserServiceDisciplineTaxonomies")]
+    [Table("UserServiceDisciplineTaxonomies")]
     public class UserServiceDisciplineTaxonomy : Entity<Guid>
     {
         public Guid UserServiceId { get; set; }

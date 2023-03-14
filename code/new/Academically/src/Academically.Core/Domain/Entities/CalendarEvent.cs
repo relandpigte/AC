@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyCalendarEvents")]
+    [Table("CalendarEvents")]
     public class CalendarEvent : CreationAuditedEntity<Guid>
     {
         public CalendarEvent()

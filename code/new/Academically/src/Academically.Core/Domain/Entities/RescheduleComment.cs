@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyRescheduleComments")]
+    [Table("RescheduleComments")]
     public class RescheduleComment : CreationAuditedEntity<Guid>
     {
         public DateTime OldStartTime { get; set; }

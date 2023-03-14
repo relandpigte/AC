@@ -5,7 +5,7 @@ using Abp.Domain.Entities;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyConversationGroups")]
+    [Table("ConversationGroups")]
     public class ConversationGroup : Entity<Guid>
     {
         public ConversationGroup()

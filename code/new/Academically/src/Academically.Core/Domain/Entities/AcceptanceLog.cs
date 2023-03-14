@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyAcceptanceLogs")]
+    [Table("AcceptanceLogs")]
     public class AcceptanceLog : CreationAuditedEntity<Guid>
     {
         public AcceptanceType Type { get; set; }

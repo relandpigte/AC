@@ -5,7 +5,7 @@ using Academically.Authorization.Users;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyUserAvailabilities")]
+    [Table("UserAvailabilities")]
     public class UserAvailability : Entity<Guid>
     {
         public DayOfWeek DayOfWeek { get; set; }

@@ -4,7 +4,7 @@ using Abp.Domain.Entities;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyEventPollQuestionOptions")]
+    [Table("EventPollQuestionOptions")]
 	public class EventPollQuestionOption : Entity<Guid>
 	{
         public string Text { get; set; }

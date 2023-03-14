@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyCommentReactions")]
+    [Table("CommentReactions")]
     public class CommentReaction : CreationAuditedEntity<Guid>
     {
         public ReactionType Type { get; set; }

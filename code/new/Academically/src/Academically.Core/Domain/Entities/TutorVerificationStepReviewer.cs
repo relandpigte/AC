@@ -5,7 +5,7 @@ using Academically.Domain.Enums;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyTutorVerificationStepReviewers")]
+    [Table("TutorVerificationStepReviewers")]
     public class TutorVerificationStepReviewer : CreationAuditedEntity<Guid>
     {
         public TutorVerificationStepStatus OldStatus { get; set; }

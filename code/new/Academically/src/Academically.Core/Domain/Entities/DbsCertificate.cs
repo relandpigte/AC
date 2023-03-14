@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyDbsCertificates")]
+    [Table("DbsCertificates")]
     public class DbsCertificate : CreationAuditedEntity<Guid>
     {
         public string DbsNumber { get; set; }

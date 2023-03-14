@@ -8,7 +8,7 @@ using Academically.Domain.Enums;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyPosts")]
+    [Table("Posts")]
 	public class Post : FullAuditedEntity<Guid>
     {
 		public Post()
@@ -39,4 +39,7 @@ namespace Academically.Domain.Entities
         public virtual ICollection<Post> Children { get; set; }
     }
 }
+
+
+
 

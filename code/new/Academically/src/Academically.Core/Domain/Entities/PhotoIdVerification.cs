@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyPhotoIdVerifications")]
+    [Table("PhotoIdVerifications")]
     public class PhotoIdVerification : CreationAuditedEntity<Guid>
     {
         public PhotoIdVerificationStatus Status { get; set; }

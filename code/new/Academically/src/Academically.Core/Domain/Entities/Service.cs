@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyServices")]
+    [Table("Services")]
     public class Service : Entity<Guid>
     {
         public Service()

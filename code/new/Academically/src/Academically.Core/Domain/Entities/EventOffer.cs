@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyEventOffers")]
+    [Table("EventOffers")]
     public class EventOffer: CreationAuditedEntity<Guid>
     {
         public Guid EventId { get; set; }

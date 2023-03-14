@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyServiceSubjects")]
+    [Table("ServiceSubjects")]
     public class ServiceSubject
     {
         [Key, Column(Order = 0)]

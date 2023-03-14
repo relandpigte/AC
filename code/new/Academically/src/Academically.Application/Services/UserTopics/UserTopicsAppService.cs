@@ -99,19 +99,5 @@ namespace Academically.Services.UserTopics
                 query = query.OrderBy(x => x.DisciplineTaxonomy.Name);
             return query;
         }
-
-        #region Pub/Sub Notifications
-
-        public async Task SubscribeUserTopicChanges()
-        {
-
-        }
-
-        public async Task UnsubscribeUserTopicChanges()
-        {
-        
-        }
-
-        #endregion
     }
 }

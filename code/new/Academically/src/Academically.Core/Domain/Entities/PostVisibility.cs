@@ -5,7 +5,7 @@ using Academically.Authorization.Users;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyPostVisibility")]
+    [Table("PostVisibility")]
     public class PostVisibility : CreationAuditedEntity<Guid>
     {
         public Guid PostId { get; set; }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyContentMargins")]
+    [Table("ContentMargins")]
     public class ContentMargin : CreationAuditedEntity<Guid>
     {
         public string Name { get; set; }

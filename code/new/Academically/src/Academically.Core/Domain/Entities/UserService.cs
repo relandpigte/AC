@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyUserServices")]
+    [Table("UserServices")]
     public class UserService : CreationAuditedEntity<Guid>
     {
         public UserService()

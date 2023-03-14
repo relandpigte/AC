@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyContents")]
+    [Table("Contents")]
     public class Content : CreationAuditedEntity<Guid>
     {
         public string PageContent { get; set; }

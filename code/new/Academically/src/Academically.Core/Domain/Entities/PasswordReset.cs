@@ -4,7 +4,7 @@ using Abp.Domain.Entities;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyPasswordResets")]
+    [Table("PasswordResets")]
     public class PasswordReset : Entity<Guid>
     {
         public virtual DateTime DateSent { get; set; }

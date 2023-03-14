@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyServiceMappings")]
+    [Table("ServiceMappings")]
     public class ServiceMapping : Entity<Guid>
     {
         public Guid? Node1Id { get; set; }

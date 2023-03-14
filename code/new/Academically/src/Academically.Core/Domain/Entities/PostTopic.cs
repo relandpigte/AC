@@ -4,7 +4,7 @@ using Abp.Domain.Entities.Auditing;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyPostTopics")]
+    [Table("PostTopics")]
 	public class PostTopic : CreationAuditedEntity<Guid>
 	{
 		public Guid PostId { get; set; }

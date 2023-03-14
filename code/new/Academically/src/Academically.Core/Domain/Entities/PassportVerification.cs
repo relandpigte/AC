@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Domain.Entities
 {
-    [Table("AcademicallyPassportVerifications")]
+    [Table("PassportVerifications")]
     public class PassportVerification : CreationAuditedEntity<Guid>
     {
         public PassportVerificationStatus Status { get; set; }

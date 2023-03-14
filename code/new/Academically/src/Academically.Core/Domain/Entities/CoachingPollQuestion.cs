@@ -7,7 +7,7 @@ using Academically.Domain.Enums;
 
 namespace Academically.Domain.Entities
 {
-	[Table("AcademicallyCoachingPollQuestions")]
+	[Table("CoachingPollQuestions")]
 	public class CoachingPollQuestion : CreationAuditedEntity<Guid>
 	{
         public string Text { get; set; }

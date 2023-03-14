@@ -7,7 +7,7 @@ using Academically.Domain.Enums;
 
 namespace Academically.Domain.Entities
 {
-	[Table("AcademicallyVideos")]
+	[Table("Videos")]
 	public class Video : CreationAuditedEntity<Guid>
 	{
         [NotMapped]
