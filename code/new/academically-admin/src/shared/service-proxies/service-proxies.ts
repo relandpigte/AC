@@ -26092,100 +26092,6 @@ export class UserTopicsServiceProxy {
         }
         return _observableOf<void>(<any>null);
     }
-
-    /**
-     * @return Success
-     */
-    subscribeUserTopicChanges(): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/UserTopics/SubscribeUserTopicChanges";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processSubscribeUserTopicChanges(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processSubscribeUserTopicChanges(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<void>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processSubscribeUserTopicChanges(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(<any>null);
-    }
-
-    /**
-     * @return Success
-     */
-    unsubscribeUserTopicChanges(): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/UserTopics/UnsubscribeUserTopicChanges";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUnsubscribeUserTopicChanges(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processUnsubscribeUserTopicChanges(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<void>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processUnsubscribeUserTopicChanges(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(<any>null);
-    }
 }
 
 @Injectable()
@@ -46251,6 +46157,9 @@ export class UpdatePostDto implements IUpdatePostDto {
     type: PostType;
     parentId: string | undefined;
     isDeleted: boolean;
+    topics: string[] | undefined;
+    newTopics: string[] | undefined;
+    attachments: string[] | undefined;
 
     constructor(data?: IUpdatePostDto) {
         if (data) {
@@ -46271,6 +46180,21 @@ export class UpdatePostDto implements IUpdatePostDto {
             this.type = _data["type"];
             this.parentId = _data["parentId"];
             this.isDeleted = _data["isDeleted"];
+            if (Array.isArray(_data["topics"])) {
+                this.topics = [] as any;
+                for (let item of _data["topics"])
+                    this.topics.push(item);
+            }
+            if (Array.isArray(_data["newTopics"])) {
+                this.newTopics = [] as any;
+                for (let item of _data["newTopics"])
+                    this.newTopics.push(item);
+            }
+            if (Array.isArray(_data["attachments"])) {
+                this.attachments = [] as any;
+                for (let item of _data["attachments"])
+                    this.attachments.push(item);
+            }
         }
     }
 
@@ -46291,6 +46215,21 @@ export class UpdatePostDto implements IUpdatePostDto {
         data["type"] = this.type;
         data["parentId"] = this.parentId;
         data["isDeleted"] = this.isDeleted;
+        if (Array.isArray(this.topics)) {
+            data["topics"] = [];
+            for (let item of this.topics)
+                data["topics"].push(item);
+        }
+        if (Array.isArray(this.newTopics)) {
+            data["newTopics"] = [];
+            for (let item of this.newTopics)
+                data["newTopics"].push(item);
+        }
+        if (Array.isArray(this.attachments)) {
+            data["attachments"] = [];
+            for (let item of this.attachments)
+                data["attachments"].push(item);
+        }
         return data; 
     }
 
@@ -46311,6 +46250,9 @@ export interface IUpdatePostDto {
     type: PostType;
     parentId: string | undefined;
     isDeleted: boolean;
+    topics: string[] | undefined;
+    newTopics: string[] | undefined;
+    attachments: string[] | undefined;
 }
 
 export class UpdatePresenterTypeDto implements IUpdatePresenterTypeDto {

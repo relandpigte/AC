@@ -344,6 +344,40 @@ namespace Academically.Services.Posts
             ObjectMapper.Map(input, post);
             post = await _postRepository.UpdateAsync(post);
 
+            await _postTopicRepository.DeleteAsync(t => t.PostId == post.Id);
+            if (input.NewTopics != null && input.NewTopics.Any())
+            {
+                var otherTopicParent = await _disciplineTaxonomyRepository.FirstOrDefaultAsync(x => x.Name == "Other Topics");
+                if (otherTopicParent != null)
+                {
+                    foreach (var newTopic in input.NewTopics)
+                    {
+                        var topicId = await _disciplineTaxonomyRepository.InsertAndGetIdAsync(new DisciplineTaxonomy
+                        {
+                            ParentId = otherTopicParent.Id,
+                            Name = newTopic
+                        });
+                        await _postTopicRepository.InsertAsync(new PostTopic
+                        {
+                            PostId = post.Id,
+                            DisciplineTaxonomyId = topicId,
+                        });
+                    }
+                }
+            }
+
+            if (input.Topics != null && input.Topics.Any())
+            {
+                foreach (var topicId in input.Topics)
+                {
+                    await _postTopicRepository.InsertAsync(new PostTopic
+                    {
+                        PostId = post.Id,
+                        DisciplineTaxonomyId = topicId,
+                    });
+                }
+            }
+
             var postDto = ObjectMapper.Map<PostDto>(post);
             return postDto;
         }
