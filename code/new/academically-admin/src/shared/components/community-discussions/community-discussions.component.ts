@@ -74,6 +74,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   get isPartiallyExpanded(): boolean { return this.comments.length > 0 && this.totalCommentsCount >= this.comments.length; }
   get hasChildren(): boolean { return this.comments?.some(c => c.children?.length); }
   get isShowAddService(): boolean { return this.isTutor; }
+  get isLoading(): boolean { return this.isLoadingComments; }
 
   ngOnInit(): void {
     this.initCommentsAppStates();

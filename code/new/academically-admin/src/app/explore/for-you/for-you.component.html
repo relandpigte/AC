@@ -36,6 +36,7 @@
             [itemSpacing]="30"
             [isAutoFit]="true"
             [isInfiteScroll]="true"
+            [isLoading]="isLoading_upcomingBroadcasts"
             (onRequestNewData)="handleUpcomingBroadcastsRequestData($event)"
             (onServiceCardShareClick)="handleServiceCardShareClick($event)"
             (onServiceCardClick)="handleEventServiceCardClick($event)">
@@ -56,6 +57,7 @@
             [itemSpacing]="30"
             [isAutoFit]="true"
             [isInfiteScroll]="true"
+            [isLoading]="isLoading_upcomingWorkshops"
             (onRequestNewData)="handleUpcomingWorkshopsRequestData($event)"
             (onServiceCardShareClick)="handleServiceCardShareClick($event)"
             (onServiceCardClick)="handleEventServiceCardClick($event)">
@@ -75,8 +77,8 @@
             [itemWidth]="352"
             [itemSpacing]="30"
             [isAutoFit]="true"
-            [isLoading]="isLoading_recommendedCourses"
             [isInfiteScroll]="true"
+            [isLoading]="isLoading_recommendedCourses"
             (onRequestNewData)="handleRecommendedCoursesRequestData($event)"
             (onServiceCardShareClick)="handleServiceCardShareClick($event)"
             (onServiceCardClick)="handleCourseServiceCardClick($event)">
@@ -96,8 +98,8 @@
             [itemWidth]="543"
             [itemSpacing]="30"
             [isAutoFit]="true"
-            [isLoading]="isLoading_newArticles"
             [isInfiteScroll]="true"
+            [isLoading]="isLoading_newArticles"
             (onRequestNewData)="handleNewArticlesRequestData($event)"
             (onServiceCardShareClick)="handleServiceCardShareClick($event)"
             (onServiceCardClick)="handleArticleServiceCardClick($event)">
@@ -117,8 +119,8 @@
             [itemWidth]="352"
             [itemSpacing]="30"
             [isAutoFit]="true"
-            [isLoading]="isLoading_recommendedTutorials"
             [isInfiteScroll]="true"
+            [isLoading]="isLoading_recommendedTutorials"
             (onRequestNewData)="handleRecommendedTutorialsRequestData($event)"
             (onServiceCardShareClick)="handleServiceCardShareClick($event)"
             (onServiceCardClick)="handleTutorialServiceCardClick($event)">
@@ -138,8 +140,8 @@
             [itemWidth]="352"
             [itemSpacing]="30"
             [isAutoFit]="true"
-            [isLoading]="isLoading_newCoachings"
             [isInfiteScroll]="true"
+            [isLoading]="isLoading_newCoachings"
             (onRequestNewData)="handleNewCoachingsRequestData($event)"
             (onServiceCardShareClick)="handleServiceCardShareClick($event)"
             (onServiceCardClick)="handleNewCoachingServiceCardClick($event)">

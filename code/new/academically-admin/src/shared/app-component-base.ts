@@ -12,7 +12,7 @@ import * as moment from 'moment';
 import { Moment } from 'moment';
 import { Observable, ReplaySubject } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
-import { ArticleDto, ArticleType, CoachingDto, CoachingType, CourseDto, CourseType, DocumentDto, EventCategory, EventDto, EventType, PricingType, UserDto, VideoDto, VideoType } from './service-proxies/service-proxies';
+import { ArticleDto, ArticleType, CoachingDto, CoachingType, CourseDto, CourseType, DocumentDto, EventCategory, EventDto, EventType, PostDto, PostType, PricingType, UserDto, VideoDto, VideoType } from './service-proxies/service-proxies';
 import { PubSubService } from './services/pub-sub.service';
 
 @Injectable()
@@ -456,21 +456,36 @@ export abstract class AppComponentBase implements OnDestroy {
     return { name: 'Topic' };
   }
 
-  loadInfiniteData(service: any, functionName: string, args: any[], destinationField: string): void {
-    this[`isLoading_${destinationField}`] = true;
+  generateRandomPost(): PostDto {
+    const post = new PostDto();
+    post.id = this.uuidv4();
+    post.content = 'Test Post';
+    post.type = PostType.QuickPost;
+    return post;
+  }
+
+  loadInfiniteData(service: any, functionName: string, args: any[], destinationField: string, opts: { allowLoader?: boolean, destinationFieldKey?: string, callback?: () => void } = { allowLoader: true }): void {
+    opts?.destinationFieldKey ? this[`isLoading_${destinationField}`][opts.destinationFieldKey] : this[`isLoading_${destinationField}`] = opts?.allowLoader && true;
     service[functionName](...args)
       .pipe(takeUntil(this.destroyed$))
-      .pipe(finalize(() => this[`isLoading_${destinationField}`] = false))
+      .pipe(finalize(() => opts?.destinationFieldKey ? this[`isLoading_${destinationField}`][opts.destinationFieldKey] : this[`isLoading_${destinationField}`] = false))
       .subscribe(newData => {
-
-        if (this[`${destinationField}MaxItems`] == 0)
-          this[destinationField] = []
-
-        if (newData) {
-          const items = this.deepSearch(newData, 'items');
-          this[`${destinationField}MaxItems`] = this.deepSearch(newData, 'totalCount');
-          this[destinationField] = _.concat(this[destinationField], items);
+        if (opts?.destinationFieldKey) {
+          if (this[`${destinationField}MaxItems`][opts.destinationFieldKey] == 0) this[destinationField][opts.destinationFieldKey] = [];
+          if (newData) {
+            const items = this.deepSearch(newData, 'items');
+            this[`${destinationField}MaxItems`][opts.destinationFieldKey] = this.deepSearch(newData, 'totalCount');
+            this[destinationField][opts.destinationFieldKey] = _.concat(this[destinationField][opts.destinationFieldKey], items);
+          }
+        } else {
+          if (this[`${destinationField}MaxItems`] == 0) this[destinationField] = [];
+          if (newData) {
+            const items = this.deepSearch(newData, 'items');
+            this[`${destinationField}MaxItems`] = this.deepSearch(newData, 'totalCount');
+            this[destinationField] = _.concat(this[destinationField], items);
+          }
         }
+        if (opts?.callback) opts.callback.call(this);
       });
   }
 

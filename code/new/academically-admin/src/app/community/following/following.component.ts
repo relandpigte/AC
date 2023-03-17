@@ -1,6 +1,7 @@
-import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit, ViewChildren } from '@angular/core';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
+import { CommunityPostCardComponent } from '@shared/components/community-post/community-post.component';
 import { CourseDto, CoursesServiceProxy, DateGrains, PostDto, PostsServiceProxy, PostType, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { MAX_POSTS_TO_LOAD, PostsStateService } from '@shared/services/posts-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
@@ -26,9 +27,11 @@ enum PostSorting {
   styleUrls: ['./following.component.less']
 })
 export class FollowingComponent extends AppComponentBase implements OnInit, OnDestroy {
+  @ViewChildren(CommunityPostCardComponent) postCards: CommunityPostCardComponent[];
+
   postsStateService: PostsStateService;
 
-  posts: any[] = [];
+  posts: any[] = Array(3).fill([]).map(() => this.generateRandomPost()) as PostDto[];
   totalPostsCount: number;
 
   usersYouMayKnow: UserDto[] = Array(5).fill([]).map(() => this.generateRandomUser()) as UserDto[];
@@ -74,6 +77,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     }
   }
   get hiddenPostsCount(): number { return this.totalPostsCount - this.posts.length; }
+  get isLoading(): boolean { return this.postCards.some(p => p.isPostLoading); }
 
   async ngOnInit() {
     this.loadInfiniteData(this._usersService, 'getAll', ['', true, 'creationTime desc', 0, 6], 'usersYouMayKnow');

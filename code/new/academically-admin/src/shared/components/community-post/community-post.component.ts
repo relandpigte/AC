@@ -19,6 +19,7 @@ import { CommunityDiscussionsComponent } from '../community-discussions/communit
 export class CommunityPostCardComponent extends AppComponentBase implements OnChanges {
     @Input() closeHiddenPostAfter: number = 0;
     @Input() data: any;
+    @Input() isLoading: boolean;
 
     @Output() refresh = new EventEmitter();
     @Output() onUpdate = new EventEmitter();
@@ -74,6 +75,8 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
                 return 'post';
         }
     }
+
+    get isPostLoading(): boolean { return this.isLoading || this.commentsContainer.isLoading; }
 
     async ngOnChanges(changes: SimpleChanges) {
         if ('data' in changes && this.data) {

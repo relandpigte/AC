@@ -22,6 +22,7 @@ export class CarouselWrapperComponent extends AppComponentBase implements AfterV
   @Input() visibleItems: number;
   @Input() itemWidth: number = 0;
   @Input() itemSpacing: number = 15;
+  @Input() loadMorePercentage: number = 80;
 
   @Input() templateRef: any;
   @Input() metadata: any;
@@ -119,7 +120,7 @@ export class CarouselWrapperComponent extends AppComponentBase implements AfterV
 
   handleInfiniteScroll(): void {
     if (this.isInfiteScroll == true) {
-      if (this.isAboveProgress(0.8)) {
+      if (this.isAboveProgress(this.loadMorePercentage / 100)) {
         if (this.items?.length < this.maxItems) {
           this.onRequestNewData.emit(this.items?.length);
         }
