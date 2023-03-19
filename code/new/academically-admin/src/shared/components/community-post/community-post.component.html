@@ -1,5 +1,6 @@
-<div class="post d-flex flex-column" *ngIf="!isHidden">
+<div class="post d-flex flex-column" *ngIf="!isHidden" [ngClass]="{'post-loading': isLoading}">
     <div class="post-container d-flex flex-column">
+        <app-shimmer [show]="isLoading" [shimmerType]="shimmerType.PostCard"></app-shimmer>
         <div class="post-heading d-flex flex-row flex-nowrap align-items-center">
             <div class="post-heading-avatar">
                 <a href="javascript: void(0);" class="avatar avatar-sm">

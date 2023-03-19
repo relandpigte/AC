@@ -59,6 +59,7 @@ import { TopicsMoreComponent } from '@shared/components/topics-more/topics-more.
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { AddServiceComponent } from '@shared/modals/add-service/add-service.component';
 import { AddTopicsComponent } from '@shared/modals/add-topics/add-topics.component';
+import { ShimmerComponent } from '@shared/components/shimmer/shimmer.component';
 
 import { KeysPipe } from '@shared/pipes/keys.pipe';
 
@@ -101,7 +102,8 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     CommunityPostCardComponent,
     CommunityDiscussionsComponent,
     CommunitySideCardComponent,
-    EmojiPickerComponent
+    EmojiPickerComponent,
+    ShimmerComponent
   ],
   imports: [
     CommonModule,
@@ -182,7 +184,8 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     CommunityPostCardComponent,
     CommunityDiscussionsComponent,
     CommunitySideCardComponent,
-    EmojiPickerComponent
+    EmojiPickerComponent,
+    ShimmerComponent
   ],
 })
 export class AppSharedModule { }
