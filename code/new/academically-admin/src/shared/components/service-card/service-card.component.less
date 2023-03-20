@@ -3,7 +3,7 @@
 @service-card-border-width: 1px;
 @service-card-border-color: #EDF2F9;
 @service-card-padding: 22px;
-@service-card-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
+@service-card-shadow: 0 0.1rem 0.8rem rgba(18, 38, 63, 0.03);
 
 @service-card-image-height: 158px;
 @service-card-image-background-color: #E4EBF6;
@@ -141,6 +141,8 @@
     max-width: 352px;
 
     transition: all 0.2s ease-in-out;
+
+    box-shadow: @service-card-shadow;
 
     &.feature {
         min-height: 237px;

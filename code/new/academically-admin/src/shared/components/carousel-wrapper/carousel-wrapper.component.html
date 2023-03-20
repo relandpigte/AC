@@ -1,30 +1,31 @@
-<div class="keen-slider" #carouselContainer>
-  <div *ngFor="let item of items" class="keen-slider__slide" [style.minWidth.px]="itemWidth" [style.maxWidth.px]="itemWidth">
-    <app-service-card
-      *ngIf="!templateRef"
-      [data]="item"
-      [ngClass]="{'item-active': expression}"
-      [isLoading]="allowLoader && isLoading"
-      [isFeatured]="isFeatured"
-      (onShareClick)="handleServiceCardShareClick($event)"
-      (onClick)="handleServiceCardClick($event)"
-    ></app-service-card>
+<div class="keen-slider-container">
+  <div class="keen-slider" #carouselContainer>
+    <div *ngFor="let item of items" class="keen-slider__slide" [style.minWidth.px]="itemWidth" [style.maxWidth.px]="itemWidth">
+      <app-service-card
+        *ngIf="!templateRef"
+        [data]="item"
+        [ngClass]="{'item-active': expression}"
+        [isLoading]="allowLoader && isLoading"
+        [isFeatured]="isFeatured"
+        (onShareClick)="handleServiceCardShareClick($event)"
+        (onClick)="handleServiceCardClick($event)"
+      ></app-service-card>
 
-    <ng-container *ngIf="templateRef">
-      <ng-container *ngTemplateOutlet="templateRef; context: { item: item, isLoading: isLoading, metadata: metadata }"></ng-container>
-    </ng-container>
+      <ng-container *ngIf="templateRef">
+        <ng-container *ngTemplateOutlet="templateRef; context: { item: item, isLoading: isLoading, metadata: metadata }"></ng-container>
+      </ng-container>
+    </div>
+
+    <div
+      *ngIf="carouselInstance"
+      [ngClass]="'carousel-nav carousel-nav-prev shadow-sm ' + (!isCircular && currentItem === 0 ? 'carousel-nav-hidden' : '')"
+      (click)="carouselInstance.prev()"
+    ></div>
+    <div
+      *ngIf="carouselInstance"
+      [ngClass]="'carousel-nav carousel-nav-next shadow-sm ' + (!isCircular && isLastItem ? 'carousel-nav-hidden' : '')"
+      (click)="carouselInstance.next()"
+    ></div>
+
   </div>
-
-  <div
-    *ngIf="carouselInstance"
-    [ngClass]="'carousel-nav carousel-nav-prev shadow-sm ' + (!isCircular && currentItem === 0 ? 'carousel-nav-hidden' : '')"
-    (click)="carouselInstance.prev()"
-  ></div>
-  <div
-    *ngIf="carouselInstance"
-    [ngClass]="'carousel-nav carousel-nav-next shadow-sm ' + (!isCircular && isLastItem ? 'carousel-nav-hidden' : '')"
-    (click)="carouselInstance.next()"
-  ></div>
-
 </div>
-

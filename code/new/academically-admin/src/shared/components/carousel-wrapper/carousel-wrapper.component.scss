@@ -1,4 +1,18 @@
 .keen-slider {
+    &-container {
+        height: calc(100% + 30px);
+        width: calc(100% + 30px);
+        padding: 15px;
+        margin-left: -15px;
+        overflow: hidden;
+    }
+
+    overflow: visible !important;
+
+    &__slide {
+        overflow: visible !important;
+    }
+
     &:hover {
         .carousel-nav-prev, .carousel-nav-next {
             visibility: visible !important;
