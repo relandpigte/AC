@@ -9,6 +9,8 @@ import * as moment from 'moment';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
 
+import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
+
 @Component({
     selector: 'app-service-card',
     templateUrl: './service-card.component.html',
@@ -109,18 +111,18 @@ import { finalize, takeUntil } from 'rxjs/operators';
 
     private setShimmerType(): void {
       if (this.isFeatured) {
-        this.shimmerType = 1;
+        this.shimmerType = ShimmerType.ArticleCard;
         return;
       }
       switch(this.type) {
         case 'article':
-          this.shimmerType = 1;
+          this.shimmerType = ShimmerType.ArticleCard;
           break;
         case 'user':
-          this.shimmerType = 2;
+          this.shimmerType = ShimmerType.UsersCard;
           break;
         default:
-          this.shimmerType = 0;
+          this.shimmerType = ShimmerType.ServiceCard;
       }
     }
 

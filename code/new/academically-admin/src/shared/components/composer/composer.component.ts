@@ -1,6 +1,7 @@
 import { Component, Injector, Renderer2, Output, EventEmitter, Input } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
+import { ShimmerType } from '../../enums/shimmer/shimmer-type.enum';
 
 @Component({
     selector: 'app-community-composer',
@@ -10,6 +11,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 })
 export class CommunityComposerComponent extends AppComponentBase {
     @Input() showBottomActions = true;
+    @Input() isLoading: boolean;
 
     @Output() onQuickPostClick: EventEmitter<any> = new EventEmitter();
     @Output() onQuestionClick: EventEmitter<any> = new EventEmitter();
@@ -23,4 +25,6 @@ export class CommunityComposerComponent extends AppComponentBase {
     ) {
         super(injector);
     }
+
+    get shimmerType() { return ShimmerType; }
 }

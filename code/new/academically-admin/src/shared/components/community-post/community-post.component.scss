@@ -6,6 +6,11 @@
 
 .post {
 
+    &.post-loading {
+        max-height: 178px;
+        overflow: hidden;
+    }
+
     &-container {
         padding: 24px;
     }
