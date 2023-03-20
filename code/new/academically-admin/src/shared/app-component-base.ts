@@ -12,7 +12,25 @@ import * as moment from 'moment';
 import { Moment } from 'moment';
 import { Observable, ReplaySubject } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
-import { ArticleDto, ArticleType, CoachingDto, CoachingType, CourseDto, CourseType, DocumentDto, EventCategory, EventDto, EventType, PostDto, PostType, PricingType, UserDto, VideoDto, VideoType } from './service-proxies/service-proxies';
+import {
+  ArticleDto,
+  ArticleType,
+  CoachingDto,
+  CoachingType,
+  CourseDto,
+  CourseType,
+  DisciplineTaxonomyDto,
+  DocumentDto,
+  EventCategory,
+  EventDto,
+  EventType,
+  PostDto,
+  PostType,
+  PricingType,
+  UserDto,
+  VideoDto,
+  VideoType
+} from './service-proxies/service-proxies';
 import { PubSubService } from './services/pub-sub.service';
 
 @Injectable()
@@ -462,6 +480,13 @@ export abstract class AppComponentBase implements OnDestroy {
     post.content = 'Test Post';
     post.type = PostType.QuickPost;
     return post;
+  }
+
+  generateRandomTopics(): DisciplineTaxonomyDto {
+    const topics = new DisciplineTaxonomyDto();
+    topics.id = this.uuidv4();
+    topics.name = 'Test name';
+    return topics;
   }
 
   loadInfiniteData(service: any, functionName: string, args: any[], destinationField: string, opts: { allowLoader?: boolean, destinationFieldKey?: string, callback?: () => void } = { allowLoader: true }): void {

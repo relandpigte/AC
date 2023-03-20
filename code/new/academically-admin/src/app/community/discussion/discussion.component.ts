@@ -1,16 +1,18 @@
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit } from '@angular/core';
+import * as _ from 'lodash';
 import { ActivatedRoute, Router } from '@angular/router';
+import { finalize, takeUntil } from 'rxjs/operators';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, UserDto } from '@shared/service-proxies/service-proxies';
 import { MAX_POSTS_TO_LOAD, PostsStateService } from '@shared/services/posts-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
-import * as _ from 'lodash';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { finalize, takeUntil } from 'rxjs/operators';
-import { UpsertPostComponent } from '../../../shared/modals/upsert-post/upsert-post.component';
+import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
+import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 
 enum PostFiltering {
     All = 'Community.Posts.Filtering.All',
@@ -39,20 +41,20 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
     postsStateService: PostsStateService;
 
     private discussion: PostDto;
-    children: PostDto[] = [];
+    children: PostDto[] = Array(3).fill([]).map(() => this.generateRandomPost()) as PostDto[];
     totalChildrenCount: number;
 
     creator: UserDto;
     discussionTopics: DisciplineTaxonomyDto[];
-    participants: UserDto[] = [];
+    participants: UserDto[] = Array(3).fill([]).map(() => this.generateRandomUser()) as UserDto[];
     subscriberIds: number[] = [];
-    relatedDiscussions: PostDto[] = [];
+    relatedDiscussions: PostDto[] = Array(3).fill([]).map(() => this.generateRandomPost()) as PostDto[];
 
-    isLoadingPost = false;
-    isLoadingChildren = false;
-    isLoadingParticipants = false;
-    isLoadingSubscriberIds = false;
-    isLoadingRelatedDiscussions = false;
+    isLoadingPost = true;
+    isLoadingChildren = true;
+    isLoadingParticipants = true;
+    isLoadingSubscriberIds = true;
+    isLoadingRelatedDiscussions = true;
     isUpdatingSubscribers = false;
 
     postFilteringEnum = PostFiltering;
@@ -107,6 +109,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
     get participantsCount(): number { return this.participants?.length ?? 0 + 1; }
     get postsCount(): number { return this.children?.length ?? 0; }
     get hiddenChildrenCount(): number { return this.totalChildrenCount - this.children.length; }
+    get shimmerType() { return ShimmerType }
 
     async ngOnInit() {
         this.isLoadingPost = true;

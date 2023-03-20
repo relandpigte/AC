@@ -30,6 +30,7 @@
         <div class="container-fluid community-content d-flex flex-row flex-nowrap">
             <div class="community-content-left flex-grow-1">
                 <app-community-composer
+                    [isLoading]="isLoading"
                     (onQuickPostClick)="handleAddPost('quick-post')"
                     (onQuestionClick)="handleAddPost('add-question')"
                     (onDiscussionClick)="handleAddPost('add-discussion')"
@@ -99,6 +100,7 @@
 
                 <ng-template #topicsTemplate let-item="item">
                     <div class="topic d-flex flex-row flex-nowrap" [title]="item.name">
+                        <app-shimmer [show]="isLoadingSuggestTopics" [shimmerType]="shimmerType.SideCardDouble"></app-shimmer>
                         <div class="topic-left flex-grow-1 d-flex flex-column flex-nowrap" [style.minWidth.px]="0">
                             <div class="topic-name wrap-text">#{{ item.name }}</div>
                             <div class="topic-followers">{{ 'Community.Topics.Followers' | localize: (item.followerCount | shortNum: 1) }}</div>
@@ -111,6 +113,7 @@
 
                 <ng-template #peopleToFollowTemplate let-item="item">
                     <div class="people d-flex flex-row flex-nowrap">
+                        <app-shimmer [show]="isLoadingPeopleToFollow" [shimmerType]="shimmerType.SideCardAvatar"></app-shimmer>
                         <div class="people-left flex-grow-1 d-flex flex-row flex-nowrap justify-content-center align-items-center">
                             <div class="people-avatar d-flex justify-content-center align-items-center">
                                 <img [src]="getProfilePicture(item.profilePictureUrl)" class="avatar avatar-sm avatar-img rounded-circle" alt="profile" />
@@ -128,6 +131,7 @@
 
                 <ng-template #recommendedCoursesTemplate let-item="item">
                     <div class="course d-flex flex-row flex-nowrap">
+                        <app-shimmer [show]="isLoadingRecommendedCourses" [shimmerType]="shimmerType.ArticleCard"></app-shimmer>
                         <div class="course-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
                             <div class="course-thumbnail bg-center flex-grow-1" [alt]="item.name" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>
                         </div>
@@ -140,6 +144,7 @@
 
                 <ng-template #recommendedArticlesTemplate let-item="item">
                     <div class="article d-flex flex-row flex-nowrap">
+                        <app-shimmer [show]="isLoadingRecommendedArticles" [shimmerType]="shimmerType.SideCardAvatar"></app-shimmer>
                         <div *ngIf="item.creatorUser" class="article-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
                             <div class="article-author bg-center flex-grow-1 avatar avatar-sm" [alt]="item.creatorUser?.fullName" [ngStyle]="{ 'background-image': 'url(\'' + getArticleAuthorAvatar(item) + '\')' }" ></div>
                         </div>
@@ -152,6 +157,7 @@
 
                 <ng-template #recommendedEventsTemplate let-item="item">
                     <div class="event d-flex flex-row flex-nowrap">
+                        <app-shimmer [show]="isLoadingRecommendedEvents" [shimmerType]="shimmerType.SideCardAvatar"></app-shimmer>
                         <div class="event-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
                             <div class="event-thumbnail bg-center flex-grow-1" [alt]="item.name" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>
                         </div>
@@ -165,6 +171,7 @@
 
                 <ng-template #recommendedTutorialsTemplate let-item="item">
                     <div class="tutorial d-flex flex-row flex-nowrap">
+                        <app-shimmer [show]="isLoadingRecommendedTutorials" [shimmerType]="shimmerType.SideCardAvatar"></app-shimmer>
                         <div class="tutorial-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
                             <div class="tutorial-thumbnail bg-center flex-grow-1" [alt]="item.name" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>
                         </div>

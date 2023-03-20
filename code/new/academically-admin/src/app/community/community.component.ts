@@ -2,7 +2,7 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ArticleDto, ArticlesServiceProxy, CourseDto, CoursesServiceProxy, DateGrains, DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, EventDto, EventsServiceProxy, SearchDisciplineTaxonomyRequestDto, UserDto, UserServiceProxy, UserTopicDto, UserTopicsServiceProxy, UserTopicType, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
-import { takeUntil } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 import * as _ from 'lodash';
 import { Router } from '@angular/router';
@@ -10,23 +10,32 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { AddTopicsComponent } from '@shared/modals/add-topics/add-topics.component';
 import { UpsertPostComponent } from '../../shared/modals/upsert-post/upsert-post.component';
 import { TopicSorting } from '@shared/components/topic/topic.component';
+import { CommunityService } from './community.service';
+import { ShimmerType } from '../../shared/enums/shimmer/shimmer-type.enum';
 
 @Component({
   selector: 'app-community',
   templateUrl: './community.component.html',
   styleUrls: ['./community.component.less'],
   animations: [appModuleAnimation()],
+  providers: [CommunityService]
 })
 export class CommunityComponent extends AppComponentBase implements OnInit {
-
+  isLoading = true;
   userTopics: UserTopicDto[] = [];
   selectedTopics: string[] = [];
-  suggestedTopics: DisciplineTaxonomyDto[] = [];
-  peopleToFollow: UserDto[] = [];
-  recommendedCourses: CourseDto[] = [];
-  recommendedArticles: ArticleDto[] = [];
-  recommendedEvents: EventDto[] = [];
-  recommendedTutorials: VideoDto[] = [];
+  isLoadingSuggestTopics = true;
+  isLoadingPeopleToFollow = true;
+  isLoadingRecommendedCourses = true;
+  isLoadingRecommendedArticles = true;
+  isLoadingRecommendedEvents = true;
+  isLoadingRecommendedTutorials = true;
+  suggestedTopics: DisciplineTaxonomyDto[] = Array(4).fill([]).map(() => this.generateRandomTopic()) as DisciplineTaxonomyDto[];
+  peopleToFollow: UserDto[] = Array(4).fill([]).map(() => this.generateRandomUser()) as UserDto[];
+  recommendedCourses: CourseDto[] = Array(4).fill([]).map(() => this.generateRandomCourse()) as CourseDto[];
+  recommendedArticles: ArticleDto[] = Array(4).fill([]).map(() => this.generateRandomArticle()) as ArticleDto[];
+  recommendedEvents: EventDto[] = Array(4).fill([]).map(() => this.generateRandomEvent()) as EventDto[];
+  recommendedTutorials: VideoDto[] = Array(4).fill([]).map(() => this.generateRandomTutorial()) as VideoDto[];
 
   constructor(
     injector: Injector,
@@ -38,12 +47,14 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     private _coursesService: CoursesServiceProxy,
     private _articlesService: ArticlesServiceProxy,
     private _eventsService: EventsServiceProxy,
-    private _videosService: VideosServiceProxy
+    private _videosService: VideosServiceProxy,
+    private communityService: CommunityService
   ) {
     super(injector);
   }
 
   get isDiscussion(): boolean { return this._router.url.includes(['community', 'discussion'].join('/')) }
+  get shimmerType() { return ShimmerType }
 
   ngOnInit(): void {
     this.getUserTopics();
@@ -53,6 +64,10 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     this.getRecommendedArticles();
     this.getRecommendedEvents();
     this.getRecommendedTutorials();
+
+    this.communityService.getIsLoading$().subscribe(isLoading => {
+      this.isLoading = isLoading;
+    });
   }
 
   handleFilterTopics(topics: string[]): void {
@@ -121,7 +136,12 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
 
   getUserTopics(): void {
     this._userTopicsService.getAll(undefined, this.appSession.userId, UserTopicType.Following, undefined)
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoadingSuggestTopics = false;
+        })
+      )
       .subscribe(topics => this.userTopics = topics.filter(x => x));
   }
 
@@ -133,13 +153,23 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     request.take = 4;
 
     this._taxonomyService.search(request)
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoadingSuggestTopics = false;
+        })
+      )
       .subscribe(topics => this.suggestedTopics = topics);
   }
 
   getPeopleToFollow(): void {
     this._usersService.getAll('', true, 'creationTime desc', 0, 4)
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoadingPeopleToFollow = false;
+        })
+      )
       .subscribe(pagedUsers => {
         this.peopleToFollow = pagedUsers.items ?? [];
         this.peopleToFollow = _.take(this.peopleToFollow, 4);
@@ -148,11 +178,16 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
 
   getRecommendedCourses(): void {
     this._coursesService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, undefined, 0, 4)
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoadingRecommendedCourses = false;
+        })
+      )
       .subscribe(pagedCourses => {
         const courses = pagedCourses;
+        this.recommendedCourses = [];
         if (courses) {
-          this.recommendedCourses = [];
           Object.keys(courses).forEach(range => {
             this.recommendedCourses = _.concat(this.recommendedCourses, courses[range]?.items);
             this.recommendedCourses = _.take(this.recommendedCourses, 4);
@@ -163,7 +198,12 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
 
   getRecommendedArticles(): void {
     this._articlesService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, undefined, 0, 4)
-    .pipe(takeUntil(this.destroyed$))
+    .pipe(
+      takeUntil(this.destroyed$),
+      finalize(() => {
+        this.isLoadingRecommendedArticles = false;
+      })
+    )
     .subscribe(pagedArticles => {
       const articles = pagedArticles;
       if (articles) {
@@ -178,7 +218,12 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
 
   getRecommendedEvents(): void {
     this._eventsService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, undefined, 0, 4)
-    .pipe(takeUntil(this.destroyed$))
+    .pipe(
+      takeUntil(this.destroyed$),
+      finalize(() => {
+        this.isLoadingRecommendedEvents = false;
+      })
+    )
     .subscribe(pagedEvents => {
       const events = pagedEvents;
       if (events) {
@@ -193,7 +238,12 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
 
   getRecommendedTutorials(): void {
     this._videosService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, undefined, 0, 4)
-    .pipe(takeUntil(this.destroyed$))
+    .pipe(
+      takeUntil(this.destroyed$),
+      finalize(() => {
+        this.isLoadingRecommendedTutorials = false;
+      })
+    )
     .subscribe(pagedTutorials => {
       const tutorials = pagedTutorials;
       if (tutorials) {

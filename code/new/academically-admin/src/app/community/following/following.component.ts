@@ -1,12 +1,15 @@
 import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit, ViewChildren } from '@angular/core';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CommunityPostCardComponent } from '@shared/components/community-post/community-post.component';
 import { CourseDto, CoursesServiceProxy, DateGrains, PostDto, PostsServiceProxy, PostType, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { MAX_POSTS_TO_LOAD, PostsStateService } from '@shared/services/posts-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
 import { takeUntil } from 'rxjs/operators';
+import {
+  CommunityDiscussionsComponent
+} from '@shared/components/community-discussions/community-discussions.component';
+import { CommunityService } from '../community.service';
 
 enum PostFiltering {
   All = 'Community.Posts.Filtering.All',
@@ -27,11 +30,11 @@ enum PostSorting {
   styleUrls: ['./following.component.less']
 })
 export class FollowingComponent extends AppComponentBase implements OnInit, OnDestroy {
-  @ViewChildren(CommunityPostCardComponent) postCards: CommunityPostCardComponent[];
+  @ViewChildren(CommunityDiscussionsComponent) commentContainer: CommunityDiscussionsComponent;
 
   postsStateService: PostsStateService;
 
-  posts: any[] = Array(3).fill([]).map(() => this.generateRandomPost()) as PostDto[];
+  posts: PostDto[] = Array(3).fill([]).map(() => this.generateRandomPost()) as PostDto[];
   totalPostsCount: number;
 
   usersYouMayKnow: UserDto[] = Array(5).fill([]).map(() => this.generateRandomUser()) as UserDto[];
@@ -39,7 +42,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
 
   isLoading_usersYouMayKnow = true;
   isLoading_recommendedCourses = true;
-  isLoadingPosts = false;
+  isLoadingPosts = true;
 
   usersYouMayKnowMaxItems: number = 0;
   recommendedCoursesMaxItems: number = 0;
@@ -59,6 +62,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     private _usersService: UserServiceProxy,
     private _coursesService: CoursesServiceProxy,
     private _postsService: PostsServiceProxy,
+    private communityService: CommunityService
   ) {
     super(injector);
   }
@@ -77,7 +81,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     }
   }
   get hiddenPostsCount(): number { return this.totalPostsCount - this.posts.length; }
-  get isLoading(): boolean { return this.postCards.some(p => p.isPostLoading); }
+  get isLoading(): boolean { return this.isLoadingPosts || this.commentContainer.isLoadingComments }
 
   async ngOnInit() {
     this.loadInfiniteData(this._usersService, 'getAll', ['', true, 'creationTime desc', 0, 6], 'usersYouMayKnow');
@@ -95,7 +99,10 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     await this.pubSubService.start(this, appStateConfig, appStateServices);
     this.postsStateService = this.pubSubService.getStateService<PostsStateService>(this.postsStateId);
 
-    this.postsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingPosts = loading);
+    this.postsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => {
+      this.isLoadingPosts = loading
+      this.communityService.setIsLoading(loading);
+    });
 
     this.postsStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
       if (this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) return;

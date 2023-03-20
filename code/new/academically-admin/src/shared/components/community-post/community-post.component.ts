@@ -7,6 +7,8 @@ import { AvailableServiceDto, DisciplineTaxonomyDto, PostsServiceProxy, PostType
 import { takeUntil } from 'rxjs/operators';
 
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
+import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
+
 import * as moment from 'moment';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { CommunityDiscussionsComponent } from '../community-discussions/community-discussions.component';
@@ -46,6 +48,10 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
         super(injector);
     }
 
+    get shimmerType() {
+        return ShimmerType;
+    }
+
     get posterName(): string { return this.data.creatorUser?.fullName ?? 'Anonymous'; }
     get postDate(): string {
         const time = moment(this.data.creationTime);
@@ -75,8 +81,6 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
                 return 'post';
         }
     }
-
-    get isPostLoading(): boolean { return this.isLoading || this.commentsContainer.isLoading; }
 
     async ngOnChanges(changes: SimpleChanges) {
         if ('data' in changes && this.data) {

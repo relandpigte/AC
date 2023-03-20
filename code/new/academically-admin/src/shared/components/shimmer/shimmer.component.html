@@ -1,0 +1,95 @@
+<div *ngIf="show" class="shimmer" [ngSwitch]="shimmerType">
+    <!--  Discussion card | Article card  -->
+    <ng-container *ngSwitchCase="ShimmerType.PostCard">
+        <div class="shimmer-row d-flex flex-row p-24">
+            <div class="shimmer-row-avatar circle"></div>
+            <div class="shimmer-row-comment flex-grow-1">
+                <div class="shimmer-row-comment-bar w-25 mt6"></div>
+                <div class="shimmer-row-comment-bar w-15"></div>
+            </div>
+        </div>
+        <div class="shimmer-row d-flex p-24">
+            <div class="shimmer-row-comment flex-grow-1">
+                <div class="shimmer-row-comment-bar w-100"></div>
+                <div class="shimmer-row-comment-bar w-75"></div>
+            </div>
+        </div>
+    </ng-container>
+
+    <!--  Side card with avatar  -->
+    <ng-container *ngSwitchCase="ShimmerType.SideCardAvatar">
+        <div class="shimmer-row d-flex flex-row p-15">
+            <div class="shimmer-row-avatar square"></div>
+            <div class="shimmer-row-comment flex-grow-1 align-items-center">
+                <div class="shimmer-row-comment-bar w-100 mt10"></div>
+                <div class="shimmer-row-comment-bar w-50"></div>
+            </div>
+        </div>
+    </ng-container>
+
+    <!--  Side card without avatar  -->
+    <ng-container *ngSwitchCase="ShimmerType.SideCardDouble">
+        <div class="shimmer-row d-flex flex-row p-15">
+            <div class="shimmer-row-comment flex-grow-1 align-items-center">
+                <div class="shimmer-row-comment-bar w-100"></div>
+                <div class="shimmer-row-comment-bar w-50"></div>
+            </div>
+        </div>
+    </ng-container>
+
+    <!--  Side card without avatar with 1 bar  -->
+    <ng-container *ngSwitchCase="ShimmerType.SideCardSingle">
+        <div class="shimmer-row d-flex flex-row p-15">
+            <div class="shimmer-row-comment flex-grow-1 align-items-center">
+                <div class="shimmer-row-comment-bar w-100"></div>
+            </div>
+        </div>
+    </ng-container>
+
+    <!--  User Card  -->
+    <ng-container *ngSwitchCase="ShimmerType.UsersCard">
+        <div class="shimmer-row d-flex flex-row justify-content-center p-24">
+            <div class="shimmer-row-avatar circle"></div>
+        </div>
+        <div class="shimmer-row d-flex flex-row p-24">
+            <div class="shimmer-row-comment flex-grow-1 align-items-center">
+                <div class="shimmer-row-comment-bar w-100"></div>
+                <div class="shimmer-row-comment-bar w-75 mt-0"></div>
+                <div class="shimmer-row-comment-bar w-25 mt40"></div>
+            </div>
+        </div>
+    </ng-container>
+
+    <!--  Service Card  -->
+    <ng-container *ngSwitchCase="ShimmerType.ServiceCard">
+        <div class="shimmer-row d-flex flex-row justify-content-center">
+            <div class="shimmer-row-banner"></div>
+        </div>
+        <div class="shimmer-row d-flex flex-row p-24">
+            <div class="shimmer-row-comment flex-grow-1 align-items-center">
+                <div class="shimmer-row-comment-bar w-100"></div>
+                <div class="shimmer-row-comment-bar w-75"></div>
+                <div class="shimmer-row-comment-bar w-25 b-25"></div>
+            </div>
+        </div>
+    </ng-container>
+
+    <!--  Article Card  -->
+    <ng-container *ngSwitchCase="ShimmerType.ArticleCard">
+        <div class="shimmer-row d-flex flex-row p-24">
+            <div class="shimmer-row-comment flex-grow-1 align-items-center">
+                <div class="shimmer-row-comment-bar w-100"></div>
+                <div class="shimmer-row-comment-bar w-75"></div>
+                <div class="shimmer-row-comment-bar w-25 b-25"></div>
+            </div>
+        </div>
+    </ng-container>
+
+    <!--  Composer  -->
+    <ng-container *ngSwitchCase="ShimmerType.Composer">
+        <div class="shimmer-row shimmer-composer d-flex flex-row">
+            <div class="shimmer-row-avatar circle"></div>
+        </div>
+    </ng-container>
+</div>
+

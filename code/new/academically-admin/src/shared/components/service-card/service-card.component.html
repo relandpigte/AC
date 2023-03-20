@@ -1,27 +1,5 @@
 <div *ngIf="type" class="service-card d-flex flex-column" [ngClass]="[isFeatured ? 'feature' : type]" (click)="handleClick()">
-    <div *ngIf="isLoading" class="service-card-shimmer flex-grow-1 d-flex flex-column">
-        <ng-container *ngIf="shimmerType === 0">
-            <div class="service-card-shimmer-img service-card-shimmer-bar"></div>
-            <div class="service-card-shimmer-header service-card-shimmer-bar"></div>
-            <div class="service-card-shimmer-title service-card-shimmer-bar"></div>
-            <div class="service-card-shimmer-owner service-card-shimmer-bar"></div>
-        </ng-container>
-        <ng-container *ngIf="shimmerType === 1">
-            <div class="service-card-shimmer-header service-card-shimmer-bar"></div>
-            <div class="service-card-shimmer-title service-card-shimmer-bar"></div>
-            <div class="service-card-shimmer-owner service-card-shimmer-bar"></div>
-        </ng-container>
-        <ng-container *ngIf="shimmerType === 2">
-            <div class="flex-grow-1 d-flex flex-column justify-content-center align-content-center align-items-center">
-                <div class="flex-grow-1 d-flex align-items-center">
-                    <div class="service-card-shimmer-avatar service-card-shimmer-bar"></div>
-                </div>
-                <div class="flex-grow-1 d-flex align-items-center">
-                    <div class="service-card-shimmer-name service-card-shimmer-bar"></div>
-                </div>
-            </div>
-        </ng-container>
-    </div>
+    <app-shimmer [show]="isLoading" [shimmerType]="shimmerType"></app-shimmer>
 
     <div *ngIf="isFeatured" class="service-card-bg-img bg-center w-100 h-100" [ngStyle]="{ 'background-image': 'url(\'' + images[0].src + '\')' }" [ngClass]="[images[0].class ? images[0].class : '']">
         <div class="service-card-bg-img-veil w-100 h-100"></div>
