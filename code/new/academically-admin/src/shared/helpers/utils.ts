@@ -35,8 +35,10 @@ export class Utils {
       let wheelActive;
 
       function dispatch(e, name) {
-        position.x -= e.deltaY;
-        position.y -= e.deltaX;
+        const direction = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+        position.x -= direction;
+        position.y -= direction;
+
         slider.container.dispatchEvent( new CustomEvent(name, { detail: { x: position.x, y: position.y } }) );
       }
 
