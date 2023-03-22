@@ -147,6 +147,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     model.referenceId = this.referenceId;
     model.parentId = parentId;
     model.body = message.value ?? message.innerHTML;
+    model.taggedId = this.taggedPerson?.id;
     model.serviceId = parentId ? this.selectedServiceForChild?.id : this.selectedService?.id;
     model.serviceType = parentId ? this.selectedServiceForChild?.serviceType : this.selectedService?.serviceType;
 
@@ -161,6 +162,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
           message.value = '';
           message.innerHTML = '';
           message.blur();
+          this.taggedPerson = null;
           if (parentId) this.selectedServiceForChild = null;
           else this.selectedService = null;
           this.notify.success(this.l('SuccessfullyPosted'));

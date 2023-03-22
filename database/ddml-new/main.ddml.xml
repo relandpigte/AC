@@ -162,4 +162,5 @@
 	<include file="ddml-new/ddml.2023-03-09-02-alter-event-table-merge-workshop.xml" />
 	<include file="ddml-new/ddml.2023-03-13-01-drop-workshop-tables.xml" />
 	<include file="ddml-new/ddml.2023-03-14-01-rename-tables.xml" />
+	<include file="ddml-new/ddml.2023-03-22-01-comments-tagged-person.xml" />
 </databaseChangeLog>

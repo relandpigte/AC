@@ -24,12 +24,15 @@ namespace Academically.Services.Comments.Dto
 
         public Guid? ServiceId { get; set; }
 
+        public long? TaggedId { get; set; }
+
         public ServicesType? ServiceType { get; set; }
 
         public int ReplyCount { get; set; }
 
         public CommentDto Parent { get; set; }
         public UserDto CreatorUser { get; set; }
+        public UserDto TaggedUser { get; set; }
 
         public IEnumerable<CommentDto> Children { get; set; }
         public IEnumerable<CommentReactionDto> CommentReactions { get; set; }

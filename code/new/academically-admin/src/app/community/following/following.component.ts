@@ -153,13 +153,14 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
   }
 
   onLoadMore(): void {
-    this.postsStateService.loading$.next(true);
+    // we don't need to display loader when loading more items.
+    // this.postsStateService.loading$.next(true);
     const lastPostCreationTime = this.posts?.[this.posts.length - 1]?.creationTime;
     this._postsService.getAllPostsPaged(undefined, undefined, lastPostCreationTime, 0, MAX_POSTS_TO_LOAD)
         .subscribe(posts => {
           this.postsStateService.pushMorePosts(posts.items);
           this.posts = this.postsStateService.getAllPosts();
-          this.postsStateService.loading$.next(false);
+          // this.postsStateService.loading$.next(false);
           this._cdr.detectChanges();
         });
   }

@@ -16,6 +16,8 @@ namespace Academically.Domain.Entities
 
         public Guid? ServiceId { get; set; }
 
+        public long? TaggedId { get; set; }
+
         public ServicesType? ServiceType { get; set; }
 
         [ForeignKey("ParentId")]
@@ -23,6 +25,9 @@ namespace Academically.Domain.Entities
 
         [ForeignKey("CreatorUserId")]
         public virtual User CreatorUser { get; set; }
+
+        [ForeignKey("TaggedId")]
+        public virtual User TaggedUser { get; set; }
 
         public virtual ICollection<Comment> Children { get; set; }
         public virtual ICollection<CommentReaction> CommentReactions { get; set; }

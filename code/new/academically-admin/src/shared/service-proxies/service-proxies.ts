@@ -30259,10 +30259,12 @@ export class CommentDto implements ICommentDto {
     referenceId: string | undefined;
     creationTime: moment.Moment;
     serviceId: string | undefined;
+    taggedId: number | undefined;
     serviceType: ServicesType;
     replyCount: number;
     parent: CommentDto;
     creatorUser: UserDto;
+    taggedUser: UserDto;
     children: CommentDto[] | undefined;
     commentReactions: CommentReactionDto[] | undefined;
     article: ArticleDto;
@@ -30288,10 +30290,12 @@ export class CommentDto implements ICommentDto {
             this.referenceId = _data["referenceId"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.serviceId = _data["serviceId"];
+            this.taggedId = _data["taggedId"];
             this.serviceType = _data["serviceType"];
             this.replyCount = _data["replyCount"];
             this.parent = _data["parent"] ? CommentDto.fromJS(_data["parent"]) : <any>undefined;
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+            this.taggedUser = _data["taggedUser"] ? UserDto.fromJS(_data["taggedUser"]) : <any>undefined;
             if (Array.isArray(_data["children"])) {
                 this.children = [] as any;
                 for (let item of _data["children"])
@@ -30325,10 +30329,12 @@ export class CommentDto implements ICommentDto {
         data["referenceId"] = this.referenceId;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["serviceId"] = this.serviceId;
+        data["taggedId"] = this.taggedId;
         data["serviceType"] = this.serviceType;
         data["replyCount"] = this.replyCount;
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        data["taggedUser"] = this.taggedUser ? this.taggedUser.toJSON() : <any>undefined;
         if (Array.isArray(this.children)) {
             data["children"] = [];
             for (let item of this.children)
@@ -30362,10 +30368,12 @@ export interface ICommentDto {
     referenceId: string | undefined;
     creationTime: moment.Moment;
     serviceId: string | undefined;
+    taggedId: number | undefined;
     serviceType: ServicesType;
     replyCount: number;
     parent: CommentDto;
     creatorUser: UserDto;
+    taggedUser: UserDto;
     children: CommentDto[] | undefined;
     commentReactions: CommentReactionDto[] | undefined;
     article: ArticleDto;

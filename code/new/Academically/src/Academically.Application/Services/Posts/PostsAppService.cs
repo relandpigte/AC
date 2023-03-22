@@ -314,6 +314,7 @@ namespace Academically.Services.Posts
             var commentsParticipant = _commentsRepository.GetAll()
                     .Where(w => w.ReferenceId == id.ToString())
                     .Include(c => c.CreatorUser)
+                    .Include(c => c.TaggedUser)
                     .Select(s => ObjectMapper.Map<UserDto>(s.CreatorUser));
 
             if (commentsParticipant.Any())
@@ -451,6 +452,8 @@ namespace Academically.Services.Posts
             var created = await _commentsRepository.GetAll()
                 .Include(e => e.CreatorUser)
                 .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.TaggedUser)
+                .ThenInclude(e => e.ProfilePictureDocument)
                 .Include(e => e.CommentReactions)
                 .OrderByDescending(e => e.CreationTime)
                 .Where(e => e.Id == createdId)
@@ -466,6 +469,8 @@ namespace Academically.Services.Posts
                 .WhereIf(input.ParentIdFilter.HasValue, e => e.ParentId == input.ParentIdFilter)
                 .Include(e => e.Children)
                 .Include(e => e.CreatorUser)
+                .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.TaggedUser)
                 .ThenInclude(e => e.ProfilePictureDocument)
                 .Include(e => e.CommentReactions)
                 .OrderByDescending(e => e.CreationTime);
@@ -499,6 +504,8 @@ namespace Academically.Services.Posts
                 .Where(e => e.ParentId == null && e.ReferenceId == referenceId)
                 .Include(e => e.CreatorUser)
                 .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.TaggedUser)
+                .ThenInclude(e => e.ProfilePictureDocument)
                 .Include(e => e.CommentReactions)
                 .OrderByDescending(e => e.CreationTime)
                 .Select(e => new
@@ -527,6 +534,8 @@ namespace Academically.Services.Posts
             var comments = await query.OrderByDescending(e => e.CreationTime)
                 .PageBy(input)
                 .Include(e => e.CreatorUser)
+                .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.TaggedUser)
                 .ThenInclude(e => e.ProfilePictureDocument)
                 .Include(e => e.CommentReactions)
                 .Select(e => ObjectMapper.Map<CommentDto>(e))

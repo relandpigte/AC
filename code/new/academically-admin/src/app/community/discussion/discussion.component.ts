@@ -281,13 +281,14 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
     }
 
     onLoadMore(): void {
-        this.postsStateService.loading$.next(true);
+        // we don't need to display loader when loading more items.
+        // this.postsStateService.loading$.next(true);
         const lastPostCreationTime = this.children?.[this.children.length - 1]?.creationTime;
         this._postsService.getAllPostsPaged(undefined, undefined, lastPostCreationTime, 0, MAX_POSTS_TO_LOAD)
             .subscribe(posts => {
               this.postsStateService.pushMorePosts(posts.items);
               this.children = this.postsStateService.getAllPosts();
-              this.postsStateService.loading$.next(false);
+            //   this.postsStateService.loading$.next(false);
               this._cdr.detectChanges();
             });
       }
