@@ -9,7 +9,8 @@
         <div class="discussion-header-back-text">Back to community</div>
     </div>
     <div class="discussion-title" [style.marginTop.px]="30">Discussion</div>
-    <div class="discussion-info card p-0" [style.marginTop.px]="10">
+    <div class="discussion-info card p-0" [style.marginTop.px]="10" [ngClass]="{'discussion-loading': isLoading}">
+        <app-shimmer [show]="isLoading" [shimmerType]="shimmerType.DiscussionCard"></app-shimmer>
         <div class="card-body position-relative">
             <div class="discussion-info-options d-flex justify-content-start align-items-center">
                 <div class="dropdown">
