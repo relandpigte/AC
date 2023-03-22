@@ -85,10 +85,7 @@ export class PostsStateService extends StateServiceBase {
   }
 
   updateChildrenCount(post: PostDto) {
-    this.loading$.next(true);
-    this._postsService.getCommentsCount(post.id)
-      .pipe(finalize(() => this.loading$.next(false)))
-      .subscribe(count => post.commentsCount = count)
+    this._postsService.getCommentsCount(post.id).subscribe(count => post.commentsCount = count)
   }
 
   pushMorePosts(posts: PostDto[]) {

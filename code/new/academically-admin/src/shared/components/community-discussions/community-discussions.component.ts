@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { AddServiceComponent } from '@shared/modals/add-service/add-service.component';
-import { AvailableServiceDto, CommentDto, PostsServiceProxy, PostType } from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, CommentDto, PostsServiceProxy, PostType, UserDto } from '@shared/service-proxies/service-proxies';
 import { CommentsStateService, MAX_COMMENT_LEVELS, MAX_REPLIES_TO_LOAD } from '@shared/services/comments-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
@@ -48,6 +48,8 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   isShowServicePicker = false;
   selectedService: AvailableServiceDto;
   selectedServiceForChild: AvailableServiceDto;
+
+  taggedPerson: UserDto;
 
   constructor(
     injector: Injector,
@@ -144,7 +146,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     const model = new CommentDto();
     model.referenceId = this.referenceId;
     model.parentId = parentId;
-    model.body = message.value;
+    model.body = message.value ?? message.innerHTML;
     model.serviceId = parentId ? this.selectedServiceForChild?.id : this.selectedService?.id;
     model.serviceType = parentId ? this.selectedServiceForChild?.serviceType : this.selectedService?.serviceType;
 
@@ -157,6 +159,8 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
           })
         ).subscribe(() => {
           message.value = '';
+          message.innerHTML = '';
+          message.blur();
           if (parentId) this.selectedServiceForChild = null;
           else this.selectedService = null;
           this.notify.success(this.l('SuccessfullyPosted'));
@@ -165,9 +169,21 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   }
 
   protected onMessageKeydown(event: any, form: NgForm, post?: any): void {
+    const isCursorAtTheStart = (el) => {
+      const range = window.getSelection().getRangeAt(0)
+      const pre_range = document.createRange();
+      pre_range.selectNodeContents(el);
+      pre_range.setEnd(range.startContainer, range.startOffset);
+      const text = pre_range.cloneContents();
+      return text.textContent.length === 0;
+    };
+
     if (event.keyCode === 13 && (!this.ctrlEnterToSubmit || (this.ctrlEnterToSubmit && event.ctrlKey))) {
       form.ngSubmit.emit();
       event.preventDefault();
+    }
+    if (event.keyCode === 8) {
+      if (!event.target?.innerHTML || isCursorAtTheStart(event.target)) this.taggedPerson = null;
     }
     if (post) setTimeout(() => this.inputLength = post.value.length);
   }
@@ -196,12 +212,13 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       if (this.commentReplyId === id) {
         setTimeout(() => {
           const addReplyEl = this._elRef.nativeElement.querySelector(`#add-reply-${id}`);
-          if (addReplyEl) addReplyEl.focus();
+          if (addReplyEl) this.placeCaretAtEndAfterFocus(addReplyEl);
         });
       }
     } else {
       this.onReplyEmit.emit(this.parentId);
     }
+    this.taggedPerson = this.comments.find(c => c.id === id)?.creatorUser;
     this.selectedServiceForChild = null;
   }
 
@@ -232,6 +249,17 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
 
   doAddComment(): void {
     this.showAddComment = true;
-    setTimeout(() => this.addCommentEl?.nativeElement.focus());
+    setTimeout(() => this.placeCaretAtEndAfterFocus(this.addCommentEl?.nativeElement));
+  }
+
+  private placeCaretAtEndAfterFocus(el) {
+    if (!el) return;
+    el.focus();
+    var range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
   }
 }

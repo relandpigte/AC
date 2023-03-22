@@ -100,7 +100,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     this.postsStateService = this.pubSubService.getStateService<PostsStateService>(this.postsStateId);
 
     this.postsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => {
-      this.isLoadingPosts = loading
+      this.isLoadingPosts = loading;
       this.communityService.setIsLoading(loading);
     });
 

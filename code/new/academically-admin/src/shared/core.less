@@ -1466,3 +1466,27 @@ each(range(1px, 30px, 1), {
     width: 3px;
   }
 }
+
+[contenteditable] {
+  outline: 0px solid transparent;
+
+  &.with-placeholder:empty {
+    color: rgba(149, 170, 201, 0.7);
+
+    &:before {
+      content: attr(data-placeholder);
+    }
+  }
+}
+
+.h-sroll {
+  overflow-y: hidden;
+  overflow-x: auto;
+  width: 0 !important;
+
+  &-hidden {
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
