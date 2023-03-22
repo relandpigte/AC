@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ArticleDto, ArticlesServiceProxy, CourseDto, CoursesServiceProxy, DateGrains, DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, EventDto, EventsServiceProxy, SearchDisciplineTaxonomyRequestDto, UserDto, UserServiceProxy, UserTopicDto, UserTopicsServiceProxy, UserTopicType, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, ArticlesServiceProxy, CourseDto, CoursesServiceProxy, CreateUserTopicDto, DateGrains, DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, EventDto, EventsServiceProxy, SearchDisciplineTaxonomyRequestDto, UserDto, UserServiceProxy, UserTopicDto, UserTopicsServiceProxy, UserTopicType, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 
 import * as _ from 'lodash';
@@ -36,6 +36,9 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   recommendedArticles: ArticleDto[] = Array(4).fill([]).map(() => this.generateRandomArticle()) as ArticleDto[];
   recommendedEvents: EventDto[] = Array(4).fill([]).map(() => this.generateRandomEvent()) as EventDto[];
   recommendedTutorials: VideoDto[] = Array(4).fill([]).map(() => this.generateRandomTutorial()) as VideoDto[];
+
+  isFollowingTopic = false;
+  topicInFocus: string;
 
   constructor(
     injector: Injector,
@@ -113,6 +116,30 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     modalSettings.class = 'modal-lg';
 
     const modal = this._modalService.show(AddTopicsComponent, modalSettings).content;
+  }
+
+  handleOnFollowTopic(topic: DisciplineTaxonomyDto): void {
+    this.isFollowingTopic = true;
+    this.topicInFocus = topic.id;
+
+    const request = new CreateUserTopicDto();
+    request.userId = this.appSession.userId;
+    request.disciplineTaxonomyId = topic.id;
+    request.type = UserTopicType.Following;
+
+    this._userTopicsService.create(request)
+        .pipe(takeUntil(this.destroyed$))
+        .pipe(finalize(() => {
+            this.isFollowingTopic = false;
+            this.topicInFocus = null;
+        }))
+        .subscribe(() => {
+          this.suggestedTopics.forEach(t => {
+            if (t.id === topic.id) t.userTopics.push(request as UserTopicDto);
+          });
+          this.notify.info(this.l('Community.Topics.Follow.Success', topic.name));
+          setTimeout(() => this.getSuggestedTopics(), 3000);
+        });
   }
 
   getCourseThumbnail(course: CourseDto): string {
@@ -254,6 +281,10 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
         });
       }
     });
+  }
+
+  isTopicFollowed(topic: DisciplineTaxonomyDto): boolean {
+    return topic?.userTopics?.some(u => u.userId === this.appSession.userId && u.type === UserTopicType.Following);
   }
 
 }

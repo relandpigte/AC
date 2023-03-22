@@ -106,7 +106,13 @@
                             <div class="topic-followers">{{ 'Community.Topics.Followers' | localize: (item.followerCount | shortNum: 1) }}</div>
                         </div>
                         <div class="topic-right d-flex justify-content-center align-items-center">
-                            <div type="button" class="btn btn-white topic-btn d-flex justify-content-center align-items-center">Follow</div>
+                            <div type="button"
+                                class="btn btn-white topic-btn d-flex justify-content-center align-items-center"
+                                [class.activated]="isTopicFollowed(item)"
+                                (click)="handleOnFollowTopic(item)">
+                            {{ isTopicFollowed(item) ? 'Following' : 'Follow'  }}
+                            <span *ngIf="topicInFocus === item.id && isFollowingTopic" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        </div>
                         </div>
                     </div>
                 </ng-template>
