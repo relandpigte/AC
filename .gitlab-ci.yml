@@ -107,7 +107,7 @@ variables:
     - yarn init --yes 2>/dev/null
     - echo "install plugins"
     - "yarn add serverless-plugin-log-retention --dev"
-    - "yarn add serverless-domain-manager --dev"    
+    - "yarn add serverless-domain-manager@6.4.4 --dev"    # Hard code due to issue AC- 
     # perform subsitutions on appsettings (need to unzip and rezip)
     - mkdir $CI_PROJECT_DIR/temp
     - unzip $CI_PROJECT_DIR/artifacts/backend.zip -d $CI_PROJECT_DIR/temp
