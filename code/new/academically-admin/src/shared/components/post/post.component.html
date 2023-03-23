@@ -31,6 +31,7 @@
                         name="information"
                         required
                         placeholder="{{ 'Community.QuickPost.Add.Information' | localize }}"
+                        (focus)="updateFocusedField(focusField.Content)"
                     ></textarea>
                 </div>
             </ng-container>
@@ -46,6 +47,7 @@
                         name="title"
                         required
                         placeholder="{{ 'Community.Question.Add.Title' | localize }}"
+                        (focus)="updateFocusedField(focusField.Title)"
                     ></textarea>
                 </div>
             </ng-container>
@@ -63,6 +65,7 @@
                         name="title"
                         required
                         placeholder="{{ 'Community.Discussion.Add.Title' | localize }}"
+                        (focus)="updateFocusedField(focusField.Title)"
                     />
                 </div>
                 <div class="post-body-information flex-grow-1 d-flex" [style.paddingTop.px]="10">
@@ -76,6 +79,7 @@
                         name="information"
                         required
                         placeholder="{{ 'Community.Discussion.Add.Information' | localize }}"
+                        (focus)="updateFocusedField(focusField.Content)"
                     ></textarea>
                 </div>
             </ng-container>
