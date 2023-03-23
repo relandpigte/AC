@@ -1,17 +1,17 @@
 
 import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
+import * as moment from 'moment';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+
 import { AppComponentBase } from '@shared/app-component-base';
 import { FileUtils } from '@shared/helpers/file-utils';
 import { AvailableServiceDto, DisciplineTaxonomyDto, PostsServiceProxy, PostType } from '@shared/service-proxies/service-proxies';
-import { takeUntil } from 'rxjs/operators';
-
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
-
-import * as moment from 'moment';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { CommunityDiscussionsComponent } from '../community-discussions/community-discussions.component';
+import { Utils } from '@shared/helpers/utils';
 
 @Component({
     selector: 'app-community-post-card',

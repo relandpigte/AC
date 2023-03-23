@@ -33,9 +33,9 @@
     </div>
 
     <div class="card-body">
-        <app-community-post *ngIf="activeTab === 'quick-post'" type="quick-post" [model]="model" (onModelChange)="handleModelChanged($event)"></app-community-post>
-        <app-community-post *ngIf="activeTab === 'add-question'" type="add-question" [model]="model" (onModelChange)="handleModelChanged($event)"></app-community-post>
-        <app-community-post *ngIf="activeTab === 'add-discussion'" type="add-discussion" [model]="model" (onModelChange)="handleModelChanged($event)"></app-community-post>
+        <app-community-post *ngIf="activeTab === 'quick-post'" type="quick-post" [model]="model" (onModelChange)="handleModelChanged($event)" (onFocusChange)="handleFocusChange($event)" [information]="model?.information"></app-community-post>
+        <app-community-post *ngIf="activeTab === 'add-question'" type="add-question" [model]="model" (onModelChange)="handleModelChanged($event)" (onFocusChange)="handleFocusChange($event)" [information]="model?.information"></app-community-post>
+        <app-community-post *ngIf="activeTab === 'add-discussion'" type="add-discussion" [model]="model" (onModelChange)="handleModelChanged($event)" (onFocusChange)="handleFocusChange($event)" [information]="model?.information" [title]="model?.title"></app-community-post>
         <app-attachment-preview
             *ngIf="fileAttachment"
             [canRemove]="canRemoveAttachment"
