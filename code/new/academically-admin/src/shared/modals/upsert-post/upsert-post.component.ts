@@ -34,7 +34,7 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
   isShowEmojiPicker = false;
   sanitizedAttachmentUrl: SafeUrl;
   focusedField: string;
-
+  caretPosition: number;
 
   @Input() allowTabs = true;
   @Input() canCancel = true;
@@ -98,11 +98,14 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   handleFocusChange(field: string): void {
     this.focusedField = field;
+  }
+
+  handleCaretChange(pos: number): void {
+    this.caretPosition = pos;
   }
 
   onCloseClick(): void {
@@ -199,21 +202,20 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
   }
 
   handleOnEmojiSelect(selected: Emoji): void {
-    if (this.model.information == null) {
-      this.model.information = this.model.content;
-    }
+    this.model.information = this.model.information ?? this.model.content;
+    this.isShowEmojiPicker = false;
 
     const emoji: string = (selected.emoji as any).native;
+    const {title, information} = this.model;
+    const pos = this.caretPosition;
     switch (this.focusedField) {
       case PostFocusField.Title:
-        this.model.title += emoji;
+        this.model.title = `${title.slice(0, pos)}${emoji}${title.slice(pos)}`;
         break;
       default:
-        this.model.information += emoji;
+        this.model.information = `${information.slice(0, pos)}${emoji}${information.slice(pos)}`;
         break;
     }
-
-    this.isShowEmojiPicker = false;
   }
 
   onFileChange(e: any) {

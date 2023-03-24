@@ -18,7 +18,6 @@ export interface VisibilityOptions {
   styleUrls: ['./post.component.scss']
 })
 export class CommunityPostComponent extends AppComponentBase implements OnInit, OnChanges {
-
   @ViewChild('titleEl') titleEl: ElementRef<HTMLElement>;
   @ViewChild('informationEl') informationEl: ElementRef<HTMLElement>;
   @ViewChild('topicEl') topicInput: ElementRef<HTMLElement>;
@@ -26,19 +25,17 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit, 
   @Input() type: PostTabs;
   @Output() onModelChange = new EventEmitter<any>();
   @Output() onFocusChange: EventEmitter<string> = new EventEmitter<string>();
+  @Output() onCaretPos: EventEmitter<number> = new EventEmitter<number>();
+  @Input() title: string;
+  @Input() information: string;
+  @Input() model: any = {};
 
   visibility: VisibilityOptions;
   visibilityOptions: VisibilityOptions[] = [];
-
-  @Input() title: string;
-  @Input() information: string;
-
   topicsChoices: any[] = [];
   selectedTopics: { id: string, name: string }[] = [];
   newSelectedTopics: { id: string, name: string }[] = [];
   isLoadingTopics = false;
-
-  @Input() model: any = {};
 
   constructor(
     injector: Injector,
@@ -72,29 +69,8 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit, 
     this.onFocusChange.emit(field);
   }
 
-  private initVisibilityOptions(): void {
-    this.visibilityOptions = [
-      { label: 'to everyone', value: null }
-    ];
-    this.visibility = this.visibilityOptions[0];
-  }
-
-  private getPostType(): PostType {
-    switch(this.type) {
-      case PostTabs.QuickPost:
-        return PostType.QuickPost;
-      case PostTabs.AddQuestion:
-        return PostType.Question;
-      default:
-        return PostType.Discussion;
-    }
-  }
-
-  private setFocus(): void {
-    setTimeout(() => {
-      if (this.titleEl) this.titleEl.nativeElement.focus();
-      else if (this.informationEl) this.informationEl.nativeElement.focus();
-    }, 10);
+  updateCaretPos(elementRef: HTMLTextAreaElement | HTMLInputElement): void {
+    this.onCaretPos.emit(elementRef.selectionStart);
   }
 
   updateFields(): void {
@@ -128,5 +104,30 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit, 
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoadingTopics = false))
       .subscribe(topics => this.topicsChoices = topics.filter(t => !this.selectedTopics.some(x => x.id === t.id)));
+  }
+
+  private initVisibilityOptions(): void {
+    this.visibilityOptions = [
+      { label: 'to everyone', value: null }
+    ];
+    this.visibility = this.visibilityOptions[0];
+  }
+
+  private getPostType(): PostType {
+    switch(this.type) {
+      case PostTabs.QuickPost:
+        return PostType.QuickPost;
+      case PostTabs.AddQuestion:
+        return PostType.Question;
+      default:
+        return PostType.Discussion;
+    }
+  }
+
+  private setFocus(): void {
+    setTimeout(() => {
+      if (this.titleEl) this.titleEl.nativeElement.focus();
+      else if (this.informationEl) this.informationEl.nativeElement.focus();
+    }, 10);
   }
 }
