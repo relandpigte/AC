@@ -4,6 +4,7 @@
 	{
 		QuickPost,
 		Question,
-		Discussion
+		Discussion,
+		Shared
 	}
 }
