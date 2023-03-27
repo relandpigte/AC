@@ -123,17 +123,12 @@ namespace Academically.Services.Posts
                                   .ToListAsync();
             foreach (var item in result)
             {
-                if (item.ServiceId.HasValue)
-                {
-                    var param = new PagedGetAvailableServicesRequestDto() { Keyword = item.ServiceId.Value.ToString() };
-                    item.Service = this.GetAvailableServices(param).Result.Items.FirstOrDefault();
-                }
+                if (item.SharedId.HasValue)
+                    await FillInShared(item);
 
                 foreach (var attachment in item.PostAttachments)
-                {
                     attachment.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(attachment.DocumentId);
-                }
-
+                
                 item.CommentsCount = await this.GetCommentsCountAsync(item.Id.ToString());
             }
 
@@ -170,16 +165,11 @@ namespace Academically.Services.Posts
                                    .ToListAsync();
             foreach (var item in result)
             {
-                if (item.ServiceId.HasValue)
-                {
-                    var param = new PagedGetAvailableServicesRequestDto() { Keyword = item.ServiceId.Value.ToString() };
-                    item.Service = this.GetAvailableServices(param).Result.Items.FirstOrDefault();
-                }
+                if (item.SharedId.HasValue)
+                    await FillInShared(item);
 
                 foreach (var attachment in item.PostAttachments)
-                {
                     attachment.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(attachment.DocumentId);
-                }
 
                 item.CommentsCount = await this.GetCommentsCountAsync(item.Id.ToString());
             }
@@ -190,6 +180,16 @@ namespace Academically.Services.Posts
         [AbpAuthorize(PermissionNames.Pages_Posts_Create)]
         public async Task Create([FromForm] CreatePostDto input)
         {
+            if(input.Type == PostType.Shared && !input.SharedId.HasValue)
+                throw new InvalidOperationException("Post with shared type has no specified post or service.");
+            
+            if (input.SharedId.HasValue && 
+                input.SharedType == SharedType.Service &&
+                !input.SharedServiceType.HasValue)
+            {
+                throw new InvalidOperationException("Service type is required for sharing a service in a post.");
+            }
+
             var post = ObjectMapper.Map<Post>(input);
             var postId = await _postRepository.InsertAndGetIdAsync(post);
 
@@ -269,13 +269,8 @@ namespace Academically.Services.Posts
                 .ToListAsync();
 
             foreach (var item in result)
-            {
-                if (item.ServiceId.HasValue)
-                {
-                    var param = new PagedGetAvailableServicesRequestDto() { Keyword = item.ServiceId.Value.ToString() };
-                    item.Service = this.GetAvailableServices(param).Result.Items.FirstOrDefault();
-                }
-            }
+                if (item.SharedId.HasValue)
+                    await FillInShared(item);
 
             return result;
         }
@@ -643,6 +638,56 @@ namespace Academically.Services.Posts
                     break;
                 default:
                     break;
+            }
+        }
+
+        private async Task FillInShared(PostDto post)
+        {
+            if (!post.SharedId.HasValue)
+                return;
+
+            if(post.SharedType == SharedType.Post)
+            {
+                post.SharedPost = await GetAsync(post.SharedId.Value);
+            }
+            else
+            {
+                switch (post.SharedServiceType)
+                {
+                    case ServicesType.Event:
+                    case ServicesType.Workshop:
+                        var event_ = await _eventRepository.GetAsync(post.SharedId.Value);
+                        post.SharedServiceEvent = ObjectMapper.Map<EventDto>(event_);
+                        if (post.SharedServiceEvent.ThumbnailDocumentId.HasValue)
+                            post.SharedServiceEvent.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(post.SharedServiceEvent.ThumbnailDocumentId.Value);
+                        break;
+                    case ServicesType.Course:
+                        var course = await _coursesRepository.GetAsync(post.SharedId.Value);
+                        post.SharedServiceCourse = ObjectMapper.Map<CourseDto>(course);
+                        if (post.SharedServiceCourse.ImageDocumentId.HasValue)
+                            post.SharedServiceCourse.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(course.ImageDocumentId.Value);
+                        break;
+                    case ServicesType.Tutorial:
+                        var video = await _videoRepository.GetAsync(post.SharedId.Value);
+                        post.SharedServiceVideo = ObjectMapper.Map<VideoDto>(video);
+                        if (post.SharedServiceVideo.ThumbnailDocumentId.HasValue)
+                            post.SharedServiceVideo.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(post.SharedServiceVideo.ThumbnailDocumentId.Value);
+                        break;
+                    case ServicesType.Article:
+                        var article = await _articlesRepository.GetAsync(post.SharedId.Value);
+                        post.SharedServiceArticle = ObjectMapper.Map<ArticleDto>(article);
+                        if (post.SharedServiceArticle.ThumbnailDocumentId.HasValue)
+                            post.SharedServiceArticle.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(post.SharedServiceArticle.ThumbnailDocumentId.Value);
+                        break;
+                    case ServicesType.Coaching:
+                        var coaching = await _coachingRepository.GetAsync(post.SharedId.Value);
+                        post.SharedServiceCoaching = ObjectMapper.Map<CoachingDto>(coaching);
+                        if (post.SharedServiceCoaching.ThumbnailDocumentId.HasValue)
+                            post.SharedServiceCoaching.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(coaching.ThumbnailDocumentId.Value);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

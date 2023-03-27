@@ -3,6 +3,10 @@ using Abp.AutoMapper;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Services.Articles.Dto;
+using Academically.Services.Coachings.Dto;
+using Academically.Services.Courses.Dto;
+using Academically.Services.Events.Dto;
+using Academically.Services.Videos.Dto;
 using Academically.Users.Dto;
 using System;
 using System.Collections.Generic;
@@ -16,14 +20,13 @@ namespace Academically.Services.Posts.Dto
         public string Title { get; set; }
         public string Content { get; set; }
         public Guid? SpaceId { get; set; }
-        public Guid? ServiceId { get; set; }
         public PostType Type { get; set; }
         public Guid? ParentId { get; set; }
         public UserDto CreatorUser { get; set; }
         public bool IsHidden { get; set; }
-
-        [NotMapped]
-        public AvailableServiceDto Service { get; set; }
+        public Guid? SharedId { get; set; }
+        public SharedType? SharedType { get; set; }
+        public ServicesType? SharedServiceType { get; set; }
 
         [NotMapped]
         public int CommentsCount { get; set; }
@@ -34,6 +37,19 @@ namespace Academically.Services.Posts.Dto
         public IEnumerable<UserDto> Participants { get; set; }
         public IEnumerable<PostNotificationDto> PostNotification { get; set; }
         public IEnumerable<PostVisibilityDto> PostVisibility { get; set; }
+
+        [NotMapped]
+        public PostDto SharedPost { get; set; }
+        [NotMapped]
+        public ArticleDto SharedServiceArticle { get; set; }
+        [NotMapped]
+        public EventDto SharedServiceEvent { get; set; }
+        [NotMapped]
+        public CourseDto SharedServiceCourse { get; set; }
+        [NotMapped]
+        public VideoDto SharedServiceVideo { get; set; }
+        [NotMapped]
+        public CoachingDto SharedServiceCoaching { get; set; }
 
     }
 }

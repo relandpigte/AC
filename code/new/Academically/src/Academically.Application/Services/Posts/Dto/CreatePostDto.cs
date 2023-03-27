@@ -13,9 +13,11 @@ namespace Academically.Services.Posts.Dto
         public string Title { get; set; }
         public string Content { get; set; }
         public Guid? SpaceId { get; set; }
-        public Guid? ServiceId { get; set; }
         public PostType Type { get; set; }
         public Guid? ParentId { get; set; }
+        public Guid? SharedId { get; set; }
+        public SharedType? SharedType { get; set; }
+        public ServicesType? SharedServiceType { get; set; }
         public IEnumerable<Guid> Topics { get; set; }
         public IEnumerable<string> NewTopics { get; set; }
         public IEnumerable<IFormFile> Attachments { get; set; }

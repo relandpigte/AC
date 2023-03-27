@@ -22,12 +22,14 @@ namespace Academically.Domain.Entities
         public string Title { get; set; }
 		public string Content { get; set; }
 		public Guid? SpaceId { get; set; }
-		public Guid? ServiceId { get; set; }
 		public PostType Type { get; set; }
 		public Guid? ParentId { get; set; }
         public bool IsHidden { get; set; }
+		public Guid? SharedId { get; set; }
+		public SharedType? SharedType { get; set; }
+		public ServicesType? SharedServiceType { get; set; }
 
-        [ForeignKey("CreatorUserId")]
+		[ForeignKey("CreatorUserId")]
 		public virtual User CreatorUser { get; set; }
         [ForeignKey("ParentId")]
         public virtual Post Parent { get; set; }
