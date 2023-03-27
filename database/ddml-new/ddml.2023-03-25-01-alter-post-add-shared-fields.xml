@@ -28,7 +28,7 @@
             </not>
         </preConditions>
         <addColumn tableName="posts">
-            <column name="posts" type="INT">
+            <column name="SharedServiceType" type="INT">
                 <constraints nullable="true"/>
             </column>
         </addColumn>
