@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ArticleDto, ArticlesServiceProxy, CourseDto, CoursesServiceProxy, CreateUserTopicDto, DateGrains, DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, EventDto, EventsServiceProxy, SearchDisciplineTaxonomyRequestDto, UserDto, UserServiceProxy, UserTopicDto, UserTopicsServiceProxy, UserTopicType, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, ArticlesServiceProxy, CoachingDto, CoachingsServiceProxy, CourseDto, CoursesServiceProxy, CreateUserTopicDto, DateGrains, DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, EventDto, EventsServiceProxy, SearchDisciplineTaxonomyRequestDto, UserDto, UserServiceProxy, UserTopicDto, UserTopicsServiceProxy, UserTopicType, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 
 import * as _ from 'lodash';
@@ -27,12 +27,14 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   isLoadingSuggestTopics = true;
   isLoadingPeopleToFollow = true;
   isLoadingRecommendedCourses = true;
+  isLoadingRecommendedCoachings = true;
   isLoadingRecommendedArticles = true;
   isLoadingRecommendedEvents = true;
   isLoadingRecommendedTutorials = true;
   suggestedTopics: DisciplineTaxonomyDto[] = Array(4).fill([]).map(() => this.generateRandomTopic()) as DisciplineTaxonomyDto[];
   peopleToFollow: UserDto[] = Array(4).fill([]).map(() => this.generateRandomUser()) as UserDto[];
   recommendedCourses: CourseDto[] = Array(4).fill([]).map(() => this.generateRandomCourse()) as CourseDto[];
+  recommendedCoachings: CoachingDto[] = Array(4).fill([]).map(() => this.generateRandomCoaching()) as CoachingDto[];
   recommendedArticles: ArticleDto[] = Array(4).fill([]).map(() => this.generateRandomArticle()) as ArticleDto[];
   recommendedEvents: EventDto[] = Array(4).fill([]).map(() => this.generateRandomEvent()) as EventDto[];
   recommendedTutorials: VideoDto[] = Array(4).fill([]).map(() => this.generateRandomTutorial()) as VideoDto[];
@@ -48,6 +50,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     private _userTopicsService: UserTopicsServiceProxy,
     private _usersService: UserServiceProxy,
     private _coursesService: CoursesServiceProxy,
+    private _coachingService: CoachingsServiceProxy,
     private _articlesService: ArticlesServiceProxy,
     private _eventsService: EventsServiceProxy,
     private _videosService: VideosServiceProxy,
@@ -64,6 +67,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     this.getSuggestedTopics();
     this.getPeopleToFollow();
     this.getRecommendedCourses();
+    this.getRecommendedCoachings();
     this.getRecommendedArticles();
     this.getRecommendedEvents();
     this.getRecommendedTutorials();
@@ -93,6 +97,8 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
       case 'user':
         break;
       case 'courses':
+        break;
+      case 'coachings':
         break;
       case 'articles':
         break;
@@ -158,7 +164,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     const modules = course?.modules ? `${course?.modules} modules` : null;
     const lessons = course?.lessons ? `${course?.lessons} lessons` : null;
     const values = [modules, lessons].filter(x => x);
-    return values?.length ? values.join(', ') : 'no lessons';
+    return values?.length ? values.join(' • ') : 'no lessons';
   }
 
   getUserTopics(): void {
@@ -213,11 +219,31 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
       )
       .subscribe(pagedCourses => {
         const courses = pagedCourses;
-        this.recommendedCourses = [];
         if (courses) {
+          this.recommendedCourses = [];
           Object.keys(courses).forEach(range => {
             this.recommendedCourses = _.concat(this.recommendedCourses, courses[range]?.items);
             this.recommendedCourses = _.take(this.recommendedCourses, 4);
+          });
+        }
+      });
+  }
+
+  getRecommendedCoachings(): void {
+    this._coachingService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, undefined, 0, 4)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoadingRecommendedCoachings = false;
+        })
+      )
+      .subscribe(pagedCoachings => {
+        const coachings = pagedCoachings;
+        if (coachings) {
+          this.recommendedCoachings = [];
+          Object.keys(coachings).forEach(range => {
+            this.recommendedCoachings = _.concat(this.recommendedCoachings, coachings[range]?.items);
+            this.recommendedCoachings = _.take(this.recommendedCoachings, 4);
           });
         }
       });

@@ -68,6 +68,16 @@
                     ></app-community-side-card>
                 </div>
 
+                <div *ngIf="recommendedCoachings?.length" [style.marginTop.px]="24">
+                    <app-community-side-card
+                        header="Recommended coaching"
+                        [items]="recommendedCoachings"
+                        [template]="recommendedCoachingsTemplate"
+                        (onClickItem)="handleItemClick($event, 'coachings')"
+                        (onViewAll)="handleViewAllClick('coachings')"
+                    ></app-community-side-card>
+                </div>
+
                 <div *ngIf="recommendedArticles?.length" [style.marginTop.px]="24">
                     <app-community-side-card
                         header="Recommended articles"
@@ -136,7 +146,7 @@
                 </ng-template>
 
                 <ng-template #recommendedCoursesTemplate let-item="item">
-                    <div class="course d-flex flex-row flex-nowrap">
+                    <div class="course d-flex flex-row flex-nowrap gap-15">
                         <app-shimmer [show]="isLoadingRecommendedCourses" [shimmerType]="shimmerType.ArticleCard"></app-shimmer>
                         <div class="course-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
                             <div class="course-thumbnail bg-center flex-grow-1" [alt]="item.name" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>
@@ -148,29 +158,36 @@
                     </div>
                 </ng-template>
 
-                <ng-template #recommendedArticlesTemplate let-item="item">
-                    <div class="article d-flex flex-row flex-nowrap">
-                        <app-shimmer [show]="isLoadingRecommendedArticles" [shimmerType]="shimmerType.SideCardAvatar"></app-shimmer>
-                        <div *ngIf="item.creatorUser" class="article-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
-                            <div class="article-author bg-center flex-grow-1 avatar avatar-sm" [alt]="item.creatorUser?.fullName" [ngStyle]="{ 'background-image': 'url(\'' + getArticleAuthorAvatar(item) + '\')' }" ></div>
+                <ng-template #recommendedCoachingsTemplate let-item="item">
+                    <div class="coaching d-flex flex-row flex-nowrap gap-15">
+                        <app-shimmer [show]="isLoadingRecommendedCoachings" [shimmerType]="shimmerType.UsersCard"></app-shimmer>
+                        <div class="coaching-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
+                            <img [src]="getProfilePicture(item.creatorUser.profilePictureUrl)" class="avatar avatar-sm avatar-img rounded-circle" alt="profile" />
                         </div>
-                        <div class="article-right flex-grow-1 d-flex flex-column justify-content-center">
-                            <div class="article-name">{{ item.name }}</div>
-                            <div class="article-description"><span *ngIf="item.creatorUser">{{ item.creatorUser.fullName | titlecase }} | </span>{{ item.description }}</div>
+                        <div class="coaching-right flex-grow-1 d-flex flex-column justify-content-center">
+                            <div class="coaching-name wrap-text">{{ item.name }}</div>
+                            <div class="coaching-author wrap-text">{{ item.creatorUser.fullName }}</div>
                         </div>
                     </div>
                 </ng-template>
 
+                <ng-template #recommendedArticlesTemplate let-item="item">
+                    <div class="article d-flex flex-column flex-nowrap">
+                        <app-shimmer [show]="isLoadingRecommendedArticles" [shimmerType]="shimmerType.SideCardAvatar"></app-shimmer>
+                        <div class="article-name line-clamp-2">{{ item.name }}</div>
+                        <div class="article-description wrap-text">{{ item.description }}</div>
+                    </div>
+                </ng-template>
+
                 <ng-template #recommendedEventsTemplate let-item="item">
-                    <div class="event d-flex flex-row flex-nowrap">
+                    <div class="event d-flex flex-row flex-nowrap gap-15">
                         <app-shimmer [show]="isLoadingRecommendedEvents" [shimmerType]="shimmerType.SideCardAvatar"></app-shimmer>
                         <div class="event-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
                             <div class="event-thumbnail bg-center flex-grow-1" [alt]="item.name" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>
                         </div>
-                        <div class="event-right flex-grow-1 d-flex flex-column justify-content-center">
+                        <div class="event-right flex-grow-1 d-flex flex-column justify-content-start">
                             <div *ngIf="item.eventDateTime" class="event-schedule wrap-text">{{ 'EventsSchedule' | localize: (item.eventDateTime | date:'HH:mm, dd LLL, yyyy' ) }}</div>
-                            <div class="event-name wrap-text">{{ item.name }}</div>
-                            <div class="event-description wrap-text">{{ item.description }}</div>
+                            <div class="event-name line-clamp-2">{{ item.name }}</div>
                         </div>
                     </div>
                 </ng-template>
@@ -182,8 +199,11 @@
                             <div class="tutorial-thumbnail bg-center flex-grow-1" [alt]="item.name" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>
                         </div>
                         <div class="tutorial-right flex-grow-1 d-flex flex-column justify-content-center">
-                            <div class="tutorial-name line-clamp">{{ item.name }}</div>
-                            <div class="tutorial-description wrap-text">{{ item.description }}</div>
+                            <div class="tutorial-name line-clamp-2">{{ item.name }}</div>
+                            <div class="tutorial-description wrap-text">
+                                <span *ngIf="item.videoLength">{{ item.videoLength | number: '1.0-0' }} mins</span>
+                                <span>no video content</span>
+                            </div>
                         </div>
                     </div>
                 </ng-template>
