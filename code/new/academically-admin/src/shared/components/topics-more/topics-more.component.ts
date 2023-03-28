@@ -84,6 +84,22 @@ export class TopicsMoreComponent extends AppComponentBase implements OnInit {
         return topic.userTopics.some(u => u.userId === this.appSession.userId && u.type === UserTopicType.Following);
     }
 
+    isShowFollowButtons(topic: DisciplineTaxonomyDto): boolean {
+        const isCurrentlyFollowing = this.topicInFocus === topic.id && this.isFollowingTopic;
+        const isCurrentlyUnfollowing = this.topicInFocus === topic.id && this.isUnfollowingTopic;
+        const isCurrentlyUnfollowed = !this.isFollowed(topic);
+
+        return !isCurrentlyFollowing && (isCurrentlyUnfollowed || isCurrentlyUnfollowing);
+    }
+
+    isShowFollowingButtons(topic: DisciplineTaxonomyDto): boolean {
+        const isCurrentlyUnfollowing = this.topicInFocus === topic.id && this.isUnfollowingTopic;
+        const isCurrentlyFollowing = this.topicInFocus === topic.id && this.isFollowingTopic;
+        const isCurrentlyFollowed = this.isFollowed(topic);
+
+        return !isCurrentlyUnfollowing && (isCurrentlyFollowed || isCurrentlyFollowing);
+    }
+
     handleOnSearch(searchFilter: string): void {
         this.isSearching = true;
         this.searchProcess$(searchFilter)

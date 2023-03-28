@@ -1,6 +1,6 @@
 :host {
     ::ng-deep {
-        .btn.following {
+        .btn.following, .btn.following:active {
             background-color: rgba(44, 123, 229, 0.1);
             color: #2C7BE5;
         }
