@@ -212,10 +212,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     if (this.level < MAX_COMMENT_LEVELS) {
       this.commentReplyId = this.commentReplyId === id ? null : id;
       if (this.commentReplyId === id) {
-        setTimeout(() => {
-          const addReplyEl = this._elRef.nativeElement.querySelector(`#add-reply-${id}`);
-          if (addReplyEl) this.placeCaretAtEndAfterFocus(addReplyEl);
-        });
+        setTimeout(() => this._elRef.nativeElement.querySelector(`#add-reply-${id}`)?.focus());
       }
     } else {
       this.onReplyEmit.emit(this.parentId);
@@ -251,17 +248,6 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
 
   doAddComment(): void {
     this.showAddComment = true;
-    setTimeout(() => this.placeCaretAtEndAfterFocus(this.addCommentEl?.nativeElement));
-  }
-
-  private placeCaretAtEndAfterFocus(el) {
-    if (!el) return;
-    el.focus();
-    var range = document.createRange();
-    range.selectNodeContents(el);
-    range.collapse(false);
-    var sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
+    setTimeout(() => this.addCommentEl?.nativeElement?.focus());
   }
 }
