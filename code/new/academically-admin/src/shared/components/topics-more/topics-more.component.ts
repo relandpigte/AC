@@ -16,14 +16,11 @@ import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 export class TopicsMoreComponent extends AppComponentBase implements OnInit {
 
     topics: Map<string, DisciplineTaxonomyDto> = new Map();
-    topicInFocus: string;
+    topicLoaders: Map<string, { isFollowingTopic?: boolean, isUnfollowingTopic?: boolean, isRemovingTopic?: boolean }> = new Map();
 
     searchFilter: string;
 
     isAllowLoading = true;
-    isFollowingTopic = false;
-    isUnfollowingTopic = false;
-    isRemovingTopic = false;
     isSearching = false;
 
     sort: SortOption = { label: 'ForYou', value: TopicSorting.ForYou };
@@ -46,8 +43,6 @@ export class TopicsMoreComponent extends AppComponentBase implements OnInit {
         .pipe(takeUntil(this.destroyed$))
         .pipe(finalize(() => {
             this.isSearching = false;
-            this.isAllowLoading = true;
-            this.topicInFocus = undefined;
         }));
     };
 
@@ -59,7 +54,8 @@ export class TopicsMoreComponent extends AppComponentBase implements OnInit {
         super(injector);
     }
 
-    get isLoading(): boolean { return this.isSearching || this.isFollowingTopic || this.isUnfollowingTopic || this.isRemovingTopic; }
+    get isLoading(): boolean { return this.isSearching || this.isSomeTopicsLoading; }
+    get isSomeTopicsLoading(): boolean { return Array.from(this.topicLoaders.keys()).some(k => this.isTopicLoading(k)); }
     get topicValues(): any { return Array.from(this.topics.values()) }
 
     ngOnInit(): void {
@@ -84,17 +80,36 @@ export class TopicsMoreComponent extends AppComponentBase implements OnInit {
         return topic.userTopics.some(u => u.userId === this.appSession.userId && u.type === UserTopicType.Following);
     }
 
+    isTopicLoading(id: string, property?: string): boolean {
+        const topicLoaders = this.topicLoaders.get(id);
+        if (!topicLoaders) return false;
+        if (property) return topicLoaders[property];
+        else return Object.keys(topicLoaders).some(p => topicLoaders[p]);
+    }
+
+    setTopicLoading(id: string, property: string, value: boolean): void {
+        if (!this.topicLoaders.has(id)) this.topicLoaders.set(id, {});
+        const topicLoaders = this.topicLoaders.get(id);
+        topicLoaders[property] = value;
+        if (Object.keys(topicLoaders).every(p => !topicLoaders[p])) this.topicLoaders.delete(id);
+        this.resetIsAllowLoading();
+    }
+
+    resetIsAllowLoading(): void {
+        if (!this.isAllowLoading && !this.isSomeTopicsLoading) this.isAllowLoading = true;
+    }
+
     isShowFollowButtons(topic: DisciplineTaxonomyDto): boolean {
-        const isCurrentlyFollowing = this.topicInFocus === topic.id && this.isFollowingTopic;
-        const isCurrentlyUnfollowing = this.topicInFocus === topic.id && this.isUnfollowingTopic;
+        const isCurrentlyFollowing = this.isTopicLoading(topic.id, 'isFollowingTopic');
+        const isCurrentlyUnfollowing = this.isTopicLoading(topic.id, 'isUnfollowingTopic');
         const isCurrentlyUnfollowed = !this.isFollowed(topic);
 
         return !isCurrentlyFollowing && (isCurrentlyUnfollowed || isCurrentlyUnfollowing);
     }
 
     isShowFollowingButtons(topic: DisciplineTaxonomyDto): boolean {
-        const isCurrentlyUnfollowing = this.topicInFocus === topic.id && this.isUnfollowingTopic;
-        const isCurrentlyFollowing = this.topicInFocus === topic.id && this.isFollowingTopic;
+        const isCurrentlyUnfollowing = this.isTopicLoading(topic.id, 'isUnfollowingTopic');
+        const isCurrentlyFollowing = this.isTopicLoading(topic.id, 'isFollowingTopic');
         const isCurrentlyFollowed = this.isFollowed(topic);
 
         return !isCurrentlyUnfollowing && (isCurrentlyFollowed || isCurrentlyFollowing);
@@ -115,8 +130,7 @@ export class TopicsMoreComponent extends AppComponentBase implements OnInit {
 
     handleOnFollow(topic: DisciplineTaxonomyDto): void {
         this.isAllowLoading = false;
-        this.isFollowingTopic = true;
-        this.topicInFocus = topic.id;
+        this.setTopicLoading(topic.id, 'isFollowingTopic', true);
 
         const request = new CreateUserTopicDto();
         request.userId = this.appSession.userId;
@@ -127,7 +141,7 @@ export class TopicsMoreComponent extends AppComponentBase implements OnInit {
             .pipe(switchMap(() => this.searchProcess$(this.searchFilter, false)))
             .pipe(takeUntil(this.destroyed$))
             .pipe(finalize(() => {
-                this.isFollowingTopic = false;
+                this.setTopicLoading(topic.id, 'isFollowingTopic', false);
                 this.updateTopicFromData(topic, UserTopicType.Following);
             }))
             .subscribe((topics) => {
@@ -137,14 +151,13 @@ export class TopicsMoreComponent extends AppComponentBase implements OnInit {
 
     handleOnUnfollow(topic: DisciplineTaxonomyDto): void {
         this.isAllowLoading = false;
-        this.isUnfollowingTopic = true;
-        this.topicInFocus = topic.id;
+        this.setTopicLoading(topic.id, 'isUnfollowingTopic', true);
 
         this._userTopics.deleteByTopicId(topic.id)
             .pipe(switchMap(() => this.searchProcess$(this.searchFilter, false)))
             .pipe(takeUntil(this.destroyed$))
             .pipe(finalize(() => {
-                this.isUnfollowingTopic = false;
+                this.setTopicLoading(topic.id, 'isUnfollowingTopic', false);
                 this.updateTopicFromData(topic, null);
             }))
             .subscribe((topics) => {
@@ -154,8 +167,7 @@ export class TopicsMoreComponent extends AppComponentBase implements OnInit {
 
     handleOnRemove(topic: DisciplineTaxonomyDto): void {
         this.isAllowLoading = false;
-        this.isRemovingTopic = true;
-        this.topicInFocus = topic.id;
+        this.setTopicLoading(topic.id, 'isRemovingTopic', true);
 
         const request = new CreateUserTopicDto();
         request.userId = this.appSession.userId;
@@ -165,7 +177,7 @@ export class TopicsMoreComponent extends AppComponentBase implements OnInit {
         this._userTopics.create(request)
             .pipe(switchMap(() => this.searchProcess$(this.searchFilter, false)))
             .pipe(takeUntil(this.destroyed$))
-            .pipe(finalize(() => this.isRemovingTopic = false))
+            .pipe(finalize(() => this.setTopicLoading(topic.id, 'isRemovingTopic', false)))
             .subscribe((topics) => {
                 this.updateSearchResults(topics);
                 this.topics.delete(topic.id);

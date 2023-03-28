@@ -16,13 +16,12 @@ import { Utils } from '@shared/helpers/utils';
 export class TopicsFollowingComponent extends AppComponentBase implements OnInit {
 
     userTopics: Map<string, UserTopicDto> = new Map();
-    topicInFocus: string;
+    topicLoaders: Map<string, { isUnfollowingTopic?: boolean }> = new Map();
 
     searchFilter: string;
 
     isAllowLoading = true;
     isLoadingUserTopics = false;
-    isUnfollowingTopic = false;
     isSearching = false;
 
     sort: SortOption = { label: 'ForYou', value: TopicSorting.ForYou };
@@ -39,8 +38,6 @@ export class TopicsFollowingComponent extends AppComponentBase implements OnInit
             .pipe(takeUntil(this.destroyed$))
             .pipe(finalize(() => {
                 this.isSearching = false;
-                this.isAllowLoading = true;
-                this.topicInFocus = undefined;
             }));
     };
 
@@ -51,10 +48,31 @@ export class TopicsFollowingComponent extends AppComponentBase implements OnInit
         super(injector);
     }
 
-    get isLoading(): boolean { return this.isLoadingUserTopics || this.isUnfollowingTopic || this.isSearching; }
+    get isLoading(): boolean { return this.isLoadingUserTopics || this.isSearching || this.isSomeTopicsLoading; }
+    get isSomeTopicsLoading(): boolean { return Array.from(this.topicLoaders.keys()).some(k => this.isTopicLoading(k)); }
+
     get displayedUserTopics(): any { return Array.from(this.userTopics.values()).map(t => t.disciplineTaxonomy); }
 
     ngOnInit(): void {
+    }
+
+    isTopicLoading(id: string, property?: string): boolean {
+        const topicLoaders = this.topicLoaders.get(id);
+        if (!topicLoaders) return false;
+        if (property) return topicLoaders[property];
+        else return Object.keys(topicLoaders).some(p => topicLoaders[p]);
+    }
+
+    setTopicLoading(id: string, property: string, value: boolean): void {
+        if (!this.topicLoaders.has(id)) this.topicLoaders.set(id, {});
+        const topicLoaders = this.topicLoaders.get(id);
+        topicLoaders[property] = value;
+        if (Object.keys(topicLoaders).every(p => !topicLoaders[p])) this.topicLoaders.delete(id);
+        this.resetIsAllowLoading();
+    }
+
+    resetIsAllowLoading(): void {
+        if (!this.isAllowLoading && !this.isSomeTopicsLoading) this.isAllowLoading = true;
     }
 
     handleOnSearch(searchFilter: string, ): void {
@@ -77,8 +95,7 @@ export class TopicsFollowingComponent extends AppComponentBase implements OnInit
 
     handleOnUnfollow(topic: DisciplineTaxonomyDto): void {
         this.isAllowLoading = false;
-        this.isUnfollowingTopic = true;
-        this.topicInFocus = topic.id;
+        this.setTopicLoading(topic.id, 'isUnfollowingTopic', true);
 
         const userTopic = Array.from(this.userTopics.values()).find(t => t.disciplineTaxonomyId === topic.id);
 
@@ -86,7 +103,7 @@ export class TopicsFollowingComponent extends AppComponentBase implements OnInit
             this._userTopicsService.delete(userTopic.id)
             .pipe(switchMap(() => this.searchProcess$(this.searchFilter)))
             .pipe(takeUntil(this.destroyed$))
-            .pipe(finalize(() => this.isUnfollowingTopic = false))
+            .pipe(finalize(() => this.setTopicLoading(topic.id, 'isUnfollowingTopic', false)))
             .subscribe(_ => {
                 this.userTopics.delete(userTopic.id);
                 this.notify.info(this.l('Community.Topics.Unfollow.Success', topic.name));

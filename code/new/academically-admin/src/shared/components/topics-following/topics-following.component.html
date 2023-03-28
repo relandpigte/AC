@@ -16,7 +16,7 @@
             <div class="topic-row-left-followers">{{ 'Community.Topics.Followers' | localize: (item.followerCount | shortNum: 1)  }}</div>
         </div>
         <div class="topic-row-right d-flex flex-row align-items-center gap-10">
-            <button class="btn btn-md btn-primary following border-0" (click)="handleOnUnfollow(item)" [disabled]="topicInFocus === item.id && isUnfollowingTopic">
+            <button class="btn btn-md btn-primary following border-0" (click)="handleOnUnfollow(item)" [disabled]="isTopicLoading(item.id)">
                 {{ 'Following' | localize }} <i class="fe fe-check" role="status" aria-hidden="true"></i>
             </button>
         </div>
