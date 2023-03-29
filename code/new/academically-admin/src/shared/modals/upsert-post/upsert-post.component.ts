@@ -35,6 +35,10 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
   sanitizedAttachmentUrl: SafeUrl;
   focusedField: string;
   caretPosition: number;
+  sharedItem: any;
+  sharedId: string;
+  sharedType: number;
+  sharedServiceType: number;
 
   @Input() allowTabs = true;
   @Input() canCancel = true;
@@ -58,7 +62,7 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
     private _postSub: CommunityPostService,
     private _postsService: PostsServiceProxy
   ) {
-    super(injector)
+    super(injector);
   }
 
   get fileAttachment(): File { return this.model?.file; }
@@ -131,14 +135,16 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
       this.model.title,
       this.model.information,
       this.model.visibility,
-      this.model.serviceId,
       this.model.type,
       this.parentPostId,
+      this.sharedId,
+      this.sharedType,
+      this.sharedServiceType,
       this.model.topics,
       this.model.newTopics,
       [this.model.file].filter(x => x).map(f => FileUtils.getFileParameter(f))
-    )
-      .pipe(takeUntil(this.destroyed$))
+
+    ).pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isCreating = false))
       .subscribe(_ => {
         this.onCloseClick();
@@ -191,12 +197,12 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
   }
 
   handleRemoveService(): void {
-    this.model.serviceId = null;
+    this.model.sharedId = null;
     this.selectedService = null;
   }
 
   handleOnAddService(service: AvailableServiceDto): void {
-    this.model.serviceId = service.id;
+    this.model.sharedId = service.id;
     this.selectedService = service;
     this.isShowServicePicker = false;
   }

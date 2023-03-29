@@ -11,7 +11,7 @@ import { AvailableServiceDto, DisciplineTaxonomyDto, PostsServiceProxy, PostType
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { CommunityDiscussionsComponent } from '../community-discussions/community-discussions.component';
-import { Utils } from '@shared/helpers/utils';
+import { PostDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
     selector: 'app-community-post-card',
@@ -19,13 +19,14 @@ import { Utils } from '@shared/helpers/utils';
     styleUrls: ['./community-post.component.scss']
 })
 export class CommunityPostCardComponent extends AppComponentBase implements OnChanges {
-    @Input() closeHiddenPostAfter: number = 0;
+    @Input() closeHiddenPostAfter = 0;
     @Input() data: any;
     @Input() isLoading: boolean;
 
     @Output() refresh = new EventEmitter();
     @Output() onUpdate = new EventEmitter();
     @Output() onChildrenUpdate = new EventEmitter();
+    @Output() onSharePost: EventEmitter<PostDto> = new EventEmitter<PostDto>();
 
     @ViewChild(CommunityDiscussionsComponent) commentsContainer: CommunityDiscussionsComponent;
 
@@ -90,32 +91,10 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
         }
     }
 
-    private async getFileAttachment() {
-        if (this.data.postAttachments) {
-            const [file] = this.data.postAttachments;
-            if (file) {
-                const document = file.document;
-                if (document) {
-                    this.fileAttachment = await FileUtils.getFileBlob(file.documentUrl, document.name, document.fileType);
-                    this._cdr.detectChanges();
-                }
-            }
-        }
-    }
-
-    private getServiceAttachment() {
-        if (this.data.service) {
-            this.serviceAttachment = this.data.service;
-        }
-    }
-
-    private startHideTimer(): void {
-        const self = this;
-        this.hideTimer = setTimeout(() => {
-            this.isHiding = false;
-            this.data.isHidden = true;
-            this.onUpdate.emit(this.data);
-        }, 1000 * this.closeHiddenPostAfter);
+    // Pass the emitted post data
+    handleSharePost(event: Event): void {
+        event.preventDefault();
+        this.onSharePost.emit(this.data);
     }
 
     doAddComment(): void {
@@ -206,5 +185,33 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
 
     handleCommentUpdates(): void {
         this.onChildrenUpdate.emit();
+    }
+
+    private async getFileAttachment() {
+        if (this.data.postAttachments) {
+            const [file] = this.data.postAttachments;
+            if (file) {
+                const document = file.document;
+                if (document) {
+                    this.fileAttachment = await FileUtils.getFileBlob(file.documentUrl, document.name, document.fileType);
+                    this._cdr.detectChanges();
+                }
+            }
+        }
+    }
+
+    private getServiceAttachment() {
+        if (this.data.service) {
+            this.serviceAttachment = this.data.service;
+        }
+    }
+
+    private startHideTimer(): void {
+        const self = this;
+        this.hideTimer = setTimeout(() => {
+            this.isHiding = false;
+            this.data.isHidden = true;
+            this.onUpdate.emit(this.data);
+        }, 1000 * this.closeHiddenPostAfter);
     }
 }

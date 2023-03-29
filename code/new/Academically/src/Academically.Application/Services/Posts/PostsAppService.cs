@@ -318,6 +318,8 @@ namespace Academically.Services.Posts
             }
             result.Participants = participants.GroupBy(g => g.Id).ToList().Select(s => s.FirstOrDefault());
 
+            await FillInShared(result);
+            
             return result;
         }
 
