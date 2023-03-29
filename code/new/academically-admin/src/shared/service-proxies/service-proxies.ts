@@ -12726,6 +12726,8 @@ export class PostsServiceProxy {
     1 = Question
     
     2 = Discussion
+    
+    3 = Shared
      * @param parentId (optional) 
      * @return Success
      */
@@ -12798,6 +12800,8 @@ export class PostsServiceProxy {
     1 = Question
     
     2 = Discussion
+    
+    3 = Shared
      * @param parentId (optional) 
      * @param creationTime (optional) 
      * @param skipCount (optional) 
@@ -12876,15 +12880,17 @@ export class PostsServiceProxy {
      * @param title (optional) 
      * @param content (optional) 
      * @param spaceId (optional) 
-     * @param serviceId (optional) 
      * @param type (optional) 
      * @param parentId (optional) 
+     * @param sharedId (optional) 
+     * @param sharedType (optional) 
+     * @param sharedServiceType (optional) 
      * @param topics (optional) 
      * @param newTopics (optional) 
      * @param attachments (optional) 
      * @return Success
      */
-    create(title: string | undefined, content: string | undefined, spaceId: string | undefined, serviceId: string | undefined, type: PostType | undefined, parentId: string | undefined, topics: string[] | undefined, newTopics: string[] | undefined, attachments: FileParameter[] | undefined): Observable<void> {
+    create(title: string | undefined, content: string | undefined, spaceId: string | undefined, type: PostType | undefined, parentId: string | undefined, sharedId: string | undefined, sharedType: SharedType | undefined, sharedServiceType: ServicesType | undefined, topics: string[] | undefined, newTopics: string[] | undefined, attachments: FileParameter[] | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/Posts/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -12901,10 +12907,6 @@ export class PostsServiceProxy {
             // do nothing
         } else
             content_.append("SpaceId", spaceId.toString());
-        if (serviceId === null || serviceId === undefined) {
-            // do nothing
-        } else
-            content_.append("ServiceId", serviceId.toString());
         if (type === null || type === undefined) {
             // do nothing
         } else
@@ -12913,6 +12915,18 @@ export class PostsServiceProxy {
             // do nothing
         } else
             content_.append("ParentId", parentId.toString());
+        if (sharedId === null || sharedId === undefined) {
+            // do nothing
+        } else
+            content_.append("SharedId", sharedId.toString());
+        if (sharedType === null || sharedType === undefined) {
+            // do nothing
+        } else
+            content_.append("SharedType", sharedType.toString());
+        if (sharedServiceType === null || sharedServiceType === undefined) {
+            // do nothing
+        } else
+            content_.append("SharedServiceType", sharedServiceType.toString());
         if (topics === null || topics === undefined) {
             // do nothing
         } else
@@ -12974,6 +12988,8 @@ export class PostsServiceProxy {
     1 = Question
     
     2 = Discussion
+    
+    3 = Shared
      * @return Success
      */
     getByUser(userId: number | undefined, type: PostType | undefined): Observable<PostDto[]> {
@@ -38846,12 +38862,13 @@ export class PostDto implements IPostDto {
     title: string | undefined;
     content: string | undefined;
     spaceId: string | undefined;
-    serviceId: string | undefined;
     type: PostType;
     parentId: string | undefined;
     creatorUser: UserDto;
     isHidden: boolean;
-    service: AvailableServiceDto;
+    sharedId: string | undefined;
+    sharedType: SharedType;
+    sharedServiceType: ServicesType;
     commentsCount: number;
     postTopics: PostTopicDto[] | undefined;
     postAttachments: PostAttachmentDto[] | undefined;
@@ -38859,6 +38876,12 @@ export class PostDto implements IPostDto {
     participants: UserDto[] | undefined;
     postNotification: PostNotificationDto[] | undefined;
     postVisibility: PostVisibilityDto[] | undefined;
+    sharedPost: PostDto;
+    sharedServiceArticle: ArticleDto;
+    sharedServiceEvent: EventDto;
+    sharedServiceCourse: CourseDto;
+    sharedServiceVideo: VideoDto;
+    sharedServiceCoaching: CoachingDto;
 
     constructor(data?: IPostDto) {
         if (data) {
@@ -38882,12 +38905,13 @@ export class PostDto implements IPostDto {
             this.title = _data["title"];
             this.content = _data["content"];
             this.spaceId = _data["spaceId"];
-            this.serviceId = _data["serviceId"];
             this.type = _data["type"];
             this.parentId = _data["parentId"];
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
             this.isHidden = _data["isHidden"];
-            this.service = _data["service"] ? AvailableServiceDto.fromJS(_data["service"]) : <any>undefined;
+            this.sharedId = _data["sharedId"];
+            this.sharedType = _data["sharedType"];
+            this.sharedServiceType = _data["sharedServiceType"];
             this.commentsCount = _data["commentsCount"];
             if (Array.isArray(_data["postTopics"])) {
                 this.postTopics = [] as any;
@@ -38919,6 +38943,12 @@ export class PostDto implements IPostDto {
                 for (let item of _data["postVisibility"])
                     this.postVisibility.push(PostVisibilityDto.fromJS(item));
             }
+            this.sharedPost = _data["sharedPost"] ? PostDto.fromJS(_data["sharedPost"]) : <any>undefined;
+            this.sharedServiceArticle = _data["sharedServiceArticle"] ? ArticleDto.fromJS(_data["sharedServiceArticle"]) : <any>undefined;
+            this.sharedServiceEvent = _data["sharedServiceEvent"] ? EventDto.fromJS(_data["sharedServiceEvent"]) : <any>undefined;
+            this.sharedServiceCourse = _data["sharedServiceCourse"] ? CourseDto.fromJS(_data["sharedServiceCourse"]) : <any>undefined;
+            this.sharedServiceVideo = _data["sharedServiceVideo"] ? VideoDto.fromJS(_data["sharedServiceVideo"]) : <any>undefined;
+            this.sharedServiceCoaching = _data["sharedServiceCoaching"] ? CoachingDto.fromJS(_data["sharedServiceCoaching"]) : <any>undefined;
         }
     }
 
@@ -38942,12 +38972,13 @@ export class PostDto implements IPostDto {
         data["title"] = this.title;
         data["content"] = this.content;
         data["spaceId"] = this.spaceId;
-        data["serviceId"] = this.serviceId;
         data["type"] = this.type;
         data["parentId"] = this.parentId;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         data["isHidden"] = this.isHidden;
-        data["service"] = this.service ? this.service.toJSON() : <any>undefined;
+        data["sharedId"] = this.sharedId;
+        data["sharedType"] = this.sharedType;
+        data["sharedServiceType"] = this.sharedServiceType;
         data["commentsCount"] = this.commentsCount;
         if (Array.isArray(this.postTopics)) {
             data["postTopics"] = [];
@@ -38979,6 +39010,12 @@ export class PostDto implements IPostDto {
             for (let item of this.postVisibility)
                 data["postVisibility"].push(item.toJSON());
         }
+        data["sharedPost"] = this.sharedPost ? this.sharedPost.toJSON() : <any>undefined;
+        data["sharedServiceArticle"] = this.sharedServiceArticle ? this.sharedServiceArticle.toJSON() : <any>undefined;
+        data["sharedServiceEvent"] = this.sharedServiceEvent ? this.sharedServiceEvent.toJSON() : <any>undefined;
+        data["sharedServiceCourse"] = this.sharedServiceCourse ? this.sharedServiceCourse.toJSON() : <any>undefined;
+        data["sharedServiceVideo"] = this.sharedServiceVideo ? this.sharedServiceVideo.toJSON() : <any>undefined;
+        data["sharedServiceCoaching"] = this.sharedServiceCoaching ? this.sharedServiceCoaching.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -39002,12 +39039,13 @@ export interface IPostDto {
     title: string | undefined;
     content: string | undefined;
     spaceId: string | undefined;
-    serviceId: string | undefined;
     type: PostType;
     parentId: string | undefined;
     creatorUser: UserDto;
     isHidden: boolean;
-    service: AvailableServiceDto;
+    sharedId: string | undefined;
+    sharedType: SharedType;
+    sharedServiceType: ServicesType;
     commentsCount: number;
     postTopics: PostTopicDto[] | undefined;
     postAttachments: PostAttachmentDto[] | undefined;
@@ -39015,6 +39053,12 @@ export interface IPostDto {
     participants: UserDto[] | undefined;
     postNotification: PostNotificationDto[] | undefined;
     postVisibility: PostVisibilityDto[] | undefined;
+    sharedPost: PostDto;
+    sharedServiceArticle: ArticleDto;
+    sharedServiceEvent: EventDto;
+    sharedServiceCourse: CourseDto;
+    sharedServiceVideo: VideoDto;
+    sharedServiceCoaching: CoachingDto;
 }
 
 export class PostDtoPagedResultDto implements IPostDtoPagedResultDto {
@@ -39194,11 +39238,12 @@ export interface IPostTopicDto {
     disciplineTaxonomy: DisciplineTaxonomyDto;
 }
 
-/** 0 = QuickPost 1 = Question 2 = Discussion */
+/** 0 = QuickPost 1 = Question 2 = Discussion 3 = Shared */
 export enum PostType {
     QuickPost = 0,
     Question = 1,
     Discussion = 2,
+    Shared = 3,
 }
 
 export class PostVisibilityDto implements IPostVisibilityDto {
@@ -41862,6 +41907,12 @@ export interface ISessionDto {
     conversationGroupId: string;
     calendarEvent: CalendarEventDto;
     sessionCandidates: SessionCandidateDto[] | undefined;
+}
+
+/** 0 = Post 1 = Service */
+export enum SharedType {
+    Post = 0,
+    Service = 1,
 }
 
 export class SpokenLanguageDto implements ISpokenLanguageDto {

@@ -1,15 +1,17 @@
 import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit, ViewChildren } from '@angular/core';
+import { takeUntil } from 'rxjs/operators';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { CourseDto, CoursesServiceProxy, DateGrains, PostDto, PostsServiceProxy, PostType, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { MAX_POSTS_TO_LOAD, PostsStateService } from '@shared/services/posts-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
-import { takeUntil } from 'rxjs/operators';
-import {
-  CommunityDiscussionsComponent
-} from '@shared/components/community-discussions/community-discussions.component';
+import { CommunityDiscussionsComponent } from '@shared/components/community-discussions/community-discussions.component';
+import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { CommunityService } from '../community.service';
+import { SharedType } from '../../../shared/service-proxies/service-proxies';
 
 enum PostFiltering {
   All = 'Community.Posts.Filtering.All',
@@ -62,8 +64,9 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     private _usersService: UserServiceProxy,
     private _coursesService: CoursesServiceProxy,
     private _postsService: PostsServiceProxy,
-    private communityService: CommunityService
-  ) {
+    private _communityService: CommunityService,
+    private _modalService: BsModalService
+    ) {
     super(injector);
   }
 
@@ -93,6 +96,25 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     this.pubSubService.stop();
   }
 
+  handleSharePost(post: PostDto): void {
+    this._postsService.get(post.id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(post => {
+        const modalSettings = this.defaultModalSettings as ModalOptions<UpsertPostComponent>;
+        modalSettings.class = 'modal-lg';
+        modalSettings.initialState = {
+          allowTabs: false,
+          canRemoveAttachment: false,
+          title: 'Community.SharePost',
+          activeTab: 'quick-post',
+          sharedItem: post,
+          sharedId: post.id,
+          sharedType: SharedType.Post,
+        };
+        this._modalService.show(UpsertPostComponent, modalSettings).content;
+      });
+  }
+
   private async initPostsAppStates() {
     const appStateConfig: AppStateConfig = { [this.postsStateId]: { load: [undefined, undefined, undefined, 0, MAX_POSTS_TO_LOAD], update: true } };
     const appStateServices: AppStateServices = { [this.postsStateId]: { type: PostsStateService, args: [this._hubService, this._postsService] } };
@@ -101,7 +123,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
 
     this.postsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => {
       this.isLoadingPosts = loading;
-      this.communityService.setIsLoading(loading);
+      this._communityService.setIsLoading(loading);
     });
 
     this.postsStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {

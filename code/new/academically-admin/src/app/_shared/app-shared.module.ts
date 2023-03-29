@@ -60,6 +60,8 @@ import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.comp
 import { AddServiceComponent } from '@shared/modals/add-service/add-service.component';
 import { AddTopicsComponent } from '@shared/modals/add-topics/add-topics.component';
 import { ShimmerComponent } from '@shared/components/shimmer/shimmer.component';
+import { PreviewPostsComponent } from '@shared/components/preview/posts/posts.component';
+import { PreviewServicesComponent } from '@shared/components/preview/services/services.component';
 
 import { KeysPipe } from '@shared/pipes/keys.pipe';
 
@@ -103,7 +105,9 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     CommunityDiscussionsComponent,
     CommunitySideCardComponent,
     EmojiPickerComponent,
-    ShimmerComponent
+    ShimmerComponent,
+    PreviewPostsComponent,
+    PreviewServicesComponent
   ],
   imports: [
     CommonModule,
@@ -185,7 +189,9 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     CommunityDiscussionsComponent,
     CommunitySideCardComponent,
     EmojiPickerComponent,
-    ShimmerComponent
+    ShimmerComponent,
+    PreviewPostsComponent,
+    PreviewServicesComponent
   ],
 })
 export class AppSharedModule { }
