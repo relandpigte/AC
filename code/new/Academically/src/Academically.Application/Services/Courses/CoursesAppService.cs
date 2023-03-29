@@ -304,6 +304,7 @@ namespace Academically.Services.Courses
                              .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Subtitle.Contains(keyword) || x.Price.ToString().Contains(keyword)
                                       || x.Id.ToString().Equals(keyword))
                              .WhereIf(creatorUserId.HasValue, x => x.CreatorUserId == creatorUserId)
+                             .Include(c => c.CreatorUser)
                              .AsNoTracking()
                              .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
                              .ToListAsync();

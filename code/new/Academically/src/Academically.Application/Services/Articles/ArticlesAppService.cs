@@ -292,6 +292,7 @@ namespace Academically.Services.Articles
                                       .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Price.ToString().Contains(keyword)
                                                || x.Id.ToString().Equals(keyword))
                                       .WhereIf(creatorUserId.HasValue, x => x.CreatorUserId == creatorUserId)
+                                      .Include(a => a.CreatorUser)
                                       .AsNoTracking()
                                       .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
                                       .ToListAsync();

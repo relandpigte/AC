@@ -237,6 +237,7 @@ namespace Academically.Services.Events
                              .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Categories.Contains(keyword)
                                       || x.Id.ToString().Equals(keyword))
                              .WhereIf(creatorUserId.HasValue, x => x.CreatorUserId == creatorUserId)
+                             .Include(e => e.CreatorUser)
                              .AsNoTracking()
                              .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
                              .ToListAsync();

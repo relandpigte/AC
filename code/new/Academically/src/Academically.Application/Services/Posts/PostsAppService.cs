@@ -430,6 +430,9 @@ namespace Academically.Services.Posts
                         item.ThumbnailImageUrl = string.Empty;
                     }
                 }
+
+                if (item.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    item.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(item.CreatorUser.ProfilePictureDocumentId.Value);
             }
             return new PagedResultDto<AvailableServiceDto>()
             {
