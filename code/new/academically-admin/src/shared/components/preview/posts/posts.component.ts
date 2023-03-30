@@ -34,7 +34,7 @@ export class PreviewPostsComponent extends AppComponentBase implements OnInit, O
     this.title        = this.data.title;
     this.description  = this.data.content;
     this.postDate     = this.postDateFormat(this.data.creationTime);
-    this.author       = this.data.creatorUser.fullName;
+    this.author       = this.data.creatorUser?.fullName;
     this.userTopics   = this.data.postTopics?.map?.(t => t.disciplineTaxonomy);
   }
 

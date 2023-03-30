@@ -64,12 +64,12 @@
             [file]="fileAttachment"
             (onRemove)="handleRemoveAttachment()"
         ></app-attachment-preview>
-        <app-service-preview
-            *ngIf="selectedService"
+        <app-preview-services
             [canRemove]="canRemoveAttachment"
-            [service]="selectedService"
+            [data]="selectedService"
+            [sharedServiceType]="sharedServiceType"
             (onRemove)="handleRemoveService()"
-        ></app-service-preview>
+        ></app-preview-services>
         <app-preview-posts [data]="sharedItem"></app-preview-posts>
         <app-service-picker
             [selectedService]="selectedService"

@@ -1,5 +1,4 @@
-
-import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import * as moment from 'moment';
@@ -7,18 +6,17 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import { FileUtils } from '@shared/helpers/file-utils';
-import { AvailableServiceDto, DisciplineTaxonomyDto, PostsServiceProxy, PostType } from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, ServicesType } from '@shared/service-proxies/service-proxies';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { CommunityDiscussionsComponent } from '../community-discussions/community-discussions.component';
-import { PostDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
     selector: 'app-community-post-card',
     templateUrl: './community-post.component.html',
     styleUrls: ['./community-post.component.scss']
 })
-export class CommunityPostCardComponent extends AppComponentBase implements OnChanges {
+export class CommunityPostCardComponent extends AppComponentBase implements OnChanges, OnInit {
     @Input() closeHiddenPostAfter = 0;
     @Input() data: any;
     @Input() isLoading: boolean;
@@ -38,6 +36,8 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     hideTimer: any;
     showComments = true;
     showAddComment = true;
+    serviceData: any;
+    sharedServiceType: number;
 
     constructor(
         injector: Injector,
@@ -83,11 +83,40 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
         }
     }
 
+    ngOnInit() {
+        this.handleServiceData(this.data);
+    }
+
     async ngOnChanges(changes: SimpleChanges) {
         if ('data' in changes && this.data) {
             this.userTopics = this.data.postTopics?.map?.(t => t.disciplineTaxonomy);
             await this.getFileAttachment();
             this.getServiceAttachment();
+        }
+    }
+
+    handleServiceData(post: PostDto): void {
+        if (!post.sharedId || !post.sharedServiceType) { return; }
+        this.sharedServiceType = post.sharedServiceType;
+        switch (post.sharedServiceType) {
+            case ServicesType.Event:
+                this.serviceData = post.sharedServiceEvent;
+                break;
+            case ServicesType.Course:
+                this.serviceData = post.sharedServiceCourse;
+                break;
+            case ServicesType.Tutorial:
+                this.serviceData = post.sharedServiceVideo;
+                break;
+            case ServicesType.Article:
+                this.serviceData = post.sharedServiceArticle;
+                break;
+            case ServicesType.Coaching:
+                this.serviceData = post.sharedServiceCoaching;
+                break;
+            case ServicesType.Workshop:
+                this.serviceData = post.sharedServiceEvent;
+                break;
         }
     }
 

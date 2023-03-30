@@ -1,11 +1,11 @@
 import { Component, Injector, OnInit } from '@angular/core';
-import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { AppComponentBase } from '@shared/app-component-base';
-import { ArticleDto, ArticlesServiceProxy, CoachingDto, CoachingsServiceProxy, CourseDto, CoursesServiceProxy, DateGrains, EventCategory, EventDto, EventsServiceProxy, PostsServiceProxy, UserDto, UserServiceProxy, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
-
 import { Router } from '@angular/router';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+
+import { appModuleAnimation } from '@shared/animations/routerTransition';
+import { AppComponentBase } from '@shared/app-component-base';
+import { ArticleDto, ArticlesServiceProxy, CoachingDto, CoachingsServiceProxy, CourseDto, CoursesServiceProxy, DateGrains, EventCategory, EventDto, EventsServiceProxy, PostsServiceProxy, SharedType, UserDto, UserServiceProxy, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 
 @Component({
@@ -137,8 +137,10 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
           canRemoveAttachment: false,
           title: 'Community.SharePost',
           activeTab: 'quick-post',
-          model: { serviceId: service.id },
-          selectedService: service
+          selectedService: service,
+          sharedId: service.id,
+          sharedType: SharedType.Service,
+          sharedServiceType: service.serviceType
         };
         this._modalService.show(UpsertPostComponent, modalSettings).content;
       });

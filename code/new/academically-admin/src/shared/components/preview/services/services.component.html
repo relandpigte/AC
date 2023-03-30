@@ -1,26 +1,69 @@
-<div class="shared-post d-flex flex-column">
-    <div class="shared-post-content d-flex flex-column">
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tempor amet est et neque dictum neque, ac gravida.
-            Scelerisque sed feugiat morbi inLorem ipsum dolor, consectetur adipiscing elit. Tempor amet est et neque
-            dictum neque, ac gravida. Scelerisque sed feugiat morbi in...</p>
-        <div class="shared-post-content-author d-flex justify-content-end align-items-center">
-            <span class="d-inline-block mr-2">Jingying Chai</span>
-            <img src="assets/img/anonymous.png" class="rounded-circle border" [width]="31" [height]="31">
+<div *ngIf="data && sharedServiceType" class="service-preview d-flex flex-column">
+    <div *ngIf="canRemove" class="service-preview-remove d-flex justify-content-center align-items-center cursor-pointer" (click)="removeService()">
+        <span class="fe fe-x"></span>
+    </div>
+    <div  *ngIf="servicesType.Article !== sharedServiceType" class="service-preview-image position-relative">
+        <img [src]="thumbnailImageUrl" [alt]="creatorName" />
+
+        <div class="service-preview-author d-flex justify-content-end align-items-center gap-10">
+            <div class="service-preview-author-name" [innerText]="creatorName"></div>
+            <div class="service-preview-author-avatar avatar avatar-sm">
+                <img [src]="creatorProfilePictureUrl" [alt]="creatorName" class="avatar-img rounded-circle">
+            </div>
         </div>
     </div>
-    <div class="shared-post-title d-flex flex-column">
-        <div class="row">
-            <div class="col d-flex flex-column">
-                <h3 class="d-flex align-items-center">This is the article title <small class="pill">Article</small></h3>
-                <div class="shared-post-title-details d-flex align-items-center">
-                    <div class="shared-post-title-details-amount">£8.00</div><span class="separator">|</span>
-                    <div class="shared-post-title-details-ratings">5.0 <i class="fe fe-star"></i></div><span class="separator">|</span>
-                    <div class="shared-post-title-details-review">215 reviews</div>
-                </div>
+    <div *ngIf="servicesType.Article === sharedServiceType" class="service-preview-content d-flex flex-column" [ngClass]="{'img-attachment': thumbnailImageUrl}">
+        <p>{{ serviceContent }}</p>
+        <div class="service-preview-author-article d-flex justify-content-end align-items-center">
+            <span class="d-inline-block mr-2" [innerText]="creatorName"></span>
+            <img [src]="creatorProfilePictureUrl" class="rounded-circle border" [alt]="creatorName" [width]="31" [height]="31">
+        </div>
+    </div>
+    <div class="service-preview-info d-flex flex-row justify-content-center">
+        <div class="service-preview-info-left flex-grow-1 d-flex flex-column">
+            <div class="service-preview-info-left-identity d-flex justify-content-start align-items-center gap-12">
+                <div class="service-preview-info-left-identity-name">{{ serviceName }}</div>
+                <div class="service-preview-info-left-identity-type d-flex justify-content-center align-items-center">{{ serviceTypeName | titlecase }}</div>
             </div>
-            <div class="col d-flex justify-content-end align-items-center">
-                <a href="#" role="button" class="btn btn-info">Learn more</a>
+            <div class="service-preview-info-left-details d-flex justify-content-start align-items-center gap-5">
+                <ng-container *ngIf="this.sanitizedOptions?.isShowDetailsPrice">
+                    <div class="service-preview-info-left-details-price">
+                        {{ priceValue | currency: priceCurrency }}<span *ngIf="priceSuffix"> {{ priceSuffix }}</span>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="this.sanitizedOptions?.isShowDetailsComposition && compositionString">
+                    <div class="service-preview-info-left-details-separator">|</div>
+                    <div class="service-preview-info-left-details-composition">{{ compositionString }}</div>
+                </ng-container>
+
+                <ng-container *ngIf="this.sanitizedOptions?.isShowDetailsLastActive && lastActive">
+                    <div class="service-preview-info-left-details-separator">|</div>
+                    <div class="service-preview-info-left-details-composition">{{ lastActive }}</div>
+                </ng-container>
+
+                <ng-container *ngIf="this.sanitizedOptions?.isShowDetailsSlots && slots">
+                    <div class="service-preview-info-left-details-separator">|</div>
+                    <div class="service-preview-info-left-details-slots">{{ slotsCount }} {{ slotsUnit }} left</div>
+                </ng-container>
+
+                <ng-container *ngIf="this.sanitizedOptions?.isShowDetailsRsvp && rsvp">
+                    <div class="service-preview-info-left-details-separator">|</div>
+                    <div class="service-preview-info-left-details-composition">{{ rsvpString }}</div>
+                </ng-container>
+
+                <ng-container *ngIf="this.sanitizedOptions?.isShowDetailsReviews && reviews">
+                    <div class="service-preview-info-left-details-separator">|</div>
+                    <div class="service-preview-info-left-details-reviews d-flex flex-row align-items-center">
+                        <div *ngIf="reviewValue" class="service-preview-info-left-details-reviews-value">{{ reviewValue | number:'1.1-1' }}</div>
+                        <span *ngIf="reviewStar" class="service-preview-info-left-details-reviews-star bg-center" [ngStyle]="{ 'background-image': 'url(\'assets/img/icon-star.png\')' }"></span>
+                        <div *ngIf="reviewCount" class="service-preview-info-left-details-reviews-count"> · {{ 'ReviewCount' | localize: reviewCount }}</div>
+                    </div>
+                </ng-container>
             </div>
+        </div>
+        <div class="service-preview-info-right d-flex justify-content-center align-items-center">
+            <div role="button" class="btn btn-white service-preview-info-right-learnmore d-flex justify-content-center align-items-center">Learn more</div>
         </div>
     </div>
 </div>
