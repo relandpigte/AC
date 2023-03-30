@@ -64,6 +64,7 @@ import { PreviewPostsComponent } from '@shared/components/preview/posts/posts.co
 import { PreviewServicesComponent } from '@shared/components/preview/services/services.component';
 
 import { KeysPipe } from '@shared/pipes/keys.pipe';
+import { ShortenPipe } from '@shared/pipes/shorten.pipe';
 
 @NgModule({
   declarations: [
@@ -107,7 +108,8 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     EmojiPickerComponent,
     ShimmerComponent,
     PreviewPostsComponent,
-    PreviewServicesComponent
+    PreviewServicesComponent,
+    ShortenPipe
   ],
   imports: [
     CommonModule,
@@ -191,7 +193,8 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
     EmojiPickerComponent,
     ShimmerComponent,
     PreviewPostsComponent,
-    PreviewServicesComponent
+    PreviewServicesComponent,
+    ShortenPipe
   ],
 })
 export class AppSharedModule { }

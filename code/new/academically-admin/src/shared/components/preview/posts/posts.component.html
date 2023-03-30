@@ -6,7 +6,12 @@
     </div>
     <div class="post-preview-content d-flex flex-column">
         <div *ngIf="title" class="post-preview-content-title">{{ title }}</div>
-        <div *ngIf="description" class="post-preview-content-desc">{{ description }}</div>
+        <div *ngIf="description" class="post-preview-content-desc">
+            <!--span *ngIf="!showMore">{{ description | shorten : 150: true }}</span-->
+            <!--span *ngIf="showMore">{{ description }}</span-->
+            <span>{{ description }}</span>
+            <!--a role="button" (click)="showMore = !showMore"> See {{ showMore ? 'less' : 'more' }}</a-->
+        </div>
         <div *ngIf="userTopics && userTopics.length" class="post-preview-content-topic">
             <a *ngFor="let userTopic of userTopics" role="button" class="mr-3">#{{ userTopic.name }}</a>
         </div>

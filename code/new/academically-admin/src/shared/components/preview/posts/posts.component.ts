@@ -15,6 +15,7 @@ export class PreviewPostsComponent extends AppComponentBase implements OnInit, O
   @Input() data: PostDto;
   @Input() file: File;
 
+  showMore = false;
   title: string;
   description: string;
   author: string;
