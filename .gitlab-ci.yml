@@ -42,10 +42,10 @@ variables:
      # Create SQL Script
     - |-
       SQLSCRIPT=$(cat <<-EOF
-      CREATE DATABASE IF NOT EXISTS \`${APP_NAME}_${ENV_NAME}\` CHARACTER SET utf8 COLLATE utf8_general_ci;
+      CREATE DATABASE IF NOT EXISTS \`${APP_NAME}_${env_name}\` CHARACTER SET utf8 COLLATE utf8_general_ci;
       SHOW DATABASES;
       CREATE USER IF NOT EXISTS '${DB_APP_USER}'@'%' IDENTIFIED BY '${DB_APP_PASSWORD}';
-      GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE, SHOW VIEW ON \`${APP_NAME}_${ENV_NAME}\`.* TO '${DB_APP_USER}'@'%';
+      GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE, SHOW VIEW ON \`${APP_NAME}_${env_name}\`.* TO '${DB_APP_USER}'@'%';
       EOF
       )
     - echo Debug - $SQLSCRIPT
