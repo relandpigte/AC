@@ -33,6 +33,9 @@ variables:
     # install java 1.8
     - apt-get install -y openjdk-8-jre
     - java -version
+    # install MySQL
+    - apt-get install -y mysql-client
+    - mysql -V
     # need 5.1.48 of mysql driver
     - aws s3 cp s3://wile-local-source/local/utils/mysql-connector-java-5.1.38.jar /usr/share/java/mysql-connector-java.jar
     - ls -la
