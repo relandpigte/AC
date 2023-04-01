@@ -309,93 +309,94 @@ deploy_schema_to_ci:
   dependencies:
     - build_schema
   environment:
-    name: ci_schema
+    name: development
+    deployment_tier: development
   only:
     - develop
 
-deploy_backend_to_ci:
-  <<: *backend
-  dependencies:
-    - build_backend
-  variables:
-    ENV_NAME: "ci"
-  environment:
-    name: ci_backend
-  only:
-    - develop
+# deploy_backend_to_ci:
+#   <<: *backend
+#   dependencies:
+#     - build_backend
+#   variables:
+#     ENV_NAME: "ci"
+#   environment:
+#     name: ci_backend
+#   only:
+#     - develop
 
-refresh_backend_to_ci:
-  extends:
-    .refresh
-  needs:
-    - deploy_backend_to_ci
-  variables:
-    ENV_NAME: "ci"
-  environment:
-    name: ci
-  only:
-    - develop
+# refresh_backend_to_ci:
+#   extends:
+#     .refresh
+#   needs:
+#     - deploy_backend_to_ci
+#   variables:
+#     ENV_NAME: "ci"
+#   environment:
+#     name: ci
+#   only:
+#     - develop
 
-deploy_frontend_to_ci:
-  <<: *frontend
-  dependencies:
-    - build_frontend
-  environment:
-    name: ci_frontend
-  only:
-    - develop
+# deploy_frontend_to_ci:
+#   <<: *frontend
+#   dependencies:
+#     - build_frontend
+#   environment:
+#     name: ci_frontend
+#   only:
+#     - develop
 
 
 
-deploy_schema_to_uat:
-  <<: *schema
-  variables:
-    ENV_NAME: "uat"
-  dependencies:
-    - build_schema
-  environment:
-    name: uat_schema
-  when: manual
-  only:
-    - develop
+# deploy_schema_to_uat:
+#   <<: *schema
+#   variables:
+#     ENV_NAME: "uat"
+#   dependencies:
+#     - build_schema
+#   environment:
+#     name: uat_schema
+#   when: manual
+#   only:
+#     - develop
 
-deploy_backend_to_uat:
-  <<: *backend
-  needs:    
-    - build_backend
-  dependencies:
-    - build_backend
-  variables:
-    ENV_NAME: "uat"
-  environment:
-    name: uat_backend
-  when: manual
-  only:
-    - develop
+# deploy_backend_to_uat:
+#   <<: *backend
+#   needs:    
+#     - build_backend
+#   dependencies:
+#     - build_backend
+#   variables:
+#     ENV_NAME: "uat"
+#   environment:
+#     name: uat_backend
+#   when: manual
+#   only:
+#     - develop
 
-refresh_backend_to_uat:
-  extends:
-    .refresh
-  needs:
-    - deploy_backend_to_uat
-  variables:
-    ENV_NAME: "uat"
-  environment:
-    name: uat
-  only:
-    - develop
+# refresh_backend_to_uat:
+#   extends:
+#     .refresh
+#   needs:
+#     - deploy_backend_to_uat
+#   variables:
+#     ENV_NAME: "uat"
+#   environment:
+#     name: uat
+#   only:
+#     - develop
 
-deploy_frontend_to_uat:
-  <<: *frontend
-  variables:
-    ENV_NAME: "uat"
-  dependencies:
-    - build_frontend
-  environment:
-    name: uat_frontend
-  when: manual
-  only:
-    - develop
+# deploy_frontend_to_uat:
+#   <<: *frontend
+#   variables:
+#     ENV_NAME: "uat"
+#   dependencies:
+#     - build_frontend
+#   environment:
+#     name: uat_frontend
+#   when: manual
+#   only:
+#     - develop
 
 
 # Environment UAT #
