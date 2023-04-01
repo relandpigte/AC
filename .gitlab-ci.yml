@@ -1,6 +1,7 @@
 stages:
   - build
   - development
+  - testing
   - refresh
 
 variables:
@@ -110,9 +111,12 @@ variables:
     - npm init -y
     - npm install
     - npm install -g serverless
-    # Lookup Required Outputs from Cloudformation
-    - export SG_WEB=$(aws cloudformation list-exports | jq -r ".[] | .[] | select(.Name==\"$APP_NAME$env_name-SGWebId\") | .Value")
-    - echo "Web Security Group $SG_WEB"
+    # Lookup Required Outputs from AWS SSM
+    - export SG_WEB=$(aws ssm get-parameter --name "/$APP_NAME/$ENV_NAME/web_sg_id" | jq -r --raw-output '.Parameter.Value')
+    - printf '\e[95m%s SG Web is - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION" "$SG_WEB"
+    # Lookup Database Id
+    - export DATABASE_ID=db-$APP_NAME-$env_name.$PUBLIC_DOMAIN
+    - printf '\e[95m%s DatabaseId is - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION" "$DATABASE_ID"
     - pwd
     
   script:
@@ -125,7 +129,7 @@ variables:
     - yarn init --yes 2>/dev/null
     - echo "install plugins"
     - "yarn add serverless-plugin-log-retention --dev"
-    - "yarn add serverless-domain-manager@6.4.4 --dev"    # Hard code due to issue AC- 
+    - "yarn add serverless-domain-manager@6.4.4 --dev"    # Hard code due to issue with 7.0.0
     # perform subsitutions on appsettings (need to unzip and rezip)
     - mkdir $CI_PROJECT_DIR/temp
     - unzip $CI_PROJECT_DIR/artifacts/backend.zip -d $CI_PROJECT_DIR/temp
@@ -137,9 +141,6 @@ variables:
     - echo $API_URL
     - cp appsettings.json appsettings.bak
     - cp log4net.config log4net.bak
-    # Lookup Database Id from Cloudformation
-    - export DATABASE_ID=$(aws cloudformation list-exports | jq -r ".[] | .[] | select(.Name==\"$APP_NAME$env_name-RDSEndId\") | .Value")
-    - echo "Database Id $DATABASE_ID"
     # Configure Logging jq, no good file is XML not json
     - sed -i 's|App_Data/Logs/Logs.txt|/var/log/'"$APP_NAME"'-gitlab/'"$APP_NAME"'.log|g' log4net.config # Add gitlab to APP_NAME whilst in transition between projects
     # Subsitute the Connection String
@@ -154,7 +155,7 @@ variables:
     - "SLS_DEBUG=* serverless create_domain"
     - echo "run serverless deploy"v1
     - "SLS_DEBUG=* serverless deploy"  
-    # NEXT SECTION WILL UTIMATELY REPLACE LAMBDA / SERVERLESS DEPLOY ABOVE
+    # NEXT SECTION WILL UTIMATELY REPLACE LAMBDA / SERVERLESS DEPLOY ABOVE  ???
     # Copy iis artifacts to S3 for deployment
     - cd $CI_PROJECT_DIR/artifacts/
     - ls -la # debug line
@@ -260,35 +261,35 @@ build_schema:
   only:
     - develop
 
-# build_backend:
-#   stage: build
-#   image: $BUILD_IMAGE
-#   before_script:
-#     - printf '\e[95m%s pre script (build_backend) \e[0m\n' "$(date +'%d-%m-%Y %T')"
-#     - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
-#     - printf '\e[95m%s Building %s for environment %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$APP_NAME" "$env_name"
-#     - printf '\e[95m%s Deploying to AWS Region - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION"
-#     - apt-get update
-#     - echo "Install Pre-requistes"
-#     - apt-get install -y zip
-#     - pwd
-#     - mkdir artifacts
-#     - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
-#     - "dotnet restore"
+build_backend:
+  stage: build
+  image: $BUILD_IMAGE
+  before_script:
+    - printf '\e[95m%s pre script (build_backend) \e[0m\n' "$(date +'%d-%m-%Y %T')"
+    - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
+    - printf '\e[95m%s Building %s for environment %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$APP_NAME" "$env_name"
+    - printf '\e[95m%s Deploying to AWS Region - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION"
+    - apt-get update
+    - echo "Install Pre-requistes"
+    - apt-get install -y zip
+    - pwd
+    - mkdir artifacts
+    - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
+    - "dotnet restore"
 
-#   script:
-#     # Build and Package projects
-#     - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
-#     - dotnet publish --configuration release --framework netcoreapp3.1 --output bin/release/netcoreapp3.1/output
-#     - "cd $CI_PROJECT_DIR/$BACKEND_PATH/bin/release/netcoreapp3.1/output" 
-#     - zip -r $CI_PROJECT_DIR/artifacts/backend.zip .
-#     - ls -la
-#   artifacts:
-#     paths:
-#       - artifacts
-#     expire_in: 21 days # does not support parameter: https://gitlab.com/gitlab-org/gitlab-runner/-/merge_requests/1893
-#   only:
-#     - develop
+  script:
+    # Build and Package projects
+    - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
+    - dotnet publish --configuration release --framework netcoreapp3.1 --output bin/release/netcoreapp3.1/output
+    - "cd $CI_PROJECT_DIR/$BACKEND_PATH/bin/release/netcoreapp3.1/output" 
+    - zip -r $CI_PROJECT_DIR/artifacts/backend.zip .
+    - ls -la
+  artifacts:
+    paths:
+      - artifacts
+    expire_in: 21 days # does not support parameter: https://gitlab.com/gitlab-org/gitlab-runner/-/merge_requests/1893
+  only:
+    - develop
 
 # build_frontend:
 #   stage: build
