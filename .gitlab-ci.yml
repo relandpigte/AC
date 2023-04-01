@@ -46,7 +46,7 @@ variables:
     - cat <<< "log /etc/openvpn/client.log" >> /etc/openvpn/client.conf # Tell vpn config to use log file.
     - which openvpn
     # Lookup Database Id from Cloudformation
-    - export DATABASE_ID=db-${var.app_name}-${var.env_name}.${PUBLIC_DOMAIN}
+    - export DATABASE_ID=db-$APP_NAME-$env_name.$PUBLIC_DOMAIN
     - echo "Database Id $DATABASE_ID"
     # Connect to VPN
     - openvpn --config /etc/openvpn/client.conf --verb 5 --daemon # Start openvpn with config as a deamon.
@@ -66,10 +66,13 @@ variables:
     - unzip $CI_PROJECT_DIR/artifacts/database.zip -d $CI_PROJECT_DIR/liquibase_scripts
     - ls -la
     - "cd $CI_PROJECT_DIR/liquibase_scripts"
-    # run liquibase
+    # run liquibase on RDS
+    - printf '\e[95m%s Run Liquibase on %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$DATABASE_ID"
+    - printf '\e[95m%s Clear Checksums \e[0m\n' "$(date +'%d-%m-%Y %T')"
     - /opt/liquibase/liquibase --url="jdbc:mysql://$DATABASE_ID:3306/$APP_NAME``_$env_name?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver clearchecksums
+    - printf '\e[95m%s Run Liquibase Scripts \e[0m\n' "$(date +'%d-%m-%Y %T')"
     - /opt/liquibase/liquibase --url="jdbc:mysql://$DATABASE_ID:3306/$APP_NAME``_$env_name?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver update
-
+    - printf '\e[95m%s Update Schema complete \e[0m\n' "$(date +'%d-%m-%Y %T')"
 
 .backend: &backend
   stage: deploy
@@ -241,64 +244,64 @@ build_schema:
   only:
     - develop
 
-build_backend:
-  stage: build
-  image: $BUILD_IMAGE
-  before_script:
-    - printf '\e[95m%s pre script (build_backend) \e[0m\n' "$(date +'%d-%m-%Y %T')"
-    - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
-    - printf '\e[95m%s Building %s for environment %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$APP_NAME" "$env_name"
-    - printf '\e[95m%s Deploying to AWS Region - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION"
-    - apt-get update
-    - echo "Install Pre-requistes"
-    - apt-get install -y zip
-    - pwd
-    - mkdir artifacts
-    - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
-    - "dotnet restore"
+# build_backend:
+#   stage: build
+#   image: $BUILD_IMAGE
+#   before_script:
+#     - printf '\e[95m%s pre script (build_backend) \e[0m\n' "$(date +'%d-%m-%Y %T')"
+#     - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
+#     - printf '\e[95m%s Building %s for environment %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$APP_NAME" "$env_name"
+#     - printf '\e[95m%s Deploying to AWS Region - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION"
+#     - apt-get update
+#     - echo "Install Pre-requistes"
+#     - apt-get install -y zip
+#     - pwd
+#     - mkdir artifacts
+#     - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
+#     - "dotnet restore"
 
-  script:
-    # Build and Package projects
-    - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
-    - dotnet publish --configuration release --framework netcoreapp3.1 --output bin/release/netcoreapp3.1/output
-    - "cd $CI_PROJECT_DIR/$BACKEND_PATH/bin/release/netcoreapp3.1/output" 
-    - zip -r $CI_PROJECT_DIR/artifacts/backend.zip .
-    - ls -la
-  artifacts:
-    paths:
-      - artifacts
-    expire_in: 21 days # does not support parameter: https://gitlab.com/gitlab-org/gitlab-runner/-/merge_requests/1893
-  only:
-    - develop
+#   script:
+#     # Build and Package projects
+#     - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
+#     - dotnet publish --configuration release --framework netcoreapp3.1 --output bin/release/netcoreapp3.1/output
+#     - "cd $CI_PROJECT_DIR/$BACKEND_PATH/bin/release/netcoreapp3.1/output" 
+#     - zip -r $CI_PROJECT_DIR/artifacts/backend.zip .
+#     - ls -la
+#   artifacts:
+#     paths:
+#       - artifacts
+#     expire_in: 21 days # does not support parameter: https://gitlab.com/gitlab-org/gitlab-runner/-/merge_requests/1893
+#   only:
+#     - develop
 
-build_frontend:
-  stage: build
-  image: node:latest
-  before_script:
-    - printf '\e[95m%s pre script (build_frontend) \e[0m\n' "$(date +'%d-%m-%Y %T')"
-    - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
-    - printf '\e[95m%s Building %s for environment %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$APP_NAME" "$env_name"
-    - printf '\e[95m%s Deploying to AWS Region - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION"
-    - apt-get update
-    - node -v
-    - npm -v
-  cache:
-    paths:
-      - $CI_PROJECT_DIR/$FRONTEND_PATH/node_modules/
+# build_frontend:
+#   stage: build
+#   image: node:latest
+#   before_script:
+#     - printf '\e[95m%s pre script (build_frontend) \e[0m\n' "$(date +'%d-%m-%Y %T')"
+#     - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
+#     - printf '\e[95m%s Building %s for environment %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$APP_NAME" "$env_name"
+#     - printf '\e[95m%s Deploying to AWS Region - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION"
+#     - apt-get update
+#     - node -v
+#     - npm -v
+#   cache:
+#     paths:
+#       - $CI_PROJECT_DIR/$FRONTEND_PATH/node_modules/
       
-  script:
-    - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
-    # specify v9.1.4 to match our code
-    - npm install -g @angular/cli@9.1.4
-    - yarn install    
-    - ls -la
-    - cp -r $CI_PROJECT_DIR/$FRONTEND_PATH/ $CI_PROJECT_DIR/artifacts/
-  artifacts:
-    paths:
-      - artifacts
-    expire_in: 21 day
-  only:
-    - develop
+#   script:
+#     - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
+#     # specify v9.1.4 to match our code
+#     - npm install -g @angular/cli@9.1.4
+#     - yarn install    
+#     - ls -la
+#     - cp -r $CI_PROJECT_DIR/$FRONTEND_PATH/ $CI_PROJECT_DIR/artifacts/
+#   artifacts:
+#     paths:
+#       - artifacts
+#     expire_in: 21 day
+#   only:
+#     - develop
 
     
 # End Build #
