@@ -35,8 +35,6 @@ variables:
     - java -version
     # need 5.1.48 of mysql driver
     - aws s3 cp s3://wile-local-source/local/utils/mysql-connector-java-5.1.38.jar /usr/share/java/mysql-connector-java.jar
-    - unzip $CI_PROJECT_DIR/liquibase-4.2.0.zip -d /opt/liquibase
-    - unzip $CI_PROJECT_DIR/artifacts/database.zip -d $CI_PROJECT_DIR/liquibase_scripts
     - ls -la
      # Create SQL Script
     - |-
@@ -50,6 +48,8 @@ variables:
     - echo Debug - $SQLSCRIPT
     # download liquibase
     - aws s3 cp s3://wile-local-source/local/utils/liquibase-4.2.0.zip $CI_PROJECT_DIR/
+    - unzip $CI_PROJECT_DIR/liquibase-4.2.0.zip -d /opt/liquibase
+    - unzip $CI_PROJECT_DIR/artifacts/database.zip -d $CI_PROJECT_DIR/liquibase_scripts
     # install and config OpenVPN
     - which openvpn || (apt-get update -y -qq && apt-get install -y -qq openvpn) # Install openvpn if not available.
     - cat <<< $CLIENT_OVPN > /etc/openvpn/client.conf # Move vpn config from gitlab variable to config file.
