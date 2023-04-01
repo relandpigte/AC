@@ -70,8 +70,7 @@ variables:
     - sleep 30s # Wait for some time so the vpn can connect before doing anything else.
     - cat /etc/openvpn/client.log # Print the vpn log.
     - ping -c 1 10.100.0.79 # Ping the Zabbix to prove VPN connection. If not available this stops the deployment process.
-    - mkdir /opt/liquibase # ready to extract liquibase
-    - mkdir $CI_PROJECT_DIR/liquibase_scripts # ready to extract package into
+
 
   script:
     - printf '\e[95m%s Update Database Schema \e[0m\n' "$(date +'%d-%m-%Y %T')"
