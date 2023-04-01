@@ -339,7 +339,7 @@ deploy_schema_to_ci:
   needs:
     - build_schema
   variables:
-    env_name: "ci"
+    env_name: ci
   environment:
     name: development
     deployment_tier: development
@@ -387,12 +387,13 @@ deploy_schema_to_schema:
   needs:
     - build_schema
   variables:
-    env_name: "testing"
+    env_name: uat
   environment:
     name: testing
     deployment_tier: testing
   only:
     - develop
+  when: manual
 
 # deploy_backend_to_uat:
 #   <<: *backend
