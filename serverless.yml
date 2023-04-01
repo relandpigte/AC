@@ -50,8 +50,8 @@ provider:
       Action:
         - s3:*
       Resource: 
-        - "arn:aws:s3:::academically-${env:ENV_NAME}-assets"
-        - "arn:aws:s3:::academically-${env:ENV_NAME}-assets/*"
+        - "arn:aws:s3:::academically-${env:env_name}-assets"
+        - "arn:aws:s3:::academically-${env:env_name}-assets/*"
   apiGateway:
     binaryMediaTypes:
       - 'multipart/form-data'
@@ -67,7 +67,7 @@ functions:
     memorySize: 512
     timeout: 30
     environment:
-      ASPNETCORE_ENVIRONMENT: ${env:ENV_NAME}
+      ASPNETCORE_ENVIRONMENT: ${env:env_name}
     events:
       - http:
           path: /{proxy+}
@@ -85,9 +85,9 @@ plugins:
 
 custom:
   customDomain:
-    domainName: api-academically-${env:ENV_NAME}.${env:PUBLIC_DOMAIN}
-    stage: ${env:ENV_NAME}
-    basePath: ${env:ENV_NAME}
+    domainName: api-academically-${env:env_name}.${env:PUBLIC_DOMAIN}
+    stage: ${env:env_name}
+    basePath: ${env:env_name}
     # certificate name is first SAN listed
     certificateName: '*.${env:PUBLIC_DOMAIN}'
     createRoute53Record: true
