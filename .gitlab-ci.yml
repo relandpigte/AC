@@ -16,10 +16,10 @@ variables:
   stage: deploy
   image: ubuntu:18.04
   before_script:
-    - echo "pre script (deploy_schema)"
-    - echo "Install Pre-requistes"
-    - echo "Application - $APP_NAME"
-    - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
+    - printf '\e[95m%s pre script (deploy_schema) \e[0m\n' "$(date +'%d-%m-%Y %T')"
+    - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
+    - printf '\e[95m%s Building %s for environment %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$APP_NAME" "$env_name"
+    - printf '\e[95m%s Deploying to AWS Region - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION"
     - apt-get update
     - apt-get install -y software-properties-common 
     - apt-get install -y iputils-ping
@@ -75,9 +75,10 @@ variables:
   stage: deploy
   image: node:latest
   before_script:
-    - echo "pre script (deploy_backend)"
-    - echo "Install Pre-requistes"
-    - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
+    - printf '\e[95m%s pre script (deploy_backend) \e[0m\n' "$(date +'%d-%m-%Y %T')"
+    - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
+    - printf '\e[95m%s Building %s for environment %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$APP_NAME" "$env_name"
+    - printf '\e[95m%s Deploying to AWS Region - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION"
     - apt-get update
     # install python, awscli & jq
     - apt-get install -y python3-pip
@@ -146,9 +147,10 @@ variables:
   stage: deploy
   image: node:latest
   before_script:
-    - echo "pre script (deploy_frontend)"
-    - echo "Install Pre-requistes"
-    - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
+    - printf '\e[95m%s pre script (deploy_frontend) \e[0m\n' "$(date +'%d-%m-%Y %T')"
+    - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
+    - printf '\e[95m%s Building %s for environment %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$APP_NAME" "$env_name"
+    - printf '\e[95m%s Deploying to AWS Region - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION"
     - apt-get update
     - node -v
     - npm -v
@@ -185,8 +187,10 @@ variables:
   stage: refresh
   image: ubuntu:18.04
   before_script:
-    - echo "pre script (refresh backend)"
-    - echo "Deploy to AWS Region - $AWS_DEFAULT_REGION"
+    - printf '\e[95m%s pre script (refresh) \e[0m\n' "$(date +'%d-%m-%Y %T')"
+    - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
+    - printf '\e[95m%s Building %s for environment %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$APP_NAME" "$env_name"
+    - printf '\e[95m%s Deploying to AWS Region - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION"
     - apt-get update
     - apt-get install -y software-properties-common 
     # install python, awscli & jq
@@ -213,8 +217,10 @@ build_schema:
   stage: build
   image: $BUILD_IMAGE
   before_script:
-    - echo "pre script (build_schema)"
-    - echo "DEBUG - $APP_NAME``_$env_name"  # need a single underscore between variables
+    - printf '\e[95m%s pre script (build_schema) \e[0m\n' "$(date +'%d-%m-%Y %T')"
+    - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
+    - printf '\e[95m%s Building %s for environment %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$APP_NAME" "$env_name"
+    - printf '\e[95m%s Deploying to AWS Region - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION"
     - apt-get update
     - echo "Install Pre-requistes"
     - apt-get install -y zip
@@ -239,7 +245,10 @@ build_backend:
   stage: build
   image: $BUILD_IMAGE
   before_script:
-    - echo "pre script (build_backend)"
+    - printf '\e[95m%s pre script (build_backend) \e[0m\n' "$(date +'%d-%m-%Y %T')"
+    - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
+    - printf '\e[95m%s Building %s for environment %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$APP_NAME" "$env_name"
+    - printf '\e[95m%s Deploying to AWS Region - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION"
     - apt-get update
     - echo "Install Pre-requistes"
     - apt-get install -y zip
@@ -266,8 +275,10 @@ build_frontend:
   stage: build
   image: node:latest
   before_script:
-    - echo "pre script (build_frontend)"
-    - echo "Install Pre-requistes"
+    - printf '\e[95m%s pre script (build_frontend) \e[0m\n' "$(date +'%d-%m-%Y %T')"
+    - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
+    - printf '\e[95m%s Building %s for environment %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$APP_NAME" "$env_name"
+    - printf '\e[95m%s Deploying to AWS Region - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION"
     - apt-get update
     - node -v
     - npm -v
@@ -303,6 +314,8 @@ build_frontend:
 deploy_schema_to_ci:
   <<: *schema
   dependencies:
+    - build_schema
+  needs:
     - build_schema
   variables:
     env_name: "ci"
