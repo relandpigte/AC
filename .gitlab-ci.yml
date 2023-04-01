@@ -378,18 +378,20 @@ deploy_schema_to_ci:
 #     - develop
 
 
-
-# deploy_schema_to_uat:
-#   <<: *schema
-#   variables:
-#     ENV_NAME: "uat"
-#   dependencies:
-#     - build_schema
-#   environment:
-#     name: uat_schema
-#   when: manual
-#   only:
-#     - develop
+deploy_schema_to_schema:
+  <<: *schema
+  stage: testing
+  dependencies:
+    - build_schema
+  needs:
+    - build_schema
+  variables:
+    env_name: "testing"
+  environment:
+    name: testing
+    deployment_tier: testing
+  only:
+    - develop
 
 # deploy_backend_to_uat:
 #   <<: *backend
