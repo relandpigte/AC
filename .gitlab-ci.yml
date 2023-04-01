@@ -7,12 +7,10 @@ variables:
   BUILD_IMAGE: "mcr.microsoft.com/dotnet/core/sdk:3.1" 
   FRONTEND_PATH: "code/new/academically-admin"
   BACKEND_PATH: "code/new/Academically/src/Academically.Web.Host"
-  ENV_NAME: "ci"
   LOG_RETENTION: 7
   PRIVATE_SUBNET_A: "subnet-03f6e008bbf99fd12"
   PRIVATE_SUBNET_B: "subnet-06ff7fbbb445833a3"
   PUBLIC_DOMAIN: "sourcecloud-dev.uk"
-
 
 .schema: &schema
   stage: deploy
@@ -48,7 +46,7 @@ variables:
     - cat <<< "log /etc/openvpn/client.log" >> /etc/openvpn/client.conf # Tell vpn config to use log file.
     - which openvpn
     # Lookup Database Id from Cloudformation
-    - export DATABASE_ID=$(aws cloudformation list-exports | jq -r ".[] | .[] | select(.Name==\"$APP_NAME$ENV_NAME-RDSEndId\") | .Value")
+    - export DATABASE_ID=db-${var.app_name}-${var.env_name}.${PUBLIC_DOMAIN}
     - echo "Database Id $DATABASE_ID"
     # Connect to VPN
     - openvpn --config /etc/openvpn/client.conf --verb 5 --daemon # Start openvpn with config as a deamon.
@@ -69,8 +67,8 @@ variables:
     - ls -la
     - "cd $CI_PROJECT_DIR/liquibase_scripts"
     # run liquibase
-    - /opt/liquibase/liquibase --url="jdbc:mysql://$DATABASE_ID:3306/$APP_NAME``_$ENV_NAME?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver clearchecksums
-    - /opt/liquibase/liquibase --url="jdbc:mysql://$DATABASE_ID:3306/$APP_NAME``_$ENV_NAME?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver update
+    - /opt/liquibase/liquibase --url="jdbc:mysql://$DATABASE_ID:3306/$APP_NAME``_$env_name?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver clearchecksums
+    - /opt/liquibase/liquibase --url="jdbc:mysql://$DATABASE_ID:3306/$APP_NAME``_$env_name?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver update
 
 
 .backend: &backend
@@ -93,7 +91,7 @@ variables:
     - npm install
     - npm install -g serverless
     # Lookup Required Outputs from Cloudformation
-    - export SG_WEB=$(aws cloudformation list-exports | jq -r ".[] | .[] | select(.Name==\"$APP_NAME$ENV_NAME-SGWebId\") | .Value")
+    - export SG_WEB=$(aws cloudformation list-exports | jq -r ".[] | .[] | select(.Name==\"$APP_NAME$env_name-SGWebId\") | .Value")
     - echo "Web Security Group $SG_WEB"
     - pwd
     
@@ -113,21 +111,21 @@ variables:
     - unzip $CI_PROJECT_DIR/artifacts/backend.zip -d $CI_PROJECT_DIR/temp
     - rm $CI_PROJECT_DIR/artifacts/backend.zip # remove zip so we can create a new one
     - cd temp
-    - export API_URL="https://api-$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN"
-    - export URL_HTTPS="https://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN"
-    - export URL_HTTP="http://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN"
+    - export API_URL="https://api-$APP_NAME-$env_name.$PUBLIC_DOMAIN"
+    - export URL_HTTPS="https://$APP_NAME-$env_name.$PUBLIC_DOMAIN"
+    - export URL_HTTP="http://$APP_NAME-$env_name.$PUBLIC_DOMAIN"
     - echo $API_URL
     - cp appsettings.json appsettings.bak
     - cp log4net.config log4net.bak
     # Lookup Database Id from Cloudformation
-    - export DATABASE_ID=$(aws cloudformation list-exports | jq -r ".[] | .[] | select(.Name==\"$APP_NAME$ENV_NAME-RDSEndId\") | .Value")
+    - export DATABASE_ID=$(aws cloudformation list-exports | jq -r ".[] | .[] | select(.Name==\"$APP_NAME$env_name-RDSEndId\") | .Value")
     - echo "Database Id $DATABASE_ID"
     # Configure Logging jq, no good file is XML not json
     - sed -i 's|App_Data/Logs/Logs.txt|/var/log/'"$APP_NAME"'-gitlab/'"$APP_NAME"'.log|g' log4net.config # Add gitlab to APP_NAME whilst in transition between projects
     # Subsitute the Connection String
-    - jq ".ConnectionStrings.Default=\"server=$DATABASE_ID``;database=$APP_NAME``_$ENV_NAME;uid=deployAdmin;password=$db_master_password;port=3306\"" appsettings.bak > appsettings.v1
+    - jq ".ConnectionStrings.Default=\"server=$DATABASE_ID``;database=$APP_NAME``_$env_name;uid=deployAdmin;password=$db_master_password;port=3306\"" appsettings.bak > appsettings.v1
     # Subsitute the Other Variables
-    - jq ".App.ClientRootAddress=\"$URL_HTTPS\" | .App.CorsOrigins=\"$URL_HTTPS``,$URL_HTTP\" | .App.ServerBasePath=\"\" | .Kestrel.Endpoints.Http.Url=\"http://localhost:5000\" | .Aws.Id=\"$AWS_ACC_NUM\" | .Aws.Profile=\"\" | .Aws.Region=\"$AWS_DEFAULT_REGION\" | .Aws.S3.AssetsBucket=\"$APP_NAME``-gitlab-$ENV_NAME``-assets\" | .Aws.S3.SecureAssetsBucket=\"$APP_NAME``-gitlab-$ENV_NAME``-assets-secure\" | .ITagg.Sms.Username=\"d9d7ec2c\" | .ITagg.Sms.Password=\"p5sswm6g\"" appsettings.v1 > appsettings.json
+    - jq ".App.ClientRootAddress=\"$URL_HTTPS\" | .App.CorsOrigins=\"$URL_HTTPS``,$URL_HTTP\" | .App.ServerBasePath=\"\" | .Kestrel.Endpoints.Http.Url=\"http://localhost:5000\" | .Aws.Id=\"$AWS_ACC_NUM\" | .Aws.Profile=\"\" | .Aws.Region=\"$AWS_DEFAULT_REGION\" | .Aws.S3.AssetsBucket=\"$APP_NAME``-gitlab-$env_name``-assets\" | .Aws.S3.SecureAssetsBucket=\"$APP_NAME``-gitlab-$env_name``-assets-secure\" | .ITagg.Sms.Username=\"d9d7ec2c\" | .ITagg.Sms.Password=\"p5sswm6g\"" appsettings.v1 > appsettings.json
     - cat appsettings.json
     - rm appsettings.bak
     - zip -r $CI_PROJECT_DIR/artifacts/backend.zip .
@@ -140,11 +138,9 @@ variables:
     # Copy iis artifacts to S3 for deployment
     - cd $CI_PROJECT_DIR/artifacts/
     - ls -la # debug line
-    - echo $APP_NAME-gitlab-$ENV_NAME-artifacts  # Add gitlab to APP_NAME whilst in transition between projects
-    - aws s3 rm s3://$APP_NAME-gitlab-$ENV_NAME-artifacts/ --recursive
-    - aws s3 cp . s3://$APP_NAME-gitlab-$ENV_NAME-artifacts/ --recursive # TEMP APP_NAME until we completely switch, SAME for aws line below
-
-
+    - echo $APP_NAME-gitlab-$env_name-artifacts  # Add gitlab to APP_NAME whilst in transition between projects
+    - aws s3 rm s3://$APP_NAME-gitlab-$env_name-artifacts/ --recursive
+    - aws s3 cp . s3://$APP_NAME-gitlab-$env_name-artifacts/ --recursive # TEMP APP_NAME until we completely switch, SAME for aws line below
 
 .frontend: &frontend
   stage: deploy
@@ -171,16 +167,16 @@ variables:
   
   script:
     # build dist previously saved as an artifact
-    - echo "Build $ENV_NAME"
+    - echo "Build $env_name"
     - "cd $CI_PROJECT_DIR/artifacts" 
     - ls -la
-    - ng build --configuration $ENV_NAME
+    - ng build --configuration $env_name
     - ls -la
     # Copy Dist to S3 Bucket
     - echo "Copy dist to S3"
-    - aws s3 rm s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN --recursive
-    - aws s3 cp dist s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN --recursive
-    - aws s3 ls s3://$APP_NAME-$ENV_NAME.$PUBLIC_DOMAIN
+    - aws s3 rm s3://$APP_NAME-$env_name.$PUBLIC_DOMAIN --recursive
+    - aws s3 cp dist s3://$APP_NAME-$env_name.$PUBLIC_DOMAIN --recursive
+    - aws s3 ls s3://$APP_NAME-$env_name.$PUBLIC_DOMAIN
 
 ###########
 # refresh #
@@ -199,13 +195,13 @@ variables:
     - aws --version
 
   script:
-    - echo "reset InstanceRefresh Tag on $ENV_NAME-acad-tlab.aws-api-asg to force Refresh on $ENV_NAME" #TEMP gitlab
+    - echo "reset InstanceRefresh Tag on $env_name-acad-tlab.aws-api-asg to force Refresh on $env_name" #TEMP gitlab
     - > 
       aws autoscaling create-or-update-tags
-      --tags ResourceId=$ENV_NAME-acad-tlab.aws-api-asg,ResourceType=auto-scaling-group,Key=InstanceRefresh,Value=$CI_JOB_STARTED_AT,PropagateAtLaunch=true
+      --tags ResourceId=$env_name-acad-tlab.aws-api-asg,ResourceType=auto-scaling-group,Key=InstanceRefresh,Value=$CI_JOB_STARTED_AT,PropagateAtLaunch=true
     - >
       aws autoscaling start-instance-refresh 
-      --auto-scaling-group-name $ENV_NAME-acad-tlab.aws-api-asg 
+      --auto-scaling-group-name $env_name-acad-tlab.aws-api-asg 
       --preferences '{"InstanceWarmup": 240, "MinHealthyPercentage": 50}'
 
 
@@ -218,7 +214,7 @@ build_schema:
   image: $BUILD_IMAGE
   before_script:
     - echo "pre script (build_schema)"
-    - echo "DEBUG - $APP_NAME``_$ENV_NAME"  # need a single underscore between variables
+    - echo "DEBUG - $APP_NAME``_$env_name"  # need a single underscore between variables
     - apt-get update
     - echo "Install Pre-requistes"
     - apt-get install -y zip
@@ -308,6 +304,8 @@ deploy_schema_to_ci:
   <<: *schema
   dependencies:
     - build_schema
+  variables:
+    env_name: "ci"
   environment:
     name: development
     deployment_tier: development
