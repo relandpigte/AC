@@ -346,16 +346,20 @@ deploy_schema_to_ci:
   only:
     - develop
 
-# deploy_backend_to_ci:
-#   <<: *backend
-#   dependencies:
-#     - build_backend
-#   variables:
-#     ENV_NAME: "ci"
-#   environment:
-#     name: ci_backend
-#   only:
-#     - develop
+deploy_backend_to_ci:
+  <<: *backend
+  stage: development
+  dependencies:
+    - build_backend
+  needs:
+    - build_backend
+  variables:
+    env_name: ci
+  environment:
+    name: development
+    deployment_tier: development
+  only:
+    - develop
 
 # refresh_backend_to_ci:
 #   extends:
