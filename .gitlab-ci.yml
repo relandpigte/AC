@@ -79,7 +79,7 @@ variables:
     - printf '\e[95m%s Update Database Schema \e[0m\n' "$(date +'%d-%m-%Y %T')"
     # Run Create Database and Application User
     - printf '\e[95m%s Creating Admin Database %s-%s AND User %s ON %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "${APP_NAME}" "${env_name}" "${DB_APP_USER}" "${DATABASE_ID}"
-    - mysql -h $DATABASE_ID -u$deployAdmin -p${db_master_password}  -e "$SQLSCRIPT"
+    - mysql -h $DATABASE_ID -u$${db_admin_user} -p${db_master_password}  -e "$SQLSCRIPT"
     # run liquibase on RDS
     - "cd $CI_PROJECT_DIR/liquibase_scripts"
     - printf '\e[95m%s Run Liquibase on %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$DATABASE_ID"
@@ -143,7 +143,7 @@ variables:
     # Configure Logging jq, no good file is XML not json
     - sed -i 's|App_Data/Logs/Logs.txt|/var/log/'"$APP_NAME"'-gitlab/'"$APP_NAME"'.log|g' log4net.config # Add gitlab to APP_NAME whilst in transition between projects
     # Subsitute the Connection String
-    - jq ".ConnectionStrings.Default=\"server=$DATABASE_ID``;database=$APP_NAME``_$env_name;uid=deployAdmin;password=$db_master_password;port=3306\"" appsettings.bak > appsettings.v1
+    - jq ".ConnectionStrings.Default=\"server=$DATABASE_ID``;database=$APP_NAME``_$env_name;uid=${db_admin_user};password=$db_master_password;port=3306\"" appsettings.bak > appsettings.v1
     # Subsitute the Other Variables
     - jq ".App.ClientRootAddress=\"$URL_HTTPS\" | .App.CorsOrigins=\"$URL_HTTPS``,$URL_HTTP\" | .App.ServerBasePath=\"\" | .Kestrel.Endpoints.Http.Url=\"http://localhost:5000\" | .Aws.Id=\"$AWS_ACC_NUM\" | .Aws.Profile=\"\" | .Aws.Region=\"$AWS_DEFAULT_REGION\" | .Aws.S3.AssetsBucket=\"$APP_NAME``-gitlab-$env_name``-assets\" | .Aws.S3.SecureAssetsBucket=\"$APP_NAME``-gitlab-$env_name``-assets-secure\" | .ITagg.Sms.Username=\"d9d7ec2c\" | .ITagg.Sms.Password=\"p5sswm6g\"" appsettings.v1 > appsettings.json
     - cat appsettings.json
