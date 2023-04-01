@@ -1,6 +1,6 @@
 stages:
   - build
-  - deploy
+  - development
   - refresh
 
 variables:
@@ -33,6 +33,23 @@ variables:
     # install java 1.8
     - apt-get install -y openjdk-8-jre
     - java -version
+    # need 5.1.48 of mysql driver
+    - aws s3 cp s3://wile-local-source/local/utils/mysql-connector-java-5.1.38.jar /usr/share/java/mysql-connector-java.jar
+    - unzip $CI_PROJECT_DIR/liquibase-4.2.0.zip -d /opt/liquibase
+    - unzip $CI_PROJECT_DIR/artifacts/database.zip -d $CI_PROJECT_DIR/liquibase_scripts
+    - ls -la
+     # Create SQL Script
+    - |-
+      SQLSCRIPT=$(cat <<-EOF
+      CREATE DATABASE IF NOT EXISTS \`${APP_NAME}_${ENV_NAME}\` CHARACTER SET utf8 COLLATE utf8_general_ci;
+      SHOW DATABASES;
+      CREATE USER IF NOT EXISTS '${DB_APP_USER}'@'%' IDENTIFIED BY '${DB_APP_PASSWORD}';
+      GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE, SHOW VIEW ON \`${APP_NAME}_${ENV_NAME}\`.* TO '${DB_APP_USER}'@'%';
+      EOF
+      )
+    - echo Debug - $SQLSCRIPT
+    # download liquibase
+    - aws s3 cp s3://wile-local-source/local/utils/liquibase-4.2.0.zip $CI_PROJECT_DIR/
     # install and config OpenVPN
     - which openvpn || (apt-get update -y -qq && apt-get install -y -qq openvpn) # Install openvpn if not available.
     - cat <<< $CLIENT_OVPN > /etc/openvpn/client.conf # Move vpn config from gitlab variable to config file.
@@ -45,7 +62,7 @@ variables:
     - cat <<< "key /etc/openvpn/client.key" >> /etc/openvpn/client.conf # Tell vpn config to use client.key file.
     - cat <<< "log /etc/openvpn/client.log" >> /etc/openvpn/client.conf # Tell vpn config to use log file.
     - which openvpn
-    # Lookup Database Id from Cloudformation
+    # Lookup Database Id
     - export DATABASE_ID=db-$APP_NAME-$env_name.$PUBLIC_DOMAIN
     - echo "Database Id $DATABASE_ID"
     # Connect to VPN
@@ -57,22 +74,20 @@ variables:
     - mkdir $CI_PROJECT_DIR/liquibase_scripts # ready to extract package into
 
   script:
-    # Run Liquibase Scripts
-    - echo "Update Database Schema"
-    - aws s3 cp s3://wile-local-source/local/utils/liquibase-4.2.0.zip $CI_PROJECT_DIR/
-    # need 5.1.48 of mysql driver
-    - aws s3 cp s3://wile-local-source/local/utils/mysql-connector-java-5.1.38.jar /usr/share/java/mysql-connector-java.jar
-    - unzip $CI_PROJECT_DIR/liquibase-4.2.0.zip -d /opt/liquibase
-    - unzip $CI_PROJECT_DIR/artifacts/database.zip -d $CI_PROJECT_DIR/liquibase_scripts
-    - ls -la
-    - "cd $CI_PROJECT_DIR/liquibase_scripts"
+    - printf '\e[95m%s Update Database Schema \e[0m\n' "$(date +'%d-%m-%Y %T')"
+    # Run Create Database and Application User
+    - printf '\e[95m%s Creating Admin Database %s-%s AND User %s ON %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "${APP_NAME}" "${env_name}" "${DB_APP_USER}" "${DATABASE_ID}"
+    - nslookup $DATABASE_ID
+    - mysql -h $DATABASE_ID -u$deployAdmin -p${db_master_password}  -e "$SQLSCRIPT"
     # run liquibase on RDS
+    - "cd $CI_PROJECT_DIR/liquibase_scripts"
     - printf '\e[95m%s Run Liquibase on %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$DATABASE_ID"
     - printf '\e[95m%s Clear Checksums \e[0m\n' "$(date +'%d-%m-%Y %T')"
-    - /opt/liquibase/liquibase --url="jdbc:mysql://$DATABASE_ID:3306/$APP_NAME``_$env_name?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver clearchecksums
+    - /opt/liquibase/liquibase --url="jdbc:mysql://$DATABASE_ID:3306/$APP_NAME``_$env_name?useSSL=false" --username=${db_admin_user} --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver clearchecksums
     - printf '\e[95m%s Run Liquibase Scripts \e[0m\n' "$(date +'%d-%m-%Y %T')"
-    - /opt/liquibase/liquibase --url="jdbc:mysql://$DATABASE_ID:3306/$APP_NAME``_$env_name?useSSL=false" --username=deployAdmin --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver update
+    - /opt/liquibase/liquibase --url="jdbc:mysql://$DATABASE_ID:3306/$APP_NAME``_$env_name?useSSL=false" --username=${db_admin_user} --password=${db_master_password} --changeLogFile=main.changelog.xml --classpath=/usr/share/java/mysql-connector-java.jar --driver=com.mysql.jdbc.Driver update
     - printf '\e[95m%s Update Schema complete \e[0m\n' "$(date +'%d-%m-%Y %T')"
+
 
 .backend: &backend
   stage: deploy
@@ -316,6 +331,7 @@ build_schema:
 
 deploy_schema_to_ci:
   <<: *schema
+  stage: development
   dependencies:
     - build_schema
   needs:
