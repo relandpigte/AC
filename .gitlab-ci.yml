@@ -76,7 +76,6 @@ variables:
     - printf '\e[95m%s Update Database Schema \e[0m\n' "$(date +'%d-%m-%Y %T')"
     # Run Create Database and Application User
     - printf '\e[95m%s Creating Admin Database %s-%s AND User %s ON %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "${APP_NAME}" "${env_name}" "${DB_APP_USER}" "${DATABASE_ID}"
-    - nslookup $DATABASE_ID
     - mysql -h $DATABASE_ID -u$deployAdmin -p${db_master_password}  -e "$SQLSCRIPT"
     # run liquibase on RDS
     - "cd $CI_PROJECT_DIR/liquibase_scripts"
