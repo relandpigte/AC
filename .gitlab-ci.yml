@@ -252,33 +252,32 @@ variables:
 # Build #
 #########
 
-# DISABLE whilst testing BE Deploy
-# build_schema:
-#   stage: build
-#   image: $BUILD_IMAGE
-#   before_script:
-#     - printf '\e[95m%s pre script (build_schema) \e[0m\n' "$(date +'%d-%m-%Y %T')"
-#     - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
-#     - printf '\e[95m%s Building %s for environment %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$APP_NAME" "$env_name"
-#     - printf '\e[95m%s Deploying to AWS Region - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION"
-#     - apt-get update
-#     - echo "Install Pre-requistes"
-#     - apt-get install -y zip
-#     - pwd
-#     - mkdir artifacts
-#   script:
-#     # Package Schema
-#     - "cd $CI_PROJECT_DIR/database" 
-#     - zip -r $CI_PROJECT_DIR/artifacts/database.zip .
-#     - echo "Zipped Packages Ready....."
-#     - "cd $CI_PROJECT_DIR/artifacts" 
-#     - ls -la
-#   artifacts:
-#     paths:
-#       - artifacts
-#     expire_in: 21 day
-#   only:
-#     - develop
+build_schema:
+  stage: build
+  image: $BUILD_IMAGE
+  before_script:
+    - printf '\e[95m%s pre script (build_schema) \e[0m\n' "$(date +'%d-%m-%Y %T')"
+    - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
+    - printf '\e[95m%s Building %s for environment %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$APP_NAME" "$env_name"
+    - printf '\e[95m%s Deploying to AWS Region - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION"
+    - apt-get update
+    - echo "Install Pre-requistes"
+    - apt-get install -y zip
+    - pwd
+    - mkdir artifacts
+  script:
+    # Package Schema
+    - "cd $CI_PROJECT_DIR/database" 
+    - zip -r $CI_PROJECT_DIR/artifacts/database.zip .
+    - echo "Zipped Packages Ready....."
+    - "cd $CI_PROJECT_DIR/artifacts" 
+    - ls -la
+  artifacts:
+    paths:
+      - artifacts
+    expire_in: 21 day
+  only:
+    - develop
 
 build_backend:
   stage: build
