@@ -34,8 +34,8 @@ export const environment = {
     amazon: {
       s3: {
         region: 'eu-west-2',
-        bucket: 'academically-gitlab-uat-assets',
-        securedBucket: 'academically-gitlab-uat-assets-secure',
+        bucket: 'academically-uat-assets',
+        securedBucket: 'academically-uat-assets-secure',
         credentials: {
           accessKey: 'AKIA3CV3YWZBN7ZGDVHT',
           secret: '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',

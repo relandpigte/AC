@@ -10,13 +10,13 @@ export const environment = {
   webRtc: {
     stun: {
       servers: [
-        'stun:turn-academically-gitlab-ci.sourcecloud-dev.uk:3478',
+        'stun:turn-academically-ci.sourcecloud-dev.uk:3478',
       ]
     },
     turn: {
       servers: [
-        'turn:turn-academically-gitlab-ci.sourcecloud-dev.uk:3478?transport=udp',
-        'turn:turn-academically-gitlab-ci.sourcecloud-dev.uk:3478?transport=tcp',
+        'turn:turn-academically-ci.sourcecloud-dev.uk:3478?transport=udp',
+        'turn:turn-academically-ci.sourcecloud-dev.uk:3478?transport=tcp',
       ],
       username: 'turn_user',
       password: 'Wsc4e9dnckso1ejz97zorjf',
@@ -30,8 +30,8 @@ export const environment = {
     amazon: {
       s3: {
         region: 'eu-west-2',
-        bucket: 'academically-gitlab-ci-assets',
-        securedBucket: 'academically-gitlab-ci-assets-secure',
+        bucket: 'academically-ci-assets',
+        securedBucket: 'academically-ci-assets-secure',
         credentials: {
           accessKey: 'AKIA3CV3YWZBN7ZGDVHT',
           secret: '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',
