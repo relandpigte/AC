@@ -148,7 +148,7 @@ variables:
     - jq ".App.ClientRootAddress=\"$URL_HTTPS\" | .App.CorsOrigins=\"$URL_HTTPS``,$URL_HTTP\" | .App.ServerBasePath=\"\" | .Kestrel.Endpoints.Http.Url=\"http://localhost:5000\" | .Aws.Id=\"$AWS_ACC_NUM\" | .Aws.Profile=\"\" | .Aws.Region=\"$AWS_DEFAULT_REGION\" | .Aws.S3.AssetsBucket=\"$APP_NAME``-gitlab-$env_name``-assets\" | .Aws.S3.SecureAssetsBucket=\"$APP_NAME``-gitlab-$env_name``-assets-secure\" | .ITagg.Sms.Username=\"d9d7ec2c\" | .ITagg.Sms.Password=\"p5sswm6g\"" appsettings.v1 > appsettings.json
     - cat appsettings.json
     - rm appsettings.bak
-    - zip -r $CI_PROJECT_DIR/artifacts/backend-$env_name.zip .
+    - zip -r $CI_PROJECT_DIR/artifacts/backend.zip .
     # - "cd $CI_PROJECT_DIR" 
     # - echo "run serverless-domain-manager"
     # - "SLS_DEBUG=* serverless create_domain"
