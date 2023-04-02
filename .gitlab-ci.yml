@@ -381,6 +381,7 @@ deploy_backend_to_ci:
 
 deploy_frontend_to_ci:
   <<: *frontend
+  stage: development
   dependencies:
     - build_frontend
   needs:
