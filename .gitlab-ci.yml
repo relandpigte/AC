@@ -310,34 +310,34 @@ build_backend:
   only:
     - develop
 
-# build_frontend:
-#   stage: build
-#   image: node:latest
-#   before_script:
-#     - printf '\e[95m%s pre script (build_frontend) \e[0m\n' "$(date +'%d-%m-%Y %T')"
-#     - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
-#     - printf '\e[95m%s Building %s for environment %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$APP_NAME" "$env_name"
-#     - printf '\e[95m%s Deploying to AWS Region - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION"
-#     - apt-get update
-#     - node -v
-#     - npm -v
-#   cache:
-#     paths:
-#       - $CI_PROJECT_DIR/$FRONTEND_PATH/node_modules/
+build_frontend:
+  stage: build
+  image: node:latest
+  before_script:
+    - printf '\e[95m%s pre script (build_frontend) \e[0m\n' "$(date +'%d-%m-%Y %T')"
+    - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
+    - printf '\e[95m%s Building %s for environment %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$APP_NAME" "$env_name"
+    - printf '\e[95m%s Deploying to AWS Region - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION"
+    - apt-get update
+    - node -v
+    - npm -v
+  cache:
+    paths:
+      - $CI_PROJECT_DIR/$FRONTEND_PATH/node_modules/
       
-#   script:
-#     - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
-#     # specify v9.1.4 to match our code
-#     - npm install -g @angular/cli@9.1.4
-#     - yarn install    
-#     - ls -la
-#     - cp -r $CI_PROJECT_DIR/$FRONTEND_PATH/ $CI_PROJECT_DIR/artifacts/
-#   artifacts:
-#     paths:
-#       - artifacts
-#     expire_in: 21 day
-#   only:
-#     - develop
+  script:
+    - "cd $CI_PROJECT_DIR/$FRONTEND_PATH"
+    # specify v9.1.4 to match our code
+    - npm install -g @angular/cli@9.1.4
+    - yarn install    
+    - ls -la
+    - cp -r $CI_PROJECT_DIR/$FRONTEND_PATH/ $CI_PROJECT_DIR/artifacts/
+  artifacts:
+    paths:
+      - artifacts
+    expire_in: 21 day
+  only:
+    - develop
 
     
 # End Build #
@@ -350,21 +350,20 @@ build_backend:
 
 # Environment CI #
 
-# DISABLE whilst testing BE Deploy
-# deploy_schema_to_ci:
-#   <<: *schema
-#   stage: development
-#   dependencies:
-#     - build_schema
-#   needs:
-#     - build_schema
-#   variables:
-#     env_name: ci
-#   environment:
-#     name: development
-#     deployment_tier: development
-#   only:
-#     - develop
+deploy_schema_to_ci:
+  <<: *schema
+  stage: development
+  dependencies:
+    - build_schema
+  needs:
+    - build_schema
+  variables:
+    env_name: ci
+  environment:
+    name: development
+    deployment_tier: development
+  only:
+    - develop
 
 deploy_backend_to_ci:
   <<: *backend
@@ -381,30 +380,23 @@ deploy_backend_to_ci:
   only:
     - develop
 
-# refresh_backend_to_ci:
-#   extends:
-#     .refresh
-#   needs:
-#     - deploy_backend_to_ci
-#   variables:
-#     ENV_NAME: "ci"
-#   environment:
-#     name: ci
-#   only:
-#     - develop
-
-# deploy_frontend_to_ci:
-#   <<: *frontend
-#   dependencies:
-#     - build_frontend
-#   environment:
-#     name: ci_frontend
-#   only:
-#     - develop
+deploy_frontend_to_ci:
+  <<: *frontend
+  dependencies:
+    - build_frontend
+  needs:
+    - build_frontend
+  variables:
+    env_name: ci
+  environment:
+    name: development
+    deployment_tier: development
+  only:
+    - develop
 
 
 # DISABLE whilst testing BE Deploy
-# deploy_schema_to_schema:
+# deploy_schema_to_uat:
 #   <<: *schema
 #   stage: testing
 #   dependencies:
