@@ -111,14 +111,14 @@ variables:
     - npm install
     - npm install -g serverless
     # Lookup Required Outputs from AWS SSM
-    - export ASG=$(aws ssm get-parameter --name "/$APP_NAME/$ENV_NAME/asg" | jq -r --raw-output '.Parameter.Value')
-    - printf '\e[95m%s API ASG Name - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION" "$ASG"
+    - export ASG=$(aws ssm get-parameter --name "/$APP_NAME/$env_name/asg" | jq -r --raw-output '.Parameter.Value')
+    - printf '\e[95m%s API ASG Name - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$ASG"
     # Lookup Required Outputs from AWS SSM
-    - export SG_WEB=$(aws ssm get-parameter --name "/$APP_NAME/$ENV_NAME/web_sg_id" | jq -r --raw-output '.Parameter.Value')
-    - printf '\e[95m%s SG Web is - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION" "$SG_WEB"
+    - export SG_WEB=$(aws ssm get-parameter --name "/$APP_NAME/$env_name/web_sg_id" | jq -r --raw-output '.Parameter.Value')
+    - printf '\e[95m%s SG Web is - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$SG_WEB"
     # Lookup Database Id
     - export DATABASE_ID=db-$APP_NAME-$env_name.$PUBLIC_DOMAIN
-    - printf '\e[95m%s DatabaseId is - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION" "$DATABASE_ID"
+    - printf '\e[95m%s DatabaseId is - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$DATABASE_ID"
     - pwd
     
   script:
@@ -165,7 +165,7 @@ variables:
     - aws s3 cp . s3://$APP_NAME-$env_name-artifacts/ --recursive
     - aws s3 ls s3://$APP_NAME-$env_name-artifacts
     # Now Refresh the code on the EC2 Server
-    - printf '\e[95m%s Reset InstanceRefresh Tag on ASG %s to force refresh on %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$ASG" "%env_name"
+    - printf '\e[95m%s Reset InstanceRefresh Tag on ASG %s to force refresh on %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$ASG" "$env_name"
     - > 
       aws autoscaling create-or-update-tags
       --tags ResourceId=$ASG,ResourceType=auto-scaling-group,Key=InstanceRefresh,Value=$CI_JOB_STARTED_AT,PropagateAtLaunch=true

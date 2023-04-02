@@ -1,7 +1,7 @@
 # Academically README #
 This Repo was cloned from Bitbucket 11/02/2021 13:40
 
-## SourceCloud Limited 2021 ##
+## SourceCloud Limited 2023 ##
 
 This README would normally document whatever steps are necessary to get your application up and running.
 
@@ -16,7 +16,7 @@ This README would normally document whatever steps are necessary to get your app
 ### How do I get set up? ###
 
 * DevOPS code is under deploy and is designed to be hosted in AWS
-* utilising GitLab & Cloudformation
+* utilising GitLab & Terraform
 
 ### Contribution guidelines ###
 
