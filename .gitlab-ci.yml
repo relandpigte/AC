@@ -111,6 +111,9 @@ variables:
     - npm install
     - npm install -g serverless
     # Lookup Required Outputs from AWS SSM
+    - export ASG=$(aws ssm get-parameter --name "/$APP_NAME/$ENV_NAME/asg" | jq -r --raw-output '.Parameter.Value')
+    - printf '\e[95m%s API ASG Name - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION" "$ASG"
+    # Lookup Required Outputs from AWS SSM
     - export SG_WEB=$(aws ssm get-parameter --name "/$APP_NAME/$ENV_NAME/web_sg_id" | jq -r --raw-output '.Parameter.Value')
     - printf '\e[95m%s SG Web is - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION" "$SG_WEB"
     # Lookup Database Id
@@ -161,6 +164,17 @@ variables:
     - aws s3 rm s3://$APP_NAME-$env_name-artifacts/ --recursive
     - aws s3 cp . s3://$APP_NAME-$env_name-artifacts/ --recursive
     - aws s3 ls s3://$APP_NAME-$env_name-artifacts
+    # Now Refresh the code on the EC2 Server
+    - printf '\e[95m%s Reset InstanceRefresh Tag on ASG %s to force refresh on %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$ASG" "%env_name"
+    - > 
+      aws autoscaling create-or-update-tags
+      --tags ResourceId=$ASG,ResourceType=auto-scaling-group,Key=InstanceRefresh,Value=$CI_JOB_STARTED_AT,PropagateAtLaunch=true
+    - >
+      aws autoscaling start-instance-refresh 
+      --auto-scaling-group-name $ASG 
+      --preferences '{"InstanceWarmup": 240, "MinHealthyPercentage": 50}'
+    - printf '\e[95m%s Update Backend complete \e[0m\n' "$(date +'%d-%m-%Y %T')"
+
 
 .frontend: &frontend
   stage: deploy
@@ -198,34 +212,37 @@ variables:
     - aws s3 rm s3://$APP_NAME-$env_name.$PUBLIC_DOMAIN --recursive
     - aws s3 cp dist s3://$APP_NAME-$env_name.$PUBLIC_DOMAIN --recursive
     - aws s3 ls s3://$APP_NAME-$env_name.$PUBLIC_DOMAIN
+    - printf '\e[95m%s Update Frontend complete \e[0m\n' "$(date +'%d-%m-%Y %T')"
 
-###########
-# refresh #
-###########
-.refresh:
-  stage: refresh
-  image: ubuntu:18.04
-  before_script:
-    - printf '\e[95m%s pre script (refresh) \e[0m\n' "$(date +'%d-%m-%Y %T')"
-    - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
-    - printf '\e[95m%s Building %s for environment %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$APP_NAME" "$env_name"
-    - printf '\e[95m%s Deploying to AWS Region - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION"
-    - apt-get update
-    - apt-get install -y software-properties-common 
-    # install python, awscli & jq
-    - apt-get install -y python3-pip
-    - pip3 install awscli boto boto3
-    - aws --version
 
-  script:
-    - echo "reset InstanceRefresh Tag on $env_name-acad-tlab.aws-api-asg to force Refresh on $env_name" #TEMP gitlab
-    - > 
-      aws autoscaling create-or-update-tags
-      --tags ResourceId=$env_name-acad-tlab.aws-api-asg,ResourceType=auto-scaling-group,Key=InstanceRefresh,Value=$CI_JOB_STARTED_AT,PropagateAtLaunch=true
-    - >
-      aws autoscaling start-instance-refresh 
-      --auto-scaling-group-name $env_name-acad-tlab.aws-api-asg 
-      --preferences '{"InstanceWarmup": 240, "MinHealthyPercentage": 50}'
+# MOVE refresh to be part of backend job - delete this not needed 2/4/2023 RL
+# ###########
+# # refresh #
+# ###########
+# .refresh:
+#   stage: refresh
+#   image: ubuntu:18.04
+#   before_script:
+#     - printf '\e[95m%s pre script (refresh) \e[0m\n' "$(date +'%d-%m-%Y %T')"
+#     - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
+#     - printf '\e[95m%s Building %s for environment %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$APP_NAME" "$env_name"
+#     - printf '\e[95m%s Deploying to AWS Region - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION"
+#     - apt-get update
+#     - apt-get install -y software-properties-common 
+#     # install python, awscli & jq
+#     - apt-get install -y python3-pip
+#     - pip3 install awscli boto boto3
+#     - aws --version
+
+#   script:
+#     - echo "reset InstanceRefresh Tag on $env_name-acad-tlab.aws-api-asg to force Refresh on $env_name" #TEMP gitlab
+#     - > 
+#       aws autoscaling create-or-update-tags
+#       --tags ResourceId=$env_name-acad-tlab.aws-api-asg,ResourceType=auto-scaling-group,Key=InstanceRefresh,Value=$CI_JOB_STARTED_AT,PropagateAtLaunch=true
+#     - >
+#       aws autoscaling start-instance-refresh 
+#       --auto-scaling-group-name $env_name-acad-tlab.aws-api-asg 
+#       --preferences '{"InstanceWarmup": 240, "MinHealthyPercentage": 50}'
 
 
 #########
