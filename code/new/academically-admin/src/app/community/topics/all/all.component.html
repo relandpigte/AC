@@ -1,37 +1,282 @@
 <div class="container-fluid all-topics d-flex flex-column flex-nowrap p-0 pb-5">
     <div class="all-topics-content flex-grow-1">
-        <app-carousel
-            [isLoading]="isLoadingParentTopics"
-            [items]="parentTopics"
-            [templateRef]="topicClusterRef1"
-            [metadata]="{ isParent: true }"
-            [itemWidth]="257"
-            [itemSpacing]="30"
-            [isAutoFit]="true"
-        ></app-carousel>
+        <ng-container [ngSwitch]="isLoading">
+            <ng-container *ngSwitchCase="true">
+                <div class="d-flex flex-row overflow-hidden">
+                    <div class="p-3 mb-4 mr-4 border bg-white rounded" [ngStyle]="{'max-width.px': 262, 'height.px': 87, 'width.%': 100}">
+                        <div class="position-relative" [ngStyle]="{'width.%': 100, 'height.%': 100}">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardDouble"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="p-3 mb-4 mr-4 border bg-white rounded" [ngStyle]="{'max-width.px': 262, 'height.px': 87, 'width.%': 100}">
+                        <div class="position-relative" [ngStyle]="{'width.%': 100, 'height.%': 100}">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardDouble"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="p-3 mb-4 mr-4 border bg-white rounded" [ngStyle]="{'max-width.px': 262, 'height.px': 87, 'width.%': 100}">
+                        <div class="position-relative" [ngStyle]="{'width.%': 100, 'height.%': 100}">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardDouble"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="p-3 mb-4 mr-0 border bg-white rounded" [ngStyle]="{'max-width.px': 262, 'height.px': 87, 'width.%': 100}">
+                        <div class="position-relative" [ngStyle]="{'width.%': 100, 'height.%': 100}">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardDouble"></app-shimmer>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-row overflow-hidden">
+                    <div class="p-3 mb-4 mr-4 border bg-white rounded" [ngStyle]="{'max-width.px': 262, 'height.px': 87, 'width.%': 100}">
+                        <div class="position-relative" [ngStyle]="{'width.%': 100, 'height.%': 100}">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardDouble"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="p-3 mb-4 mr-4 border bg-white rounded" [ngStyle]="{'max-width.px': 262, 'height.px': 87, 'width.%': 100}">
+                        <div class="position-relative" [ngStyle]="{'width.%': 100, 'height.%': 100}">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardDouble"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="p-3 mb-4 mr-4 border bg-white rounded" [ngStyle]="{'max-width.px': 262, 'height.px': 87, 'width.%': 100}">
+                        <div class="position-relative" [ngStyle]="{'width.%': 100, 'height.%': 100}">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardDouble"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="p-3 mb-4 mr-0 border bg-white rounded" [ngStyle]="{'max-width.px': 262, 'height.px': 87, 'width.%': 100}">
+                        <div class="position-relative" [ngStyle]="{'width.%': 100, 'height.%': 100}">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardDouble"></app-shimmer>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-row overflow-hidden">
+                    <div class="p-3 mr-4 border bg-white rounded" [ngStyle]="{'max-width.px': 262, 'height.px': 87, 'width.%': 100}">
+                        <div class="position-relative" [ngStyle]="{'width.%': 100, 'height.%': 100}">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardDouble"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="p-3 mr-4 border bg-white rounded" [ngStyle]="{'max-width.px': 262, 'height.px': 87, 'width.%': 100}">
+                        <div class="position-relative" [ngStyle]="{'width.%': 100, 'height.%': 100}">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardDouble"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="p-3 mr-4 border bg-white rounded" [ngStyle]="{'max-width.px': 262, 'height.px': 87, 'width.%': 100}">
+                        <div class="position-relative" [ngStyle]="{'width.%': 100, 'height.%': 100}">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardDouble"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="p-3 mr-0 border bg-white rounded" [ngStyle]="{'max-width.px': 262, 'height.px': 87, 'width.%': 100}">
+                        <div class="position-relative" [ngStyle]="{'width.%': 100, 'height.%': 100}">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardDouble"></app-shimmer>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="false">
+                <app-carousel
+                    [isLoading]="isLoadingParentTopics"
+                    [items]="parentTopics"
+                    [templateRef]="topicClusterRef1"
+                    [metadata]="{ isParent: true }"
+                    [itemWidth]="257"
+                    [itemSpacing]="30"
+                    [isAutoFit]="true"
+                ></app-carousel>
+            </ng-container>
+        </ng-container>
     </div>
 
     <div class="all-topics-content flex-grow-1">
-        <div class="row align-items-center" [style.marginTop.px]="40" [style.marginBottom.px]="25">
-            <div class="col d-flex flex-wrap align-items-center justify-content-between">
+        <div class="row align-items-center" [style.marginTop.px]="40" [style.marginBottom.px]="25" [style.minHeight.px]="28">
+            <div *ngIf="!isLoading" class="col d-flex flex-wrap align-items-center justify-content-between">
               <span class="all-topics-content-header">For you</span>
               <span class="all-topics-content-view-all cursor-pointer" [routerLink]="['events']">View All</span>
             </div>
         </div>
-        <app-carousel
-            [templateRef]="topicClusterRef2"
-            [metadata]="{ isParent: false }"
-            [itemWidth]="240"
-            [itemSpacing]="20"
-            [isAutoFit]="true"
-            [isLoading]="isLoading_forYouTopicsList"
-            [items]="forYouTopics"
-            [maxItems]="forYouTopicsListMaxItems"
-            [isInfiteScroll]="true"
-            [loadMorePercentage]="70"
-            (onRequestNewData)="handleForYouTopicsListRequestData()"
-        ></app-carousel>
+        <ng-container [ngSwitch]="isLoading">
+            <ng-container *ngSwitchCase="true">
+                <div class="d-flex flex-row flex-nowrap justify-content-end align-items-center gap-29 mb-4" [style.overflow]="'hidden'">
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-row flex-nowrap justify-content-end align-items-center gap-29 mb-4" [style.overflow]="'hidden'">
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-row flex-nowrap justify-content-end align-items-center gap-29 mb-4" [style.overflow]="'hidden'">
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="false">
+                <app-carousel
+                    [templateRef]="topicClusterRef2"
+                    [metadata]="{ isParent: false }"
+                    [itemWidth]="240"
+                    [itemSpacing]="20"
+                    [isAutoFit]="true"
+                    [isLoading]="isLoading_forYouTopicsList"
+                    [items]="forYouTopics"
+                    [maxItems]="forYouTopicsListMaxItems"
+                    [isInfiteScroll]="true"
+                    [loadMorePercentage]="70"
+                    (onRequestNewData)="handleForYouTopicsListRequestData()"
+                ></app-carousel>
+            </ng-container>
+        </ng-container>
     </div>
+
+    <ng-container *ngIf="isLoading">
+        <div class="all-topics-content flex-grow-1 mt-6" *ngFor="let i of [].constructor(3); even as isEven">
+            <div class="d-flex flex-row flex-nowrap justify-content-{{ isEven ? 'start' : 'end' }} align-items-center gap-29 mb-4" [style.overflow]="'hidden'">
+                <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                    <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                        <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                    </div>
+                </div>
+                <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                    <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                        <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                    </div>
+                </div>
+                <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                    <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                        <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                    </div>
+                </div>
+                <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                    <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                        <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                    </div>
+                </div>
+                <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                    <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                        <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex flex-row flex-nowrap justify-content-{{ isEven ? 'start' : 'end' }} align-items-center gap-29 mb-4" [style.overflow]="'hidden'">
+                <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                    <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                        <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                    </div>
+                </div>
+                <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                    <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                        <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                    </div>
+                </div>
+                <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                    <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                        <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                    </div>
+                </div>
+                <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                    <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                        <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                    </div>
+                </div>
+                <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                    <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                        <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex flex-row flex-nowrap justify-content-{{ isEven ? 'start' : 'end' }} align-items-center gap-29 mb-4" [style.overflow]="'hidden'">
+                <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                    <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                        <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                    </div>
+                </div>
+                <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                    <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                        <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                    </div>
+                </div>
+                <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                    <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                        <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                    </div>
+                </div>
+                <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                    <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                        <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                    </div>
+                </div>
+                <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                    <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                        <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
 
     <div *ngFor="let t of tailoredTopics | keyvalue" class="all-topics-content flex-grow-1">
         <div class="row align-items-center" [style.marginTop.px]="40" [style.marginBottom.px]="25">
@@ -40,19 +285,106 @@
               <span class="all-topics-content-view-all cursor-pointer" (click)="handleViewAllTopicsClick(t.key)">View All</span>
             </div>
         </div>
-        <app-carousel
-            [templateRef]="topicClusterRef1"
-            [metadata]="{ isParent: false, group: t.key }"
-            [itemWidth]="240"
-            [itemSpacing]="20"
-            [isAutoFit]="true"
-            [isLoading]="isLoading_tailoredTopicsList[t.key]"
-            [items]="t.value.items"
-            [maxItems]="tailoredTopicsListMaxItems[t.key]"
-            [isInfiteScroll]="true"
-            [loadMorePercentage]="70"
-            (onRequestNewData)="handleTailoredTopicsListRequestData(t.key)"
-        ></app-carousel>
+        <ng-container [ngSwitch]="isLoading_tailoredTopicsList[t.key]">
+            <ng-container *ngSwitchCase="true">
+                <div class="d-flex flex-row flex-nowrap justify-content-start align-items-center gap-29 mb-4" [style.overflow]="'hidden'">
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-row flex-nowrap justify-content-start align-items-center gap-29 mb-4" [style.overflow]="'hidden'">
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-row flex-nowrap justify-content-start align-items-center gap-29 mb-4" [style.overflow]="'hidden'">
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
+                        <div class="position-relative" [style.height.px]="50" [style.width.px]="185">
+                            <app-shimmer [show]="true" [shimmerType]="ShimmerType.SideCardSingle"></app-shimmer>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="false">
+                <app-carousel
+                    [templateRef]="topicClusterRef1"
+                    [metadata]="{ isParent: false, group: t.key }"
+                    [itemWidth]="240"
+                    [itemSpacing]="20"
+                    [isAutoFit]="true"
+                    [isLoading]="isLoading_tailoredTopicsList[t.key]"
+                    [items]="t.value.items"
+                    [maxItems]="tailoredTopicsListMaxItems[t.key]"
+                    [isInfiteScroll]="true"
+                    [loadMorePercentage]="70"
+                    (onRequestNewData)="handleTailoredTopicsListRequestData(t.key)"
+                ></app-carousel>
+            </ng-container>
+        </ng-container>
     </div>
 </div>
 
