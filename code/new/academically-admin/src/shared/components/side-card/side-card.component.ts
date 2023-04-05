@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Injector, Input, Output, Renderer2 } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, Output, Renderer2 } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 
@@ -8,7 +8,7 @@ import { AppComponentBase } from '@shared/app-component-base';
     styleUrls: ['./side-card.component.less'],
     animations: [appModuleAnimation()]
 })
-export class CommunitySideCardComponent extends AppComponentBase implements AfterViewInit {
+export class CommunitySideCardComponent extends AppComponentBase {
 
     @Input() header: string;
     @Input() items: any[] = [];
@@ -22,9 +22,6 @@ export class CommunitySideCardComponent extends AppComponentBase implements Afte
         private _renderer: Renderer2
     ) {
         super(injector);
-    }
-
-    ngAfterViewInit(): void {
     }
 
     handleItemClick(row: any): void {
