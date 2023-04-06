@@ -143,8 +143,6 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
           this.suggestedTopics.forEach(t => {
             if (t.id === topic.id) t.userTopics.push(request as UserTopicDto);
           });
-          this.notify.info(this.l('Community.Topics.Follow.Success', topic.name));
-          setTimeout(() => this.getSuggestedTopics(), 3000);
         });
   }
 

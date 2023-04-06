@@ -119,9 +119,9 @@
                             <div type="button"
                                 class="btn btn-white topic-btn d-flex justify-content-center align-items-center"
                                 [class.activated]="isTopicFollowed(item)"
-                                (click)="handleOnFollowTopic(item)">
+                                (click)="handleOnFollowTopic(item)"
+                                [disabled]="topicInFocus === item.id && isFollowingTopic">
                             {{ isTopicFollowed(item) ? 'Following' : 'Follow'  }}
-                            <span *ngIf="topicInFocus === item.id && isFollowingTopic" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         </div>
                         </div>
                     </div>
