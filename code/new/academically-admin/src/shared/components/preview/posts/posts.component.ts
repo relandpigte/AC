@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, Input, OnChanges, OnInit, SimpleChanges, EventEmitter, Output } from '@angular/core';
 import * as moment from 'moment';
 
 import { AppComponentBase } from '@shared/app-component-base';
@@ -14,6 +14,9 @@ import { DisciplineTaxonomyDto } from '@shared/service-proxies/service-proxies';
 export class PreviewPostsComponent extends AppComponentBase implements OnInit, OnChanges {
   @Input() data: PostDto;
   @Input() file: File;
+  @Input() canRemove: boolean;
+
+  @Output() onRemove: EventEmitter<any> = new EventEmitter<any>();
 
   showMore = false;
   title: string;
@@ -37,6 +40,10 @@ export class PreviewPostsComponent extends AppComponentBase implements OnInit, O
     this.postDate     = this.postDateFormat(this.data.creationTime);
     this.author       = this.data.creatorUser?.fullName;
     this.userTopics   = this.data.postTopics?.map?.(t => t.disciplineTaxonomy);
+  }
+
+  removePost(): void {
+    this.onRemove.emit();
   }
 
   async ngOnChanges(changes: SimpleChanges) {

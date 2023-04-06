@@ -1,6 +1,9 @@
 <div *ngIf="data" class="post-preview post-discussion d-flex flex-column" [ngClass]="{'has-post-attachment': file}">
+    <div *ngIf="canRemove" class="post-preview-remove d-flex justify-content-center align-items-center cursor-pointer" (click)="removePost()">
+        <span class="fe fe-x"></span>
+    </div>
     <div class="post-preview-header d-flex align-items-center">
-        <img class="post-preview-header-avatar rounded-circle" src="assets/img/anonymous.png" [width]="26" [height]="26">
+        <img class="post-preview-header-avatar rounded-circle" [src]="getProfilePictureFromDocument(data?.creatorUser?.profilePictureDocument, data?.creatorUser?.id)" [width]="26" [height]="26">
         <span class="post-preview-header-name">{{ author }}</span>
         <span class="post-preview-header-time">{{ postDate }}</span>
     </div>

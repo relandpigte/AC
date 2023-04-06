@@ -201,6 +201,14 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
     this.selectedService = null;
   }
 
+  handleRemovePost(): void {
+    this.model.sharedId = null;
+    this.sharedItem = null;
+    this.sharedId = null;
+    this.sharedType = null;
+    this.sharedServiceType = null;
+  }
+
   handleOnAddService(service: AvailableServiceDto): void {
     this.model.sharedId = service.id;
     this.selectedService = service;

@@ -14,7 +14,7 @@ import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 })
 export class PreviewServicesComponent extends AppComponentBase implements OnChanges {
   @Input() data: AvailableServiceDto;
-  @Input() canRemove = true;
+  @Input() canRemove: boolean;
   @Input() sharedServiceType: number;
 
   @Output() onRemove: EventEmitter<any> = new EventEmitter<any>();

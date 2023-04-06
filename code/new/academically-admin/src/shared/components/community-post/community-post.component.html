@@ -49,8 +49,8 @@
             <app-service-preview [service]="serviceAttachment" [canRemove]="false"></app-service-preview>
         </div>
 
-        <app-preview-posts [data]="data.sharedPost"></app-preview-posts>
-        <app-preview-services [data]="serviceData" [sharedServiceType]="sharedServiceType"></app-preview-services>
+        <app-preview-posts [data]="data.sharedPost" [canRemove]="false"></app-preview-posts>
+        <app-preview-services [data]="serviceData" [sharedServiceType]="sharedServiceType" [canRemove]="false"></app-preview-services>
 
         <div class="post-actions d-flex flex-row" [style.marginTop.px]="15">
             <div class="post-actions-left d-flex justify-content-start align-items-center gap-10">

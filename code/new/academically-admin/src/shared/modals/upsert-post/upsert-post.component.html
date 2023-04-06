@@ -70,7 +70,11 @@
             [sharedServiceType]="sharedServiceType"
             (onRemove)="handleRemoveService()"
         ></app-preview-services>
-        <app-preview-posts [data]="sharedItem"></app-preview-posts>
+        <app-preview-posts
+            [data]="sharedItem"
+            (onRemove)="handleRemovePost()"
+            [canRemove]="canRemoveAttachment"
+        ></app-preview-posts>
         <app-service-picker
             [selectedService]="selectedService"
             [isShown]="isShowServicePicker"

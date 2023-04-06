@@ -165,7 +165,13 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
         modalSettings.initialState = {
             activeTab: tabType,
             updateOnly: true,
-            model: {...data}
+            model: {...data},
+            sharedItem: data.sharedPost,
+            selectedService: this.serviceData,
+            sharedId: data.sharedId,
+            sharedType: data.sharedType,
+            sharedServiceType: this.sharedServiceType,
+            canRemoveAttachment: false
         };
 
         const modal = this._modalService.show(UpsertPostComponent, modalSettings).content;
