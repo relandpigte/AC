@@ -2,7 +2,7 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ArticleDto, ArticlesServiceProxy, CoachingDto, CoachingsServiceProxy, CourseDto, CoursesServiceProxy, CreateUserTopicDto, DateGrains, DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, EventDto, EventsServiceProxy, SearchDisciplineTaxonomyRequestDto, UserDto, UserServiceProxy, UserTopicDto, UserTopicsServiceProxy, UserTopicType, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 
 import * as _ from 'lodash';
 import { Router } from '@angular/router';
@@ -39,8 +39,13 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   recommendedEvents: EventDto[] = Array(4).fill([]).map(() => this.generateRandomEvent()) as EventDto[];
   recommendedTutorials: VideoDto[] = Array(4).fill([]).map(() => this.generateRandomTutorial()) as VideoDto[];
 
-  isFollowingTopic = false;
-  topicInFocus: string;
+  topicLoaders: Map<string, { isFollowingTopic?: boolean, isUnfollowingTopic?: boolean }> = new Map();
+
+  getUserTopics$ = () => {
+    return this._userTopicsService.getAll(undefined, this.appSession.userId, UserTopicType.Following, undefined)
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this.isLoadingSuggestTopics = false));
+  }
 
   constructor(
     injector: Injector,
@@ -75,6 +80,20 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     this.communityService.getIsLoading$().subscribe(isLoading => {
       this.isLoading = isLoading;
     });
+  }
+
+  isTopicLoading(id: string, property?: string): boolean {
+    const topicLoaders = this.topicLoaders.get(id);
+    if (!topicLoaders) return false;
+    if (property) return topicLoaders[property];
+    else return Object.keys(topicLoaders).some(p => topicLoaders[p]);
+  }
+
+  setTopicLoading(id: string, property: string, value: boolean): void {
+    if (!this.topicLoaders.has(id)) this.topicLoaders.set(id, {});
+    const topicLoaders = this.topicLoaders.get(id);
+    topicLoaders[property] = value;
+    if (Object.keys(topicLoaders).every(p => !topicLoaders[p])) this.topicLoaders.delete(id);
   }
 
   handleFilterTopics(topics: string[]): void {
@@ -125,8 +144,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   }
 
   handleOnFollowTopic(topic: DisciplineTaxonomyDto): void {
-    this.isFollowingTopic = true;
-    this.topicInFocus = topic.id;
+    this.setTopicLoading(topic.id, 'isFollowingTopic', true);
 
     const request = new CreateUserTopicDto();
     request.userId = this.appSession.userId;
@@ -134,16 +152,32 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     request.type = UserTopicType.Following;
 
     this._userTopicsService.create(request)
+        .pipe(switchMap(() => this.getUserTopics$()))
         .pipe(takeUntil(this.destroyed$))
-        .pipe(finalize(() => {
-            this.isFollowingTopic = false;
-            this.topicInFocus = null;
-        }))
-        .subscribe(() => {
+        .pipe(finalize(() => this.setTopicLoading(topic.id, 'isFollowingTopic', false)))
+        .subscribe((topics) => {
+          this.userTopics = topics.filter(x => x);
           this.suggestedTopics.forEach(t => {
             if (t.id === topic.id) t.userTopics.push(request as UserTopicDto);
           });
         });
+  }
+
+  handleOnUnfollowTopic(topic: DisciplineTaxonomyDto): void {
+    this.setTopicLoading(topic.id, 'isUnfollowingTopic', true);
+
+    const userTopic = Array.from(this.userTopics.values()).find(t => t.disciplineTaxonomyId === topic.id);
+
+    this._userTopicsService.delete(userTopic.id)
+      .pipe(switchMap(() =>  this.getUserTopics$()))
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this.setTopicLoading(topic.id, 'isUnfollowingTopic', false)))
+      .subscribe((topics) => {
+        this.userTopics = topics.filter(x => x);
+        this.suggestedTopics.forEach(t => {
+          if (t.id === topic.id) t.userTopics = t.userTopics.filter(t => t.disciplineTaxonomyId !== topic.id);
+        });
+      });
   }
 
   getCourseThumbnail(course: CourseDto): string {
@@ -166,14 +200,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   }
 
   getUserTopics(): void {
-    this._userTopicsService.getAll(undefined, this.appSession.userId, UserTopicType.Following, undefined)
-      .pipe(
-        takeUntil(this.destroyed$),
-        finalize(() => {
-          this.isLoadingSuggestTopics = false;
-        })
-      )
-      .subscribe(topics => this.userTopics = topics.filter(x => x));
+    this.getUserTopics$().subscribe(topics => this.userTopics = topics.filter(x => x));
   }
 
   getSuggestedTopics(): void {
