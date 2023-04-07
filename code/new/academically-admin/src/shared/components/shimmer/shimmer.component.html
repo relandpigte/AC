@@ -18,9 +18,20 @@
 
     <!--  Side card with avatar  -->
     <ng-container *ngSwitchCase="ShimmerType.SideCardAvatar">
-        <div class="shimmer-row d-flex flex-row p-15">
+        <div class="shimmer-row d-flex flex-row align-items-center h-100">
+            <div class="shimmer-row-avatar circle"></div>
+            <div class="shimmer-row-comment circle flex-grow-1 align-items-center">
+                <div class="shimmer-row-comment-bar w-100 mt10"></div>
+                <div class="shimmer-row-comment-bar w-50"></div>
+            </div>
+        </div>
+    </ng-container>
+
+    <!--  Side card with thumbnail  -->
+    <ng-container *ngSwitchCase="ShimmerType.SideCardThumbnail">
+        <div class="shimmer-row d-flex flex-row align-items-center h-100">
             <div class="shimmer-row-avatar square"></div>
-            <div class="shimmer-row-comment flex-grow-1 align-items-center">
+            <div class="shimmer-row-comment square flex-grow-1 align-items-center">
                 <div class="shimmer-row-comment-bar w-100 mt10"></div>
                 <div class="shimmer-row-comment-bar w-50"></div>
             </div>
@@ -29,7 +40,7 @@
 
     <!--  Side card without avatar  -->
     <ng-container *ngSwitchCase="ShimmerType.SideCardDouble">
-        <div class="shimmer-row d-flex flex-row p-15">
+        <div class="shimmer-row d-flex flex-row align-items-center h-100">
             <div class="shimmer-row-comment flex-grow-1 align-items-center">
                 <div class="shimmer-row-comment-bar w-100"></div>
                 <div class="shimmer-row-comment-bar w-50"></div>

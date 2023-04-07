@@ -55,6 +55,15 @@
         }
 
         &-comment {
+
+            &.circle {
+                height: 48px;
+            }
+
+            &.square {
+                height: 55px;
+            }
+
             &-bar {
                 border-radius: 5px;
                 height: 10px;

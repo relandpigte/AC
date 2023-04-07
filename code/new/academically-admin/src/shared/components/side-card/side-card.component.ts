@@ -13,6 +13,7 @@ export class CommunitySideCardComponent extends AppComponentBase {
     @Input() header: string;
     @Input() items: any[] = [];
     @Input() template: any;
+    @Input() isLoading: boolean;
 
     @Output() onClickItem: EventEmitter<any> = new EventEmitter();
     @Output() onViewAll: EventEmitter<any> = new EventEmitter();
