@@ -107,9 +107,11 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
           canRemoveAttachment: true,
           title: 'Community.SharePost',
           activeTab: 'quick-post',
-          sharedItem: post,
-          sharedId: post.id,
-          sharedType: SharedType.Post,
+          model: {
+            sharedPost: post,
+            sharedId: post.id,
+            sharedType: SharedType.Post
+          }
         };
         this._modalService.show(UpsertPostComponent, modalSettings).content;
       });

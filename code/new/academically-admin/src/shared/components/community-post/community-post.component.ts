@@ -36,8 +36,6 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     hideTimer: any;
     showComments = true;
     showAddComment = true;
-    serviceData: any;
-    sharedServiceType: number;
 
     constructor(
         injector: Injector,
@@ -83,9 +81,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
         }
     }
 
-    ngOnInit() {
-        this.handleServiceData(this.data);
-    }
+    ngOnInit() { }
 
     async ngOnChanges(changes: SimpleChanges) {
         if ('data' in changes && this.data) {
@@ -95,30 +91,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
         }
     }
 
-    handleServiceData(post: PostDto): void {
-        if (!post.sharedId || !post.sharedServiceType) { return; }
-        this.sharedServiceType = post.sharedServiceType;
-        switch (post.sharedServiceType) {
-            case ServicesType.Event:
-                this.serviceData = post.sharedServiceEvent;
-                break;
-            case ServicesType.Course:
-                this.serviceData = post.sharedServiceCourse;
-                break;
-            case ServicesType.Tutorial:
-                this.serviceData = post.sharedServiceVideo;
-                break;
-            case ServicesType.Article:
-                this.serviceData = post.sharedServiceArticle;
-                break;
-            case ServicesType.Coaching:
-                this.serviceData = post.sharedServiceCoaching;
-                break;
-            case ServicesType.Workshop:
-                this.serviceData = post.sharedServiceEvent;
-                break;
-        }
-    }
+
 
     // Pass the emitted post data
     handleSharePost(event: Event): void {
@@ -165,12 +138,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
         modalSettings.initialState = {
             activeTab: tabType,
             updateOnly: true,
-            model: {...data},
-            sharedItem: data.sharedPost,
-            selectedService: this.serviceData,
-            sharedId: data.sharedId,
-            sharedType: data.sharedType,
-            sharedServiceType: this.sharedServiceType,
+            model: data,
             canRemoveAttachment: false
         };
 

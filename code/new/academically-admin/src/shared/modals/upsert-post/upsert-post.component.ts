@@ -1,16 +1,16 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { Emoji } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
-import { Emoji } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 
-import { AvailableServiceDto, PostsServiceProxy, PostType, UpdatePostDto } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
-import { FileUtils } from '@shared/helpers/file-utils';
-import { CommunityPostService } from '@shared/services/community-post.service';
 import { PostFocusField } from '@shared/enums/post/post-focus-field.enum';
+import { FileUtils } from '@shared/helpers/file-utils';
+import { AvailableServiceDto, PostsServiceProxy, PostType, ServicesType, SharedType, UpdatePostDto } from '@shared/service-proxies/service-proxies';
+import { CommunityPostService } from '@shared/services/community-post.service';
 
 export enum PostTabs {
   QuickPost = 'quick-post',
@@ -24,21 +24,19 @@ export enum PostTabs {
   styleUrls: ['./upsert-post.component.scss']
 })
 export class UpsertPostComponent extends AppComponentBase implements OnInit {
+  activeTab: string = PostTabs.QuickPost;
+  allowedExtensions: string[] = [];
+
   parentPostId: string;
   model: any;
   selectedService: AvailableServiceDto;
-  activeTab: string = PostTabs.QuickPost;
-  allowedExtensions: string[] = [];
+
   isCreating = false;
   isShowServicePicker = false;
   isShowEmojiPicker = false;
   sanitizedAttachmentUrl: SafeUrl;
   focusedField: string;
   caretPosition: number;
-  sharedItem: any;
-  sharedId: string;
-  sharedType: number;
-  sharedServiceType: number;
 
   @Input() allowTabs = true;
   @Input() canCancel = true;
@@ -65,12 +63,32 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
-  get fileAttachment(): File { return this.model?.file; }
   get canAddAttachment(): boolean { return this.model && !this.model.file && !this.model.serviceId; }
   get canAddImage(): boolean { return this.canAddAttachment && this.activeTab === PostTabs.QuickPost; }
   get canAddFile(): boolean { return this.canAddAttachment && this.activeTab === PostTabs.QuickPost; }
   get canAddEmoticons(): boolean { return this.activeTab === PostTabs.QuickPost; }
   get canAddService(): boolean { return this.canAddAttachment && this.activeTab === PostTabs.QuickPost; }
+
+  get sharedAttachment(): File { return this.model?.file; }
+  get sharedPost(): any { return this.model?.sharedPost; }
+  get sharedService(): any {
+      switch (this.model?.sharedServiceType) {
+          case ServicesType.Event:
+            return this.model.sharedServiceEvent;
+          case ServicesType.Course:
+            return this.model.sharedServiceCourse;
+          case ServicesType.Tutorial:
+            return this.model.sharedServiceVideo;
+          case ServicesType.Article:
+            return this.model.sharedServiceArticle;
+          case ServicesType.Coaching:
+            return this.model.sharedServiceCoaching;
+          case ServicesType.Workshop:
+            return this.model.sharedServiceEvent;
+          default:
+            return null;
+      }
+  }
 
   get tabTitle(): string {
     switch (this.model?.type) {
@@ -137,13 +155,12 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
       this.model.visibility,
       this.model.type,
       this.parentPostId,
-      this.sharedId,
-      this.sharedType,
-      this.sharedServiceType,
+      this.model.shareId,
+      this.model.sharedType,
+      this.model.sharedServiceType,
       this.model.topics,
       this.model.newTopics,
       [this.model.file].filter(x => x).map(f => FileUtils.getFileParameter(f))
-
     ).pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isCreating = false))
       .subscribe(_ => {
@@ -198,21 +215,22 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
 
   handleRemoveService(): void {
     this.model.sharedId = null;
+    this.model.sharedServiceType = null;
+    this.model.sharedType = null;
     this.selectedService = null;
   }
 
   handleRemovePost(): void {
+    this.model.sharedPost = null;
     this.model.sharedId = null;
-    this.sharedItem = null;
-    this.sharedId = null;
-    this.sharedType = null;
-    this.sharedServiceType = null;
+    this.model.sharedType = null;
   }
 
   handleOnAddService(service: AvailableServiceDto): void {
     this.model.sharedId = service.id;
-    this.selectedService = service;
+    this.model.sharedType = SharedType.Service;
     this.isShowServicePicker = false;
+    this.selectedService = service;
   }
 
   handleOnEmojiSelect(selected: Emoji): void {
