@@ -7,7 +7,7 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
-import { DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, UserDto } from '@shared/service-proxies/service-proxies';
+import { DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, SharedType, UserDto } from '@shared/service-proxies/service-proxies';
 import { MAX_POSTS_TO_LOAD, PostsStateService } from '@shared/services/posts-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
@@ -128,6 +128,23 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
 
     ngOnDestroy() {
         this.pubSubService.stop();
+    }
+
+    handleShareDiscussion(): void {
+        const modalSettings = this.defaultModalSettings as ModalOptions<UpsertPostComponent>;
+        modalSettings.class = 'modal-lg';
+        modalSettings.initialState = {
+            allowTabs: false,
+            canRemoveAttachment: true,
+            title: 'Community.SharePost',
+            activeTab: 'quick-post',
+            model: {
+                sharedPost: this.discussion,
+                sharedId: this.discussionId,
+                sharedType: SharedType.Post
+            }
+        };
+        this._modalService.show(UpsertPostComponent, modalSettings).content;
     }
 
     private async initDiscussion() {
