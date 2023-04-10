@@ -10,6 +10,7 @@ import { AvailableServiceDto, DisciplineTaxonomyDto, PostDto, PostsServiceProxy,
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { CommunityDiscussionsComponent } from '../community-discussions/community-discussions.component';
+import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 
 @Component({
     selector: 'app-community-post-card',
@@ -80,6 +81,9 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
                 return 'post';
         }
     }
+    get sharedPost(): any { return this.data?.sharedPost; }
+    get sharedService(): any { return ServiceCardUtils.getServiceData(this.data); }
+
 
     ngOnInit() { }
 
@@ -90,8 +94,6 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
             this.getServiceAttachment();
         }
     }
-
-
 
     // Pass the emitted post data
     handleSharePost(event: Event): void {

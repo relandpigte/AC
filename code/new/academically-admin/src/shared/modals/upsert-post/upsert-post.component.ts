@@ -9,8 +9,9 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { PostFocusField } from '@shared/enums/post/post-focus-field.enum';
 import { FileUtils } from '@shared/helpers/file-utils';
-import { AvailableServiceDto, PostsServiceProxy, PostType, ServicesType, SharedType, UpdatePostDto } from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, PostsServiceProxy, PostType, SharedType, UpdatePostDto } from '@shared/service-proxies/service-proxies';
 import { CommunityPostService } from '@shared/services/community-post.service';
+import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 
 export enum PostTabs {
   QuickPost = 'quick-post',
@@ -37,6 +38,7 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
   sanitizedAttachmentUrl: SafeUrl;
   focusedField: string;
   caretPosition: number;
+  fileAttachment: File;
 
   @Input() allowTabs = true;
   @Input() canCancel = true;
@@ -69,26 +71,8 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
   get canAddEmoticons(): boolean { return this.activeTab === PostTabs.QuickPost; }
   get canAddService(): boolean { return this.canAddAttachment && this.activeTab === PostTabs.QuickPost; }
 
-  get sharedAttachment(): File { return this.model?.file; }
   get sharedPost(): any { return this.model?.sharedPost; }
-  get sharedService(): any {
-      switch (this.model?.sharedServiceType) {
-          case ServicesType.Event:
-            return this.model.sharedServiceEvent;
-          case ServicesType.Course:
-            return this.model.sharedServiceCourse;
-          case ServicesType.Tutorial:
-            return this.model.sharedServiceVideo;
-          case ServicesType.Article:
-            return this.model.sharedServiceArticle;
-          case ServicesType.Coaching:
-            return this.model.sharedServiceCoaching;
-          case ServicesType.Workshop:
-            return this.model.sharedServiceEvent;
-          default:
-            return null;
-      }
-  }
+  get sharedService(): any { return this.selectedService ?? ServiceCardUtils.getServiceData(this.model); }
 
   get tabTitle(): string {
     switch (this.model?.type) {
@@ -120,7 +104,9 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
     }
   }
 
-  ngOnInit(): void {}
+  async ngOnInit(): Promise<void> {
+    await this.getFileAttachment();
+  }
 
   handleFocusChange(field: string): void {
     this.focusedField = field;
@@ -155,7 +141,7 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
       this.model.visibility,
       this.model.type,
       this.parentPostId,
-      this.model.shareId,
+      this.model.sharedId,
       this.model.sharedType,
       this.model.sharedServiceType,
       this.model.topics,
@@ -229,8 +215,14 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
   handleOnAddService(service: AvailableServiceDto): void {
     this.model.sharedId = service.id;
     this.model.sharedType = SharedType.Service;
+    this.model.sharedServiceType = service.serviceType;
     this.isShowServicePicker = false;
-    this.selectedService = service;
+
+    this._postsService.getAvailableService(service.id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(s => {
+        this.selectedService = s;
+      });
   }
 
   handleOnEmojiSelect(selected: Emoji): void {
@@ -269,5 +261,18 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
 
   private isValidDiscussion(): boolean {
     return this.model && this.model.title && this.model.information && (this.model.topics?.length || this.model.newTopics?.length);
+  }
+
+  private async getFileAttachment(): Promise<void> {
+    if (this.model.postAttachments) {
+      const [file] = this.model.postAttachments;
+      if (file) {
+        const document = file.document;
+        if (document) {
+          this.fileAttachment = await FileUtils.getFileBlob(file.documentUrl, document.name, document.fileType);
+          this._cdr.detectChanges();
+        }
+      }
+    }
   }
 }
