@@ -59,13 +59,13 @@
             [title]="model?.title"
         ></app-community-post>
         <app-attachment-preview
-            *ngIf="sharedAttachment"
-            [file]="sharedAttachment"
+            *ngIf="fileAttachment"
+            [file]="fileAttachment"
             [canRemove]="canRemoveAttachment"
             (onRemove)="handleRemoveAttachment()"
         ></app-attachment-preview>
         <app-preview-services
-            [data]="selectedService"
+            [data]="sharedService"
             [canRemove]="canRemoveAttachment"
             (onRemove)="handleRemoveService()"
         ></app-preview-services>

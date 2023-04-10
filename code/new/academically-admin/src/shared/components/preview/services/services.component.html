@@ -9,7 +9,7 @@
             <div class="service-preview-author d-flex justify-content-end align-items-center gap-10">
                 <div class="service-preview-author-name" [innerText]="creatorName"></div>
                 <div class="service-preview-author-avatar avatar avatar-sm">
-                    <img [src]="getProfilePictureFromDocument(data?.creatorUser?.profilePictureDocument, data?.creatorUser?.id)" [alt]="creatorName" class="avatar-img rounded-circle">
+                    <img [src]="creatorProfilePictureUrl" [alt]="creatorName" class="avatar-img rounded-circle">
                 </div>
             </div>
         </div>
@@ -18,7 +18,7 @@
         <p>{{ serviceContent }}</p>
         <div class="service-preview-author-article d-flex justify-content-end align-items-center">
             <span class="d-inline-block mr-2" [innerText]="creatorName"></span>
-            <img [src]="getProfilePictureFromDocument(data?.creatorUser?.profilePictureDocument, data?.creatorUser?.id)" class="rounded-circle border" [alt]="creatorName" [width]="31" [height]="31">
+            <img [src]="creatorProfilePictureUrl" class="rounded-circle border" [alt]="creatorName" [width]="31" [height]="31">
         </div>
     </div>
     <div class="service-preview-info d-flex flex-row justify-content-center">

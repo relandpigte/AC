@@ -27,9 +27,9 @@ export class PreviewServicesComponent extends AppComponentBase implements OnChan
     super(injector);
   }
 
+  get creatorProfilePictureUrl(): string { return this.data?.creatorUser?.profilePictureUrl ?? this.getProfilePictureFromDocument(this.data?.creatorUser?.profilePictureDocument, this.data?.creatorUser?.id) ?? 'assets/img/anonymous.png'; }
   get thumbnailImageUrl(): string { return this.data?.thumbnailImageUrl ?? 'assets/img/img-placeholder.png'; }
   get creatorName(): string { return this.data?.creatorUser?.fullName ?? 'Anonymous'; }
-  get creatorProfilePictureUrl(): string { return this.data?.creatorUser?.profilePictureUrl ?? 'assets/img/anonymous.png'; }
   get serviceTypeName(): string { return this.sanitized?.type; }
   get serviceName(): string { return this.sanitized?.name; }
   get priceValue(): number { return this.sanitized?.price?.price ?? 0; }
