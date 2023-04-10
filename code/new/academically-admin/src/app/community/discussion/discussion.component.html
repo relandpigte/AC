@@ -69,7 +69,7 @@
         <div class="discussion-content-left flex-grow-1">
             <app-community-composer [isLoading]="isLoading"  [showBottomActions]="false" (onQuickPostClick)="handleAddPost()"></app-community-composer>
 
-            <div class="discussion-controls d-flex flex-row justify-content-between" [style.marginBottom.px]="10">
+            <div class="discussion-controls d-flex flex-row justify-content-between" [style.marginBottom.px]="10" [class.loading]="isLoading">
                 <div class="discussion-controls-left d-flex align-items-end">
                     <div class="discussion-controls-left-posts-count">
                         {{ postsCount }} posts
@@ -125,6 +125,7 @@
             <div *ngIf="participants?.length">
                 <app-community-side-card
                     header="Participants"
+                    [isLoading]="isLoadingParticipants"
                     [items]="participants"
                     [template]="participantsTemplate"
                     (onClickItem)="handleItemClick($event, 'participants')"
@@ -134,6 +135,7 @@
             <div *ngIf="relatedDiscussions?.length" [style.marginTop.px]="24">
                 <app-community-side-card
                     header="Related discussion"
+                    [isLoading]="isLoadingRelatedDiscussions"
                     [items]="relatedDiscussions"
                     [template]="relatedDiscussionsTemplate"
                     (onClickItem)="handleItemClick($event, 'discussions')"
