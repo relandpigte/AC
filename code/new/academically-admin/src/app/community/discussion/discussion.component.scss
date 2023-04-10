@@ -117,6 +117,26 @@
     }
 
     &-controls {
+        &.loading {
+            .discussion-controls {
+                &-left,
+                &-right {
+                    color: transparent;
+
+                    &-posts-count {
+                        color: transparent;
+                    }
+
+                    .dropdown {
+                        &-toggle,
+                        &-toggle .fe {
+                            color: transparent;
+                        }
+                    }
+                }
+            }
+        }
+
         &-left {
             &-posts-count {
                 font-weight: 400;
