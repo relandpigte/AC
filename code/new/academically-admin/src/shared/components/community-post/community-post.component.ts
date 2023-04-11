@@ -18,6 +18,8 @@ import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
     styleUrls: ['./community-post.component.scss']
 })
 export class CommunityPostCardComponent extends AppComponentBase implements OnChanges, OnInit {
+    readonly showMoreLimit: number = 255;
+
     @Input() closeHiddenPostAfter = 0;
     @Input() data: any;
     @Input() isLoading: boolean;
@@ -37,6 +39,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     hideTimer: any;
     showComments = true;
     showAddComment = true;
+    showMore = false;
 
     constructor(
         injector: Injector,
@@ -48,10 +51,8 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
         super(injector);
     }
 
-    get shimmerType() {
-        return ShimmerType;
-    }
-
+    get shimmerType() { return ShimmerType; }
+    get isShowMore(): boolean { return this.description?.length > this.showMoreLimit; }
     get posterName(): string { return this.data.creatorUser?.fullName ?? 'Anonymous'; }
     get postDate(): string {
         const time = moment(this.data.creationTime);
@@ -63,10 +64,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
 
     get title(): string { return this.data.title; }
     get description(): string { return this.data.content; }
-    get isOwner(): boolean {
-        return this.appSession.userId === this.data?.creatorUserId;
-    }
-
+    get isOwner(): boolean { return this.appSession.userId === this.data?.creatorUserId; }
     get isQuickPost(): boolean { return this.data?.type === PostType.QuickPost; }
     get isQuestion(): boolean { return this.data?.type === PostType.Question; }
     get isDiscussion(): boolean { return this.data?.type === PostType.Discussion; }
