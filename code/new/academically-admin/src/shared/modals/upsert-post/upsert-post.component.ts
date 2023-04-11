@@ -246,6 +246,7 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
     const file = e.target.files[0] as File;
     if (FileUtils.validateFile(this, [file], this.maxFileSize, 1, this.allowedExtensions)) {
       this.model.file = file;
+      this.fileAttachment = file;
       this.sanitizedAttachmentUrl = FileUtils.getSanitizedFileUrl(this, file);
     }
     this.fileInput.nativeElement.value = '';
@@ -264,7 +265,7 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
   }
 
   private async getFileAttachment(): Promise<void> {
-    if (this.model.postAttachments) {
+    if (this.model?.postAttachments) {
       const [file] = this.model.postAttachments;
       if (file) {
         const document = file.document;
