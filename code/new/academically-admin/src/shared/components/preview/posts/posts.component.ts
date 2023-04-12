@@ -12,22 +12,28 @@ import { DisciplineTaxonomyDto } from '@shared/service-proxies/service-proxies';
   styleUrls: ['./posts.component.scss']
 })
 export class PreviewPostsComponent extends AppComponentBase implements OnInit, OnChanges {
+  readonly showMoreLimit: number = 255;
+
   @Input() data: PostDto;
   @Input() file: File;
   @Input() canRemove: boolean;
 
   @Output() onRemove: EventEmitter<any> = new EventEmitter<any>();
-
   showMore = false;
   title: string;
   description: string;
   author: string;
   postDate: string;
   fileAttachment: File;
+
   userTopics: DisciplineTaxonomyDto[];
 
   constructor(injector: Injector, private _cdr: ChangeDetectorRef) {
     super(injector);
+  }
+
+  get isShowMore(): boolean {
+    return this.description?.length > this.showMoreLimit;
   }
 
   ngOnInit(): void {

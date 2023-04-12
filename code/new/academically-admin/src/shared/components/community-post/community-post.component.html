@@ -33,7 +33,11 @@
         </div>
         <div class="post-content d-flex flex-column">
             <div *ngIf="title" class="post-content-title" [style.marginTop.px]="10">{{ title }}</div>
-            <div class="post-content-description" [innerHTML]="description" [style.marginTop.px]="10"></div>
+            <div class="post-content-description mt-3 d-inline-block">
+                <span *ngIf="!showMore" [innerHTML]="(description | shorten : showMoreLimit : true) + ''"></span>
+                <span *ngIf="showMore" [innerHTML]="description"></span>
+                <a *ngIf="isShowMore" role="button" (click)="showMore = !showMore"> See {{ showMore ? 'less' : 'more' }}</a>
+            </div>
             <div class="post-content-topics"></div>
         </div>
 
