@@ -1,19 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
+using Academically.Authorization.Roles;
+using Academically.Authorization.Users;
 using Academically.Domain.Entities;
 using Academically.Services.UserFollowers.Dto;
+using Academically.Users.Dto;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Academically.Services.UserFollowers
 {
     public class UserFollowersAppService : AcademicallyAppServiceBase, IUserFollowersAppService
 	{
 		private readonly IRepository<UserFollower, Guid> _userFollowersRepository;
+        private readonly IRepository<User, long> _userRepository;
 
-		public UserFollowersAppService(IRepository<UserFollower, Guid> userFollowersRepository)
+        public UserFollowersAppService(
+            IRepository<UserFollower, Guid> userFollowersRepository,
+            IRepository<User, long> usersRepository)
 		{
 			_userFollowersRepository = userFollowersRepository;
+            _userRepository = usersRepository;
         }
 
         public async Task<UserFollowerDto> GetAsync(long userId, long followerUserId)
@@ -37,6 +47,29 @@ namespace Academically.Services.UserFollowers
         public async Task DeleteAsync(Guid id)
         {
             await _userFollowersRepository.DeleteAsync(id);
+        }
+
+        public async Task<IEnumerable<UserDto>> GetUsersToFollow()
+        {
+            var following = await _userFollowersRepository.GetAll()
+                .Where(x => x.CreatorUserId == AbpSession.UserId.Value)
+                .Select(x => x.UserId)
+                .ToListAsync();
+
+            var usersToFollow = await _userRepository.GetAll()
+                .Where(x => x.Id != AbpSession.UserId.Value && !following.Contains(x.Id))
+                .ToListAsync();
+
+            return ObjectMapper.Map<List<UserDto>>(usersToFollow);
+        }
+
+        public async Task<IEnumerable<UserFollowerDto>> GetFollowing()
+        {
+            var following = await _userFollowersRepository.GetAll()
+                .Where(x => x.CreatorUserId == AbpSession.UserId.Value)
+                .ToListAsync();
+
+            return ObjectMapper.Map<List<UserFollowerDto>>(following);
         }
     }
 }

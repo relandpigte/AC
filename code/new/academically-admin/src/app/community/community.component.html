@@ -147,7 +147,13 @@
                             </div>
                         </div>
                         <div class="people-right d-flex justify-content-center align-items-center">
-                            <div type="button" class="btn btn-white topic-btn d-flex justify-content-center align-items-center">Follow</div>
+                            <button type="button"
+                                class="btn btn-white topic-btn d-flex justify-content-center align-items-center"
+                                [class.activated]="isUserFollowed(item)"
+                                (click)="isUserFollowed(item) ? handleOnUnfollowUser(item) : handleOnFollowUser(item)"
+                                [disabled]="isUserLoading(item.id)">
+                                {{ isUserFollowed(item) ? 'Following' : 'Follow'  }}
+                            </button>
                         </div>
                     </div>
                 </ng-template>
