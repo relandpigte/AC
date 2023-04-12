@@ -63,7 +63,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     }
 
     get title(): string { return this.data.title; }
-    get description(): string { return this.data.content; }
+    get description(): string { return this.data.content ?? ''; }
     get isOwner(): boolean { return this.appSession.userId === this.data?.creatorUserId; }
     get isQuickPost(): boolean { return this.data?.type === PostType.QuickPost; }
     get isQuestion(): boolean { return this.data?.type === PostType.Question; }
