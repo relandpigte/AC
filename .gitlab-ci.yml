@@ -413,6 +413,7 @@ deploy_schema_to_uat:
 
 deploy_backend_to_uat:
   <<: *backend
+  stage: testing
   needs:    
     - build_backend
   dependencies:
@@ -428,6 +429,7 @@ deploy_backend_to_uat:
 
 deploy_frontend_to_uat:
   <<: *frontend
+  stage: testing
   variables:
     env_name: uat
   dependencies:
