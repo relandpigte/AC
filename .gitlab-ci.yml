@@ -422,6 +422,7 @@ deploy_backend_to_uat:
     env_name: uat
   environment:
     name: testing
+    deployment_tier: testing
   when: manual
   only:
     - develop
@@ -436,6 +437,7 @@ deploy_frontend_to_uat:
     - build_frontend
   environment:
     name: testing
+    deployment_tier: testing
   when: manual
   only:
     - develop
