@@ -418,12 +418,13 @@ deploy_backend_to_uat:
   dependencies:
     - build_backend
   variables:
-    ENV_NAME: "uat"
+    env_name: uat
   environment:
-    name: uat_backend
+    name: testing
   when: manual
   only:
     - develop
+
 
 refresh_backend_to_uat:
   extends:
@@ -431,20 +432,20 @@ refresh_backend_to_uat:
   needs:
     - deploy_backend_to_uat
   variables:
-    ENV_NAME: "uat"
+    env_name: uat
   environment:
-    name: uat
+    name: testing
   only:
     - develop
 
 deploy_frontend_to_uat:
   <<: *frontend
   variables:
-    ENV_NAME: "uat"
+    env_name: uat
   dependencies:
     - build_frontend
   environment:
-    name: uat_frontend
+    name: testing
   when: manual
   only:
     - develop
