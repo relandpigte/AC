@@ -6,7 +6,7 @@ using Academically.Domain.Entities;
 namespace Academically.Services.UserFollowers.Dto
 {
 	[AutoMap(typeof(UserFollower))]
-	public class UserFollowerDto : EntityDto<Guid>
+	public class UserFollowerDto : CreationAuditedEntityDto<Guid>
 	{
         public long UserId { get; set; }
     }

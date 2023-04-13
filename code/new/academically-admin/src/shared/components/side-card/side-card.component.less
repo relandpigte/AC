@@ -5,6 +5,30 @@
     border-radius: 10px;
     box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
 
+    &.loading {
+        .side-card {
+            &-header {
+                border-bottom-color: white;
+
+                &-title {
+                    color: white;
+                }
+
+                &-view-all {
+                    color: white;
+                }
+            }
+
+            &-items {
+                &-row {
+                    &:not(:last-child) {
+                        border-bottom-color: white;
+                    }
+                }
+            }
+        }
+    }
+
     &-header {
         padding: 20px;
         border-bottom: 1px solid #EDF2F9;

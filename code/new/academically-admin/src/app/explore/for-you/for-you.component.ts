@@ -138,9 +138,11 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
           title: 'Community.SharePost',
           activeTab: 'quick-post',
           selectedService: service,
-          sharedId: service.id,
-          sharedType: SharedType.Service,
-          sharedServiceType: service.serviceType
+          model: {
+            sharedId: service.id,
+            sharedServiceType: service.serviceType,
+            sharedType: SharedType.Service
+          }
         };
         this._modalService.show(UpsertPostComponent, modalSettings).content;
       });

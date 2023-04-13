@@ -1,4 +1,4 @@
-<div class="side-card">
+<div class="side-card" [class.loading]="isLoading">
     <div class="side-card-header d-flex flex-row flex-nowrap justify-content-between">
         <div class="side-card-header-title">{{ header }}</div>
         <div class="side-card-header-view-all cursor-pointer" (click)="handleViewAllClick()">View All</div>

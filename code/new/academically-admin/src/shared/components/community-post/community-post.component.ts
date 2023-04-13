@@ -10,6 +10,7 @@ import { AvailableServiceDto, DisciplineTaxonomyDto, PostDto, PostsServiceProxy,
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { CommunityDiscussionsComponent } from '../community-discussions/community-discussions.component';
+import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 
 @Component({
     selector: 'app-community-post-card',
@@ -17,6 +18,8 @@ import { CommunityDiscussionsComponent } from '../community-discussions/communit
     styleUrls: ['./community-post.component.scss']
 })
 export class CommunityPostCardComponent extends AppComponentBase implements OnChanges, OnInit {
+    readonly showMoreLimit: number = 255;
+
     @Input() closeHiddenPostAfter = 0;
     @Input() data: any;
     @Input() isLoading: boolean;
@@ -36,8 +39,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     hideTimer: any;
     showComments = true;
     showAddComment = true;
-    serviceData: any;
-    sharedServiceType: number;
+    showMore = false;
 
     constructor(
         injector: Injector,
@@ -49,10 +51,8 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
         super(injector);
     }
 
-    get shimmerType() {
-        return ShimmerType;
-    }
-
+    get shimmerType() { return ShimmerType; }
+    get isShowMore(): boolean { return this.description?.length > this.showMoreLimit; }
     get posterName(): string { return this.data.creatorUser?.fullName ?? 'Anonymous'; }
     get postDate(): string {
         const time = moment(this.data.creationTime);
@@ -63,11 +63,8 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     }
 
     get title(): string { return this.data.title; }
-    get description(): string { return this.data.content; }
-    get isOwner(): boolean {
-        return this.appSession.userId === this.data?.creatorUserId;
-    }
-
+    get description(): string { return this.data.content ?? ''; }
+    get isOwner(): boolean { return this.appSession.userId === this.data?.creatorUserId; }
     get isQuickPost(): boolean { return this.data?.type === PostType.QuickPost; }
     get isQuestion(): boolean { return this.data?.type === PostType.Question; }
     get isDiscussion(): boolean { return this.data?.type === PostType.Discussion; }
@@ -82,41 +79,17 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
                 return 'post';
         }
     }
+    get sharedPost(): any { return this.data?.sharedPost; }
+    get sharedService(): any { return ServiceCardUtils.getServiceData(this.data); }
 
-    ngOnInit() {
-        this.handleServiceData(this.data);
-    }
+
+    ngOnInit() { }
 
     async ngOnChanges(changes: SimpleChanges) {
         if ('data' in changes && this.data) {
             this.userTopics = this.data.postTopics?.map?.(t => t.disciplineTaxonomy);
             await this.getFileAttachment();
             this.getServiceAttachment();
-        }
-    }
-
-    handleServiceData(post: PostDto): void {
-        if (!post.sharedId || !post.sharedServiceType) { return; }
-        this.sharedServiceType = post.sharedServiceType;
-        switch (post.sharedServiceType) {
-            case ServicesType.Event:
-                this.serviceData = post.sharedServiceEvent;
-                break;
-            case ServicesType.Course:
-                this.serviceData = post.sharedServiceCourse;
-                break;
-            case ServicesType.Tutorial:
-                this.serviceData = post.sharedServiceVideo;
-                break;
-            case ServicesType.Article:
-                this.serviceData = post.sharedServiceArticle;
-                break;
-            case ServicesType.Coaching:
-                this.serviceData = post.sharedServiceCoaching;
-                break;
-            case ServicesType.Workshop:
-                this.serviceData = post.sharedServiceEvent;
-                break;
         }
     }
 
@@ -165,7 +138,8 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
         modalSettings.initialState = {
             activeTab: tabType,
             updateOnly: true,
-            model: {...data}
+            model: data,
+            canRemoveAttachment: false
         };
 
         const modal = this._modalService.show(UpsertPostComponent, modalSettings).content;

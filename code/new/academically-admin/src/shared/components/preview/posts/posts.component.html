@@ -1,16 +1,18 @@
 <div *ngIf="data" class="post-preview post-discussion d-flex flex-column" [ngClass]="{'has-post-attachment': file}">
+    <div *ngIf="canRemove" class="post-preview-remove d-flex justify-content-center align-items-center cursor-pointer" (click)="removePost()">
+        <span class="fe fe-x"></span>
+    </div>
     <div class="post-preview-header d-flex align-items-center">
-        <img class="post-preview-header-avatar rounded-circle" src="assets/img/anonymous.png" [width]="26" [height]="26">
+        <img class="post-preview-header-avatar rounded-circle" [src]="getProfilePictureFromDocument(data?.creatorUser?.profilePictureDocument, data?.creatorUser?.id)" [width]="26" [height]="26">
         <span class="post-preview-header-name">{{ author }}</span>
         <span class="post-preview-header-time">{{ postDate }}</span>
     </div>
     <div class="post-preview-content d-flex flex-column">
         <div *ngIf="title" class="post-preview-content-title">{{ title }}</div>
         <div *ngIf="description" class="post-preview-content-desc">
-            <!--span *ngIf="!showMore">{{ description | shorten : 150: true }}</span-->
-            <!--span *ngIf="showMore">{{ description }}</span-->
-            <span>{{ description }}</span>
-            <!--a role="button" (click)="showMore = !showMore"> See {{ showMore ? 'less' : 'more' }}</a-->
+            <span *ngIf="!showMore">{{ description | shorten : showMoreLimit : true }}</span>
+            <span *ngIf="showMore">{{ description }}</span>
+            <a *ngIf="isShowMore" role="button" (click)="showMore = !showMore"> See {{ showMore ? 'less' : 'more' }}</a>
         </div>
         <div *ngIf="userTopics && userTopics.length" class="post-preview-content-topic">
             <a *ngFor="let userTopic of userTopics" role="button" class="mr-3">#{{ userTopic.name }}</a>

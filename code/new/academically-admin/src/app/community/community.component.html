@@ -41,6 +41,7 @@
                 <div *ngIf="suggestedTopics?.length">
                     <app-community-side-card
                         header="Topics you might like"
+                        [isLoading]="isLoadingSuggestTopics"
                         [items]="suggestedTopics"
                         [template]="topicsTemplate"
                         (onClickItem)="handleItemClick($event, 'topics')"
@@ -51,6 +52,7 @@
                 <div *ngIf="peopleToFollow?.length" [style.marginTop.px]="24">
                     <app-community-side-card
                         header="People to follow"
+                        [isLoading]="isLoadingPeopleToFollow"
                         [items]="peopleToFollow"
                         [template]="peopleToFollowTemplate"
                         (onClickItem)="handleItemClick($event, 'users')"
@@ -61,6 +63,7 @@
                 <div *ngIf="recommendedCourses?.length" [style.marginTop.px]="24">
                     <app-community-side-card
                         header="Recommended courses"
+                        [isLoading]="isLoadingRecommendedCourses"
                         [items]="recommendedCourses"
                         [template]="recommendedCoursesTemplate"
                         (onClickItem)="handleItemClick($event, 'courses')"
@@ -71,6 +74,7 @@
                 <div *ngIf="recommendedCoachings?.length" [style.marginTop.px]="24">
                     <app-community-side-card
                         header="Recommended coaching"
+                        [isLoading]="isLoadingRecommendedCoachings"
                         [items]="recommendedCoachings"
                         [template]="recommendedCoachingsTemplate"
                         (onClickItem)="handleItemClick($event, 'coachings')"
@@ -81,6 +85,7 @@
                 <div *ngIf="recommendedArticles?.length" [style.marginTop.px]="24">
                     <app-community-side-card
                         header="Recommended articles"
+                        [isLoading]="isLoadingRecommendedArticles"
                         [items]="recommendedArticles"
                         [template]="recommendedArticlesTemplate"
                         (onClickItem)="handleItemClick($event, 'articles')"
@@ -91,6 +96,7 @@
                 <div *ngIf="recommendedEvents?.length" [style.marginTop.px]="24">
                     <app-community-side-card
                         header="Recommended events"
+                        [isLoading]="isLoadingRecommendedEvents"
                         [items]="recommendedEvents"
                         [template]="recommendedEventsTemplate"
                         (onClickItem)="handleItemClick($event, 'events')"
@@ -101,6 +107,7 @@
                 <div *ngIf="recommendedTutorials?.length" [style.marginTop.px]="24">
                     <app-community-side-card
                         header="Recommended tutorials"
+                        [isLoading]="isLoadingRecommendedTutorials"
                         [items]="recommendedTutorials"
                         [template]="recommendedTutorialsTemplate"
                         (onClickItem)="handleItemClick($event, 'tutorials')"
@@ -116,13 +123,13 @@
                             <div class="topic-followers">{{ 'Community.Topics.Followers' | localize: (item.followerCount | shortNum: 1) }}</div>
                         </div>
                         <div class="topic-right d-flex justify-content-center align-items-center">
-                            <div type="button"
+                            <button type="button"
                                 class="btn btn-white topic-btn d-flex justify-content-center align-items-center"
                                 [class.activated]="isTopicFollowed(item)"
-                                (click)="handleOnFollowTopic(item)">
-                            {{ isTopicFollowed(item) ? 'Following' : 'Follow'  }}
-                            <span *ngIf="topicInFocus === item.id && isFollowingTopic" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        </div>
+                                (click)="isTopicFollowed(item) ? handleOnUnfollowTopic(item) : handleOnFollowTopic(item)"
+                                [disabled]="isTopicLoading(item.id)">
+                                {{ isTopicFollowed(item) ? 'Following' : 'Follow'  }}
+                            </button>
                         </div>
                     </div>
                 </ng-template>
@@ -140,14 +147,20 @@
                             </div>
                         </div>
                         <div class="people-right d-flex justify-content-center align-items-center">
-                            <div type="button" class="btn btn-white topic-btn d-flex justify-content-center align-items-center">Follow</div>
+                            <button type="button"
+                                class="btn btn-white topic-btn d-flex justify-content-center align-items-center"
+                                [class.activated]="isUserFollowed(item)"
+                                (click)="isUserFollowed(item) ? handleOnUnfollowUser(item) : handleOnFollowUser(item)"
+                                [disabled]="isUserLoading(item.id)">
+                                {{ isUserFollowed(item) ? 'Following' : 'Follow'  }}
+                            </button>
                         </div>
                     </div>
                 </ng-template>
 
                 <ng-template #recommendedCoursesTemplate let-item="item">
                     <div class="course d-flex flex-row flex-nowrap gap-15">
-                        <app-shimmer [show]="isLoadingRecommendedCourses" [shimmerType]="shimmerType.ArticleCard"></app-shimmer>
+                        <app-shimmer [show]="isLoadingRecommendedCourses" [shimmerType]="shimmerType.SideCardThumbnail"></app-shimmer>
                         <div class="course-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
                             <div class="course-thumbnail bg-center flex-grow-1" [alt]="item.name" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>
                         </div>
@@ -160,7 +173,7 @@
 
                 <ng-template #recommendedCoachingsTemplate let-item="item">
                     <div class="coaching d-flex flex-row flex-nowrap gap-15">
-                        <app-shimmer [show]="isLoadingRecommendedCoachings" [shimmerType]="shimmerType.UsersCard"></app-shimmer>
+                        <app-shimmer [show]="isLoadingRecommendedCoachings" [shimmerType]="shimmerType.SideCardAvatar"></app-shimmer>
                         <div class="coaching-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
                             <img [src]="getProfilePicture(item.creatorUser.profilePictureUrl)" class="avatar avatar-sm avatar-img rounded-circle" alt="profile" />
                         </div>
@@ -173,7 +186,7 @@
 
                 <ng-template #recommendedArticlesTemplate let-item="item">
                     <div class="article d-flex flex-column flex-nowrap">
-                        <app-shimmer [show]="isLoadingRecommendedArticles" [shimmerType]="shimmerType.SideCardAvatar"></app-shimmer>
+                        <app-shimmer [show]="isLoadingRecommendedArticles" [shimmerType]="shimmerType.SideCardDouble"></app-shimmer>
                         <div class="article-name line-clamp-2">{{ item.name }}</div>
                         <div class="article-description wrap-text">{{ item.description }}</div>
                     </div>
@@ -181,7 +194,7 @@
 
                 <ng-template #recommendedEventsTemplate let-item="item">
                     <div class="event d-flex flex-row flex-nowrap gap-15">
-                        <app-shimmer [show]="isLoadingRecommendedEvents" [shimmerType]="shimmerType.SideCardAvatar"></app-shimmer>
+                        <app-shimmer [show]="isLoadingRecommendedEvents" [shimmerType]="shimmerType.SideCardThumbnail"></app-shimmer>
                         <div class="event-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
                             <div class="event-thumbnail bg-center flex-grow-1" [alt]="item.name" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>
                         </div>
@@ -194,7 +207,7 @@
 
                 <ng-template #recommendedTutorialsTemplate let-item="item">
                     <div class="tutorial d-flex flex-row flex-nowrap">
-                        <app-shimmer [show]="isLoadingRecommendedTutorials" [shimmerType]="shimmerType.SideCardAvatar"></app-shimmer>
+                        <app-shimmer [show]="isLoadingRecommendedTutorials" [shimmerType]="shimmerType.SideCardThumbnail"></app-shimmer>
                         <div class="tutorial-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
                             <div class="tutorial-thumbnail bg-center flex-grow-1" [alt]="item.name" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>
                         </div>

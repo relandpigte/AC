@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 
-import { AppComponentBase } from '@shared/app-component-base';
-import { AvailableServiceDto, ProfilesServiceProxy, ServicesType } from '@shared/service-proxies/service-proxies';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { ServiceCard, ServiceCardComposition, ServiceCardOptions, ServiceCardReview, ServiceCardRsvp, ServiceCardSlots } from '@shared/models/service-card.model';
+import { AppComponentBase } from '@shared/app-component-base';
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
+import { ServiceCard, ServiceCardComposition, ServiceCardOptions, ServiceCardReview, ServiceCardRsvp, ServiceCardSlots } from '@shared/models/service-card.model';
+import { AvailableServiceDto, ProfilesServiceProxy, ServicesType } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-preview-services',
@@ -13,9 +13,10 @@ import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
   animations: [appModuleAnimation()]
 })
 export class PreviewServicesComponent extends AppComponentBase implements OnChanges {
+  ServicesType = ServicesType;
+
   @Input() data: AvailableServiceDto;
-  @Input() canRemove = true;
-  @Input() sharedServiceType: number;
+  @Input() canRemove: boolean;
 
   @Output() onRemove: EventEmitter<any> = new EventEmitter<any>();
 
@@ -26,9 +27,9 @@ export class PreviewServicesComponent extends AppComponentBase implements OnChan
     super(injector);
   }
 
+  get creatorProfilePictureUrl(): string { return this.data?.creatorUser?.profilePictureUrl ?? this.getProfilePictureFromDocument(this.data?.creatorUser?.profilePictureDocument, this.data?.creatorUser?.id) ?? 'assets/img/anonymous.png'; }
   get thumbnailImageUrl(): string { return this.data?.thumbnailImageUrl ?? 'assets/img/img-placeholder.png'; }
   get creatorName(): string { return this.data?.creatorUser?.fullName ?? 'Anonymous'; }
-  get creatorProfilePictureUrl(): string { return this.data?.creatorUser?.profilePictureUrl ?? 'assets/img/anonymous.png'; }
   get serviceTypeName(): string { return this.sanitized?.type; }
   get serviceName(): string { return this.sanitized?.name; }
   get priceValue(): number { return this.sanitized?.price?.price ?? 0; }
@@ -48,7 +49,7 @@ export class PreviewServicesComponent extends AppComponentBase implements OnChan
   get reviews(): ServiceCardReview { return this.sanitized?.reviews; }
 
   get serviceContent(): string { return this.data?.description; }
-  get servicesType() { return ServicesType; }
+  get serviceType() { return this.data?.serviceType; }
 
   ngOnChanges(changes: SimpleChanges): void {
     if ('data' in changes && this.data) {

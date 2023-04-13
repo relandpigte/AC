@@ -1,16 +1,17 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { Emoji } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
-import { Emoji } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 
-import { AvailableServiceDto, PostsServiceProxy, PostType, UpdatePostDto } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
-import { FileUtils } from '@shared/helpers/file-utils';
-import { CommunityPostService } from '@shared/services/community-post.service';
 import { PostFocusField } from '@shared/enums/post/post-focus-field.enum';
+import { FileUtils } from '@shared/helpers/file-utils';
+import { AvailableServiceDto, PostsServiceProxy, PostType, SharedType, UpdatePostDto } from '@shared/service-proxies/service-proxies';
+import { CommunityPostService } from '@shared/services/community-post.service';
+import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 
 export enum PostTabs {
   QuickPost = 'quick-post',
@@ -24,21 +25,20 @@ export enum PostTabs {
   styleUrls: ['./upsert-post.component.scss']
 })
 export class UpsertPostComponent extends AppComponentBase implements OnInit {
+  activeTab: string = PostTabs.QuickPost;
+  allowedExtensions: string[] = [];
+
   parentPostId: string;
   model: any;
   selectedService: AvailableServiceDto;
-  activeTab: string = PostTabs.QuickPost;
-  allowedExtensions: string[] = [];
+
   isCreating = false;
   isShowServicePicker = false;
   isShowEmojiPicker = false;
   sanitizedAttachmentUrl: SafeUrl;
   focusedField: string;
   caretPosition: number;
-  sharedItem: any;
-  sharedId: string;
-  sharedType: number;
-  sharedServiceType: number;
+  fileAttachment: File;
 
   @Input() allowTabs = true;
   @Input() canCancel = true;
@@ -65,12 +65,14 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
-  get fileAttachment(): File { return this.model?.file; }
   get canAddAttachment(): boolean { return this.model && !this.model.file && !this.model.serviceId; }
   get canAddImage(): boolean { return this.canAddAttachment && this.activeTab === PostTabs.QuickPost; }
   get canAddFile(): boolean { return this.canAddAttachment && this.activeTab === PostTabs.QuickPost; }
   get canAddEmoticons(): boolean { return this.activeTab === PostTabs.QuickPost; }
   get canAddService(): boolean { return this.canAddAttachment && this.activeTab === PostTabs.QuickPost; }
+
+  get sharedPost(): any { return this.model?.sharedPost; }
+  get sharedService(): any { return this.selectedService ?? ServiceCardUtils.getServiceData(this.model); }
 
   get tabTitle(): string {
     switch (this.model?.type) {
@@ -102,7 +104,9 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
     }
   }
 
-  ngOnInit(): void {}
+  async ngOnInit(): Promise<void> {
+    await this.getFileAttachment();
+  }
 
   handleFocusChange(field: string): void {
     this.focusedField = field;
@@ -137,13 +141,12 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
       this.model.visibility,
       this.model.type,
       this.parentPostId,
-      this.sharedId,
-      this.sharedType,
-      this.sharedServiceType,
+      this.model.sharedId,
+      this.model.sharedType,
+      this.model.sharedServiceType,
       this.model.topics,
       this.model.newTopics,
       [this.model.file].filter(x => x).map(f => FileUtils.getFileParameter(f))
-
     ).pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isCreating = false))
       .subscribe(_ => {
@@ -198,13 +201,28 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
 
   handleRemoveService(): void {
     this.model.sharedId = null;
+    this.model.sharedServiceType = null;
+    this.model.sharedType = null;
     this.selectedService = null;
+  }
+
+  handleRemovePost(): void {
+    this.model.sharedPost = null;
+    this.model.sharedId = null;
+    this.model.sharedType = null;
   }
 
   handleOnAddService(service: AvailableServiceDto): void {
     this.model.sharedId = service.id;
-    this.selectedService = service;
+    this.model.sharedType = SharedType.Service;
+    this.model.sharedServiceType = service.serviceType;
     this.isShowServicePicker = false;
+
+    this._postsService.getAvailableService(service.id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(s => {
+        this.selectedService = s;
+      });
   }
 
   handleOnEmojiSelect(selected: Emoji): void {
@@ -228,6 +246,7 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
     const file = e.target.files[0] as File;
     if (FileUtils.validateFile(this, [file], this.maxFileSize, 1, this.allowedExtensions)) {
       this.model.file = file;
+      this.fileAttachment = file;
       this.sanitizedAttachmentUrl = FileUtils.getSanitizedFileUrl(this, file);
     }
     this.fileInput.nativeElement.value = '';
@@ -243,5 +262,18 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
 
   private isValidDiscussion(): boolean {
     return this.model && this.model.title && this.model.information && (this.model.topics?.length || this.model.newTopics?.length);
+  }
+
+  private async getFileAttachment(): Promise<void> {
+    if (this.model?.postAttachments) {
+      const [file] = this.model.postAttachments;
+      if (file) {
+        const document = file.document;
+        if (document) {
+          this.fileAttachment = await FileUtils.getFileBlob(file.documentUrl, document.name, document.fileType);
+          this._cdr.detectChanges();
+        }
+      }
+    }
   }
 }

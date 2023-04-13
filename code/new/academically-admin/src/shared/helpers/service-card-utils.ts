@@ -251,4 +251,24 @@ export class ServiceCardUtils {
           if (!options || !('isShowActions' in options)) sanitizedOptions.isShowActions = false;
         }
     }
+
+    static getServiceData(service: any) {
+      if (!service) return null;
+      switch (service.sharedServiceType) {
+        case ServicesType.Event:
+          return service.sharedServiceEvent;
+        case ServicesType.Course:
+          return service.sharedServiceCourse;
+        case ServicesType.Tutorial:
+          return service.sharedServiceVideo;
+        case ServicesType.Article:
+          return service.sharedServiceArticle;
+        case ServicesType.Coaching:
+          return service.sharedServiceCoaching;
+        case ServicesType.Workshop:
+          return service.sharedServiceEvent;
+        default:
+          return null;
+      }
+    }
 }

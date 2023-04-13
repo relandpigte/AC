@@ -100,6 +100,14 @@
             padding: 7.5px 21.5px;
         }
 
+        &-share {
+            @extend .discussion-info-invite;
+            span {
+                width: 16px;
+                height: 13px;
+            }
+        }
+
         &-subscribe {
             padding: 7.5px 21.5px;
         }
@@ -117,6 +125,26 @@
     }
 
     &-controls {
+        &.loading {
+            .discussion-controls {
+                &-left,
+                &-right {
+                    color: transparent;
+
+                    &-posts-count {
+                        color: transparent;
+                    }
+
+                    .dropdown {
+                        &-toggle,
+                        &-toggle .fe {
+                            color: transparent;
+                        }
+                    }
+                }
+            }
+        }
+
         &-left {
             &-posts-count {
                 font-weight: 400;
