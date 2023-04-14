@@ -359,7 +359,7 @@ deploy_schema_to_ci:
   variables:
     env_name: ci
   environment:
-    name: development
+    name: ci
     deployment_tier: development
   only:
     - develop
@@ -374,7 +374,7 @@ deploy_backend_to_ci:
   variables:
     env_name: ci
   environment:
-    name: development
+    name: ci
     deployment_tier: development
   only:
     - develop
@@ -389,7 +389,7 @@ deploy_frontend_to_ci:
   variables:
     env_name: ci
   environment:
-    name: development
+    name: ci
     deployment_tier: development
   only:
     - develop
@@ -405,7 +405,7 @@ deploy_schema_to_uat:
   variables:
     env_name: uat
   environment:
-    name: testing
+    name: uat
     deployment_tier: testing
   only:
     - develop
@@ -421,7 +421,7 @@ deploy_backend_to_uat:
   variables:
     env_name: uat
   environment:
-    name: testing
+    name: uat
     deployment_tier: testing
   when: manual
   only:
@@ -436,7 +436,7 @@ deploy_frontend_to_uat:
   dependencies:
     - build_frontend
   environment:
-    name: testing
+    name: uat
     deployment_tier: testing
   when: manual
   only:
