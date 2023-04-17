@@ -1,13 +1,4 @@
 <div class="discussion position-relative" [style.paddingBottom.px]="20">
-    <div class="discussion-header d-flex align-items-center" [style.marginTop.px]="40">
-        <div
-            class="discussion-header-back-btn d-flex justify-content-center align-items-center cursor-pointer"
-            (click)="navigateBack()"
-        >
-            <span class="fe fe-arrow-left"></span>
-        </div>
-        <div class="discussion-header-back-text">Back to community</div>
-    </div>
     <div class="discussion-title" [style.marginTop.px]="30">Discussion</div>
     <div class="discussion-info card p-0" [style.marginTop.px]="10" [ngClass]="{'discussion-loading': isLoading}">
         <app-shimmer [show]="isLoading" [shimmerType]="shimmerType.DiscussionCard"></app-shimmer>
