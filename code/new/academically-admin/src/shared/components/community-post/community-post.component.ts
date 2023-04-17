@@ -11,6 +11,7 @@ import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.comp
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { CommunityDiscussionsComponent } from '../community-discussions/community-discussions.component';
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
+import { AppConsts } from '@shared/AppConsts';
 
 @Component({
     selector: 'app-community-post-card',
@@ -110,7 +111,8 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     }
 
     goToDiscussion(): void {
-        this._router.navigate(['app', 'community', 'discussion', this.data.id]);
+        const url = `${AppConsts.appBaseUrl}/app/community/discussion/${this.data.id}`;
+        window.open(url, '_blank');
     }
 
     onDeleteClick(id: string): void {
