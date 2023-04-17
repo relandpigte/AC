@@ -10,7 +10,7 @@
             <div class="post-heading-owner flex-grow-1 d-flex flex-column flex-nowrap gap-3">
                 <div class="post-heading-owner-name d-flex flex-row align-items-center gap-15">
                     {{ posterName | titlecase }}
-                    <div type="button" class="btn btn-white post-heading-owner-follow d-flex justify-content-center align-items-center">Follow</div>
+                    <button *ngIf="!isOwner" type="button" class="btn btn-white post-heading-owner-follow d-flex justify-content-center align-items-center">Follow</button>
                 </div>
                 <div class="post-heading-owner-time">{{ postDate }}</div>
             </div>
