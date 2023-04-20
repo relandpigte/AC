@@ -12,6 +12,7 @@ import { UpsertPostComponent } from '../../shared/modals/upsert-post/upsert-post
 import { TopicSorting } from '@shared/components/topic/topic.component';
 import { CommunityService } from './community.service';
 import { ShimmerType } from '../../shared/enums/shimmer/shimmer-type.enum';
+import { UserFollowingService } from '@shared/services/user-following.service';
 
 @Component({
   selector: 'app-community',
@@ -68,7 +69,8 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     private _eventsService: EventsServiceProxy,
     private _videosService: VideosServiceProxy,
     private _userFollowersService: UserFollowersServiceProxy,
-    private _communityService: CommunityService,
+    private communityService: CommunityService,
+    private _userFollowingService: UserFollowingService
   ) {
     super(injector);
   }
@@ -379,7 +381,10 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     .pipe(finalize(() => this.setTopicLoading(user.id.toString(), 'isFollowingUser', false)))
     .subscribe(response => {
       this.peopleToFollow.forEach(t => {
-        if (t.id === user.id) this.userFollowing.push(response);
+        if (t.id === user.id) {
+          this.userFollowing.push(response);
+          this._userFollowingService.addFollowedUser(response);
+        }
       });
     });
   }
@@ -395,6 +400,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
       .pipe(finalize(() => this.setUserLoading(user.id.toString(), 'isUnfollowingUser', false)))
       .subscribe((userFollowing) => {
         this.userFollowing = userFollowing.filter(x => x);
+        this._userFollowingService.removeFollowedUser(userFollower.id);
       });
   }
 }
