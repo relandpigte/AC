@@ -69,7 +69,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     private _eventsService: EventsServiceProxy,
     private _videosService: VideosServiceProxy,
     private _userFollowersService: UserFollowersServiceProxy,
-    private communityService: CommunityService,
+    private _communityService: CommunityService,
     private _userFollowingService: UserFollowingService
   ) {
     super(injector);
