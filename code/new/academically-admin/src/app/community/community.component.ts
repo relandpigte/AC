@@ -68,7 +68,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     private _eventsService: EventsServiceProxy,
     private _videosService: VideosServiceProxy,
     private _userFollowersService: UserFollowersServiceProxy,
-    private communityService: CommunityService,
+    private _communityService: CommunityService,
   ) {
     super(injector);
   }
@@ -87,7 +87,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     this.getRecommendedEvents();
     this.getRecommendedTutorials();
 
-    this.communityService.getIsLoading$().subscribe(isLoading => {
+    this._communityService.getIsLoading().subscribe(isLoading => {
       this.isLoading = isLoading;
     });
   }
@@ -122,6 +122,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
 
   handleFilterTopics(topics: string[]): void {
     this.selectedTopics = topics;
+    this._communityService.setSelectedTopics(topics);
   }
 
   handleViewAllClick(type: string): void {
