@@ -6,12 +6,13 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import { FileUtils } from '@shared/helpers/file-utils';
-import { AvailableServiceDto, DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, ServicesType } from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, UserDto } from '@shared/service-proxies/service-proxies';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { CommunityDiscussionsComponent } from '../community-discussions/community-discussions.component';
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 import { AppConsts } from '@shared/AppConsts';
+import { UserFollowingService } from '@shared/services/user-following.service';
 
 @Component({
     selector: 'app-community-post-card',
@@ -48,6 +49,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
         private _router: Router,
         private _postsServiceProxy: PostsServiceProxy,
         private _modalService: BsModalService,
+        private _userFollowingService: UserFollowingService
     ) {
         super(injector);
     }
@@ -190,6 +192,22 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
 
     handleCommentUpdates(): void {
         this.onChildrenUpdate.emit();
+    }
+
+    isUserFollowing(user: UserDto): boolean {
+        return this._userFollowingService.isUserFollowing(user);
+    }
+
+    isUserLoading(userId: number): boolean {
+        return this._userFollowingService.isUserLoading(userId?.toString());
+    }
+
+    handleUserFollow(user: UserDto): void {
+        if (this.isUserFollowing(user)) {
+            this._userFollowingService.onUnFollowUser(user);
+        } else {
+            this._userFollowingService.onFollowUser(user);
+        }
     }
 
     private async getFileAttachment() {

@@ -24,7 +24,6 @@ import { UserFollowingService } from '@shared/services/user-following.service';
 export class CommunityComponent extends AppComponentBase implements OnInit {
   isLoading = true;
   userTopics: UserTopicDto[] = [];
-  userFollowing: UserFollowerDto[] = [];
   selectedTopics: string[] = [];
   isLoadingSuggestTopics = true;
   isLoadingPeopleToFollow = true;
@@ -42,18 +41,11 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   recommendedTutorials: VideoDto[] = Array(4).fill([]).map(() => this.generateRandomTutorial()) as VideoDto[];
 
   topicLoaders: Map<string, { isFollowingTopic?: boolean, isUnfollowingTopic?: boolean }> = new Map();
-  userLoaders: Map<string, { isFollowingUser?: boolean, isUnfollowingUser?: boolean }> = new Map();
 
   getUserTopics$ = () => {
     return this._userTopicsService.getAll(undefined, this.appSession.userId, UserTopicType.Following, undefined)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoadingSuggestTopics = false));
-  }
-
-  getUserFollowing$ = () => {
-    return this._userFollowersService.getFollowing()
-      .pipe(takeUntil(this.destroyed$))
-      .pipe(finalize(() => this.isLoadingPeopleToFollow = false));
   }
 
   constructor(
@@ -80,7 +72,6 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
 
   ngOnInit(): void {
     this.getUserTopics();
-    this.getUserFollowing();
     this.getSuggestedTopics();
     this.getPeopleToFollow();
     this.getRecommendedCourses();
@@ -106,20 +97,6 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     const topicLoaders = this.topicLoaders.get(id);
     topicLoaders[property] = value;
     if (Object.keys(topicLoaders).every(p => !topicLoaders[p])) this.topicLoaders.delete(id);
-  }
-
-  isUserLoading(id: string, property?: string): boolean {
-    const userLoaders = this.userLoaders.get(id);
-    if (!userLoaders) return false;
-    if (property) return userLoaders[property];
-    else return Object.keys(userLoaders).some(p => userLoaders[p]);
-  }
-
-  setUserLoading(id: string, property: string, value: boolean): void {
-    if (!this.userLoaders.has(id)) this.userLoaders.set(id, {});
-    const userLoaders = this.userLoaders.get(id);
-    userLoaders[property] = value;
-    if (Object.keys(userLoaders).every(p => !userLoaders[p])) this.userLoaders.delete(id);
   }
 
   handleFilterTopics(topics: string[]): void {
@@ -228,10 +205,6 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
 
   getUserTopics(): void {
     this.getUserTopics$().subscribe(topics => this.userTopics = topics.filter(x => x));
-  }
-
-  getUserFollowing(): void {
-    this.getUserFollowing$().subscribe(following => this.userFollowing = following.filter(x => x));
   }
 
   getSuggestedTopics(): void {
@@ -369,38 +342,19 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     return topic?.userTopics?.some(u => u.userId === this.appSession.userId && u.type === UserTopicType.Following);
   }
 
-  isUserFollowed(user: UserDto): boolean {
-    return this.userFollowing.some(u => u.userId === user.id);
+  isUserFollowing(user: UserDto): boolean {
+    return this._userFollowingService.isUserFollowing(user);
   }
 
-  handleOnFollowUser(user: UserDto): void {
-    this.setUserLoading(user.id.toString(), 'isFollowingUser', true);
-
-    this._userFollowersService.create(user.id)
-    .pipe(takeUntil(this.destroyed$))
-    .pipe(finalize(() => this.setTopicLoading(user.id.toString(), 'isFollowingUser', false)))
-    .subscribe(response => {
-      this.peopleToFollow.forEach(t => {
-        if (t.id === user.id) {
-          this.userFollowing.push(response);
-          this._userFollowingService.addFollowedUser(response);
-        }
-      });
-    });
+  isUserLoading(userId: number): boolean {
+    return this._userFollowingService.isUserLoading(userId.toString());
   }
 
-  handleOnUnfollowUser(user: UserDto): void {
-    this.setTopicLoading(user.id.toString(), 'isUnfollowingUser', true);
-
-    const userFollower = Array.from(this.userFollowing.values()).find(t => t.userId === user.id);
-
-    this._userFollowersService.delete(userFollower.id)
-      .pipe(switchMap(() =>  this.getUserFollowing$()))
-      .pipe(takeUntil(this.destroyed$))
-      .pipe(finalize(() => this.setUserLoading(user.id.toString(), 'isUnfollowingUser', false)))
-      .subscribe((userFollowing) => {
-        this.userFollowing = userFollowing.filter(x => x);
-        this._userFollowingService.removeFollowedUser(userFollower.id);
-      });
+  handleUserFollow(user: UserDto): void {
+    if (this.isUserFollowing(user)) {
+      this._userFollowingService.onUnFollowUser(user);
+    } else {
+      this._userFollowingService.onFollowUser(user);
+    }
   }
 }

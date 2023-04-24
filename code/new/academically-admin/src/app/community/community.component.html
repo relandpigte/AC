@@ -149,10 +149,10 @@
                         <div class="people-right d-flex justify-content-center align-items-center">
                             <button type="button"
                                 class="btn btn-white topic-btn d-flex justify-content-center align-items-center"
-                                [class.activated]="isUserFollowed(item)"
-                                (click)="isUserFollowed(item) ? handleOnUnfollowUser(item) : handleOnFollowUser(item)"
+                                [class.activated]="isUserFollowing(item)"
+                                (click)="handleUserFollow(item)"
                                 [disabled]="isUserLoading(item.id)">
-                                {{ isUserFollowed(item) ? 'Following' : 'Follow'  }}
+                                {{ isUserFollowing(item) ? 'Following' : 'Follow'  }}
                             </button>
                         </div>
                     </div>

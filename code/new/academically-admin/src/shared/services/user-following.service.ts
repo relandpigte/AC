@@ -57,21 +57,21 @@ export class UserFollowingService {
   }
 
   public isUserFollowing(user: UserDto): boolean {
-    return this.userFollowed?.some(u => u.userId === user.id);
+    return this.userFollowed?.some(u => u.userId === user?.id);
   }
 
-  public isCurrentUser(userId?: number): boolean {
+  public isCurrentUser(userId: number): boolean {
     if (!userId) {
       return false;
     }
     return userId === this.appSession?.user?.id;
   }
 
-  public addFollowedUser(user: UserFollowerDto): void {
+  private addFollowedUser(user: UserFollowerDto): void {
     this.userFollowed.push(user);
   }
 
-  public removeFollowedUser(followerId: string): void {
+  private removeFollowedUser(followerId: string): void {
     this.userFollowed = this.userFollowed.filter(u => u.id !== followerId);
   }
 
