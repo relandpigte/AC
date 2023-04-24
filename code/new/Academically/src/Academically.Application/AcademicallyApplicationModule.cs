@@ -15,6 +15,9 @@ namespace Academically
         {
             Configuration.Authorization.Providers.Add<AcademicallyAuthorizationProvider>();
             Configuration.Notifications.Providers.Add<CalendarEventsNotificationProvider>();
+
+            // Enable auditing for the application
+            Configuration.Auditing.IsEnabled = true;
         }
 
         public override void Initialize()

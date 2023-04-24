@@ -1,10 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Auditing;
 using Abp.Domain.Entities.Auditing;
 
 namespace Academically.Domain.Entities
 {
     [Table("PostTopics")]
+	[Audited]
 	public class PostTopic : CreationAuditedEntity<Guid>
 	{
 		public Guid PostId { get; set; }
