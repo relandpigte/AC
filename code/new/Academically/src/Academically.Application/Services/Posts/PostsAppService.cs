@@ -193,6 +193,7 @@ namespace Academically.Services.Posts
             var post = ObjectMapper.Map<Post>(input);
             var postId = await _postRepository.InsertAndGetIdAsync(post);
 
+            var topicIds = input.Topics?.Count() > 0 ? input.Topics.ToList() : new List<Guid>();
             if (input.NewTopics != null && input.NewTopics.Any())
             {
                 var otherTopicParent = await _disciplineTaxonomyRepository.FirstOrDefaultAsync(x => x.Name == "Other Topics");
@@ -205,6 +206,9 @@ namespace Academically.Services.Posts
                             ParentId = otherTopicParent.Id,
                             Name = newTopic
                         });
+                        
+                        topicIds.Add(topicId);
+
                         await _postTopicRepository.InsertAsync(new PostTopic
                         {
                             PostId = postId,
@@ -251,6 +255,13 @@ namespace Academically.Services.Posts
             }
 
             await CurrentUnitOfWork.SaveChangesAsync();
+
+            if (topicIds?.Count > 0)
+            {
+                post = await _postRepository.GetAsync(postId);
+                post.DisciplineTaxonomyIds = string.Join(",", topicIds);
+                await _postRepository.UpdateAsync(post);
+            }
         }
 
         public async Task<List<PostDto>> GetByUser(long userId, PostType? type)
@@ -340,9 +351,13 @@ namespace Academically.Services.Posts
             }
 
             ObjectMapper.Map(input, post);
+            
             post = await _postRepository.UpdateAsync(post);
 
             await _postTopicRepository.DeleteAsync(t => t.PostId == post.Id);
+
+            var topicIds = input.Topics?.Count() > 0 ? input.Topics.ToList() : new List<Guid>();
+
             if (input.NewTopics != null && input.NewTopics.Any())
             {
                 var otherTopicParent = await _disciplineTaxonomyRepository.FirstOrDefaultAsync(x => x.Name == "Other Topics");
@@ -355,6 +370,9 @@ namespace Academically.Services.Posts
                             ParentId = otherTopicParent.Id,
                             Name = newTopic
                         });
+                        
+                        topicIds.Add(topicId);
+
                         await _postTopicRepository.InsertAsync(new PostTopic
                         {
                             PostId = post.Id,
@@ -374,6 +392,15 @@ namespace Academically.Services.Posts
                         DisciplineTaxonomyId = topicId,
                     });
                 }
+            }
+            
+            if (topicIds?.Count > 0)
+            {
+                post.DisciplineTaxonomyIds = string.Join(",", topicIds);
+            }
+            else
+            {
+                post.DisciplineTaxonomyIds = null;
             }
 
             var postDto = ObjectMapper.Map<PostDto>(post);
