@@ -193,6 +193,7 @@ namespace Academically.Services.Posts
             var post = ObjectMapper.Map<Post>(input);
             var postId = await _postRepository.InsertAndGetIdAsync(post);
 
+            var topicIds = input.Topics?.Count() > 0 ? input.Topics.ToList() : new List<Guid>();
             if (input.NewTopics != null && input.NewTopics.Any())
             {
                 var otherTopicParent = await _disciplineTaxonomyRepository.FirstOrDefaultAsync(x => x.Name == "Other Topics");
@@ -205,6 +206,9 @@ namespace Academically.Services.Posts
                             ParentId = otherTopicParent.Id,
                             Name = newTopic
                         });
+                        
+                        topicIds.Add(topicId);
+
                         await _postTopicRepository.InsertAsync(new PostTopic
                         {
                             PostId = postId,
@@ -251,6 +255,13 @@ namespace Academically.Services.Posts
             }
 
             await CurrentUnitOfWork.SaveChangesAsync();
+
+            if (topicIds?.Count > 0)
+            {
+                post = await _postRepository.GetAsync(postId);
+                post.DisciplineTaxonomyIds = string.Join(",", topicIds);
+                await _postRepository.UpdateAsync(post);
+            }
         }
 
         public async Task<List<PostDto>> GetByUser(long userId, PostType? type)
@@ -340,9 +351,13 @@ namespace Academically.Services.Posts
             }
 
             ObjectMapper.Map(input, post);
+            
             post = await _postRepository.UpdateAsync(post);
 
             await _postTopicRepository.DeleteAsync(t => t.PostId == post.Id);
+
+            var topicIds = input.Topics?.Count() > 0 ? input.Topics.ToList() : new List<Guid>();
+
             if (input.NewTopics != null && input.NewTopics.Any())
             {
                 var otherTopicParent = await _disciplineTaxonomyRepository.FirstOrDefaultAsync(x => x.Name == "Other Topics");
@@ -355,6 +370,9 @@ namespace Academically.Services.Posts
                             ParentId = otherTopicParent.Id,
                             Name = newTopic
                         });
+                        
+                        topicIds.Add(topicId);
+
                         await _postTopicRepository.InsertAsync(new PostTopic
                         {
                             PostId = post.Id,
@@ -374,6 +392,15 @@ namespace Academically.Services.Posts
                         DisciplineTaxonomyId = topicId,
                     });
                 }
+            }
+            
+            if (topicIds?.Count > 0)
+            {
+                post.DisciplineTaxonomyIds = string.Join(",", topicIds);
+            }
+            else
+            {
+                post.DisciplineTaxonomyIds = null;
             }
 
             var postDto = ObjectMapper.Map<PostDto>(post);
@@ -601,6 +628,43 @@ namespace Academically.Services.Posts
         public async Task DeletePostNotification(DeletePostNotificationDto input)
         {
             await _postNotificationRepository.DeleteAsync(p => p.PostId == input.PostId && p.CreatorUserId == input.CreatorUserId);
+        }
+
+        public async Task<List<PostDto>> GetPostsByTopics(IEnumerable<string> topicIds)
+        {
+            var userId = AbpSession.UserId.Value;
+            var userHiddenPost = await _postVisibilityRepository.GetAll()
+                .Where(w => w.IsHidden && w.CreatorUserId == userId)
+                .Select(s => s.PostId).ToListAsync();
+            var result = await _postRepository.GetAll()
+                .Include(p => p.CreatorUser)
+                .Include(p => p.Children)
+                .Include(e => e.Parent)
+                .Include(p => p.PostAttachments)
+                    .ThenInclude(a => a.Document)
+                .Include(p => p.PostTopics)
+                    .ThenInclude(t => t.DisciplineTaxonomy)
+                .Include(p => p.CreatorUser)
+                    .ThenInclude(u => u.ProfilePictureDocument)
+                .Include(p => p.PostNotification)
+                .Where(e => e.PostTopics.Any(x => topicIds.Contains(x.DisciplineTaxonomyId.ToString())))
+                .Where(e => e.IsHidden == false && !userHiddenPost.Contains(e.Id))
+                .OrderByDescending(p => p.CreationTime)
+                .Select(p => ObjectMapper.Map<PostDto>(p))
+                .ToListAsync();
+
+            foreach (var item in result)
+            {
+                if (item.SharedId.HasValue)
+                    await FillInShared(item);
+
+                foreach (var attachment in item.PostAttachments)
+                    attachment.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(attachment.DocumentId);
+
+                item.CommentsCount = await this.GetCommentsCountAsync(item.Id.ToString());
+            }
+
+            return result;
         }
 
         private async Task FillInService(CommentDto comment)

@@ -185,6 +185,20 @@
                     </div>
                 </ng-container>
 
+                <ng-container *ngSwitchCase="'follow'">
+                    <button
+                        type="button"
+                        class="btn text-center flex-grow-1 d-flex flex-row justify-content-center align-items-center"
+                        [ngClass]="[action.class ? action.class : 'btn-light']"
+                        style="gap: 5px"
+                        [class.following]="isUserFollowing(data)"
+                        [disabled]="isUserLoading(data.id) || isCurrentUser(data.id)"
+                        (click)="handleUserFollow(data)">
+                        <span>{{ isUserFollowing(data) ? 'Following' : 'Follow' }}</span>
+                        <i *ngIf="action.icon" [class]="action.icon"></i>
+                    </button>
+                </ng-container>
+
                 <ng-container *ngSwitchDefault>
                     <button type="button" class="btn text-center flex-grow-1 d-flex flex-row justify-content-center align-items-center" [ngClass]="[action.class ? action.class : 'btn-light']" style="gap: 5px">
                         <span *ngIf="action.label">{{ action.label | localize}}</span>

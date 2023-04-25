@@ -10,6 +10,7 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
 
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
+import { UserFollowingService } from '@shared/services/user-following.service';
 
 @Component({
     selector: 'app-service-card',
@@ -35,14 +36,35 @@ import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
     constructor(
         injector: Injector,
         private _modalService: BsModalService,
-        private _postsService: PostsServiceProxy
+        private _postsService: PostsServiceProxy,
+        private _userFollowingService: UserFollowingService
     ) {
-        super(injector)
+        super(injector);
     }
 
     ngOnInit(): void {
       this.sanitizeData();
       this.setShimmerType();
+    }
+
+    isUserFollowing(user: UserDto): boolean {
+      return this._userFollowingService.isUserFollowing(user);
+    }
+
+    isUserLoading(userId: number): boolean {
+      return this._userFollowingService.isUserLoading(userId.toString());
+    }
+
+    handleUserFollow(user: UserDto): void {
+      if (this.isUserFollowing(user)) {
+        this._userFollowingService.onUnFollowUser(user);
+      } else {
+        this._userFollowingService.onFollowUser(user);
+      }
+    }
+
+    isCurrentUser(userId: number): boolean {
+      return this._userFollowingService.isCurrentUser(userId);
     }
 
     get type(): ServiceCardType { return this.sanitized?.type; }

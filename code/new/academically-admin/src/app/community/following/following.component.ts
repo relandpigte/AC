@@ -11,7 +11,7 @@ import { StateUpdateType } from '@shared/services/state-base.service';
 import { CommunityDiscussionsComponent } from '@shared/components/community-discussions/community-discussions.component';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { CommunityService } from '../community.service';
-import { SharedType } from '../../../shared/service-proxies/service-proxies';
+import { SharedType } from '@shared/service-proxies/service-proxies';
 
 enum PostFiltering {
   All = 'Community.Posts.Filtering.All',
@@ -90,6 +90,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     this.loadInfiniteData(this._usersService, 'getAll', ['', true, 'creationTime desc', 0, 6], 'usersYouMayKnow');
     this.loadInfiniteData(this._coursesService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4], 'recommendedCourses');
     await this.initPostsAppStates();
+    this.handleFilteringTopic();
   }
 
   ngOnDestroy() {
@@ -115,6 +116,12 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
         };
         this._modalService.show(UpsertPostComponent, modalSettings).content;
       });
+  }
+
+   handleFilteringTopic(): void {
+    this._communityService.getSelectedTopics().subscribe(async value => {
+      this.posts = await this.postsStateService.getPostsByTopic(value);
+    });
   }
 
   private async initPostsAppStates() {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Application.Services.Dto;
+using Abp.Auditing;
 using Abp.Domain.Entities.Auditing;
 using Academically.Authorization.Users;
 using Academically.Domain.Enums;
@@ -9,7 +10,8 @@ using Academically.Domain.Enums;
 namespace Academically.Domain.Entities
 {
     [Table("Posts")]
-	public class Post : FullAuditedEntity<Guid>
+    [Audited]
+    public class Post : FullAuditedEntity<Guid>
     {
 		public Post()
 		{
@@ -29,7 +31,12 @@ namespace Academically.Domain.Entities
 		public SharedType? SharedType { get; set; }
 		public ServicesType? SharedServiceType { get; set; }
 
-		[ForeignKey("CreatorUserId")]
+        // Comma-separated string of foreign keys to DiscipleTaxonomy, a copy of 
+		// DiscipleTaxonodyId save in PostTopic table. This is only intended for 
+		// capturing audit for list of topics
+        public string DisciplineTaxonomyIds { get; set; }
+
+        [ForeignKey("CreatorUserId")]
 		public virtual User CreatorUser { get; set; }
         [ForeignKey("ParentId")]
         public virtual Post Parent { get; set; }

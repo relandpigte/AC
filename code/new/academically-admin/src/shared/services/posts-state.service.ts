@@ -1,11 +1,10 @@
 import { BehaviorSubject, Subject } from 'rxjs';
 import { Utils } from '../helpers/utils';
-import { HubEvent, PostDto, PostsServiceProxy, PostType } from '../service-proxies/service-proxies';
+import { HubEvent, PostDto, PostsServiceProxy, PostType, UserTopicDto } from '../service-proxies/service-proxies';
 import { StateServiceBase, StateUpdate } from './state-base.service';
 
 import { HubService } from '@app/_shared/services/hub.service';
 import * as _ from 'lodash';
-import { finalize } from 'rxjs/operators';
 
 export const MAX_POSTS_TO_LOAD = 15;
 
@@ -47,6 +46,15 @@ export class PostsStateService extends StateServiceBase {
       sorting?.pred ?? ((p) => p.creationTime),
       sorting?.direction ?? 'desc'
     );
+
+   getPostsByTopic = async (topics: UserTopicDto[]) => {
+    try {
+      const selectedTopics = Object.values(topics).map(x => x.disciplineTaxonomyId);
+      return await this._postsService.getPostsByTopics(selectedTopics).toPromise();
+    } catch (e) {
+      console.error(`Error while getting post by topic: ${e}`);
+    }
+  }
 
   async loadData(component: any, userId: number) {
     this.loading$.next(true);

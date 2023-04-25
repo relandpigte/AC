@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Auditing;
 using Abp.Domain.Entities.Auditing;
 
 namespace Academically.Domain.Entities

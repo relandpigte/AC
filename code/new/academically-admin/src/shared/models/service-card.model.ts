@@ -71,12 +71,12 @@ export const DefaultServiceCardActions: ServiceCardButton[] = [
 ];
 
 export const UserServiceCardActions: ServiceCardButton[] = [
-    { type: 'submit', action: 'follow', label: 'Follow', class: 'btn-primary' },
+    { type: 'follow', action: 'follow', label: 'Follow', class: 'btn-primary' },
     { type: 'submit', action: 'remove', label: 'Remove', class: 'btn-light' }
 ];
 
 export type ServiceCardType = 'course' | 'tutorial' | 'article' | 'event' | 'broadcast' | 'coaching' | 'workshop' | 'user' | 'space' | 'feature';
-export type ServiceCardButtonType = 'submit' | 'group' | 'share';
+export type ServiceCardButtonType = 'submit' | 'group' | 'share' | 'follow';
 export type HeadingType = 'location' | 'schedule';
 
 export interface ServiceCardPerson {
