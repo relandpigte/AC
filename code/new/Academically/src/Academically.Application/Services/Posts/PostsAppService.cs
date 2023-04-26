@@ -4,11 +4,15 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
+using Abp.Auditing;
 using Abp.Authorization;
+using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
+using Abp.EntityHistory;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Timing;
+using Abp.Events.Bus.Entities;
 using Academically.Authorization;
 using Academically.Authorization.Users;
 using Academically.Domain.Entities;
@@ -31,6 +35,8 @@ using Academically.Services.Videos.Dto;
 using Academically.Users.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static Amazon.S3.Util.S3EventNotification;
+using Academically.Services.DisciplineTaxonomies.Dto;
 
 namespace Academically.Services.Posts
 {
@@ -49,6 +55,7 @@ namespace Academically.Services.Posts
         private readonly IRepository<Coaching, Guid> _coachingRepository;
         private readonly IRepository<Video, Guid> _videoRepository;
         private readonly IRepository<Event, Guid> _eventRepository;
+        private readonly IRepository<EntityChange, long> _entityChangeRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IArticlesAppService _articlesAppService;
         private readonly ICoachingsAppService _coachingsAppService;
@@ -68,13 +75,14 @@ namespace Academically.Services.Posts
             IRepository<Coaching, Guid> coachingRepository,
             IRepository<Video, Guid> videoRepository,
             IRepository<Event, Guid> eventRepository,
+            IRepository<Comment, Guid> commentsRepository,
+            IRepository<EntityChange, long> entityChangeRepository,
             IDocumentsDomainService documentsDomainService,
             IArticlesAppService articlesAppService,
             ICoachingsAppService coachingsAppService,
             ICoursesAppService coursesAppService,
             IVideosAppService videosAppService,
-            IEventsAppService eventsAppService,
-            IRepository<Comment, Guid> commentsRepository)
+            IEventsAppService eventsAppService)
         {
             _postRepository = postRepository;
             _postTopicRepository = postTopicRepository;
@@ -94,6 +102,7 @@ namespace Academically.Services.Posts
             _coachingRepository = coachingRepository;
             _videoRepository = videoRepository;
             _eventRepository = eventRepository;
+            _entityChangeRepository = entityChangeRepository;
         }
 
         public async Task<List<PostDto>> GetAllPosts(PostType? type, Guid? parentId)
@@ -286,7 +295,7 @@ namespace Academically.Services.Posts
             return result;
         }
 
-        public async Task<PostDto> GetAsync(Guid id)
+        public async Task<PostDto> GetAsync(Guid id, bool includeEditHistory = false)
         {
             var userId = AbpSession.UserId.Value;
             var userHiddenPost = _postVisibilityRepository.GetAll()
@@ -306,6 +315,11 @@ namespace Academically.Services.Posts
                         .SingleOrDefaultAsync(p => p.Id == id);
 
             var result = ObjectMapper.Map<PostDto>(post);
+
+            if (includeEditHistory)
+            {
+                result.PostEditHistories = await GetEditHistory(post);
+            }
 
             foreach (var attachment in result.PostAttachments)
             {
@@ -330,7 +344,7 @@ namespace Academically.Services.Posts
             result.Participants = participants.GroupBy(g => g.Id).ToList().Select(s => s.FirstOrDefault());
 
             await FillInShared(result);
-            
+
             return result;
         }
 
@@ -758,6 +772,49 @@ namespace Academically.Services.Posts
                         break;
                 }
             }
+        }
+
+        private async Task<List<PostEditHistoryDto>> GetEditHistory(Post post)
+        {
+            var entityChanges = await _entityChangeRepository.GetAll()
+                .Include(x => x.PropertyChanges)
+                .Where(x => x.EntityTypeFullName == typeof(Post).FullName && x.EntityId == $"\"{post.Id}\"" && x.ChangeType == EntityChangeType.Updated)
+                .OrderByDescending(x => x.ChangeTime)
+                .ToListAsync();
+
+            var histories = new List<PostEditHistoryDto>();
+            foreach (var entityChange in entityChanges)
+            {
+                var history = new PostEditHistoryDto 
+                { 
+                    ChangeTime = entityChange.ChangeTime 
+                };
+
+                foreach (var propertyChange in entityChange.PropertyChanges)
+                {
+                    switch (propertyChange.PropertyName)
+                    {
+                        case nameof(history.Title):
+                            history.Title = propertyChange.OriginalValue.Trim('"'); break;
+                        case nameof(history.Content):
+                            history.Content = propertyChange.OriginalValue.Trim('"'); break;
+                        case "DisciplineTaxonomyIds":
+                            var disciplineTaxonomyIds = propertyChange.OriginalValue?.Trim('"').Split(",").ToList();
+                            if (disciplineTaxonomyIds != null)
+                            {
+                                var disciplineTaxonomies = await _disciplineTaxonomyRepository.GetAll()
+                                   .Where(x => disciplineTaxonomyIds.Contains(x.Id.ToString()))
+                                   .Select(x => ObjectMapper.Map<DisciplineTaxonomyDto>(x))
+                                   .ToListAsync();
+                                history.PostTopics = disciplineTaxonomies;
+                            }
+                            break;
+                        default: break;
+                    }
+                }
+                histories.Add(history);
+            }
+            return histories;
         }
     }
 }

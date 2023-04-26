@@ -50,6 +50,7 @@ namespace Academically.Services.Posts.Dto
         public VideoDto SharedServiceVideo { get; set; }
         [NotMapped]
         public CoachingDto SharedServiceCoaching { get; set; }
-
+        [NotMapped]
+        public List<PostEditHistoryDto> PostEditHistories { get; set; }
     }
 }
