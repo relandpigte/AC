@@ -1,6 +1,6 @@
 {
-  "remoteServiceBaseUrl": "https://api-academically-uat.academically-dev.uk/uat",
-  "appBaseUrl": "https://academically-uat.academically-dev.uk",
+  "remoteServiceBaseUrl": "https://api-uat.academically-dev.uk/uat",
+  "appBaseUrl": "https://uat.academically-dev.uk",
   "localeMappings": [
     {
       "from": "pt-BR",

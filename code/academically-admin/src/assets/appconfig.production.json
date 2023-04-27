@@ -1,6 +1,6 @@
 {
-  "remoteServiceBaseUrl": "http://localhost:21021",
-  "appBaseUrl": "http://localhost:4200",
+  "remoteServiceBaseUrl": "https://api-prod.academically-dev.uk/uat",
+  "appBaseUrl": "https://prod.academically-dev.uk",
   "localeMappings": [
     {
       "from": "pt-BR",
