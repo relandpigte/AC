@@ -189,6 +189,7 @@ variables:
     - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
     - printf '\e[95m%s Building %s for environment %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$APP_NAME" "$env_name"
     - printf '\e[95m%s Deploying to AWS Region - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION"
+    - printf '\e[95m%s Deploying to Domain - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$PUBLIC_DOMAIN"
     - apt-get update
     - node -v
     - npm -v
