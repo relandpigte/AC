@@ -138,7 +138,7 @@ variables:
     - rm $CI_PROJECT_DIR/artifacts/backend.zip # remove zip so we can create a new one
     - cd temp
     - >
-      if [[ "$ENV_NAME" == "ci" ]]; then
+      if [[ "$env_name" == "ci" ]]; then
         export API_URL="https://api-$APP_NAME-$env_name.$PUBLIC_DOMAIN"
         export URL_HTTPS="https://$APP_NAME-$env_name.$PUBLIC_DOMAIN"
         export URL_HTTP="http://$APP_NAME-$env_name.$PUBLIC_DOMAIN"
@@ -220,7 +220,7 @@ variables:
     # Copy Dist to S3 Bucket
     - echo "Copy dist to S3"
     - >
-      if [[ "$ENV_NAME" == "ci" ]]; then
+      if [[ "$env_name" == "ci" ]]; then
         aws s3 rm s3://$APP_NAME-$env_name.$PUBLIC_DOMAIN --recursive
         aws s3 cp dist s3://$APP_NAME-$env_name.$PUBLIC_DOMAIN --recursive
         aws s3 ls s3://$APP_NAME-$env_name.$PUBLIC_DOMAIN
