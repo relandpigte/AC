@@ -49,7 +49,10 @@ export class PreviewServicesComponent extends AppComponentBase implements OnChan
   get reviews(): ServiceCardReview { return this.sanitized?.reviews; }
 
   get serviceContent(): string { return this.data?.description; }
-  get serviceType() { return this.data?.serviceType; }
+  get serviceType() {
+    const index = this.sanitized?.type?.charAt(0).toUpperCase() + this.sanitized?.type?.slice(1);
+    return ServicesType[index];
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if ('data' in changes && this.data) {
