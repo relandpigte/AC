@@ -8,10 +8,9 @@ variables:
   BUILD_IMAGE: "mcr.microsoft.com/dotnet/core/sdk:3.1" 
   FRONTEND_PATH: "code/new/academically-admin"
   BACKEND_PATH: "code/new/Academically/src/Academically.Web.Host"
-  LOG_RETENTION: 7
-  PRIVATE_SUBNET_A: "subnet-03f6e008bbf99fd12"
-  PRIVATE_SUBNET_B: "subnet-06ff7fbbb445833a3"
-  PUBLIC_DOMAIN: "sourcecloud-dev.uk"
+  # LOG_RETENTION: 7
+  # PRIVATE_SUBNET_A: "subnet-03f6e008bbf99fd12"
+  # PRIVATE_SUBNET_B: "subnet-06ff7fbbb445833a3"
 
 .schema: &schema
   stage: deploy
@@ -109,7 +108,7 @@ variables:
     # install node and serverless
     - npm init -y
     - npm install
-    - npm install -g serverless
+    # - npm install -g serverless
     # Lookup Required Outputs from AWS SSM
     - export ASG=$(aws ssm get-parameter --name "/$APP_NAME/$env_name/asg" | jq -r --raw-output '.Parameter.Value')
     - printf '\e[95m%s API ASG Name - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$ASG"
@@ -129,9 +128,9 @@ variables:
     - echo "Create package.json"
     - yarn install
     - yarn init --yes 2>/dev/null
-    - echo "install plugins"
-    - "yarn add serverless-plugin-log-retention --dev"
-    - "yarn add serverless-domain-manager@6.4.4 --dev"    # Hard code due to issue with 7.0.0
+    # - echo "install plugins"
+    # - "yarn add serverless-plugin-log-retention --dev"
+    # - "yarn add serverless-domain-manager@6.4.4 --dev"    # Hard code due to issue with 7.0.0
     # perform subsitutions on appsettings (need to unzip and rezip)
     - mkdir $CI_PROJECT_DIR/temp
     - unzip $CI_PROJECT_DIR/artifacts/backend.zip -d $CI_PROJECT_DIR/temp
@@ -163,12 +162,7 @@ variables:
     - cat appsettings.json
     - rm appsettings.bak
     - zip -r $CI_PROJECT_DIR/artifacts/backend.zip .
-    # - "cd $CI_PROJECT_DIR" 
-    # - echo "run serverless-domain-manager"
-    # - "SLS_DEBUG=* serverless create_domain"
-    # - echo "run serverless deploy"v1
-    # - "SLS_DEBUG=* serverless deploy"  
-    # NEXT SECTION WILL UTIMATELY REPLACE LAMBDA / SERVERLESS DEPLOY ABOVE  ???
+
     # Copy iis artifacts to S3 for deployment
     - cd $CI_PROJECT_DIR/artifacts/
     - ls -la # debug line
