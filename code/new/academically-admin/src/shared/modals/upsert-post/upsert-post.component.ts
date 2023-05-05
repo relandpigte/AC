@@ -196,6 +196,7 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
 
   handleRemoveAttachment(): void {
     this.model.file = null;
+    this.fileAttachment = null;
     this.fileInput.nativeElement.value = '';
   }
 
