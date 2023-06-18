@@ -1,3 +1,0 @@
----    
-- name: STAGE1 - Provision Lambda Packages
-  import_playbook: lambda/lambda.yml

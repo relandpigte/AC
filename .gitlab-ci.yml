@@ -2,15 +2,11 @@ stages:
   - build
   - development
   - testing
-  - refresh
 
 variables:
   BUILD_IMAGE: "mcr.microsoft.com/dotnet/core/sdk:3.1" 
   FRONTEND_PATH: "code/new/academically-admin"
   BACKEND_PATH: "code/new/Academically/src/Academically.Web.Host"
-  # LOG_RETENTION: 7
-  # PRIVATE_SUBNET_A: "subnet-03f6e008bbf99fd12"
-  # PRIVATE_SUBNET_B: "subnet-06ff7fbbb445833a3"
 
 .schema: &schema
   stage: deploy
@@ -58,9 +54,6 @@ variables:
     - cat <<< $CLIENT_OVPN > /etc/openvpn/client.conf # Move vpn config from gitlab variable to config file.
     - cat <<< $CLIENT_OVPN_KEY > /etc/openvpn/client.key # Move vpn client.key from gitlab variable to file.
     - cat <<< $CLIENT_OVPN_CRT > /etc/openvpn/client.crt # Move vpn client.crt from gitlab variable to file.
-    - cat <<< $VPN_U > /etc/openvpn/pass.txt # Move vpn user from gitlab variable to pass file.
-    - cat <<< $VPN_P >> /etc/openvpn/pass.txt # Move vpn password from gitlab variable to pass file.
-    - cat <<< "auth-user-pass /etc/openvpn/pass.txt" >> /etc/openvpn/client.conf # Tell vpn config to use password file.
     - cat <<< "cert /etc/openvpn/client.crt" >> /etc/openvpn/client.conf # Tell vpn config to use client.crt file.
     - cat <<< "key /etc/openvpn/client.key" >> /etc/openvpn/client.conf # Tell vpn config to use client.key file.
     - cat <<< "log /etc/openvpn/client.log" >> /etc/openvpn/client.conf # Tell vpn config to use log file.
@@ -72,7 +65,6 @@ variables:
     - openvpn --config /etc/openvpn/client.conf --verb 5 --daemon # Start openvpn with config as a deamon.
     - sleep 30s # Wait for some time so the vpn can connect before doing anything else.
     - cat /etc/openvpn/client.log # Print the vpn log.
-    - ping -c 1 10.100.0.79 # Ping the Zabbix to prove VPN connection. If not available this stops the deployment process.
 
   script:
     - printf '\e[95m%s Update Database Schema \e[0m\n' "$(date +'%d-%m-%Y %T')"
@@ -227,38 +219,6 @@ variables:
     - printf '\e[95m%s Update Frontend complete \e[0m\n' "$(date +'%d-%m-%Y %T')"
 
 
-
-
-# MOVE refresh to be part of backend job - delete this not needed 2/4/2023 RL
-# ###########
-# # refresh #
-# ###########
-# .refresh:
-#   stage: refresh
-#   image: ubuntu:18.04
-#   before_script:
-#     - printf '\e[95m%s pre script (refresh) \e[0m\n' "$(date +'%d-%m-%Y %T')"
-#     - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
-#     - printf '\e[95m%s Building %s for environment %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$APP_NAME" "$env_name"
-#     - printf '\e[95m%s Deploying to AWS Region - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION"
-#     - apt-get update
-#     - apt-get install -y software-properties-common 
-#     # install python, awscli & jq
-#     - apt-get install -y python3-pip
-#     - pip3 install awscli boto boto3
-#     - aws --version
-
-#   script:
-#     - echo "reset InstanceRefresh Tag on $env_name-acad-tlab.aws-api-asg to force Refresh on $env_name" #TEMP gitlab
-#     - > 
-#       aws autoscaling create-or-update-tags
-#       --tags ResourceId=$env_name-acad-tlab.aws-api-asg,ResourceType=auto-scaling-group,Key=InstanceRefresh,Value=$CI_JOB_STARTED_AT,PropagateAtLaunch=true
-#     - >
-#       aws autoscaling start-instance-refresh 
-#       --auto-scaling-group-name $env_name-acad-tlab.aws-api-asg 
-#       --preferences '{"InstanceWarmup": 240, "MinHealthyPercentage": 50}'
-
-
 #########
 # Build #
 #########
@@ -375,35 +335,35 @@ deploy_schema_to_ci:
   only:
     - develop
 
-deploy_backend_to_ci:
-  <<: *backend
-  stage: development
-  dependencies:
-    - build_backend
-  needs:
-    - build_backend
-  variables:
-    env_name: ci
-  environment:
-    name: ci
-    deployment_tier: development
-  only:
-    - develop
+# deploy_backend_to_ci:
+#   <<: *backend
+#   stage: development
+#   dependencies:
+#     - build_backend
+#   needs:
+#     - build_backend
+#   variables:
+#     env_name: ci
+#   environment:
+#     name: ci
+#     deployment_tier: development
+#   only:
+#     - develop
 
-deploy_frontend_to_ci:
-  <<: *frontend
-  stage: development
-  dependencies:
-    - build_frontend
-  needs:
-    - build_frontend
-  variables:
-    env_name: ci
-  environment:
-    name: ci
-    deployment_tier: development
-  only:
-    - develop
+# deploy_frontend_to_ci:
+#   <<: *frontend
+#   stage: development
+#   dependencies:
+#     - build_frontend
+#   needs:
+#     - build_frontend
+#   variables:
+#     env_name: ci
+#   environment:
+#     name: ci
+#     deployment_tier: development
+#   only:
+#     - develop
 
 
 deploy_schema_to_uat:
@@ -422,36 +382,36 @@ deploy_schema_to_uat:
     - develop
   when: manual
 
-deploy_backend_to_uat:
-  <<: *backend
-  stage: testing
-  needs:    
-    - build_backend
-  dependencies:
-    - build_backend
-  variables:
-    env_name: uat
-  environment:
-    name: uat
-    deployment_tier: testing
-  when: manual
-  only:
-    - develop
+# deploy_backend_to_uat:
+#   <<: *backend
+#   stage: testing
+#   needs:    
+#     - build_backend
+#   dependencies:
+#     - build_backend
+#   variables:
+#     env_name: uat
+#   environment:
+#     name: uat
+#     deployment_tier: testing
+#   when: manual
+#   only:
+#     - develop
 
 
-deploy_frontend_to_uat:
-  <<: *frontend
-  stage: testing
-  variables:
-    env_name: uat
-  dependencies:
-    - build_frontend
-  environment:
-    name: uat
-    deployment_tier: testing
-  when: manual
-  only:
-    - develop
+# deploy_frontend_to_uat:
+#   <<: *frontend
+#   stage: testing
+#   variables:
+#     env_name: uat
+#   dependencies:
+#     - build_frontend
+#   environment:
+#     name: uat
+#     deployment_tier: testing
+#   when: manual
+#   only:
+#     - develop
 
 
 # Environment UAT #

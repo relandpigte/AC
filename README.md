@@ -1,14 +1,13 @@
 # Academically README #
 This Repo was cloned from Bitbucket 11/02/2021 13:40
 
-## SourceCloud Limited 2023 ##
+## Richmond Services Ltd 2023 ##
 
 This README would normally document whatever steps are necessary to get your application up and running.
 
 ### What is this repository for? ###
 
  * All code related to Academically
- * /deploy Deployment Code
  * /database Database Scripts
  * /code Backend Code
  * /code Frontend Code
@@ -24,5 +23,5 @@ This README would normally document whatever steps are necessary to get your app
 
 ### Who do I talk to? ###
 
-* Repo owner: joemelle.bacus@sourcecloud.co.uk
+* Repo owner: jroblangley787@gmail.com
 * 
