@@ -104,40 +104,30 @@ variables:
     # Lookup Required Outputs from AWS SSM
     - export ASG=$(aws ssm get-parameter --name "/$APP_NAME/$env_name/asg" | jq -r --raw-output '.Parameter.Value')
     - printf '\e[95m%s API ASG Name - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$ASG"
-    # Lookup Required Outputs from AWS SSM
-    - export SG_WEB=$(aws ssm get-parameter --name "/$APP_NAME/$env_name/web_sg_id" | jq -r --raw-output '.Parameter.Value')
-    - printf '\e[95m%s SG Web is - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$SG_WEB"
+    # # Lookup Required Outputs from AWS SSM
+    # - export SG_WEB=$(aws ssm get-parameter --name "/$APP_NAME/$env_name/web_sg_id" | jq -r --raw-output '.Parameter.Value')
+    # - printf '\e[95m%s SG Web is - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$SG_WEB"
     # Lookup Database Id
     - export DATABASE_ID=db-$APP_NAME-$env_name.$PUBLIC_DOMAIN
     - printf '\e[95m%s DatabaseId is - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$DATABASE_ID"
     - pwd
     
   script:
-    # Deploy using serverless
+    # Deploy to S3
     - "cd $CI_PROJECT_DIR" 
     - "pwd"
     - "ls -la"
     - echo "Create package.json"
     - yarn install
     - yarn init --yes 2>/dev/null
-    # - echo "install plugins"
-    # - "yarn add serverless-plugin-log-retention --dev"
-    # - "yarn add serverless-domain-manager@6.4.4 --dev"    # Hard code due to issue with 7.0.0
-    # perform subsitutions on appsettings (need to unzip and rezip)
     - mkdir $CI_PROJECT_DIR/temp
     - unzip $CI_PROJECT_DIR/artifacts/backend.zip -d $CI_PROJECT_DIR/temp
     - rm $CI_PROJECT_DIR/artifacts/backend.zip # remove zip so we can create a new one
     - cd temp
-    - >
-      if [[ "$env_name" == "ci" ]]; then
-        export API_URL="https://api-$APP_NAME-$env_name.$PUBLIC_DOMAIN"
-        export URL_HTTPS="https://$APP_NAME-$env_name.$PUBLIC_DOMAIN"
-        export URL_HTTP="http://$APP_NAME-$env_name.$PUBLIC_DOMAIN"
-      else 
-        export API_URL="https://api-$env_name.$PUBLIC_DOMAIN"
-        export URL_HTTPS="https://$env_name.$PUBLIC_DOMAIN"
-        export URL_HTTP="http://$env_name.$PUBLIC_DOMAIN"
-      fi
+
+    - export API_URL="https://api-$env_name.$PUBLIC_DOMAIN"
+    - export URL_HTTPS="https://$env_name.$PUBLIC_DOMAIN"
+    - export URL_HTTP="http://$env_name.$PUBLIC_DOMAIN"
 
     - echo $API_URL
     - cp appsettings.json appsettings.bak
@@ -338,20 +328,20 @@ build_frontend:
 #   only:
 #     - develop
 
-# deploy_backend_to_ci:
-#   <<: *backend
-#   stage: development
-#   dependencies:
-#     - build_backend
-#   needs:
-#     - build_backend
-#   variables:
-#     env_name: ci
-#   environment:
-#     name: ci
-#     deployment_tier: development
-#   only:
-#     - develop
+deploy_backend_to_ci:
+  <<: *backend
+  stage: development
+  dependencies:
+    - build_backend
+  needs:
+    - build_backend
+  variables:
+    env_name: ci
+  environment:
+    name: ci
+    deployment_tier: development
+  only:
+    - develop
 
 deploy_frontend_to_ci:
   <<: *frontend
