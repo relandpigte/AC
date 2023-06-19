@@ -206,16 +206,19 @@ variables:
     - ng build --configuration $env_name
     # Copy Dist to S3 Bucket
     - echo "Copy dist to S3"
-    - >
-      if [[ "$env_name" == "ci" ]]; then
-        aws s3 rm s3://$APP_NAME-$env_name.$PUBLIC_DOMAIN --recursive
-        aws s3 cp dist s3://$APP_NAME-$env_name.$PUBLIC_DOMAIN --recursive
-        aws s3 ls s3://$APP_NAME-$env_name.$PUBLIC_DOMAIN
-      else 
-        aws s3 rm s3://$env_name.$PUBLIC_DOMAIN --recursive
-        aws s3 cp dist s3://$env_name.$PUBLIC_DOMAIN --recursive
-        aws s3 ls s3://$env_name.$PUBLIC_DOMAIN
-      fi
+    - aws s3 rm s3://$env_name.$PUBLIC_DOMAIN --recursive
+    - aws s3 cp dist s3://$env_name.$PUBLIC_DOMAIN --recursive
+    - aws s3 ls s3://$env_name.$PUBLIC_DOMAIN
+    # - >
+    #   if [[ "$env_name" == "ci" ]]; then
+    #     aws s3 rm s3://$APP_NAME-$env_name.$PUBLIC_DOMAIN --recursive
+    #     aws s3 cp dist s3://$APP_NAME-$env_name.$PUBLIC_DOMAIN --recursive
+    #     aws s3 ls s3://$APP_NAME-$env_name.$PUBLIC_DOMAIN
+    #   else 
+    #     aws s3 rm s3://$env_name.$PUBLIC_DOMAIN --recursive
+    #     aws s3 cp dist s3://$env_name.$PUBLIC_DOMAIN --recursive
+    #     aws s3 ls s3://$env_name.$PUBLIC_DOMAIN
+    #   fi
     - printf '\e[95m%s Update Frontend complete \e[0m\n' "$(date +'%d-%m-%Y %T')"
 
 
@@ -350,22 +353,22 @@ deploy_schema_to_ci:
 #   only:
 #     - develop
 
-# deploy_frontend_to_ci:
-#   <<: *frontend
-#   stage: development
-#   dependencies:
-#     - build_frontend
-#   needs:
-#     - build_frontend
-#   variables:
-#     env_name: ci
-#   environment:
-#     name: ci
-#     deployment_tier: development
-#   only:
-#     - develop
+deploy_frontend_to_ci:
+  <<: *frontend
+  stage: development
+  dependencies:
+    - build_frontend
+  needs:
+    - build_frontend
+  variables:
+    env_name: ci
+  environment:
+    name: ci
+    deployment_tier: development
+  only:
+    - develop
 
-
+# Environment UAT #
 deploy_schema_to_uat:
   <<: *schema
   stage: testing
@@ -399,22 +402,20 @@ deploy_schema_to_uat:
 #     - develop
 
 
-# deploy_frontend_to_uat:
-#   <<: *frontend
-#   stage: testing
-#   variables:
-#     env_name: uat
-#   dependencies:
-#     - build_frontend
-#   environment:
-#     name: uat
-#     deployment_tier: testing
-#   when: manual
-#   only:
-#     - develop
+deploy_frontend_to_uat:
+  <<: *frontend
+  stage: testing
+  variables:
+    env_name: uat
+  dependencies:
+    - build_frontend
+  environment:
+    name: uat
+    deployment_tier: testing
+  when: manual
+  only:
+    - develop
 
-
-# Environment UAT #
 
 # End Deploy #
 ##############
