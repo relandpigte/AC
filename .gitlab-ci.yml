@@ -323,20 +323,20 @@ build_frontend:
 
 # Environment CI #
 
-deploy_schema_to_ci:
-  <<: *schema
-  stage: development
-  dependencies:
-    - build_schema
-  needs:
-    - build_schema
-  variables:
-    env_name: ci
-  environment:
-    name: ci
-    deployment_tier: development
-  only:
-    - develop
+# deploy_schema_to_ci:
+#   <<: *schema
+#   stage: development
+#   dependencies:
+#     - build_schema
+#   needs:
+#     - build_schema
+#   variables:
+#     env_name: ci
+#   environment:
+#     name: ci
+#     deployment_tier: development
+#   only:
+#     - develop
 
 # deploy_backend_to_ci:
 #   <<: *backend
@@ -369,21 +369,21 @@ deploy_frontend_to_ci:
     - develop
 
 # Environment UAT #
-deploy_schema_to_uat:
-  <<: *schema
-  stage: testing
-  dependencies:
-    - build_schema
-  needs:
-    - build_schema
-  variables:
-    env_name: uat
-  environment:
-    name: uat
-    deployment_tier: testing
-  only:
-    - develop
-  when: manual
+# deploy_schema_to_uat:
+#   <<: *schema
+#   stage: testing
+#   dependencies:
+#     - build_schema
+#   needs:
+#     - build_schema
+#   variables:
+#     env_name: uat
+#   environment:
+#     name: uat
+#     deployment_tier: testing
+#   only:
+#     - develop
+#   when: manual
 
 # deploy_backend_to_uat:
 #   <<: *backend
