@@ -1,6 +1,6 @@
 {
-  "remoteServiceBaseUrl": "https://api-academically-ci.sourcecloud-dev.uk",
-  "appBaseUrl": "https://academically-ci.sourcecloud-dev.uk",
+  "remoteServiceBaseUrl": "https://api-ci.academically-dev.uk",
+  "appBaseUrl": "https://ci.academically-dev.uk",
   "localeMappings": [
     {
       "from": "pt-BR",
