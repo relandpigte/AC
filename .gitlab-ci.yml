@@ -83,7 +83,7 @@ variables:
 
 .backend: &backend
   stage: deploy
-  image: node:latest
+  image: node:18.04 # Lock in at 18.04 to prevent python issue
   before_script:
     - printf '\e[95m%s pre script (deploy_backend) \e[0m\n' "$(date +'%d-%m-%Y %T')"
     - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
@@ -175,7 +175,7 @@ variables:
 
 .frontend: &frontend
   stage: deploy
-  image: node:latest
+  image: node:18.04 # Lock in at 18.04 to prevent python issue
   before_script:
     - printf '\e[95m%s pre script (deploy_frontend) \e[0m\n' "$(date +'%d-%m-%Y %T')"
     - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
@@ -285,7 +285,7 @@ build_backend:
 
 build_frontend:
   stage: build
-  image: node:latest
+  image: node:18.04 # Lock in at 18.04 to prevent python issue
   before_script:
     - printf '\e[95m%s pre script (build_frontend) \e[0m\n' "$(date +'%d-%m-%Y %T')"
     - printf '\e[95m%s Install Pre-requistes \e[0m\n' "$(date +'%d-%m-%Y %T')"
