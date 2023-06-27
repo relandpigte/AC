@@ -100,8 +100,8 @@ namespace SourceCloud.Provider.Aws
 
             var fileStream = new MemoryStream();
 
-            var mailWriterContructor = mailWriterType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, null, new[] { typeof(Stream) }, null);
-            var mailWriter = mailWriterContructor.Invoke(new object[] { fileStream });
+            var mailWriterContructor = mailWriterType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, null, new[] { typeof(Stream), typeof(bool) }, null);
+            var mailWriter = mailWriterContructor.Invoke(new object[] { fileStream, true });
 
             var sendMethod = typeof(MailMessage).GetMethod("Send", BindingFlags.Instance | BindingFlags.NonPublic);
             sendMethod.Invoke(message, BindingFlags.Instance | BindingFlags.NonPublic, null, new[] { mailWriter, true, true }, null);

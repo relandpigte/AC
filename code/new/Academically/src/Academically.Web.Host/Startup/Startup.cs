@@ -23,6 +23,8 @@ using Unchase.Swashbuckle.AspNetCore.Extensions.Extensions;
 using Abp.AspNetCore.SignalR.Hubs;
 using Academically.Web.Host.Hubs;
 using Academically.Hubs;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 
 namespace Academically.Web.Host.Startup
 {
@@ -47,6 +49,7 @@ namespace Academically.Web.Host.Startup
                 options =>
                 {
                     options.Filters.Add(new AbpAutoValidateAntiforgeryTokenAttribute());
+                    options.ModelBinderProviders.RemoveType<DateTimeModelBinderProvider>();
                 }
             ).AddNewtonsoftJson(options =>
             {

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using Abp.Authorization;
 using Academically.Authorization.Roles;
+using Abp.Domain.Uow;
 
 namespace Academically.Authorization.Users
 {
@@ -10,11 +11,13 @@ namespace Academically.Authorization.Users
         public UserClaimsPrincipalFactory(
             UserManager userManager,
             RoleManager roleManager,
-            IOptions<IdentityOptions> optionsAccessor)
+            IOptions<IdentityOptions> optionsAccessor,
+            IUnitOfWorkManager manager)
             : base(
                   userManager,
                   roleManager,
-                  optionsAccessor)
+                  optionsAccessor,
+                  manager)
         {
         }
     }

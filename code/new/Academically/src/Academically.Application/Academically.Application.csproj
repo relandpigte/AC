@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <VersionPrefix>1.0.0.0</VersionPrefix>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
     <AssemblyName>Academically.Application</AssemblyName>
     <PackageId>Academically.Application</PackageId>
@@ -37,6 +37,9 @@
     <ProjectReference Include="..\Academically.Core\Academically.Core.csproj" />
     <ProjectReference Include="..\Academically.EntityFrameworkCore\Academically.EntityFrameworkCore.csproj" />
   </ItemGroup>
+    <ItemGroup>
+	    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.0" />
+	</ItemGroup>
   <ItemGroup>
     <Folder Include="Services\Coachings\Enums\" />
     <Folder Include="Services\Registrations\" />
