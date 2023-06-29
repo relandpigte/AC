@@ -205,6 +205,10 @@
     }
 
     &-content {
+        &-left, &-right {
+            width: 0;
+        }
+
         &-post {
             &:empty {
                 display: none;
