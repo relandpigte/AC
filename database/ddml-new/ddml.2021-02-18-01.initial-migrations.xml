@@ -184,6 +184,8 @@
             <column name="PropertyName" type="VARCHAR(96)"/>
             <column name="PropertyTypeFullName" type="VARCHAR(192)"/>
             <column name="TenantId" type="INT"/>
+            <column name="NewValueHash" type="VARCHAR(512)"/>
+            <column name="OriginalValueHash" type="VARCHAR(512)"/>
         </createTable>
     </changeSet>
     <changeSet author="root (generated)" id="1613626355534-11">

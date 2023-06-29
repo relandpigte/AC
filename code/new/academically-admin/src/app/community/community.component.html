@@ -118,7 +118,7 @@
                 <ng-template #topicsTemplate let-item="item">
                     <div class="topic d-flex flex-row flex-nowrap" [title]="item.name">
                         <app-shimmer [show]="isLoadingSuggestTopics" [shimmerType]="shimmerType.SideCardDouble"></app-shimmer>
-                        <div class="topic-left flex-grow-1 d-flex flex-column flex-nowrap" [style.minWidth.px]="0">
+                        <div class="topic-left flex-grow-1 d-flex flex-column flex-nowrap gap-2" [style.minWidth.px]="0">
                             <div class="topic-name wrap-text">#{{ item.name }}</div>
                             <div class="topic-followers">{{ 'Community.Topics.Followers' | localize: (item.followerCount | shortNum: 1) }}</div>
                         </div>
@@ -141,7 +141,7 @@
                             <div class="people-avatar d-flex justify-content-center align-items-center">
                                 <img [src]="getProfilePicture(item.profilePictureUrl)" class="avatar avatar-sm avatar-img rounded-circle" alt="profile" />
                             </div>
-                            <div class="people-status flex-grow-1 ">
+                            <div class="people-status flex-grow-1 d-flex flex-column gap-2">
                                 <div class="people-status-name">{{ item.fullName }}</div>
                                 <div class="people-status-value"><span class="people-status-value-indicator">●</span>Online</div>
                             </div>
@@ -164,7 +164,7 @@
                         <div class="course-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
                             <div class="course-thumbnail bg-center flex-grow-1" [alt]="item.name" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>
                         </div>
-                        <div class="course-right flex-grow-1 d-flex flex-column justify-content-center">
+                        <div class="course-right flex-grow-1 d-flex flex-column justify-content-center gap-2">
                             <div class="course-name line-clamp">{{ item.name }}</div>
                             <div class="course-composition wrap-text">{{ getCourseComposition(item) }}</div>
                         </div>
@@ -177,7 +177,7 @@
                         <div class="coaching-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
                             <img [src]="getProfilePicture(item.creatorUser.profilePictureUrl)" class="avatar avatar-sm avatar-img rounded-circle" alt="profile" />
                         </div>
-                        <div class="coaching-right flex-grow-1 d-flex flex-column justify-content-center">
+                        <div class="coaching-right flex-grow-1 d-flex flex-column justify-content-center gap-2">
                             <div class="coaching-name wrap-text">{{ item.name }}</div>
                             <div class="coaching-author wrap-text">{{ item.creatorUser.fullName }}</div>
                         </div>
@@ -185,7 +185,7 @@
                 </ng-template>
 
                 <ng-template #recommendedArticlesTemplate let-item="item">
-                    <div class="article d-flex flex-column flex-nowrap">
+                    <div class="article d-flex flex-column flex-nowrap gap-2">
                         <app-shimmer [show]="isLoadingRecommendedArticles" [shimmerType]="shimmerType.SideCardDouble"></app-shimmer>
                         <div class="article-name line-clamp-2">{{ item.name }}</div>
                         <div class="article-description wrap-text">{{ item.description }}</div>
@@ -198,7 +198,7 @@
                         <div class="event-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
                             <div class="event-thumbnail bg-center flex-grow-1" [alt]="item.name" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>
                         </div>
-                        <div class="event-right flex-grow-1 d-flex flex-column justify-content-start">
+                        <div class="event-right flex-grow-1 d-flex flex-column justify-content-start gap-2">
                             <div *ngIf="item.eventDateTime" class="event-schedule wrap-text">{{ 'EventsSchedule' | localize: (item.eventDateTime | date:'HH:mm, dd LLL, yyyy' ) }}</div>
                             <div class="event-name line-clamp-2">{{ item.name }}</div>
                         </div>
@@ -211,7 +211,7 @@
                         <div class="tutorial-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
                             <div class="tutorial-thumbnail bg-center flex-grow-1" [alt]="item.name" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>
                         </div>
-                        <div class="tutorial-right flex-grow-1 d-flex flex-column justify-content-center">
+                        <div class="tutorial-right flex-grow-1 d-flex flex-column justify-content-center gap-2">
                             <div class="tutorial-name line-clamp-2">{{ item.name }}</div>
                             <div class="tutorial-description wrap-text">
                                 <span *ngIf="item.videoLength">{{ item.videoLength | number: '1.0-0' }} mins</span>

@@ -23,11 +23,11 @@
                 <div *ngFor="let topic of discussionTopics" class="discussion-info-topics-item cursor-pointer">#{{ topic.name }}</div>
             </div>
         </div>
-        <div class="card-footer">
+        <div class="card-footer flex-column-reverse flex-md-row gap-10">
             <div class="flex-grow-1 d-flex align-items-center">
                 <div class="discussion-info-participants">{{ participantsCount }} participants</div>
             </div>
-            <div class="flex-grow-1 d-flex justify-content-end gap-20">
+            <div class="flex-grow-1 d-flex flex-column flex-md-row justify-content-end gap-5 gap-md-20">
                 <button type="button" class="btn btn-light discussion-info-share" (click)="handleShareDiscussion()">
                     <span class="d-inline-block bg-center" [ngStyle]="{ 'background-image': 'url(assets/img/icon-share.png)' }"></span> Share
                 </button>
@@ -59,7 +59,7 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid discussion-content d-flex flex-row flex-nowrap p-0">
+    <div class="discussion-content d-flex flex-row flex-nowrap p-0">
         <div class="discussion-content-left flex-grow-1">
             <app-community-composer [isLoading]="isLoading"  [showBottomActions]="false" (onQuickPostClick)="handleAddPost()"></app-community-composer>
 
@@ -111,11 +111,11 @@
 
             <div class="discussion-content-post end d-flex flex-row justify-content-center align-items-center" [style.marginTop.px]="40" [style.marginBottom.px]="20">
                 <div class="left"></div>
-                <div class="center flex-grow-1">No more posts</div>
+                <div class="discussion-content-post-no-more flex-grow-1 d-flex justify-content-center align-items-center">No more posts</div>
                 <div class="right"></div>
             </div>
         </div>
-        <div class="community-content-right" [style.marginLeft.px]="24">
+        <div class="community-content-right d-none d-lg-block" [style.marginLeft.px]="24">
             <div *ngIf="participants?.length">
                 <app-community-side-card
                     header="Participants"
@@ -155,7 +155,7 @@
                 <div class="participants-status-value"><span class="participants-status-value-indicator">●</span>Online</div>
             </div>
         </div>
-        <div class="participants-right d-flex justify-content-center align-items-center">
+        <div *ngIf="!isParticipantSelf(item)" class="participants-right d-flex justify-content-center align-items-center">
             <div type="button" class="btn btn-white topic-btn d-flex justify-content-center align-items-center">Follow</div>
         </div>
     </div>

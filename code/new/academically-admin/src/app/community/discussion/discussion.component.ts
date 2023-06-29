@@ -269,6 +269,10 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
         return this.selectedSorting === sort;
     }
 
+    isParticipantSelf(item: UserDto): boolean {
+        return this.appSession.userId === item?.id;
+    }
+
     isParticipantOwner(item: UserDto): boolean {
         return this.creator?.id === item?.id;
     }
