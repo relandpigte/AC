@@ -5,6 +5,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { ProfileService } from '../_services/profile.service';
 import { AddExperienceComponent } from './_components/add-experience/add-experience.component';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 @Component({
   selector: 'app-experience',
   templateUrl: './experience.component.html',
@@ -21,7 +22,8 @@ export class ExperienceComponent extends AppComponentBase implements OnInit {
     injector: Injector,
     private _profileService: ProfileService,
     private _modalService: BsModalService,
-    private _workHistoryService: WorkHistoriesServiceProxy
+    private _workHistoryService: WorkHistoriesServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
   }
@@ -63,20 +65,18 @@ export class ExperienceComponent extends AppComponentBase implements OnInit {
   }
 
   onDeleteClick(workHistory){
-    this.message.confirm(
-      undefined,
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this._workHistoryService.delete(workHistory.id)
+    const options: ModalDialogOptions = {
+      title: undefined,
+      text: undefined,
+      confirmCb: (): void => {
+        this._workHistoryService.delete(workHistory.id)
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
             this.notify.success(this.l('SuccessfullyDeleted'));
             this.getUserWorkHistories();
           });
-        }
       }
-    );
-
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 }

@@ -4,6 +4,8 @@ import { ResearchMethodDto, ResearchMethodsServiceProxy } from '@shared/service-
 import * as _ from 'lodash-es';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { TreeNode } from 'primeng/api';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { takeUntil } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-research-method-tree',
@@ -20,6 +22,7 @@ export class ResearchMethodTreeComponent extends AppComponentBase implements OnI
     injector: Injector,
     private _researchMethodsService: ResearchMethodsServiceProxy,
     private _modalRef: BsModalRef,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
   }
@@ -76,11 +79,14 @@ export class ResearchMethodTreeComponent extends AppComponentBase implements OnI
 
   private close(): void {
     if (this.selectedResearchMethods.length > 0) {
-      this.message.confirm(this.l('ResearchMethodsNotSavedWarning'), undefined, (result: boolean) => {
-        if (result) {
+      const options: ModalDialogOptions = {
+        title: this.l('AreYouSure'),
+        text: this.l('ResearchMethodsNotSavedWarning'),
+        confirmCb: (): void => {
           this._modalRef.hide();
         }
-      });
+      };
+      this._modalDialogService.showConfirmDialog(options);
     } else {
       this._modalRef.hide();
     }

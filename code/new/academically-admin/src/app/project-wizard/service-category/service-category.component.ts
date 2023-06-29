@@ -5,6 +5,8 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { CreateProjectDto, Service2Dto, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { ServiceWizardService } from '../_services/service-wizard.service';
 import { finalize } from 'rxjs/operators';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { takeUntil } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-service-category',
@@ -22,7 +24,8 @@ export class ServiceCategoryComponent extends AppComponentBase implements OnInit
     injector: Injector,
     private _router: Router,
     private _servicesService: ServicesServiceProxy,
-    private _serviceWizardService: ServiceWizardService
+    private _serviceWizardService: ServiceWizardService,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
   }
@@ -63,16 +66,15 @@ export class ServiceCategoryComponent extends AppComponentBase implements OnInit
   }
 
   onCancelClick(): void {
-    this.message.confirm(
-      this.l('CancelServiceWizardMessage'),
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this._serviceWizardService.clear();
-          this._router.navigate(['/app/dashboard']);
-        }
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('CancelServiceWizardMessage'),
+      confirmCb: (): void => {
+        this._serviceWizardService.clear();
+        this._router.navigate(['/app/dashboard']);
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   onNextClick(): void {

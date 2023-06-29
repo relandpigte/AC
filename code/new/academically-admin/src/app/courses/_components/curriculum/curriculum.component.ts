@@ -6,6 +6,7 @@ import { CourseSectionDto, CourseSectionsServiceProxy, CourseSectionStatus, Cour
 import { takeUntil, finalize } from 'rxjs/operators';
 import { DragulaService } from 'ng2-dragula';
 import { CourseEllipseState } from './../../_models/courseEllipseType';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 @Component({
   selector: 'app-curriculum',
@@ -25,7 +26,8 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
     injector: Injector,
     private _modalService: BsModalService,
     private _courseSectionsService: CourseSectionsServiceProxy,
-    private dragulaService: DragulaService
+    private dragulaService: DragulaService,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this.dragulaService.createGroup('Course', {
@@ -95,19 +97,18 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
   }
 
   onDeleteClick(id): void {
-    this.message.confirm(
-      this.l('DeleteCourseSection'),
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this._courseSectionsService.delete(id)
-            .subscribe(() => {
-              this.notify.success(this.l('SuccessfullyDeleted'));
-              this.getCourseSections();
-            });
-        }
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('DeleteCourseSection'),
+      confirmCb: (): void => {
+        this._courseSectionsService.delete(id)
+          .subscribe(() => {
+            this.notify.success(this.l('SuccessfullyDeleted'));
+            this.getCourseSections();
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
 

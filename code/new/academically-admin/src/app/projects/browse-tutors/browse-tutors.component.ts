@@ -4,6 +4,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
 import { GetAvailalbeTutorDto, GetAvailalbeTutorDtoPagedResultDto, ProjectsServiceProxy, UserDto, UserDtoPagedResultDto } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 class PagedTutorsRequestDto extends PagedAndSortedRequestDto {
   searchFilter: string;
@@ -26,6 +27,7 @@ export class BrowseTutorsComponent extends PagedListingComponentBase<UserDto> {
     injector: Injector,
     private _route: ActivatedRoute,
     private _projectsService: ProjectsServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this._route.parent.parent.paramMap.subscribe(paramMap => {
@@ -36,27 +38,24 @@ export class BrowseTutorsComponent extends PagedListingComponentBase<UserDto> {
   }
 
   onInviteToQuoteClick(availableTutor: GetAvailalbeTutorDto): void {
-    this.message.confirm(
-      undefined,
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this.isSendingInvitation[availableTutor.tutor.id] = true;
-          this._projectsService.sendProjectInvitation(this.projectId, availableTutor.tutor.id)
-            .pipe(
-              takeUntil(this.destroyed$),
-              finalize(() => {
-                this.isSendingInvitation[availableTutor.tutor.id] = false;
-              })
-            )
-            .subscribe(() => {
-              this.notify.success(this.l('InvitationSent'));
+    const options: ModalDialogOptions = {
+      confirmCb: (): void => {
+        this.isSendingInvitation[availableTutor.tutor.id] = true;
+        this._projectsService.sendProjectInvitation(this.projectId, availableTutor.tutor.id)
+          .pipe(
+            takeUntil(this.destroyed$),
+            finalize(() => {
+              this.isSendingInvitation[availableTutor.tutor.id] = false;
+            })
+          )
+          .subscribe(() => {
+            this.notify.success(this.l('InvitationSent'));
 
-              this.list(new PagedTutorsRequestDto,this.pageNumber,Function)
-            });
-        }
+            this.list(new PagedTutorsRequestDto,this.pageNumber,Function)
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   protected list(

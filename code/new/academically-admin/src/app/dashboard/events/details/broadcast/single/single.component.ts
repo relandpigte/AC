@@ -6,6 +6,7 @@ import { AppConsts } from '@shared/AppConsts';
 import { EventDto, EventsServiceProxy, EventStatus } from '@shared/service-proxies/service-proxies';
 import { takeUntil } from 'rxjs/operators';
 import { EventService } from '../../../_services/event.service';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 @Component({
   selector: 'app-single',
@@ -24,6 +25,7 @@ export class SingleComponent extends AppComponentBase implements OnInit {
     route: ActivatedRoute,
     private _eventService: EventService,
     private _eventsService: EventsServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     route.paramMap.subscribe(paramMap => {
@@ -50,8 +52,10 @@ export class SingleComponent extends AppComponentBase implements OnInit {
   }
 
   onPublishClick(): void {
-    this.message.confirm(this.l('PublishEventConfirmationMessage'), undefined, (result) => {
-      if (result) {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('PublishEventConfirmationMessage'),
+      confirmCb: (): void => {
         this._eventsService.updateStatus(this.model.id, EventStatus.Published)
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
@@ -59,12 +63,15 @@ export class SingleComponent extends AppComponentBase implements OnInit {
             this.l('SavedSuccessfully');
           });
       }
-    });
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   onUnpublishClick(): void {
-    this.message.confirm(this.l('UnpublishEventConfirmationMessage'), undefined, (result) => {
-      if (result) {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('UnpublishEventConfirmationMessage'),
+      confirmCb: (): void => {
         this._eventsService.updateStatus(this.model.id, EventStatus.Draft)
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
@@ -72,7 +79,8 @@ export class SingleComponent extends AppComponentBase implements OnInit {
             this.l('SavedSuccessfully');
           });
       }
-    });
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   private getEvent(): void {

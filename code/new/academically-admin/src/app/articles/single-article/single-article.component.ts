@@ -6,6 +6,8 @@ import { ArticleService } from '../_services/article.service';
 import { takeUntil } from 'rxjs/operators';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppConsts } from '@shared/AppConsts';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { finalize } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-single-article',
@@ -24,6 +26,7 @@ export class SingleArticleComponent extends AppComponentBase implements OnInit {
     route: ActivatedRoute,
     private _articleService: ArticleService,
     private _articlesService: ArticlesServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     route.paramMap.subscribe(paramMap => {
@@ -50,8 +53,10 @@ export class SingleArticleComponent extends AppComponentBase implements OnInit {
   }
 
   onPublishClick(): void {
-    this.message.confirm(this.l('PublishArticleConfirmationMessage'), undefined, (result) => {
-      if (result) {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('PublishArticleConfirmationMessage'),
+      confirmCb: (): void => {
         this._articlesService.updateStatus(this.model.id, ArticleStatus.Published)
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
@@ -59,12 +64,15 @@ export class SingleArticleComponent extends AppComponentBase implements OnInit {
             this.l('SavedSuccessfully');
           });
       }
-    });
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   onUnpublishClick(): void {
-    this.message.confirm(this.l('UnpublishArticleConfirmationMessage'), undefined, (result) => {
-      if (result) {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('UnpublishArticleConfirmationMessage'),
+      confirmCb: (): void => {
         this._articlesService.updateStatus(this.model.id, ArticleStatus.Draft)
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
@@ -72,7 +80,8 @@ export class SingleArticleComponent extends AppComponentBase implements OnInit {
             this.l('SavedSuccessfully');
           });
       }
-    });
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   private getArticle(): void {

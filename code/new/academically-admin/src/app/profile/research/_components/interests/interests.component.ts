@@ -6,6 +6,8 @@ import * as _ from 'lodash';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { CreateEditInterestComponent } from './create-edit-interest/create-edit-interest.component';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { takeUntil } from '@node_modules/rxjs/operators';
 
 class PagedUserResearchInterestsRequestDto extends PagedAndSortedRequestDto {
   userIdFilter: number;
@@ -26,6 +28,7 @@ export class InterestsComponent extends PagedListingComponentBase<UserResearchIn
     private _appSession: AppSessionService,
     private _modalService: BsModalService,
     private _userResearchInterestsService: UserResearchInterestsServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this.pageSize = 5;
@@ -60,20 +63,19 @@ export class InterestsComponent extends PagedListingComponentBase<UserResearchIn
   }
 
   onDeleteClick(userResearchInterest: UserResearchInterestDto): void {
-    this.message.confirm(
-      undefined,
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this._userResearchInterestsService.delete(userResearchInterest.id)
-            .subscribe(() => {
-              this.notify.success('SuccessfullyDeleted');
-              this.pageNumber = 1;
-              this.refresh();
-            });
-        }
+    const options: ModalDialogOptions = {
+      title: undefined,
+      text: undefined,
+      confirmCb: (): void => {
+        this._userResearchInterestsService.delete(userResearchInterest.id)
+          .subscribe(() => {
+            this.notify.success('SuccessfullyDeleted');
+            this.pageNumber = 1;
+            this.refresh();
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   private showCreateEditUserResearchInterestMdoal(userResearchInterest?: UserResearchInterestDto): void {

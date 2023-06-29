@@ -4,6 +4,8 @@ import { AuthenticatorDto, AccountServiceProxy } from '@shared/service-proxies/s
 import { NgxQrcodeElementTypes, NgxQrcodeErrorCorrectionLevels } from '@techiediaries/ngx-qrcode';
 import { pipe } from 'rxjs';
 import { takeUntil, finalize } from 'rxjs/operators';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { take } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-two-factor-authentication',
@@ -21,6 +23,7 @@ export class TwoFactorAuthenticationComponent extends AppComponentBase implement
   constructor(
     injector: Injector,
     private _accountService: AccountServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
   }
@@ -47,28 +50,28 @@ export class TwoFactorAuthenticationComponent extends AppComponentBase implement
   on2FaStatusChange(): void {
     this.is2FaEnabled = !this.is2FaEnabled;
     if (!this.is2FaEnabled && this.model.isEnabled) {
-      this.message.confirm(
-        this.l('TwoFactorAuthenticationDisableConfirmationMessage'),
-        undefined,
-        (result: boolean) => {
-          if (result) {
-            this.is2FaLoading = true;
-            this._accountService.disableUserTwoFactorAuthentication()
-              .pipe(
-                takeUntil(this.destroyed$),
-                pipe(finalize(() => {
-                  this.is2FaLoading = false;
-                })),
-              )
-              .subscribe(() => {
-                this.model.isEnabled = false;
-                this.notify.success(this.l('TwoFactorAuthenticationDisabledMessage'));
-              });
-          } else {
-            this.is2FaEnabled = true;
-          }
+      const options: ModalDialogOptions = {
+        title: this.l('AreYouSure'),
+        text: this.l('TwoFactorAuthenticationDisableConfirmationMessage'),
+        confirmCb: (): void => {
+          this.is2FaLoading = true;
+          this._accountService.disableUserTwoFactorAuthentication()
+            .pipe(
+              takeUntil(this.destroyed$),
+              pipe(finalize(() => {
+                this.is2FaLoading = false;
+              })),
+            )
+            .subscribe(() => {
+              this.model.isEnabled = false;
+              this.notify.success(this.l('TwoFactorAuthenticationDisabledMessage'));
+            });
+        },
+        cancelCb: (): void => {
+          this.is2FaEnabled = true;
         }
-      );
+      };
+      this._modalDialogService.showConfirmDialog(options);
     }
   }
 

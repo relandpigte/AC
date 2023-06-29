@@ -1,0 +1,61 @@
+::ng-deep {
+    .modal-dialog-confirmation {
+        max-width: 380px !important;
+        margin-left: auto;
+        margin-right: auto;
+
+        .modal-content {
+            border: 0 none;
+        }
+    }
+}
+
+.card {
+    border: 0 none;
+
+    &-header {
+        padding: 40px 20px 0;
+        border: 0 none;
+
+        &-title {
+            font-size: 20px;
+            line-height: 20px;
+            font-weight: 600;
+            color: #12263F;
+            text-align: center;
+        }
+    }
+
+    &-body {
+        text-align: center;
+        color: #6E84A3;
+        font-size: 13px;
+        padding: 12px 20px 0;
+    }
+
+    &-footer {
+        padding: 24px 20px 20px;
+        border: 0 none;
+
+        button {
+            line-height: 32px;
+            height: 32px;
+            padding: 0;
+            flex: 1 1 0;
+            width: 0;
+
+            &.btn-confirm {
+                background-color: #2C7BE5;
+                border: 1px solid #2C7BE5;
+                color: white;
+                margin-left: 8px;
+            }
+
+            &.btn-cancel {
+                border: 1px solid #E4EBF6;
+                color: #3B516C;
+                margin-right: 8px;
+            }
+        }
+    }
+}

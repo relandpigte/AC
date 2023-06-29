@@ -18,6 +18,7 @@ import { Subscription } from 'rxjs/internal/Subscription';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { TutorWizardStepDeclinedComponent } from '../_components/tutor-wizard-step-declined/tutor-wizard-step-declined.component';
 import { BecomeATutorService } from '../_services/become-a-tutor.service';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 enum PhoneVerificationState {
   NotSent,
@@ -64,6 +65,7 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit, 
     private _profilesService: ProfilesServiceProxy,
     private _tutorWizardService: TutorWizardServiceProxy,
     private _becomeATutorService: BecomeATutorService,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
 
@@ -186,16 +188,15 @@ export class ContactNumberComponent extends AppComponentBase implements OnInit, 
 
   onEditPhoneNumberClick(): void {
     if (this.currentState === PhoneVerificationState.Verified) {
-      this.message.confirm(
-        undefined,
-        this.l('ReverifiyPhoneNumberConfirmationMessage'),
-        (result: boolean) => {
-          if (result) {
-            delete this.phoneNumber;
-            this.currentState = PhoneVerificationState.EditSent;
-          }
+      const options: ModalDialogOptions = {
+        title: this.l('AreYouSure'),
+        text: this.l('ReverifiyPhoneNumberConfirmationMessage'),
+        confirmCb: (): void => {
+          delete this.phoneNumber;
+          this.currentState = PhoneVerificationState.EditSent;
         }
-      );
+      };
+      this._modalDialogService.showConfirmDialog(options);
     } else {
       this.currentState = PhoneVerificationState.EditSent;
     }

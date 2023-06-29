@@ -7,6 +7,7 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { TutorWizardStepDeclinedComponent } from '../_components/tutor-wizard-step-declined/tutor-wizard-step-declined.component';
 import { BecomeATutorService } from '../_services/become-a-tutor.service';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 @Component({
   selector: 'app-about-you',
@@ -31,7 +32,8 @@ export class AboutYouComponent extends AppComponentBase implements OnInit {
     private _modalService: BsModalService,
     private _tutorApplicationService: TutorApplicationServiceProxy,
     private _becomeATutorService: BecomeATutorService,
-    private _appSession: AppSessionService
+    private _appSession: AppSessionService,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
   }
@@ -81,15 +83,14 @@ export class AboutYouComponent extends AppComponentBase implements OnInit {
   }
 
   onCancelClick(): void {
-    this.message.confirm(
-      this.l('CancelTutorWizardMessage'),
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this._router.navigate(['/app/dashboard']);
-        }
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('CancelTutorWizardMessage'),
+      confirmCb: (): void => {
+        this._router.navigate(['/app/dashboard']);
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   onNavigateNextScreen(): void {

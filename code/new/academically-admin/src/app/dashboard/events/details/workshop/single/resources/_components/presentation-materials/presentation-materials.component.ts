@@ -6,6 +6,7 @@ import { EventDto, EventResourceDto, EventResourcesServiceProxy, EventResourceTy
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { UploadPresentationMaterialComponent } from '../upload-presentation-material/upload-presentation-material.component';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 class PagedWorkshopResourceRequestDto extends PagedAndSortedRequestDto {
   workshopIdFilter: string;
@@ -31,6 +32,7 @@ export class PresentationMaterialsComponent extends PagedListingComponentBase<Ev
     private _workshopService: EventService,
     private _uploadService: UploadService,
     private _workshopResourcesService: EventResourcesServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this._workshopService.eventCreated$
@@ -57,8 +59,10 @@ export class PresentationMaterialsComponent extends PagedListingComponentBase<Ev
   }
 
   onDeleteClick(workshopResource: EventResourceDto): void {
-    this.message.confirm(this.l('DeleteWorkshopResourceConfirmationMessage'), undefined, (result => {
-      if (result) {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('DeleteWorkshopResourceConfirmationMessage'),
+      confirmCb: (): void => {
         this.isLoading = true;
         this._uploadService.delete(workshopResource.document, workshopResource.id)
           .pipe(takeUntil(this.destroyed$))
@@ -77,7 +81,8 @@ export class PresentationMaterialsComponent extends PagedListingComponentBase<Ev
               });
           });
       }
-    }));
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   protected list(

@@ -1,0 +1,14 @@
+<div class="modal-card card" role="dialog">
+    <div class="modal-content">
+        <div class="card-header">
+            <h3 class="card-header-title">{{ title }}</h3>
+        </div>
+        <div class="card-body">
+            {{ text }}
+        </div>
+        <div class="card-footer d-flex justify-content-center">
+            <button type="button" class="btn btn-cancel" (click)="onCancel()">{{ btnCancelText }}</button>
+            <button type="button" class="btn btn-confirm" (click)="onConfirm()">{{ btnConfirmText }}</button>
+        </div>
+    </div>
+</div>

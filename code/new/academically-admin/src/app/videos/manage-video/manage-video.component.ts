@@ -5,6 +5,8 @@ import { VideosServiceProxy, VideoDto, VideoStatus } from '@shared/service-proxi
 import { ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { VideoService } from '../_services/video.service';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { finalize } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-manage-video',
@@ -22,6 +24,7 @@ export class ManageVideoComponent extends AppComponentBase implements OnInit {
     route: ActivatedRoute,
     private _videoService: VideoService,
     private _videosService: VideosServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     route.paramMap.subscribe(paramMap => {
@@ -43,8 +46,10 @@ export class ManageVideoComponent extends AppComponentBase implements OnInit {
   }
 
   onPublishClick(): void {
-    this.message.confirm(this.l('PublishVideoConfirmationMessage'), undefined, (result) => {
-      if (result) {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('PublishVideoConfirmationMessage'),
+      confirmCb: (): void => {
         this._videosService.updateStatus(this.model.id, VideoStatus.Published)
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
@@ -52,12 +57,15 @@ export class ManageVideoComponent extends AppComponentBase implements OnInit {
             this.l('SavedSuccessfully');
           });
       }
-    });
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   onUnpublishClick(): void {
-    this.message.confirm(this.l('UnpublishVideoConfirmationMessage'), undefined, (result) => {
-      if (result) {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('UnpublishVideoConfirmationMessage'),
+      confirmCb: (): void => {
         this._videosService.updateStatus(this.model.id, VideoStatus.Draft)
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
@@ -65,7 +73,8 @@ export class ManageVideoComponent extends AppComponentBase implements OnInit {
             this.l('SavedSuccessfully');
           });
       }
-    });
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   private getVideo(): void {

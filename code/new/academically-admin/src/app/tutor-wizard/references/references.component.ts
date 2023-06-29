@@ -11,6 +11,7 @@ import { finalize, takeUntil } from 'rxjs/operators';
 import { TutorWizardStepDeclinedComponent } from '../_components/tutor-wizard-step-declined/tutor-wizard-step-declined.component';
 import { BecomeATutorService } from '../_services/become-a-tutor.service';
 import { CreateEditReferenceComponent } from './create-edit-reference/create-edit-reference.component';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 @Component({
   selector: 'app-references',
@@ -45,7 +46,8 @@ export class ReferencesComponent extends PagedListingComponentBase<ReferenceDto>
     private _becomeATutorService: BecomeATutorService,
     private _tutorWizardService: TutorWizardServiceProxy,
     private _referencesService: ReferencesServiceProxy,
-    private _appSession: AppSessionService
+    private _appSession: AppSessionService,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this.sorting = this.headers[0].sortColumn;
@@ -119,27 +121,26 @@ export class ReferencesComponent extends PagedListingComponentBase<ReferenceDto>
   }
 
   onDeleteClick(id: string): void {
-    this.message.confirm(
-      undefined,
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this.isTableLoading = true;
-          this._referencesService.delete(id)
-            .pipe(
-              takeUntil(this.destroyed$),
-              pipe(finalize(() => {
-                this.isTableLoading = false;
-              }))
-            )
-            .subscribe(() => {
-              this.notify.success('SuccessfullyDeleted');
-              this.pageNumber = 1;
-              this.refresh();
-            })
-        }
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('DeletePostConfirmationMessage'),
+      confirmCb: (): void => {
+        this.isTableLoading = true;
+        this._referencesService.delete(id)
+          .pipe(
+            takeUntil(this.destroyed$),
+            pipe(finalize(() => {
+              this.isTableLoading = false;
+            }))
+          )
+          .subscribe(() => {
+            this.notify.success('SuccessfullyDeleted');
+            this.pageNumber = 1;
+            this.refresh();
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   onNavigateNextScreen(): void {

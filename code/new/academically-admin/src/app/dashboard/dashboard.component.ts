@@ -8,6 +8,7 @@ import { CourseWizardComponent } from '@app/dashboard/courses/course-wizard/cour
 import { environment } from 'environments/environment';
 import { AppConsts } from '@shared/AppConsts';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,6 +27,7 @@ export class DashboardComponent extends AppComponentBase implements OnInit {
     private _router: Router,
     private _route: ActivatedRoute,
     private _paymentsService: PaymentsServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this.user = this.appSession.user;
@@ -75,14 +77,16 @@ export class DashboardComponent extends AppComponentBase implements OnInit {
   }
 
   onConnectStripeClick(): void {
-    this.message.confirm(
-      this.l('StripeOnboardingConfirmationMessage'),
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          window.location.href = environment.providers.stripe.onbloardLink(environment.providers.stripe.clientId, AppConsts.appBaseUrl);
-        }
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('StripeOnboardingConfirmationMessage'),
+      confirmCb: (): void => {
+        window.location.href = environment.providers.stripe.onbloardLink(
+          environment.providers.stripe.clientId,
+          AppConsts.appBaseUrl
+        );
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 }

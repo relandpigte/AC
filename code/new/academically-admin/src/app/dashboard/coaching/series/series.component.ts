@@ -7,6 +7,8 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { takeUntil } from 'rxjs/operators';
 import { CreateCoachingComponent } from '../_components/create-coaching/create-coaching.component';
 import { CoachingService } from '../_services/coaching.service';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { finalize } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-series',
@@ -27,6 +29,7 @@ export class SeriesComponent extends AppComponentBase implements OnInit {
     private _router: Router,
     private _coachingsService: CoachingsServiceProxy,
     private _coachingService: CoachingService,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     route.paramMap.subscribe(paramMap => {
@@ -69,21 +72,26 @@ export class SeriesComponent extends AppComponentBase implements OnInit {
   }
 
   onPublishClick(): void {
-    this.message.confirm(this.l('PublishCoachingConfirmationMessage'), undefined, (result) => {
-      if (result) {
-        this._coachingsService.updateStatus(this.model.id, CoachingStatus.Published)
-          .pipe(takeUntil(this.destroyed$))
-          .subscribe(() => {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('PublishCoachingConfirmationMessage'),
+      confirmCb: async (): Promise<void> => {
+        await this._coachingsService.updateStatus(this.model.id, CoachingStatus.Published)
+          .pipe(takeUntil(this.destroyed$), finalize(() => {
             this.model.status = CoachingStatus.Published;
             this.l('SavedSuccessfully');
-          });
+          }))
+          .toPromise();
       }
-    });
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   onUnpublishClick(): void {
-    this.message.confirm(this.l('UnpublishCoachingConfirmationMessage'), undefined, (result) => {
-      if (result) {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('UnpublishCoachingConfirmationMessage'),
+      confirmCb: (): void => {
         this._coachingsService.updateStatus(this.model.id, CoachingStatus.Draft)
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
@@ -91,7 +99,8 @@ export class SeriesComponent extends AppComponentBase implements OnInit {
             this.l('SavedSuccessfully');
           });
       }
-    });
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   private getCoachingSeries(): void {

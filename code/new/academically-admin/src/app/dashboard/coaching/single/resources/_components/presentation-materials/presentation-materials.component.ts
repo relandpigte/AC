@@ -6,6 +6,7 @@ import { CoachingDto, CoachingResourcesServiceProxy, CoachingResourceDto, Coachi
 import { CoachingService } from '@app/dashboard/coaching/_services/coaching.service';
 import { PagedListingComponentBase, PagedAndSortedRequestDto } from '@shared/paged-listing-component-base';
 import { UploadService } from '@app/_shared/services/upload.service';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 class PagedCoachingResourceRequestDto extends PagedAndSortedRequestDto {
   coachingIdFilter: string;
@@ -31,6 +32,7 @@ export class PresentationMaterialsComponent extends PagedListingComponentBase<Co
     private _coachingService: CoachingService,
     private _uploadService: UploadService,
     private _coachingResourcesService: CoachingResourcesServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this._coachingService.coachingCreated$
@@ -57,8 +59,10 @@ export class PresentationMaterialsComponent extends PagedListingComponentBase<Co
   }
 
   onDeleteClick(coachingResource: CoachingResourceDto): void {
-    this.message.confirm(this.l('DeleteCoachingResourceConfirmationMessage'), undefined, (result => {
-      if (result) {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('DeleteCoachingResourceConfirmationMessage'),
+      confirmCb: (): void => {
         this.isLoading = true;
         this._uploadService.delete(coachingResource.document, coachingResource.id)
           .pipe(takeUntil(this.destroyed$))
@@ -77,7 +81,8 @@ export class PresentationMaterialsComponent extends PagedListingComponentBase<Co
               });
           });
       }
-    }));
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   protected list(

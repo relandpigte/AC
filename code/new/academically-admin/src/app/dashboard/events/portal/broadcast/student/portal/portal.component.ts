@@ -23,6 +23,7 @@ import { SignalAction as PortalSignalAction } from './_components/polls/polls.co
 import { PortalPollService } from './_components/polls/_services/portal-poll.service';
 import { BsModalService, ModalOptions, BsModalRef } from 'ngx-bootstrap/modal';
 import { AttendeeOpenDialogComponent } from './_components/polls/_components/attendee-open-dialog/attendee-open-dialog.component';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 enum SignalAction {
   StartEvent,
@@ -101,6 +102,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     private _portalPollService: PortalPollService,
     private _eventSessionsService: EventSessionsServiceProxy,
     private _modalService: BsModalService,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this.pipeDestroy(route.paramMap, (paramMap) => {
@@ -186,17 +188,16 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
   }
 
   async onEndEventClick(): Promise<void> {
-    this.message.confirm(
-      this.l('EndEventConfirmation'),
-      undefined,
-      async (result: boolean) => {
-        if (result) {
-          this.eventStarted = false;
-          this.eventJoined = false;
-          // await this.eventSessionsHub.invoke('endEvent', this.attendeeIds, JSON.stringify(this.session));
-        }
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('EndEventConfirmation'),
+      confirmCb: (): void => {
+        this.eventStarted = false;
+        this.eventJoined = false;
+        // await this.eventSessionsHub.invoke('endEvent', this.attendeeIds, JSON.stringify(this.session));
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   async onShareVideo(file: File): Promise<void> {

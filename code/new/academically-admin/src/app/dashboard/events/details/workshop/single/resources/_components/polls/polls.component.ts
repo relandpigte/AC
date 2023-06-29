@@ -5,6 +5,7 @@ import { EventDto, EventPollDto, EventPollsServiceProxy } from '@shared/service-
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { CreateEditPollComponent } from '../create-edit-poll/create-edit-poll.component';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 class PagedWorkshopPollRequestDto extends PagedAndSortedRequestDto {
   workshopIdFilter: string;
@@ -25,6 +26,7 @@ export class PollsComponent extends PagedListingComponentBase<EventPollDto> impl
     private _modalService: BsModalService,
     private _workshopService: EventService,
     private _workshopPollsService: EventPollsServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this._workshopService.eventCreated$
@@ -56,8 +58,10 @@ export class PollsComponent extends PagedListingComponentBase<EventPollDto> impl
   }
 
   onDeleteClick(workshopPoll: EventPollDto): void {
-    this.message.confirm(this.l('DeleteWorkshopPollConfirmationMessage'), undefined, (result => {
-      if (result) {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('DeleteWorkshopPollConfirmationMessage'),
+      confirmCb: (): void => {
         this.isLoading = true;
         this._workshopPollsService.delete(workshopPoll.id)
           .pipe(
@@ -72,7 +76,8 @@ export class PollsComponent extends PagedListingComponentBase<EventPollDto> impl
             this.refresh();
           });
       }
-    }));
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   protected list(

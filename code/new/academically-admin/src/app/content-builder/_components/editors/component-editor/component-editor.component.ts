@@ -8,6 +8,8 @@ import { ComponentContent } from '../../../_models/component-content';
 import { MarginType } from '../../../_models/margin-type';
 import { PageBuilderService } from '../../../_services/page-builder.service';
 import { CreateEditMarginComponent } from '../../create-edit-margin/create-edit-margin.component';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { finalize } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-component-editor',
@@ -24,6 +26,7 @@ export class ComponentEditorComponent extends AppComponentBase implements OnInit
     private _modalService: BsModalService,
     private _pageBuilderService: PageBuilderService,
     private _contentMarginsService: ContentMarginsServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
   }
@@ -53,24 +56,23 @@ export class ComponentEditorComponent extends AppComponentBase implements OnInit
   }
 
   onDeleteCustomMarginClick(contentMargin: ContentMarginDto): void {
-    this.message.confirm(
-      undefined,
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this._contentMarginsService.delete(contentMargin.id)
-            .pipe(takeUntil(this.destroyed$))
-            .subscribe(() => {
-              this.notify.success(this.l('SuccessfullyDeleted'));
-              this.getContentMargins();
-              if (this.component.marginType === contentMargin.id) {
-                this.component.marginType = MarginType.Narrow;
-                this.setLayout();
-              }
-            });
-        }
+    const options: ModalDialogOptions = {
+      title: undefined,
+      text: undefined,
+      confirmCb: (): void => {
+        this._contentMarginsService.delete(contentMargin.id)
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(() => {
+            this.notify.success(this.l('SuccessfullyDeleted'));
+            this.getContentMargins();
+            if (this.component.marginType === contentMargin.id) {
+              this.component.marginType = MarginType.Narrow;
+              this.setLayout();
+            }
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   private getContentMargins(): void {

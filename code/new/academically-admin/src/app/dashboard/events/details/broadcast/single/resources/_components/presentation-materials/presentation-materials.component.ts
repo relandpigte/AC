@@ -6,6 +6,7 @@ import { EventDto, EventResourcesServiceProxy, EventResourceDto, EventResourceTy
 import { EventService } from '@app/dashboard/events/_services/event.service';
 import { PagedListingComponentBase, PagedAndSortedRequestDto } from '@shared/paged-listing-component-base';
 import { UploadService } from '@app/_shared/services/upload.service';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 class PagedEventResourceRequestDto extends PagedAndSortedRequestDto {
   eventIdFilter: string;
@@ -31,6 +32,7 @@ export class PresentationMaterialsComponent extends PagedListingComponentBase<Ev
     private _eventService: EventService,
     private _uploadService: UploadService,
     private _eventResourcesService: EventResourcesServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this._eventService.eventCreated$
@@ -57,8 +59,10 @@ export class PresentationMaterialsComponent extends PagedListingComponentBase<Ev
   }
 
   onDeleteClick(eventResource: EventResourceDto): void {
-    this.message.confirm(this.l('DeleteEventResourceConfirmationMessage'), undefined, (result => {
-      if (result) {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('DeleteEventResourceConfirmationMessage'),
+      confirmCb: (): void => {
         this.isLoading = true;
         this._uploadService.delete(eventResource.document, eventResource.id)
           .pipe(takeUntil(this.destroyed$))
@@ -77,7 +81,8 @@ export class PresentationMaterialsComponent extends PagedListingComponentBase<Ev
               });
           });
       }
-    }));
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   protected list(

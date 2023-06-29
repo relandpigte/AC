@@ -5,6 +5,7 @@ import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/pag
 import { CoachingDto, CoachingDtoPagedResultDto, CoachingsServiceProxy, CoachingStatus, CoachingType } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import { finalize, takeUntil } from 'rxjs/operators';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 class PagedCoachingRequestDto extends PagedAndSortedRequestDto {
   userIdFilter: number;
@@ -35,6 +36,7 @@ export class ProgramsComponent extends PagedListingComponentBase<CoachingDto> im
     private _coachingsService: CoachingsServiceProxy,
     private _coachingService: CoachingService,
     private _uploadService: UploadService,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this._coachingService.coachingCreated$.subscribe(coaching => {
@@ -50,20 +52,19 @@ export class ProgramsComponent extends PagedListingComponentBase<CoachingDto> im
   }
 
   onDeleteClick(id: string): void {
-    this.message.confirm(
-      this.l('DeleteCoachingConfirmationMessage'),
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this._coachingsService.delete(id)
-            .pipe(takeUntil(this.destroyed$))
-            .subscribe(() => {
-              this.notify.success(this.l('SuccessfullyDeleted'));
-              this.refresh();
-            });
-        }
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('DeleteCoachingConfirmationMessage'),
+      confirmCb: async (): Promise<void> => {
+        await this._coachingsService.delete(id)
+          .pipe(takeUntil(this.destroyed$), finalize(() => {
+            this.notify.success(this.l('SuccessfullyDeleted'));
+            this.refresh();
+          }))
+          .toPromise();
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   protected list(

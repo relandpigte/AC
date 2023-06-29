@@ -5,6 +5,7 @@ import { TableHeaderSortData } from '@shared/components/table-header-sort/table-
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { CourseWizardComponent } from '../course-wizard/course-wizard.component';
 import { takeUntil, finalize } from 'rxjs/operators';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 class PagedCourseRequestDto extends PagedAndSortedRequestDto {
   userIdFilter: number;
@@ -34,6 +35,7 @@ export class TeachingComponent extends PagedListingComponentBase<CourseDto> impl
     injector: Injector,
     private _modalService: BsModalService,
     private _coursesService: CoursesServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this.sorting = this.headers[0].sortColumn;
@@ -61,26 +63,25 @@ export class TeachingComponent extends PagedListingComponentBase<CourseDto> impl
   }
 
   onDeleteClick(id: string): void {
-    this.message.confirm(
-      undefined,
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this.isLoading = true;
-          this._coursesService.delete(id)
-            .pipe(
-              takeUntil(this.destroyed$),
-              finalize(() => {
-                this.isLoading = false;
-              }),
-            )
-            .subscribe(() => {
-              this.notify.success('SuccessfullyDeleted');
-              this.getDataPage(1);
-            });
-        }
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: undefined,
+      confirmCb: (): void => {
+        this.isLoading = true;
+        this._coursesService.delete(id)
+          .pipe(
+            takeUntil(this.destroyed$),
+            finalize(() => {
+              this.isLoading = false;
+            }),
+          )
+          .subscribe(() => {
+            this.notify.success('SuccessfullyDeleted');
+            this.getDataPage(1);
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   onViewCourse(course: CourseDto) {

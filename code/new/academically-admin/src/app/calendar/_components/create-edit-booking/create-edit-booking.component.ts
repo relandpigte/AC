@@ -14,6 +14,7 @@ import * as moment from 'moment';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { takeUntil, finalize } from 'rxjs/operators';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 @Component({
   selector: 'app-create-edit-booking',
@@ -49,6 +50,7 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
     injector: Injector,
     private _modal: BsModalRef,
     private _calendarEventsService: CalendarEventsServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this.startTime = new Date();
@@ -147,61 +149,59 @@ export class CreateEditBookingComponent extends AppComponentBase implements OnIn
           });
       } else if (this.isCancellingABooking) {
         this.isLoading = false;
-        this.message.confirm(
-          this.l('CancelBookingConfirmationMessage'),
-          undefined,
-          (result: boolean) => {
-            if (result) {
-              this.isLoading = true;
-              rescheduleModel.calendarEvent = _.cloneDeep(this.model);
-              rescheduleModel.calendarEvent.creatorUser = null;
-              rescheduleModel.calendarEvent.projectOffer = null;
-              rescheduleModel.calendarEvent.project = null;
-              rescheduleModel.comments = this.comments;
-              this._calendarEventsService.cancel(rescheduleModel)
-                .pipe(
-                  takeUntil(this.destroyed$),
-                  finalize(() => {
-                    this.isLoading = false;
-                  }),
-                )
-                .subscribe(() => {
-                  this.notify.success(this.l('TheBookingRequestWasCancelled'));
-                  this.modelSaved.emit();
-                  this._modal.hide();
-                });
-            }
+        const options: ModalDialogOptions = {
+          title: this.l('AreYouSure'),
+          text: this.l('CancelBookingConfirmationMessage'),
+          confirmCb: (): void => {
+            this.isLoading = true;
+            rescheduleModel.calendarEvent = _.cloneDeep(this.model);
+            rescheduleModel.calendarEvent.creatorUser = null;
+            rescheduleModel.calendarEvent.projectOffer = null;
+            rescheduleModel.calendarEvent.project = null;
+            rescheduleModel.comments = this.comments;
+            this._calendarEventsService.cancel(rescheduleModel)
+              .pipe(
+                takeUntil(this.destroyed$),
+                finalize(() => {
+                  this.isLoading = false;
+                }),
+              )
+              .subscribe(() => {
+                this.notify.success(this.l('TheBookingRequestWasCancelled'));
+                this.modelSaved.emit();
+                this._modal.hide();
+              });
           }
-        );
+        };
+        this._modalDialogService.showConfirmDialog(options);
       } else {
         this.isLoading = false;
-        this.message.confirm(
-          this.l('RescheduleBookingConfirmationMessage'),
-          undefined,
-          (result: boolean) => {
-            if (result) {
-              this.isLoading = true;
-              rescheduleModel.calendarEvent = _.cloneDeep(this.model);
-              rescheduleModel.calendarEvent.creatorUser = null;
-              rescheduleModel.calendarEvent.projectOffer = null;
-              rescheduleModel.calendarEvent.project = null;
-              rescheduleModel.oldStartTime = this.convertDateToMoment(this.tempStartTime);
-              rescheduleModel.oldEndTime = this.convertDateToMoment(this.tempEndTime);
-              rescheduleModel.comments = this.comments;
-              this._calendarEventsService.reschedule(rescheduleModel)
-                .pipe(
-                  takeUntil(this.destroyed$),
-                  finalize(() => {
-                    this.isLoading = false;
-                  }),
-                )
-                .subscribe(() => {
-                  this.modelSaved.emit();
-                  this._modal.hide();
-                });
-            }
+        const options: ModalDialogOptions = {
+          title: this.l('AreYouSure'),
+          text: this.l('RescheduleBookingConfirmationMessage'),
+          confirmCb: (): void => {
+            this.isLoading = true;
+            rescheduleModel.calendarEvent = _.cloneDeep(this.model);
+            rescheduleModel.calendarEvent.creatorUser = null;
+            rescheduleModel.calendarEvent.projectOffer = null;
+            rescheduleModel.calendarEvent.project = null;
+            rescheduleModel.oldStartTime = this.convertDateToMoment(this.tempStartTime);
+            rescheduleModel.oldEndTime = this.convertDateToMoment(this.tempEndTime);
+            rescheduleModel.comments = this.comments;
+            this._calendarEventsService.reschedule(rescheduleModel)
+              .pipe(
+                takeUntil(this.destroyed$),
+                finalize(() => {
+                  this.isLoading = false;
+                }),
+              )
+              .subscribe(() => {
+                this.modelSaved.emit();
+                this._modal.hide();
+              });
           }
-        );
+        };
+        this._modalDialogService.showConfirmDialog(options);
       }
       if (this.model.type === CalendarEventType.Personal) {
         this.model.tutorId = this.model.creatorUserId;

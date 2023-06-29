@@ -7,6 +7,7 @@ import { finalize, takeUntil } from 'rxjs/operators';
 import { CreateEditServiceComponent } from './_components/create-edit-service/create-edit-service.component';
 import { Services } from '../../../assets/services-icon.json';
 import * as _ from 'lodash';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 class ServiceMenuItem extends ServiceDto {
   icon: string;
   isActive?: boolean;
@@ -41,6 +42,7 @@ export class ServicesComponent extends AppComponentBase implements OnInit {
     private _modalService: BsModalService,
     private _userServicesService: UserServicesServiceProxy,
     private _profileService: ProfileService,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
   }
@@ -55,7 +57,6 @@ export class ServicesComponent extends AppComponentBase implements OnInit {
     this._profileService.isViewOnly$.subscribe(isViewOnly => {
       this.isReadOnly = isViewOnly;
     });
-    
   }
 
   onToggleCollapse(id: number): void {
@@ -96,23 +97,22 @@ export class ServicesComponent extends AppComponentBase implements OnInit {
   }
 
   onDeleteClick(id: string): void {
-    this.message.confirm(
-      undefined,
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this.deleteLoaders[id] = true;
-          this._userServicesService.delete(id)
-            .pipe(finalize(() => {
-              this.deleteLoaders[id] = false;
-            }))
-            .subscribe(() => {
-              this.getServiceTree();
-              this.notify.success('SuccessfullyDeleted');
-            });
-        }
+    const options: ModalDialogOptions = {
+      title: undefined,
+      text: undefined,
+      confirmCb: (): void => {
+        this.deleteLoaders[id] = true;
+        this._userServicesService.delete(id)
+          .pipe(finalize(() => {
+            this.deleteLoaders[id] = false;
+          }))
+          .subscribe(() => {
+            this.getServiceTree();
+            this.notify.success('SuccessfullyDeleted');
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   private getServiceTree(): void {

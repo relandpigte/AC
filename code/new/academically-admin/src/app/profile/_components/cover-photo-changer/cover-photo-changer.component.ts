@@ -6,6 +6,8 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { FileParameter, ProfilesServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { takeUntil } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-cover-photo-changer',
@@ -23,6 +25,7 @@ export class CoverPhotoChangerComponent extends AppComponentBase {
     private _modalService: BsModalService,
     private _profileService: ProfileService,
     private _profilesService: ProfilesServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this._profileService.user$.subscribe(user => {
@@ -84,22 +87,21 @@ export class CoverPhotoChangerComponent extends AppComponentBase {
   }
 
   onRemoveCoverPhoto(): void {
-    this.message.confirm(
-      undefined,
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this.isRemovingCoverPhoto = true;
-          this._profilesService.deleteCoverPhoto()
-            .subscribe(() => {
-              delete this.user.coverPhotoUrl;
-              delete this.appSession.user.coverPictureUrl;
-              this._profileService.user = this.user;
-              this.notify.success(this.l('CoverPhotoRemovedMessage'));
-              this.isRemovingCoverPhoto = false;
-            });
-        }
+    const options: ModalDialogOptions = {
+      title: undefined,
+      text: undefined,
+      confirmCb: (): void => {
+        this.isRemovingCoverPhoto = true;
+        this._profilesService.deleteCoverPhoto()
+          .subscribe(() => {
+            delete this.user.coverPhotoUrl;
+            delete this.appSession.user.coverPictureUrl;
+            this._profileService.user = this.user;
+            this.notify.success(this.l('CoverPhotoRemovedMessage'));
+            this.isRemovingCoverPhoto = false;
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 }
