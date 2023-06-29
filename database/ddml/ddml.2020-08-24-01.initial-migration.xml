@@ -21,6 +21,7 @@
             <column name="ClientName" type="VARCHAR(128)"/>
             <column name="BrowserInfo" type="VARCHAR(512)"/>
             <column name="Exception" type="VARCHAR(2000)"/>
+            <column name="ExceptionMessage" type="VARCHAR(2000)"/>
             <column name="ImpersonatorUserId" type="BIGINT"/>
             <column name="ImpersonatorTenantId" type="INT"/>
             <column name="CustomData" type="VARCHAR(2000)"/>

@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <VersionPrefix>1.0.0.0</VersionPrefix>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
     <AssemblyName>Academically.Core</AssemblyName>
     <PackageId>Academically.Core</PackageId>
@@ -15,9 +15,9 @@
     <EmbeddedResource Include="Localization\SourceFiles\*.xml" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Abp.AspNetCore.SignalR" Version="5.13.0" />
-    <PackageReference Include="Abp.AutoMapper" Version="5.13.0" />
-    <PackageReference Include="Abp.ZeroCore.EntityFrameworkCore" Version="5.13.0" />
+    <PackageReference Include="Abp.AspNetCore.SignalR" Version="7.0.0" />
+    <PackageReference Include="Abp.AutoMapper" Version="7.0.0" />
+    <PackageReference Include="Abp.ZeroCore.EntityFrameworkCore" Version="7.0.0" />
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="3.3.1" />
   </ItemGroup>
   <ItemGroup>

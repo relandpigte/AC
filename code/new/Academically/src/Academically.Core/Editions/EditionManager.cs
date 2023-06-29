@@ -1,6 +1,7 @@
 ﻿using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 
 namespace Academically.Editions
 {
@@ -10,10 +11,12 @@ namespace Academically.Editions
 
         public EditionManager(
             IRepository<Edition> editionRepository, 
-            IAbpZeroFeatureValueStore featureValueStore)
+            IAbpZeroFeatureValueStore featureValueStore,
+            IUnitOfWorkManager manager)
             : base(
                 editionRepository,
-                featureValueStore)
+                featureValueStore,
+                manager)
         {
         }
     }
