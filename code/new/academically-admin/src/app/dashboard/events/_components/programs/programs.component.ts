@@ -5,6 +5,7 @@ import { EventCategory, EventDto, EventDtoPagedResultDto, EventsServiceProxy, Ev
 import * as _ from 'lodash';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { EventService } from '../../_services/event.service';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 class PagedWorkshopRequestDto extends PagedAndSortedRequestDto {
   userIdFilter: number;
@@ -33,6 +34,7 @@ export class ProgramsComponent extends PagedListingComponentBase<EventDto> imple
     private _workshopsService: EventsServiceProxy,
     private _workshopService: EventService,
     private _uploadService: UploadService,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this._workshopService.eventCreated$.subscribe(workshop => {
@@ -48,20 +50,19 @@ export class ProgramsComponent extends PagedListingComponentBase<EventDto> imple
   }
 
   onDeleteClick(id: string): void {
-    this.message.confirm(
-      this.l('DeleteWorkshopConfirmationMessage'),
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this._workshopsService.delete(id)
-            .pipe(takeUntil(this.destroyed$))
-            .subscribe(() => {
-              this.notify.success(this.l('SuccessfullyDeleted'));
-              this.refresh();
-            });
-        }
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('DeleteWorkshopConfirmationMessage'),
+      confirmCb: (): void => {
+        this._workshopsService.delete(id)
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(() => {
+            this.notify.success(this.l('SuccessfullyDeleted'));
+            this.refresh();
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   protected list(

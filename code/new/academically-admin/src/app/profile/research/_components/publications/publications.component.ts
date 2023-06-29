@@ -6,6 +6,8 @@ import * as _ from 'lodash';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { CreateEditPublicationComponent } from './create-edit-publication/create-edit-publication.component';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { takeUntil } from '@node_modules/rxjs/operators';
 
 class PagedUserPublicationsRequestDto extends PagedAndSortedRequestDto {
   userIdFilter: number;
@@ -31,6 +33,7 @@ export class PublicationsComponent extends PagedListingComponentBase<UserResearc
     private _appSession: AppSessionService,
     private _modalService: BsModalService,
     private _userPublicationsService: UserPublicationsServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this.pageSize = 5;
@@ -74,20 +77,20 @@ export class PublicationsComponent extends PagedListingComponentBase<UserResearc
   }
 
   onDeleteClick(userPublication: UserPublicationDto): void {
-    this.message.confirm(
-      undefined,
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this._userPublicationsService.delete(userPublication.id)
-            .subscribe(() => {
-              this.notify.success('SuccessfullyDeleted');
-              this.pageNumber = 1;
-              this.refresh();
-            });
-        }
+
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: undefined,
+      confirmCb: (): void => {
+        this._userPublicationsService.delete(userPublication.id)
+          .subscribe(() => {
+            this.notify.success('SuccessfullyDeleted');
+            this.pageNumber = 1;
+            this.refresh();
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   private showCreateEditPublicationModal(userPublication?: UserPublicationDto): void {

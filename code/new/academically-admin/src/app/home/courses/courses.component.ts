@@ -6,6 +6,7 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { CourseWizardComponent } from '@app/dashboard/courses/course-wizard/course-wizard.component';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 @Component({
   selector: 'app-courses',
@@ -27,6 +28,7 @@ export class CoursesComponent extends PagedListingComponentBase<CourseDto> imple
     private _modalService: BsModalService,
     private _coursesService: CoursesServiceProxy,
     private _router: Router,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this.sorting = 'creationTime desc';
@@ -56,26 +58,25 @@ export class CoursesComponent extends PagedListingComponentBase<CourseDto> imple
   }
 
   onDeleteClick(id: string): void {
-    this.message.confirm(
-      undefined,
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this.isLoading = true;
-          this._coursesService.delete(id)
-            .pipe(
-              takeUntil(this.destroyed$),
-              finalize(() => {
-                this.isLoading = false;
-              }),
-            )
-            .subscribe(() => {
-              this.notify.success('SuccessfullyDeleted');
-              this.getDataPage(1);
-            });
-        }
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: undefined,
+      confirmCb: (): void => {
+        this.isLoading = true;
+        this._coursesService.delete(id)
+          .pipe(
+            takeUntil(this.destroyed$),
+            finalize(() => {
+              this.isLoading = false;
+            }),
+          )
+          .subscribe(() => {
+            this.notify.success('SuccessfullyDeleted');
+            this.getDataPage(1);
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   protected list(

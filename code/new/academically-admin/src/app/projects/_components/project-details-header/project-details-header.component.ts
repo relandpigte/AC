@@ -3,6 +3,8 @@ import { ProjectService } from '@app/projects/_services/project.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ProjectDto, ProjectsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { Router } from '@angular/router';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { takeUntil } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -18,6 +20,7 @@ export class ProjectDetailsHeaderComponent extends AppComponentBase implements O
     private _projectService: ProjectService,
     private _projectsService: ProjectsServiceProxy,
     private _router: Router,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
   }
@@ -32,18 +35,17 @@ export class ProjectDetailsHeaderComponent extends AppComponentBase implements O
   }
 
   onDeleteClick(): void {
-    this.message.confirm(
-      this.l('DeleteProjectConfirmationMessage'),
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this._projectsService.delete(this.project.id)
-            .subscribe(() => {
-              this.notify.success('SuccessfullyDeleted');
-              this._router.navigate(['/app/dashboard']);
-            });
-        }
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('DeleteProjectConfirmationMessage'),
+      confirmCb: (): void => {
+        this._projectsService.delete(this.project.id)
+          .subscribe(() => {
+            this.notify.success('SuccessfullyDeleted');
+            this._router.navigate(['/app/dashboard']);
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 }

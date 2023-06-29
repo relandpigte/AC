@@ -1,9 +1,12 @@
 import { Component, ElementRef, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
+import { finalize, take } from 'rxjs/operators';
+import { BsModalService } from 'ngx-bootstrap/modal';
+
 import { ImageCropperComponent } from '@app/_shared/components/image-cropper/image-cropper.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { FileParameter, ProfilesServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 @Component({
   selector: 'app-profile-picture-changer',
@@ -21,6 +24,7 @@ export class ProfilePictureChangerComponent extends AppComponentBase {
     injector: Injector,
     private _modalService: BsModalService,
     private _profilesService: ProfilesServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
   }
@@ -56,20 +60,19 @@ export class ProfilePictureChangerComponent extends AppComponentBase {
   }
 
   onRemoveClick(): void {
-    this.message.confirm(
-      undefined,
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this.isRemoving = true;
-          this._profilesService.deleteProfilePicture()
-            .subscribe(() => {
-              this.profilePictureUpdated.emit(undefined);
-              this.notify.success(this.l('ProfilePictureRemovedMessage'));
-              this.isRemoving = false;
-            });
-        }
+    const options: ModalDialogOptions = {
+      title: undefined,
+      text: this.l('ProfilePictureRemoveMessage'),
+      confirmCb: (): void => {
+        this.isRemoving = true;
+        this._profilesService.deleteProfilePicture()
+          .subscribe(() => {
+            this.profilePictureUpdated.emit(undefined);
+            this.notify.success(this.l('ProfilePictureRemovedMessage'));
+            this.isRemoving = false;
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 }

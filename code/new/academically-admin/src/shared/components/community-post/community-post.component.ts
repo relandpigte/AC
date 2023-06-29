@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { takeUntil } from 'rxjs/operators';
+import { finalize, take, takeUntil } from 'rxjs/operators';
 import * as moment from 'moment';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 
@@ -13,6 +13,8 @@ import { CommunityDiscussionsComponent } from '../community-discussions/communit
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 import { AppConsts } from '@shared/AppConsts';
 import { UserFollowingService } from '@shared/services/user-following.service';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { pipe } from 'rxjs';
 
 @Component({
     selector: 'app-community-post-card',
@@ -49,7 +51,8 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
         private _router: Router,
         private _postsServiceProxy: PostsServiceProxy,
         private _modalService: BsModalService,
-        private _userFollowingService: UserFollowingService
+        private _userFollowingService: UserFollowingService,
+        private _modalDialogService: ModalDialogService
     ) {
         super(injector);
     }
@@ -118,20 +121,19 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     }
 
     onDeleteClick(id: string): void {
-        this.message.confirm(
-            this.l('DeletePostConfirmationMessage'),
-            undefined,
-            (result: boolean) => {
-                if (result) {
-                    this._postsServiceProxy.delete(id)
-                        .pipe(takeUntil(this.destroyed$))
-                        .subscribe(() => {
-                        this.notify.success(this.l('SuccessfullyDeleted'));
-                        this.refresh.emit();
-                    });
-                }
+        const options: ModalDialogOptions = {
+            title: this.l('AreYouSure'),
+            text: this.l('DeletePostConfirmationMessage'),
+            confirmCb: (): void => {
+                this._postsServiceProxy.delete(id)
+                  .pipe(takeUntil(this.destroyed$))
+                  .subscribe(() => {
+                      this.notify.success(this.l('SuccessfullyDeleted'));
+                      this.refresh.emit();
+                  });
             }
-        );
+        };
+        this._modalDialogService.showConfirmDialog(options);
     }
 
     onEditClick(data: any): void {
@@ -154,21 +156,22 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     }
 
     onHideClick(id: string): void {
-        this.message.confirm(
-            this.l('AreYouSureWantToHideThisPost'),
-            undefined,
-            (result: boolean) => {
-                if (result) {
-                    this._postsServiceProxy.setPostVisibility(id, true, null, null, null)
-                        .pipe(takeUntil(this.destroyed$))
-                        .subscribe(() => {
-                            this.isHidden = true;
-                            this.isHiding = true;
-                            if (this.closeHiddenPostAfter > 0) this.startHideTimer();
-                    });
-                }
+        const options: ModalDialogOptions = {
+            title: this.l('AreYouSure'),
+            text: this.l('AreYouSureWantToHideThisPost'),
+            confirmCb: (): void => {
+                this._postsServiceProxy.setPostVisibility(id, true, null, null, null)
+                  .pipe(takeUntil(this.destroyed$))
+                  .subscribe(() => {
+                      this.isHidden = true;
+                      this.isHiding = true;
+                      if (this.closeHiddenPostAfter > 0) {
+                          this.startHideTimer();
+                      }
+                  });
             }
-        );
+        };
+        this._modalDialogService.showConfirmDialog(options);
     }
 
     onUndoHideClick(id: string): void {

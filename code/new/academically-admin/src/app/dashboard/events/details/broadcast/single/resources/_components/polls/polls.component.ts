@@ -5,6 +5,7 @@ import { EventService } from '@app/dashboard/events/_services/event.service';
 import { EventDto, EventPollDto, EventPollsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { PagedListingComponentBase, PagedAndSortedRequestDto } from '@shared/paged-listing-component-base';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 class PagedEventPollRequestDto extends PagedAndSortedRequestDto {
   eventIdFilter: string;
@@ -25,6 +26,7 @@ export class PollsComponent extends PagedListingComponentBase<EventPollDto> impl
     private _modalService: BsModalService,
     private _eventService: EventService,
     private _eventPollsService: EventPollsServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this._eventService.eventCreated$
@@ -69,8 +71,10 @@ export class PollsComponent extends PagedListingComponentBase<EventPollDto> impl
   }
 
   onDeleteClick(eventPoll: EventPollDto): void {
-    this.message.confirm(this.l('DeleteEventPollConfirmationMessage'), undefined, (result => {
-      if (result) {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('DeleteEventPollConfirmationMessage'),
+      confirmCb: (): void => {
         this.isLoading = true;
         this._eventPollsService.delete(eventPoll.id)
           .pipe(
@@ -85,7 +89,8 @@ export class PollsComponent extends PagedListingComponentBase<EventPollDto> impl
             this.refresh();
           });
       }
-    }));
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   protected list(

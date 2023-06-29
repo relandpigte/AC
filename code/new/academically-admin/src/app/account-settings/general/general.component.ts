@@ -22,6 +22,8 @@ import { Observer } from 'rxjs';
 import { Observable } from 'rxjs';
 import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 import { AbpValidationError } from '@shared/components/validation/abp-validation.api';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { take } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-general',
@@ -62,6 +64,7 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
     private _paymentsService: PaymentsServiceProxy,
     private _route: ActivatedRoute,
     private _router: Router,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this.user = this.appSession.user;
@@ -119,17 +122,14 @@ export class GeneralComponent extends AppComponentBase implements OnInit {
   }
 
   onConnectStripeClick(): void {
-    this.message.confirm(
-      this.l('StripeOnboardingConfirmationMessage'),
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          window.location.href = environment.providers.stripe.onbloardLink(environment.providers.stripe.clientId, AppConsts.appBaseUrl);
-        } else {
-          this.isTutorProfile = false;
-        }
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('StripeOnboardingConfirmationMessage'),
+      confirmCb: (): void => {
+        window.location.href = environment.providers.stripe.onbloardLink(environment.providers.stripe.clientId, AppConsts.appBaseUrl);
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   onCountryChange(): void {

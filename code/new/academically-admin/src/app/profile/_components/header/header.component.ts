@@ -8,6 +8,8 @@ import { IThemeSetting } from '@shared/interfaces/theme-setting.interface';
 import { BecomeATutorStep, TutorWizardServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
 import { ThemeManagerService } from '@shared/services/theme-manager.service';
 import { takeUntil } from 'rxjs/operators';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { finalize } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -30,6 +32,7 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
     private _profileService: ProfileService,
     private _tutorWizardServiceProxy: TutorWizardServiceProxy,
     private _router: Router,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this.themeSettings = themeSettingsService.getConfiguration();
@@ -61,15 +64,14 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
   }
 
   onTutorWizardClick(): void {
-    this.message.confirm(
-      this.l('TutorWizardConfirmationMessage'),
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this._router.navigate(['/app/tutor-wizard']);
-        }
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('TutorWizardConfirmationMessage'),
+      confirmCb: (): void => {
+        this._router.navigate(['/app/tutor-wizard']);
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   private getCurrentWizardStep(): void {

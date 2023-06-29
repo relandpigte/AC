@@ -5,6 +5,7 @@ import { finalize, takeUntil } from 'rxjs/operators';
 import { VideoService } from '@app/videos/_services/video.service';
 import * as _ from 'lodash';
 import { UploadService } from '@app/_shared/services/upload.service';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 class PagedVideoRequestDto extends PagedAndSortedRequestDto {
   userIdFilter: number;
@@ -31,6 +32,7 @@ export class TeachingComponent extends PagedListingComponentBase<VideoDto> imple
     private _videosService: VideosServiceProxy,
     private _videoService: VideoService,
     private _uploadService: UploadService,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this._videoService.videoCreated$.subscribe(video => {
@@ -46,20 +48,19 @@ export class TeachingComponent extends PagedListingComponentBase<VideoDto> imple
   }
 
   onDeleteClick(id: string): void {
-    this.message.confirm(
-      this.l('DeleteVideoConfirmationMessage'),
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this._videosService.delete(id)
-            .pipe(takeUntil(this.destroyed$))
-            .subscribe(() => {
-              this.notify.success(this.l('SuccessfullyDeleted'));
-              this.refresh();
-            });
-        }
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('DeleteVideoConfirmationMessage'),
+      confirmCb: (): void => {
+        this._videosService.delete(id)
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(() => {
+            this.notify.success(this.l('SuccessfullyDeleted'));
+            this.refresh();
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   protected list(

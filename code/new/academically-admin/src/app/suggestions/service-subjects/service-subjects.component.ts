@@ -5,6 +5,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { SubjectsServiceProxy, SubjectSuggestionDto } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash-es';
 import { finalize, takeUntil } from 'rxjs/operators';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 @Component({
   selector: 'app-service-subjects',
@@ -23,6 +24,7 @@ export class ServiceSubjectsComponent extends AppComponentBase implements OnInit
     injector: Injector,
     activatedRoute: ActivatedRoute,
     private _subjectsService: SubjectsServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     activatedRoute.paramMap.subscribe(paramMap => {
@@ -41,49 +43,45 @@ export class ServiceSubjectsComponent extends AppComponentBase implements OnInit
   }
 
   onApproveClick(id: string): void {
-    this.message.confirm(
-      undefined,
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this.isLoading = true;
-          this._subjectsService.approveSuggestion(id)
-            .pipe(
-              takeUntil(this.destroyed$),
-              finalize(() => {
-                this.isLoading = false;
-              }),
-            )
-            .subscribe(() => {
-              this.notify.success(this.l('SubjectSuggestionApprovedMessage'));
-              this.getSuggestions();
-            });
-        }
+    const options: ModalDialogOptions = {
+      confirmCb: (): void => {
+        this.isLoading = true;
+        this._subjectsService.approveSuggestion(id)
+          .pipe(
+            takeUntil(this.destroyed$),
+            finalize(() => {
+              this.isLoading = false;
+            }),
+          )
+          .subscribe(() => {
+            this.notify.success(this.l('SubjectSuggestionApprovedMessage'));
+            this.getSuggestions();
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   onRejectClick(id: string): void {
-    this.message.confirm(
-      undefined,
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this.isLoading = true;
-          this._subjectsService.rejectSuggestion(id)
-            .pipe(
-              takeUntil(this.destroyed$),
-              finalize(() => {
-                this.isLoading = false;
-              }),
-            )
-            .subscribe(() => {
-              this.notify.success(this.l('SubjectSuggestionRejectedMessage'));
-              this.getSuggestions();
-            });
-        }
+    const options: ModalDialogOptions = {
+      title: undefined,
+      text: undefined,
+      confirmCb: (): void => {
+        this.isLoading = true;
+        this._subjectsService.rejectSuggestion(id)
+          .pipe(
+            takeUntil(this.destroyed$),
+            finalize(() => {
+              this.isLoading = false;
+            }),
+          )
+          .subscribe(() => {
+            this.notify.success(this.l('SubjectSuggestionRejectedMessage'));
+            this.getSuggestions();
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   private getSuggestions(): void {

@@ -6,6 +6,7 @@ import { finalize, takeUntil } from 'rxjs/operators';
 import { UploadService } from '@app/_shared/services/upload.service';
 import * as _ from 'lodash';
 import { Router } from '@angular/router';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 class PagedArticleRequestDto extends PagedAndSortedRequestDto {
   userIdFilter: number;
@@ -33,6 +34,7 @@ export class TeachingComponent extends PagedListingComponentBase<ArticleDto> imp
     private _articleService: ArticleService,
     private _uploadService: UploadService,
     private router: Router,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this._articleService.articleCreated$.subscribe(article => {
@@ -55,20 +57,19 @@ export class TeachingComponent extends PagedListingComponentBase<ArticleDto> imp
   }
 
   onDeleteClick(id: string): void {
-    this.message.confirm(
-      this.l('DeleteArticleConfirmationMessage'),
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this._articlesService.delete(id)
-            .pipe(takeUntil(this.destroyed$))
-            .subscribe(() => {
-              this.notify.success(this.l('SuccessfullyDeleted'));
-              this.refresh();
-            });
-        }
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('DeleteArticleConfirmationMessage'),
+      confirmCb: (): void => {
+        this._articlesService.delete(id)
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(() => {
+            this.notify.success(this.l('SuccessfullyDeleted'));
+            this.refresh();
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   protected list(

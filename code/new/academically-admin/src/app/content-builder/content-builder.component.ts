@@ -9,6 +9,8 @@ import { Content } from './_models/content';
 import { LessonContent } from './_models/lesson-content';
 import { PageContent } from './_models/page-content';
 import { PageBuilderService } from './_services/page-builder.service';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { finalize } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-content-builder',
@@ -26,6 +28,7 @@ export class ContentBuilderComponent extends AppComponentBase implements OnInit,
     injector: Injector,
     private _contentsService: ContentsServiceProxy,
     private _pageBuilderService: PageBuilderService,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this._pageBuilderService.content$.subscribe(content => {
@@ -51,8 +54,10 @@ export class ContentBuilderComponent extends AppComponentBase implements OnInit,
     });
     this._pageBuilderService.remove$.subscribe(content => {
       if (content) {
-        this.message.confirm(null, null, (response) => {
-          if (response) {
+        const options: ModalDialogOptions = {
+          title: this.l('AreYouSure'),
+          text: null,
+          confirmCb: (): void => {
             if (content.type === 'page') {
               const index = this.lessonContent.pages.findIndex(e => e === content);
               if (index >= 0) {
@@ -74,7 +79,8 @@ export class ContentBuilderComponent extends AppComponentBase implements OnInit,
               });
             }
           }
-        });
+        };
+        this._modalDialogService.showConfirmDialog(options);
         this._pageBuilderService.remove = undefined;
       }
     });

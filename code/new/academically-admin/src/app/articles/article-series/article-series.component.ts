@@ -7,6 +7,8 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { takeUntil } from 'rxjs/operators';
 import { CreateArticleComponent } from '../_components/create-article/create-article.component';
 import { ArticleService } from '../_services/article.service';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { finalize, take } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-article-series',
@@ -27,6 +29,7 @@ export class ArticleSeriesComponent extends AppComponentBase implements OnInit {
     private _router: Router,
     private _articlesService: ArticlesServiceProxy,
     private _articleService: ArticleService,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     route.paramMap.subscribe(paramMap => {
@@ -70,8 +73,10 @@ export class ArticleSeriesComponent extends AppComponentBase implements OnInit {
   }
 
   onPublishClick(): void {
-    this.message.confirm(this.l('PublishArticleConfirmationMessage'), undefined, (result) => {
-      if (result) {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('PublishArticleConfirmationMessage'),
+      confirmCb: (): void => {
         this._articlesService.updateStatus(this.model.id, ArticleStatus.Published)
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
@@ -79,12 +84,15 @@ export class ArticleSeriesComponent extends AppComponentBase implements OnInit {
             this.l('SavedSuccessfully');
           });
       }
-    });
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   onUnpublishClick(): void {
-    this.message.confirm(this.l('UnpublishArticleConfirmationMessage'), undefined, (result) => {
-      if (result) {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('UnpublishArticleConfirmationMessage'),
+      confirmCb: (): void => {
         this._articlesService.updateStatus(this.model.id, ArticleStatus.Draft)
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
@@ -92,7 +100,8 @@ export class ArticleSeriesComponent extends AppComponentBase implements OnInit {
             this.l('SavedSuccessfully');
           });
       }
-    });
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   private getArticleSeries(): void {

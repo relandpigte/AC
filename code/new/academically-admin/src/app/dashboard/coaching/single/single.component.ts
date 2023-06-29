@@ -6,6 +6,7 @@ import { AppConsts } from '@shared/AppConsts';
 import { CoachingDto, CoachingsServiceProxy, CoachingStatus } from '@shared/service-proxies/service-proxies';
 import { takeUntil } from 'rxjs/operators';
 import { CoachingService } from '../_services/coaching.service';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 @Component({
   selector: 'app-single',
@@ -24,6 +25,7 @@ export class SingleComponent extends AppComponentBase implements OnInit {
     route: ActivatedRoute,
     private _coachingService: CoachingService,
     private _coachingsService: CoachingsServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     route.paramMap.subscribe(paramMap => {
@@ -48,8 +50,10 @@ export class SingleComponent extends AppComponentBase implements OnInit {
   }
 
   onPublishClick(): void {
-    this.message.confirm(this.l('PublishCoachingConfirmationMessage'), undefined, (result) => {
-      if (result) {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('PublishCoachingConfirmationMessage'),
+      confirmCb: (): void => {
         this._coachingsService.updateStatus(this.model.id, CoachingStatus.Published)
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
@@ -57,12 +61,15 @@ export class SingleComponent extends AppComponentBase implements OnInit {
             this.l('SavedSuccessfully');
           });
       }
-    });
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   onUnpublishClick(): void {
-    this.message.confirm(this.l('UnpublishCoachingConfirmationMessage'), undefined, (result) => {
-      if (result) {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('UnpublishCoachingConfirmationMessage'),
+      confirmCb: (): void => {
         this._coachingsService.updateStatus(this.model.id, CoachingStatus.Draft)
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
@@ -70,7 +77,8 @@ export class SingleComponent extends AppComponentBase implements OnInit {
             this.l('SavedSuccessfully');
           });
       }
-    });
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   private getCoaching(): void {

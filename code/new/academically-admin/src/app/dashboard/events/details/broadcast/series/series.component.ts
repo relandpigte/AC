@@ -7,6 +7,8 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { takeUntil } from 'rxjs/operators';
 import { CreateBroadcastComponent } from '../../../_components/create-broadcast/create-broadcast.component';
 import { EventService } from '../../../_services/event.service';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { finalize } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-series',
@@ -27,6 +29,7 @@ export class SeriesComponent extends AppComponentBase implements OnInit {
     private _router: Router,
     private _eventsService: EventsServiceProxy,
     private _eventService: EventService,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     route.paramMap.subscribe(paramMap => {
@@ -69,8 +72,10 @@ export class SeriesComponent extends AppComponentBase implements OnInit {
   }
 
   onPublishClick(): void {
-    this.message.confirm(this.l('PublishEventConfirmationMessage'), undefined, (result) => {
-      if (result) {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('PublishEventConfirmationMessage'),
+      confirmCb: (): void => {
         this._eventsService.updateStatus(this.model.id, EventStatus.Published)
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
@@ -78,12 +83,15 @@ export class SeriesComponent extends AppComponentBase implements OnInit {
             this.l('SavedSuccessfully');
           });
       }
-    });
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   onUnpublishClick(): void {
-    this.message.confirm(this.l('UnpublishEventConfirmationMessage'), undefined, (result) => {
-      if (result) {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('PublishEventConfirmationMessage'),
+      confirmCb: (): void => {
         this._eventsService.updateStatus(this.model.id, EventStatus.Draft)
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
@@ -91,7 +99,8 @@ export class SeriesComponent extends AppComponentBase implements OnInit {
             this.l('SavedSuccessfully');
           });
       }
-    });
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   private getEventSeries(): void {

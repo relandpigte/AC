@@ -3,6 +3,8 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { DocumentDto, DocumentsServiceProxy, UserQualificationDocumentDto, UserQualificationsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { takeUntil } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-view-qualification-documents',
@@ -19,6 +21,7 @@ export class ViewQualificationDocumentsComponent extends AppComponentBase implem
     private _modal: BsModalRef,
     private _documentsService: DocumentsServiceProxy,
     private _userQualificationsService: UserQualificationsServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
   }
@@ -42,26 +45,25 @@ export class ViewQualificationDocumentsComponent extends AppComponentBase implem
   }
 
   onDeleteDocumentClick(id: string): void {
-    this.message.confirm(
-      undefined,
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this.deleteLoaders[id] = true;
-          this._userQualificationsService.deleteDocument(id)
-            .pipe(finalize(() => {
-              this.deleteLoaders[id] = true;
-            }))
-            .subscribe(() => {
-              const index = this.userQualificationDocuments.findIndex(e => e.id === id);
-              if (index >= 0) {
-                this.userQualificationDocuments.splice(index, 1);
-                this.notify.success('SuccessfullyDeleted');
-              }
-            });
-        }
+    const options: ModalDialogOptions = {
+      title: undefined,
+      text: undefined,
+      confirmCb: (): void => {
+        this.deleteLoaders[id] = true;
+        this._userQualificationsService.deleteDocument(id)
+          .pipe(finalize(() => {
+            this.deleteLoaders[id] = true;
+          }))
+          .subscribe(() => {
+            const index = this.userQualificationDocuments.findIndex(e => e.id === id);
+            if (index >= 0) {
+              this.userQualificationDocuments.splice(index, 1);
+              this.notify.success('SuccessfullyDeleted');
+            }
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   formatBytes(bytes: number, decimals = 2) {

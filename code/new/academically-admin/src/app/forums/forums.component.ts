@@ -4,6 +4,8 @@ import { PagedListingComponentBase, PagedAndSortedRequestDto } from '@shared/pag
 import { finalize, takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { take } from '@node_modules/rxjs/operators';
 
 class PagedEventRequestDto extends PagedAndSortedRequestDto {
 }
@@ -26,6 +28,7 @@ export class ForumsComponent extends PagedListingComponentBase<ForumDto> impleme
     injector: Injector,
     private _forumsService: ForumsServiceProxy,
     private _reactionsService: ReactionsServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this.user = this.appSession.user;
@@ -41,20 +44,19 @@ export class ForumsComponent extends PagedListingComponentBase<ForumDto> impleme
   }
 
   onDeleteClick(forum: ForumDto): void {
-    this.message.confirm(
-      this.l('DeleteFormConfirmationMessage'),
-      undefined,
-      result => {
-        if (result) {
-          this._forumsService.delete(forum.id)
-            .pipe(takeUntil(this.destroyed$))
-            .subscribe(() => {
-              this.notify.success(this.l('SuccessfullyDeleted'));
-              this.refresh();
-            });
-        }
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('DeleteFormConfirmationMessage'),
+      confirmCb: (): void => {
+        this._forumsService.delete(forum.id)
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(() => {
+            this.notify.success(this.l('SuccessfullyDeleted'));
+            this.refresh();
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   onFormSubmit(forum: ForumDto): void {

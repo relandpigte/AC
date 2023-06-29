@@ -7,6 +7,8 @@ import { finalize } from 'rxjs/operators';
 import { CreateEditQualificationComponent } from './create-edit-qualification/create-edit-qualification.component';
 import { ViewQualificationDocumentsComponent } from './view-qualification-documents/view-qualification-documents.component';
 import { ProfileService } from '@app/profile/_services/profile.service';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { takeUntil } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-qualifications',
@@ -25,6 +27,7 @@ export class QualificationsComponent extends AppComponentBase implements OnInit 
     private _modalService: BsModalService,
     private _userQualificationsService: UserQualificationsServiceProxy,
     private _profileService: ProfileService,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
   }
@@ -58,23 +61,22 @@ export class QualificationsComponent extends AppComponentBase implements OnInit 
   }
 
   onDeleteClick(id: string): void {
-    this.message.confirm(
-      undefined,
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this.deleteLoaders[id] = true;
-          this._userQualificationsService.delete(id)
-            .pipe(finalize(() => {
-              this.deleteLoaders[id] = true;
-            }))
-            .subscribe(() => {
-              this.getQualifications();
-              this.notify.success('SuccessfullyDeleted');
-            });
-        }
+    const options: ModalDialogOptions = {
+      title: undefined,
+      text: undefined,
+      confirmCb: (): void => {
+        this.deleteLoaders[id] = true;
+        this._userQualificationsService.delete(id)
+          .pipe(finalize(() => {
+            this.deleteLoaders[id] = true;
+          }))
+          .subscribe(() => {
+            this.getQualifications();
+            this.notify.success('SuccessfullyDeleted');
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   private showCreateEditQualificationModal(userQualification: UserQualificationDto): void {

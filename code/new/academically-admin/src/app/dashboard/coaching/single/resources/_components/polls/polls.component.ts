@@ -5,6 +5,7 @@ import { CoachingService } from '@app/dashboard/coaching/_services/coaching.serv
 import { CoachingDto, CoachingPollDto, CoachingPollsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { PagedListingComponentBase, PagedAndSortedRequestDto } from '@shared/paged-listing-component-base';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 class PagedCoachingPollRequestDto extends PagedAndSortedRequestDto {
   coachingIdFilter: string;
@@ -25,6 +26,7 @@ export class PollsComponent extends PagedListingComponentBase<CoachingPollDto> i
     private _modalService: BsModalService,
     private _coachingService: CoachingService,
     private _coachingPollsService: CoachingPollsServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this._coachingService.coachingCreated$
@@ -56,8 +58,10 @@ export class PollsComponent extends PagedListingComponentBase<CoachingPollDto> i
   }
 
   onDeleteClick(coachingPoll: CoachingPollDto): void {
-    this.message.confirm(this.l('DeleteCoachingPollConfirmationMessage'), undefined, (result => {
-      if (result) {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('DeleteCoachingPollConfirmationMessage'),
+      confirmCb: (): void => {
         this.isLoading = true;
         this._coachingPollsService.delete(coachingPoll.id)
           .pipe(
@@ -72,7 +76,8 @@ export class PollsComponent extends PagedListingComponentBase<CoachingPollDto> i
             this.refresh();
           });
       }
-    }));
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   protected list(

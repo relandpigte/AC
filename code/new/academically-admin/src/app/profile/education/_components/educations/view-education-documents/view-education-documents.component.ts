@@ -3,6 +3,8 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { DocumentDto, DocumentsServiceProxy, UserEducationDocumentDto, UserEducationsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { takeUntil } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-view-education-documents',
@@ -19,6 +21,7 @@ export class ViewEducationDocumentsComponent extends AppComponentBase {
     private _modal: BsModalRef,
     private _documentsService: DocumentsServiceProxy,
     private _userEducationsService: UserEducationsServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
   }
@@ -39,26 +42,25 @@ export class ViewEducationDocumentsComponent extends AppComponentBase {
   }
 
   onDeleteDocumentClick(id: string): void {
-    this.message.confirm(
-      undefined,
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this.deleteLoaders[id] = true;
-          this._userEducationsService.deleteDocument(id)
-            .pipe(finalize(() => {
-              this.deleteLoaders[id] = true;
-            }))
-            .subscribe(() => {
-              const index = this.userEducationDocuments.findIndex(e => e.id === id);
-              if (index >= 0) {
-                this.userEducationDocuments.splice(index, 1);
-                this.notify.success('SuccessfullyDeleted');
-              }
-            });
-        }
+    const options: ModalDialogOptions = {
+      title: undefined,
+      text: undefined,
+      confirmCb: (): void => {
+        this.deleteLoaders[id] = true;
+        this._userEducationsService.deleteDocument(id)
+          .pipe(finalize(() => {
+            this.deleteLoaders[id] = true;
+          }))
+          .subscribe(() => {
+            const index = this.userEducationDocuments.findIndex(e => e.id === id);
+            if (index >= 0) {
+              this.userEducationDocuments.splice(index, 1);
+              this.notify.success('SuccessfullyDeleted');
+            }
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   formatBytes(bytes: number, decimals = 2) {

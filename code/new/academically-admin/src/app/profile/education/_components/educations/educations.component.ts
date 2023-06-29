@@ -7,6 +7,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { CreateEditEducationComponent } from './create-edit-education/create-edit-education.component';
 import { ViewEducationDocumentsComponent } from './view-education-documents/view-education-documents.component';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 class UserEducation {
   educations: UserEducationDto[] = [];
@@ -37,6 +38,7 @@ export class EducationsComponent extends AppComponentBase implements OnInit {
     private _modalService: BsModalService,
     private _profilesService: ProfilesServiceProxy,
     private _userEducationsService: UserEducationsServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
   }
@@ -62,20 +64,19 @@ export class EducationsComponent extends AppComponentBase implements OnInit {
   }
 
   onDeleteClick(userEducation: UserEducationDto): void {
-    this.message.confirm(
-      undefined,
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this._userEducationsService.delete(userEducation.id)
-            .subscribe(() => {
-              this.notify.success('SuccessfullyDeleted');
-              this.getUserEducations();
-              this.refreshUser();
-            });
-        }
+    const options: ModalDialogOptions = {
+      title: undefined,
+      text: undefined,
+      confirmCb: (): void => {
+        this._userEducationsService.delete(userEducation.id)
+          .subscribe(() => {
+            this.notify.success('SuccessfullyDeleted');
+            this.getUserEducations();
+            this.refreshUser();
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   onViewDocumentsClick(userEducation: UserEducationDto): void {

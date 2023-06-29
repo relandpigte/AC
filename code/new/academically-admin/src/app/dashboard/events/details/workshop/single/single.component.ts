@@ -5,6 +5,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { EventDto, EventsServiceProxy, EventStatus } from '@shared/service-proxies/service-proxies';
 import { takeUntil } from 'rxjs/operators';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 @Component({
   selector: 'app-single',
@@ -22,7 +23,8 @@ export class SingleComponent extends AppComponentBase implements OnInit {
     injector: Injector,
     route: ActivatedRoute,
     private _workshopService: EventService,
-    private _workshopsService:EventsServiceProxy,
+    private _workshopsService: EventsServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     route.paramMap.subscribe(paramMap => {
@@ -47,8 +49,10 @@ export class SingleComponent extends AppComponentBase implements OnInit {
   }
 
   onPublishClick(): void {
-    this.message.confirm(this.l('PublishWorkshopConfirmationMessage'), undefined, (result) => {
-      if (result) {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('PublishWorkshopConfirmationMessage'),
+      confirmCb: (): void => {
         this._workshopsService.updateStatus(this.model.id, EventStatus.Published)
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
@@ -56,12 +60,15 @@ export class SingleComponent extends AppComponentBase implements OnInit {
             this.l('SavedSuccessfully');
           });
       }
-    });
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   onUnpublishClick(): void {
-    this.message.confirm(this.l('UnpublishWorkshopConfirmationMessage'), undefined, (result) => {
-      if (result) {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('UnpublishWorkshopConfirmationMessage'),
+      confirmCb: (): void => {
         this._workshopsService.updateStatus(this.model.id, EventStatus.Draft)
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
@@ -69,7 +76,8 @@ export class SingleComponent extends AppComponentBase implements OnInit {
             this.l('SavedSuccessfully');
           });
       }
-    });
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   private getWorkshop(): void {

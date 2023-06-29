@@ -5,6 +5,8 @@ import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto } from '@shared
 import * as _ from 'lodash';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { TreeNode } from 'primeng/api';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { takeUntil } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-research-fields-tree',
@@ -21,6 +23,7 @@ export class ResearchFieldsTreeComponent extends AppComponentBase implements OnI
     injector: Injector,
     private _disciplineTaxonomiesService: DisciplineTaxonomiesServiceProxy,
     private _modalRef: BsModalRef,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
   }
@@ -83,11 +86,14 @@ export class ResearchFieldsTreeComponent extends AppComponentBase implements OnI
 
   private close(): void {
     if (this.selectedDisciplineTaxonomies.length > 0) {
-      this.message.confirm(this.l('ResearhFieldsNotSavedWarning'), undefined, (result: boolean) => {
-        if (result) {
+      const options: ModalDialogOptions = {
+        title: this.l('AreYouSure'),
+        text: this.l('ResearchFieldsNotSavedWarning'),
+        confirmCb: (): void => {
           this._modalRef.hide();
         }
-      });
+      };
+      this._modalDialogService.showConfirmDialog(options);
     } else {
       this._modalRef.hide();
     }

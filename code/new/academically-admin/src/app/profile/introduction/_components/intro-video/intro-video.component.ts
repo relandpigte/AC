@@ -5,6 +5,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { FileParameter, ProfilesServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 @Component({
   selector: 'app-intro-video',
@@ -23,6 +24,7 @@ export class IntroVideoComponent extends AppComponentBase implements OnInit {
     injector: Injector,
     private _profileService: ProfileService,
     private _profilesService: ProfilesServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this._profileService.user$.subscribe(user => {
@@ -50,28 +52,25 @@ export class IntroVideoComponent extends AppComponentBase implements OnInit {
   }
 
   onDeleteClick(): void {
-    this.message.confirm(
-      undefined,
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this.isLoading = true;
-          this._profilesService.deleteIntroVideo()
-            .pipe(
-              takeUntil(this.destroyed$),
-              finalize(() => {
-                this.isLoading = false;
-              }),
-            )
-            .subscribe(() => {
-              this.user.introVideoUrl = undefined;
-              this._profileService.user = this.user;
-              this.intorVideo = undefined;
-              this.notify.success(this.l('SuccessfullyDeleted'));
-            });
-        }
+    const options: ModalDialogOptions = {
+      confirmCb: (): void => {
+        this.isLoading = true;
+        this._profilesService.deleteIntroVideo()
+          .pipe(
+            takeUntil(this.destroyed$),
+            finalize(() => {
+              this.isLoading = false;
+            }),
+          )
+          .subscribe(() => {
+            this.user.introVideoUrl = undefined;
+            this._profileService.user = this.user;
+            this.intorVideo = undefined;
+            this.notify.success(this.l('SuccessfullyDeleted'));
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   onFilesChanged(files: FileParameter[]): void {

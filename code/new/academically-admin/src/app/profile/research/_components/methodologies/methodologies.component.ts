@@ -6,6 +6,8 @@ import * as _ from 'lodash';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
 import { CreateEditMethodologyComponent } from './create-edit-methodology/create-edit-methodology.component';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { takeUntil } from '@node_modules/rxjs/operators';
 
 class PagedUserResearchMethodologiesRequestDto extends PagedAndSortedRequestDto {
   userIdFilter: number;
@@ -25,7 +27,8 @@ export class MethodologiesComponent extends PagedListingComponentBase<UserResear
     injector: Injector,
     private _appSession: AppSessionService,
     private _modalService: BsModalService,
-    private _userResearchMethodologiesService: UserResearchMethodologiesServiceProxy
+    private _userResearchMethodologiesService: UserResearchMethodologiesServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this.pageSize = 5;
@@ -60,20 +63,19 @@ export class MethodologiesComponent extends PagedListingComponentBase<UserResear
   }
 
   onDeleteClick(userResearchMethod: UserResearchMethodologyDto): void {
-    this.message.confirm(
-      undefined,
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this._userResearchMethodologiesService.delete(userResearchMethod.id)
-            .subscribe(() => {
-              this.notify.success('SuccessfullyDeleted');
-              this.pageNumber = 1;
-              this.refresh();
-            });
-        }
+    const options: ModalDialogOptions = {
+      title: undefined,
+      text: undefined,
+      confirmCb: (): void => {
+        this._userResearchMethodologiesService.delete(userResearchMethod.id)
+          .subscribe(() => {
+            this.notify.success('SuccessfullyDeleted');
+            this.pageNumber = 1;
+            this.refresh();
+          });
       }
-    );
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   private showCreateEditUserResearchMethodologyModal(userResearchMethodology?: UserResearchMethodologyDto): void {

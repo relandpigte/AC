@@ -5,6 +5,7 @@ import { ArticleDto, CoachingDto, CourseDto, EventDto, EventOfferDto, EventOffer
 import { BsModalService, ModalOptions } from "ngx-bootstrap/modal";
 import { finalize, takeUntil } from 'rxjs/operators';
 import { CreateEditOfferComponent } from '../create-edit-offer/create-edit-offer.component';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 class PagedEventOfferResultRequestDto extends PagedAndSortedRequestDto {
   eventIdFilter: string;
@@ -33,6 +34,7 @@ export class OffersComponent extends PagedListingComponentBase<EventOfferDto> im
     private _modalService: BsModalService,
     private _eventService: EventService,
     private _eventOffersService: EventOffersServiceProxy,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
     this._eventService.eventCreated$
@@ -80,8 +82,10 @@ export class OffersComponent extends PagedListingComponentBase<EventOfferDto> im
   }
 
   onDeleteClick(offer: EventOfferDto): void {
-    this.message.confirm(this.l('DeleteEventOfferConfirmationMessage'), undefined, (result => {
-      if (result) {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('DeleteEventOfferConfirmationMessage'),
+      confirmCb: (): void => {
         this.isLoading = true;
         this._eventOffersService.delete(offer.id)
           .pipe(
@@ -96,7 +100,8 @@ export class OffersComponent extends PagedListingComponentBase<EventOfferDto> im
             this.refresh();
           });
       }
-    }));
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   loadAllServices(): void {
