@@ -220,13 +220,6 @@
                     height: 0.5px;
                     background-color: #95AAC9;
                 }
-                .center {
-                    padding: 0 163px;
-                    font-weight: 600;
-                    font-size: 13px;
-                    line-height: 17px;
-                    color: #95AAC9;
-                }
             }
 
             &-load-more {
@@ -239,6 +232,13 @@
                 padding: 20px;
                 border-radius: 0;
                 cursor: pointer;
+            }
+
+            &-no-more {
+                font-weight: 600;
+                font-size: 13px;
+                line-height: 17px;
+                color: #95AAC9;
             }
         }
     }
