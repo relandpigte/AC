@@ -47,16 +47,32 @@
             }
 
             &-follow {
-                width: 54px;
-                height: 19px;
-                border: 1px solid #E3EBF6;
-                border-radius: 4px;
                 font-weight: 400;
-                font-size: 10px;
-                line-height: 13px;
+                font-size: 13px;
+                line-height: normal;
                 text-align: center;
-                letter-spacing: -0.01em;
-                color: #3B516C;
+                letter-spacing: -0.13px;
+                padding: 0;
+                color: #2C7BE5;
+
+                &.activated {
+                    color: #6E84A3;
+                }
+
+                &:before {
+                    content:"•";
+                    padding-right: 5px;
+                    font-size: 8px;
+                }
+
+                &:focus {
+                    box-shadow: none;
+                }
+
+                &:not(.activated):hover .text {
+                    text-underline-offset: 2px;
+                    text-decoration: underline;
+                }
             }
         }
     }

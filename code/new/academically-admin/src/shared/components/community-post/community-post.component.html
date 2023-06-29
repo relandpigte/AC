@@ -11,13 +11,14 @@
                 <div class="post-heading-owner-name d-flex flex-row align-items-center gap-15">
                     {{ posterName | titlecase }}
                     <button
-                        *ngIf="!isOwner"
                         type="button"
-                        class="btn btn-white post-heading-owner-follow d-flex justify-content-center align-items-center"
-                        [class.activated]="isUserFollowing(data?.creatorUser)"
+                        class="btn btn-link post-heading-owner-follow d-flex justify-content-center align-items-center"
+                        [class.activated]="isOwner || isUserFollowing(data?.creatorUser)"
                         (click)="handleUserFollow(data?.creatorUser)"
                         [disabled]="isUserLoading(data?.creatorUserId)">
-                        {{ isUserFollowing(data?.creatorUser) ? 'Following' : 'Follow'  }}
+                        <span class="text">
+                            {{ isOwner ? 'You' : (isUserFollowing(data?.creatorUser) ? 'Following' : 'Follow')  }}
+                        </span>
                     </button>
                 </div>
                 <div class="post-heading-owner-time">{{ postDate }}</div>
