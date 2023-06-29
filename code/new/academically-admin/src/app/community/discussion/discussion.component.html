@@ -155,7 +155,7 @@
                 <div class="participants-status-value"><span class="participants-status-value-indicator">●</span>Online</div>
             </div>
         </div>
-        <div class="participants-right d-flex justify-content-center align-items-center">
+        <div *ngIf="!isParticipantSelf(item)" class="participants-right d-flex justify-content-center align-items-center">
             <div type="button" class="btn btn-white topic-btn d-flex justify-content-center align-items-center">Follow</div>
         </div>
     </div>
