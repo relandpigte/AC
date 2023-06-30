@@ -1913,6 +1913,7 @@
 	<text name="Community.Posts.Sorting.Latest">Latest</text>
 	<text name="Community.Posts.Sorting.Replied">Most Replied</text>
 	<text name="Community.Posts.Sorting.Reacted">Most Reacted</text>
+	<text name="Community.Posts.Content.Not.Available">This content is no longer available.</text>
 	<!-- Community - Quick Post -->
 	<text name="Community.QuickPost.Add.Information">Say something...</text>
 	<!-- Community - Question -->

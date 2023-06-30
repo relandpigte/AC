@@ -98,7 +98,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
   }
 
   handleSharePost(post: PostDto): void {
-    this._postsService.get(post.id)
+    this._postsService.get(post.id, false)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(post => {
         const modalSettings = this.defaultModalSettings as ModalOptions<UpsertPostComponent>;

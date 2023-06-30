@@ -39,7 +39,7 @@
             position: relative;
 
             &:after {
-                ontent: ".";
+                content: ".";
                 position: absolute;
                 right: -10px;
                 top: -3px;
@@ -77,5 +77,19 @@
         &-attachment {
             margin-bottom: 0;
         }
+    }
+
+    &-not-available {
+        border: 1px solid #E4EBF6;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-top: 10px;
+        position: relative;
+        height: 124px;
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 152.402%;
+        letter-spacing: -0.2px;
+        color: #6E84A3;
     }
 }

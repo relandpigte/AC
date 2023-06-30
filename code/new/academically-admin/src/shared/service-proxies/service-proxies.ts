@@ -13057,14 +13057,19 @@ export class PostsServiceProxy {
 
     /**
      * @param id (optional) 
+     * @param includeEditHistory (optional) 
      * @return Success
      */
-    get(id: string | undefined): Observable<PostDto> {
+    get(id: string | undefined, includeEditHistory: boolean | undefined): Observable<PostDto> {
         let url_ = this.baseUrl + "/api/services/app/Posts/Get?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
         else if (id !== undefined)
             url_ += "id=" + encodeURIComponent("" + id) + "&";
+        if (includeEditHistory === null)
+            throw new Error("The parameter 'includeEditHistory' cannot be null.");
+        else if (includeEditHistory !== undefined)
+            url_ += "includeEditHistory=" + encodeURIComponent("" + includeEditHistory) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -39061,6 +39066,7 @@ export class PostDto implements IPostDto {
     sharedServiceCourse: CourseDto;
     sharedServiceVideo: VideoDto;
     sharedServiceCoaching: CoachingDto;
+    postEditHistories: PostEditHistoryDto[] | undefined;
 
     constructor(data?: IPostDto) {
         if (data) {
@@ -39128,6 +39134,11 @@ export class PostDto implements IPostDto {
             this.sharedServiceCourse = _data["sharedServiceCourse"] ? CourseDto.fromJS(_data["sharedServiceCourse"]) : <any>undefined;
             this.sharedServiceVideo = _data["sharedServiceVideo"] ? VideoDto.fromJS(_data["sharedServiceVideo"]) : <any>undefined;
             this.sharedServiceCoaching = _data["sharedServiceCoaching"] ? CoachingDto.fromJS(_data["sharedServiceCoaching"]) : <any>undefined;
+            if (Array.isArray(_data["postEditHistories"])) {
+                this.postEditHistories = [] as any;
+                for (let item of _data["postEditHistories"])
+                    this.postEditHistories.push(PostEditHistoryDto.fromJS(item));
+            }
         }
     }
 
@@ -39195,6 +39206,11 @@ export class PostDto implements IPostDto {
         data["sharedServiceCourse"] = this.sharedServiceCourse ? this.sharedServiceCourse.toJSON() : <any>undefined;
         data["sharedServiceVideo"] = this.sharedServiceVideo ? this.sharedServiceVideo.toJSON() : <any>undefined;
         data["sharedServiceCoaching"] = this.sharedServiceCoaching ? this.sharedServiceCoaching.toJSON() : <any>undefined;
+        if (Array.isArray(this.postEditHistories)) {
+            data["postEditHistories"] = [];
+            for (let item of this.postEditHistories)
+                data["postEditHistories"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -39238,6 +39254,7 @@ export interface IPostDto {
     sharedServiceCourse: CourseDto;
     sharedServiceVideo: VideoDto;
     sharedServiceCoaching: CoachingDto;
+    postEditHistories: PostEditHistoryDto[] | undefined;
 }
 
 export class PostDtoPagedResultDto implements IPostDtoPagedResultDto {
@@ -39293,6 +39310,69 @@ export class PostDtoPagedResultDto implements IPostDtoPagedResultDto {
 export interface IPostDtoPagedResultDto {
     items: PostDto[] | undefined;
     totalCount: number;
+}
+
+export class PostEditHistoryDto implements IPostEditHistoryDto {
+    changeTime: moment.Moment;
+    title: string | undefined;
+    content: string | undefined;
+    postTopics: DisciplineTaxonomyDto[] | undefined;
+
+    constructor(data?: IPostEditHistoryDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.changeTime = _data["changeTime"] ? moment(_data["changeTime"].toString()) : <any>undefined;
+            this.title = _data["title"];
+            this.content = _data["content"];
+            if (Array.isArray(_data["postTopics"])) {
+                this.postTopics = [] as any;
+                for (let item of _data["postTopics"])
+                    this.postTopics.push(DisciplineTaxonomyDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PostEditHistoryDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PostEditHistoryDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["changeTime"] = this.changeTime ? this.changeTime.toISOString() : <any>undefined;
+        data["title"] = this.title;
+        data["content"] = this.content;
+        if (Array.isArray(this.postTopics)) {
+            data["postTopics"] = [];
+            for (let item of this.postTopics)
+                data["postTopics"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): PostEditHistoryDto {
+        const json = this.toJSON();
+        let result = new PostEditHistoryDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPostEditHistoryDto {
+    changeTime: moment.Moment;
+    title: string | undefined;
+    content: string | undefined;
+    postTopics: DisciplineTaxonomyDto[] | undefined;
 }
 
 export class PostNotificationDto implements IPostNotificationDto {

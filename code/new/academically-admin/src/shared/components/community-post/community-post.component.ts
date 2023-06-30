@@ -6,7 +6,7 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import { FileUtils } from '@shared/helpers/file-utils';
-import { AvailableServiceDto, DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, UserDto } from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, SharedType, UserDto } from '@shared/service-proxies/service-proxies';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { CommunityDiscussionsComponent } from '../community-discussions/community-discussions.component';
@@ -87,6 +87,8 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     }
     get sharedPost(): any { return this.data?.sharedPost; }
     get sharedService(): any { return ServiceCardUtils.getServiceData(this.data); }
+    get hasSharedPost(): boolean { return this.data?.sharedId && this.data?.sharedType === SharedType.Post; }
+    get hasSharedService(): boolean { return this.data?.sharedId && this.data?.sharedType === SharedType.Service; }
 
 
     ngOnInit() { }

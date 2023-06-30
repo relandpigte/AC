@@ -314,6 +314,8 @@ namespace Academically.Services.Posts
                         .Where(e => e.IsHidden == false && !userHiddenPost.Contains(e.Id))
                         .SingleOrDefaultAsync(p => p.Id == id);
 
+            if (post == null) return null;
+
             var result = ObjectMapper.Map<PostDto>(post);
 
             if (includeEditHistory)
@@ -729,9 +731,9 @@ namespace Academically.Services.Posts
             if (!post.SharedId.HasValue)
                 return;
 
-            if(post.SharedType == SharedType.Post)
+            if (post.SharedType == SharedType.Post)
             {
-                post.SharedPost = await GetAsync(post.SharedId.Value);
+                post.SharedPost = await GetAsync(post.SharedId.Value, false);
             }
             else
             {
@@ -739,34 +741,50 @@ namespace Academically.Services.Posts
                 {
                     case ServicesType.Event:
                     case ServicesType.Workshop:
-                        var event_ = await _eventRepository.GetAsync(post.SharedId.Value);
-                        post.SharedServiceEvent = ObjectMapper.Map<EventDto>(event_);
-                        if (post.SharedServiceEvent.ThumbnailDocumentId.HasValue)
-                            post.SharedServiceEvent.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(post.SharedServiceEvent.ThumbnailDocumentId.Value);
+                        var event_ = await _eventRepository.GetAll().IgnoreQueryFilters().SingleOrDefaultAsync(e => e.Id == post.SharedId.Value);
+                        if (event_ != null)
+                        {
+                            post.SharedServiceEvent = ObjectMapper.Map<EventDto>(event_);
+                            if (post.SharedServiceEvent.ThumbnailDocumentId.HasValue)
+                                post.SharedServiceEvent.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(post.SharedServiceEvent.ThumbnailDocumentId.Value);
+                        }
                         break;
                     case ServicesType.Course:
-                        var course = await _coursesRepository.GetAsync(post.SharedId.Value);
-                        post.SharedServiceCourse = ObjectMapper.Map<CourseDto>(course);
-                        if (post.SharedServiceCourse.ImageDocumentId.HasValue)
-                            post.SharedServiceCourse.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(course.ImageDocumentId.Value);
+                        var course = await _coursesRepository.GetAll().IgnoreQueryFilters().SingleOrDefaultAsync(c => c.Id == post.SharedId.Value);
+                        if (course != null)
+                        {
+                            post.SharedServiceCourse = ObjectMapper.Map<CourseDto>(course);
+                            if (post.SharedServiceCourse.ImageDocumentId.HasValue)
+                                post.SharedServiceCourse.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(course.ImageDocumentId.Value);
+                        }
+                       
                         break;
                     case ServicesType.Tutorial:
-                        var video = await _videoRepository.GetAsync(post.SharedId.Value);
-                        post.SharedServiceVideo = ObjectMapper.Map<VideoDto>(video);
-                        if (post.SharedServiceVideo.ThumbnailDocumentId.HasValue)
-                            post.SharedServiceVideo.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(post.SharedServiceVideo.ThumbnailDocumentId.Value);
+                        var video = await _videoRepository.GetAll().IgnoreQueryFilters().SingleOrDefaultAsync(t => t.Id == post.SharedId.Value);
+                        if (video != null)
+                        {
+                            post.SharedServiceVideo = ObjectMapper.Map<VideoDto>(video);
+                            if (post.SharedServiceVideo.ThumbnailDocumentId.HasValue)
+                                post.SharedServiceVideo.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(post.SharedServiceVideo.ThumbnailDocumentId.Value);
+                        }
                         break;
                     case ServicesType.Article:
-                        var article = await _articlesRepository.GetAsync(post.SharedId.Value);
-                        post.SharedServiceArticle = ObjectMapper.Map<ArticleDto>(article);
-                        if (post.SharedServiceArticle.ThumbnailDocumentId.HasValue)
-                            post.SharedServiceArticle.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(post.SharedServiceArticle.ThumbnailDocumentId.Value);
+                        var article = await _articlesRepository.GetAll().IgnoreQueryFilters().SingleOrDefaultAsync(a => a.Id == post.SharedId.Value);
+                        if (article != null)
+                        {
+                            post.SharedServiceArticle = ObjectMapper.Map<ArticleDto>(article);
+                            if (post.SharedServiceArticle.ThumbnailDocumentId.HasValue)
+                                post.SharedServiceArticle.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(post.SharedServiceArticle.ThumbnailDocumentId.Value);
+                        }
                         break;
                     case ServicesType.Coaching:
-                        var coaching = await _coachingRepository.GetAsync(post.SharedId.Value);
-                        post.SharedServiceCoaching = ObjectMapper.Map<CoachingDto>(coaching);
-                        if (post.SharedServiceCoaching.ThumbnailDocumentId.HasValue)
-                            post.SharedServiceCoaching.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(coaching.ThumbnailDocumentId.Value);
+                        var coaching = await _coachingRepository.GetAll().IgnoreQueryFilters().SingleOrDefaultAsync(c => c.Id == post.SharedId.Value);
+                        if (coaching != null)
+                        {
+                            post.SharedServiceCoaching = ObjectMapper.Map<CoachingDto>(coaching);
+                            if (post.SharedServiceCoaching.ThumbnailDocumentId.HasValue)
+                                post.SharedServiceCoaching.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(coaching.ThumbnailDocumentId.Value);
+                        }
                         break;
                     default:
                         break;

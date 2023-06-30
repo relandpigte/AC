@@ -69,3 +69,6 @@
         </div>
     </div>
 </div>
+<div *ngIf="!data" class="service-preview-not-available d-flex justify-content-center align-items-center">
+    {{ 'Community.Posts.Content.Not.Available' | localize }}
+</div>
