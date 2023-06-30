@@ -1,11 +1,12 @@
-import { Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
+import { debounceTime, finalize, takeUntil } from 'rxjs/operators';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import { TopicSorting } from '@shared/components/topic/topic.component';
 import { PostTabs } from '@shared/modals/upsert-post/upsert-post.component';
 import { DisciplineTaxonomiesServiceProxy, KeywordSearchStrategy, PostType } from '@shared/service-proxies/service-proxies';
 import { PostFocusField } from '@shared/enums/post/post-focus-field.enum';
+import { Subject } from 'rxjs';
 
 export interface VisibilityOptions {
   label: string;
@@ -37,8 +38,11 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit, 
   newSelectedTopics: { id: string, name: string }[] = [];
   isLoadingTopics = false;
 
+  triggerTextAreaResize$ = new Subject<HTMLTextAreaElement>();
+
   constructor(
     injector: Injector,
+    private _renderer: Renderer2,
     private _taxonomyService: DisciplineTaxonomiesServiceProxy
   ) {
     super(injector);
@@ -57,6 +61,13 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit, 
     } else {
       this.updateModel();
     }
+
+    this.triggerTextAreaResize$
+      .pipe(debounceTime(10))
+      .subscribe((el: HTMLTextAreaElement) => {
+        this._renderer.setStyle(el, 'height', `0px`);
+        this._renderer.setStyle(el, 'height', `${el.scrollHeight}px`);
+      });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -69,8 +80,12 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit, 
     this.onFocusChange.emit(field);
   }
 
-  updateCaretPos(elementRef: HTMLTextAreaElement | HTMLInputElement): void {
-    this.onCaretPos.emit(elementRef.selectionStart);
+  updateCaretPos(el: HTMLTextAreaElement | HTMLInputElement): void {
+    this.onCaretPos.emit(el.selectionStart);
+  }
+
+  updateTextAreaHeight(el: HTMLTextAreaElement) {
+    this.triggerTextAreaResize$.next(el);
   }
 
   updateFields(): void {

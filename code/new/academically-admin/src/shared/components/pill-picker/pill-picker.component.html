@@ -3,7 +3,7 @@
         #{{ item.name }} <button (click)="handleRemoveSelected(item)" type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
     </span>
     <div *ngIf="canAddItems" class="pill-picker-keyword flex-grow-1">
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center" #inputEl>
             <span *ngIf="keywordPrefix && (isShowKeywordPrefix || keyword)" class="pill-picker-keyword-prefix">{{ keywordPrefix }}</span>
             <input
                 [(ngModel)]="keyword"
@@ -14,7 +14,7 @@
                 type="text"
                 id="keyword"
                 name="keyword"
-                [placeholder]="keywordPlaceholder"
+                [placeholder]="selected?.length ? '' : keywordPlaceholder"
                 (keydown)="handleKeyDown($event)"
                 (blur)="isShowKeywordPrefix=false"
                 (focus)="isShowKeywordPrefix=true"
@@ -28,6 +28,7 @@
             [noDataText]="autocompleteNoDataText"
             [isLoading]="isLoading"
             [data]="choices"
+            [element]="inputEl"
             (onKeywordChange)="handleKeywordChange($event)"
             (onItemSelect)="handleChoiceSelect($event)"
         ></app-autocomplete>

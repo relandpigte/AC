@@ -1,4 +1,4 @@
-<div class="autocomplete d-flex shadow" [class.show]="isShown">
+<div #container class="autocomplete d-flex shadow" [class.show]="isShown">
     <div class="autocomplete-scroll-wrapper flex-grow-1">
         <ng-container *ngIf="data?.length === 0">
             <div class="autocomplete-row no-data">

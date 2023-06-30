@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Injector, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Injector, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, skip, takeUntil } from 'rxjs/operators';
@@ -16,10 +16,13 @@ export class AutocompleteComponent extends AppComponentBase implements OnInit, A
   @Input() isLoading: boolean = true;
   @Input() inputDelay: number = 300;
   @Input() minChars: number = 0;
+  @Input() element: any;
 
   @Output() onKeywordChange = new EventEmitter<any>();
   @Output() onItemSelect = new EventEmitter<any>();
   @Output() onClose = new EventEmitter<any>();
+
+  @ViewChild('container') container: ElementRef;
 
   keywordChanged$ = new BehaviorSubject<string>('');
   keyword: string = '';
@@ -28,7 +31,8 @@ export class AutocompleteComponent extends AppComponentBase implements OnInit, A
 
   constructor(
     injector: Injector,
-    private _elRef: ElementRef
+    private _elRef: ElementRef,
+    private _renderer: Renderer2
   ) {
     super(injector);
   }
@@ -49,6 +53,7 @@ export class AutocompleteComponent extends AppComponentBase implements OnInit, A
         this.keyword = text.toLowerCase().trim();
         this.onKeywordChange.next({ keyword: this.keyword, showLoading: true });
         this.isShowChoices = true;
+        this.positionContainer();
       });
 
     this.input.addEventListener('focus', () => {
@@ -56,6 +61,7 @@ export class AutocompleteComponent extends AppComponentBase implements OnInit, A
       const inputValue = this.input.value.toLowerCase().trim();
       if (inputValue.length >= this.minChars) {
         this.isShowChoices = true;
+        this.positionContainer();
         if (inputValue !== this.keyword) {
           this.keyword = inputValue;
           this.onKeywordChange.next({ keyword: this.keyword, showLoading: false });
@@ -80,5 +86,12 @@ export class AutocompleteComponent extends AppComponentBase implements OnInit, A
     this.onItemSelect.emit(item);
     this.data = null;
     this.input.focus();
+  }
+
+  private positionContainer(): void {
+    if (this.element) {
+      const position = this.element.getBoundingClientRect();
+      this._renderer.setStyle(this.container.nativeElement, 'top', `${position.top}px`);
+    }
   }
 }

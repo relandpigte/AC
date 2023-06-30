@@ -1,4 +1,4 @@
-<div class="post container-fluid d-flex flex-column p-0" [style.minHeight.px]="307" [style.maxHeight.px]="307">
+<div class="post container-fluid flex-grow-1 d-flex flex-column p-0">
     <div class="post-author d-flex flex-row align-items-center">
         <div class="post-author-avatar">
             <a href="javascript: void(0);" class="avatar d-flex align-items-center">
@@ -26,13 +26,15 @@
                         (ngModelChange)="updateModel()"
                         #informationModel="ngModel"
                         #informationEl
-                        class="form-control flex-grow-1 slick-scroll"
+                        class="form-control flex-grow-1 hidden-scroll"
+                        id="information"
                         name="information"
                         required
                         placeholder="{{ 'Community.QuickPost.Add.Information' | localize }}"
                         (focus)="updateFocusedField(focusField.Content)"
                         (click)="updateCaretPos(informationEl)"
                         (keyup)="updateCaretPos(informationEl)"
+                        (keydown)="updateTextAreaHeight(informationEl)"
                     ></textarea>
                 </div>
             </ng-container>
@@ -43,13 +45,14 @@
                         (ngModelChange)="updateModel()"
                         #titleModel="ngModel"
                         #titleEl
-                        class="form-control flex-grow-1 slick-scroll"
+                        class="form-control flex-grow-1 hidden-scroll"
                         name="title"
                         required
                         placeholder="{{ 'Community.Question.Add.Title' | localize }}"
                         (focus)="updateFocusedField(focusField.Title)"
                         (click)="updateCaretPos(titleEl)"
                         (keyup)="updateCaretPos(titleEl)"
+                        (keydown)="updateTextAreaHeight(titleEl)"
                     ></textarea>
                 </div>
             </ng-container>
@@ -78,7 +81,7 @@
                         (ngModelChange)="updateModel()"
                         #informationModel="ngModel"
                         #informationEl
-                        class="form-control flex-grow-1 slick-scroll"
+                        class="form-control flex-grow-1 hidden-scroll"
                         id="information"
                         name="information"
                         required
@@ -86,6 +89,7 @@
                         (focus)="updateFocusedField(focusField.Content)"
                         (click)="updateCaretPos(informationEl)"
                         (keyup)="updateCaretPos(informationEl)"
+                        (keydown)="updateTextAreaHeight(informationEl)"
                     ></textarea>
                 </div>
             </ng-container>
