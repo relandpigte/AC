@@ -6,8 +6,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class ShortenPipe implements PipeTransform {
   transform(value: string, limit = 25, completeWords = false, ellipsis = '...'): string {
     if (completeWords && value?.length > limit) {
-      limit = value.substr(0, limit).lastIndexOf(' ');
+      limit = value.substring(0, limit).lastIndexOf(' ');
     }
-    return value?.length > limit ? value.substr(0, limit) + ellipsis : value;
+    return value?.length > limit ? value.substring(0, limit) + ellipsis : value;
   }
 }
