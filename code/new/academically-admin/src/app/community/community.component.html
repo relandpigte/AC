@@ -5,12 +5,7 @@
     <ng-container *ngIf="!isDiscussion">
         <div class="container-fluid">
             <div class="header-body pt-0">
-                <div class="row align-items-end" [style.marginTop.px]="40">
-                    <div class="col mb-md-0">
-                        <div class="community-header">Community</div>
-                    </div>
-                </div>
-                <div class="row align-items-center">
+                <div class="row align-items-center"  [style.marginTop.px]="40">
                     <div class="col">
                         <ul class="nav nav-tabs nav-overflow header-tabs">
                             <li class="nav-item">
@@ -23,7 +18,7 @@
                     </div>
                 </div>
             </div>
-            <div [style.marginBottom.px]="20">
+            <div>
                 <app-carousel-pill [choices]="userTopics" key="disciplineTaxonomy.name" (onAdd)="handleAddTopics()" (onSelect)="handleFilterTopics($event)"></app-carousel-pill>
             </div>
         </div>
