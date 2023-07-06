@@ -62,10 +62,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     get posterName(): string { return this.data.creatorUser?.fullName ?? 'Anonymous'; }
     get postDate(): string {
         const time = moment(this.data.creationTime);
-        if (time.isSame(new Date(), 'day'))
-            return time.format('h:mm a');
-        else
-            return time.format('MMM D, YYYY h:mm a');
+        return this.convertMomentToPostDateAgo(time);
     }
 
     get title(): string { return this.data.title; }

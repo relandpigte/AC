@@ -2,6 +2,35 @@
     &:empty {
         display: none;
     }
+
+    ::ng-deep {
+        .tooltip {
+            filter: drop-shadow(0 0.75rem 1.5rem rgba(18, 38, 63, 0.03));
+            -o-filter: drop-shadow(0 0.75rem 1.5rem rgba(18, 38, 63, 0.03));
+            -ms-filter: drop-shadow(0 0.75rem 1.5rem rgba(18, 38, 63, 0.03));
+            -moz-filter: drop-shadow(0 0.75rem 1.5rem rgba(18, 38, 63, 0.03));
+            -webkit-filter: drop-shadow(0 0.75rem 1.5rem rgba(18, 38, 63, 0.03));
+
+            .tooltip-inner {
+                background-color: #031831;
+                max-width: none;
+                padding: 10px 15px;
+                color: #FFFFFF;
+                font-size: 15px;
+                font-weight: normal;
+                border-color: #031831;
+            }
+
+            &.top {
+                .arrow {
+                    &:before {
+                        top: -1px;
+                        border-top-color: #031831;
+                    }
+                }
+            }
+        }
+    }
 }
 
 .post {
