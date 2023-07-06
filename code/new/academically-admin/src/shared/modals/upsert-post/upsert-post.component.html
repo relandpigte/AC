@@ -65,11 +65,13 @@
             (onRemove)="handleRemoveAttachment()"
         ></app-attachment-preview>
         <app-preview-services
+            *ngIf="sharedService"
             [data]="sharedService"
             [canRemove]="canRemoveAttachment"
             (onRemove)="handleRemoveService()"
         ></app-preview-services>
         <app-preview-posts
+            *ngIf="sharedPost"
             [data]="sharedPost"
             [canRemove]="canRemoveAttachment"
             (onRemove)="handleRemovePost()"
