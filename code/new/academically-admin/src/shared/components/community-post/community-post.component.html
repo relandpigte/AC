@@ -1,4 +1,4 @@
-<div class="post d-flex flex-column" *ngIf="!isHidden" [ngClass]="{'post-loading': isLoading}">
+<div class="card post d-flex flex-column" *ngIf="!isHidden" [ngClass]="{'post-loading': isLoading}">
     <div class="post-container d-flex flex-column">
         <app-shimmer [show]="isLoading" [shimmerType]="shimmerType.PostCard"></app-shimmer>
         <div class="post-heading d-flex flex-row flex-nowrap align-items-center">
@@ -145,7 +145,7 @@
     ></app-community-discussions>
 </div>
 
-<div class="post" *ngIf="isHiding && isHidden">
+<div class="card post" *ngIf="isHiding && isHidden">
     <div class="post-container d-flex flex-row justify-content-between">
         <div class="post-hidden-text d-flex align-items-center ">
             {{ 'YouveHiddenAPost' | localize }}

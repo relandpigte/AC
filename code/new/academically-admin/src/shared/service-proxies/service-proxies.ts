@@ -13058,9 +13058,10 @@ export class PostsServiceProxy {
     /**
      * @param id (optional) 
      * @param includeEditHistory (optional) 
+     * @param includeHiddenPosts (optional) 
      * @return Success
      */
-    get(id: string | undefined, includeEditHistory: boolean | undefined): Observable<PostDto> {
+    get(id: string | undefined, includeEditHistory: boolean | undefined, includeHiddenPosts: boolean | undefined): Observable<PostDto> {
         let url_ = this.baseUrl + "/api/services/app/Posts/Get?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
@@ -13070,6 +13071,10 @@ export class PostsServiceProxy {
             throw new Error("The parameter 'includeEditHistory' cannot be null.");
         else if (includeEditHistory !== undefined)
             url_ += "includeEditHistory=" + encodeURIComponent("" + includeEditHistory) + "&";
+        if (includeHiddenPosts === null)
+            throw new Error("The parameter 'includeHiddenPosts' cannot be null.");
+        else if (includeHiddenPosts !== undefined)
+            url_ += "includeHiddenPosts=" + encodeURIComponent("" + includeHiddenPosts) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

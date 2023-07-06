@@ -101,7 +101,7 @@
                 </div>
             </div>
 
-            <div *ngFor="let p of children" class="card discussion-content-post">
+            <div *ngFor="let p of children" class="discussion-content-post">
                 <app-community-post-card [isLoading]="isLoading" *ngIf="!p.isHidden && !p.isDeleted" [data]="p" (onChildrenUpdate)="handleChildrenUpdate(p)"></app-community-post-card>
             </div>
 

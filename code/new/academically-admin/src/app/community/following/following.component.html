@@ -85,8 +85,8 @@
       </div>
     </div>
 
-    <ng-container *ngFor="let p of posts" >
-      <div *ngIf="!p.isHidden" class="card community-content-post">
+    <ng-container *ngFor="let p of posts">
+      <div class="community-content-post">
         <app-community-post-card [isLoading]="isLoadingPosts" [data]="p" (onChildrenUpdate)="handleChildrenUpdate(p)" (onSharePost)="handleSharePost($event)"></app-community-post-card>
       </div>
     </ng-container>

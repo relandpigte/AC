@@ -295,7 +295,7 @@ namespace Academically.Services.Posts
             return result;
         }
 
-        public async Task<PostDto> GetAsync(Guid id, bool includeEditHistory = false)
+        public async Task<PostDto> GetAsync(Guid id, bool includeEditHistory = false, bool includeHiddenPosts = false)
         {
             var userId = AbpSession.UserId.Value;
             var userHiddenPost = _postVisibilityRepository.GetAll()
@@ -311,7 +311,7 @@ namespace Academically.Services.Posts
                         .Include(p => p.PostTopics)
                             .ThenInclude(t => t.DisciplineTaxonomy)
                         .Include(p => p.PostNotification)
-                        .Where(e => e.IsHidden == false && !userHiddenPost.Contains(e.Id))
+                        .WhereIf(!includeHiddenPosts, e => e.IsHidden == false && !userHiddenPost.Contains(e.Id))
                         .SingleOrDefaultAsync(p => p.Id == id);
 
             if (post == null) return null;

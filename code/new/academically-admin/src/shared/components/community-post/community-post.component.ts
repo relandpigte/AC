@@ -1,20 +1,19 @@
 import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { finalize, take, takeUntil } from 'rxjs/operators';
 import * as moment from 'moment';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { takeUntil } from 'rxjs/operators';
 
 import { AppComponentBase } from '@shared/app-component-base';
-import { FileUtils } from '@shared/helpers/file-utils';
-import { AvailableServiceDto, DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, SharedType, UserDto } from '@shared/service-proxies/service-proxies';
-import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
-import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
-import { CommunityDiscussionsComponent } from '../community-discussions/community-discussions.component';
-import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 import { AppConsts } from '@shared/AppConsts';
-import { UserFollowingService } from '@shared/services/user-following.service';
+import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
+import { FileUtils } from '@shared/helpers/file-utils';
+import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
+import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
+import { AvailableServiceDto, DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, SharedType, UserDto } from '@shared/service-proxies/service-proxies';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
-import { pipe } from 'rxjs';
+import { UserFollowingService } from '@shared/services/user-following.service';
+import { CommunityDiscussionsComponent } from '../community-discussions/community-discussions.component';
 
 @Component({
     selector: 'app-community-post-card',
@@ -93,6 +92,8 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     async ngOnChanges(changes: SimpleChanges) {
         if ('data' in changes && this.data) {
             this.userTopics = this.data.postTopics?.map?.(t => t.disciplineTaxonomy);
+            this.isHidden = this.data.isHidden;
+            this.isHiding = this.data.isHidden;
             await this.getFileAttachment();
             this.getServiceAttachment();
         }
@@ -155,22 +156,15 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     }
 
     onHideClick(id: string): void {
-        const options: ModalDialogOptions = {
-            title: this.l('AreYouSure'),
-            text: this.l('AreYouSureWantToHideThisPost'),
-            confirmCb: (): void => {
-                this._postsServiceProxy.setPostVisibility(id, true, null, null, null)
-                  .pipe(takeUntil(this.destroyed$))
-                  .subscribe(() => {
-                      this.isHidden = true;
-                      this.isHiding = true;
-                      if (this.closeHiddenPostAfter > 0) {
-                          this.startHideTimer();
-                      }
-                  });
-            }
-        };
-        this._modalDialogService.showConfirmDialog(options);
+        this._postsServiceProxy.setPostVisibility(id, true, null, null, null)
+            .pipe(takeUntil(this.destroyed$))
+            .subscribe(() => {
+                this.isHidden = true;
+                this.isHiding = true;
+                if (this.closeHiddenPostAfter > 0) {
+                    this.startHideTimer();
+                }
+            });
     }
 
     onUndoHideClick(id: string): void {

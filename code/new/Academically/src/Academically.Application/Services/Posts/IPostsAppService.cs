@@ -13,7 +13,7 @@ namespace Academically.Services.Posts
         Task<List<PostDto>> GetPostsByTopics(IEnumerable<string> topicIds);
         Task Create(CreatePostDto input);
         Task<List<PostDto>> GetByUser(long userId, PostType? type);
-        Task<PostDto> GetAsync(Guid id, bool includeEditHistory = false);
+        Task<PostDto> GetAsync(Guid id, bool includeEditHistory = false, bool includeHiddenPosts = false);
         Task<PostDto> UpdateAsync(UpdatePostDto input);
         Task DeleteAsync(Guid id);
         Task<AvailableServiceDto> GetAvailableService(Guid id);
