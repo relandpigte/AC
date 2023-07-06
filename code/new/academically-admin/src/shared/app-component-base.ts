@@ -201,6 +201,54 @@ export abstract class AppComponentBase implements OnDestroy {
     return moment(date).fromNow(removeSuffix);
   }
 
+  convertMomentToPostDateAgo(date: Moment): string {
+    const time = moment(date).format('hh:mm');
+    const month = moment(date).format('D MMMM');
+    const year = moment(date).format('D MMMM YYYY');
+
+    moment.relativeTimeThreshold('s', 60);
+    moment.relativeTimeThreshold('h', 24);
+    moment.relativeTimeThreshold('d', 31);
+    moment.updateLocale('en', {
+      relativeTime : {
+        s: () => 'Just now',
+        m:  '%dm ago',
+        mm: (n) => `${n}m ago`,
+        h:  '1h ago',
+        hh: '%dh ago',
+        d: () => `Yesterday at ${time}`,
+        dd: (n) => {
+          if (n <= 13) {
+            const calendar = moment(date).calendar(null, {
+              lastWeek: 'dddd [at] hh:mm',
+              sameElse: '[Last] dddd [at] hh:mm'
+            });
+            return calendar.toString();
+          }
+          return `${month} at ${time}`;
+        },
+        M:  month,
+        MM: month,
+        y:  () => {
+          // Note: 350 days is the default to consider as 1 year for some reasons.
+          // This block here checks if it's exact 364 days or less then displays the month format
+          // Else display the year format.
+          const daysDiff = moment().diff(moment(date), 'days');
+          if (daysDiff < 365) {
+            return month;
+          }
+          return year;
+        },
+        yy: year
+      }
+    });
+    return moment(date).fromNow(true);
+  }
+
+  convertMomentToPostDateFormat(date: Moment): string {
+    return moment(date).format('dddd, DD MMMM YYYY [at] hh:mm');
+  }
+
   getCourseImageUrl(courseImageUrl: string): string {
     if (courseImageUrl) {
       return courseImageUrl;

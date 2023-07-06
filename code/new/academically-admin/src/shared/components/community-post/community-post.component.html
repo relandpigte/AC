@@ -21,7 +21,9 @@
                         </span>
                     </button>
                 </div>
-                <div class="post-heading-owner-time">{{ postDate }}</div>
+                <div class="post-heading-owner-time" role="button">
+                    <span [tooltip]="convertMomentToPostDateFormat(data.creationTime)">{{ postDate }}</span>
+                </div>
             </div>
             <div class="post-heading-options align-self-start">
                 <div class="dropdown">
