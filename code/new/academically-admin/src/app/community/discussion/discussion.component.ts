@@ -13,6 +13,7 @@ import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.servi
 import { StateUpdateType } from '@shared/services/state-base.service';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
+import { UserFollowingService } from '@shared/services/user-following.service';
 
 enum PostFiltering {
     All = 'Community.Posts.Filtering.All',
@@ -74,7 +75,8 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
         private _cdr: ChangeDetectorRef,
         private _modalService: BsModalService,
         private _hubService: HubService,
-        private _postsService: PostsServiceProxy
+        private _postsService: PostsServiceProxy,
+        private _userFollowingService: UserFollowingService
     ) {
         super(injector);
         this._route.paramMap.subscribe(async paramMap => {
@@ -312,5 +314,22 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
             //   this.postsStateService.loading$.next(false);
               this._cdr.detectChanges();
             });
-      }
+    }
+
+    isUserFollowing(user: UserDto): boolean {
+        return this._userFollowingService.isUserFollowing(user);
+    }
+
+    isUserLoading(userId: number): boolean {
+        return this._userFollowingService.isUserLoading(userId.toString());
+    }
+
+    handleUserFollow(user: UserDto): void {
+        if (this.isUserFollowing(user)) {
+          this._userFollowingService.onUnFollowUser(user);
+        } else {
+          this._userFollowingService.onFollowUser(user);
+        }
+    }
+
 }

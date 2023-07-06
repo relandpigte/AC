@@ -156,7 +156,13 @@
             </div>
         </div>
         <div *ngIf="!isParticipantSelf(item)" class="participants-right d-flex justify-content-center align-items-center">
-            <div type="button" class="btn btn-white topic-btn d-flex justify-content-center align-items-center">Follow</div>
+            <button type="button"
+                class="btn btn-white participants-btn d-flex justify-content-center align-items-center"
+                [class.activated]="isUserFollowing(item)"
+                (click)="handleUserFollow(item)"
+                [disabled]="isUserLoading(item.id)">
+                {{ isUserFollowing(item) ? 'Following' : 'Follow'  }}
+            </button>
         </div>
     </div>
 </ng-template>
