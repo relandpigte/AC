@@ -1,0 +1,16 @@
+<div class="edit-history container-fluid">
+    <div class="row">
+        <h1 class="edit-history-title col-12">Edit history</h1>
+        <div class="edit-history-content col-12">
+            <app-preview-posts [data]="post"></app-preview-posts>
+
+            <div class="edit-history-separator d-flex align-items-center">
+                <span class="flex-grow-1">Edit history is visible to anyone who can see this {{ postType }}</span>
+           </div>
+
+            <div *ngFor="let history of histories" [style.marginBottom.px]="24">
+                <app-preview-posts [data]="history"></app-preview-posts>
+            </div>
+        </div>
+    </div>
+</div>

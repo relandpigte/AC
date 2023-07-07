@@ -49,14 +49,14 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   userTopics: UserTopicDto[] = [];
   selectedTopics: string[] = [];
 
-  isLoadingCommunity$ = new BehaviorSubject<boolean>(true);
-  isLoadingSuggestTopics$ = new BehaviorSubject<boolean>(true);
-  isLoadingPeopleToFollow$ = new BehaviorSubject<boolean>(true);
-  isLoadingRecommendedCourses$ = new BehaviorSubject<boolean>(true);
-  isLoadingRecommendedCoachings$ = new BehaviorSubject<boolean>(true);
-  isLoadingRecommendedArticles$ = new BehaviorSubject<boolean>(true);
-  isLoadingRecommendedEvents$ = new BehaviorSubject<boolean>(true);
-  isLoadingRecommendedTutorials$ = new BehaviorSubject<boolean>(true);
+  isLoadingCommunity$ = new BehaviorSubject<boolean>(false);
+  isLoadingSuggestTopics$ = new BehaviorSubject<boolean>(false);
+  isLoadingPeopleToFollow$ = new BehaviorSubject<boolean>(false);
+  isLoadingRecommendedCourses$ = new BehaviorSubject<boolean>(false);
+  isLoadingRecommendedCoachings$ = new BehaviorSubject<boolean>(false);
+  isLoadingRecommendedArticles$ = new BehaviorSubject<boolean>(false);
+  isLoadingRecommendedEvents$ = new BehaviorSubject<boolean>(false);
+  isLoadingRecommendedTutorials$ = new BehaviorSubject<boolean>(false);
 
   suggestedTopics: DisciplineTaxonomyDto[] = Array(4)
     .fill([])
@@ -86,6 +86,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   > = new Map();
 
   getUserTopics$ = () => {
+    this.isLoadingSuggestTopics$.next(true);
     return this._userTopicsService
       .getAll(
         undefined,
@@ -116,12 +117,10 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
-  get isDiscussion(): boolean {
-    return this._router.url.includes(["community", "discussion"].join("/"));
-  }
-  get shimmerType() {
-    return ShimmerType;
-  }
+  get isDiscussion(): boolean { return this._router.url.includes(['community', 'discussion'].join('/')); }
+  get isEditHistory(): boolean { return this._router.url.includes(['community', 'edit-history'].join('/')); }
+  get shimmerType() { return ShimmerType; }
+
   get isLoading$() {
     return combineLatest([
       this.isLoadingCommunity$,
@@ -304,6 +303,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     request.sorting = TopicSorting.Popular;
     request.take = 4;
 
+    this.isLoadingSuggestTopics$.next(true);
     this._taxonomyService
       .search(request)
       .pipe(
@@ -316,6 +316,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   }
 
   getPeopleToFollow(): void {
+    this.isLoadingPeopleToFollow$.next(true);
     this._userFollowersService
       .getUsersToFollow()
       .pipe(
@@ -331,6 +332,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   }
 
   getRecommendedCourses(): void {
+    this.isLoadingRecommendedCourses$.next(true);
     this._coursesService
       .getByDates(
         this.appSession.userId,
@@ -364,6 +366,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   }
 
   getRecommendedCoachings(): void {
+    this.isLoadingRecommendedCoachings$.next(true);
     this._coachingService
       .getByDates(
         this.appSession.userId,
@@ -397,6 +400,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   }
 
   getRecommendedArticles(): void {
+    this.isLoadingRecommendedArticles$.next(true);
     this._articlesService
       .getByDates(
         this.appSession.userId,
@@ -430,6 +434,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   }
 
   getRecommendedEvents(): void {
+    this.isLoadingRecommendedEvents$.next(true);
     this._eventsService
       .getByDates(
         this.appSession.userId,
@@ -463,6 +468,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   }
 
   getRecommendedTutorials(): void {
+    this.isLoadingRecommendedTutorials$.next(true)
     this._videosService
       .getByDates(
         this.appSession.userId,

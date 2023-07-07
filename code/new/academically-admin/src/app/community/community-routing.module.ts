@@ -37,6 +37,13 @@ import { AppRouteGuard } from '@shared/auth/auth-route-guard';
                     import('@app/community/discussion/discussion.module').then(
                       (m) => m.DiscussionModule
                     ),
+                },
+                {
+                  path: 'edit-history/:id',
+                  loadChildren: () =>
+                    import('@app/community/edit-history/edit-history.module').then(
+                      (m) => m.EditHistoryModule
+                    ),
                 }
             ]
           },
