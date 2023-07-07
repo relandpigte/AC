@@ -7,11 +7,6 @@ namespace Academically.Services.Posts.Dto
 {
     public class PostEditHistoryDto
     {
-        public PostEditHistoryDto()
-        {
-            PostTopics = new List<DisciplineTaxonomyDto>();     
-        }
-
         public DateTime ChangeTime { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }

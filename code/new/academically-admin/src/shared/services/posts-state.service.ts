@@ -18,7 +18,7 @@ export class PostsStateService extends StateServiceBase {
   totalPostsCount: number;
 
   posts$: Subject<StateUpdate<PostDto>> = new Subject();
-  loading$: Subject<boolean> = new BehaviorSubject(false);
+  loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
   type: pageType;
   fns = {

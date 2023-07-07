@@ -15,7 +15,7 @@ export class CommentsStateService extends StateServiceBase {
   totalCommentsCount: number;
 
   comments$: Subject<StateUpdate<CommentDto>> = new Subject();
-  loading$: Subject<boolean> = new BehaviorSubject(false);
+  loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
   constructor(
     private _hubService: HubService,

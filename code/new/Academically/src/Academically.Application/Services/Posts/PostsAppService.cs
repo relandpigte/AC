@@ -818,7 +818,8 @@ namespace Academically.Services.Posts
                             history.Content = propertyChange.OriginalValue.Trim('"'); break;
                         case "DisciplineTaxonomyIds":
                             var disciplineTaxonomyIds = propertyChange.OriginalValue?.Trim('"').Split(",").ToList();
-                            if (disciplineTaxonomyIds != null)
+                            if (disciplineTaxonomyIds == null) history.PostTopics = new List<DisciplineTaxonomyDto>();
+                            else
                             {
                                 var disciplineTaxonomies = await _disciplineTaxonomyRepository.GetAll()
                                    .Where(x => disciplineTaxonomyIds.Contains(x.Id.ToString()))

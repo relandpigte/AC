@@ -52,26 +52,28 @@ export class EditHistoryComponent extends AppComponentBase implements OnInit {
   }
 
   private buildPostHistory(): void {
-    const { title, content } = this.post;
+    const { title, content, postTopics } = this.post;
     let tempTitle = title;
     let tempContent = content;
+    let tempPostTopics = postTopics;
 
     this.post?.postEditHistories?.map((h, i, arr) => {
 
-      const history = new PostDto();
+      const history = new PostDto(this.post);
       history.title = h.title ?? tempTitle;
       history.content = h.content ?? tempContent;
       history.creationTime = h.changeTime;
-      history.postTopics = h.postTopics.map(t => {
+      history.postTopics = h.postTopics?.map(t => {
         var postTopicDto = new PostTopicDto();
         postTopicDto.disciplineTaxonomy = t;
         postTopicDto.disciplineTaxonomyId = t.id;
         return postTopicDto;
-      });
+      }) ?? tempPostTopics;
       this.histories.push(history);
 
       tempTitle = history.title;
       tempContent = history.content;
+      tempPostTopics = history.postTopics;
     });
   }
 }

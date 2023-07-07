@@ -6,7 +6,7 @@ import { UserTopicDto } from '@shared/service-proxies/service-proxies';
   providedIn: 'root'
 })
 export class CommunityService {
-  private isLoading$ = new BehaviorSubject<boolean>(false);
+  private isLoading$ = new BehaviorSubject<boolean>(true);
   private selectedTopics$ = new Subject<UserTopicDto[]>();
 
 
