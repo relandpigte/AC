@@ -13,6 +13,10 @@
         animation: fullView 0.5s forwards cubic-bezier(0.250, 0.460, 0.450, 0.940);
         gap: 15px;
 
+        &.inanimate {
+            animation: none;
+        }
+
         &.shimmer-composer {
             padding: 20px 24px;
         }
@@ -27,6 +31,10 @@
 
         &.p-15 {
             padding: 15px 0;
+        }
+
+        &-blank {
+            width: 100%;
         }
 
 

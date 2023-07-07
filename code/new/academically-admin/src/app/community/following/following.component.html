@@ -1,6 +1,6 @@
 <div class="container-fluid following d-flex flex-column flex-nowrap p-0">
 
-    <div class="following-controls d-flex flex-row justify-content-between" [style.marginBottom.px]="10">
+    <div *ngIf="!isLoading" class="following-controls d-flex flex-row justify-content-between" [style.marginBottom.px]="10">
       <div class="following-controls-filter">
         <div class="dropdown">
           <a href="#" class="dropdown-ellipses dropdown-toggle d-flex flex-row align-items-center gap-5" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -87,15 +87,15 @@
 
     <ng-container *ngFor="let p of posts">
       <div class="community-content-post">
-        <app-community-post-card [isLoading]="isLoadingPosts" [data]="p" (onChildrenUpdate)="handleChildrenUpdate(p)" (onSharePost)="handleSharePost($event)"></app-community-post-card>
+        <app-community-post-card [isLoading]="isLoading" [data]="p" (onChildrenUpdate)="handleChildrenUpdate(p)" (onSharePost)="handleSharePost($event)"></app-community-post-card>
       </div>
     </ng-container>
 
-    <div *ngIf="hiddenPostsCount" class="card community-content-post-load-more" (click)="onLoadMore()">
+    <div *ngIf="!isLoading && hiddenPostsCount" class="card community-content-post-load-more" (click)="onLoadMore()">
         <span>Load more...</span>
     </div>
 
-    <div *ngIf="usersYouMayKnow?.length > 0" class="card community-content-post">
+    <div *ngIf="!isLoading && usersYouMayKnow?.length > 0" class="card community-content-post">
         <div class="row align-items-center community-content-post-title">
           <div class="col d-flex flex-wrap align-items-center justify-content-between">
             <span class="community-content-post-title-heading">Users you may know</span>
@@ -108,7 +108,7 @@
             [maxItems]="usersYouMayKnowMaxItems"
             [itemWidth]="260"
             [itemSpacing]="25"
-            [isLoading]="isLoading_usersYouMayKnow"
+            [isLoading]="isLoading"
             [isAutoFit]="true"
             [isInfiteScroll]="true"
             (onRequestNewData)="handleUsersYouMayKnowRequestData($event)">
@@ -116,7 +116,7 @@
         </div>
     </div>
 
-    <div *ngIf="recommendedCourses?.length > 0" class="card community-content-post">
+    <div *ngIf="!isLoading && recommendedCourses?.length > 0" class="card community-content-post">
       <div class="row align-items-center community-content-post-title">
         <div class="col d-flex flex-wrap align-items-center justify-content-between">
           <span class="community-content-post-title-heading">Recommended Courses</span>
@@ -129,7 +129,7 @@
           [maxItems]="recommendedCoursesMaxItems"
           [itemWidth]="352"
           [itemSpacing]="30"
-          [isLoading]="isLoading_recommendedCourses"
+          [isLoading]="isLoading"
           [isAutoFit]="true"
           [isInfiteScroll]="true"
           (onRequestNewData)="handleRecommendedCoursesRequestData($event)"
@@ -138,7 +138,7 @@
       </div>
     </div>
 
-    <div class="community-content-post end d-flex flex-row justify-content-center align-items-center" [style.marginTop.px]="40" [style.marginBottom.px]="20">
+    <div *ngIf="!isLoading" class="community-content-post end d-flex flex-row justify-content-center align-items-center" [style.marginTop.px]="40" [style.marginBottom.px]="20">
       <div class="left"></div>
       <div class="community-content-post-no-more flex-grow-1 d-flex justify-content-center align-items-center">No more posts</div>
       <div class="right"></div>

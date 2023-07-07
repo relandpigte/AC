@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Injector, Input, Output, OnChanges, SimpleChanges, ElementRef, ViewChild, OnDestroy, AfterViewInit, HostListener } from "@angular/core";
 import { AppComponentBase } from '@shared/app-component-base';
+import { ShimmerType } from "@shared/enums/shimmer/shimmer-type.enum";
 import { Utils } from "@shared/helpers/utils";
 import KeenSlider, { KeenSliderInstance } from 'keen-slider';
 
@@ -16,6 +17,9 @@ export class CarouselPillComponent extends AppComponentBase implements AfterView
     carouselInstance: KeenSliderInstance = null;
     currentItem: number = 0;
 
+    @Input() isLoading: boolean;
+    @Input() hasShimmer: boolean = false;
+
     @Input() choices: any[];
     @Input() key: string;
 
@@ -26,6 +30,8 @@ export class CarouselPillComponent extends AppComponentBase implements AfterView
 
     @Output() onSelect = new EventEmitter<string[]>();
     @Output() onAdd =  new EventEmitter<void>();
+
+    shimmerType = ShimmerType;
 
     windowResizeInterval$: any;
     private selected: string[] = [];

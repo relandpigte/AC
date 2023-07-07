@@ -84,7 +84,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     }
   }
   get hiddenPostsCount(): number { return this.totalPostsCount - this.posts.length; }
-  get isLoading(): boolean { return this.isLoadingPosts || this.commentContainer.isLoadingComments }
+  get isLoading(): boolean { return this.isLoadingPosts || this.commentContainer.isLoadingComments || this.isLoading_usersYouMayKnow || this.isLoading_recommendedCourses; }
 
   async ngOnInit() {
     this.loadInfiniteData(this._usersService, 'getAll', ['', true, 'creationTime desc', 0, 6], 'usersYouMayKnow');

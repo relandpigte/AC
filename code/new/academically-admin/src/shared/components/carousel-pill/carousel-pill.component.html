@@ -1,4 +1,7 @@
-<div class="carousel-pill keen-slider align-content-center align-items-center" #carouselContainer>
+<div *ngIf="hasShimmer && isLoading" class="carousel-pill-shimmer-container">
+    <app-shimmer [show]="true" [shimmerType]="shimmerType.TopicsCarousel"></app-shimmer>
+</div>
+<div class="carousel-pill keen-slider align-content-center align-items-center" #carouselContainer [hidden]="hasShimmer && isLoading">
     <div class="keen-slider__slide flex-row align-items-center">
         <div *ngIf="canAdd" class="carousel-pill-item add-pill" (click)="handleAddPill()">
             <i class="fas fa-plus"></i><span class="add-pill-label">{{ 'Add' | localize }}</span>

@@ -13,18 +13,19 @@ import { TopicSorting } from '@shared/components/topic/topic.component';
 import { CommunityService } from './community.service';
 import { ShimmerType } from '../../shared/enums/shimmer/shimmer-type.enum';
 import { UserFollowingService } from '@shared/services/user-following.service';
+import { combineLatest } from 'rxjs';
 
 @Component({
-  selector: 'app-community',
-  templateUrl: './community.component.html',
-  styleUrls: ['./community.component.less'],
+  selector: "app-community",
+  templateUrl: "./community.component.html",
+  styleUrls: ["./community.component.less"],
   animations: [appModuleAnimation()],
-  providers: [CommunityService]
+  providers: [CommunityService],
 })
 export class CommunityComponent extends AppComponentBase implements OnInit {
-  isLoading = true;
   userTopics: UserTopicDto[] = [];
   selectedTopics: string[] = [];
+  isLoadingCommunity = true;
   isLoadingSuggestTopics = true;
   isLoadingPeopleToFollow = true;
   isLoadingRecommendedCourses = true;
@@ -32,21 +33,44 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   isLoadingRecommendedArticles = true;
   isLoadingRecommendedEvents = true;
   isLoadingRecommendedTutorials = true;
-  suggestedTopics: DisciplineTaxonomyDto[] = Array(4).fill([]).map(() => this.generateRandomTopic()) as DisciplineTaxonomyDto[];
-  peopleToFollow: UserDto[] = Array(4).fill([]).map(() => this.generateRandomUser()) as UserDto[];
-  recommendedCourses: CourseDto[] = Array(4).fill([]).map(() => this.generateRandomCourse()) as CourseDto[];
-  recommendedCoachings: CoachingDto[] = Array(4).fill([]).map(() => this.generateRandomCoaching()) as CoachingDto[];
-  recommendedArticles: ArticleDto[] = Array(4).fill([]).map(() => this.generateRandomArticle()) as ArticleDto[];
-  recommendedEvents: EventDto[] = Array(4).fill([]).map(() => this.generateRandomEvent()) as EventDto[];
-  recommendedTutorials: VideoDto[] = Array(4).fill([]).map(() => this.generateRandomTutorial()) as VideoDto[];
+  suggestedTopics: DisciplineTaxonomyDto[] = Array(4)
+    .fill([])
+    .map(() => this.generateRandomTopic()) as DisciplineTaxonomyDto[];
+  peopleToFollow: UserDto[] = Array(4)
+    .fill([])
+    .map(() => this.generateRandomUser()) as UserDto[];
+  recommendedCourses: CourseDto[] = Array(4)
+    .fill([])
+    .map(() => this.generateRandomCourse()) as CourseDto[];
+  recommendedCoachings: CoachingDto[] = Array(4)
+    .fill([])
+    .map(() => this.generateRandomCoaching()) as CoachingDto[];
+  recommendedArticles: ArticleDto[] = Array(4)
+    .fill([])
+    .map(() => this.generateRandomArticle()) as ArticleDto[];
+  recommendedEvents: EventDto[] = Array(4)
+    .fill([])
+    .map(() => this.generateRandomEvent()) as EventDto[];
+  recommendedTutorials: VideoDto[] = Array(4)
+    .fill([])
+    .map(() => this.generateRandomTutorial()) as VideoDto[];
 
-  topicLoaders: Map<string, { isFollowingTopic?: boolean, isUnfollowingTopic?: boolean }> = new Map();
+  topicLoaders: Map<
+    string,
+    { isFollowingTopic?: boolean; isUnfollowingTopic?: boolean }
+  > = new Map();
 
   getUserTopics$ = () => {
-    return this._userTopicsService.getAll(undefined, this.appSession.userId, UserTopicType.Following, undefined)
+    return this._userTopicsService
+      .getAll(
+        undefined,
+        this.appSession.userId,
+        UserTopicType.Following,
+        undefined
+      )
       .pipe(takeUntil(this.destroyed$))
-      .pipe(finalize(() => this.isLoadingSuggestTopics = false));
-  }
+      .pipe(finalize(() => (this.isLoadingSuggestTopics = false)));
+  };
 
   constructor(
     injector: Injector,
@@ -67,8 +91,24 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
-  get isDiscussion(): boolean { return this._router.url.includes(['community', 'discussion'].join('/')) }
-  get shimmerType() { return ShimmerType }
+  get isDiscussion(): boolean {
+    return this._router.url.includes(["community", "discussion"].join("/"));
+  }
+  get shimmerType() {
+    return ShimmerType;
+  }
+  get isLoading(): boolean {
+    return (
+      this.isLoadingCommunity ||
+      this.isLoadingPeopleToFollow ||
+      this.isLoadingRecommendedArticles ||
+      this.isLoadingRecommendedCoachings ||
+      this.isLoadingRecommendedCourses ||
+      this.isLoadingRecommendedEvents ||
+      this.isLoadingRecommendedTutorials ||
+      this.isLoadingSuggestTopics
+    );
+  }
 
   ngOnInit(): void {
     this.getUserTopics();
@@ -80,8 +120,8 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     this.getRecommendedEvents();
     this.getRecommendedTutorials();
 
-    this._communityService.getIsLoading().subscribe(isLoading => {
-      this.isLoading = isLoading;
+    this._communityService.getIsLoading().subscribe((isLoading) => {
+      this.isLoadingCommunity = isLoading;
     });
   }
 
@@ -89,14 +129,15 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     const topicLoaders = this.topicLoaders.get(id);
     if (!topicLoaders) return false;
     if (property) return topicLoaders[property];
-    else return Object.keys(topicLoaders).some(p => topicLoaders[p]);
+    else return Object.keys(topicLoaders).some((p) => topicLoaders[p]);
   }
 
   setTopicLoading(id: string, property: string, value: boolean): void {
     if (!this.topicLoaders.has(id)) this.topicLoaders.set(id, {});
     const topicLoaders = this.topicLoaders.get(id);
     topicLoaders[property] = value;
-    if (Object.keys(topicLoaders).every(p => !topicLoaders[p])) this.topicLoaders.delete(id);
+    if (Object.keys(topicLoaders).every((p) => !topicLoaders[p]))
+      this.topicLoaders.delete(id);
   }
 
   handleFilterTopics(topics: string[]): void {
@@ -105,106 +146,131 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   }
 
   handleViewAllClick(type: string): void {
-    switch(type) {
-      case 'topics':
+    switch (type) {
+      case "topics":
         break;
       default:
-        this._router.navigate(['app', 'explore', type]);
+        this._router.navigate(["app", "explore", type]);
     }
   }
 
   handleItemClick(type: string, item: any): void {
-    switch(type) {
-      case 'topics':
+    switch (type) {
+      case "topics":
         break;
-      case 'users':
+      case "users":
         break;
-      case 'courses':
+      case "courses":
         break;
-      case 'coachings':
+      case "coachings":
         break;
-      case 'articles':
+      case "articles":
         break;
-      case 'events':
+      case "events":
         break;
-      case 'tutorials':
+      case "tutorials":
         break;
     }
   }
 
   handleAddPost(tab: string): void {
-    const modalSettings = this.defaultModalSettings as ModalOptions<UpsertPostComponent>;
-    modalSettings.class = 'modal-lg';
+    const modalSettings = this
+      .defaultModalSettings as ModalOptions<UpsertPostComponent>;
+    modalSettings.class = "modal-lg";
     modalSettings.initialState = { activeTab: tab };
 
-    const modal = this._modalService.show(UpsertPostComponent, modalSettings).content;
+    const modal = this._modalService.show(
+      UpsertPostComponent,
+      modalSettings
+    ).content;
   }
 
   handleAddTopics(): void {
-    const modalSettings = this.defaultModalSettings as ModalOptions<AddTopicsComponent>;
-    modalSettings.class = 'modal-lg';
+    const modalSettings = this
+      .defaultModalSettings as ModalOptions<AddTopicsComponent>;
+    modalSettings.class = "modal-lg";
 
-    const modal = this._modalService.show(AddTopicsComponent, modalSettings).content;
+    const modal = this._modalService.show(
+      AddTopicsComponent,
+      modalSettings
+    ).content;
   }
 
   handleOnFollowTopic(topic: DisciplineTaxonomyDto): void {
-    this.setTopicLoading(topic.id, 'isFollowingTopic', true);
+    this.setTopicLoading(topic.id, "isFollowingTopic", true);
 
     const request = new CreateUserTopicDto();
     request.userId = this.appSession.userId;
     request.disciplineTaxonomyId = topic.id;
     request.type = UserTopicType.Following;
 
-    this._userTopicsService.create(request)
-        .pipe(switchMap(() => this.getUserTopics$()))
-        .pipe(takeUntil(this.destroyed$))
-        .pipe(finalize(() => this.setTopicLoading(topic.id, 'isFollowingTopic', false)))
-        .subscribe((topics) => {
-          this.userTopics = topics.filter(x => x);
-          this.suggestedTopics.forEach(t => {
-            if (t.id === topic.id) t.userTopics.push(request as UserTopicDto);
-          });
+    this._userTopicsService
+      .create(request)
+      .pipe(switchMap(() => this.getUserTopics$()))
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(
+        finalize(() =>
+          this.setTopicLoading(topic.id, "isFollowingTopic", false)
+        )
+      )
+      .subscribe((topics) => {
+        this.userTopics = topics.filter((x) => x);
+        this.suggestedTopics.forEach((t) => {
+          if (t.id === topic.id) t.userTopics.push(request as UserTopicDto);
         });
+      });
   }
 
   handleOnUnfollowTopic(topic: DisciplineTaxonomyDto): void {
-    this.setTopicLoading(topic.id, 'isUnfollowingTopic', true);
+    this.setTopicLoading(topic.id, "isUnfollowingTopic", true);
 
-    const userTopic = Array.from(this.userTopics.values()).find(t => t.disciplineTaxonomyId === topic.id);
+    const userTopic = Array.from(this.userTopics.values()).find(
+      (t) => t.disciplineTaxonomyId === topic.id
+    );
 
-    this._userTopicsService.delete(userTopic.id)
-      .pipe(switchMap(() =>  this.getUserTopics$()))
+    this._userTopicsService
+      .delete(userTopic.id)
+      .pipe(switchMap(() => this.getUserTopics$()))
       .pipe(takeUntil(this.destroyed$))
-      .pipe(finalize(() => this.setTopicLoading(topic.id, 'isUnfollowingTopic', false)))
+      .pipe(
+        finalize(() =>
+          this.setTopicLoading(topic.id, "isUnfollowingTopic", false)
+        )
+      )
       .subscribe((topics) => {
-        this.userTopics = topics.filter(x => x);
-        this.suggestedTopics.forEach(t => {
-          if (t.id === topic.id) t.userTopics = t.userTopics.filter(t => t.disciplineTaxonomyId !== topic.id);
+        this.userTopics = topics.filter((x) => x);
+        this.suggestedTopics.forEach((t) => {
+          if (t.id === topic.id)
+            t.userTopics = t.userTopics.filter(
+              (t) => t.disciplineTaxonomyId !== topic.id
+            );
         });
       });
   }
 
   getCourseThumbnail(course: CourseDto): string {
-    return course.thumbnailImageUrl ?? 'assets/img/img-placeholder.png';
+    return course.thumbnailImageUrl ?? "assets/img/img-placeholder.png";
   }
 
   getArticleAuthorAvatar(article: ArticleDto): string {
-    return article.creatorUser?.profilePictureUrl ?? 'assets/img/anonymous.png';
+    return article.creatorUser?.profilePictureUrl ?? "assets/img/anonymous.png";
   }
 
   getEventThumbnail(event: EventDto): string {
-    return event.thumbnailImageUrl ?? 'assets/img/img-placeholder.png';
+    return event.thumbnailImageUrl ?? "assets/img/img-placeholder.png";
   }
 
   getCourseComposition(course: CourseDto): string {
     const modules = course?.modules ? `${course?.modules} modules` : null;
     const lessons = course?.lessons ? `${course?.lessons} lessons` : null;
-    const values = [modules, lessons].filter(x => x);
-    return values?.length ? values.join(' • ') : 'no lessons';
+    const values = [modules, lessons].filter((x) => x);
+    return values?.length ? values.join(" • ") : "no lessons";
   }
 
   getUserTopics(): void {
-    this.getUserTopics$().subscribe(topics => this.userTopics = topics.filter(x => x));
+    this.getUserTopics$().subscribe(
+      (topics) => (this.userTopics = topics.filter((x) => x))
+    );
   }
 
   getSuggestedTopics(): void {
@@ -214,44 +280,59 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     request.sorting = TopicSorting.Popular;
     request.take = 4;
 
-    this._taxonomyService.search(request)
+    this._taxonomyService
+      .search(request)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
           this.isLoadingSuggestTopics = false;
         })
       )
-      .subscribe(topics => this.suggestedTopics = topics);
+      .subscribe((topics) => (this.suggestedTopics = topics));
   }
 
   getPeopleToFollow(): void {
-    this._userFollowersService.getUsersToFollow()
+    this._userFollowersService
+      .getUsersToFollow()
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
           this.isLoadingPeopleToFollow = false;
         })
       )
-      .subscribe(users => {
+      .subscribe((users) => {
         this.peopleToFollow = users ?? [];
         this.peopleToFollow = _.take(this.peopleToFollow, 4);
       });
   }
 
   getRecommendedCourses(): void {
-    this._coursesService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, undefined, 0, 4)
+    this._coursesService
+      .getByDates(
+        this.appSession.userId,
+        undefined,
+        undefined,
+        undefined,
+        DateGrains.Aged30,
+        undefined,
+        0,
+        4
+      )
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
           this.isLoadingRecommendedCourses = false;
         })
       )
-      .subscribe(pagedCourses => {
+      .subscribe((pagedCourses) => {
         const courses = pagedCourses;
         if (courses) {
           this.recommendedCourses = [];
-          Object.keys(courses).forEach(range => {
-            this.recommendedCourses = _.concat(this.recommendedCourses, courses[range]?.items);
+          Object.keys(courses).forEach((range) => {
+            this.recommendedCourses = _.concat(
+              this.recommendedCourses,
+              courses[range]?.items
+            );
             this.recommendedCourses = _.take(this.recommendedCourses, 4);
           });
         }
@@ -259,19 +340,32 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   }
 
   getRecommendedCoachings(): void {
-    this._coachingService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, undefined, 0, 4)
+    this._coachingService
+      .getByDates(
+        this.appSession.userId,
+        undefined,
+        undefined,
+        undefined,
+        DateGrains.Aged30,
+        undefined,
+        0,
+        4
+      )
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
           this.isLoadingRecommendedCoachings = false;
         })
       )
-      .subscribe(pagedCoachings => {
+      .subscribe((pagedCoachings) => {
         const coachings = pagedCoachings;
         if (coachings) {
           this.recommendedCoachings = [];
-          Object.keys(coachings).forEach(range => {
-            this.recommendedCoachings = _.concat(this.recommendedCoachings, coachings[range]?.items);
+          Object.keys(coachings).forEach((range) => {
+            this.recommendedCoachings = _.concat(
+              this.recommendedCoachings,
+              coachings[range]?.items
+            );
             this.recommendedCoachings = _.take(this.recommendedCoachings, 4);
           });
         }
@@ -279,67 +373,110 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   }
 
   getRecommendedArticles(): void {
-    this._articlesService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, undefined, 0, 4)
-    .pipe(
-      takeUntil(this.destroyed$),
-      finalize(() => {
-        this.isLoadingRecommendedArticles = false;
-      })
-    )
-    .subscribe(pagedArticles => {
-      const articles = pagedArticles;
-      if (articles) {
-        this.recommendedArticles = [];
-        Object.keys(articles).forEach(range => {
-          this.recommendedArticles = _.concat(this.recommendedArticles, articles[range]?.items);
-          this.recommendedArticles = _.take(this.recommendedArticles, 4);
-        });
-      }
-    });
+    this._articlesService
+      .getByDates(
+        this.appSession.userId,
+        undefined,
+        undefined,
+        undefined,
+        DateGrains.Aged30,
+        undefined,
+        0,
+        4
+      )
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoadingRecommendedArticles = false;
+        })
+      )
+      .subscribe((pagedArticles) => {
+        const articles = pagedArticles;
+        if (articles) {
+          this.recommendedArticles = [];
+          Object.keys(articles).forEach((range) => {
+            this.recommendedArticles = _.concat(
+              this.recommendedArticles,
+              articles[range]?.items
+            );
+            this.recommendedArticles = _.take(this.recommendedArticles, 4);
+          });
+        }
+      });
   }
 
   getRecommendedEvents(): void {
-    this._eventsService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, undefined, 0, 4)
-    .pipe(
-      takeUntil(this.destroyed$),
-      finalize(() => {
-        this.isLoadingRecommendedEvents = false;
-      })
-    )
-    .subscribe(pagedEvents => {
-      const events = pagedEvents;
-      if (events) {
-        this.recommendedEvents = [];
-        Object.keys(events).forEach(range => {
-          this.recommendedEvents = _.concat(this.recommendedEvents, events[range]?.items);
-          this.recommendedEvents = _.take(this.recommendedEvents, 4);
-        });
-      }
-    });
+    this._eventsService
+      .getByDates(
+        this.appSession.userId,
+        undefined,
+        undefined,
+        undefined,
+        DateGrains.Aged30,
+        undefined,
+        0,
+        4
+      )
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoadingRecommendedEvents = false;
+        })
+      )
+      .subscribe((pagedEvents) => {
+        const events = pagedEvents;
+        if (events) {
+          this.recommendedEvents = [];
+          Object.keys(events).forEach((range) => {
+            this.recommendedEvents = _.concat(
+              this.recommendedEvents,
+              events[range]?.items
+            );
+            this.recommendedEvents = _.take(this.recommendedEvents, 4);
+          });
+        }
+      });
   }
 
   getRecommendedTutorials(): void {
-    this._videosService.getByDates(this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, undefined, 0, 4)
-    .pipe(
-      takeUntil(this.destroyed$),
-      finalize(() => {
-        this.isLoadingRecommendedTutorials = false;
-      })
-    )
-    .subscribe(pagedTutorials => {
-      const tutorials = pagedTutorials;
-      if (tutorials) {
-        this.recommendedTutorials = [];
-        Object.keys(tutorials).forEach(range => {
-          this.recommendedTutorials = _.concat(this.recommendedTutorials, tutorials[range]?.items);
-          this.recommendedTutorials = _.take(this.recommendedTutorials, 4);
-        });
-      }
-    });
+    this._videosService
+      .getByDates(
+        this.appSession.userId,
+        undefined,
+        undefined,
+        undefined,
+        DateGrains.Aged30,
+        undefined,
+        0,
+        4
+      )
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoadingRecommendedTutorials = false;
+        })
+      )
+      .subscribe((pagedTutorials) => {
+        const tutorials = pagedTutorials;
+        if (tutorials) {
+          this.recommendedTutorials = [];
+          Object.keys(tutorials).forEach((range) => {
+            this.recommendedTutorials = _.concat(
+              this.recommendedTutorials,
+              tutorials[range]?.items
+            );
+            this.recommendedTutorials = _.take(this.recommendedTutorials, 4);
+          });
+        }
+      });
   }
 
   isTopicFollowed(topic: DisciplineTaxonomyDto): boolean {
-    return topic?.userTopics?.some(u => u.userId === this.appSession.userId && u.type === UserTopicType.Following);
+    return topic?.userTopics?.some(
+      (u) =>
+        u.userId === this.appSession.userId &&
+        u.type === UserTopicType.Following
+    );
   }
 
   isUserFollowing(user: UserDto): boolean {
