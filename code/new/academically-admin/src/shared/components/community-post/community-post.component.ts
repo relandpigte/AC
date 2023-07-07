@@ -83,6 +83,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     }
     get sharedPost(): any { return this.data?.sharedPost; }
     get sharedService(): any { return ServiceCardUtils.getServiceData(this.data); }
+    get isEdited(): boolean { return this.data?.lastModificationTime != null; }
     get hasSharedPost(): boolean { return this.data?.sharedId && this.data?.sharedType === SharedType.Post; }
     get hasSharedService(): boolean { return this.data?.sharedId && this.data?.sharedType === SharedType.Service; }
     get isShowOwnerTag(): boolean { return this.isOwner || !this.isUserFollowing(this.data?.creatorUser) || (this.isUserFollowing(this.data?.creatorUser) && this.showUnfollow)}
@@ -122,6 +123,11 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
 
     goToDiscussion(): void {
         const url = `${AppConsts.appBaseUrl}/app/community/discussion/${this.data.id}`;
+        window.open(url, '_blank');
+    }
+
+    goToHistory(): void {
+        const url = `${AppConsts.appBaseUrl}/app/community/edit-history/${this.data.id}`;
         window.open(url, '_blank');
     }
 

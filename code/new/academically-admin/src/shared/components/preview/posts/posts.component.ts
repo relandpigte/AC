@@ -20,33 +20,23 @@ export class PreviewPostsComponent extends AppComponentBase implements OnInit, O
 
   @Output() onRemove: EventEmitter<any> = new EventEmitter<any>();
   showMore = false;
-  title: string;
-  description: string;
-  author: string;
-  postDate: string;
   fileAttachment: File;
-
-  userTopics: DisciplineTaxonomyDto[];
 
   constructor(injector: Injector, private _cdr: ChangeDetectorRef) {
     super(injector);
   }
 
+  get title(): string { return this.data?.title; }
+  get description(): string { return this.data?.content; }
+  get postDate(): string { return this.postDateFormat(this.data?.creationTime); }
+  get author(): string { return this.data?.creatorUser?.fullName; }
+  get userTopics(): DisciplineTaxonomyDto[] { return this.data?.postTopics?.map?.(t => t.disciplineTaxonomy); }
+
   get isShowMore(): boolean {
     return this.description?.length > this.showMoreLimit;
   }
 
-  ngOnInit(): void {
-    if (!this.data) {
-      return;
-    }
-
-    this.title        = this.data.title;
-    this.description  = this.data.content;
-    this.postDate     = this.postDateFormat(this.data.creationTime);
-    this.author       = this.data.creatorUser?.fullName;
-    this.userTopics   = this.data.postTopics?.map?.(t => t.disciplineTaxonomy);
-  }
+  ngOnInit(): void {}
 
   removePost(): void {
     this.onRemove.emit();
@@ -75,6 +65,9 @@ export class PreviewPostsComponent extends AppComponentBase implements OnInit, O
   }
 
   private postDateFormat(postDate: any): string {
+    if (!postDate) {
+      return;
+    }
     const time = moment(postDate);
     if (time.isSame(new Date(), 'day')) {
       return time.format('h:mm a');

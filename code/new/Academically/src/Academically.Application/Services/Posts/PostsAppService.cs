@@ -265,12 +265,12 @@ namespace Academically.Services.Posts
 
             await CurrentUnitOfWork.SaveChangesAsync();
 
-            if (topicIds?.Count > 0)
-            {
-                post = await _postRepository.GetAsync(postId);
-                post.DisciplineTaxonomyIds = string.Join(",", topicIds);
-                await _postRepository.UpdateAsync(post);
-            }
+            // if (topicIds?.Count > 0)
+            // {
+            //     post = await _postRepository.GetAsync(postId);
+            //     post.DisciplineTaxonomyIds = string.Join(",", topicIds);
+            //     await _postRepository.UpdateAsync(post);
+            // }
         }
 
         public async Task<List<PostDto>> GetByUser(long userId, PostType? type)
