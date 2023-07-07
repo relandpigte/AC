@@ -1,19 +1,41 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ArticleDto, ArticlesServiceProxy, CoachingDto, CoachingsServiceProxy, CourseDto, CoursesServiceProxy, CreateUserTopicDto, DateGrains, DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, EventDto, EventsServiceProxy, SearchDisciplineTaxonomyRequestDto, UserDto, UserFollowerDto, UserFollowersServiceProxy, UserServiceProxy, UserTopicDto, UserTopicsServiceProxy, UserTopicType, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  ArticleDto,
+  ArticlesServiceProxy,
+  CoachingDto,
+  CoachingsServiceProxy,
+  CourseDto,
+  CoursesServiceProxy,
+  CreateUserTopicDto,
+  DateGrains,
+  DisciplineTaxonomiesServiceProxy,
+  DisciplineTaxonomyDto,
+  EventDto,
+  EventsServiceProxy,
+  SearchDisciplineTaxonomyRequestDto,
+  UserDto,
+  UserFollowersServiceProxy,
+  UserTopicDto,
+  UserTopicType,
+  UserTopicsServiceProxy,
+  VideoDto,
+  VideosServiceProxy,
+} from "@shared/service-proxies/service-proxies";
 import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 
-import * as _ from 'lodash';
 import { Router } from '@angular/router';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { AddTopicsComponent } from '@shared/modals/add-topics/add-topics.component';
-import { UpsertPostComponent } from '../../shared/modals/upsert-post/upsert-post.component';
 import { TopicSorting } from '@shared/components/topic/topic.component';
-import { CommunityService } from './community.service';
-import { ShimmerType } from '../../shared/enums/shimmer/shimmer-type.enum';
+import { AddTopicsComponent } from '@shared/modals/add-topics/add-topics.component';
 import { UserFollowingService } from '@shared/services/user-following.service';
-import { combineLatest } from 'rxjs';
+import * as _ from 'lodash';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { ShimmerType } from '../../shared/enums/shimmer/shimmer-type.enum';
+import { UpsertPostComponent } from '../../shared/modals/upsert-post/upsert-post.component';
+import { CommunityService } from './community.service';
+import { BehaviorSubject, combineLatest, of } from 'rxjs';
+import { WrapperService } from '@shared/services/wrapper.service';
 
 @Component({
   selector: "app-community",
@@ -23,16 +45,19 @@ import { combineLatest } from 'rxjs';
   providers: [CommunityService],
 })
 export class CommunityComponent extends AppComponentBase implements OnInit {
+  differ: any;
   userTopics: UserTopicDto[] = [];
   selectedTopics: string[] = [];
-  isLoadingCommunity = true;
-  isLoadingSuggestTopics = true;
-  isLoadingPeopleToFollow = true;
-  isLoadingRecommendedCourses = true;
-  isLoadingRecommendedCoachings = true;
-  isLoadingRecommendedArticles = true;
-  isLoadingRecommendedEvents = true;
-  isLoadingRecommendedTutorials = true;
+
+  isLoadingCommunity$ = new BehaviorSubject<boolean>(true);
+  isLoadingSuggestTopics$ = new BehaviorSubject<boolean>(true);
+  isLoadingPeopleToFollow$ = new BehaviorSubject<boolean>(true);
+  isLoadingRecommendedCourses$ = new BehaviorSubject<boolean>(true);
+  isLoadingRecommendedCoachings$ = new BehaviorSubject<boolean>(true);
+  isLoadingRecommendedArticles$ = new BehaviorSubject<boolean>(true);
+  isLoadingRecommendedEvents$ = new BehaviorSubject<boolean>(true);
+  isLoadingRecommendedTutorials$ = new BehaviorSubject<boolean>(true);
+
   suggestedTopics: DisciplineTaxonomyDto[] = Array(4)
     .fill([])
     .map(() => this.generateRandomTopic()) as DisciplineTaxonomyDto[];
@@ -69,16 +94,16 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
         undefined
       )
       .pipe(takeUntil(this.destroyed$))
-      .pipe(finalize(() => (this.isLoadingSuggestTopics = false)));
+      .pipe(finalize(() => (this.isLoadingSuggestTopics$.next(false))));
   };
 
   constructor(
     injector: Injector,
     private _router: Router,
     private _modalService: BsModalService,
+    private _wrapperService: WrapperService,
     private _taxonomyService: DisciplineTaxonomiesServiceProxy,
     private _userTopicsService: UserTopicsServiceProxy,
-    private _usersService: UserServiceProxy,
     private _coursesService: CoursesServiceProxy,
     private _coachingService: CoachingsServiceProxy,
     private _articlesService: ArticlesServiceProxy,
@@ -97,17 +122,17 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   get shimmerType() {
     return ShimmerType;
   }
-  get isLoading(): boolean {
-    return (
-      this.isLoadingCommunity ||
-      this.isLoadingPeopleToFollow ||
-      this.isLoadingRecommendedArticles ||
-      this.isLoadingRecommendedCoachings ||
-      this.isLoadingRecommendedCourses ||
-      this.isLoadingRecommendedEvents ||
-      this.isLoadingRecommendedTutorials ||
-      this.isLoadingSuggestTopics
-    );
+  get isLoading$() {
+    return combineLatest([
+      this.isLoadingCommunity$,
+      this.isLoadingPeopleToFollow$,
+      this.isLoadingRecommendedArticles$,
+      this.isLoadingRecommendedCoachings$,
+      this.isLoadingRecommendedCourses$,
+      this.isLoadingRecommendedEvents$,
+      this.isLoadingRecommendedTutorials$,
+      this.isLoadingSuggestTopics$
+    ]).pipe(switchMap((loaders) => of(loaders.some(l => l))));
   }
 
   ngOnInit(): void {
@@ -120,9 +145,8 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     this.getRecommendedEvents();
     this.getRecommendedTutorials();
 
-    this._communityService.getIsLoading().subscribe((isLoading) => {
-      this.isLoadingCommunity = isLoading;
-    });
+    this._communityService.getIsLoading().subscribe((isLoading) => this.isLoadingCommunity$.next(isLoading));
+    this.isLoading$.pipe(takeUntil(this.destroyed$)).subscribe(isLoading => this._wrapperService.toggleCanScroll(!isLoading));
   }
 
   isTopicLoading(id: string, property?: string): boolean {
@@ -285,7 +309,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
-          this.isLoadingSuggestTopics = false;
+          this.isLoadingSuggestTopics$.next(false);
         })
       )
       .subscribe((topics) => (this.suggestedTopics = topics));
@@ -297,7 +321,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
-          this.isLoadingPeopleToFollow = false;
+          this.isLoadingPeopleToFollow$.next(false);
         })
       )
       .subscribe((users) => {
@@ -321,7 +345,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
-          this.isLoadingRecommendedCourses = false;
+          this.isLoadingRecommendedCourses$.next(false);
         })
       )
       .subscribe((pagedCourses) => {
@@ -354,7 +378,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
-          this.isLoadingRecommendedCoachings = false;
+          this.isLoadingRecommendedCoachings$.next(false);
         })
       )
       .subscribe((pagedCoachings) => {
@@ -387,7 +411,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
-          this.isLoadingRecommendedArticles = false;
+          this.isLoadingRecommendedArticles$.next(false);
         })
       )
       .subscribe((pagedArticles) => {
@@ -420,7 +444,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
-          this.isLoadingRecommendedEvents = false;
+          this.isLoadingRecommendedEvents$.next(false);
         })
       )
       .subscribe((pagedEvents) => {
@@ -453,7 +477,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
-          this.isLoadingRecommendedTutorials = false;
+          this.isLoadingRecommendedTutorials$.next(false);
         })
       )
       .subscribe((pagedTutorials) => {

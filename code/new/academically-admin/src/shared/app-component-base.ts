@@ -76,6 +76,7 @@ export abstract class AppComponentBase implements OnDestroy {
       ignoreBackdropClick: true,
       keyboard: false,
     };
+
     if (this.appSession.user) {
       this.isTutor = this.checkUserRole('tutor');
       this.isStudent = this.checkUserRole('student');

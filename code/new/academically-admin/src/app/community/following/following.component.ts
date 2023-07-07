@@ -12,6 +12,8 @@ import { CommunityDiscussionsComponent } from '@shared/components/community-disc
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { CommunityService } from '../community.service';
 import { SharedType } from '@shared/service-proxies/service-proxies';
+import { of } from 'rxjs';
+import { WrapperService } from '@shared/services/wrapper.service';
 
 enum PostFiltering {
   All = 'Community.Posts.Filtering.All',
@@ -36,7 +38,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
 
   postsStateService: PostsStateService;
 
-  posts: PostDto[] = Array(3).fill([]).map(() => this.generateRandomPost()) as PostDto[];
+  posts: PostDto[] = Array(10).fill([]).map(() => this.generateRandomPost()) as PostDto[];
   totalPostsCount: number;
 
   usersYouMayKnow: UserDto[] = Array(5).fill([]).map(() => this.generateRandomUser()) as UserDto[];
@@ -84,13 +86,14 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     }
   }
   get hiddenPostsCount(): number { return this.totalPostsCount - this.posts.length; }
-  get isLoading(): boolean { return this.isLoadingPosts || this.commentContainer.isLoadingComments || this.isLoading_usersYouMayKnow || this.isLoading_recommendedCourses; }
+  get isLoading$() { return of(this.isLoadingPosts || this.commentContainer?.isLoadingComments || this.isLoading_usersYouMayKnow || this.isLoading_recommendedCourses); }
 
   async ngOnInit() {
     this.loadInfiniteData(this._usersService, 'getAll', ['', true, 'creationTime desc', 0, 6], 'usersYouMayKnow');
     this.loadInfiniteData(this._coursesService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4], 'recommendedCourses');
     await this.initPostsAppStates();
     this.handleFilteringTopic();
+    this.isLoading$.pipe(takeUntil(this.destroyed$)).subscribe(isLoading => this._communityService.setIsLoading(isLoading));
   }
 
   ngOnDestroy() {
@@ -130,10 +133,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     await this.pubSubService.start(this, appStateConfig, appStateServices);
     this.postsStateService = this.pubSubService.getStateService<PostsStateService>(this.postsStateId);
 
-    this.postsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => {
-      this.isLoadingPosts = loading;
-      this._communityService.setIsLoading(loading);
-    });
+    this.postsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(isLoading => this.isLoadingPosts = isLoading);
 
     this.postsStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
       if (this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) return;

@@ -8,6 +8,7 @@ import { IThemeSetting } from '@shared/interfaces/theme-setting.interface';
 import { ThemeManagerService } from '@shared/services/theme-manager.service';
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { WrapperService } from '@shared/services/wrapper.service';
 
 @Component({
   selector: 'app-wrapper',
@@ -20,8 +21,9 @@ export class WrapperComponent extends AppComponentBase implements OnInit {
   themeSetting: IThemeSetting;
   routerEvents: BehaviorSubject<RouterEvent> = new BehaviorSubject(undefined);
   routerEvent: RouterEvent;
+  canScroll: boolean = true;
 
-  constructor(injector: Injector, themeSettingsService: ThemeManagerService, router: Router) {
+  constructor(injector: Injector, themeSettingsService: ThemeManagerService, router: Router, private wrapperService: WrapperService) {
     super(injector);
     this.themeSetting = themeSettingsService.getConfiguration();
     router.events.subscribe(this.routerEvents);
@@ -34,5 +36,6 @@ export class WrapperComponent extends AppComponentBase implements OnInit {
     this.routerEvents.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
       this.routerEvent = event;
     });
+    this.wrapperService.canScroll$.subscribe(canScroll => this.canScroll = canScroll);
   }
 }
