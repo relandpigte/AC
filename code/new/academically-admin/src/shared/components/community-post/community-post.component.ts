@@ -23,9 +23,9 @@ import { CommunityDiscussionsComponent } from '../community-discussions/communit
 export class CommunityPostCardComponent extends AppComponentBase implements OnChanges, OnInit {
     readonly showMoreLimit: number = 255;
 
-    @Input() closeHiddenPostAfter = 0;
     @Input() data: any;
     @Input() isLoading: boolean;
+    @Input() closeHiddenPostAfter = 0;
 
     @Output() refresh = new EventEmitter();
     @Output() onUpdate = new EventEmitter();
@@ -43,11 +43,11 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     showComments = true;
     showAddComment = true;
     showMore = false;
+    showUnfollow = false;
 
     constructor(
         injector: Injector,
         private _cdr: ChangeDetectorRef,
-        private _router: Router,
         private _postsServiceProxy: PostsServiceProxy,
         private _modalService: BsModalService,
         private _userFollowingService: UserFollowingService,
@@ -85,9 +85,14 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     get sharedService(): any { return ServiceCardUtils.getServiceData(this.data); }
     get hasSharedPost(): boolean { return this.data?.sharedId && this.data?.sharedType === SharedType.Post; }
     get hasSharedService(): boolean { return this.data?.sharedId && this.data?.sharedType === SharedType.Service; }
+    get isShowOwnerTag(): boolean { return this.isOwner || !this.isUserFollowing(this.data?.creatorUser) || (this.isUserFollowing(this.data?.creatorUser) && this.showUnfollow)}
 
-
-    ngOnInit() { }
+    ngOnInit() {
+        UserFollowingService.userFollowedChanged$.pipe(takeUntil(this.destroyed$))
+            .subscribe((change) => {
+                if (change > 0) this.showUnfollow = true;
+            })
+    }
 
     async ngOnChanges(changes: SimpleChanges) {
         if ('data' in changes && this.data) {

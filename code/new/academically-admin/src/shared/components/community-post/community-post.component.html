@@ -11,10 +11,11 @@
                 <div class="post-heading-owner-name d-flex flex-row align-items-center gap-15">
                     {{ posterName | titlecase }}
                     <button
+                        *ngIf="isShowOwnerTag"
                         type="button"
                         class="btn btn-link post-heading-owner-follow d-flex justify-content-center align-items-center"
                         [class.activated]="isOwner || isUserFollowing(data?.creatorUser)"
-                        (click)="handleUserFollow(data?.creatorUser)"
+                        (click)="isOwner ? '' : handleUserFollow(data?.creatorUser)"
                         [disabled]="isUserLoading(data?.creatorUserId)">
                         <span class="text">
                             {{ isOwner ? 'You' : (isUserFollowing(data?.creatorUser) ? 'Following' : 'Follow')  }}

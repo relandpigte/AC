@@ -3,6 +3,7 @@ import { finalize, take } from 'rxjs/operators';
 
 import { UserDto, UserFollowerDto, UserFollowersServiceProxy } from '../service-proxies/service-proxies';
 import { AppSessionService } from '@shared/session/app-session.service';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +11,8 @@ import { AppSessionService } from '@shared/session/app-session.service';
 export class UserFollowingService {
   private userFollowed: UserFollowerDto[];
   private userLoaders: Map<string, { isFollowingUser?: boolean, isUnfollowingUser?: boolean }> = new Map();
+
+  static userFollowedChanged$ = new Subject<number>();
 
   constructor(
     private _userFollowerService: UserFollowersServiceProxy,
@@ -69,10 +72,12 @@ export class UserFollowingService {
 
   private addFollowedUser(user: UserFollowerDto): void {
     this.userFollowed.push(user);
+    UserFollowingService.userFollowedChanged$.next(1);
   }
 
   private removeFollowedUser(followerId: string): void {
     this.userFollowed = this.userFollowed.filter(u => u.id !== followerId);
+    UserFollowingService.userFollowedChanged$.next(-1);
   }
 
   private setUserLoading(id: string, property: string, value: boolean): void {
