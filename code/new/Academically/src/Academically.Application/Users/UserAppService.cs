@@ -169,7 +169,8 @@ namespace Academically.Users
                     || x.Surname.Contains(input.Keyword)
                     || x.EmailAddress.Contains(input.Keyword)
                     || x.Id.ToString().Contains(input.Keyword))
-                .WhereIf(input.IsActive.HasValue, x => x.IsActive == input.IsActive);
+                .WhereIf(input.IsActive.HasValue, x => x.IsActive == input.IsActive)
+                .WhereIf(input.ExcludeSelf.HasValue, x => x.Id != _abpSession.UserId.Value);
         }
 
         protected override async Task<User> GetEntityByIdAsync(long id)

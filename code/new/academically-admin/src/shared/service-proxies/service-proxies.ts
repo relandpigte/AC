@@ -21834,12 +21834,13 @@ export class TutorApplicationServiceProxy {
     /**
      * @param keyword (optional) 
      * @param isActive (optional) 
+     * @param excludeSelf (optional) 
      * @param sorting (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAll(keyword: string | undefined, isActive: boolean | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<TutorVerificationDtoPagedResultDto> {
+    getAll(keyword: string | undefined, isActive: boolean | undefined, excludeSelf: boolean | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<TutorVerificationDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/TutorApplication/GetAll?";
         if (keyword === null)
             throw new Error("The parameter 'keyword' cannot be null.");
@@ -21849,6 +21850,10 @@ export class TutorApplicationServiceProxy {
             throw new Error("The parameter 'isActive' cannot be null.");
         else if (isActive !== undefined)
             url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
+        if (excludeSelf === null)
+            throw new Error("The parameter 'excludeSelf' cannot be null.");
+        else if (excludeSelf !== undefined)
+            url_ += "ExcludeSelf=" + encodeURIComponent("" + excludeSelf) + "&";
         if (sorting === null)
             throw new Error("The parameter 'sorting' cannot be null.");
         else if (sorting !== undefined)
@@ -23306,12 +23311,13 @@ export class UserServiceProxy {
     /**
      * @param keyword (optional) 
      * @param isActive (optional) 
+     * @param excludeSelf (optional) 
      * @param sorting (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAll(keyword: string | undefined, isActive: boolean | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserDtoPagedResultDto> {
+    getAll(keyword: string | undefined, isActive: boolean | undefined, excludeSelf: boolean | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/User/GetAll?";
         if (keyword === null)
             throw new Error("The parameter 'keyword' cannot be null.");
@@ -23321,6 +23327,10 @@ export class UserServiceProxy {
             throw new Error("The parameter 'isActive' cannot be null.");
         else if (isActive !== undefined)
             url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
+        if (excludeSelf === null)
+            throw new Error("The parameter 'excludeSelf' cannot be null.");
+        else if (excludeSelf !== undefined)
+            url_ += "ExcludeSelf=" + encodeURIComponent("" + excludeSelf) + "&";
         if (sorting === null)
             throw new Error("The parameter 'sorting' cannot be null.");
         else if (sorting !== undefined)

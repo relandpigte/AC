@@ -12,6 +12,7 @@ import { finalize } from 'rxjs/operators';
 class PagedUsersRequestDto extends PagedAndSortedRequestDto {
   keyword: string;
   isActive: boolean;
+  excludeSelf: boolean;
 }
 
 @Component({
@@ -79,11 +80,13 @@ export class TutorApplicationsListComponent extends PagedListingComponentBase<Us
   ): void {
     request.keyword = this.keyword;
     request.isActive = this.isActive;
+    request.excludeSelf = false;
 
     this._tutorApplicationService
       .getAll(
         request.keyword,
         request.isActive,
+        request.excludeSelf,
         request.sort,
         request.skipCount,
         request.maxResultCount

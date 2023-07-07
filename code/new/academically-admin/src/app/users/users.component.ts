@@ -20,6 +20,7 @@ import { TableHeaderSortData } from '@shared/components/table-header-sort/table-
 class PagedUsersRequestDto extends PagedAndSortedRequestDto {
   keyword: string;
   isActive: boolean;
+  excludeSelf: boolean;
 }
 
 @Component({
@@ -111,11 +112,13 @@ export class UsersComponent extends PagedListingComponentBase<UserDto> {
   ): void {
     request.keyword = this.keyword;
     request.isActive = this.isActive;
+    request.excludeSelf = false;
 
     this._userService
       .getAll(
         request.keyword,
         request.isActive,
+        request.excludeSelf,
         request.sort,
         request.skipCount,
         request.maxResultCount

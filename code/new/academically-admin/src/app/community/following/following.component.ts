@@ -89,7 +89,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
   get isLoading$() { return of(this.isLoadingPosts || this.commentContainer?.isLoadingComments || this.isLoading_usersYouMayKnow || this.isLoading_recommendedCourses); }
 
   async ngOnInit() {
-    this.loadInfiniteData(this._usersService, 'getAll', ['', true, 'creationTime desc', 0, 6], 'usersYouMayKnow');
+    this.loadInfiniteData(this._usersService, 'getAll', ['', true, true, 'creationTime desc', 0, 6], 'usersYouMayKnow');
     this.loadInfiniteData(this._coursesService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4], 'recommendedCourses');
     await this.initPostsAppStates();
     this.handleFilteringTopic();

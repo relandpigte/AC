@@ -6,5 +6,6 @@ namespace Academically.Users.Dto
     {
         public string Keyword { get; set; }
         public bool? IsActive { get; set; }
+        public bool? ExcludeSelf { get; set; }
     }
 }

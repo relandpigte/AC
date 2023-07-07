@@ -57,7 +57,7 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadInfiniteData(this._usersService, 'getAll', ['', true, 'creationTime desc', 0, 6], 'newUsers');
+    this.loadInfiniteData(this._usersService, 'getAll', ['', true, true, 'creationTime desc', 0, 6], 'newUsers');
     this.loadInfiniteData(this._eventsService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, EventCategory.Broadcast, 0, 4], 'upcomingBroadcasts');
     this.loadInfiniteData(this._eventsService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, EventCategory.Workshop, 0, 4], 'upcomingWorkshops');
     this.loadInfiniteData(this._coursesService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4], 'recommendedCourses');
@@ -67,7 +67,7 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
   }
 
   handleNewUsersRequestData(skipCount: number): void {
-    this.loadInfiniteData(this._usersService, 'getAll', ['', true, 'creationTime desc', skipCount, 6], 'newUsers');
+    this.loadInfiniteData(this._usersService, 'getAll', ['', true, true, 'creationTime desc', skipCount, 6], 'newUsers');
   }
 
   handleUpcomingBroadcastsRequestData(skipCount: number): void {
