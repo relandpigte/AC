@@ -139,7 +139,7 @@
     </div>
 
     <app-community-discussions
-        [show]="!isDiscussion && showComments"
+        [show]="!isHistoryCard && !isDiscussion && showComments"
         [showAddComment]="showAddComment"
         [referenceId]="data?.id"
         [postType]="data?.type"
