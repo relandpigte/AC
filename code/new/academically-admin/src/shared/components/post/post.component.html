@@ -31,7 +31,7 @@
                         name="information"
                         required
                         placeholder="{{ 'Community.QuickPost.Add.Information' | localize }}"
-                        (focus)="updateFocusedField(focusField.Content)"
+                        (focus)="updateFocusedField(focusField.Content); updateTextAreaHeight(informationEl);"
                         (click)="updateCaretPos(informationEl)"
                         (keyup)="updateCaretPos(informationEl)"
                         (keydown)="updateTextAreaHeight(informationEl)"
@@ -49,7 +49,7 @@
                         name="title"
                         required
                         placeholder="{{ 'Community.Question.Add.Title' | localize }}"
-                        (focus)="updateFocusedField(focusField.Title)"
+                        (focus)="updateFocusedField(focusField.Title); updateTextAreaHeight(titleEl);"
                         (click)="updateCaretPos(titleEl)"
                         (keyup)="updateCaretPos(titleEl)"
                         (keydown)="updateTextAreaHeight(titleEl)"
@@ -86,7 +86,7 @@
                         name="information"
                         required
                         placeholder="{{ 'Community.Discussion.Add.Information' | localize }}"
-                        (focus)="updateFocusedField(focusField.Content)"
+                        (focus)="updateFocusedField(focusField.Content); updateTextAreaHeight(informationEl);"
                         (click)="updateCaretPos(informationEl)"
                         (keyup)="updateCaretPos(informationEl)"
                         (keydown)="updateTextAreaHeight(informationEl)"
