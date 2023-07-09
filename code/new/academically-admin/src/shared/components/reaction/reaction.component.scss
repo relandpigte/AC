@@ -13,6 +13,26 @@
                 margin-right: 5px;
         }
 
+        &.inactive {
+            color: #B1C2D9 !important;
+        }
+
+        &.blue {
+            color: #2C7BE5;
+        }
+
+        &.red {
+            color: #E63757;
+        }
+
+        &.yellow {
+            color: #F5D83E;
+        }
+
+        &.green {
+            color: #00D97E;
+        }
+
         &-popover {
             position: absolute;
             top: 0;

@@ -16,6 +16,9 @@
         CommentDeleted,
         CommentReactionCreated,
         CommentReactionUpdated,
-        CommentReactionDeleted
+        CommentReactionDeleted,
+        ReactionCreated,
+        ReactionUpdated,
+        ReactionDeleted
     }
 }

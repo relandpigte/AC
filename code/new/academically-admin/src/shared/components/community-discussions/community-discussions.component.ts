@@ -225,8 +225,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   }
 
   protected reactionClick(comment: CommentDto, type: ReactionType): void {
-    this._reactionsService.save(comment.id, type)
-      .subscribe(() => console.error('@@@ reacted to: ', comment.id, type));
+    this._reactionsService.save(comment.id, type).subscribe(() => {});
   }
 
   protected toggleServicePicker(isForChild?: boolean): void {

@@ -37577,7 +37577,7 @@ export interface IGroupedPermissionDtoListResultDto {
     items: GroupedPermissionDto[] | undefined;
 }
 
-/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted */
+/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted */
 export enum HubEvent {
     PostCreated = 0,
     PostUpdated = 1,
@@ -37594,6 +37594,9 @@ export enum HubEvent {
     CommentReactionCreated = 12,
     CommentReactionUpdated = 13,
     CommentReactionDeleted = 14,
+    ReactionCreated = 15,
+    ReactionUpdated = 16,
+    ReactionDeleted = 17,
 }
 
 export class ICustomAttributeProvider implements IICustomAttributeProvider {

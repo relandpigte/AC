@@ -4,6 +4,7 @@ using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Services.Comments.Dto;
 using Academically.Services.Posts.Dto;
+using Academically.Services.Reactions.Dto;
 using Academically.Services.UserTopics.Dto;
 using Microsoft.AspNetCore.SignalR;
 using System;
@@ -22,6 +23,9 @@ namespace Academically.Hubs
         Task NotifyUsersForCommentReactionCreated(CommentReactionDto commentReaction);
         Task NotifyUsersForCommentReactionUpdated(CommentReactionDto commentReaction);
         Task NotifyUsersForCommentReactionDeleted(CommentReactionDto commentReaction);
+        Task NotifyUsersForReactionCreated(ReactionDto reaction);
+        Task NotifyUsersForReactionUpdated(ReactionDto reaction);
+        Task NotifyUsersForReactionDeleted(ReactionDto reaction);
         Task NotifyUsersForUserTopicCreated(UserTopicDto userTopic);
         Task NotifyUsersForUserTopicUpdated(UserTopicDto userTopic);
         Task NotifyUsersForUserTopicDeleted(Guid id);
@@ -33,27 +37,34 @@ namespace Academically.Hubs
     public class HubManager : IHubManager
     {
         private const string FollowingGroup = "following-group";
+        private const string ReactionsGroup = "reactions-group";
 
         private readonly IHubContext<UserTopicsHub> _userTopicsHub;
         private readonly IHubContext<PostsHub> _postsHub;
         private readonly IHubContext<CommentsHub> _commentsHub;
         private readonly IHubContext<ServicesHub> _servicesHub;
+        private readonly IHubContext<ReactionsHub> _reactionsHub;
         private readonly IRepository<Post, Guid> _postRepository;
         private readonly IRepository<Comment, Guid> _commentsRepository;
+        private readonly IRepository<Reaction, Guid> _reactionsRepository;
 
         public HubManager(IHubContext<UserTopicsHub> userTopicsHub,
             IHubContext<PostsHub> postsHub,
             IHubContext<CommentsHub> commentsHub,
             IHubContext<ServicesHub> servicesHub,
+            IHubContext<ReactionsHub> reactionsHub,
             IRepository<Post, Guid> postRepository,
-            IRepository<Comment, Guid> commentsRepository)
+            IRepository<Comment, Guid> commentsRepository,
+            IRepository<Reaction, Guid> reactionsRepository)
         {
             _userTopicsHub = userTopicsHub;
             _postsHub = postsHub;
             _commentsHub = commentsHub;
             _servicesHub = servicesHub;
+            _reactionsHub = reactionsHub;
             _postRepository = postRepository;
             _commentsRepository = commentsRepository;
+            _reactionsRepository = reactionsRepository;
         }
 
         public async Task NotifyUsersForPostCreated(PostDto post)
@@ -168,6 +179,42 @@ namespace Academically.Hubs
             else
             {
                 await _commentsHub.Clients.Group(comment.ReferenceId).SendAsync(nameof(HubEvent.CommentReactionDeleted), commentReaction.Id);
+            }
+        }
+
+        public async Task NotifyUsersForReactionCreated(ReactionDto reaction)
+        {
+            if (reaction.ReferenceId != null)
+            {
+                await _reactionsHub.Clients.Group($"{reaction.ReferenceId}").SendAsync(nameof(HubEvent.ReactionCreated), reaction);
+            } else
+            {
+                await _reactionsHub.Clients.Group(ReactionsGroup).SendAsync(nameof(HubEvent.ReactionCreated), reaction);
+            }
+            
+        }
+
+        public async Task NotifyUsersForReactionUpdated(ReactionDto reaction)
+        {
+            if (reaction.ReferenceId != null)
+            {
+                await _reactionsHub.Clients.Group($"{reaction.ReferenceId}").SendAsync(nameof(HubEvent.ReactionUpdated), reaction);
+            }
+            else
+            {
+                await _reactionsHub.Clients.Group(ReactionsGroup).SendAsync(nameof(HubEvent.ReactionUpdated), reaction);
+            }
+        }
+
+        public async Task NotifyUsersForReactionDeleted(ReactionDto reaction)
+        {
+            if (reaction.ReferenceId != null)
+            {
+                await _reactionsHub.Clients.Group($"{reaction.ReferenceId}").SendAsync(nameof(HubEvent.ReactionDeleted), reaction);
+            }
+            else
+            {
+                await _reactionsHub.Clients.Group(ReactionsGroup).SendAsync(nameof(HubEvent.ReactionDeleted), reaction);
             }
         }
 

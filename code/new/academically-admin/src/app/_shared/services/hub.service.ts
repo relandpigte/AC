@@ -41,6 +41,10 @@ export class HubService {
     return await this.getHub(`comments`, Utils.generateUrlParams(params));
   }
 
+  public async getReactionsHub(params?: Record<string, any>): Promise<any> {
+    return await this.getHub(`reactions`, Utils.generateUrlParams(params));
+  }
+
   public getCommentsHubWithParam(referenceId?: string, parentId?: string): Promise<any> {
     let queryParam = null;
     if(referenceId){

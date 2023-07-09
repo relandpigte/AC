@@ -1,7 +1,7 @@
 <div class="reaction-container d-flex flex-nowrap justify-content-center align-items-center">
     <ng-container [ngSwitch]="reactionGroup">
-        <ng-container *ngSwitchCase="ReactionGroup.Emotions">
-            <div class="reaction-action d-flex flex-nowrap justify-content-center align-items-center cursor-pointer" (mouseenter)="openPopover(true)" (mouseleave)="openPopover(false)">
+        <!-- <ng-container *ngSwitchCase="ReactionGroup.Emotions">
+            <div #reactionAction class="reaction-action d-flex flex-nowrap justify-content-center align-items-center cursor-pointer" (mouseenter)="openPopover(true)" (mouseleave)="openPopover(false)" [class]="ActionColorClass">
                 Like
                 <div #popover class="reaction-action-popover d-none">
                     <div class=" d-flex flex-nowrap justify-content-center align-items-center">
@@ -17,9 +17,9 @@
                     <span [class]="getReactionIcon(type)"></span>
                 </div>
             </div>
-        </ng-container>
+        </ng-container> -->
         <ng-container *ngSwitchCase="ReactionGroup.Votes">
-            <div class="reaction-action d-flex flex-nowrap justify-content-center align-items-center cursor-pointer" (mouseenter)="openPopover(true)" (mouseleave)="openPopover(false)">
+            <div #reactionAction class="reaction-action d-flex flex-nowrap justify-content-center align-items-center cursor-pointer" (mouseenter)="openPopover(true)" (mouseleave)="openPopover(false)" [class]="ActionColorClass">
                 Vote
                 <div #popover class="reaction-action-popover d-none">
                     <div class=" d-flex flex-nowrap justify-content-center align-items-center">
@@ -42,9 +42,23 @@
             <div class="reaction-action d-flex flex-nowrap justify-content-center align-items-center cursor-pointer">Like</div>
             <div class="reaction-counts d-flex flex-nowrap justify-content-center align-items-center">
                 <div class="reaction-counts-value cursor-default">{{ TotalReactions }}</div>
-                <div class="reaction-counts-icons d-flex flex-nowrap justify-content-center align-items-center blue"><span class="fe fe-thumbs-up"></span></div>
+                <div class="reaction-counts-icons d-flex flex-nowrap justify-content-center align-items-center cluster" [ngClass]="[getReactionColorClass(ReactionType.Like)]">
+                    <span [class]="getReactionIcon(ReactionType.Like)"></span>
+                </div>
+                <div class="reaction-counts-icons d-flex flex-nowrap justify-content-center align-items-center cluster" [ngClass]="[getReactionColorClass(ReactionType.Heart)]">
+                    <span [class]="getReactionIcon(ReactionType.Heart)"></span>
+                </div>
+                <div class="reaction-counts-icons d-flex flex-nowrap justify-content-center align-items-center cluster" [ngClass]="[getReactionColorClass(ReactionType.Sad)]">
+                    <span [class]="getReactionIcon(ReactionType.Sad)"></span>
+                </div>
             </div>
         </ng-container>
+        <!-- <ng-container *ngSwitchDefault>
+            <div class="reaction-action d-flex flex-nowrap justify-content-center align-items-center cursor-pointer" (click)="onReactClick(ReactionType.Like)">Like</div>
+            <div class="reaction-counts d-flex flex-nowrap justify-content-center align-items-center">
+                <div class="reaction-counts-value cursor-default">{{ TotalReactions }}</div>
+            </div>
+        </ng-container> -->
     </ng-container>
     <div class="reply cursor-pointer" (click)="onReplyClick()">Reply</div>
 </div>
