@@ -1,0 +1,50 @@
+<div class="reaction-container d-flex flex-nowrap justify-content-center align-items-center">
+    <ng-container [ngSwitch]="reactionGroup">
+        <ng-container *ngSwitchCase="ReactionGroup.Emotions">
+            <div class="reaction-action d-flex flex-nowrap justify-content-center align-items-center cursor-pointer" (mouseenter)="openPopover(true)" (mouseleave)="openPopover(false)">
+                Like
+                <div #popover class="reaction-action-popover d-none">
+                    <div class=" d-flex flex-nowrap justify-content-center align-items-center">
+                        <div *ngFor="let type of ReactionTypes" class="reaction-action-popover-icon d-flex flex-nowrap justify-content-center align-items-center cursor-pointer" (click)="onReactClick(type)">
+                            <span class="d-flex flex-nowrap justify-content-center align-items-center" [ngClass]="[getReactionColorClass(type)]" [class]="getReactionIcon(type)"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="reaction-counts d-flex flex-nowrap justify-content-center align-items-center">
+                <div class="reaction-counts-value cursor-default">{{ TotalReactions }}</div>
+                <div class="reaction-counts-icons d-flex flex-nowrap justify-content-center align-items-center cluster" *ngFor="let type of ReactionTypes" [ngClass]="[getReactionColorClass(type)]">
+                    <span [class]="getReactionIcon(type)"></span>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="ReactionGroup.Votes">
+            <div class="reaction-action d-flex flex-nowrap justify-content-center align-items-center cursor-pointer" (mouseenter)="openPopover(true)" (mouseleave)="openPopover(false)">
+                Vote
+                <div #popover class="reaction-action-popover d-none">
+                    <div class=" d-flex flex-nowrap justify-content-center align-items-center">
+                        <div *ngFor="let type of ReactionTypes" class="reaction-action-popover-icon d-flex flex-nowrap justify-content-center align-items-center cursor-pointer" (click)="onReactClick(type)">
+                            <span class="d-flex flex-nowrap justify-content-center align-items-center" [ngClass]="[getReactionColorClass(type)]" [class]="getReactionIcon(type)"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="reaction-counts d-flex flex-nowrap justify-content-center align-items-center">
+                <div *ngFor="let type of ReactionTypes" class="reaction-counts d-flex flex-nowrap justify-content-center align-items-center" style="gap: 2px;">
+                    <div class="reaction-counts-value cursor-default">{{ getReactionCount(type) }}</div>
+                    <div class="reaction-counts-icons d-flex flex-nowrap justify-content-center align-items-center" [ngClass]="[getReactionColorClass(type)]">
+                        <span [class]="getReactionIcon(type)"></span>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+            <div class="reaction-action d-flex flex-nowrap justify-content-center align-items-center cursor-pointer">Like</div>
+            <div class="reaction-counts d-flex flex-nowrap justify-content-center align-items-center">
+                <div class="reaction-counts-value cursor-default">{{ TotalReactions }}</div>
+                <div class="reaction-counts-icons d-flex flex-nowrap justify-content-center align-items-center blue"><span class="fe fe-thumbs-up"></span></div>
+            </div>
+        </ng-container>
+    </ng-container>
+    <div class="reply cursor-pointer" (click)="onReplyClick()">Reply</div>
+</div>

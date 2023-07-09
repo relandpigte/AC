@@ -44,6 +44,7 @@ import { CommunityPostCardComponent } from '@shared/components/community-post/co
 import { CommunityDiscussionsComponent } from '@shared/components/community-discussions/community-discussions.component';
 import { CommunityComposerComponent } from '@shared/components/composer/composer.component';
 import { EmojiPickerComponent } from '@shared/components/emoji-picker/emoji-picker.component';
+import { ReactionComponent } from '@shared/components/reaction/reaction.component';
 import { FeaturedCarouselComponent } from '@shared/components/featured-carousel/featured-carousel.component';
 import { PillPickerComponent } from '@shared/components/pill-picker/pill-picker.component';
 import { CommunityPostComponent } from '@shared/components/post/post.component';
@@ -106,6 +107,7 @@ import { ShortenPipe } from '@shared/pipes/shorten.pipe';
     CommunityDiscussionsComponent,
     CommunitySideCardComponent,
     EmojiPickerComponent,
+    ReactionComponent,
     ShimmerComponent,
     PreviewPostsComponent,
     PreviewServicesComponent,
@@ -191,6 +193,7 @@ import { ShortenPipe } from '@shared/pipes/shorten.pipe';
     CommunityDiscussionsComponent,
     CommunitySideCardComponent,
     EmojiPickerComponent,
+    ReactionComponent,
     ShimmerComponent,
     PreviewPostsComponent,
     PreviewServicesComponent,

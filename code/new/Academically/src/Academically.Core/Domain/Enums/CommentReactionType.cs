@@ -12,5 +12,7 @@ namespace Academically.Domain.Enums
         Wow = 4,
         Sad = 5,
         Mad = 6,
+        Upvote = 7,
+        Downvote = 8
     }
 }

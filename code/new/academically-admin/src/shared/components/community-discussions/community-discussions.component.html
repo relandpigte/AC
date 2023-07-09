@@ -126,24 +126,12 @@
 
               <!-- Comment Actions | START -->
               <div class="comment-actions justify-content-start align-items-center gap-10 p-10">
-                <div class="cursor-pointer">Like</div>
-                <div class="comment-actions-separator">•</div>
-                <div class="comment-actions-reactions cursor-pointer d-flex align-items-center gap-7">
-                  {{ 18 }}
-                  <div class="comment-actions-reactions-type d-flex">
-                      <div class="comment-actions-reactions-type-item blue d-flex justify-content-center align-items-center">
-                          <span class="fe fe-thumbs-up"></span>
-                      </div>
-                      <div class="comment-actions-reactions-type-item red d-flex justify-content-center align-items-center">
-                          <span class="fe fe-heart"></span>
-                      </div>
-                      <div class="comment-actions-reactions-type-item yellow d-flex justify-content-center align-items-center">
-                          <span class="fe fe-thumbs-down"></span>
-                      </div>
-                  </div>
-                </div>
-                <div class="comment-actions-separator">|</div>
-                <a href="javascript:;" class="reply-btn" (click)="initiateReply(comment.id)">Reply</a>
+                <app-reaction
+                  [referenceId]="comment.id"
+                  [reactionGroup]="reactionGroup"
+                  (onReaction)="reactionClick(comment, $event)"
+                  (onReply)="initiateReply(comment.id)"
+                ></app-reaction>
               </div>
               <!-- Comment Actions | END -->
 
@@ -154,6 +142,7 @@
                 [postType]="postType"
                 [isChild]="true"
                 [level]="level + 1"
+                [reactionGroup]="reactionGroup"
                 [foldSubject$]="foldSubject$"
                 (onReplyEmit)="initiateReply($event)"
                 (onUpdateEmit)="onUpdateEmit.emit()"

@@ -1,0 +1,92 @@
+.reaction {
+    &-action {
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        position: relative;
+
+        &::after {
+                content:"•";
+                font-size: 8px;
+                padding-left: 5px;
+                margin-right: 5px;
+        }
+
+        &-popover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: white;
+            padding: 5px;
+            overflow: hidden;
+            border: 1px solid var(--gray-300, #E4EBF6);
+            border-radius: 40px;
+            box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
+            -webkit-transform: translate(calc(-50% + 13px), calc(-100% - 5px));
+            -moz-transform: translate(calc(-50% + 13px), calc(-100% - 5px));
+            -ms-transform: translate(calc(-50% + 13px), calc(-100% - 5px));
+            -o-transform: translate(calc(-50% + 13px), calc(-100% - 5px));
+            transform: translate(calc(-50% + 13px), calc(-100% - 5px));
+
+            &-icon {
+                span {
+                    width: 40px !important;
+                    height: 40px !important;
+                    font-size: 26px !important;
+                    @extend .reaction-counts-icons;
+                }
+            }
+        }
+    }
+
+    &-counts {
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        margin-right: 10px;
+
+        &-value {
+            margin-right: 2px;
+        }
+
+        &-icons {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px solid white;
+            color: white;
+            font-size: 12px;
+
+            &.blue {
+                background-color: #2C7BE5;
+            }
+
+            &.red {
+                background-color: #E63757;
+            }
+
+            &.yellow {
+                background-color: #F5D83E;
+            }
+
+            &.green {
+                background-color: #00D97E;
+            }
+
+            &.cluster {
+                &:not(:last-child) {
+                    margin-right: -5px;
+                }
+            }
+        }
+    }
+}
+
+.reply {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}

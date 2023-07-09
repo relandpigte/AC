@@ -48,20 +48,14 @@ namespace Academically.Services.Reactions
         {
             var reaction = await _reactionsRepository.GetAll()
                 .FirstOrDefaultAsync(e => e.ReferenceId == referenceId
-                    && e.CreatorUserId == AbpSession.UserId
-                    && e.Type == type);
-            if (reaction == null)
-            {
-                reaction = new Reaction()
-                {
-                    ReferenceId = referenceId,
-                    Type = type,
-                };
-                await _reactionsRepository.InsertAsync(reaction);
-            }
+                    && e.CreatorUserId == AbpSession.UserId);
+            if (reaction?.Type == type) await _reactionsRepository.DeleteAsync(reaction);
             else
             {
-                await _reactionsRepository.DeleteAsync(reaction);
+                if (reaction == null) reaction = new Reaction();
+                reaction.ReferenceId = referenceId;
+                reaction.Type = type;
+                await _reactionsRepository.InsertOrUpdateAsync(reaction);
             }
         }
     }

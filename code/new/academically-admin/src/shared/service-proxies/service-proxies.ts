@@ -28,7 +28,7 @@ export class AcceptanceLogsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     accept(body: AcceptanceType | undefined): Observable<void> {
@@ -81,9 +81,9 @@ export class AcceptanceLogsServiceProxy {
 
     /**
      * @param type (optional) 1 = TermsOfUse
-
+    
     2 = PrivacyPolicy
-     * @param userId (optional)
+     * @param userId (optional) 
      * @return Success
      */
     getLatest(type: AcceptanceType | undefined, userId: number | undefined): Observable<AcceptanceLogDto> {
@@ -155,7 +155,7 @@ export class AccountServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     isTenantAvailable(body: IsTenantAvailableInput | undefined): Observable<IsTenantAvailableOutput> {
@@ -211,7 +211,7 @@ export class AccountServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     register(body: RegisterInput | undefined): Observable<RegisterOutput> {
@@ -318,7 +318,7 @@ export class AccountServiceProxy {
     }
 
     /**
-     * @param code (optional)
+     * @param code (optional) 
      * @return Success
      */
     enableUserTwoFactorAuthentication(code: string | undefined): Observable<void> {
@@ -417,8 +417,8 @@ export class AccountServiceProxy {
     }
 
     /**
-     * @param userId (optional)
-     * @param code (optional)
+     * @param userId (optional) 
+     * @param code (optional) 
      * @return Success
      */
     authenticateUser(userId: number | undefined, code: string | undefined): Observable<void> {
@@ -486,14 +486,14 @@ export class ArticlesServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
-     * @param searchFilter (optional)
+     * @param userIdFilter (optional) 
+     * @param searchFilter (optional) 
      * @param statusFilter (optional) 0 = Draft
-
+    
     1 = Published
-     * @param sorting (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(userIdFilter: number | undefined, searchFilter: string | undefined, statusFilter: ArticleStatus | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<ArticleDtoPagedResultDto> {
@@ -569,13 +569,13 @@ export class ArticlesServiceProxy {
     }
 
     /**
-     * @param parentIdFilter (optional)
-     * @param searchFilter (optional)
+     * @param parentIdFilter (optional) 
+     * @param searchFilter (optional) 
      * @param stausFilter (optional) 0 = Draft
-
+    
     1 = Published
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAllForSeries(parentIdFilter: string | undefined, searchFilter: string | undefined, stausFilter: ArticleStatus | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<ArticleDtoPagedResultDto> {
@@ -647,8 +647,8 @@ export class ArticlesServiceProxy {
     }
 
     /**
-     * @param maxResultCount (optional)
-     * @param skipCount (optional)
+     * @param maxResultCount (optional) 
+     * @param skipCount (optional) 
      * @return Success
      */
     getAllForHome(maxResultCount: number | undefined, skipCount: number | undefined): Observable<ArticleDtoPagedResultDto> {
@@ -708,7 +708,7 @@ export class ArticlesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<ArticleDto> {
@@ -764,7 +764,7 @@ export class ArticlesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: ArticleDto | undefined): Observable<ArticleDto> {
@@ -820,7 +820,7 @@ export class ArticlesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     updateDetails(body: UpdateArticleDetailsDto | undefined): Observable<ArticleDto> {
@@ -876,7 +876,7 @@ export class ArticlesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     updateSettings(body: UpdateArticleSettingsDto | undefined): Observable<ArticleDto> {
@@ -932,8 +932,8 @@ export class ArticlesServiceProxy {
     }
 
     /**
-     * @param id (optional)
-     * @param body (optional)
+     * @param id (optional) 
+     * @param body (optional) 
      * @return Success
      */
     updateStatus(id: string | undefined, body: ArticleStatus | undefined): Observable<void> {
@@ -989,7 +989,7 @@ export class ArticlesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -1041,13 +1041,13 @@ export class ArticlesServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
-     * @param topic (optional)
+     * @param userIdFilter (optional) 
+     * @param topic (optional) 
      * @param categoryFilter (optional) 0 = Broadcast
-
+    
     1 = Workshop
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getByTopic(userIdFilter: number | undefined, topic: string | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: ArticleDtoPagedResultDto; }> {
@@ -1128,22 +1128,22 @@ export class ArticlesServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
-     * @param startDate (optional)
-     * @param movingDate (optional)
-     * @param endDate (optional)
+     * @param userIdFilter (optional) 
+     * @param startDate (optional) 
+     * @param movingDate (optional) 
+     * @param endDate (optional) 
      * @param grain (optional) 0 = Daily
-
+    
     1 = Weekly
-
+    
     2 = Monthly
-
+    
     3 = Aged30
      * @param categoryFilter (optional) 0 = Broadcast
-
+    
     1 = Workshop
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getByDates(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: ArticleDtoPagedResultDto; }> {
@@ -1236,12 +1236,12 @@ export class ArticlesServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
+     * @param userIdFilter (optional) 
      * @param categoryFilter (optional) 0 = Broadcast
-
+    
     1 = Workshop
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getByPopularity(userIdFilter: number | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: ArticleDtoPagedResultDto; }> {
@@ -1388,7 +1388,7 @@ export class AuditLogsServiceProxy {
     }
 
     /**
-     * @param methodName (optional)
+     * @param methodName (optional) 
      * @return Success
      */
     getMethodNameType(methodName: string | undefined): Observable<AuditLogsType> {
@@ -1444,7 +1444,7 @@ export class AuditLogsServiceProxy {
     }
 
     /**
-     * @param serviceName (optional)
+     * @param serviceName (optional) 
      * @return Success
      */
     getServiceNameType(serviceName: string | undefined): Observable<string> {
@@ -1512,7 +1512,7 @@ export class CalendarEventsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<CalendarEventDto> {
@@ -1568,7 +1568,7 @@ export class CalendarEventsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     getAllEventDetailsbyEventId(id: string | undefined): Observable<CalendarEventDto> {
@@ -1624,9 +1624,9 @@ export class CalendarEventsServiceProxy {
     }
 
     /**
-     * @param userId (optional)
-     * @param startTime (optional)
-     * @param endTime (optional)
+     * @param userId (optional) 
+     * @param startTime (optional) 
+     * @param endTime (optional) 
      * @return Success
      */
     getAll(userId: number | undefined, startTime: moment.Moment | undefined, endTime: moment.Moment | undefined): Observable<CalendarEventDto[]> {
@@ -1697,8 +1697,8 @@ export class CalendarEventsServiceProxy {
     }
 
     /**
-     * @param currentTime (optional)
-     * @param userId (optional)
+     * @param currentTime (optional) 
+     * @param userId (optional) 
      * @return Success
      */
     getUpcoming(currentTime: moment.Moment | undefined, userId: number | undefined): Observable<CalendarEventDto[]> {
@@ -1765,7 +1765,7 @@ export class CalendarEventsServiceProxy {
     }
 
     /**
-     * @param userId (optional)
+     * @param userId (optional) 
      * @return Success
      */
     getUserProjects(userId: number | undefined): Observable<ProjectDto[]> {
@@ -1828,7 +1828,7 @@ export class CalendarEventsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: CalendarEventDto | undefined): Observable<void> {
@@ -1880,7 +1880,7 @@ export class CalendarEventsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: CalendarEventDto | undefined): Observable<void> {
@@ -1932,7 +1932,7 @@ export class CalendarEventsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     reschedule(body: RescheduleCalendarEventDto | undefined): Observable<void> {
@@ -1984,8 +1984,8 @@ export class CalendarEventsServiceProxy {
     }
 
     /**
-     * @param id (optional)
-     * @param tutorId (optional)
+     * @param id (optional) 
+     * @param tutorId (optional) 
      * @return Success
      */
     accept(id: string | undefined, tutorId: number | undefined): Observable<void> {
@@ -2041,7 +2041,7 @@ export class CalendarEventsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     decline(body: RescheduleCalendarEventDto | undefined): Observable<void> {
@@ -2093,7 +2093,7 @@ export class CalendarEventsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     cancel(body: RescheduleCalendarEventDto | undefined): Observable<void> {
@@ -2145,7 +2145,7 @@ export class CalendarEventsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     createBatch(body: CalendarEventDto[] | undefined): Observable<void> {
@@ -2209,10 +2209,10 @@ export class CoachingPollsServiceProxy {
     }
 
     /**
-     * @param coachingIdFilter (optional)
-     * @param sorting (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param coachingIdFilter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(coachingIdFilter: string | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CoachingPollDtoPagedResultDto> {
@@ -2280,7 +2280,7 @@ export class CoachingPollsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<CoachingPollDto> {
@@ -2336,7 +2336,7 @@ export class CoachingPollsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: CreateCoachingPollDto | undefined): Observable<CoachingPollDto> {
@@ -2392,7 +2392,7 @@ export class CoachingPollsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: CreateCoachingPollDto | undefined): Observable<CoachingPollDto> {
@@ -2448,7 +2448,7 @@ export class CoachingPollsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -2512,7 +2512,7 @@ export class CoachingResourcesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<CoachingResourceDto> {
@@ -2568,12 +2568,12 @@ export class CoachingResourcesServiceProxy {
     }
 
     /**
-     * @param coachingIdFilter (optional)
-     * @param presentationMaterialsOnlyFilter (optional)
-     * @param handoutsOnlyFilter (optional)
-     * @param sorting (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param coachingIdFilter (optional) 
+     * @param presentationMaterialsOnlyFilter (optional) 
+     * @param handoutsOnlyFilter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(coachingIdFilter: string | undefined, presentationMaterialsOnlyFilter: boolean | undefined, handoutsOnlyFilter: boolean | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CoachingResourceDtoPagedResultDto> {
@@ -2649,7 +2649,7 @@ export class CoachingResourcesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: CreateCoachingResourceDto | undefined): Observable<CoachingResourceDto> {
@@ -2705,7 +2705,7 @@ export class CoachingResourcesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: CreateCoachingResourceDto | undefined): Observable<CoachingResourceDto> {
@@ -2761,7 +2761,7 @@ export class CoachingResourcesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -2825,8 +2825,8 @@ export class CoachingsServiceProxy {
     }
 
     /**
-     * @param id (optional)
-     * @param body (optional)
+     * @param id (optional) 
+     * @param body (optional) 
      * @return Success
      */
     updateStatus(id: string | undefined, body: CoachingStatus | undefined): Observable<void> {
@@ -2882,7 +2882,7 @@ export class CoachingsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     updatePresenterType(body: UpdateCoachingPresenterTypeDto | undefined): Observable<void> {
@@ -2934,7 +2934,7 @@ export class CoachingsServiceProxy {
     }
 
     /**
-     * @param coachingPresenterId (optional)
+     * @param coachingPresenterId (optional) 
      * @return Success
      */
     removePresenter(coachingPresenterId: string | undefined): Observable<void> {
@@ -2986,7 +2986,7 @@ export class CoachingsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     invitePresenter(body: CreateCoachingPresenterDto | undefined): Observable<void> {
@@ -3038,10 +3038,10 @@ export class CoachingsServiceProxy {
     }
 
     /**
-     * @param coachingIdFilter (optional)
-     * @param searchFilter (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param coachingIdFilter (optional) 
+     * @param searchFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getPresentersForInvite(coachingIdFilter: string | undefined, searchFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserDtoPagedResultDto> {
@@ -3109,7 +3109,7 @@ export class CoachingsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     getAllPresenters(id: string | undefined): Observable<CoachingPresenterDto[]> {
@@ -3172,7 +3172,7 @@ export class CoachingsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     updateSettings(body: UpdateCoachingSettingsDto | undefined): Observable<CoachingDto> {
@@ -3228,13 +3228,13 @@ export class CoachingsServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
-     * @param topic (optional)
+     * @param userIdFilter (optional) 
+     * @param topic (optional) 
      * @param categoryFilter (optional) 0 = Broadcast
-
+    
     1 = Workshop
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getByTopic(userIdFilter: number | undefined, topic: string | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CoachingDtoPagedResultDto; }> {
@@ -3315,22 +3315,22 @@ export class CoachingsServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
-     * @param startDate (optional)
-     * @param movingDate (optional)
-     * @param endDate (optional)
+     * @param userIdFilter (optional) 
+     * @param startDate (optional) 
+     * @param movingDate (optional) 
+     * @param endDate (optional) 
      * @param grain (optional) 0 = Daily
-
+    
     1 = Weekly
-
+    
     2 = Monthly
-
+    
     3 = Aged30
      * @param categoryFilter (optional) 0 = Broadcast
-
+    
     1 = Workshop
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getByDates(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CoachingDtoPagedResultDto; }> {
@@ -3423,12 +3423,12 @@ export class CoachingsServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
+     * @param userIdFilter (optional) 
      * @param categoryFilter (optional) 0 = Broadcast
-
+    
     1 = Workshop
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getByPopularity(userIdFilter: number | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CoachingDtoPagedResultDto; }> {
@@ -3505,7 +3505,7 @@ export class CoachingsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<CoachingDto> {
@@ -3561,15 +3561,15 @@ export class CoachingsServiceProxy {
     }
 
     /**
-     * @param parentIdFilter (optional)
-     * @param userIdFilter (optional)
-     * @param searchFilter (optional)
+     * @param parentIdFilter (optional) 
+     * @param userIdFilter (optional) 
+     * @param searchFilter (optional) 
      * @param statusFilter (optional) 0 = Draft
-
+    
     1 = Published
-     * @param sorting (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(parentIdFilter: string | undefined, userIdFilter: number | undefined, searchFilter: string | undefined, statusFilter: CoachingStatus | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CoachingDtoPagedResultDto> {
@@ -3649,7 +3649,7 @@ export class CoachingsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: CreateCoachingDto | undefined): Observable<CoachingDto> {
@@ -3705,7 +3705,7 @@ export class CoachingsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: UpdateCoachingDto | undefined): Observable<CoachingDto> {
@@ -3761,7 +3761,7 @@ export class CoachingsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -3825,7 +3825,7 @@ export class CommentsServiceProxy {
     }
 
     /**
-     * @param referenceId (optional)
+     * @param referenceId (optional) 
      * @return Success
      */
     getAll(referenceId: string | undefined): Observable<CommentDto[]> {
@@ -3888,10 +3888,10 @@ export class CommentsServiceProxy {
     }
 
     /**
-     * @param referenceIdFilter (optional)
-     * @param parentIdFilter (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param referenceIdFilter (optional) 
+     * @param parentIdFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAllReplies(referenceIdFilter: string | undefined, parentIdFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CommentDtoPagedResultDto> {
@@ -3959,7 +3959,7 @@ export class CommentsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: CommentDto | undefined): Observable<CommentDto> {
@@ -4015,7 +4015,7 @@ export class CommentsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     createReaction(body: CommentReactionDto | undefined): Observable<CommentReactionDto> {
@@ -4071,7 +4071,7 @@ export class CommentsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     deleteReaction(id: string | undefined): Observable<void> {
@@ -4135,7 +4135,7 @@ export class ConferenceSessionsServiceProxy {
     }
 
     /**
-     * @param referenceId (optional)
+     * @param referenceId (optional) 
      * @return Success
      */
     get(referenceId: string | undefined): Observable<ConferenceSessionDto> {
@@ -4191,7 +4191,7 @@ export class ConferenceSessionsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     createCandidate(body: ConferenceSessionCandidateDto | undefined): Observable<ConferenceSessionCandidateDto> {
@@ -4247,7 +4247,7 @@ export class ConferenceSessionsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: ConferenceSessionDto | undefined): Observable<void> {
@@ -4299,8 +4299,8 @@ export class ConferenceSessionsServiceProxy {
     }
 
     /**
-     * @param id (optional)
-     * @param body (optional)
+     * @param id (optional) 
+     * @param body (optional) 
      * @return Success
      */
     updateStatus(id: string | undefined, body: ConferenceSessionStatus | undefined): Observable<void> {
@@ -4356,9 +4356,9 @@ export class ConferenceSessionsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @param type (optional) 1 = Offer
-
+    
     2 = Answer
      * @return Success
      */
@@ -4427,7 +4427,7 @@ export class ConfigurationServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     changeUiTheme(body: ChangeUiThemeInput | undefined): Observable<void> {
@@ -4479,7 +4479,7 @@ export class ConfigurationServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     changeNotificationSettings(body: ChangeNotificationSettingsDto | undefined): Observable<void> {
@@ -4601,7 +4601,7 @@ export class ContentMarginsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<ContentMarginDto> {
@@ -4657,7 +4657,7 @@ export class ContentMarginsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: ContentMarginDto | undefined): Observable<ContentMarginDto> {
@@ -4713,7 +4713,7 @@ export class ContentMarginsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: ContentMarginDto | undefined): Observable<ContentMarginDto> {
@@ -4769,7 +4769,7 @@ export class ContentMarginsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -4833,7 +4833,7 @@ export class ContentsServiceProxy {
     }
 
     /**
-     * @param referenceId (optional)
+     * @param referenceId (optional) 
      * @return Success
      */
     get(referenceId: string | undefined): Observable<ContentDto> {
@@ -4889,7 +4889,7 @@ export class ContentsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     save(body: ContentDto | undefined): Observable<void> {
@@ -4953,7 +4953,7 @@ export class ConversationsServiceProxy {
     }
 
     /**
-     * @param projectId (optional)
+     * @param projectId (optional) 
      * @return Success
      */
     getAll(projectId: string | undefined): Observable<ConversationDto[]> {
@@ -5016,7 +5016,7 @@ export class ConversationsServiceProxy {
     }
 
     /**
-     * @param projectId (optional)
+     * @param projectId (optional) 
      * @return Success
      */
     getGroups(projectId: string | undefined): Observable<ConversationGroupDto[]> {
@@ -5079,8 +5079,8 @@ export class ConversationsServiceProxy {
     }
 
     /**
-     * @param conversationId (optional)
-     * @param documents (optional)
+     * @param conversationId (optional) 
+     * @param documents (optional) 
      * @return Success
      */
     uploadDocuments(conversationId: string | undefined, documents: FileParameter[] | undefined): Observable<ConversationDocumentDto[]> {
@@ -5162,11 +5162,11 @@ export class CourseAssignmentsServiceProxy {
     }
 
     /**
-     * @param searchFilter (optional)
-     * @param courseIdFilter (optional)
-     * @param sorting (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param searchFilter (optional) 
+     * @param courseIdFilter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAllByStudent(searchFilter: string | undefined, courseIdFilter: string | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CourseAssignmentDtoPagedResultDto> {
@@ -5238,13 +5238,13 @@ export class CourseAssignmentsServiceProxy {
     }
 
     /**
-     * @param courseIdFilter (optional)
-     * @param searchFilter (optional)
-     * @param courseSectionIdFilter (optional)
-     * @param creationTimeFilter (optional)
-     * @param sorting (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param courseIdFilter (optional) 
+     * @param searchFilter (optional) 
+     * @param courseSectionIdFilter (optional) 
+     * @param creationTimeFilter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAllByCourse(courseIdFilter: string | undefined, searchFilter: string | undefined, courseSectionIdFilter: string | undefined, creationTimeFilter: moment.Moment | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CourseAssignmentDtoPagedResultDto> {
@@ -5324,13 +5324,13 @@ export class CourseAssignmentsServiceProxy {
     }
 
     /**
-     * @param studentCourseIdFilter (optional)
-     * @param searchFilter (optional)
-     * @param courseSectionIdFilter (optional)
-     * @param creationTimeFilter (optional)
-     * @param sorting (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param studentCourseIdFilter (optional) 
+     * @param searchFilter (optional) 
+     * @param courseSectionIdFilter (optional) 
+     * @param creationTimeFilter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(studentCourseIdFilter: string | undefined, searchFilter: string | undefined, courseSectionIdFilter: string | undefined, creationTimeFilter: moment.Moment | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CourseAssignmentDtoPagedResultDto> {
@@ -5410,8 +5410,8 @@ export class CourseAssignmentsServiceProxy {
     }
 
     /**
-     * @param studentCourseSectionId (optional)
-     * @param files (optional)
+     * @param studentCourseSectionId (optional) 
+     * @param files (optional) 
      * @return Success
      */
     create(studentCourseSectionId: string | undefined, files: FileParameter[] | undefined): Observable<void> {
@@ -5482,7 +5482,7 @@ export class CourseConversationsServiceProxy {
     }
 
     /**
-     * @param studentCourseId (optional)
+     * @param studentCourseId (optional) 
      * @return Success
      */
     getAll(studentCourseId: string | undefined): Observable<CourseConversationDto[]> {
@@ -5545,7 +5545,7 @@ export class CourseConversationsServiceProxy {
     }
 
     /**
-     * @param courseId (optional)
+     * @param courseId (optional) 
      * @return Success
      */
     getStudents(courseId: string | undefined): Observable<GetStudentsCourseConversationDto[]> {
@@ -5608,7 +5608,7 @@ export class CourseConversationsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: CourseConversationDto | undefined): Observable<CourseConversationDto> {
@@ -5664,7 +5664,7 @@ export class CourseConversationsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     createReaction(body: CourseConversationReactionDto | undefined): Observable<CourseConversationReactionDto> {
@@ -5720,7 +5720,7 @@ export class CourseConversationsServiceProxy {
     }
 
     /**
-     * @param courseConversationReactionId (optional)
+     * @param courseConversationReactionId (optional) 
      * @return Success
      */
     deleteReaction(courseConversationReactionId: string | undefined): Observable<void> {
@@ -5784,7 +5784,7 @@ export class CoursesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<CourseDto> {
@@ -5840,14 +5840,14 @@ export class CoursesServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
-     * @param searchFilter (optional)
+     * @param userIdFilter (optional) 
+     * @param searchFilter (optional) 
      * @param statusFilter (optional) 0 = Draft
-
+    
     1 = Published
-     * @param sorting (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(userIdFilter: number | undefined, searchFilter: string | undefined, statusFilter: CourseStatus | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CourseDtoPagedResultDto> {
@@ -5923,13 +5923,13 @@ export class CoursesServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
-     * @param topic (optional)
+     * @param userIdFilter (optional) 
+     * @param topic (optional) 
      * @param categoryFilter (optional) 0 = Broadcast
-
+    
     1 = Workshop
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getByTopic(userIdFilter: number | undefined, topic: string | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CourseDtoPagedResultDto; }> {
@@ -6010,22 +6010,22 @@ export class CoursesServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
-     * @param startDate (optional)
-     * @param movingDate (optional)
-     * @param endDate (optional)
+     * @param userIdFilter (optional) 
+     * @param startDate (optional) 
+     * @param movingDate (optional) 
+     * @param endDate (optional) 
      * @param grain (optional) 0 = Daily
-
+    
     1 = Weekly
-
+    
     2 = Monthly
-
+    
     3 = Aged30
      * @param categoryFilter (optional) 0 = Broadcast
-
+    
     1 = Workshop
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getByDates(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CourseDtoPagedResultDto; }> {
@@ -6118,12 +6118,12 @@ export class CoursesServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
+     * @param userIdFilter (optional) 
      * @param categoryFilter (optional) 0 = Broadcast
-
+    
     1 = Workshop
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getByPopularity(userIdFilter: number | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: CourseDtoPagedResultDto; }> {
@@ -6200,14 +6200,14 @@ export class CoursesServiceProxy {
     }
 
     /**
-     * @param name (optional)
-     * @param subtitle (optional)
-     * @param description (optional)
-     * @param categories (optional)
-     * @param languageId (optional)
-     * @param pricingType (optional)
-     * @param imageDocumentFile (optional)
-     * @param id (optional)
+     * @param name (optional) 
+     * @param subtitle (optional) 
+     * @param description (optional) 
+     * @param categories (optional) 
+     * @param languageId (optional) 
+     * @param pricingType (optional) 
+     * @param imageDocumentFile (optional) 
+     * @param id (optional) 
      * @return Success
      */
     updateDetails(name: string | undefined, subtitle: string | undefined, description: string | undefined, categories: string | undefined, languageId: string | undefined, pricingType: PricingType | undefined, imageDocumentFile: FileParameter | undefined, id: string | undefined): Observable<CourseDto> {
@@ -6294,7 +6294,7 @@ export class CoursesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     updateSettings(body: UpdateCourseSettingsDto | undefined): Observable<CourseDto> {
@@ -6350,7 +6350,7 @@ export class CoursesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -6402,7 +6402,7 @@ export class CoursesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: CreateCourseDto | undefined): Observable<CourseDto> {
@@ -6458,7 +6458,7 @@ export class CoursesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: CourseDto | undefined): Observable<CourseDto> {
@@ -6526,7 +6526,7 @@ export class CourseSectionPagesServiceProxy {
     }
 
     /**
-     * @param courseSectionId (optional)
+     * @param courseSectionId (optional) 
      * @return Success
      */
     get(courseSectionId: string | undefined): Observable<CourseSectionPageDto> {
@@ -6582,7 +6582,7 @@ export class CourseSectionPagesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     save(body: CourseSectionPageDto | undefined): Observable<void> {
@@ -6634,12 +6634,12 @@ export class CourseSectionPagesServiceProxy {
     }
 
     /**
-     * @param description (optional)
-     * @param categoriesTags (optional)
-     * @param duration (optional)
-     * @param file (optional)
-     * @param courseSectionId (optional)
-     * @param id (optional)
+     * @param description (optional) 
+     * @param categoriesTags (optional) 
+     * @param duration (optional) 
+     * @param file (optional) 
+     * @param courseSectionId (optional) 
+     * @param id (optional) 
      * @return Success
      */
     saveUpdateDetails(description: string | undefined, categoriesTags: string | undefined, duration: string | undefined, file: FileParameter | undefined, courseSectionId: string | undefined, id: string | undefined): Observable<void> {
@@ -6726,7 +6726,7 @@ export class CourseSectionsServiceProxy {
     }
 
     /**
-     * @param courseId (optional)
+     * @param courseId (optional) 
      * @return Success
      */
     getAll(courseId: string | undefined): Observable<CourseSectionDto[]> {
@@ -6789,7 +6789,7 @@ export class CourseSectionsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<CourseSectionDto> {
@@ -6845,7 +6845,7 @@ export class CourseSectionsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: CourseSectionDto | undefined): Observable<void> {
@@ -6897,7 +6897,7 @@ export class CourseSectionsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -6949,7 +6949,7 @@ export class CourseSectionsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     createDuplicate(body: CourseSectionDto | undefined): Observable<void> {
@@ -7001,9 +7001,9 @@ export class CourseSectionsServiceProxy {
     }
 
     /**
-     * @param id (optional)
-     * @param parentId (optional)
-     * @param newIndex (optional)
+     * @param id (optional) 
+     * @param parentId (optional) 
+     * @param newIndex (optional) 
      * @return Success
      */
     updateCourseSectionParent(id: string | undefined, parentId: string | undefined, newIndex: number | undefined): Observable<void> {
@@ -7063,7 +7063,7 @@ export class CourseSectionsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: CourseSectionDto | undefined): Observable<void> {
@@ -7115,7 +7115,7 @@ export class CourseSectionsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     updateDetails(body: UpdateCourseSectionDetailsDto | undefined): Observable<CourseSectionDto> {
@@ -7171,7 +7171,7 @@ export class CourseSectionsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     updateSettings(body: UpdateCourseSectionSettingsDto | undefined): Observable<CourseSectionDto> {
@@ -7309,10 +7309,10 @@ export class DbsCertificatesServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
-     * @param sorting (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param userIdFilter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(userIdFilter: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<DbsCertificateDtoPagedResultDto> {
@@ -7380,9 +7380,9 @@ export class DbsCertificatesServiceProxy {
     }
 
     /**
-     * @param dbsNumber (optional)
-     * @param dateOfIssue (optional)
-     * @param file (optional)
+     * @param dbsNumber (optional) 
+     * @param dateOfIssue (optional) 
+     * @param file (optional) 
      * @return Success
      */
     create(dbsNumber: string | undefined, dateOfIssue: moment.Moment | undefined, file: FileParameter | undefined): Observable<DbsCertificateDto> {
@@ -7449,10 +7449,10 @@ export class DbsCertificatesServiceProxy {
     }
 
     /**
-     * @param dbsNumber (optional)
-     * @param dateOfIssue (optional)
-     * @param file (optional)
-     * @param id (optional)
+     * @param dbsNumber (optional) 
+     * @param dateOfIssue (optional) 
+     * @param file (optional) 
+     * @param id (optional) 
      * @return Success
      */
     update(dbsNumber: string | undefined, dateOfIssue: moment.Moment | undefined, file: FileParameter | undefined, id: string | undefined): Observable<DbsCertificateDto> {
@@ -7523,7 +7523,7 @@ export class DbsCertificatesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -7575,7 +7575,7 @@ export class DbsCertificatesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<DbsCertificateDto> {
@@ -7643,7 +7643,7 @@ export class DisciplineTaxonomiesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<DisciplineTaxonomyDto> {
@@ -7699,11 +7699,11 @@ export class DisciplineTaxonomiesServiceProxy {
     }
 
     /**
-     * @param parentId (optional)
-     * @param keyword (optional)
-     * @param includeChildren (optional)
-     * @param excludeFollowing (optional)
-     * @param sorting (optional)
+     * @param parentId (optional) 
+     * @param keyword (optional) 
+     * @param includeChildren (optional) 
+     * @param excludeFollowing (optional) 
+     * @param sorting (optional) 
      * @return Success
      */
     getAll(parentId: string | undefined, keyword: string | undefined, includeChildren: boolean | undefined, excludeFollowing: boolean | undefined, sorting: string | undefined): Observable<DisciplineTaxonomyDto[]> {
@@ -7782,13 +7782,13 @@ export class DisciplineTaxonomiesServiceProxy {
     }
 
     /**
-     * @param parentId (optional)
-     * @param keyword (optional)
-     * @param includeChildren (optional)
-     * @param excludeFollowing (optional)
-     * @param sorting (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param parentId (optional) 
+     * @param keyword (optional) 
+     * @param includeChildren (optional) 
+     * @param excludeFollowing (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAllPaged(parentId: string | undefined, keyword: string | undefined, includeChildren: boolean | undefined, excludeFollowing: boolean | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<DisciplineTaxonomyDtoPagedResultDto> {
@@ -7868,7 +7868,7 @@ export class DisciplineTaxonomiesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     search(body: SearchDisciplineTaxonomyRequestDto | undefined): Observable<DisciplineTaxonomyDto[]> {
@@ -7931,15 +7931,15 @@ export class DisciplineTaxonomiesServiceProxy {
     }
 
     /**
-     * @param keyword (optional)
+     * @param keyword (optional) 
      * @param searchStrategy (optional) 1 = StartsWith
-
+    
     2 = Contains
-
+    
     3 = EndsWith
-     * @param excludeFollowing (optional)
-     * @param sorting (optional)
-     * @param take (optional)
+     * @param excludeFollowing (optional) 
+     * @param sorting (optional) 
+     * @param take (optional) 
      * @return Success
      */
     getAllLastChildren(keyword: string | undefined, searchStrategy: KeywordSearchStrategy | undefined, excludeFollowing: boolean | undefined, sorting: string | undefined, take: number | undefined): Observable<DisciplineTaxonomyDto[]> {
@@ -8018,17 +8018,17 @@ export class DisciplineTaxonomiesServiceProxy {
     }
 
     /**
-     * @param keyword (optional)
+     * @param keyword (optional) 
      * @param searchStrategy (optional) 1 = StartsWith
-
+    
     2 = Contains
-
+    
     3 = EndsWith
-     * @param excludeFollowing (optional)
-     * @param take (optional)
-     * @param sorting (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param excludeFollowing (optional) 
+     * @param take (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAllLastChildrenPaged(keyword: string | undefined, searchStrategy: KeywordSearchStrategy | undefined, excludeFollowing: boolean | undefined, take: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<DisciplineTaxonomyDtoPagedResultDto> {
@@ -8108,7 +8108,7 @@ export class DisciplineTaxonomiesServiceProxy {
     }
 
     /**
-     * @param disciplineTaxonomyIds (optional)
+     * @param disciplineTaxonomyIds (optional) 
      * @return Success
      */
     getChildrenCount(disciplineTaxonomyIds: string[] | undefined): Observable<GetDisciplineTaxonomyChildrenCountDto[]> {
@@ -8171,7 +8171,7 @@ export class DisciplineTaxonomiesServiceProxy {
     }
 
     /**
-     * @param disciplineTaxonomyIds (optional)
+     * @param disciplineTaxonomyIds (optional) 
      * @return Success
      */
     getFollowerCount(disciplineTaxonomyIds: string[] | undefined): Observable<GetDisciplineTaxonomyFollowerCountDto[]> {
@@ -8246,7 +8246,7 @@ export class DocumentsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     getSecuredUrl(id: string | undefined): Observable<string> {
@@ -8302,7 +8302,7 @@ export class DocumentsServiceProxy {
     }
 
     /**
-     * @param userId (optional)
+     * @param userId (optional) 
      * @return Success
      */
     getProfilePictureUrl(userId: number | undefined): Observable<string> {
@@ -8358,7 +8358,7 @@ export class DocumentsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<DocumentDto> {
@@ -8414,8 +8414,8 @@ export class DocumentsServiceProxy {
     }
 
     /**
-     * @param referenceId (optional)
-     * @param body (optional)
+     * @param referenceId (optional) 
+     * @param body (optional) 
      * @return Success
      */
     create(referenceId: string | undefined, body: DocumentDto | undefined): Observable<DocumentDto> {
@@ -8475,8 +8475,8 @@ export class DocumentsServiceProxy {
     }
 
     /**
-     * @param id (optional)
-     * @param referenceId (optional)
+     * @param id (optional) 
+     * @param referenceId (optional) 
      * @return Success
      */
     delete(id: string | undefined, referenceId: string | undefined): Observable<void> {
@@ -8614,7 +8614,7 @@ export class EventOffersServiceProxy {
     }
 
     /**
-     * @param eventId (optional)
+     * @param eventId (optional) 
      * @return Success
      */
     getAllUnpaged(eventId: string | undefined): Observable<EventOfferDto[]> {
@@ -8735,7 +8735,7 @@ export class EventOffersServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<EventOfferDto> {
@@ -8791,10 +8791,10 @@ export class EventOffersServiceProxy {
     }
 
     /**
-     * @param eventIdFilter (optional)
-     * @param sorting (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param eventIdFilter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(eventIdFilter: string | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<EventOfferDtoPagedResultDto> {
@@ -8862,7 +8862,7 @@ export class EventOffersServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: CreateEventOfferDto | undefined): Observable<EventOfferDto> {
@@ -8918,7 +8918,7 @@ export class EventOffersServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: CreateEventOfferDto | undefined): Observable<EventOfferDto> {
@@ -8974,7 +8974,7 @@ export class EventOffersServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -9038,10 +9038,10 @@ export class EventPollsServiceProxy {
     }
 
     /**
-     * @param eventIdFilter (optional)
-     * @param sorting (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param eventIdFilter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(eventIdFilter: string | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<EventPollDtoPagedResultDto> {
@@ -9109,7 +9109,7 @@ export class EventPollsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<EventPollDto> {
@@ -9165,7 +9165,7 @@ export class EventPollsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: CreateEventPollDto | undefined): Observable<EventPollDto> {
@@ -9221,7 +9221,7 @@ export class EventPollsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: CreateEventPollDto | undefined): Observable<EventPollDto> {
@@ -9277,7 +9277,7 @@ export class EventPollsServiceProxy {
     }
 
     /**
-     * @param eventId (optional)
+     * @param eventId (optional) 
      * @return Success
      */
     getAllUnpaged(eventId: string | undefined): Observable<EventPollDto[]> {
@@ -9340,7 +9340,7 @@ export class EventPollsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -9404,7 +9404,7 @@ export class EventResourcesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<EventResourceDto> {
@@ -9460,12 +9460,12 @@ export class EventResourcesServiceProxy {
     }
 
     /**
-     * @param eventIdFilter (optional)
-     * @param presentationMaterialsOnlyFilter (optional)
-     * @param handoutsOnlyFilter (optional)
-     * @param sorting (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param eventIdFilter (optional) 
+     * @param presentationMaterialsOnlyFilter (optional) 
+     * @param handoutsOnlyFilter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(eventIdFilter: string | undefined, presentationMaterialsOnlyFilter: boolean | undefined, handoutsOnlyFilter: boolean | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<EventResourceDtoPagedResultDto> {
@@ -9541,7 +9541,7 @@ export class EventResourcesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: CreateEventResourceDto | undefined): Observable<EventResourceDto> {
@@ -9597,7 +9597,7 @@ export class EventResourcesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: CreateEventResourceDto | undefined): Observable<EventResourceDto> {
@@ -9653,7 +9653,7 @@ export class EventResourcesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -9717,13 +9717,13 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
-     * @param topic (optional)
+     * @param userIdFilter (optional) 
+     * @param topic (optional) 
      * @param categoryFilter (optional) 0 = Broadcast
-
+    
     1 = Workshop
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getByTopics(userIdFilter: number | undefined, topic: string | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: EventDtoPagedResultDto; }> {
@@ -9804,22 +9804,22 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
-     * @param startDate (optional)
-     * @param movingDate (optional)
-     * @param endDate (optional)
+     * @param userIdFilter (optional) 
+     * @param startDate (optional) 
+     * @param movingDate (optional) 
+     * @param endDate (optional) 
      * @param grain (optional) 0 = Daily
-
+    
     1 = Weekly
-
+    
     2 = Monthly
-
+    
     3 = Aged30
      * @param categoryFilter (optional) 0 = Broadcast
-
+    
     1 = Workshop
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getByDates(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: EventDtoPagedResultDto; }> {
@@ -9912,12 +9912,12 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
+     * @param userIdFilter (optional) 
      * @param categoryFilter (optional) 0 = Broadcast
-
+    
     1 = Workshop
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getByPopularity(userIdFilter: number | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: EventDtoPagedResultDto; }> {
@@ -9994,15 +9994,15 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
+     * @param userIdFilter (optional) 
      * @param eventScheduleFilter (optional) 1 = Upcoming
-
+    
     2 = Past
      * @param categoryFilter (optional) 0 = Broadcast
-
+    
     1 = Workshop
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getEventSchedules(userIdFilter: number | undefined, eventScheduleFilter: EventScheduleFilter | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<EventDtoPagedResultDto> {
@@ -10074,9 +10074,9 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param saveOnlyFilter (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param saveOnlyFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAllPurchased(saveOnlyFilter: boolean | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<StudentEventDtoPagedResultDto> {
@@ -10140,10 +10140,10 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param eventIdFilter (optional)
-     * @param searchFilter (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param eventIdFilter (optional) 
+     * @param searchFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getPresentersForInvite(eventIdFilter: string | undefined, searchFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserDtoPagedResultDto> {
@@ -10211,7 +10211,7 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     getAllPresenters(id: string | undefined): Observable<EventPresenterDto[]> {
@@ -10274,7 +10274,7 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     getAllAudiences(id: string | undefined): Observable<StudentEventDto[]> {
@@ -10337,7 +10337,7 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     getAllRelated(id: string | undefined): Observable<EventDto[]> {
@@ -10400,10 +10400,10 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param eventIdFilter (optional)
-     * @param pastFilter (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param eventIdFilter (optional) 
+     * @param pastFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAllEventInstances(eventIdFilter: string | undefined, pastFilter: boolean | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<EventInstanceDtoPagedResultDto> {
@@ -10471,7 +10471,7 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     getPurchased(id: string | undefined): Observable<StudentEventDto> {
@@ -10527,7 +10527,7 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     getPresenter(id: string | undefined): Observable<EventPresenterDto> {
@@ -10583,7 +10583,7 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     getDelayStatus(id: string | undefined): Observable<GetEventDelayStatusDto> {
@@ -10639,8 +10639,8 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param id (optional)
-     * @param body (optional)
+     * @param id (optional) 
+     * @param body (optional) 
      * @return Success
      */
     updateStatus(id: string | undefined, body: EventStatus | undefined): Observable<void> {
@@ -10696,7 +10696,7 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     updateSettings(body: UpdateEventSettingsDto | undefined): Observable<EventDto> {
@@ -10752,7 +10752,7 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     purchase(body: CreateStudentEventDto | undefined): Observable<void> {
@@ -10804,7 +10804,7 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     invitePresenter(body: CreateEventPresenterDto | undefined): Observable<void> {
@@ -10856,7 +10856,7 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     updatePresenterType(body: UpdatePresenterTypeDto | undefined): Observable<void> {
@@ -10908,7 +10908,7 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     updatePresenterStatus(body: UpdateEventPresenterStatusDto | undefined): Observable<void> {
@@ -10960,7 +10960,7 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param eventPresenterId (optional)
+     * @param eventPresenterId (optional) 
      * @return Success
      */
     removePresenter(eventPresenterId: string | undefined): Observable<void> {
@@ -11012,7 +11012,7 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param studentEventId (optional)
+     * @param studentEventId (optional) 
      * @return Success
      */
     unsave(studentEventId: string | undefined): Observable<void> {
@@ -11064,8 +11064,8 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param id (optional)
-     * @param autoAdmitAttendees (optional)
+     * @param id (optional) 
+     * @param autoAdmitAttendees (optional) 
      * @return Success
      */
     updateAutoAdmit(id: string | undefined, autoAdmitAttendees: boolean | undefined): Observable<void> {
@@ -11121,7 +11121,7 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -11173,7 +11173,7 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<EventDto> {
@@ -11229,19 +11229,19 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param parentIdFilter (optional)
-     * @param userIdFilter (optional)
-     * @param searchFilter (optional)
-     * @param visible (optional)
-     * @param open (optional)
+     * @param parentIdFilter (optional) 
+     * @param userIdFilter (optional) 
+     * @param searchFilter (optional) 
+     * @param visible (optional) 
+     * @param open (optional) 
      * @param statusFilter (optional) 0 = Draft
-
+    
     1 = Published
      * @param categoryFilter (optional) 0 = Broadcast
-
+    
     1 = Workshop
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(parentIdFilter: string | undefined, userIdFilter: number | undefined, searchFilter: string | undefined, visible: boolean | undefined, open: boolean | undefined, statusFilter: EventStatus | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<EventDtoPagedResultDto> {
@@ -11329,7 +11329,7 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: CreateEventDto | undefined): Observable<EventDto> {
@@ -11385,7 +11385,7 @@ export class EventsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: UpdateEventDto | undefined): Observable<EventDto> {
@@ -11453,7 +11453,7 @@ export class EventSessionsServiceProxy {
     }
 
     /**
-     * @param invitationId (optional)
+     * @param invitationId (optional) 
      * @return Success
      */
     getInvitedUser(invitationId: string | undefined): Observable<UserDto> {
@@ -11509,7 +11509,7 @@ export class EventSessionsServiceProxy {
     }
 
     /**
-     * @param eventId (optional)
+     * @param eventId (optional) 
      * @return Success
      */
     getUsers(eventId: string | undefined): Observable<EventUserDto[]> {
@@ -11584,7 +11584,7 @@ export class ForumsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -11636,7 +11636,7 @@ export class ForumsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     createReply(body: CreateForumReplyDto | undefined): Observable<ForumReplyDto> {
@@ -11692,7 +11692,7 @@ export class ForumsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<ForumDto> {
@@ -11748,8 +11748,8 @@ export class ForumsServiceProxy {
     }
 
     /**
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(skipCount: number | undefined, maxResultCount: number | undefined): Observable<ForumDtoPagedResultDto> {
@@ -11809,7 +11809,7 @@ export class ForumsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: CreateForumDto | undefined): Observable<ForumDto> {
@@ -11865,7 +11865,7 @@ export class ForumsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: UpdateForumDto | undefined): Observable<ForumDto> {
@@ -11991,12 +11991,12 @@ export class NotificationsServiceProxy {
     }
 
     /**
-     * @param searchFilter (optional)
+     * @param searchFilter (optional) 
      * @param stateFilter (optional) 0 = Unread
-
+    
     1 = Read
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(searchFilter: string | undefined, stateFilter: UserNotificationState | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserNotificationPagedResultDto> {
@@ -12064,7 +12064,7 @@ export class NotificationsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     updateNotificationReadState(id: string | undefined): Observable<void> {
@@ -12128,7 +12128,7 @@ export class PassportVerificationsServiceProxy {
     }
 
     /**
-     * @param passportPhoto (optional)
+     * @param passportPhoto (optional) 
      * @return Success
      */
     create(passportPhoto: FileParameter | undefined): Observable<void> {
@@ -12195,7 +12195,7 @@ export class PasswordResetsServiceProxy {
     }
 
     /**
-     * @param emailAddress (optional)
+     * @param emailAddress (optional) 
      * @return Success
      */
     create(emailAddress: string | undefined): Observable<void> {
@@ -12247,7 +12247,7 @@ export class PasswordResetsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     validate(id: string | undefined): Observable<void> {
@@ -12299,7 +12299,7 @@ export class PasswordResetsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     resetPassword(body: PasswordResetInputDto | undefined): Observable<void> {
@@ -12363,7 +12363,7 @@ export class PaymentsServiceProxy {
     }
 
     /**
-     * @param code (optional)
+     * @param code (optional) 
      * @return Success
      */
     onboardUser(code: string | undefined): Observable<string> {
@@ -12482,7 +12482,7 @@ export class PhoneVerificationsServiceProxy {
     }
 
     /**
-     * @param recipient (optional)
+     * @param recipient (optional) 
      * @return Success
      */
     create(recipient: string | undefined): Observable<void> {
@@ -12534,7 +12534,7 @@ export class PhoneVerificationsServiceProxy {
     }
 
     /**
-     * @param code (optional)
+     * @param code (optional) 
      * @return Success
      */
     verify(code: string | undefined): Observable<void> {
@@ -12598,7 +12598,7 @@ export class PhotoIdVerificationsServiceProxy {
     }
 
     /**
-     * @param userId (optional)
+     * @param userId (optional) 
      * @return Success
      */
     getLatest(userId: number | undefined): Observable<PhotoIdVerificationDto> {
@@ -12654,7 +12654,7 @@ export class PhotoIdVerificationsServiceProxy {
     }
 
     /**
-     * @param photoId (optional)
+     * @param photoId (optional) 
      * @return Success
      */
     create(photoId: FileParameter | undefined): Observable<void> {
@@ -12722,13 +12722,13 @@ export class PostsServiceProxy {
 
     /**
      * @param type (optional) 0 = QuickPost
-
+    
     1 = Question
-
+    
     2 = Discussion
-
+    
     3 = Shared
-     * @param parentId (optional)
+     * @param parentId (optional) 
      * @return Success
      */
     getAllPosts(type: PostType | undefined, parentId: string | undefined): Observable<PostDto[]> {
@@ -12796,16 +12796,16 @@ export class PostsServiceProxy {
 
     /**
      * @param type (optional) 0 = QuickPost
-
+    
     1 = Question
-
+    
     2 = Discussion
-
+    
     3 = Shared
-     * @param parentId (optional)
-     * @param creationTime (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param parentId (optional) 
+     * @param creationTime (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAllPostsPaged(type: PostType | undefined, parentId: string | undefined, creationTime: moment.Moment | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PostDtoPagedResultDto> {
@@ -12877,17 +12877,17 @@ export class PostsServiceProxy {
     }
 
     /**
-     * @param title (optional)
-     * @param content (optional)
-     * @param spaceId (optional)
-     * @param type (optional)
-     * @param parentId (optional)
-     * @param sharedId (optional)
-     * @param sharedType (optional)
-     * @param sharedServiceType (optional)
-     * @param topics (optional)
-     * @param newTopics (optional)
-     * @param attachments (optional)
+     * @param title (optional) 
+     * @param content (optional) 
+     * @param spaceId (optional) 
+     * @param type (optional) 
+     * @param parentId (optional) 
+     * @param sharedId (optional) 
+     * @param sharedType (optional) 
+     * @param sharedServiceType (optional) 
+     * @param topics (optional) 
+     * @param newTopics (optional) 
+     * @param attachments (optional) 
      * @return Success
      */
     create(title: string | undefined, content: string | undefined, spaceId: string | undefined, type: PostType | undefined, parentId: string | undefined, sharedId: string | undefined, sharedType: SharedType | undefined, sharedServiceType: ServicesType | undefined, topics: string[] | undefined, newTopics: string[] | undefined, attachments: FileParameter[] | undefined): Observable<void> {
@@ -12982,13 +12982,13 @@ export class PostsServiceProxy {
     }
 
     /**
-     * @param userId (optional)
+     * @param userId (optional) 
      * @param type (optional) 0 = QuickPost
-
+    
     1 = Question
-
+    
     2 = Discussion
-
+    
     3 = Shared
      * @return Success
      */
@@ -13056,9 +13056,9 @@ export class PostsServiceProxy {
     }
 
     /**
-     * @param id (optional)
-     * @param includeEditHistory (optional)
-     * @param includeHiddenPosts (optional)
+     * @param id (optional) 
+     * @param includeEditHistory (optional) 
+     * @param includeHiddenPosts (optional) 
      * @return Success
      */
     get(id: string | undefined, includeEditHistory: boolean | undefined, includeHiddenPosts: boolean | undefined): Observable<PostDto> {
@@ -13122,7 +13122,7 @@ export class PostsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: UpdatePostDto | undefined): Observable<PostDto> {
@@ -13178,7 +13178,7 @@ export class PostsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -13230,7 +13230,7 @@ export class PostsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     getAvailableService(id: string | undefined): Observable<AvailableServiceDto> {
@@ -13286,12 +13286,12 @@ export class PostsServiceProxy {
     }
 
     /**
-     * @param keyword (optional)
-     * @param take (optional)
-     * @param creatorUserId (optional)
-     * @param sorting (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param keyword (optional) 
+     * @param take (optional) 
+     * @param creatorUserId (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAvailableServices(keyword: string | undefined, take: number | undefined, creatorUserId: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<AvailableServiceDtoPagedResultDto> {
@@ -13367,7 +13367,7 @@ export class PostsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     createComment(body: CommentDto | undefined): Observable<CommentDto> {
@@ -13423,10 +13423,10 @@ export class PostsServiceProxy {
     }
 
     /**
-     * @param referenceIdFilter (optional)
-     * @param parentIdFilter (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param referenceIdFilter (optional) 
+     * @param parentIdFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAllCommentsPaged(referenceIdFilter: string | undefined, parentIdFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CommentDtoPagedResultDto> {
@@ -13494,7 +13494,7 @@ export class PostsServiceProxy {
     }
 
     /**
-     * @param referenceId (optional)
+     * @param referenceId (optional) 
      * @return Success
      */
     getAllComment(referenceId: string | undefined): Observable<CommentDto[]> {
@@ -13557,10 +13557,10 @@ export class PostsServiceProxy {
     }
 
     /**
-     * @param referenceIdFilter (optional)
-     * @param parentIdFilter (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param referenceIdFilter (optional) 
+     * @param parentIdFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAllCommentReplies(referenceIdFilter: string | undefined, parentIdFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CommentDtoPagedResultDto> {
@@ -13628,7 +13628,7 @@ export class PostsServiceProxy {
     }
 
     /**
-     * @param referenceId (optional)
+     * @param referenceId (optional) 
      * @return Success
      */
     getCommentsCount(referenceId: string | undefined): Observable<number> {
@@ -13684,11 +13684,11 @@ export class PostsServiceProxy {
     }
 
     /**
-     * @param postId (optional)
-     * @param isHidden (optional)
-     * @param creationTime (optional)
-     * @param creatorUserId (optional)
-     * @param id (optional)
+     * @param postId (optional) 
+     * @param isHidden (optional) 
+     * @param creationTime (optional) 
+     * @param creatorUserId (optional) 
+     * @param id (optional) 
      * @return Success
      */
     setPostVisibility(postId: string | undefined, isHidden: boolean | undefined, creationTime: moment.Moment | undefined, creatorUserId: number | undefined, id: string | undefined): Observable<void> {
@@ -13759,8 +13759,8 @@ export class PostsServiceProxy {
     }
 
     /**
-     * @param postId (optional)
-     * @param creatorUserId (optional)
+     * @param postId (optional) 
+     * @param creatorUserId (optional) 
      * @return Success
      */
     createPostNotification(postId: string | undefined, creatorUserId: number | undefined): Observable<void> {
@@ -13819,8 +13819,8 @@ export class PostsServiceProxy {
     }
 
     /**
-     * @param postId (optional)
-     * @param creatorUserId (optional)
+     * @param postId (optional) 
+     * @param creatorUserId (optional) 
      * @return Success
      */
     deletePostNotification(postId: string | undefined, creatorUserId: number | undefined): Observable<void> {
@@ -13876,7 +13876,7 @@ export class PostsServiceProxy {
     }
 
     /**
-     * @param topicIds (optional)
+     * @param topicIds (optional) 
      * @return Success
      */
     getPostsByTopics(topicIds: string[] | undefined): Observable<PostDto[]> {
@@ -13951,7 +13951,7 @@ export class ProfilesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: number | undefined): Observable<UserDto> {
@@ -14007,7 +14007,7 @@ export class ProfilesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     getVerificationStatus(id: number | undefined): Observable<VerificationStatusDto> {
@@ -14063,7 +14063,7 @@ export class ProfilesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     getMetrics(id: number | undefined): Observable<ProfileMetricDto> {
@@ -14119,7 +14119,7 @@ export class ProfilesServiceProxy {
     }
 
     /**
-     * @param keyword (optional)
+     * @param keyword (optional) 
      * @return Success
      */
     getLocationSuggestions(keyword: string | undefined): Observable<LocationSuggestion[]> {
@@ -14182,7 +14182,7 @@ export class ProfilesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     getLocation(id: string | undefined): Observable<LocationDetail> {
@@ -14238,7 +14238,7 @@ export class ProfilesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: UserDto | undefined): Observable<void> {
@@ -14290,7 +14290,7 @@ export class ProfilesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     updateProfile(body: UpdateProfileDto | undefined): Observable<void> {
@@ -14342,7 +14342,7 @@ export class ProfilesServiceProxy {
     }
 
     /**
-     * @param websiteUrl (optional)
+     * @param websiteUrl (optional) 
      * @return Success
      */
     updateWebsiteUrl(websiteUrl: string | undefined): Observable<void> {
@@ -14394,7 +14394,7 @@ export class ProfilesServiceProxy {
     }
 
     /**
-     * @param about (optional)
+     * @param about (optional) 
      * @return Success
      */
     updateAbout(about: string | undefined): Observable<void> {
@@ -14446,7 +14446,7 @@ export class ProfilesServiceProxy {
     }
 
     /**
-     * @param coverPhoto (optional)
+     * @param coverPhoto (optional) 
      * @return Success
      */
     updateCoverPhoto(coverPhoto: FileParameter | undefined): Observable<string> {
@@ -14505,7 +14505,7 @@ export class ProfilesServiceProxy {
     }
 
     /**
-     * @param profilePicture (optional)
+     * @param profilePicture (optional) 
      * @return Success
      */
     updateProfilePicture(profilePicture: FileParameter | undefined): Observable<string> {
@@ -14564,7 +14564,7 @@ export class ProfilesServiceProxy {
     }
 
     /**
-     * @param introVideo (optional)
+     * @param introVideo (optional) 
      * @return Success
      */
     updateIntroVideo(introVideo: FileParameter | undefined): Observable<string> {
@@ -14823,11 +14823,11 @@ export class ProjectOffersServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
-     * @param projectIdFilter (optional)
-     * @param searchFilter (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param userIdFilter (optional) 
+     * @param projectIdFilter (optional) 
+     * @param searchFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(userIdFilter: number | undefined, projectIdFilter: string | undefined, searchFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<ProjectOfferDtoPagedResultDto> {
@@ -14899,7 +14899,7 @@ export class ProjectOffersServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<ProjectOfferDto> {
@@ -14955,7 +14955,7 @@ export class ProjectOffersServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: CreateProjectOfferDto | undefined): Observable<void> {
@@ -15007,7 +15007,7 @@ export class ProjectOffersServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     accept(id: string | undefined): Observable<void> {
@@ -15071,10 +15071,10 @@ export class ProjectsServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
-     * @param searchFilter (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param userIdFilter (optional) 
+     * @param searchFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(userIdFilter: number | undefined, searchFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<ProjectDtoPagedResultDto> {
@@ -15142,8 +15142,8 @@ export class ProjectsServiceProxy {
     }
 
     /**
-     * @param maxResultCount (optional)
-     * @param skipCount (optional)
+     * @param maxResultCount (optional) 
+     * @param skipCount (optional) 
      * @return Success
      */
     getAllFormHome(maxResultCount: number | undefined, skipCount: number | undefined): Observable<ProjectDtoPagedResultDto> {
@@ -15261,7 +15261,7 @@ export class ProjectsServiceProxy {
     }
 
     /**
-     * @param academicLevel (optional)
+     * @param academicLevel (optional) 
      * @return Success
      */
     getAcademicLevelQualifications(academicLevel: string | undefined): Observable<string[]> {
@@ -15498,7 +15498,7 @@ export class ProjectsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<ProjectDto> {
@@ -15612,9 +15612,9 @@ export class ProjectsServiceProxy {
     }
 
     /**
-     * @param searchFilter (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param searchFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAvailableTutors(searchFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<GetAvailalbeTutorDtoPagedResultDto> {
@@ -15678,7 +15678,7 @@ export class ProjectsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: CreateProjectDto | undefined): Observable<string> {
@@ -15734,8 +15734,8 @@ export class ProjectsServiceProxy {
     }
 
     /**
-     * @param projectId (optional)
-     * @param documents (optional)
+     * @param projectId (optional) 
+     * @param documents (optional) 
      * @return Success
      */
     uploadProjectDocuments(projectId: string | undefined, documents: FileParameter[] | undefined): Observable<ProjectDto> {
@@ -15798,8 +15798,8 @@ export class ProjectsServiceProxy {
     }
 
     /**
-     * @param id (optional)
-     * @param tutorId (optional)
+     * @param id (optional) 
+     * @param tutorId (optional) 
      * @return Success
      */
     sendProjectInvitation(id: string | undefined, tutorId: number | undefined): Observable<void> {
@@ -15855,7 +15855,7 @@ export class ProjectsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: UpdateProjectDto | undefined): Observable<ProjectDto> {
@@ -15911,7 +15911,7 @@ export class ProjectsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -15963,10 +15963,10 @@ export class ProjectsServiceProxy {
     }
 
     /**
-     * @param searchFilter (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
-     * @param projectId (optional)
+     * @param searchFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @param projectId (optional) 
      * @return Success
      */
     getProjectInvitationTutors(searchFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined, projectId: string | undefined): Observable<GetAvailalbeTutorDtoPagedResultDto> {
@@ -16046,10 +16046,10 @@ export class QuestionsServiceProxy {
     }
 
     /**
-     * @param referenceId (optional)
-     * @param hostId (optional)
-     * @param answered (optional)
-     * @param creatorId (optional)
+     * @param referenceId (optional) 
+     * @param hostId (optional) 
+     * @param answered (optional) 
+     * @param creatorId (optional) 
      * @return Success
      */
     getAll(referenceId: string | undefined, hostId: number | undefined, answered: boolean | undefined, creatorId: number | undefined): Observable<QuestionDto[]> {
@@ -16124,9 +16124,9 @@ export class QuestionsServiceProxy {
     }
 
     /**
-     * @param parentIdFilter (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param parentIdFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAllReplies(parentIdFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<QuestionDtoPagedResultDto> {
@@ -16190,7 +16190,7 @@ export class QuestionsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: QuestionDto | undefined): Observable<QuestionDto> {
@@ -16246,7 +16246,7 @@ export class QuestionsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     createReaction(body: QuestionReactionDto | undefined): Observable<QuestionReactionDto> {
@@ -16302,7 +16302,7 @@ export class QuestionsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     deleteReaction(id: string | undefined): Observable<void> {
@@ -16366,7 +16366,7 @@ export class RatingsServiceProxy {
     }
 
     /**
-     * @param studentId (optional)
+     * @param studentId (optional) 
      * @return Success
      */
     getStudentRatingSummary(studentId: number | undefined): Observable<StudentRatingSummaryDto> {
@@ -16422,7 +16422,7 @@ export class RatingsServiceProxy {
     }
 
     /**
-     * @param tutorId (optional)
+     * @param tutorId (optional) 
      * @return Success
      */
     getTutorRatingSummary(tutorId: number | undefined): Observable<TutorRatingSummaryDto> {
@@ -16478,9 +16478,9 @@ export class RatingsServiceProxy {
     }
 
     /**
-     * @param studentId (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param studentId (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getStudentRatings(studentId: number | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<StudentRatingDtoPagedResultDto> {
@@ -16544,9 +16544,9 @@ export class RatingsServiceProxy {
     }
 
     /**
-     * @param tutorId (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param tutorId (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getTutorRatings(tutorId: number | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<TutorRatingDtoPagedResultDto> {
@@ -16610,7 +16610,7 @@ export class RatingsServiceProxy {
     }
 
     /**
-     * @param courseId (optional)
+     * @param courseId (optional) 
      * @return Success
      */
     getCourseRatingSummary(courseId: string | undefined): Observable<CourseRatingSummaryDto> {
@@ -16666,9 +16666,9 @@ export class RatingsServiceProxy {
     }
 
     /**
-     * @param courseId (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param courseId (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getCourseRatings(courseId: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CourseRatingDtoPagedResultDto> {
@@ -16744,7 +16744,7 @@ export class ReactionsServiceProxy {
     }
 
     /**
-     * @param referenceId (optional)
+     * @param referenceId (optional) 
      * @return Success
      */
     getAll(referenceId: string | undefined): Observable<ReactionDto[]> {
@@ -16807,18 +16807,22 @@ export class ReactionsServiceProxy {
     }
 
     /**
-     * @param referenceId (optional)
+     * @param referenceId (optional) 
      * @param type (optional) 1 = Like
-
+    
     2 = Heart
-
+    
     3 = Laugh
-
+    
     4 = Wow
-
+    
     5 = Sad
-
+    
     6 = Mad
+    
+    7 = Upvote
+    
+    8 = Downvote
      * @return Success
      */
     get(referenceId: string | undefined, type: ReactionType | undefined): Observable<ReactionDto> {
@@ -16878,18 +16882,22 @@ export class ReactionsServiceProxy {
     }
 
     /**
-     * @param referenceId (optional)
+     * @param referenceId (optional) 
      * @param type (optional) 1 = Like
-
+    
     2 = Heart
-
+    
     3 = Laugh
-
+    
     4 = Wow
-
+    
     5 = Sad
-
+    
     6 = Mad
+    
+    7 = Upvote
+    
+    8 = Downvote
      * @return Success
      */
     getCount(referenceId: string | undefined, type: ReactionType | undefined): Observable<number> {
@@ -16949,8 +16957,8 @@ export class ReactionsServiceProxy {
     }
 
     /**
-     * @param referenceId (optional)
-     * @param body (optional)
+     * @param referenceId (optional) 
+     * @param body (optional) 
      * @return Success
      */
     save(referenceId: string | undefined, body: ReactionType | undefined): Observable<void> {
@@ -17018,10 +17026,10 @@ export class ReferencesServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
-     * @param sorting (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param userIdFilter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(userIdFilter: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<ReferenceDtoPagedResultDto> {
@@ -17089,12 +17097,12 @@ export class ReferencesServiceProxy {
     }
 
     /**
-     * @param forename (optional)
-     * @param surname (optional)
-     * @param email (optional)
-     * @param phone (optional)
-     * @param relationship (optional)
-     * @param file (optional)
+     * @param forename (optional) 
+     * @param surname (optional) 
+     * @param email (optional) 
+     * @param phone (optional) 
+     * @param relationship (optional) 
+     * @param file (optional) 
      * @return Success
      */
     create(forename: string | undefined, surname: string | undefined, email: string | undefined, phone: string | undefined, relationship: ReferenceRelationshipType | undefined, file: FileParameter | undefined): Observable<ReferenceDto> {
@@ -17173,13 +17181,13 @@ export class ReferencesServiceProxy {
     }
 
     /**
-     * @param forename (optional)
-     * @param surname (optional)
-     * @param email (optional)
-     * @param phone (optional)
-     * @param relationship (optional)
-     * @param file (optional)
-     * @param id (optional)
+     * @param forename (optional) 
+     * @param surname (optional) 
+     * @param email (optional) 
+     * @param phone (optional) 
+     * @param relationship (optional) 
+     * @param file (optional) 
+     * @param id (optional) 
      * @return Success
      */
     update(forename: string | undefined, surname: string | undefined, email: string | undefined, phone: string | undefined, relationship: ReferenceRelationshipType | undefined, file: FileParameter | undefined, id: string | undefined): Observable<ReferenceDto> {
@@ -17262,7 +17270,7 @@ export class ReferencesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -17314,7 +17322,7 @@ export class ReferencesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<ReferenceDto> {
@@ -17382,7 +17390,7 @@ export class RegistrationsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<RegistrationDto> {
@@ -17438,7 +17446,7 @@ export class RegistrationsServiceProxy {
     }
 
     /**
-     * @param email (optional)
+     * @param email (optional) 
      * @return Success
      */
     checkEmailUniqueness(email: string | undefined): Observable<boolean> {
@@ -17494,7 +17502,7 @@ export class RegistrationsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: RegistrationDto | undefined): Observable<void> {
@@ -17616,7 +17624,7 @@ export class ResearchMethodsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     search(body: SearchResearchMethodResultRequestDto | undefined): Observable<ResearchMethodDto[]> {
@@ -17691,7 +17699,7 @@ export class RoleServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: CreateRoleDto | undefined): Observable<RoleDto> {
@@ -17747,7 +17755,7 @@ export class RoleServiceProxy {
     }
 
     /**
-     * @param permission (optional)
+     * @param permission (optional) 
      * @return Success
      */
     getRoles(permission: string | undefined): Observable<RoleListDtoListResultDto> {
@@ -17803,7 +17811,7 @@ export class RoleServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: RoleDto | undefined): Observable<RoleDto> {
@@ -17859,7 +17867,7 @@ export class RoleServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: number | undefined): Observable<void> {
@@ -17962,7 +17970,7 @@ export class RoleServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     getRoleForEdit(id: number | undefined): Observable<GetRoleForEditOutput> {
@@ -18018,7 +18026,7 @@ export class RoleServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: number | undefined): Observable<RoleDto> {
@@ -18074,10 +18082,10 @@ export class RoleServiceProxy {
     }
 
     /**
-     * @param keyword (optional)
-     * @param sorting (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param keyword (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(keyword: string | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<RoleDtoPagedResultDto> {
@@ -18215,7 +18223,7 @@ export class ServicesServiceProxy {
     }
 
     /**
-     * @param categoryId (optional)
+     * @param categoryId (optional) 
      * @return Success
      */
     getServices(categoryId: string | undefined): Observable<ServiceDto[]> {
@@ -18278,8 +18286,8 @@ export class ServicesServiceProxy {
     }
 
     /**
-     * @param categoryId (optional)
-     * @param serviceId (optional)
+     * @param categoryId (optional) 
+     * @param serviceId (optional) 
      * @return Success
      */
     getLevels(categoryId: string | undefined, serviceId: string | undefined): Observable<ServiceMappingDto[]> {
@@ -18346,7 +18354,7 @@ export class ServicesServiceProxy {
     }
 
     /**
-     * @param levelName (optional)
+     * @param levelName (optional) 
      * @return Success
      */
     getSubjects(levelName: string | undefined): Observable<SubjectDto[]> {
@@ -18658,7 +18666,7 @@ export class SessionsServiceProxy {
     }
 
     /**
-     * @param calendarEventId (optional)
+     * @param calendarEventId (optional) 
      * @return Success
      */
     get(calendarEventId: string | undefined): Observable<SessionDto> {
@@ -18765,7 +18773,7 @@ export class SessionsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     createCandidate(body: SessionCandidateDto | undefined): Observable<SessionCandidateDto> {
@@ -18821,7 +18829,7 @@ export class SessionsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: SessionDto | undefined): Observable<void> {
@@ -18873,9 +18881,9 @@ export class SessionsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @param type (optional) 1 = Offer
-
+    
     2 = Answer
      * @return Success
      */
@@ -19072,7 +19080,7 @@ export class StudentArticlesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: StudentArticleDto | undefined): Observable<void> {
@@ -19124,7 +19132,7 @@ export class StudentArticlesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -19176,9 +19184,9 @@ export class StudentArticlesServiceProxy {
     }
 
     /**
-     * @param isSavedFilter (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param isSavedFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(isSavedFilter: boolean | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<StudentArticleDtoPagedResultDto> {
@@ -19242,7 +19250,7 @@ export class StudentArticlesServiceProxy {
     }
 
     /**
-     * @param articleId (optional)
+     * @param articleId (optional) 
      * @return Success
      */
     getByArticle(articleId: string | undefined): Observable<GetStudentArticleDto> {
@@ -19310,10 +19318,10 @@ export class StudentCoursesServiceProxy {
     }
 
     /**
-     * @param searchFilter (optional)
-     * @param sorting (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param searchFilter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(searchFilter: string | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<StudentCourseDtoPagedResultDto> {
@@ -19381,12 +19389,12 @@ export class StudentCoursesServiceProxy {
     }
 
     /**
-     * @param searchFilter (optional)
-     * @param courseIdFilter (optional)
-     * @param minimumProgressFilter (optional)
-     * @param sorting (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param searchFilter (optional) 
+     * @param courseIdFilter (optional) 
+     * @param minimumProgressFilter (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAllStudents(searchFilter: string | undefined, courseIdFilter: string | undefined, minimumProgressFilter: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<StudentCourseDtoPagedResultDto> {
@@ -19462,7 +19470,7 @@ export class StudentCoursesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<StudentCourseDto> {
@@ -19518,7 +19526,7 @@ export class StudentCoursesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     getWithSections(id: string | undefined): Observable<StudentCourseDto> {
@@ -19574,7 +19582,7 @@ export class StudentCoursesServiceProxy {
     }
 
     /**
-     * @param courseId (optional)
+     * @param courseId (optional) 
      * @return Success
      */
     getByCourse(courseId: string | undefined): Observable<StudentCourseDto> {
@@ -19630,7 +19638,7 @@ export class StudentCoursesServiceProxy {
     }
 
     /**
-     * @param courseId (optional)
+     * @param courseId (optional) 
      * @return Success
      */
     getRecentGraduates(courseId: string | undefined): Observable<UserDto[]> {
@@ -19693,7 +19701,7 @@ export class StudentCoursesServiceProxy {
     }
 
     /**
-     * @param courseId (optional)
+     * @param courseId (optional) 
      * @return Success
      */
     create(courseId: string | undefined): Observable<void> {
@@ -19745,7 +19753,7 @@ export class StudentCoursesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     createCourseRatings(body: CreateCourseRatingDto | undefined): Observable<void> {
@@ -19809,7 +19817,7 @@ export class StudentCourseSectionsServiceProxy {
     }
 
     /**
-     * @param courseId (optional)
+     * @param courseId (optional) 
      * @return Success
      */
     getAll(courseId: string | undefined): Observable<StudentCourseSectionDto[]> {
@@ -19872,9 +19880,9 @@ export class StudentCourseSectionsServiceProxy {
     }
 
     /**
-     * @param courseSectionIdFilter (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param courseSectionIdFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAllInProgress(courseSectionIdFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<StudentCourseSectionDtoPagedResultDto> {
@@ -19938,7 +19946,7 @@ export class StudentCourseSectionsServiceProxy {
     }
 
     /**
-     * @param courseId (optional)
+     * @param courseId (optional) 
      * @return Success
      */
     getAssignmentsAllowed(courseId: string | undefined): Observable<StudentCourseSectionDto[]> {
@@ -20001,8 +20009,8 @@ export class StudentCourseSectionsServiceProxy {
     }
 
     /**
-     * @param id (optional)
-     * @param body (optional)
+     * @param id (optional) 
+     * @param body (optional) 
      * @return Success
      */
     updateStatus(id: string | undefined, body: StudentCourseSectionStatus | undefined): Observable<void> {
@@ -20070,9 +20078,9 @@ export class StudentVideosServiceProxy {
     }
 
     /**
-     * @param isSavedFilter (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param isSavedFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(isSavedFilter: boolean | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<StudentVideoDtoPagedResultDto> {
@@ -20136,7 +20144,7 @@ export class StudentVideosServiceProxy {
     }
 
     /**
-     * @param videoId (optional)
+     * @param videoId (optional) 
      * @return Success
      */
     getByVideo(videoId: string | undefined): Observable<GetStudentVideoDto> {
@@ -20192,7 +20200,7 @@ export class StudentVideosServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: StudentVideoDto | undefined): Observable<GetStudentVideoDto> {
@@ -20248,7 +20256,7 @@ export class StudentVideosServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -20370,7 +20378,7 @@ export class SubjectsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     suggestSubject(body: SuggestSubjectDto | undefined): Observable<void> {
@@ -20422,7 +20430,7 @@ export class SubjectsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     approveSuggestion(id: string | undefined): Observable<void> {
@@ -20474,7 +20482,7 @@ export class SubjectsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     rejectSuggestion(id: string | undefined): Observable<void> {
@@ -20538,7 +20546,7 @@ export class TenantServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: CreateTenantDto | undefined): Observable<TenantDto> {
@@ -20594,7 +20602,7 @@ export class TenantServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: number | undefined): Observable<void> {
@@ -20646,7 +20654,7 @@ export class TenantServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: number | undefined): Observable<TenantDto> {
@@ -20702,10 +20710,10 @@ export class TenantServiceProxy {
     }
 
     /**
-     * @param keyword (optional)
-     * @param isActive (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param keyword (optional) 
+     * @param isActive (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(keyword: string | undefined, isActive: boolean | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<TenantDtoPagedResultDto> {
@@ -20773,7 +20781,7 @@ export class TenantServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: TenantDto | undefined): Observable<TenantDto> {
@@ -20841,8 +20849,8 @@ export class TestDataGeneratorServiceProxy {
     }
 
     /**
-     * @param studentId (optional)
-     * @param numberOfRatings (optional)
+     * @param studentId (optional) 
+     * @param numberOfRatings (optional) 
      * @return Success
      */
     generateTestRatingsForStudent(studentId: number | undefined, numberOfRatings: number | undefined): Observable<void> {
@@ -20898,8 +20906,8 @@ export class TestDataGeneratorServiceProxy {
     }
 
     /**
-     * @param tutorId (optional)
-     * @param numberOfRatings (optional)
+     * @param tutorId (optional) 
+     * @param numberOfRatings (optional) 
      * @return Success
      */
     generateTestRatingsForTutor(tutorId: number | undefined, numberOfRatings: number | undefined): Observable<void> {
@@ -21174,7 +21182,7 @@ export class TimeZonesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     updateUserTimeZone(body: TimeZoneDto | undefined): Observable<void> {
@@ -21238,7 +21246,7 @@ export class TokenAuthServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     authenticate(body: AuthenticateModel | undefined): Observable<AuthenticateResultModel> {
@@ -21294,7 +21302,7 @@ export class TokenAuthServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     autoAuthenticate(body: AutoAuthenticateModel | undefined): Observable<AuthenticateResultModel> {
@@ -21408,7 +21416,7 @@ export class TokenAuthServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     externalAuthenticate(body: ExternalAuthenticateModel | undefined): Observable<ExternalAuthenticateResultModel> {
@@ -21534,7 +21542,7 @@ export class TopicsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<TopicDto> {
@@ -21590,9 +21598,9 @@ export class TopicsServiceProxy {
     }
 
     /**
-     * @param searchFilter (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param searchFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(searchFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<TopicDtoPagedResultDto> {
@@ -21656,7 +21664,7 @@ export class TopicsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: CreateTopicDto | undefined): Observable<TopicDto> {
@@ -21712,7 +21720,7 @@ export class TopicsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: UpdateTopicDto | undefined): Observable<TopicDto> {
@@ -21768,7 +21776,7 @@ export class TopicsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -21832,12 +21840,12 @@ export class TutorApplicationServiceProxy {
     }
 
     /**
-     * @param keyword (optional)
-     * @param isActive (optional)
-     * @param excludeSelf (optional)
-     * @param sorting (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param keyword (optional) 
+     * @param isActive (optional) 
+     * @param excludeSelf (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(keyword: string | undefined, isActive: boolean | undefined, excludeSelf: boolean | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<TutorVerificationDtoPagedResultDto> {
@@ -21913,7 +21921,7 @@ export class TutorApplicationServiceProxy {
     }
 
     /**
-     * @param userId (optional)
+     * @param userId (optional) 
      * @return Success
      */
     getPendingStep(userId: number | undefined): Observable<TutorVerificationStepDto> {
@@ -21969,7 +21977,7 @@ export class TutorApplicationServiceProxy {
     }
 
     /**
-     * @param userId (optional)
+     * @param userId (optional) 
      * @return Success
      */
     get(userId: number | undefined): Observable<TutorVerificationDto> {
@@ -22025,35 +22033,35 @@ export class TutorApplicationServiceProxy {
     }
 
     /**
-     * @param verificationId (optional)
+     * @param verificationId (optional) 
      * @param step (optional) 0 = AboutYou
-
+    
     1 = Education
-
+    
     2 = Research
-
+    
     3 = Languages
-
+    
     4 = ServicesOffered
-
+    
     5 = ProfilePicture
-
+    
     6 = PhotoId
-
+    
     7 = Address
-
+    
     8 = ContactNumber
-
+    
     9 = References
-
+    
     10 = DbsCheck
-
+    
     11 = TermsOfUse
-
+    
     12 = PrivacyPolicy
-
+    
     13 = Declaration
-
+    
     14 = CompleteApplication
      * @return Success
      */
@@ -22114,35 +22122,35 @@ export class TutorApplicationServiceProxy {
     }
 
     /**
-     * @param verificationId (optional)
+     * @param verificationId (optional) 
      * @param step (optional) 0 = AboutYou
-
+    
     1 = Education
-
+    
     2 = Research
-
+    
     3 = Languages
-
+    
     4 = ServicesOffered
-
+    
     5 = ProfilePicture
-
+    
     6 = PhotoId
-
+    
     7 = Address
-
+    
     8 = ContactNumber
-
+    
     9 = References
-
+    
     10 = DbsCheck
-
+    
     11 = TermsOfUse
-
+    
     12 = PrivacyPolicy
-
+    
     13 = Declaration
-
+    
     14 = CompleteApplication
      * @return Success
      */
@@ -22203,35 +22211,35 @@ export class TutorApplicationServiceProxy {
     }
 
     /**
-     * @param verificationId (optional)
+     * @param verificationId (optional) 
      * @param step (optional) 0 = AboutYou
-
+    
     1 = Education
-
+    
     2 = Research
-
+    
     3 = Languages
-
+    
     4 = ServicesOffered
-
+    
     5 = ProfilePicture
-
+    
     6 = PhotoId
-
+    
     7 = Address
-
+    
     8 = ContactNumber
-
+    
     9 = References
-
+    
     10 = DbsCheck
-
+    
     11 = TermsOfUse
-
+    
     12 = PrivacyPolicy
-
+    
     13 = Declaration
-
+    
     14 = CompleteApplication
      * @return Success
      */
@@ -22355,7 +22363,7 @@ export class TutorWizardServiceProxy {
     }
 
     /**
-     * @param userId (optional)
+     * @param userId (optional) 
      * @return Success
      */
     getPendingStep(userId: number | undefined): Observable<TutorVerificationStepDto> {
@@ -22462,7 +22470,7 @@ export class TutorWizardServiceProxy {
     }
 
     /**
-     * @param userId (optional)
+     * @param userId (optional) 
      * @return Success
      */
     getAboutYou(userId: number | undefined): Observable<AboutYouDto> {
@@ -22518,7 +22526,7 @@ export class TutorWizardServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     updateAboutYou(body: AboutYouDto | undefined): Observable<void> {
@@ -22570,7 +22578,7 @@ export class TutorWizardServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     updateStep(body: BecomeATutorStep | undefined): Observable<TutorVerificationStepDto> {
@@ -22626,7 +22634,7 @@ export class TutorWizardServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     updateAddress(body: UpdateAddressDto | undefined): Observable<void> {
@@ -22678,7 +22686,7 @@ export class TutorWizardServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     approve(id: string | undefined): Observable<void> {
@@ -22730,7 +22738,7 @@ export class TutorWizardServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     decline(body: DeclineTutorVerificationStepDto | undefined): Observable<void> {
@@ -22794,8 +22802,8 @@ export class UniversitiesServiceProxy {
     }
 
     /**
-     * @param countryCode (optional)
-     * @param query (optional)
+     * @param countryCode (optional) 
+     * @param query (optional) 
      * @return Success
      */
     search(countryCode: string | undefined, query: string | undefined): Observable<UniversityDto[]> {
@@ -22874,7 +22882,7 @@ export class UserServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: CreateUserDto | undefined): Observable<UserDto> {
@@ -22930,7 +22938,7 @@ export class UserServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: UserDto | undefined): Observable<UserDto> {
@@ -22986,7 +22994,7 @@ export class UserServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: number | undefined): Observable<void> {
@@ -23089,7 +23097,7 @@ export class UserServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     changeLanguage(body: ChangeUserLanguageDto | undefined): Observable<void> {
@@ -23141,7 +23149,7 @@ export class UserServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     changePassword(body: ChangePasswordDto | undefined): Observable<boolean> {
@@ -23197,7 +23205,7 @@ export class UserServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     resetPassword(body: ResetPasswordDto | undefined): Observable<boolean> {
@@ -23253,7 +23261,7 @@ export class UserServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: number | undefined): Observable<UserDto> {
@@ -23309,12 +23317,12 @@ export class UserServiceProxy {
     }
 
     /**
-     * @param keyword (optional)
-     * @param isActive (optional)
-     * @param excludeSelf (optional)
-     * @param sorting (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param keyword (optional) 
+     * @param isActive (optional) 
+     * @param excludeSelf (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(keyword: string | undefined, isActive: boolean | undefined, excludeSelf: boolean | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserDtoPagedResultDto> {
@@ -23402,7 +23410,7 @@ export class UserAvailabilitiesServiceProxy {
     }
 
     /**
-     * @param userId (optional)
+     * @param userId (optional) 
      * @return Success
      */
     getAll(userId: number | undefined): Observable<UserAvailabilityDto[]> {
@@ -23465,7 +23473,7 @@ export class UserAvailabilitiesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     createEdit(body: UserAvailabilityDto[] | undefined): Observable<void> {
@@ -23529,7 +23537,7 @@ export class UserEducationsServiceProxy {
     }
 
     /**
-     * @param userId (optional)
+     * @param userId (optional) 
      * @return Success
      */
     getAll(userId: number | undefined): Observable<UniversityDto[]> {
@@ -23650,7 +23658,7 @@ export class UserEducationsServiceProxy {
     }
 
     /**
-     * @param academicLevelId (optional)
+     * @param academicLevelId (optional) 
      * @return Success
      */
     getQualifications(academicLevelId: string | undefined): Observable<AcademicLevelQualificationDto[]> {
@@ -23713,7 +23721,7 @@ export class UserEducationsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: CreateEditUserEducationDto | undefined): Observable<string> {
@@ -23769,7 +23777,7 @@ export class UserEducationsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: CreateEditUserEducationDto | undefined): Observable<string> {
@@ -23825,7 +23833,7 @@ export class UserEducationsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     suggestionQualification(body: SuggestQualificationDto | undefined): Observable<AcademicLevelQualificationDto> {
@@ -23881,9 +23889,9 @@ export class UserEducationsServiceProxy {
     }
 
     /**
-     * @param userEducationId (optional)
-     * @param categories (optional)
-     * @param documents (optional)
+     * @param userEducationId (optional) 
+     * @param categories (optional) 
+     * @param documents (optional) 
      * @return Success
      */
     uploadDocuments(userEducationId: string | undefined, categories: string | undefined, documents: FileParameter[] | undefined): Observable<void> {
@@ -23946,7 +23954,7 @@ export class UserEducationsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -23998,7 +24006,7 @@ export class UserEducationsServiceProxy {
     }
 
     /**
-     * @param userEducationDocumentId (optional)
+     * @param userEducationDocumentId (optional) 
      * @return Success
      */
     deleteDocument(userEducationDocumentId: string | undefined): Observable<void> {
@@ -24062,8 +24070,8 @@ export class UserFollowersServiceProxy {
     }
 
     /**
-     * @param userId (optional)
-     * @param followerUserId (optional)
+     * @param userId (optional) 
+     * @param followerUserId (optional) 
      * @return Success
      */
     get(userId: number | undefined, followerUserId: number | undefined): Observable<UserFollowerDto> {
@@ -24123,7 +24131,7 @@ export class UserFollowersServiceProxy {
     }
 
     /**
-     * @param userId (optional)
+     * @param userId (optional) 
      * @return Success
      */
     create(userId: number | undefined): Observable<UserFollowerDto> {
@@ -24179,7 +24187,7 @@ export class UserFollowersServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -24359,7 +24367,7 @@ export class UserPublicationsServiceProxy {
     }
 
     /**
-     * @param nameFilter (optional)
+     * @param nameFilter (optional) 
      * @return Success
      */
     getTags(nameFilter: string | undefined): Observable<PublicationTagDto[]> {
@@ -24422,11 +24430,11 @@ export class UserPublicationsServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
-     * @param searchFilter (optional)
-     * @param projectType (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param userIdFilter (optional) 
+     * @param searchFilter (optional) 
+     * @param projectType (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getPaged(userIdFilter: number | undefined, searchFilter: string | undefined, projectType: number | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserPublicationDtoPagedResultDto> {
@@ -24498,7 +24506,7 @@ export class UserPublicationsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: UserPublicationDto | undefined): Observable<void> {
@@ -24550,7 +24558,7 @@ export class UserPublicationsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: UserPublicationDto | undefined): Observable<void> {
@@ -24602,7 +24610,7 @@ export class UserPublicationsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -24666,7 +24674,7 @@ export class UserQualificationsServiceProxy {
     }
 
     /**
-     * @param userId (optional)
+     * @param userId (optional) 
      * @return Success
      */
     getAll(userId: number | undefined): Observable<UserQualificationDto[]> {
@@ -24729,15 +24737,15 @@ export class UserQualificationsServiceProxy {
     }
 
     /**
-     * @param professionalCertificateOrAward (optional)
-     * @param conferringOrganization (optional)
-     * @param summary (optional)
-     * @param city (optional)
-     * @param country (optional)
-     * @param startYear (optional)
-     * @param endYear (optional)
-     * @param gradeAttained (optional)
-     * @param documentsToUpload (optional)
+     * @param professionalCertificateOrAward (optional) 
+     * @param conferringOrganization (optional) 
+     * @param summary (optional) 
+     * @param city (optional) 
+     * @param country (optional) 
+     * @param startYear (optional) 
+     * @param endYear (optional) 
+     * @param gradeAttained (optional) 
+     * @param documentsToUpload (optional) 
      * @return Success
      */
     create(professionalCertificateOrAward: string | undefined, conferringOrganization: string | undefined, summary: string | undefined, city: string | undefined, country: string | undefined, startYear: string | undefined, endYear: string | undefined, gradeAttained: string | undefined, documentsToUpload: FileParameter[] | undefined): Observable<void> {
@@ -24824,16 +24832,16 @@ export class UserQualificationsServiceProxy {
     }
 
     /**
-     * @param id (optional)
-     * @param professionalCertificateOrAward (optional)
-     * @param conferringOrganization (optional)
-     * @param summary (optional)
-     * @param city (optional)
-     * @param country (optional)
-     * @param startYear (optional)
-     * @param endYear (optional)
-     * @param gradeAttained (optional)
-     * @param documentsToUpload (optional)
+     * @param id (optional) 
+     * @param professionalCertificateOrAward (optional) 
+     * @param conferringOrganization (optional) 
+     * @param summary (optional) 
+     * @param city (optional) 
+     * @param country (optional) 
+     * @param startYear (optional) 
+     * @param endYear (optional) 
+     * @param gradeAttained (optional) 
+     * @param documentsToUpload (optional) 
      * @return Success
      */
     update(id: string | undefined, professionalCertificateOrAward: string | undefined, conferringOrganization: string | undefined, summary: string | undefined, city: string | undefined, country: string | undefined, startYear: string | undefined, endYear: string | undefined, gradeAttained: string | undefined, documentsToUpload: FileParameter[] | undefined): Observable<void> {
@@ -24924,7 +24932,7 @@ export class UserQualificationsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -24976,7 +24984,7 @@ export class UserQualificationsServiceProxy {
     }
 
     /**
-     * @param userQualificationDocumentId (optional)
+     * @param userQualificationDocumentId (optional) 
      * @return Success
      */
     deleteDocument(userQualificationDocumentId: string | undefined): Observable<void> {
@@ -25040,9 +25048,9 @@ export class UserResearchInterestsServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param userIdFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getPaged(userIdFilter: number | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserResearchInterestDtoPagedResultDto> {
@@ -25106,7 +25114,7 @@ export class UserResearchInterestsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: UserResearchInterestDto | undefined): Observable<void> {
@@ -25158,7 +25166,7 @@ export class UserResearchInterestsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     edit(body: UserResearchInterestDto | undefined): Observable<void> {
@@ -25210,7 +25218,7 @@ export class UserResearchInterestsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -25274,9 +25282,9 @@ export class UserResearchMethodologiesServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param userIdFilter (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getPaged(userIdFilter: number | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserResearchMethodologyDtoPagedResultDto> {
@@ -25340,7 +25348,7 @@ export class UserResearchMethodologiesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: UserResearchMethodologyDto | undefined): Observable<void> {
@@ -25392,7 +25400,7 @@ export class UserResearchMethodologiesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     edit(body: UserResearchMethodologyDto | undefined): Observable<void> {
@@ -25444,7 +25452,7 @@ export class UserResearchMethodologiesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -25508,8 +25516,8 @@ export class UserServicesServiceProxy {
     }
 
     /**
-     * @param userId (optional)
-     * @param serviceId (optional)
+     * @param userId (optional) 
+     * @param serviceId (optional) 
      * @return Success
      */
     get(userId: number | undefined, serviceId: string | undefined): Observable<UserServiceForListDto[]> {
@@ -25576,7 +25584,7 @@ export class UserServicesServiceProxy {
     }
 
     /**
-     * @param userId (optional)
+     * @param userId (optional) 
      * @return Success
      */
     getServiceTree(userId: number | undefined): Observable<ServiceDto[]> {
@@ -25639,7 +25647,7 @@ export class UserServicesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: UserServiceDto | undefined): Observable<void> {
@@ -25691,7 +25699,7 @@ export class UserServicesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     update(body: UserServiceDto | undefined): Observable<void> {
@@ -25743,7 +25751,7 @@ export class UserServicesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -25795,7 +25803,7 @@ export class UserServicesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     getService(id: string | undefined): Observable<UserServiceDto> {
@@ -25863,7 +25871,7 @@ export class UserSpokenlanguageServiceProxy {
     }
 
     /**
-     * @param userId (optional)
+     * @param userId (optional) 
      * @return Success
      */
     getUserSpokenLanguages(userId: number | undefined): Observable<UserSpokenLanguageDto[]> {
@@ -25926,7 +25934,7 @@ export class UserSpokenlanguageServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     editUserSpokenLanguages(body: EditUserSpokenLanguagesDto | undefined): Observable<void> {
@@ -25990,12 +25998,12 @@ export class UserTopicsServiceProxy {
     }
 
     /**
-     * @param keyword (optional)
-     * @param userId (optional)
+     * @param keyword (optional) 
+     * @param userId (optional) 
      * @param type (optional) 0 = Following
-
+    
     1 = NotInterested
-     * @param sorting (optional)
+     * @param sorting (optional) 
      * @return Success
      */
     getAll(keyword: string | undefined, userId: number | undefined, type: UserTopicType | undefined, sorting: string | undefined): Observable<UserTopicDto[]> {
@@ -26070,14 +26078,14 @@ export class UserTopicsServiceProxy {
     }
 
     /**
-     * @param keyword (optional)
-     * @param userId (optional)
+     * @param keyword (optional) 
+     * @param userId (optional) 
      * @param type (optional) 0 = Following
-
+    
     1 = NotInterested
-     * @param sorting (optional)
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAllPaged(keyword: string | undefined, userId: number | undefined, type: UserTopicType | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserTopicDtoPagedResultDto> {
@@ -26153,7 +26161,7 @@ export class UserTopicsServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: CreateUserTopicDto | undefined): Observable<void> {
@@ -26205,7 +26213,7 @@ export class UserTopicsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -26257,7 +26265,7 @@ export class UserTopicsServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     deleteByTopicId(id: string | undefined): Observable<void> {
@@ -26321,13 +26329,13 @@ export class VideosServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
-     * @param searchFilter (optional)
+     * @param userIdFilter (optional) 
+     * @param searchFilter (optional) 
      * @param stausFilter (optional) 0 = Draft
-
+    
     1 = Published
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAll(userIdFilter: number | undefined, searchFilter: string | undefined, stausFilter: VideoStatus | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<VideoDtoPagedResultDto> {
@@ -26399,13 +26407,13 @@ export class VideosServiceProxy {
     }
 
     /**
-     * @param parentIdFilter (optional)
-     * @param searchFilter (optional)
+     * @param parentIdFilter (optional) 
+     * @param searchFilter (optional) 
      * @param stausFilter (optional) 0 = Draft
-
+    
     1 = Published
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getAllForSeries(parentIdFilter: string | undefined, searchFilter: string | undefined, stausFilter: VideoStatus | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<VideoDtoPagedResultDto> {
@@ -26477,7 +26485,7 @@ export class VideosServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     getOtherVideosForSeries(id: string | undefined): Observable<VideoDto[]> {
@@ -26540,8 +26548,8 @@ export class VideosServiceProxy {
     }
 
     /**
-     * @param maxResultCount (optional)
-     * @param skipCount (optional)
+     * @param maxResultCount (optional) 
+     * @param skipCount (optional) 
      * @return Success
      */
     getAllForHome(maxResultCount: number | undefined, skipCount: number | undefined): Observable<VideoDtoPagedResultDto> {
@@ -26601,7 +26609,7 @@ export class VideosServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     getAllRelated(id: string | undefined): Observable<VideoDto[]> {
@@ -26664,7 +26672,7 @@ export class VideosServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     get(id: string | undefined): Observable<VideoDto> {
@@ -26720,7 +26728,7 @@ export class VideosServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     getDelayStatus(id: string | undefined): Observable<GetDelayStatusDto> {
@@ -26776,7 +26784,7 @@ export class VideosServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: VideoDto | undefined): Observable<VideoDto> {
@@ -26832,7 +26840,7 @@ export class VideosServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     updateDetails(body: UpdateVideoDetailsDto | undefined): Observable<VideoDto> {
@@ -26888,7 +26896,7 @@ export class VideosServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     updateSettings(body: UpdateVideoSettingsDto | undefined): Observable<VideoDto> {
@@ -26944,8 +26952,8 @@ export class VideosServiceProxy {
     }
 
     /**
-     * @param id (optional)
-     * @param body (optional)
+     * @param id (optional) 
+     * @param body (optional) 
      * @return Success
      */
     updateStatus(id: string | undefined, body: VideoStatus | undefined): Observable<void> {
@@ -27001,7 +27009,7 @@ export class VideosServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -27053,13 +27061,13 @@ export class VideosServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
-     * @param topic (optional)
+     * @param userIdFilter (optional) 
+     * @param topic (optional) 
      * @param categoryFilter (optional) 0 = Broadcast
-
+    
     1 = Workshop
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getByTopic(userIdFilter: number | undefined, topic: string | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: VideoDtoPagedResultDto; }> {
@@ -27140,22 +27148,22 @@ export class VideosServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
-     * @param startDate (optional)
-     * @param movingDate (optional)
-     * @param endDate (optional)
+     * @param userIdFilter (optional) 
+     * @param startDate (optional) 
+     * @param movingDate (optional) 
+     * @param endDate (optional) 
      * @param grain (optional) 0 = Daily
-
+    
     1 = Weekly
-
+    
     2 = Monthly
-
+    
     3 = Aged30
      * @param categoryFilter (optional) 0 = Broadcast
-
+    
     1 = Workshop
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getByDates(userIdFilter: number | undefined, startDate: moment.Moment | undefined, movingDate: moment.Moment | undefined, endDate: moment.Moment | undefined, grain: DateGrains | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: VideoDtoPagedResultDto; }> {
@@ -27248,12 +27256,12 @@ export class VideosServiceProxy {
     }
 
     /**
-     * @param userIdFilter (optional)
+     * @param userIdFilter (optional) 
      * @param categoryFilter (optional) 0 = Broadcast
-
+    
     1 = Workshop
-     * @param skipCount (optional)
-     * @param maxResultCount (optional)
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
     getByPopularity(userIdFilter: number | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<{ [key: string]: VideoDtoPagedResultDto; }> {
@@ -27401,7 +27409,7 @@ export class WorkHistoriesServiceProxy {
     }
 
     /**
-     * @param userId (optional)
+     * @param userId (optional) 
      * @return Success
      */
     getAll(userId: number | undefined): Observable<WorkHistoryDto[]> {
@@ -27464,7 +27472,7 @@ export class WorkHistoriesServiceProxy {
     }
 
     /**
-     * @param body (optional)
+     * @param body (optional) 
      * @return Success
      */
     create(body: WorkHistoryDto | undefined): Observable<WorkHistoryDto> {
@@ -27520,7 +27528,7 @@ export class WorkHistoriesServiceProxy {
     }
 
     /**
-     * @param id (optional)
+     * @param id (optional) 
      * @return Success
      */
     delete(id: string | undefined): Observable<void> {
@@ -27609,7 +27617,7 @@ export class AboutYouDto implements IAboutYouDto {
         data["name"] = this.name;
         data["surname"] = this.surname;
         data["about"] = this.about;
-        return data;
+        return data; 
     }
 
     clone(): AboutYouDto {
@@ -27661,7 +27669,7 @@ export class AcademicLevelDto implements IAcademicLevelDto {
         data["id"] = this.id;
         data["name"] = this.name;
         data["displayOrder"] = this.displayOrder;
-        return data;
+        return data; 
     }
 
     clone(): AcademicLevelDto {
@@ -27724,7 +27732,7 @@ export class AcademicLevelQualificationDto implements IAcademicLevelQualificatio
         data["reviewerUserId"] = this.reviewerUserId;
         data["reviewTime"] = this.reviewTime ? this.reviewTime.toISOString() : <any>undefined;
         data["reviewStatus"] = this.reviewStatus;
-        return data;
+        return data; 
     }
 
     clone(): AcademicLevelQualificationDto {
@@ -27783,7 +27791,7 @@ export class AcceptanceLogDto implements IAcceptanceLogDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["type"] = this.type;
-        return data;
+        return data; 
     }
 
     clone(): AcceptanceLogDto {
@@ -27860,7 +27868,7 @@ export class ApplicationInfoDto implements IApplicationInfoDto {
         data["baseDirectory"] = this.baseDirectory;
         data["profilePicturesFolderName"] = this.profilePicturesFolderName;
         data["coverPhotoFolderName"] = this.coverPhotoFolderName;
-        return data;
+        return data; 
     }
 
     clone(): ApplicationInfoDto {
@@ -27991,7 +27999,7 @@ export class ArticleDto implements IArticleDto {
         data["popularityWeight"] = this.popularityWeight;
         data["thumbnailImageUrl"] = this.thumbnailImageUrl;
         data["articlesCount"] = this.articlesCount;
-        return data;
+        return data; 
     }
 
     clone(): ArticleDto {
@@ -28070,7 +28078,7 @@ export class ArticleDtoPagedResultDto implements IArticleDtoPagedResultDto {
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): ArticleDtoPagedResultDto {
@@ -28209,7 +28217,7 @@ export class Assembly implements IAssembly {
         data["globalAssemblyCache"] = this.globalAssemblyCache;
         data["hostContext"] = this.hostContext;
         data["securityRuleSet"] = this.securityRuleSet;
-        return data;
+        return data; 
     }
 
     clone(): Assembly {
@@ -28293,7 +28301,7 @@ export class AuditLogsDto implements IAuditLogsDto {
         data["parameters"] = this.parameters;
         data["auditLogsType"] = this.auditLogsType;
         data["servicesName"] = this.servicesName;
-        return data;
+        return data; 
     }
 
     clone(): AuditLogsDto {
@@ -28364,7 +28372,7 @@ export class AuthenticateModel implements IAuthenticateModel {
         data["userNameOrEmailAddress"] = this.userNameOrEmailAddress;
         data["password"] = this.password;
         data["rememberClient"] = this.rememberClient;
-        return data;
+        return data; 
     }
 
     clone(): AuthenticateModel {
@@ -28424,7 +28432,7 @@ export class AuthenticateResultModel implements IAuthenticateResultModel {
         data["userId"] = this.userId;
         data["isTwoFactorEnabled"] = this.isTwoFactorEnabled;
         data["referenceId"] = this.referenceId;
-        return data;
+        return data; 
     }
 
     clone(): AuthenticateResultModel {
@@ -28478,7 +28486,7 @@ export class AuthenticatorDto implements IAuthenticatorDto {
         data["isEnabled"] = this.isEnabled;
         data["sharedKey"] = this.sharedKey;
         data["qrCodeUrl"] = this.qrCodeUrl;
-        return data;
+        return data; 
     }
 
     clone(): AuthenticatorDto {
@@ -28526,7 +28534,7 @@ export class AutoAuthenticateModel implements IAutoAuthenticateModel {
         data = typeof data === 'object' ? data : {};
         data["type"] = this.type;
         data["referenceId"] = this.referenceId;
-        return data;
+        return data; 
     }
 
     clone(): AutoAuthenticateModel {
@@ -28985,7 +28993,7 @@ export class AvailableServiceDto implements IAvailableServiceDto {
         data["language"] = this.language ? this.language.toJSON() : <any>undefined;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         data["popularityWeight"] = this.popularityWeight;
-        return data;
+        return data; 
     }
 
     clone(): AvailableServiceDto {
@@ -29173,7 +29181,7 @@ export class AvailableServiceDtoPagedResultDto implements IAvailableServiceDtoPa
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): AvailableServiceDtoPagedResultDto {
@@ -29297,7 +29305,7 @@ export class CalendarEventDto implements ICalendarEventDto {
             for (let item of this.userCalendarEvents)
                 data["userCalendarEvents"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): CalendarEventDto {
@@ -29383,7 +29391,7 @@ export class ChangeNotificationSettingsDto implements IChangeNotificationSetting
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["isNewBookingEnabled"] = this.isNewBookingEnabled;
-        return data;
+        return data; 
     }
 
     clone(): ChangeNotificationSettingsDto {
@@ -29429,7 +29437,7 @@ export class ChangePasswordDto implements IChangePasswordDto {
         data = typeof data === 'object' ? data : {};
         data["currentPassword"] = this.currentPassword;
         data["newPassword"] = this.newPassword;
-        return data;
+        return data; 
     }
 
     clone(): ChangePasswordDto {
@@ -29473,7 +29481,7 @@ export class ChangeUiThemeInput implements IChangeUiThemeInput {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["theme"] = this.theme;
-        return data;
+        return data; 
     }
 
     clone(): ChangeUiThemeInput {
@@ -29516,7 +29524,7 @@ export class ChangeUserLanguageDto implements IChangeUserLanguageDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["languageName"] = this.languageName;
-        return data;
+        return data; 
     }
 
     clone(): ChangeUserLanguageDto {
@@ -29825,7 +29833,7 @@ export class CoachingDto implements ICoachingDto {
                 data["children"].push(item.toJSON());
         }
         data["popularityWeight"] = this.popularityWeight;
-        return data;
+        return data; 
     }
 
     clone(): CoachingDto {
@@ -29965,7 +29973,7 @@ export class CoachingDtoPagedResultDto implements ICoachingDtoPagedResultDto {
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): CoachingDtoPagedResultDto {
@@ -30026,7 +30034,7 @@ export class CoachingPollDto implements ICoachingPollDto {
             for (let item of this.coachingPollQuestions)
                 data["coachingPollQuestions"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): CoachingPollDto {
@@ -30083,7 +30091,7 @@ export class CoachingPollDtoPagedResultDto implements ICoachingPollDtoPagedResul
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): CoachingPollDtoPagedResultDto {
@@ -30156,7 +30164,7 @@ export class CoachingPollQuestionDto implements ICoachingPollQuestionDto {
             for (let item of this.coachingPollQuestionOptions)
                 data["coachingPollQuestionOptions"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): CoachingPollQuestionDto {
@@ -30212,7 +30220,7 @@ export class CoachingPollQuestionOptionDto implements ICoachingPollQuestionOptio
         data["id"] = this.id;
         data["text"] = this.text;
         data["coachingPollQuestionId"] = this.coachingPollQuestionId;
-        return data;
+        return data; 
     }
 
     clone(): CoachingPollQuestionOptionDto {
@@ -30284,7 +30292,7 @@ export class CoachingPresenterDto implements ICoachingPresenterDto {
         data["email"] = this.email;
         data["creatorUserId"] = this.creatorUserId;
         data["user"] = this.user ? this.user.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): CoachingPresenterDto {
@@ -30372,7 +30380,7 @@ export class CoachingResourceDto implements ICoachingResourceDto {
         data["documentId"] = this.documentId;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["document"] = this.document ? this.document.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): CoachingResourceDto {
@@ -30432,7 +30440,7 @@ export class CoachingResourceDtoPagedResultDto implements ICoachingResourceDtoPa
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): CoachingResourceDtoPagedResultDto {
@@ -30565,7 +30573,7 @@ export class CommentDto implements ICommentDto {
         data["course"] = this.course ? this.course.toJSON() : <any>undefined;
         data["video"] = this.video ? this.video.toJSON() : <any>undefined;
         data["coaching"] = this.coaching ? this.coaching.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): CommentDto {
@@ -30637,7 +30645,7 @@ export class CommentDtoPagedResultDto implements ICommentDtoPagedResultDto {
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): CommentDtoPagedResultDto {
@@ -30690,7 +30698,7 @@ export class CommentReactionDto implements ICommentReactionDto {
         data["type"] = this.type;
         data["commentId"] = this.commentId;
         data["creatorUserId"] = this.creatorUserId;
-        return data;
+        return data; 
     }
 
     clone(): CommentReactionDto {
@@ -30752,7 +30760,7 @@ export class ConferenceSessionCandidateDto implements IConferenceSessionCandidat
         data["value"] = this.value;
         data["type"] = this.type;
         data["conferenceSessionId"] = this.conferenceSessionId;
-        return data;
+        return data; 
     }
 
     clone(): ConferenceSessionCandidateDto {
@@ -30821,7 +30829,7 @@ export class ConferenceSessionDto implements IConferenceSessionDto {
             for (let item of this.conferenceSessionCandidates)
                 data["conferenceSessionCandidates"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): ConferenceSessionDto {
@@ -30978,7 +30986,7 @@ export class ConstructorInfo implements IConstructorInfo {
         data["isSecuritySafeCritical"] = this.isSecuritySafeCritical;
         data["isSecurityTransparent"] = this.isSecurityTransparent;
         data["memberType"] = this.memberType;
-        return data;
+        return data; 
     }
 
     clone(): ConstructorInfo {
@@ -31055,7 +31063,7 @@ export class ContentDto implements IContentDto {
         data = typeof data === 'object' ? data : {};
         data["pageContent"] = this.pageContent;
         data["referenceId"] = this.referenceId;
-        return data;
+        return data; 
     }
 
     clone(): ContentDto {
@@ -31111,7 +31119,7 @@ export class ContentMarginDto implements IContentMarginDto {
         data["top"] = this.top;
         data["bottom"] = this.bottom;
         data["width"] = this.width;
-        return data;
+        return data; 
     }
 
     clone(): ContentMarginDto {
@@ -31170,7 +31178,7 @@ export class ConversationDocumentDto implements IConversationDocumentDto {
         data["documentId"] = this.documentId;
         data["conversation"] = this.conversation ? this.conversation.toJSON() : <any>undefined;
         data["document"] = this.document ? this.document.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): ConversationDocumentDto {
@@ -31246,7 +31254,7 @@ export class ConversationDto implements IConversationDto {
             for (let item of this.conversationDocuments)
                 data["conversationDocuments"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): ConversationDto {
@@ -31320,7 +31328,7 @@ export class ConversationGroupDto implements IConversationGroupDto {
         data["lastConversationMessage"] = this.lastConversationMessage;
         data["project"] = this.project ? this.project.toJSON() : <any>undefined;
         data["unseenCount"] = this.unseenCount;
-        return data;
+        return data; 
     }
 
     clone(): ConversationGroupDto {
@@ -31399,7 +31407,7 @@ export class CourseAssignmentDto implements ICourseAssignmentDto {
         data["studentCourseSection"] = this.studentCourseSection ? this.studentCourseSection.toJSON() : <any>undefined;
         data["document"] = this.document ? this.document.toJSON() : <any>undefined;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): CourseAssignmentDto {
@@ -31459,7 +31467,7 @@ export class CourseAssignmentDtoPagedResultDto implements ICourseAssignmentDtoPa
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): CourseAssignmentDtoPagedResultDto {
@@ -31549,7 +31557,7 @@ export class CourseConversationDto implements ICourseConversationDto {
             for (let item of this.courseConversationReactions)
                 data["courseConversationReactions"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): CourseConversationDto {
@@ -31614,7 +31622,7 @@ export class CourseConversationReactionDto implements ICourseConversationReactio
         data["courseConversationId"] = this.courseConversationId;
         data["creatorUserId"] = this.creatorUserId;
         data["courseConversation"] = this.courseConversation ? this.courseConversation.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): CourseConversationReactionDto {
@@ -31762,7 +31770,7 @@ export class CourseDto implements ICourseDto {
         data["lessons"] = this.lessons;
         data["progress"] = this.progress;
         data["units"] = this.units;
-        return data;
+        return data; 
     }
 
     clone(): CourseDto {
@@ -31847,7 +31855,7 @@ export class CourseDtoPagedResultDto implements ICourseDtoPagedResultDto {
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): CourseDtoPagedResultDto {
@@ -31909,7 +31917,7 @@ export class CourseRatingDto implements ICourseRatingDto {
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["totalRatingPercentage"] = this.totalRatingPercentage;
         data["reviewer"] = this.reviewer ? this.reviewer.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): CourseRatingDto {
@@ -31969,7 +31977,7 @@ export class CourseRatingDtoPagedResultDto implements ICourseRatingDtoPagedResul
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): CourseRatingDtoPagedResultDto {
@@ -32043,7 +32051,7 @@ export class CourseRatingSummaryDto implements ICourseRatingSummaryDto {
         data["totalPunctualityRatings"] = this.totalPunctualityRatings;
         data["totalProfessionalismsRating"] = this.totalProfessionalismsRating;
         data["totalKnowledgeRatings"] = this.totalKnowledgeRatings;
-        return data;
+        return data; 
     }
 
     clone(): CourseRatingSummaryDto {
@@ -32189,7 +32197,7 @@ export class CourseSectionDto implements ICourseSectionDto {
             for (let item of this.children)
                 data["children"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): CourseSectionDto {
@@ -32282,7 +32290,7 @@ export class CourseSectionPageDto implements ICourseSectionPageDto {
         data["file"] = this.file;
         data["courseSectionId"] = this.courseSectionId;
         data["imageDocument"] = this.imageDocument ? this.imageDocument.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): CourseSectionPageDto {
@@ -32364,7 +32372,7 @@ export class CreateCoachingDto implements ICreateCoachingDto {
         data["name"] = this.name;
         data["type"] = this.type;
         data["parentId"] = this.parentId;
-        return data;
+        return data; 
     }
 
     clone(): CreateCoachingDto {
@@ -32426,7 +32434,7 @@ export class CreateCoachingPollDto implements ICreateCoachingPollDto {
             for (let item of this.coachingPollQuestions)
                 data["coachingPollQuestions"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): CreateCoachingPollDto {
@@ -32478,7 +32486,7 @@ export class CreateCoachingPresenterDto implements ICreateCoachingPresenterDto {
         data["type"] = this.type;
         data["coachingId"] = this.coachingId;
         data["email"] = this.email;
-        return data;
+        return data; 
     }
 
     clone(): CreateCoachingPresenterDto {
@@ -32532,7 +32540,7 @@ export class CreateCoachingResourceDto implements ICreateCoachingResourceDto {
         data["name"] = this.name;
         data["type"] = this.type;
         data["coachingId"] = this.coachingId;
-        return data;
+        return data; 
     }
 
     clone(): CreateCoachingResourceDto {
@@ -32578,7 +32586,7 @@ export class CreateCourseDto implements ICreateCourseDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
-        return data;
+        return data; 
     }
 
     clone(): CreateCourseDto {
@@ -32624,7 +32632,7 @@ export class CreateCourseRatingAreaDto implements ICreateCourseRatingAreaDto {
         data = typeof data === 'object' ? data : {};
         data["areaType"] = this.areaType;
         data["rating"] = this.rating;
-        return data;
+        return data; 
     }
 
     clone(): CreateCourseRatingAreaDto {
@@ -32688,7 +32696,7 @@ export class CreateCourseRatingDto implements ICreateCourseRatingDto {
             for (let item of this.courseRatingAreas)
                 data["courseRatingAreas"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): CreateCourseRatingDto {
@@ -32747,7 +32755,7 @@ export class CreateEditUserEducationCourseDto implements ICreateEditUserEducatio
         data["grade"] = this.grade;
         data["academicLevelId"] = this.academicLevelId;
         data["academicLevelQualificationId"] = this.academicLevelQualificationId;
-        return data;
+        return data; 
     }
 
     clone(): CreateEditUserEducationCourseDto {
@@ -32823,7 +32831,7 @@ export class CreateEditUserEducationDto implements ICreateEditUserEducationDto {
             for (let item of this.userEducationCourses)
                 data["userEducationCourses"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): CreateEditUserEducationDto {
@@ -32882,7 +32890,7 @@ export class CreateEventDto implements ICreateEventDto {
         data["category"] = this.category;
         data["type"] = this.type;
         data["parentId"] = this.parentId;
-        return data;
+        return data; 
     }
 
     clone(): CreateEventDto {
@@ -32970,7 +32978,7 @@ export class CreateEventOfferDto implements ICreateEventOfferDto {
         data["offerLimitHours"] = this.offerLimitHours;
         data["offerLimitMinutes"] = this.offerLimitMinutes;
         data["offerLimitSeconds"] = this.offerLimitSeconds;
-        return data;
+        return data; 
     }
 
     clone(): CreateEventOfferDto {
@@ -33044,7 +33052,7 @@ export class CreateEventPollDto implements ICreateEventPollDto {
             for (let item of this.eventPollQuestions)
                 data["eventPollQuestions"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): CreateEventPollDto {
@@ -33096,7 +33104,7 @@ export class CreateEventPresenterDto implements ICreateEventPresenterDto {
         data["type"] = this.type;
         data["eventId"] = this.eventId;
         data["email"] = this.email;
-        return data;
+        return data; 
     }
 
     clone(): CreateEventPresenterDto {
@@ -33150,7 +33158,7 @@ export class CreateEventResourceDto implements ICreateEventResourceDto {
         data["name"] = this.name;
         data["type"] = this.type;
         data["eventId"] = this.eventId;
-        return data;
+        return data; 
     }
 
     clone(): CreateEventResourceDto {
@@ -33207,7 +33215,7 @@ export class CreateForumDto implements ICreateForumDto {
             for (let item of this.topics)
                 data["topics"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): CreateForumDto {
@@ -33254,7 +33262,7 @@ export class CreateForumReplyDto implements ICreateForumReplyDto {
         data = typeof data === 'object' ? data : {};
         data["message"] = this.message;
         data["forumId"] = this.forumId;
-        return data;
+        return data; 
     }
 
     clone(): CreateForumReplyDto {
@@ -33301,7 +33309,7 @@ export class CreateForumTopicDto implements ICreateForumTopicDto {
         data = typeof data === 'object' ? data : {};
         data["topicId"] = this.topicId;
         data["topicName"] = this.topicName;
-        return data;
+        return data; 
     }
 
     clone(): CreateForumTopicDto {
@@ -33404,7 +33412,7 @@ export class CreateProjectDto implements ICreateProjectDto {
             for (let item of this.projectAvailabilities)
                 data["projectAvailabilities"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): CreateProjectDto {
@@ -33482,7 +33490,7 @@ export class CreateProjectOfferDto implements ICreateProjectOfferDto {
         data["discountedHours"] = this.discountedHours;
         data["discountedHourlyRate"] = this.discountedHourlyRate;
         data["isFreeSessionOffered"] = this.isFreeSessionOffered;
-        return data;
+        return data; 
     }
 
     clone(): CreateProjectOfferDto {
@@ -33551,7 +33559,7 @@ export class CreateRoleDto implements ICreateRoleDto {
             for (let item of this.grantedPermissions)
                 data["grantedPermissions"].push(item);
         }
-        return data;
+        return data; 
     }
 
     clone(): CreateRoleDto {
@@ -33601,7 +33609,7 @@ export class CreateStudentEventDto implements ICreateStudentEventDto {
         data = typeof data === 'object' ? data : {};
         data["eventId"] = this.eventId;
         data["saveOnly"] = this.saveOnly;
-        return data;
+        return data; 
     }
 
     clone(): CreateStudentEventDto {
@@ -33657,7 +33665,7 @@ export class CreateTenantDto implements ICreateTenantDto {
         data["adminEmailAddress"] = this.adminEmailAddress;
         data["connectionString"] = this.connectionString;
         data["isActive"] = this.isActive;
-        return data;
+        return data; 
     }
 
     clone(): CreateTenantDto {
@@ -33704,7 +33712,7 @@ export class CreateTopicDto implements ICreateTopicDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
-        return data;
+        return data; 
     }
 
     clone(): CreateTopicDto {
@@ -33776,7 +33784,7 @@ export class CreateUserDto implements ICreateUserDto {
                 data["roleNames"].push(item);
         }
         data["password"] = this.password;
-        return data;
+        return data; 
     }
 
     clone(): CreateUserDto {
@@ -33832,7 +33840,7 @@ export class CreateUserTopicDto implements ICreateUserTopicDto {
         data["userId"] = this.userId;
         data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
         data["type"] = this.type;
-        return data;
+        return data; 
     }
 
     clone(): CreateUserTopicDto {
@@ -33886,7 +33894,7 @@ export class CurrencyDto implements ICurrencyDto {
         data["name"] = this.name;
         data["code"] = this.code;
         data["isEnabled"] = this.isEnabled;
-        return data;
+        return data; 
     }
 
     clone(): CurrencyDto {
@@ -33957,7 +33965,7 @@ export class CustomAttributeData implements ICustomAttributeData {
             for (let item of this.namedArguments)
                 data["namedArguments"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): CustomAttributeData {
@@ -34012,7 +34020,7 @@ export class CustomAttributeNamedArgument implements ICustomAttributeNamedArgume
         data["typedValue"] = this.typedValue ? this.typedValue.toJSON() : <any>undefined;
         data["memberName"] = this.memberName;
         data["isField"] = this.isField;
-        return data;
+        return data; 
     }
 
     clone(): CustomAttributeNamedArgument {
@@ -34061,7 +34069,7 @@ export class CustomAttributeTypedArgument implements ICustomAttributeTypedArgume
         data = typeof data === 'object' ? data : {};
         data["argumentType"] = this.argumentType ? this.argumentType.toJSON() : <any>undefined;
         data["value"] = this.value;
-        return data;
+        return data; 
     }
 
     clone(): CustomAttributeTypedArgument {
@@ -34139,7 +34147,7 @@ export class DbsCertificateDto implements IDbsCertificateDto {
         data["documentId"] = this.documentId;
         data["document"] = this.document ? this.document.toJSON() : <any>undefined;
         data["dbsCertificateFileUrl"] = this.dbsCertificateFileUrl;
-        return data;
+        return data; 
     }
 
     clone(): DbsCertificateDto {
@@ -34198,7 +34206,7 @@ export class DbsCertificateDtoPagedResultDto implements IDbsCertificateDtoPagedR
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): DbsCertificateDtoPagedResultDto {
@@ -34245,7 +34253,7 @@ export class DeclineTutorVerificationStepDto implements IDeclineTutorVerificatio
         data = typeof data === 'object' ? data : {};
         data["comments"] = this.comments;
         data["tutorVerificationStepId"] = this.tutorVerificationStepId;
-        return data;
+        return data; 
     }
 
     clone(): DeclineTutorVerificationStepDto {
@@ -34341,7 +34349,7 @@ export class DisciplineTaxonomyDto implements IDisciplineTaxonomyDto {
         }
         data["childrentCount"] = this.childrentCount;
         data["followerCount"] = this.followerCount;
-        return data;
+        return data; 
     }
 
     clone(): DisciplineTaxonomyDto {
@@ -34405,7 +34413,7 @@ export class DisciplineTaxonomyDtoPagedResultDto implements IDisciplineTaxonomyD
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): DisciplineTaxonomyDtoPagedResultDto {
@@ -34470,7 +34478,7 @@ export class Document implements IDocument {
         data["fileType"] = this.fileType;
         data["documentType"] = this.documentType;
         data["size"] = this.size;
-        return data;
+        return data; 
     }
 
     clone(): Document {
@@ -34538,7 +34546,7 @@ export class DocumentDto implements IDocumentDto {
         data["documentType"] = this.documentType;
         data["size"] = this.size;
         data["creatorUserId"] = this.creatorUserId;
-        return data;
+        return data; 
     }
 
     clone(): DocumentDto {
@@ -34620,7 +34628,7 @@ export class EditOtherUserSpokenLanguageDto implements IEditOtherUserSpokenLangu
         data = typeof data === 'object' ? data : {};
         data["spokenLanguageId"] = this.spokenLanguageId;
         data["proficiency"] = this.proficiency;
-        return data;
+        return data; 
     }
 
     clone(): EditOtherUserSpokenLanguageDto {
@@ -34678,7 +34686,7 @@ export class EditUserSpokenLanguagesDto implements IEditUserSpokenLanguagesDto {
             for (let item of this.otherUserSpokenLanguages)
                 data["otherUserSpokenLanguages"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): EditUserSpokenLanguagesDto {
@@ -34729,7 +34737,7 @@ export class EducationLevelDto implements IEducationLevelDto {
         data["id"] = this.id;
         data["name"] = this.name;
         data["shortName"] = this.shortName;
-        return data;
+        return data; 
     }
 
     clone(): EducationLevelDto {
@@ -35094,7 +35102,7 @@ export class EventDto implements IEventDto {
                 data["children"].push(item.toJSON());
         }
         data["popularityWeight"] = this.popularityWeight;
-        return data;
+        return data; 
     }
 
     clone(): EventDto {
@@ -35248,7 +35256,7 @@ export class EventDtoPagedResultDto implements IEventDtoPagedResultDto {
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): EventDtoPagedResultDto {
@@ -35348,7 +35356,7 @@ export class EventInfo implements IEventInfo {
         data["raiseMethod"] = this.raiseMethod ? this.raiseMethod.toJSON() : <any>undefined;
         data["isMulticast"] = this.isMulticast;
         data["eventHandlerType"] = this.eventHandlerType ? this.eventHandlerType.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): EventInfo {
@@ -35417,7 +35425,7 @@ export class EventInstanceDto implements IEventInstanceDto {
         data["time"] = this.time;
         data["registrants"] = this.registrants;
         data["duration"] = this.duration;
-        return data;
+        return data; 
     }
 
     clone(): EventInstanceDto {
@@ -35475,7 +35483,7 @@ export class EventInstanceDtoPagedResultDto implements IEventInstanceDtoPagedRes
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): EventInstanceDtoPagedResultDto {
@@ -35568,7 +35576,7 @@ export class EventOfferDto implements IEventOfferDto {
         data["offerLimitHours"] = this.offerLimitHours;
         data["offerLimitMinutes"] = this.offerLimitMinutes;
         data["offerLimitSeconds"] = this.offerLimitSeconds;
-        return data;
+        return data; 
     }
 
     clone(): EventOfferDto {
@@ -35636,7 +35644,7 @@ export class EventOfferDtoPagedResultDto implements IEventOfferDtoPagedResultDto
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): EventOfferDtoPagedResultDto {
@@ -35710,7 +35718,7 @@ export class EventPollDto implements IEventPollDto {
             for (let item of this.eventPollQuestions)
                 data["eventPollQuestions"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): EventPollDto {
@@ -35768,7 +35776,7 @@ export class EventPollDtoPagedResultDto implements IEventPollDtoPagedResultDto {
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): EventPollDtoPagedResultDto {
@@ -35826,7 +35834,7 @@ export class EventPollQuestionAnswerDto implements IEventPollQuestionAnswerDto {
             for (let item of this.eventPollQuestionOptionIds)
                 data["eventPollQuestionOptionIds"].push(item);
         }
-        return data;
+        return data; 
     }
 
     clone(): EventPollQuestionAnswerDto {
@@ -35911,7 +35919,7 @@ export class EventPollQuestionDto implements IEventPollQuestionDto {
             for (let item of this.eventPollAnswers)
                 data["eventPollAnswers"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): EventPollQuestionDto {
@@ -35968,7 +35976,7 @@ export class EventPollQuestionOptionDto implements IEventPollQuestionOptionDto {
         data["id"] = this.id;
         data["text"] = this.text;
         data["eventPollQuestionId"] = this.eventPollQuestionId;
-        return data;
+        return data; 
     }
 
     clone(): EventPollQuestionOptionDto {
@@ -36040,7 +36048,7 @@ export class EventPresenterDto implements IEventPresenterDto {
         data["email"] = this.email;
         data["creatorUserId"] = this.creatorUserId;
         data["user"] = this.user ? this.user.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): EventPresenterDto {
@@ -36135,7 +36143,7 @@ export class EventResourceDto implements IEventResourceDto {
         data["documentId"] = this.documentId;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["document"] = this.document ? this.document.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): EventResourceDto {
@@ -36195,7 +36203,7 @@ export class EventResourceDtoPagedResultDto implements IEventResourceDtoPagedRes
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): EventResourceDtoPagedResultDto {
@@ -36267,7 +36275,7 @@ export class EventUserDto implements IEventUserDto {
         data = typeof data === 'object' ? data : {};
         data["type"] = this.type;
         data["user"] = this.user ? this.user.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): EventUserDto {
@@ -36325,7 +36333,7 @@ export class ExternalAuthenticateModel implements IExternalAuthenticateModel {
         data["authProvider"] = this.authProvider;
         data["providerKey"] = this.providerKey;
         data["providerAccessCode"] = this.providerAccessCode;
-        return data;
+        return data; 
     }
 
     clone(): ExternalAuthenticateModel {
@@ -36379,7 +36387,7 @@ export class ExternalAuthenticateResultModel implements IExternalAuthenticateRes
         data["encryptedAccessToken"] = this.encryptedAccessToken;
         data["expireInSeconds"] = this.expireInSeconds;
         data["waitingForActivation"] = this.waitingForActivation;
-        return data;
+        return data; 
     }
 
     clone(): ExternalAuthenticateResultModel {
@@ -36428,7 +36436,7 @@ export class ExternalLoginProviderInfoModel implements IExternalLoginProviderInf
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
         data["clientId"] = this.clientId;
-        return data;
+        return data; 
     }
 
     clone(): ExternalLoginProviderInfoModel {
@@ -36578,7 +36586,7 @@ export class FieldInfo implements IFieldInfo {
         data["isSecuritySafeCritical"] = this.isSecuritySafeCritical;
         data["isSecurityTransparent"] = this.isSecurityTransparent;
         data["fieldHandle"] = this.fieldHandle ? this.fieldHandle.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): FieldInfo {
@@ -36677,7 +36685,7 @@ export class ForumDto implements IForumDto {
             for (let item of this.forumTopics)
                 data["forumTopics"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): ForumDto {
@@ -36736,7 +36744,7 @@ export class ForumDtoPagedResultDto implements IForumDtoPagedResultDto {
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): ForumDtoPagedResultDto {
@@ -36789,7 +36797,7 @@ export class ForumReplyDto implements IForumReplyDto {
         data["message"] = this.message;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): ForumReplyDto {
@@ -36841,7 +36849,7 @@ export class ForumTopicDto implements IForumTopicDto {
         data["forumId"] = this.forumId;
         data["topicId"] = this.topicId;
         data["topic"] = this.topic ? this.topic.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): ForumTopicDto {
@@ -36909,7 +36917,7 @@ export class GetAvailalbeTutorDto implements IGetAvailalbeTutorDto {
             for (let item of this.services)
                 data["services"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): GetAvailalbeTutorDto {
@@ -36964,7 +36972,7 @@ export class GetAvailalbeTutorDtoPagedResultDto implements IGetAvailalbeTutorDto
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): GetAvailalbeTutorDtoPagedResultDto {
@@ -37014,7 +37022,7 @@ export class GetCurrentLoginInformationsOutput implements IGetCurrentLoginInform
         data["application"] = this.application ? this.application.toJSON() : <any>undefined;
         data["user"] = this.user ? this.user.toJSON() : <any>undefined;
         data["tenant"] = this.tenant ? this.tenant.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): GetCurrentLoginInformationsOutput {
@@ -37062,7 +37070,7 @@ export class GetDelayStatusDto implements IGetDelayStatusDto {
         data = typeof data === 'object' ? data : {};
         data["isFirstVideoPublished"] = this.isFirstVideoPublished;
         data["videoCount"] = this.videoCount;
-        return data;
+        return data; 
     }
 
     clone(): GetDelayStatusDto {
@@ -37109,7 +37117,7 @@ export class GetDisciplineTaxonomyChildrenCountDto implements IGetDisciplineTaxo
         data = typeof data === 'object' ? data : {};
         data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
         data["childCount"] = this.childCount;
-        return data;
+        return data; 
     }
 
     clone(): GetDisciplineTaxonomyChildrenCountDto {
@@ -37156,7 +37164,7 @@ export class GetDisciplineTaxonomyFollowerCountDto implements IGetDisciplineTaxo
         data = typeof data === 'object' ? data : {};
         data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
         data["followerCount"] = this.followerCount;
-        return data;
+        return data; 
     }
 
     clone(): GetDisciplineTaxonomyFollowerCountDto {
@@ -37203,7 +37211,7 @@ export class GetEventDelayStatusDto implements IGetEventDelayStatusDto {
         data = typeof data === 'object' ? data : {};
         data["isFirstVideoPublished"] = this.isFirstVideoPublished;
         data["videoCount"] = this.videoCount;
-        return data;
+        return data; 
     }
 
     clone(): GetEventDelayStatusDto {
@@ -37269,7 +37277,7 @@ export class GetRoleForEditOutput implements IGetRoleForEditOutput {
             for (let item of this.grantedPermissionNames)
                 data["grantedPermissionNames"].push(item);
         }
-        return data;
+        return data; 
     }
 
     clone(): GetRoleForEditOutput {
@@ -37323,7 +37331,7 @@ export class GetStudentArticleDto implements IGetStudentArticleDto {
         data["articleId"] = this.articleId;
         data["saveOnly"] = this.saveOnly;
         data["creatorUserId"] = this.creatorUserId;
-        return data;
+        return data; 
     }
 
     clone(): GetStudentArticleDto {
@@ -37375,7 +37383,7 @@ export class GetStudentsCourseConversationDto implements IGetStudentsCourseConve
         data["studentCourseId"] = this.studentCourseId;
         data["user"] = this.user ? this.user.toJSON() : <any>undefined;
         data["lastCourseConversation"] = this.lastCourseConversation ? this.lastCourseConversation.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): GetStudentsCourseConversationDto {
@@ -37429,7 +37437,7 @@ export class GetStudentVideoDto implements IGetStudentVideoDto {
         data["videoId"] = this.videoId;
         data["saveOnly"] = this.saveOnly;
         data["creatorUserId"] = this.creatorUserId;
-        return data;
+        return data; 
     }
 
     clone(): GetStudentVideoDto {
@@ -37498,7 +37506,7 @@ export class GroupedPermissionDto implements IGroupedPermissionDto {
             for (let item of this.children)
                 data["children"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): GroupedPermissionDto {
@@ -37554,7 +37562,7 @@ export class GroupedPermissionDtoListResultDto implements IGroupedPermissionDtoL
             for (let item of this.items)
                 data["items"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): GroupedPermissionDtoListResultDto {
@@ -37611,7 +37619,7 @@ export class ICustomAttributeProvider implements IICustomAttributeProvider {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        return data;
+        return data; 
     }
 
     clone(): ICustomAttributeProvider {
@@ -37648,7 +37656,7 @@ export class IntPtr implements IIntPtr {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        return data;
+        return data; 
     }
 
     clone(): IntPtr {
@@ -37690,7 +37698,7 @@ export class IsTenantAvailableInput implements IIsTenantAvailableInput {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["tenancyName"] = this.tenancyName;
-        return data;
+        return data; 
     }
 
     clone(): IsTenantAvailableInput {
@@ -37736,7 +37744,7 @@ export class IsTenantAvailableOutput implements IIsTenantAvailableOutput {
         data = typeof data === 'object' ? data : {};
         data["state"] = this.state;
         data["tenantId"] = this.tenantId;
-        return data;
+        return data; 
     }
 
     clone(): IsTenantAvailableOutput {
@@ -37815,7 +37823,7 @@ export class LocationDetail implements ILocationDetail {
         data["town_Or_City"] = this.town_Or_City;
         data["county"] = this.county;
         data["district"] = this.district;
-        return data;
+        return data; 
     }
 
     clone(): LocationDetail {
@@ -37871,7 +37879,7 @@ export class LocationSuggestion implements ILocationSuggestion {
         data["id"] = this.id;
         data["address"] = this.address;
         data["url"] = this.url;
-        return data;
+        return data; 
     }
 
     clone(): LocationSuggestion {
@@ -37945,7 +37953,7 @@ export class MemberInfo implements IMemberInfo {
         }
         data["isCollectible"] = this.isCollectible;
         data["metadataToken"] = this.metadataToken;
-        return data;
+        return data; 
     }
 
     clone(): MemberInfo {
@@ -38134,7 +38142,7 @@ export class MethodBase implements IMethodBase {
         data["isSecurityCritical"] = this.isSecurityCritical;
         data["isSecuritySafeCritical"] = this.isSecuritySafeCritical;
         data["isSecurityTransparent"] = this.isSecurityTransparent;
-        return data;
+        return data; 
     }
 
     clone(): MethodBase {
@@ -38335,7 +38343,7 @@ export class MethodInfo implements IMethodInfo {
         data["returnParameter"] = this.returnParameter ? this.returnParameter.toJSON() : <any>undefined;
         data["returnType"] = this.returnType ? this.returnType.toJSON() : <any>undefined;
         data["returnTypeCustomAttributes"] = this.returnTypeCustomAttributes ? this.returnTypeCustomAttributes.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): MethodInfo {
@@ -38444,7 +38452,7 @@ export class Module implements IModule {
                 data["customAttributes"].push(item.toJSON());
         }
         data["metadataToken"] = this.metadataToken;
-        return data;
+        return data; 
     }
 
     clone(): Module {
@@ -38495,7 +38503,7 @@ export class ModuleHandle implements IModuleHandle {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["mdStreamVersion"] = this.mdStreamVersion;
-        return data;
+        return data; 
     }
 
     clone(): ModuleHandle {
@@ -38544,7 +38552,7 @@ export class MyServiceItemViewDto implements IMyServiceItemViewDto {
         data["id"] = this.id;
         data["serviceType"] = this.serviceType;
         data["title"] = this.title;
-        return data;
+        return data; 
     }
 
     clone(): MyServiceItemViewDto {
@@ -38600,7 +38608,7 @@ export class MyServiceViewDto implements IMyServiceViewDto {
             for (let item of this.items)
                 data["items"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): MyServiceViewDto {
@@ -38659,7 +38667,7 @@ export class NotificationData implements INotificationData {
                     (<any>data["properties"])[key] = this.properties[key];
             }
         }
-        return data;
+        return data; 
     }
 
     clone(): NotificationData {
@@ -38777,7 +38785,7 @@ export class ParameterInfo implements IParameterInfo {
                 data["customAttributes"].push(item.toJSON());
         }
         data["metadataToken"] = this.metadataToken;
-        return data;
+        return data; 
     }
 
     clone(): ParameterInfo {
@@ -38848,7 +38856,7 @@ export class PasswordResetInputDto implements IPasswordResetInputDto {
         data["id"] = this.id;
         data["newPassword"] = this.newPassword;
         data["newPasswordConfirmation"] = this.newPasswordConfirmation;
-        return data;
+        return data; 
     }
 
     clone(): PasswordResetInputDto {
@@ -38902,7 +38910,7 @@ export class PhoneVerificationDto implements IPhoneVerificationDto {
         data["userId"] = this.userId;
         data["recipient"] = this.recipient;
         data["dateSent"] = this.dateSent ? this.dateSent.toISOString() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): PhoneVerificationDto {
@@ -38957,7 +38965,7 @@ export class PhotoIdVerificationDto implements IPhotoIdVerificationDto {
         data["status"] = this.status;
         data["photoIdUrl"] = this.photoIdUrl;
         data["document"] = this.document ? this.document.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): PhotoIdVerificationDto {
@@ -39028,7 +39036,7 @@ export class PostAttachmentDto implements IPostAttachmentDto {
         data["documentId"] = this.documentId;
         data["document"] = this.document ? this.document.toJSON() : <any>undefined;
         data["documentUrl"] = this.documentUrl;
-        return data;
+        return data; 
     }
 
     clone(): PostAttachmentDto {
@@ -39226,7 +39234,7 @@ export class PostDto implements IPostDto {
             for (let item of this.postEditHistories)
                 data["postEditHistories"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): PostDto {
@@ -39311,7 +39319,7 @@ export class PostDtoPagedResultDto implements IPostDtoPagedResultDto {
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): PostDtoPagedResultDto {
@@ -39372,7 +39380,7 @@ export class PostEditHistoryDto implements IPostEditHistoryDto {
             for (let item of this.postTopics)
                 data["postTopics"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): PostEditHistoryDto {
@@ -39430,7 +39438,7 @@ export class PostNotificationDto implements IPostNotificationDto {
         data["creatorUserId"] = this.creatorUserId;
         data["postId"] = this.postId;
         data["notifyUserId"] = this.notifyUserId;
-        return data;
+        return data; 
     }
 
     clone(): PostNotificationDto {
@@ -39492,7 +39500,7 @@ export class PostTopicDto implements IPostTopicDto {
         data["postId"] = this.postId;
         data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
         data["disciplineTaxonomy"] = this.disciplineTaxonomy ? this.disciplineTaxonomy.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): PostTopicDto {
@@ -39560,7 +39568,7 @@ export class PostVisibilityDto implements IPostVisibilityDto {
         data["creatorUserId"] = this.creatorUserId;
         data["postId"] = this.postId;
         data["isHidden"] = this.isHidden;
-        return data;
+        return data; 
     }
 
     clone(): PostVisibilityDto {
@@ -39630,7 +39638,7 @@ export class ProfileMetricDto implements IProfileMetricDto {
         data["userType"] = this.userType;
         data["positiveReviewsPercentage"] = this.positiveReviewsPercentage;
         data["totalReviews"] = this.totalReviews;
-        return data;
+        return data; 
     }
 
     clone(): ProfileMetricDto {
@@ -39693,7 +39701,7 @@ export class ProjectAvailabilityDto implements IProjectAvailabilityDto {
         data["startTime"] = this.startTime;
         data["endTime"] = this.endTime;
         data["project"] = this.project ? this.project.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): ProjectAvailabilityDto {
@@ -39756,7 +39764,7 @@ export class ProjectDocumentDto implements IProjectDocumentDto {
         data["documentUrl"] = this.documentUrl;
         data["project"] = this.project ? this.project.toJSON() : <any>undefined;
         data["document"] = this.document ? this.document.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): ProjectDocumentDto {
@@ -39914,7 +39922,7 @@ export class ProjectDto implements IProjectDto {
             for (let item of this.projectAvailabilities)
                 data["projectAvailabilities"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): ProjectDto {
@@ -39994,7 +40002,7 @@ export class ProjectDtoPagedResultDto implements IProjectDtoPagedResultDto {
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): ProjectDtoPagedResultDto {
@@ -40074,7 +40082,7 @@ export class ProjectOfferDto implements IProjectOfferDto {
         data["creatorUserId"] = this.creatorUserId;
         data["project"] = this.project ? this.project.toJSON() : <any>undefined;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): ProjectOfferDto {
@@ -40140,7 +40148,7 @@ export class ProjectOfferDtoPagedResultDto implements IProjectOfferDtoPagedResul
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): ProjectOfferDtoPagedResultDto {
@@ -40246,7 +40254,7 @@ export class PropertyInfo implements IPropertyInfo {
         data["canWrite"] = this.canWrite;
         data["getMethod"] = this.getMethod ? this.getMethod.toJSON() : <any>undefined;
         data["setMethod"] = this.setMethod ? this.setMethod.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): PropertyInfo {
@@ -40306,7 +40314,7 @@ export class PublicationTagDto implements IPublicationTagDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
-        return data;
+        return data; 
     }
 
     clone(): PublicationTagDto {
@@ -40403,7 +40411,7 @@ export class QuestionDto implements IQuestionDto {
             for (let item of this.questionReactions)
                 data["questionReactions"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): QuestionDto {
@@ -40466,7 +40474,7 @@ export class QuestionDtoPagedResultDto implements IQuestionDtoPagedResultDto {
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): QuestionDtoPagedResultDto {
@@ -40519,7 +40527,7 @@ export class QuestionReactionDto implements IQuestionReactionDto {
         data["type"] = this.type;
         data["questionId"] = this.questionId;
         data["creatorUserId"] = this.creatorUserId;
-        return data;
+        return data; 
     }
 
     clone(): QuestionReactionDto {
@@ -40596,7 +40604,7 @@ export class ReactionDto implements IReactionDto {
         data["type"] = this.type;
         data["referenceId"] = this.referenceId;
         data["creatorUserId"] = this.creatorUserId;
-        return data;
+        return data; 
     }
 
     clone(): ReactionDto {
@@ -40614,7 +40622,7 @@ export interface IReactionDto {
     creatorUserId: number;
 }
 
-/** 1 = Like 2 = Heart 3 = Laugh 4 = Wow 5 = Sad 6 = Mad */
+/** 1 = Like 2 = Heart 3 = Laugh 4 = Wow 5 = Sad 6 = Mad 7 = Upvote 8 = Downvote */
 export enum ReactionType {
     Like = 1,
     Heart = 2,
@@ -40622,6 +40630,8 @@ export enum ReactionType {
     Wow = 4,
     Sad = 5,
     Mad = 6,
+    Upvote = 7,
+    Downvote = 8,
 }
 
 export class ReferenceDto implements IReferenceDto {
@@ -40676,7 +40686,7 @@ export class ReferenceDto implements IReferenceDto {
         data["documentId"] = this.documentId;
         data["document"] = this.document ? this.document.toJSON() : <any>undefined;
         data["referenceFileUrl"] = this.referenceFileUrl;
-        return data;
+        return data; 
     }
 
     clone(): ReferenceDto {
@@ -40738,7 +40748,7 @@ export class ReferenceDtoPagedResultDto implements IReferenceDtoPagedResultDto {
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): ReferenceDtoPagedResultDto {
@@ -40809,7 +40819,7 @@ export class RegisterInput implements IRegisterInput {
         data["passwordConfirmation"] = this.passwordConfirmation;
         data["captchaResponse"] = this.captchaResponse;
         data["registrationId"] = this.registrationId;
-        return data;
+        return data; 
     }
 
     clone(): RegisterInput {
@@ -40859,7 +40869,7 @@ export class RegisterOutput implements IRegisterOutput {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["canLogin"] = this.canLogin;
-        return data;
+        return data; 
     }
 
     clone(): RegisterOutput {
@@ -40911,7 +40921,7 @@ export class RegistrationDto implements IRegistrationDto {
         data["lastName"] = this.lastName;
         data["emailAddress"] = this.emailAddress;
         data["dateOfBirth"] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): RegistrationDto {
@@ -40966,7 +40976,7 @@ export class RescheduleCalendarEventDto implements IRescheduleCalendarEventDto {
         data["oldStartTime"] = this.oldStartTime ? this.oldStartTime.toISOString() : <any>undefined;
         data["oldEndTime"] = this.oldEndTime ? this.oldEndTime.toISOString() : <any>undefined;
         data["comments"] = this.comments;
-        return data;
+        return data; 
     }
 
     clone(): RescheduleCalendarEventDto {
@@ -41036,7 +41046,7 @@ export class RescheduleCommentDto implements IRescheduleCommentDto {
         data["calendarEventId"] = this.calendarEventId;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): RescheduleCommentDto {
@@ -41113,7 +41123,7 @@ export class ResearchMethodDto implements IResearchMethodDto {
             for (let item of this.children)
                 data["children"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): ResearchMethodDto {
@@ -41168,7 +41178,7 @@ export class ResetPasswordDto implements IResetPasswordDto {
         data["adminPassword"] = this.adminPassword;
         data["userId"] = this.userId;
         data["newPassword"] = this.newPassword;
-        return data;
+        return data; 
     }
 
     clone(): ResetPasswordDto {
@@ -41236,7 +41246,7 @@ export class RoleDto implements IRoleDto {
             for (let item of this.grantedPermissions)
                 data["grantedPermissions"].push(item);
         }
-        return data;
+        return data; 
     }
 
     clone(): RoleDto {
@@ -41292,7 +41302,7 @@ export class RoleDtoListResultDto implements IRoleDtoListResultDto {
             for (let item of this.items)
                 data["items"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): RoleDtoListResultDto {
@@ -41346,7 +41356,7 @@ export class RoleDtoPagedResultDto implements IRoleDtoPagedResultDto {
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): RoleDtoPagedResultDto {
@@ -41402,7 +41412,7 @@ export class RoleEditDto implements IRoleEditDto {
         data["displayName"] = this.displayName;
         data["description"] = this.description;
         data["isStatic"] = this.isStatic;
-        return data;
+        return data; 
     }
 
     clone(): RoleEditDto {
@@ -41464,7 +41474,7 @@ export class RoleListDto implements IRoleListDto {
         data["isStatic"] = this.isStatic;
         data["isDefault"] = this.isDefault;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): RoleListDto {
@@ -41520,7 +41530,7 @@ export class RoleListDtoListResultDto implements IRoleListDtoListResultDto {
             for (let item of this.items)
                 data["items"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): RoleListDtoListResultDto {
@@ -41563,7 +41573,7 @@ export class RuntimeFieldHandle implements IRuntimeFieldHandle {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["value"] = this.value ? this.value.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): RuntimeFieldHandle {
@@ -41606,7 +41616,7 @@ export class RuntimeMethodHandle implements IRuntimeMethodHandle {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["value"] = this.value ? this.value.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): RuntimeMethodHandle {
@@ -41649,7 +41659,7 @@ export class RuntimeTypeHandle implements IRuntimeTypeHandle {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["value"] = this.value ? this.value.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): RuntimeTypeHandle {
@@ -41701,7 +41711,7 @@ export class SearchDisciplineTaxonomyRequestDto implements ISearchDisciplineTaxo
         data["excludeFollowing"] = this.excludeFollowing;
         data["sorting"] = this.sorting;
         data["take"] = this.take;
-        return data;
+        return data; 
     }
 
     clone(): SearchDisciplineTaxonomyRequestDto {
@@ -41750,7 +41760,7 @@ export class SearchResearchMethodResultRequestDto implements ISearchResearchMeth
         data = typeof data === 'object' ? data : {};
         data["maxResultCount"] = this.maxResultCount;
         data["searchFilter"] = this.searchFilter;
-        return data;
+        return data; 
     }
 
     clone(): SearchResearchMethodResultRequestDto {
@@ -41813,7 +41823,7 @@ export class Service2Dto implements IService2Dto {
         data["parentId"] = this.parentId;
         data["parentIdMap"] = this.parentIdMap;
         data["description"] = this.description;
-        return data;
+        return data; 
     }
 
     clone(): Service2Dto {
@@ -41879,7 +41889,7 @@ export class ServiceDisciplineTaxonomyDto implements IServiceDisciplineTaxonomyD
         data["parentId"] = this.parentId;
         data["parentIdMap"] = this.parentIdMap;
         data["isEditable"] = this.isEditable;
-        return data;
+        return data; 
     }
 
     clone(): ServiceDisciplineTaxonomyDto {
@@ -41943,7 +41953,7 @@ export class ServiceDto implements IServiceDto {
             for (let item of this.children)
                 data["children"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): ServiceDto {
@@ -42008,7 +42018,7 @@ export class ServiceMappingDto implements IServiceMappingDto {
         data["node1Id"] = this.node1Id;
         data["node2Id"] = this.node2Id;
         data["node3Id"] = this.node3Id;
-        return data;
+        return data; 
     }
 
     clone(): ServiceMappingDto {
@@ -42084,7 +42094,7 @@ export class SessionCandidateDto implements ISessionCandidateDto {
         data["value"] = this.value;
         data["type"] = this.type;
         data["sessionId"] = this.sessionId;
-        return data;
+        return data; 
     }
 
     clone(): SessionCandidateDto {
@@ -42162,7 +42172,7 @@ export class SessionDto implements ISessionDto {
             for (let item of this.sessionCandidates)
                 data["sessionCandidates"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): SessionDto {
@@ -42220,7 +42230,7 @@ export class SpokenLanguageDto implements ISpokenLanguageDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
-        return data;
+        return data; 
     }
 
     clone(): SpokenLanguageDto {
@@ -42275,7 +42285,7 @@ export class StructLayoutAttribute implements IStructLayoutAttribute {
         data = typeof data === 'object' ? data : {};
         data["typeId"] = this.typeId;
         data["value"] = this.value;
-        return data;
+        return data; 
     }
 
     clone(): StructLayoutAttribute {
@@ -42328,7 +42338,7 @@ export class StudentArticleDto implements IStudentArticleDto {
         data["articleId"] = this.articleId;
         data["saveOnly"] = this.saveOnly;
         data["article"] = this.article ? this.article.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): StudentArticleDto {
@@ -42385,7 +42395,7 @@ export class StudentArticleDtoPagedResultDto implements IStudentArticleDtoPagedR
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): StudentArticleDtoPagedResultDto {
@@ -42455,7 +42465,7 @@ export class StudentCourseDto implements IStudentCourseDto {
             for (let item of this.studentCourseSections)
                 data["studentCourseSections"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): StudentCourseDto {
@@ -42515,7 +42525,7 @@ export class StudentCourseDtoPagedResultDto implements IStudentCourseDtoPagedRes
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): StudentCourseDtoPagedResultDto {
@@ -42577,7 +42587,7 @@ export class StudentCourseSectionDto implements IStudentCourseSectionDto {
         data["courseSection"] = this.courseSection ? this.courseSection.toJSON() : <any>undefined;
         data["studentCourse"] = this.studentCourse ? this.studentCourse.toJSON() : <any>undefined;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): StudentCourseSectionDto {
@@ -42637,7 +42647,7 @@ export class StudentCourseSectionDtoPagedResultDto implements IStudentCourseSect
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): StudentCourseSectionDtoPagedResultDto {
@@ -42700,7 +42710,7 @@ export class StudentEventDto implements IStudentEventDto {
         data["saveOnly"] = this.saveOnly;
         data["event"] = this.event ? this.event.toJSON() : <any>undefined;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): StudentEventDto {
@@ -42758,7 +42768,7 @@ export class StudentEventDtoPagedResultDto implements IStudentEventDtoPagedResul
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): StudentEventDtoPagedResultDto {
@@ -42817,7 +42827,7 @@ export class StudentRatingDto implements IStudentRatingDto {
         data["comments"] = this.comments;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["reviewer"] = this.reviewer ? this.reviewer.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): StudentRatingDto {
@@ -42876,7 +42886,7 @@ export class StudentRatingDtoPagedResultDto implements IStudentRatingDtoPagedRes
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): StudentRatingDtoPagedResultDto {
@@ -42932,7 +42942,7 @@ export class StudentRatingSummaryDto implements IStudentRatingSummaryDto {
         data["totalPositiveReviews"] = this.totalPositiveReviews;
         data["totalNeutralReviews"] = this.totalNeutralReviews;
         data["totalNegativeReviews"] = this.totalNegativeReviews;
-        return data;
+        return data; 
     }
 
     clone(): StudentRatingSummaryDto {
@@ -42988,7 +42998,7 @@ export class StudentVideoDto implements IStudentVideoDto {
         data["videoId"] = this.videoId;
         data["saveOnly"] = this.saveOnly;
         data["video"] = this.video ? this.video.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): StudentVideoDto {
@@ -43045,7 +43055,7 @@ export class StudentVideoDtoPagedResultDto implements IStudentVideoDtoPagedResul
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): StudentVideoDtoPagedResultDto {
@@ -43092,7 +43102,7 @@ export class SubjectDto implements ISubjectDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
-        return data;
+        return data; 
     }
 
     clone(): SubjectDto {
@@ -43148,7 +43158,7 @@ export class SubjectSuggestionDto implements ISubjectSuggestionDto {
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["serviceName"] = this.serviceName;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): SubjectSuggestionDto {
@@ -43198,7 +43208,7 @@ export class SuggestQualificationDto implements ISuggestQualificationDto {
         data = typeof data === 'object' ? data : {};
         data["academicLevelId"] = this.academicLevelId;
         data["name"] = this.name;
-        return data;
+        return data; 
     }
 
     clone(): SuggestQualificationDto {
@@ -43245,7 +43255,7 @@ export class SuggestSubjectDto implements ISuggestSubjectDto {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
         data["serviceId"] = this.serviceId;
-        return data;
+        return data; 
     }
 
     clone(): SuggestSubjectDto {
@@ -43305,7 +43315,7 @@ export class TenantDto implements ITenantDto {
         data["tenancyName"] = this.tenancyName;
         data["name"] = this.name;
         data["isActive"] = this.isActive;
-        return data;
+        return data; 
     }
 
     clone(): TenantDto {
@@ -43362,7 +43372,7 @@ export class TenantDtoPagedResultDto implements ITenantDtoPagedResultDto {
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): TenantDtoPagedResultDto {
@@ -43412,7 +43422,7 @@ export class TenantLoginInfoDto implements ITenantLoginInfoDto {
         data["id"] = this.id;
         data["tenancyName"] = this.tenancyName;
         data["name"] = this.name;
-        return data;
+        return data; 
     }
 
     clone(): TenantLoginInfoDto {
@@ -43481,7 +43491,7 @@ export class TenantNotification implements ITenantNotification {
         data["entityId"] = this.entityId;
         data["severity"] = this.severity;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): TenantNotification {
@@ -43532,7 +43542,7 @@ export class TestDto implements ITestDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["hubEvent"] = this.hubEvent;
-        return data;
+        return data; 
     }
 
     clone(): TestDto {
@@ -43581,7 +43591,7 @@ export class TimeZoneDto implements ITimeZoneDto {
         data["id"] = this.id;
         data["name"] = this.name;
         data["ianaName"] = this.ianaName;
-        return data;
+        return data; 
     }
 
     clone(): TimeZoneDto {
@@ -43629,7 +43639,7 @@ export class TopicDto implements ITopicDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
-        return data;
+        return data; 
     }
 
     clone(): TopicDto {
@@ -43684,7 +43694,7 @@ export class TopicDtoPagedResultDto implements ITopicDtoPagedResultDto {
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): TopicDtoPagedResultDto {
@@ -43731,7 +43741,7 @@ export class TopicUsageDto implements ITopicUsageDto {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
         data["totalUsage"] = this.totalUsage;
-        return data;
+        return data; 
     }
 
     clone(): TopicUsageDto {
@@ -43778,7 +43788,7 @@ export class TurnServerConfigDto implements ITurnServerConfigDto {
         data = typeof data === 'object' ? data : {};
         data["username"] = this.username;
         data["password"] = this.password;
-        return data;
+        return data; 
     }
 
     clone(): TurnServerConfigDto {
@@ -43840,7 +43850,7 @@ export class TutorRatingDto implements ITutorRatingDto {
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["totalRatingPercentage"] = this.totalRatingPercentage;
         data["reviewer"] = this.reviewer ? this.reviewer.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): TutorRatingDto {
@@ -43900,7 +43910,7 @@ export class TutorRatingDtoPagedResultDto implements ITutorRatingDtoPagedResultD
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): TutorRatingDtoPagedResultDto {
@@ -43974,7 +43984,7 @@ export class TutorRatingSummaryDto implements ITutorRatingSummaryDto {
         data["totalPunctualityRatings"] = this.totalPunctualityRatings;
         data["totalProfessionalismsRating"] = this.totalProfessionalismsRating;
         data["totalKnowledgeRatings"] = this.totalKnowledgeRatings;
-        return data;
+        return data; 
     }
 
     clone(): TutorRatingSummaryDto {
@@ -44059,7 +44069,7 @@ export class TutorVerificationDto implements ITutorVerificationDto {
             for (let item of this.tutorVerificationSteps)
                 data["tutorVerificationSteps"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): TutorVerificationDto {
@@ -44121,7 +44131,7 @@ export class TutorVerificationDtoPagedResultDto implements ITutorVerificationDto
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): TutorVerificationDtoPagedResultDto {
@@ -44188,7 +44198,7 @@ export class TutorVerificationStepDto implements ITutorVerificationStepDto {
         data["reviewTime"] = this.reviewTime ? this.reviewTime.toISOString() : <any>undefined;
         data["reviewerUserId"] = this.reviewerUserId;
         data["tutorVerificationId"] = this.tutorVerificationId;
-        return data;
+        return data; 
     }
 
     clone(): TutorVerificationStepDto {
@@ -44470,7 +44480,7 @@ export class Type implements IType {
         data["isSerializable"] = this.isSerializable;
         data["containsGenericParameters"] = this.containsGenericParameters;
         data["isVisible"] = this.isVisible;
-        return data;
+        return data; 
     }
 
     clone(): Type {
@@ -44937,7 +44947,7 @@ export class TypeInfo implements ITypeInfo {
             for (let item of this.implementedInterfaces)
                 data["implementedInterfaces"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): TypeInfo {
@@ -45076,7 +45086,7 @@ export class UniversityDto implements IUniversityDto {
             for (let item of this.userEducations)
                 data["userEducations"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): UniversityDto {
@@ -45137,7 +45147,7 @@ export class UpdateAddressDto implements IUpdateAddressDto {
         data["city"] = this.city;
         data["stateOrProvince"] = this.stateOrProvince;
         data["zipOrPostCode"] = this.zipOrPostCode;
-        return data;
+        return data; 
     }
 
     clone(): UpdateAddressDto {
@@ -45203,7 +45213,7 @@ export class UpdateArticleDetailsDto implements IUpdateArticleDetailsDto {
         data["languageId"] = this.languageId;
         data["pricingType"] = this.pricingType;
         data["thumbnailDocumentId"] = this.thumbnailDocumentId;
-        return data;
+        return data; 
     }
 
     clone(): UpdateArticleDetailsDto {
@@ -45270,7 +45280,7 @@ export class UpdateArticleSettingsDto implements IUpdateArticleSettingsDto {
         data["commentModeration"] = this.commentModeration;
         data["customUrl"] = this.customUrl;
         data["isVisible"] = this.isVisible;
-        return data;
+        return data; 
     }
 
     clone(): UpdateArticleSettingsDto {
@@ -45340,7 +45350,7 @@ export class UpdateCoachingDto implements IUpdateCoachingDto {
         data["languageId"] = this.languageId;
         data["pricingType"] = this.pricingType;
         data["price"] = this.price;
-        return data;
+        return data; 
     }
 
     clone(): UpdateCoachingDto {
@@ -45393,7 +45403,7 @@ export class UpdateCoachingPresenterTypeDto implements IUpdateCoachingPresenterT
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["newType"] = this.newType;
-        return data;
+        return data; 
     }
 
     clone(): UpdateCoachingPresenterTypeDto {
@@ -45638,7 +45648,7 @@ export class UpdateCoachingSettingsDto implements IUpdateCoachingSettingsDto {
         data["audienceEnableOffersTab"] = this.audienceEnableOffersTab;
         data["audienceEnableOffersTabDisplayNoOfPurchases"] = this.audienceEnableOffersTabDisplayNoOfPurchases;
         data["audienceEnableHandoutsTab"] = this.audienceEnableHandoutsTab;
-        return data;
+        return data; 
     }
 
     clone(): UpdateCoachingSettingsDto {
@@ -45763,7 +45773,7 @@ export class UpdateCourseSectionDetailsDto implements IUpdateCourseSectionDetail
         data["categories"] = this.categories;
         data["approximateLessonDuration"] = this.approximateLessonDuration;
         data["imageDocumentId"] = this.imageDocumentId;
-        return data;
+        return data; 
     }
 
     clone(): UpdateCourseSectionDetailsDto {
@@ -45847,7 +45857,7 @@ export class UpdateCourseSectionSettingsDto implements IUpdateCourseSectionSetti
         data["isPrerequsite"] = this.isPrerequsite;
         data["areAllPrerequisite"] = this.areAllPrerequisite;
         data["isAssignmentEnabled"] = this.isAssignmentEnabled;
-        return data;
+        return data; 
     }
 
     clone(): UpdateCourseSectionSettingsDto {
@@ -45932,7 +45942,7 @@ export class UpdateCourseSettingsDto implements IUpdateCourseSettingsDto {
         data["endTime"] = this.endTime;
         data["commentsVisibility"] = this.commentsVisibility;
         data["commentsNeedAdminApproval"] = this.commentsNeedAdminApproval;
-        return data;
+        return data; 
     }
 
     clone(): UpdateCourseSettingsDto {
@@ -46006,7 +46016,7 @@ export class UpdateEventDto implements IUpdateEventDto {
         data["languageId"] = this.languageId;
         data["pricingType"] = this.pricingType;
         data["price"] = this.price;
-        return data;
+        return data; 
     }
 
     clone(): UpdateEventDto {
@@ -46059,7 +46069,7 @@ export class UpdateEventPresenterStatusDto implements IUpdateEventPresenterStatu
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["status"] = this.status;
-        return data;
+        return data; 
     }
 
     clone(): UpdateEventPresenterStatusDto {
@@ -46340,7 +46350,7 @@ export class UpdateEventSettingsDto implements IUpdateEventSettingsDto {
         data["audienceEnableOffersTabDisplayNoOfPurchases"] = this.audienceEnableOffersTabDisplayNoOfPurchases;
         data["audienceEnableHandoutsTab"] = this.audienceEnableHandoutsTab;
         data["numberOfAttendees"] = this.numberOfAttendees;
-        return data;
+        return data; 
     }
 
     clone(): UpdateEventSettingsDto {
@@ -46465,7 +46475,7 @@ export class UpdateForumDto implements IUpdateForumDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["message"] = this.message;
-        return data;
+        return data; 
     }
 
     clone(): UpdateForumDto {
@@ -46563,7 +46573,7 @@ export class UpdatePostDto implements IUpdatePostDto {
             for (let item of this.attachments)
                 data["attachments"].push(item);
         }
-        return data;
+        return data; 
     }
 
     clone(): UpdatePostDto {
@@ -46619,7 +46629,7 @@ export class UpdatePresenterTypeDto implements IUpdatePresenterTypeDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["newType"] = this.newType;
-        return data;
+        return data; 
     }
 
     clone(): UpdatePresenterTypeDto {
@@ -46666,7 +46676,7 @@ export class UpdateProfileDto implements IUpdateProfileDto {
         data = typeof data === 'object' ? data : {};
         data["firstName"] = this.firstName;
         data["lastName"] = this.lastName;
-        return data;
+        return data; 
     }
 
     clone(): UpdateProfileDto {
@@ -46772,7 +46782,7 @@ export class UpdateProjectDto implements IUpdateProjectDto {
             for (let item of this.projectAvailabilities)
                 data["projectAvailabilities"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): UpdateProjectDto {
@@ -46836,7 +46846,7 @@ export class UpdateTopicDto implements IUpdateTopicDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
-        return data;
+        return data; 
     }
 
     clone(): UpdateTopicDto {
@@ -46901,7 +46911,7 @@ export class UpdateVideoDetailsDto implements IUpdateVideoDetailsDto {
         data["languageId"] = this.languageId;
         data["price"] = this.price;
         data["pricingType"] = this.pricingType;
-        return data;
+        return data; 
     }
 
     clone(): UpdateVideoDetailsDto {
@@ -46969,7 +46979,7 @@ export class UpdateVideoSettingsDto implements IUpdateVideoSettingsDto {
         data["commentModeration"] = this.commentModeration;
         data["customUrl"] = this.customUrl;
         data["isVisible"] = this.isVisible;
-        return data;
+        return data; 
     }
 
     clone(): UpdateVideoSettingsDto {
@@ -47030,7 +47040,7 @@ export class UserAvailabilityDto implements IUserAvailabilityDto {
         data["isAvailable"] = this.isAvailable;
         data["startTime"] = this.startTime;
         data["endTime"] = this.endTime;
-        return data;
+        return data; 
     }
 
     clone(): UserAvailabilityDto {
@@ -47083,7 +47093,7 @@ export class UserCalendarEventDto implements IUserCalendarEventDto {
         data["id"] = this.id;
         data["userId"] = this.userId;
         data["calendarEventId"] = this.calendarEventId;
-        return data;
+        return data; 
     }
 
     clone(): UserCalendarEventDto {
@@ -47240,7 +47250,7 @@ export class UserDto implements IUserDto {
             for (let item of this.roleDisplayNames)
                 data["roleDisplayNames"].push(item);
         }
-        return data;
+        return data; 
     }
 
     clone(): UserDto {
@@ -47326,7 +47336,7 @@ export class UserDtoPagedResultDto implements IUserDtoPagedResultDto {
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): UserDtoPagedResultDto {
@@ -47388,7 +47398,7 @@ export class UserEducationCourseDto implements IUserEducationCourseDto {
         data["academicLevelQualificationId"] = this.academicLevelQualificationId;
         data["academicLevel"] = this.academicLevel ? this.academicLevel.toJSON() : <any>undefined;
         data["academicLevelQualification"] = this.academicLevelQualification ? this.academicLevelQualification.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): UserEducationCourseDto {
@@ -47452,7 +47462,7 @@ export class UserEducationDocumentDto implements IUserEducationDocumentDto {
         data["category"] = this.category;
         data["isReviewed"] = this.isReviewed;
         data["document"] = this.document ? this.document.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): UserEducationDocumentDto {
@@ -47540,7 +47550,7 @@ export class UserEducationDto implements IUserEducationDto {
             for (let item of this.userEducationDocuments)
                 data["userEducationDocuments"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): UserEducationDto {
@@ -47600,7 +47610,7 @@ export class UserFollowerDto implements IUserFollowerDto {
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["creatorUserId"] = this.creatorUserId;
         data["userId"] = this.userId;
-        return data;
+        return data; 
     }
 
     clone(): UserFollowerDto {
@@ -47681,7 +47691,7 @@ export class UserLoginInfoDto implements IUserLoginInfoDto {
             for (let item of this.roles)
                 data["roles"].push(item);
         }
-        return data;
+        return data; 
     }
 
     clone(): UserLoginInfoDto {
@@ -47745,7 +47755,7 @@ export class UserNotification implements IUserNotification {
         data["userId"] = this.userId;
         data["state"] = this.state;
         data["notification"] = this.notification ? this.notification.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): UserNotification {
@@ -47803,7 +47813,7 @@ export class UserNotificationPagedResultDto implements IUserNotificationPagedRes
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): UserNotificationPagedResultDto {
@@ -47893,7 +47903,7 @@ export class UserPublicationDto implements IUserPublicationDto {
             for (let item of this.userPublicationTags)
                 data["userPublicationTags"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): UserPublicationDto {
@@ -47955,7 +47965,7 @@ export class UserPublicationDtoPagedResultDto implements IUserPublicationDtoPage
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): UserPublicationDtoPagedResultDto {
@@ -48008,7 +48018,7 @@ export class UserPublicationTagDto implements IUserPublicationTagDto {
         data["userPublicationId"] = this.userPublicationId;
         data["publicationTagId"] = this.publicationTagId;
         data["publicationTag"] = this.publicationTag ? this.publicationTag.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): UserPublicationTagDto {
@@ -48066,7 +48076,7 @@ export class UserQualificationDocumentDto implements IUserQualificationDocumentD
         data["documentId"] = this.documentId;
         data["isReviewed"] = this.isReviewed;
         data["document"] = this.document ? this.document.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): UserQualificationDocumentDto {
@@ -48148,7 +48158,7 @@ export class UserQualificationDto implements IUserQualificationDto {
             for (let item of this.userQualificationDocuments)
                 data["userQualificationDocuments"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): UserQualificationDto {
@@ -48209,7 +48219,7 @@ export class UserResearchInterestDisciplineTaxonomyDto implements IUserResearchI
         data["userResearchInterestId"] = this.userResearchInterestId;
         data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
         data["disciplineTaxonomy"] = this.disciplineTaxonomy ? this.disciplineTaxonomy.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): UserResearchInterestDisciplineTaxonomyDto {
@@ -48272,7 +48282,7 @@ export class UserResearchInterestDto implements IUserResearchInterestDto {
             for (let item of this.userResearchInterestDisciplineTaxonomies)
                 data["userResearchInterestDisciplineTaxonomies"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): UserResearchInterestDto {
@@ -48329,7 +48339,7 @@ export class UserResearchInterestDtoPagedResultDto implements IUserResearchInter
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): UserResearchInterestDtoPagedResultDto {
@@ -48390,7 +48400,7 @@ export class UserResearchMethodologyDto implements IUserResearchMethodologyDto {
             for (let item of this.userResearchMethodologyResearchMethods)
                 data["userResearchMethodologyResearchMethods"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): UserResearchMethodologyDto {
@@ -48447,7 +48457,7 @@ export class UserResearchMethodologyDtoPagedResultDto implements IUserResearchMe
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): UserResearchMethodologyDtoPagedResultDto {
@@ -48500,7 +48510,7 @@ export class UserResearchMethodologyResearchMethodDto implements IUserResearchMe
         data["userResearchMethodologyId"] = this.userResearchMethodologyId;
         data["researchMethodId"] = this.researchMethodId;
         data["researchMethod"] = this.researchMethod ? this.researchMethod.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): UserResearchMethodologyResearchMethodDto {
@@ -48583,7 +48593,7 @@ export class UserServiceDto implements IUserServiceDto {
             for (let item of this.disciplineTaxonomies)
                 data["disciplineTaxonomies"].push(item.toJSON());
         }
-        return data;
+        return data; 
     }
 
     clone(): UserServiceDto {
@@ -48667,7 +48677,7 @@ export class UserServiceForListDto implements IUserServiceForListDto {
             for (let item of this.disciplineTaxonomies)
                 data["disciplineTaxonomies"].push(item);
         }
-        return data;
+        return data; 
     }
 
     clone(): UserServiceForListDto {
@@ -48728,7 +48738,7 @@ export class UserSpokenLanguageDto implements IUserSpokenLanguageDto {
         data["spokenLanguageId"] = this.spokenLanguageId;
         data["spokenLanguageName"] = this.spokenLanguageName;
         data["proficiency"] = this.proficiency;
-        return data;
+        return data; 
     }
 
     clone(): UserSpokenLanguageDto {
@@ -48790,7 +48800,7 @@ export class UserTopicDto implements IUserTopicDto {
         data["type"] = this.type;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["disciplineTaxonomy"] = this.disciplineTaxonomy ? this.disciplineTaxonomy.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 
     clone(): UserTopicDto {
@@ -48849,7 +48859,7 @@ export class UserTopicDtoPagedResultDto implements IUserTopicDtoPagedResultDto {
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): UserTopicDtoPagedResultDto {
@@ -48905,7 +48915,7 @@ export class VerificationStatusDto implements IVerificationStatusDto {
         data["isEmailConfirmed"] = this.isEmailConfirmed;
         data["isPhoneNumberConfirmed"] = this.isPhoneNumberConfirmed;
         data["passportVerificationStatus"] = this.passportVerificationStatus;
-        return data;
+        return data; 
     }
 
     clone(): VerificationStatusDto {
@@ -49054,7 +49064,7 @@ export class VideoDto implements IVideoDto {
         }
         data["likeCount"] = this.likeCount;
         data["thumbnailImageUrl"] = this.thumbnailImageUrl;
-        return data;
+        return data; 
     }
 
     clone(): VideoDto {
@@ -49140,7 +49150,7 @@ export class VideoDtoPagedResultDto implements IVideoDtoPagedResultDto {
                 data["items"].push(item.toJSON());
         }
         data["totalCount"] = this.totalCount;
-        return data;
+        return data; 
     }
 
     clone(): VideoDtoPagedResultDto {
@@ -49217,7 +49227,7 @@ export class WorkHistoryDto implements IWorkHistoryDto {
         data["country"] = this.country;
         data["city"] = this.city;
         data["summary"] = this.summary;
-        return data;
+        return data; 
     }
 
     clone(): WorkHistoryDto {
