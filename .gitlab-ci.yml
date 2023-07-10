@@ -6,7 +6,7 @@ stages:
 variables:
   BUILD_IMAGE: "mcr.microsoft.com/dotnet/sdk:6.0" 
   FRONTEND_PATH: "code/new/academically-admin"
-  BACKEND_PATH: "code/new/Academically/src/Academically.Web.Host"
+  BACKEND_PATH: "code/new/Academically/Academically.Web.Host"
 
 .schema: &schema
   stage: deploy
