@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, R
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ReactionColorClass, ReactionGroup, ReactionIcons, ReactionTypes } from '@shared/enums/post/reaction-group.enum';
-import { CommentReactionDto, HubEvent, ReactionDto, ReactionType, ReactionsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { HubEvent, ReactionDto, ReactionType, ReactionsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
@@ -25,7 +25,7 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
     get ReactionType() { return ReactionType; }
     get ReactionTypes() { return ReactionTypes[this.reactionGroup]; }
     get TotalReactions(): number { return this.reactions?.length ?? 0; }
-    get ActionColorClass(): string { return ReactionColorClass[this.reactions?.find?.(r => r.referenceId === this.referenceId)?.type]; }
+    get ActionColorClass(): string { return ReactionColorClass[this.reactions?.find?.(r => r.referenceId === this.referenceId && r.creatorUserId === this.appSession.userId)?.type]; }
 
     reactions: ReactionDto[];
     reactionsCount: { [type in ReactionType]?: number } = {};
