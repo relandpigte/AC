@@ -257,8 +257,8 @@ build_backend:
     - pwd
     - mkdir artifacts
     - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
-    - dotnet --version
-    - "dotnet restore"
+    - dotnet --version --use-current-runtime
+    - "dotnet restore --use-current-runtime"
 
   script:
     # Build and Package projects
