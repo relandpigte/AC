@@ -40575,6 +40575,7 @@ export class ReactionDto implements IReactionDto {
     type: ReactionType;
     referenceId: string | undefined;
     creatorUserId: number;
+    creatorUser: UserDto;
 
     constructor(data?: IReactionDto) {
         if (data) {
@@ -40591,6 +40592,7 @@ export class ReactionDto implements IReactionDto {
             this.type = _data["type"];
             this.referenceId = _data["referenceId"];
             this.creatorUserId = _data["creatorUserId"];
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
         }
     }
 
@@ -40607,6 +40609,7 @@ export class ReactionDto implements IReactionDto {
         data["type"] = this.type;
         data["referenceId"] = this.referenceId;
         data["creatorUserId"] = this.creatorUserId;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -40623,6 +40626,7 @@ export interface IReactionDto {
     type: ReactionType;
     referenceId: string | undefined;
     creatorUserId: number;
+    creatorUser: UserDto;
 }
 
 /** 1 = Like 2 = Heart 3 = Laugh 4 = Wow 5 = Sad 6 = Mad 7 = Upvote 8 = Downvote */

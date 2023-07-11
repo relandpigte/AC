@@ -1,4 +1,4 @@
-<div class="reaction-container d-flex flex-nowrap justify-content-center align-items-center gap-5">
+<div class="reaction-container d-flex flex-nowrap justify-content-center align-items-center position-relative gap-5">
     <ng-container [ngSwitch]="reactionGroup">
         <ng-container *ngSwitchCase="ReactionGroup.Emotions">
             <div
@@ -22,12 +22,13 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="hasTally && totalReactions" class="reaction-counts d-flex flex-nowrap justify-content-center align-items-center">
+            <div *ngIf="hasTally && totalReactions" class="reaction-counts d-flex flex-nowrap justify-content-center align-items-center" [class.cursor-pointer]="hasReactionUsersList" (click)="hasReactionUsersList ? onReactionUsersClick() : ''">
                 <div class="reaction-counts-value cursor-default" style="margin-right: 2px;">{{ totalReactions }}</div>
                 <div class="reaction-counts-icons d-flex flex-nowrap justify-content-center align-items-center cluster" *ngFor="let type of (isShowOnlyActiveReactions ? activeReactionTypes: ReactionTypes)" [ngClass]="[getReactionColorClass(type)]">
                     <span [class]="getReactionIcon(type)"></span>
                 </div>
             </div>
+            <app-reaction-users *ngIf="hasReactionUsersList && isReactionUsersListShown" [reactions]="reactions" [ngClass]="[reactionUsersListPlacement]"></app-reaction-users>
         </ng-container>
         <ng-container *ngSwitchCase="ReactionGroup.Votes">
             <div
@@ -51,13 +52,14 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="hasTally" class="reaction-counts d-flex flex-nowrap justify-content-center align-items-center">
+            <div *ngIf="hasTally" class="reaction-counts d-flex flex-nowrap justify-content-center align-items-center" [class.cursor-pointer]="hasReactionUsersList" (click)="hasReactionUsersList ? onReactionUsersClick() : ''">
                 <div *ngFor="let type of (isShowOnlyActiveReactions ? activeReactionTypes: ReactionTypes)" class="reaction-counts-item d-flex flex-nowrap justify-content-center align-items-center gap-2">
                     <div class="reaction-counts-value cursor-default">{{ getReactionCount(type) }}</div>
                     <div class="reaction-counts-icons d-flex flex-nowrap justify-content-center align-items-center" [ngClass]="[getReactionColorClass(type)]">
                         <span [class]="getReactionIcon(type)"></span>
                     </div>
                 </div>
+                <app-reaction-users *ngIf="hasReactionUsersList && isReactionUsersListShown" [reactions]="reactions" [ngClass]="[reactionUsersListPlacement]"></app-reaction-users>
             </div>
         </ng-container>
         <ng-container *ngSwitchDefault>
@@ -70,8 +72,9 @@
                 <span *ngIf="parentIcon" [ngClass]="[parentIcon]"></span>
                 Like
             </div>
-            <div *ngIf="hasTally && totalReactions" class="reaction-counts d-flex flex-nowrap justify-content-center align-items-center">
+            <div *ngIf="hasTally && totalReactions" class="reaction-counts d-flex flex-nowrap justify-content-center align-items-center" [class.cursor-pointer]="hasReactionUsersList" (click)="hasReactionUsersList ? onReactionUsersClick() : ''">
                 <div class="reaction-counts-value cursor-default">{{ totalReactions }}</div>
+                <app-reaction-users *ngIf="hasReactionUsersList && isReactionUsersListShown" [reactions]="reactions" [ngClass]="[reactionUsersListPlacement]"></app-reaction-users>
             </div>
         </ng-container>
     </ng-container>

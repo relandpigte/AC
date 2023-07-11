@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Injector, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ReactionColorClass, ReactionGroup, ReactionIcons, ReactionTypes } from '@shared/enums/post/reaction-group.enum';
@@ -26,9 +26,13 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
     @Input() hasAction = true;
     @Input() hasTally = true;
     @Input() hasReply = true;
+    @Input() hasReactionUsersList = false;
+
+    @Input() reactionUsersListPlacement: 'left' | 'right' = 'left';
 
     @Output() onReaction = new EventEmitter<ReactionType>();
     @Output() onReply = new EventEmitter<void>();
+    @Output() onReactionUsers = new EventEmitter<void>();
 
     actionColorClass = '';
     activeReactionTypes = [];
@@ -43,9 +47,11 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
     reactionsCount: { [type in ReactionType]?: number } = {};
 
     popoverTrigger$ = new BehaviorSubject<{open: boolean, force?: boolean}>(null);
+    isReactionUsersListShown = false;
 
     constructor(
         injector: Injector,
+        private _elRef: ElementRef,
         private _renderer: Renderer2,
         private _reactionsService: ReactionsServiceProxy,
         private _hubService: HubService
@@ -86,6 +92,13 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
             });
     }
 
+    @HostListener('document:click', ['$event.target'])
+    onFocusOut(element): void {
+        if (!this._elRef.nativeElement.contains(element)) {
+           this.isReactionUsersListShown = false;
+        }
+    }
+
     getReactionCount(type: ReactionType): number { return this.reactionsCount?.[type] ?? 0; }
 
     getReactionIcon(reactionType: ReactionType) {
@@ -104,6 +117,10 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
 
     onReplyClick(): void {
         this.onReply.emit();
+    }
+
+    onReactionUsersClick(): void {
+        this.isReactionUsersListShown = !this.isReactionUsersListShown;
     }
 
     openPopover(open: boolean, force = false): void {
