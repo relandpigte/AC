@@ -17,6 +17,8 @@ export class ReactionUsersComponent extends AppComponentBase implements OnChange
     reactionCounts: { [type in ReactionType]?: number } = {};
     reactionUsers: { [type in ReactionType]?: UserDto[] } = {};
 
+    selectedReactionType: ReactionType = null;
+
     constructor(
         injector: Injector,
         private _userFollowingService: UserFollowingService
@@ -31,6 +33,8 @@ export class ReactionUsersComponent extends AppComponentBase implements OnChange
         }
     }
 
+    get currentUserId() { return this.appSession.userId; }
+
     private initReactionCounts(): void {
         this.reactions.forEach(r => this.reactionCounts[r.type] = (this.reactionCounts[r.type] ?? 0) + 1);
     }
@@ -39,8 +43,8 @@ export class ReactionUsersComponent extends AppComponentBase implements OnChange
         this.reactions.forEach(r => this.reactionUsers[r.type] = [...(this.reactionUsers[r.type] ?? []), r.creatorUser]);
     }
 
-    getReactionUsers(reactionType?: ReactionType): UserDto[] {
-        if (reactionType) return this.reactionUsers[reactionType];
+    getReactionUsers(): UserDto[] {
+        if (this.selectedReactionType) return this.reactionUsers[this.selectedReactionType];
         return _.flatMap(this.reactionUsers);
     }
 
