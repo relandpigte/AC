@@ -126,9 +126,10 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
         this._reactionsService.save(this.referenceId, type).subscribe(() => {});
     }
 
-    removeMyReaction() {
+    toggleMyReaction() {
         const myReactionType = this.MyReactionType;
         if (myReactionType) this._reactionsService.save(this.referenceId, myReactionType).subscribe(() => {});
+        else this._reactionsService.save(this.referenceId, ReactionType.Like).subscribe(() => {});
         this.openPopover(false, true);
     }
 
