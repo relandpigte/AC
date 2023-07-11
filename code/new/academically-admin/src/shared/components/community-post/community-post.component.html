@@ -71,13 +71,15 @@
 
         <div *ngIf="!isHistoryCard" class="post-actions d-flex flex-row" [style.marginTop.px]="15">
             <div class="post-actions-left d-flex justify-content-start align-items-center gap-10">
-                <div
+                <app-reaction
                     *ngIf="!isDiscussion"
-                    type="button"
-                    class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0"
-                >
-                    <span class="fe fe-thumbs-up"></span>Like
-                </div>
+                    [referenceId]="data?.id"
+                    [reactionGroup]="ReactionGroup.Emotions"
+                    parentIcon="fe fe-thumbs-up"
+                    [isActionButton]="true"
+                    [hasReply]="false"
+                    [hasTally]="false"
+                ></app-reaction>
                 <div
                     *ngIf="isQuickPost"
                     type="button"
@@ -109,7 +111,7 @@
                     <span class="fe fe-more-horizontal"></span>
                 </div>
             </div>
-            <div class="post-actions-right flex-grow-1 d-flex justify-content-end align-items-center gap-7">
+            <div class="post-actions-right flex-grow-1 d-flex justify-content-end align-items-center gap-5">
                 <div *ngIf="isQuickPost" class="post-actions-right-comments cursor-pointer" (click)="doToggleComments()">
                     {{ data.commentsCount | shortNum: 1  }} comments
                 </div>
@@ -119,20 +121,15 @@
                 <div *ngIf="isDiscussion" class="post-actions-right-comments cursor-pointer">
                     {{ data.children.length | shortNum: 1  }} posts
                 </div>
-                <div class="post-actions-right-separator">•</div>
                 <div class="post-actions-right-reactions cursor-pointer d-flex gap-5">
-                    {{ 15 }}
-                    <div class="post-actions-right-reactions-type d-flex">
-                        <div class="post-actions-right-reactions-type-item blue d-flex justify-content-center align-items-center">
-                            <span class="fe fe-thumbs-up"></span>
-                        </div>
-                        <div class="post-actions-right-reactions-type-item red d-flex justify-content-center align-items-center">
-                            <span class="fe fe-heart"></span>
-                        </div>
-                        <div class="post-actions-right-reactions-type-item yellow d-flex justify-content-center align-items-center">
-                            <span class="fe fe-thumbs-down"></span>
-                        </div>
-                    </div>
+                    <app-reaction
+                        *ngIf="!isDiscussion"
+                        [referenceId]="data?.id"
+                        [reactionGroup]="ReactionGroup.Emotions"
+                        [isShowOnlyActiveReactions]="true"
+                        [hasAction]="false"
+                        [hasReply]="false"
+                    ></app-reaction>
                 </div>
             </div>
         </div>

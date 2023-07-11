@@ -3,8 +3,8 @@ import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ReactionColorClass, ReactionGroup, ReactionIcons, ReactionTypes } from '@shared/enums/post/reaction-group.enum';
 import { HubEvent, ReactionDto, ReactionType, ReactionsServiceProxy } from '@shared/service-proxies/service-proxies';
-import { BehaviorSubject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, of, timer } from 'rxjs';
+import { debounce, distinctUntilChanged, filter, takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'app-reaction',
@@ -18,19 +18,31 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
     @Input() referenceId: string;
     @Input() reactionGroup: ReactionGroup;
 
+    @Input() parentIcon: string;
+
+    @Input() isActionButton = false;
+    @Input() isShowOnlyActiveReactions = false;
+
+    @Input() hasAction = true;
+    @Input() hasTally = true;
+    @Input() hasReply = true;
+
     @Output() onReaction = new EventEmitter<ReactionType>();
     @Output() onReply = new EventEmitter<void>();
 
+    actionColorClass = '';
+    activeReactionTypes = [];
+    totalReactions = 0;
+
     get ReactionGroup() { return ReactionGroup; }
     get ReactionType() { return ReactionType; }
-    get ReactionTypes() { return ReactionTypes[this.reactionGroup]; }
-    get TotalReactions(): number { return this.reactions?.length ?? 0; }
-    get ActionColorClass(): string { return ReactionColorClass[this.reactions?.find?.(r => r.referenceId === this.referenceId && r.creatorUserId === this.appSession.userId)?.type]; }
+    get ReactionTypes() { return ReactionTypes[this.reactionGroup] }
+    get MyReactionType() { return this.reactions?.find?.(r => r.referenceId === this.referenceId && r.creatorUserId === this.appSession.userId)?.type; }
 
     reactions: ReactionDto[];
     reactionsCount: { [type in ReactionType]?: number } = {};
 
-    popoverTrigger$ = new BehaviorSubject<boolean>(false);
+    popoverTrigger$ = new BehaviorSubject<{open: boolean, force?: boolean}>(null);
 
     constructor(
         injector: Injector,
@@ -42,19 +54,10 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
 
         this.popoverTrigger$
             .pipe(takeUntil(this.destroyed$))
+            .pipe(filter(x => !!x))
             .pipe(distinctUntilChanged())
-            .pipe(debounceTime(500))
-            .subscribe(open => {
-                if (this.reactionAction) {
-                    if (open) this._renderer.addClass(this.reactionAction.nativeElement, 'inactive');
-                    else this._renderer.removeClass(this.reactionAction.nativeElement, 'inactive');
-                }
-
-                if (this.popover) {
-                    if (open) this._renderer.removeClass(this.popover.nativeElement, 'd-none');
-                    else this._renderer.addClass(this.popover.nativeElement, 'd-none');
-                }
-            });
+            .pipe(debounce(t => t.force ? of({}) : timer(500)))
+            .subscribe(({open}) => this.handlePopoverTrigger(open));
     }
 
     ngOnInit() {
@@ -76,6 +79,10 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
             .subscribe(reactions => {
                 this.reactions = reactions;
                 this.reactionsCount = reactions.reduce((counts, curr) => Object.assign(counts, { [curr.type]: (counts[curr.type] ?? 0) + 1 }), {});
+
+                this.initActionColorClass();
+                this.initActiveReactionTypes();
+                this.initTotalReactions();
             });
     }
 
@@ -91,14 +98,56 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
 
     onReactClick(reactType: ReactionType): void {
         if (this.popover) this._renderer.addClass(this.popover.nativeElement, 'd-none');
-        return this.onReaction.emit(reactType);
+        if (this.onReaction.observers?.length) return this.onReaction.emit(reactType);
+        else this.sendMyReaction(reactType);
     }
 
     onReplyClick(): void {
         this.onReply.emit();
     }
 
-    openPopover(open: boolean): void {
-        this.popoverTrigger$.next(open);
+    openPopover(open: boolean, force = false): void {
+        this.popoverTrigger$.next({open, force});
+    }
+
+    handlePopoverTrigger(open: boolean): void {
+        if (this.reactionAction) {
+            if (open) this._renderer.addClass(this.reactionAction.nativeElement, 'inactive');
+            else this._renderer.removeClass(this.reactionAction.nativeElement, 'inactive');
+        }
+
+        if (this.popover) {
+            if (open) this._renderer.removeClass(this.popover.nativeElement, 'd-none');
+            else this._renderer.addClass(this.popover.nativeElement, 'd-none');
+        }
+    }
+
+    private sendMyReaction(type: ReactionType) {
+        this._reactionsService.save(this.referenceId, type).subscribe(() => {});
+    }
+
+    removeMyReaction() {
+        const myReactionType = this.MyReactionType;
+        if (myReactionType) this._reactionsService.save(this.referenceId, myReactionType).subscribe(() => {});
+        this.openPopover(false, true);
+    }
+
+    private initActionColorClass(): void {
+        const getClass = () => {
+            if (this.isActionButton) {
+                if (this.reactions?.find?.(r => r.referenceId === this.referenceId && r.creatorUserId === this.appSession.userId)) return 'active';
+                else return '';
+            }
+            return ReactionColorClass[this.MyReactionType];
+        };
+        this.actionColorClass = getClass();
+    }
+
+    private initActiveReactionTypes(): void {
+        this.activeReactionTypes = this.ReactionTypes.filter(r => this.reactionsCount[r] > 0);
+    }
+
+    private initTotalReactions(): void {
+        this.totalReactions = this.reactions?.length ?? 0;
     }
 }

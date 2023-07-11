@@ -14,6 +14,7 @@ import { AvailableServiceDto, DisciplineTaxonomyDto, PostDto, PostsServiceProxy,
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { UserFollowingService } from '@shared/services/user-following.service';
 import { CommunityDiscussionsComponent } from '../community-discussions/community-discussions.component';
+import { ReactionGroup } from '@shared/enums/post/reaction-group.enum';
 
 @Component({
     selector: 'app-community-post-card',
@@ -89,6 +90,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     get hasSharedPost(): boolean { return this.data?.sharedId && this.data?.sharedType === SharedType.Post; }
     get hasSharedService(): boolean { return this.data?.sharedId && this.data?.sharedType === SharedType.Service; }
     get isShowOwnerTag(): boolean { return this.isOwner || !this.isUserFollowing(this.data?.creatorUser) || (this.isUserFollowing(this.data?.creatorUser) && this.showUnfollow)}
+    get ReactionGroup() { return ReactionGroup; }
 
     ngOnInit() {
         UserFollowingService.userFollowedChanged$.pipe(takeUntil(this.destroyed$))

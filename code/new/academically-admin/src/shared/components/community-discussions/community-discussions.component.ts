@@ -4,7 +4,7 @@ import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { PostTypeReactionGroup } from '@shared/enums/post/reaction-group.enum';
 import { AddServiceComponent } from '@shared/modals/add-service/add-service.component';
-import { AvailableServiceDto, CommentDto, PostType, PostsServiceProxy, ReactionType, ReactionsServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, CommentDto, PostType, PostsServiceProxy, ReactionType, UserDto } from '@shared/service-proxies/service-proxies';
 import { CommentsStateService, MAX_COMMENT_LEVELS, MAX_REPLIES_TO_LOAD } from '@shared/services/comments-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
@@ -58,8 +58,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     private _elRef: ElementRef,
     private _modalService: BsModalService,
     private _hubService: HubService,
-    private _postsServiceProxy: PostsServiceProxy,
-    private _reactionsService: ReactionsServiceProxy
+    private _postsServiceProxy: PostsServiceProxy
   ) {
     super(injector);
   }
@@ -222,10 +221,6 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     }
     this.taggedPerson = this.comments.find(c => c.id === id)?.creatorUser;
     this.selectedServiceForChild = null;
-  }
-
-  protected reactionClick(comment: CommentDto, type: ReactionType): void {
-    this._reactionsService.save(comment.id, type).subscribe(() => {});
   }
 
   protected toggleServicePicker(isForChild?: boolean): void {

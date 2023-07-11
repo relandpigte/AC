@@ -6,13 +6,6 @@
         line-height: normal;
         position: relative;
 
-        &::after {
-                content:"•";
-                font-size: 8px;
-                padding-left: 5px;
-                margin-right: 5px;
-        }
-
         &.inactive {
             color: #B1C2D9 !important;
         }
@@ -31,6 +24,27 @@
 
         &.green {
             color: #00D97E;
+        }
+
+        &-btn {
+            height: 34px;
+            background: #F9FBFD;
+            border-radius: 5px;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 20px;
+            color: #6E84A3;
+            &.inactive {
+                background-color: #edf2f9 !important;
+            }
+
+            &.active {
+                color: #2C7BE5 !important;
+            }
+
+            >.btn-label {
+                padding: .5rem .75rem;
+            }
         }
 
         &-popover {
@@ -65,10 +79,17 @@
         font-style: normal;
         font-weight: 400;
         line-height: normal;
-        margin-right: 10px;
 
-        &-value {
-            margin-right: 2px;
+        &::before {
+            content:"•";
+            font-size: 8px;
+            padding-right: 5px;
+        }
+
+        &-item {
+            &:not(:last-child) {
+                margin-right: 10px;
+            }
         }
 
         &-icons {
@@ -109,4 +130,5 @@
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+    margin-left: 5px;
 }
