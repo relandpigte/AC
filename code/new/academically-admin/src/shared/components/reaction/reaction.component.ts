@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, HostListener, Injector, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ReactionColorClass, ReactionGroup, ReactionIcons, ReactionTypes } from '@shared/enums/post/reaction-group.enum';
+import { ReactionColorClass, ReactionGroup, ReactionIcons, ReactionLabels, ReactionTypes } from '@shared/enums/post/reaction-group.enum';
 import { HubEvent, ReactionDto, ReactionType, ReactionsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BehaviorSubject, of, timer } from 'rxjs';
 import { debounce, distinctUntilChanged, filter, takeUntil } from 'rxjs/operators';
@@ -18,10 +18,7 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
     @Input() referenceId: string;
     @Input() reactionGroup: ReactionGroup;
 
-    @Input() parentIcon: string;
-
     @Input() isActionButton = false;
-    @Input() isShowOnlyActiveReactions = false;
 
     @Input() hasAction = true;
     @Input() hasTally = true;
@@ -42,6 +39,8 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
     get ReactionType() { return ReactionType; }
     get ReactionTypes() { return ReactionTypes[this.reactionGroup] }
     get MyReactionType() { return this.reactions?.find?.(r => r.referenceId === this.referenceId && r.creatorUserId === this.appSession.userId)?.type; }
+    get MyReactionColorClass() { return ReactionColorClass[this.MyReactionType]; }
+    get MyReactionLabel() { return ReactionLabels[this.MyReactionType]; }
 
     reactions: ReactionDto[];
     reactionsCount: { [type in ReactionType]?: number } = {};
@@ -86,7 +85,6 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
                 this.reactions = reactions;
                 this.reactionsCount = reactions.reduce((counts, curr) => Object.assign(counts, { [curr.type]: (counts[curr.type] ?? 0) + 1 }), {});
 
-                this.initActionColorClass();
                 this.initActiveReactionTypes();
                 this.initTotalReactions();
             });
@@ -103,6 +101,10 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
 
     getReactionIcon(reactionType: ReactionType) {
         return ReactionIcons[reactionType];
+    }
+
+    getReactionLabel(reactionType: ReactionType) {
+        return ReactionLabels[reactionType];
     }
 
     getReactionColorClass(reactionType: ReactionType) {
@@ -149,17 +151,6 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
         if (myReactionType) this._reactionsService.save(this.referenceId, myReactionType).subscribe(() => {});
         else this._reactionsService.save(this.referenceId, defaultReactionType).subscribe(() => {});
         this.openPopover(false, true);
-    }
-
-    private initActionColorClass(): void {
-        const getClass = () => {
-            if (this.isActionButton) {
-                if (this.reactions?.find?.(r => r.referenceId === this.referenceId && r.creatorUserId === this.appSession.userId)) return 'active';
-                else return '';
-            }
-            return ReactionColorClass[this.MyReactionType];
-        };
-        this.actionColorClass = getClass();
     }
 
     private initActiveReactionTypes(): void {

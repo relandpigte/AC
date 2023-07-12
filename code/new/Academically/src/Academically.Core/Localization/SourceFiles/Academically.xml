@@ -1806,6 +1806,15 @@
 	<text name="SortedBy">Sorted by</text>
 	<text name="Recent">Recent</text>
 	<text name="Popular">Popular</text>
+	<text name="Generics.Reactions.Like">Like</text>
+	<text name="Generics.Reactions.Love">Love</text>
+	<text name="Generics.Reactions.Haha">Haha</text>
+	<text name="Generics.Reactions.Wow">Wow</text>
+	<text name="Generics.Reactions.Sad">Sad</text>
+	<text name="Generics.Reactions.Angry">Angry</text>
+	<text name="Generics.Reactions.Vote">Vote</text>
+	<text name="Generics.Reactions.Upvote">Upvote</text>
+	<text name="Generics.Reactions.Downvote">Downvote</text>
 	<!-- Coaching -->
 	<text name="NewCoaching">New Coaching</text>
 	<text name="CreateCoaching">Create Coaching</text>

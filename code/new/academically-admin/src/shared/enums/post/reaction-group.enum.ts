@@ -6,7 +6,7 @@ export enum ReactionGroup {
 };
 
 export const ReactionTypes: { [group in ReactionGroup]: ReactionType[] } = {
-    [ReactionGroup.Emotions]: [ ReactionType.Like, ReactionType.Heart, ReactionType.Sad ],
+    [ReactionGroup.Emotions]: [ ReactionType.Like, ReactionType.Heart ],
     [ReactionGroup.Votes]: [ ReactionType.Upvote, ReactionType.Downvote ]
 };
 
@@ -19,6 +19,17 @@ export const ReactionIcons: { [type in ReactionType]: string } = {
     [ReactionType.Mad]: 'fe fe-thumbs-down',
     [ReactionType.Upvote]: 'fe fe-arrow-up',
     [ReactionType.Downvote]: 'fe fe-arrow-down'
+};
+
+export const ReactionLabels: { [type in ReactionType]: string } = {
+    [ReactionType.Like]: 'Generics.Reactions.Like',
+    [ReactionType.Heart]: 'Generics.Reactions.Love',
+    [ReactionType.Laugh]: 'Generics.Reactions.Haha',
+    [ReactionType.Wow]: 'Generics.Reactions.Wow',
+    [ReactionType.Sad]: 'Generics.Reactions.Sad',
+    [ReactionType.Mad]: 'Generics.Reactions.Angry',
+    [ReactionType.Upvote]: 'Generics.Reactions.Upvote',
+    [ReactionType.Downvote]: 'Generics.Reactions.Downvote'
 };
 
 export const ReactionColorClass: { [type in ReactionType]: string } = {

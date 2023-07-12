@@ -75,7 +75,6 @@
                     *ngIf="!isDiscussion"
                     [referenceId]="data?.id"
                     [reactionGroup]="ReactionGroup.Emotions"
-                    parentIcon="fe fe-thumbs-up"
                     [isActionButton]="true"
                     [hasReply]="false"
                     [hasTally]="false"
@@ -111,7 +110,7 @@
                     <span class="fe fe-more-horizontal"></span>
                 </div>
             </div>
-            <div class="post-actions-right flex-grow-1 d-flex justify-content-end align-items-center gap-5">
+            <div class="post-actions-right flex-grow-1 d-flex justify-content-end align-items-center">
                 <div *ngIf="isQuickPost" class="post-actions-right-comments cursor-pointer" (click)="doToggleComments()">
                     {{ data.commentsCount | shortNum: 1  }} comments
                 </div>
@@ -126,7 +125,6 @@
                         *ngIf="!isDiscussion"
                         [referenceId]="data?.id"
                         [reactionGroup]="ReactionGroup.Emotions"
-                        [isShowOnlyActiveReactions]="true"
                         [hasAction]="false"
                         [hasReply]="false"
                         [hasReactionUsersList]="true"
