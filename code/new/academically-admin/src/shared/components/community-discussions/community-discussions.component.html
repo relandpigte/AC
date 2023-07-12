@@ -1,5 +1,5 @@
 <ng-container *ngIf="show && (showAddComment || totalCommentsCount)">
-  <div *ngIf="!isChild" class="discussions-separator"></div>
+  <div *ngIf="!isChild" class="discussions-separator" [ngClass]="{'expanded': isExpanded}"></div>
   <div class="discussions-container" [class.p-0]="isChild">
 
     <div *ngIf="!isChild" class="discussions-top">
