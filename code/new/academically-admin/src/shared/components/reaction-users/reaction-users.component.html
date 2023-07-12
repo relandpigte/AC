@@ -1,13 +1,13 @@
 <div class="reaction-users-container card d-flex flex-column justify-content-start align-items-center">
     <div class="reaction-users-tabs d-flex justify-content-start align-items-center w-100">
         <ul class="nav nav-tabs nav-overflow border-0 p-0 h-100">
-            <li class="nav-item h-100 d-flex justify-content-center align-items-center" [class.active]="selectedReactionType === null" (click)="selectedReactionType=null">
+            <li class="nav-item h-100 d-flex justify-content-center align-items-center cursor-pointer" [class.active]="selectedReactionType === null" (click)="selectedReactionType=null">
                 <div class="reaction-users-tabs-item d-flex justify-content-center align-items-center gap-5">
                     <div class="reaction-users-tabs-item-label">All</div>
                     <div class="reaction-users-tabs-item-value">{{ reactions?.length }}</div>
                 </div>
             </li>
-            <li *ngFor="let r of reactionCounts | keyvalue"  class="nav-item h-100 d-flex justify-content-center align-items-center"  [class.active]="selectedReactionType === r.key" (click)="selectedReactionType=r.key">
+            <li *ngFor="let r of reactionCounts | keyvalue"  class="nav-item h-100 d-flex justify-content-center align-items-center cursor-pointer"  [class.active]="selectedReactionType === r.key" (click)="selectedReactionType=r.key">
                 <div class="reaction-users-tabs-item d-flex justify-content-center align-items-center gap-5">
                     <div class="reaction-users-tabs-item-label">
                         <span class="reaction-users-tabs-item-label-icon d-flex flex-nowrap justify-content-center align-items-center" [ngClass]="[getReactionColorClass(r.key)]" [class]="getReactionIcon(r.key)"></span>
