@@ -28,12 +28,11 @@
 
 <ng-template #topicItemLoadingTemplate>
   <div class="topic-row d-flex flex-row">
-      <div class="topic-row-left d-flex flex-column flex-grow-1 justify-content-center gap-5">
-          <div class="box-shimmer-bar"  [style.width.%]="55" [style.height.px]="18"></div>
-          <div class="box-shimmer-bar"  [style.width.%]="15" [style.height.px]="6"></div>
+      <div class="topic-row-left flex-grow-1 position-relative">
+          <app-shimmer [show]="true" [shimmerType]="shimmerType.SideCardDouble"></app-shimmer>
       </div>
-      <div class="topic-row-right d-flex flex-row align-items-center gap-20">
-          <div class="box-shimmer-bar action"  [style.width.px]="120" [style.height.px]="40"></div>
+      <div class="topic-row-right flex-grow-1 justify-content-end position-relative">
+          <app-shimmer [show]="true" [shimmerType]="shimmerType.InlineButtons"></app-shimmer>
       </div>
   </div>
 </ng-template>

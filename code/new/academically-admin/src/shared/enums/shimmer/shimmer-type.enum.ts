@@ -9,5 +9,6 @@ export enum ShimmerType {
   UsersCard,
   ServiceCard,
   DiscussionCard,
-  TopicsCarousel
+  TopicsCarousel,
+  InlineButtons
 }

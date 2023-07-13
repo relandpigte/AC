@@ -4,6 +4,7 @@ import { TopicSorting } from '@shared/components/topic/topic.component';
 import { Utils } from '@shared/helpers/utils';
 import { DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, GetDisciplineTaxonomyFollowerCountDto, UserTopicDtoPagedResultDto, UserTopicsServiceProxy, UserTopicType } from '@shared/service-proxies/service-proxies';
 import { finalize, switchMap, takeUntil } from 'rxjs/operators';
+import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 
 
 @Component({
@@ -32,6 +33,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
+  get shimmerType() { return ShimmerType; }
   get loading(): boolean { return this.isLoadingUserTopics || this.isUnfollowingTopic || this.isSearching; }
 
   ngOnInit(): void {}
