@@ -65,7 +65,11 @@
             font-weight: 400;
 
             a {
-                color: #2C7BE5;
+                color: #6E84A3;
+
+                &:hover {
+                    text-decoration: underline;
+                }
             }
         }
         &-topic {
