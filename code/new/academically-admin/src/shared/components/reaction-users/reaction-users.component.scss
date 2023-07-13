@@ -1,15 +1,7 @@
-:host {
-    position: absolute;
-    z-index: 9;
-    top: 0;
-    transform: translate(0, 25px);
-
-    &.right {
-        right: 0;
-    }
-
-    &.left {
-        left: 0;
+::ng-deep {
+    .reaction-users-modal {
+        max-width: 354px;
+        max-height: 435px;
     }
 }
 
@@ -91,6 +83,34 @@
             &-avatar {
                 height: 45px;
                 width: 45px;
+
+                &-icon {
+                    position: absolute;
+                    right: -3px;
+                    bottom: -3px;
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 50%;
+                    border: 1px solid white;
+                    color: white;
+                    font-size: 12px;
+
+                    &.blue {
+                        background-color: #2C7BE5;
+                    }
+
+                    &.red {
+                        background-color: #E63757;
+                    }
+
+                    &.yellow {
+                        background-color: #F5D83E;
+                    }
+
+                    &.green {
+                        background-color: #00D97E;
+                    }
+                }
             }
 
             &-status {
@@ -131,6 +151,14 @@
                     border-color: #6E84A3;
                 }
             }
+        }
+    }
+
+    &-close {
+        padding: 5px;
+
+        &:focus {
+            box-shadow: none;
         }
     }
 }

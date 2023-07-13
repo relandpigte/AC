@@ -28,7 +28,6 @@
                     <span [class]="getReactionIcon(type)"></span>
                 </div>
             </div>
-            <app-reaction-users *ngIf="hasReactionUsersList && isReactionUsersListShown" [reactions]="reactions" [ngClass]="[reactionUsersListPlacement]"></app-reaction-users>
         </ng-container>
         <ng-container *ngSwitchCase="ReactionGroup.Votes">
             <div
@@ -60,7 +59,6 @@
                     </div>
                 </div>
             </div>
-            <app-reaction-users *ngIf="hasReactionUsersList && isReactionUsersListShown" [reactions]="reactions" [ngClass]="[reactionUsersListPlacement]"></app-reaction-users>
         </ng-container>
         <ng-container *ngSwitchDefault>
             <div
@@ -76,7 +74,6 @@
             <div *ngIf="hasTally && totalReactions" class="reaction-counts d-flex flex-nowrap justify-content-center align-items-center hide-empty" [class.cursor-pointer]="hasReactionUsersList" (click)="hasReactionUsersList ? onReactionUsersClick() : ''">
                 <div class="reaction-counts-value cursor-default">{{ totalReactions }}</div>
             </div>
-            <app-reaction-users *ngIf="hasReactionUsersList && isReactionUsersListShown" [reactions]="reactions" [ngClass]="[reactionUsersListPlacement]"></app-reaction-users>
         </ng-container>
     </ng-container>
     <ng-container *ngIf="hasReply">

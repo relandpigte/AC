@@ -3,8 +3,10 @@ import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ReactionColorClass, ReactionGroup, ReactionIcons, ReactionLabels, ReactionTypes } from '@shared/enums/post/reaction-group.enum';
 import { HubEvent, ReactionDto, ReactionType, ReactionsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, of, timer } from 'rxjs';
 import { debounce, distinctUntilChanged, filter, takeUntil } from 'rxjs/operators';
+import { ReactionUsersComponent } from '../reaction-users/reaction-users.component';
 
 @Component({
     selector: 'app-reaction',
@@ -24,8 +26,6 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
     @Input() hasTally = true;
     @Input() hasReply = true;
     @Input() hasReactionUsersList = false;
-
-    @Input() reactionUsersListPlacement: 'left' | 'right' = 'left';
 
     @Output() onReaction = new EventEmitter<ReactionType>();
     @Output() onReply = new EventEmitter<void>();
@@ -52,6 +52,7 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
         injector: Injector,
         private _elRef: ElementRef,
         private _renderer: Renderer2,
+        private _modalService: BsModalService,
         private _reactionsService: ReactionsServiceProxy,
         private _hubService: HubService
     ) {
@@ -122,7 +123,14 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
     }
 
     onReactionUsersClick(): void {
-        this.isReactionUsersListShown = !this.isReactionUsersListShown;
+
+        const modalSettings = this.defaultModalSettings as ModalOptions<ReactionUsersComponent>;
+        modalSettings.class = "modal-dialog-centered reaction-users-modal";
+        modalSettings.initialState = { reactions: this.reactions };
+
+        const modal = this._modalService.show(ReactionUsersComponent, modalSettings).content;
+
+        // this.isReactionUsersListShown = !this.isReactionUsersListShown;
     }
 
     openPopover(open: boolean, force = false): void {
