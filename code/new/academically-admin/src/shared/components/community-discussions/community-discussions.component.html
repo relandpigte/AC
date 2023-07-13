@@ -158,10 +158,10 @@
                   <!-- Avatar | END -->
                 </div>
                 <div class="col p-0 ms-n2">
-                  <div class="d-flex text-area-container" [style.padding.px]="10">
+                  <div class="d-flex text-area-container" [style.padding.px]="10" [style.height.px]="addReplyEl.innerHTML.length || taggedPerson ? 73 : 50">
                     <div class="col d-flex align-items-center p-0 ms-n2 h-sroll h-sroll-hidden">
                       <!-- Reply Textarea | START -->
-                      <form autocomplete="off" #replyForm="ngForm" (ngSubmit)="onFormSubmit(addReplyEl, comment.id)" class="comment-box flex-grow-1">
+                      <form autocomplete="off" #replyForm="ngForm" (ngSubmit)="onFormSubmit(addReplyEl, comment.id)" class="comment-box flex-grow-1 d-flex flex-column">
                         <div
                           name="message"
                           class="form-control form-control-flush d-flex"
@@ -178,13 +178,14 @@
                             (keydown)="onMessageKeydown($event, replyForm)"
                           ></div>
                         </div>
+                        <div *ngIf="addReplyEl.innerHTML.length || taggedPerson" class="text-area-container-instruction">Press enter to <span>post</span></div>
                       </form>
                       <!-- Reply Textarea | END -->
                     </div>
-                    <div class="col-auto align-self-center p-0">
+                    <div class="col-auto align-self-center p-0" [ngClass]="addReplyEl.innerHTML.length || taggedPerson ? 'd-flex mt-auto' : null">
                       <!-- Icons | START -->
                       <div class="col-auto pr-0 align-self-center">
-                        <div class="text-muted d-flex gap-20">
+                        <div class="text-muted d-flex gap-10">
                           <a class="text-reset" href="#!" data-toggle="tooltip" title="" data-original-title="Add photo" [class.disabled]="true">
                             <i class="fe fe-camera"></i>
                           </a>
