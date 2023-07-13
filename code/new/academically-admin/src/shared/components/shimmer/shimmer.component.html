@@ -114,10 +114,20 @@
         </div>
     </ng-container>
 
-    <!--  Discussion Card  -->
+    <!--  Topics Carousel  -->
     <ng-container *ngSwitchCase="ShimmerType.TopicsCarousel">
         <div class="shimmer-row inanimate">
             <div class="shimmer-row-blank"></div>
+        </div>
+    </ng-container>
+
+    <!--  More Topics 2Bars -->
+    <ng-container *ngSwitchCase="ShimmerType.InlineButtons">
+        <div class="shimmer-row d-flex">
+            <div class="shimmer-row-comment d-flex flex-row gap-10 w-100 justify-content-end">
+                <div class="shimmer-row-comment-bar btn"></div>
+                <div class="shimmer-row-comment-bar btn"></div>
+            </div>
         </div>
     </ng-container>
 </div>
