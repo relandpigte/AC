@@ -77,6 +77,7 @@ export class CarouselPillComponent extends AppComponentBase implements AfterView
           initial: this.currentItem,
           loop: false,
           mode: 'free-snap',
+          rubberband: false,
           slides: {
             perView: 'auto',
             spacing: this.itemSpacing,

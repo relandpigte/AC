@@ -96,6 +96,7 @@ export class CarouselWrapperComponent extends AppComponentBase implements AfterV
         initial: this.currentItem,
         loop: this.isCircular,
         mode: 'free-snap',
+        rubberband: false,
         slides: {
           perView: this.isAutoFit ? 'auto' : this.perView ?? 3,
           spacing: this.itemSpacing,
