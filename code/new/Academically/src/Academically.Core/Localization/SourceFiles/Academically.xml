@@ -4,6 +4,7 @@
 	<text name="TopicsAndTags">Topics and tags</text>
 	<text name="DeleteEventOfferConfirmationMessage">Are you sure you want to delete this offer?</text>
 	<text name="DeletePostConfirmationMessage">Are you sure you want to delete this post?</text>
+	<text name="DeleteDiscussionConfirmationMessage">Are you sure you want to delete this discussion?</text>
 	<text name="SelectAnItem">Select an item</text>
     <text name="Seconds">Seconds</text>
     <text name="Hours">Hours</text>

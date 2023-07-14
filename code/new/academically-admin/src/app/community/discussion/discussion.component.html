@@ -10,7 +10,7 @@
                     </a>
                     <div *ngIf="isOwner" class="dropdown-menu dropdown-menu-right">
                       <div class="dropdown-item cursor-pointer" (click)="handleEditDiscussion(discussion)">Edit discussion</div>
-                      <div class="dropdown-item cursor-pointer">Delete discussion</div>
+                      <div class="dropdown-item cursor-pointer" (click)="handleDeleteDiscussion()">Delete discussion</div>
                     </div>
                     <div *ngIf="!isOwner" class="dropdown-menu dropdown-menu-right">
                         <div class="dropdown-item cursor-pointer">Report discussion</div>
@@ -106,7 +106,7 @@
             </div>
 
             <div *ngFor="let p of children" class="discussion-content-post">
-                <app-community-post-card [isLoading]="isLoading" *ngIf="!p.isHidden && !p.isDeleted" [data]="p" (onChildrenUpdate)="handleChildrenUpdate(p)"></app-community-post-card>
+                <app-community-post-card [isLoading]="isLoading" *ngIf="!p.isHidden && !p.isDeleted" [data]="p" [canOverrideOwner]="true" (onChildrenUpdate)="handleChildrenUpdate(p)"></app-community-post-card>
             </div>
 
             <div *ngIf="hiddenChildrenCount" class="card discussion-content-post-load-more" (click)="onLoadMore()">

@@ -38,6 +38,7 @@
                         <div class="dropdown-item cursor-pointer border-top pt-3" (click)="onHideClick(data?.id)">Hide this {{ typeName }}</div>
                     </div>
                     <div *ngIf="!isOwner" class="dropdown-menu dropdown-menu-left">
+                        <div *ngIf="canOverrideOwner" class="dropdown-item cursor-pointer" (click)="onDeleteClick(data?.id)">Delete {{ typeName }}</div>
                         <div class="dropdown-item cursor-pointer" (click)="onHideClick(data?.id)">Hide this {{ typeName }}</div>
                         <div class="dropdown-item cursor-pointer">Report {{ typeName }}</div>
                     </div>

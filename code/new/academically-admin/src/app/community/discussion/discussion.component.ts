@@ -16,6 +16,7 @@ import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.comp
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { UserFollowingService } from '@shared/services/user-following.service';
 import { AppConsts } from '@shared/AppConsts';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 enum PostFiltering {
     All = 'Community.Posts.Filtering.All',
@@ -76,6 +77,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
         private _router: Router,
         private _cdr: ChangeDetectorRef,
         private _modalService: BsModalService,
+        private _modalDialogService: ModalDialogService,
         private _hubService: HubService,
         private _postsService: PostsServiceProxy,
         private _userFollowingService: UserFollowingService
@@ -137,6 +139,22 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
 
     ngOnDestroy() {
         this.pubSubService.stop();
+    }
+
+    handleDeleteDiscussion(): void {
+        const options: ModalDialogOptions = {
+            title: this.l('AreYouSure'),
+            text: this.l('DeleteDiscussionConfirmationMessage'),
+            confirmCb: (): void => {
+                this._postsService.delete(this.discussion.id)
+                  .pipe(takeUntil(this.destroyed$))
+                  .subscribe(() => {
+                      this.notify.success(this.l('SuccessfullyDeleted'));
+                      setTimeout(() => this._router.navigate(['app', 'community', 'following']), 1000);
+                  });
+            }
+        };
+        this._modalDialogService.showConfirmDialog(options);
     }
 
     handleEditDiscussion(data: PostDto): void {

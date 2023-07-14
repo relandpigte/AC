@@ -33,6 +33,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     @Input() closeHiddenPostAfter = 0;
     @Input() isHistoryCard: boolean;
     @Input() hideEdited: boolean;
+    @Input() canOverrideOwner: boolean;
 
     @Output() refresh = new EventEmitter();
     @Output() onUpdate = new EventEmitter();
