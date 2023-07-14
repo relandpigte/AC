@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, Injector, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ReactionColorClass, ReactionGroup, ReactionIcons, ReactionLabels, ReactionTypes } from '@shared/enums/post/reaction-group.enum';
@@ -46,11 +46,9 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
     reactionsCount: { [type in ReactionType]?: number } = {};
 
     popoverTrigger$ = new BehaviorSubject<{open: boolean, force?: boolean}>(null);
-    isReactionUsersListShown = false;
 
     constructor(
         injector: Injector,
-        private _elRef: ElementRef,
         private _renderer: Renderer2,
         private _modalService: BsModalService,
         private _reactionsService: ReactionsServiceProxy,
@@ -91,13 +89,6 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
             });
     }
 
-    @HostListener('document:click', ['$event.target'])
-    onFocusOut(element): void {
-        if (!this._elRef.nativeElement.contains(element)) {
-           this.isReactionUsersListShown = false;
-        }
-    }
-
     getReactionCount(type: ReactionType): number { return this.reactionsCount?.[type] ?? 0; }
 
     getReactionIcon(reactionType: ReactionType) {
@@ -123,14 +114,13 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
     }
 
     onReactionUsersClick(): void {
-
         const modalSettings = this.defaultModalSettings as ModalOptions<ReactionUsersComponent>;
+        modalSettings.backdrop = true;
+        modalSettings.ignoreBackdropClick = false;
+        modalSettings.keyboard = true;
         modalSettings.class = "modal-dialog-centered reaction-users-modal";
         modalSettings.initialState = { reactions: this.reactions };
-
-        const modal = this._modalService.show(ReactionUsersComponent, modalSettings).content;
-
-        // this.isReactionUsersListShown = !this.isReactionUsersListShown;
+        this._modalService.show(ReactionUsersComponent, modalSettings).content;
     }
 
     openPopover(open: boolean, force = false): void {
