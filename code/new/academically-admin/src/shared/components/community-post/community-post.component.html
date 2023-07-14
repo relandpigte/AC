@@ -1,6 +1,6 @@
-<div class="card post d-flex flex-column" *ngIf="!isHidden" [ngClass]="{'post-loading': isLoading}">
+<div class="card post d-flex flex-column" *ngIf="!isHidden" [ngClass]="{'post-loading': IsLoading}">
     <div class="post-container d-flex flex-column">
-        <app-shimmer [show]="isLoading" [shimmerType]="shimmerType.PostCard"></app-shimmer>
+        <app-shimmer [show]="IsLoading" [shimmerType]="shimmerType.PostCard"></app-shimmer>
         <div class="post-heading d-flex flex-row flex-nowrap align-items-center">
             <div class="post-heading-avatar">
                 <a href="javascript: void(0);" class="avatar avatar-sm">
@@ -106,8 +106,14 @@
                 <div role="button" (click)="handleSharePost($event)" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0">
                     <span class="post-actions-left-item-share bg-center" [ngStyle]="{ 'background-image': 'url(\'assets/img/icon-share.png\')' }"></span>Share
                 </div>
-                <div role="button" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0">
-                    <span class="fe fe-more-horizontal"></span>
+                <div class="dropdown ">
+                    <a href="#" class="dropdown-ellipses dropdown-toggle btn btn-white post-actions-left-item d-flex justify-content-center align-items-center border-0" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="fe fe-more-horizontal"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-left">
+                        <div *ngIf="isQuestion" class="dropdown-item cursor-pointer">Invite to answer</div>
+                        <div class="dropdown-item cursor-pointer" (click)="handleSubscribeClick()">Turn {{ isSubscribedToNotifications ? 'off' : 'on' }} notifications</div>
+                    </div>
                 </div>
             </div>
             <div class="post-actions-right flex-grow-1 d-flex justify-content-end align-items-center">

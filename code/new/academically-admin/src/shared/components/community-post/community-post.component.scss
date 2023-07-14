@@ -156,6 +156,10 @@
                     font-size: 16px;
                     line-height: 20px;
                     color: #6E84A3;
+
+                    &:focus {
+                        box-shadow: none;
+                    }
                 }
 
                 &-share {

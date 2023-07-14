@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { takeUntil } from 'rxjs/operators';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import { AppConsts } from '@shared/AppConsts';
+import { ReactionGroup } from '@shared/enums/post/reaction-group.enum';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { FileUtils } from '@shared/helpers/file-utils';
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
@@ -14,7 +14,11 @@ import { AvailableServiceDto, DisciplineTaxonomyDto, PostDto, PostsServiceProxy,
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { UserFollowingService } from '@shared/services/user-following.service';
 import { CommunityDiscussionsComponent } from '../community-discussions/community-discussions.component';
-import { ReactionGroup } from '@shared/enums/post/reaction-group.enum';
+
+enum SubscribeType {
+    subscribe = 'Subscribe',
+    unsubscribe = 'Unsubscribe'
+}
 
 @Component({
     selector: 'app-community-post-card',
@@ -47,6 +51,10 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     showAddComment = true;
     showMore = false;
     showUnfollow = false;
+
+    isLoadingSubscriberIds = false;
+
+    subscriberIds: number[] = [];
 
     constructor(
         injector: Injector,
@@ -92,6 +100,10 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     get isShowOwnerTag(): boolean { return this.isOwner || !this.isUserFollowing(this.data?.creatorUser) || (this.isUserFollowing(this.data?.creatorUser) && this.showUnfollow)}
     get ReactionGroup() { return ReactionGroup; }
 
+    get isSubscribedToNotifications(): boolean { return this.subscriberIds.includes(this.appSession.userId); }
+
+    get IsLoading(): boolean { return this.isLoading || this.isLoadingSubscriberIds; }
+
     ngOnInit() {
         UserFollowingService.userFollowedChanged$.pipe(takeUntil(this.destroyed$))
             .subscribe((change) => {
@@ -104,8 +116,10 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
             this.userTopics = this.data.postTopics?.map?.(t => t.disciplineTaxonomy);
             this.isHidden = this.data.isHidden;
             this.isHiding = this.data.isHidden;
+
             await this.getFileAttachment();
-            this.getServiceAttachment();
+            await this.getServiceAttachment();
+            await this.getSubscriberIds();
         }
     }
 
@@ -234,7 +248,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
         }
     }
 
-    private getServiceAttachment() {
+    private async getServiceAttachment() {
         if (this.data.service) {
             this.serviceAttachment = this.data.service;
         }
@@ -247,5 +261,26 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
             this.data.isHidden = true;
             this.onUpdate.emit(this.data);
         }, 1000 * this.closeHiddenPostAfter);
+    }
+
+    private async getSubscriberIds() {
+        this.isLoadingSubscriberIds = true;
+        if (this.data) this.subscriberIds = this.data.postNotification?.map(n => n.creatorUserId);
+        this.isLoadingSubscriberIds = false;
+    }
+
+    handleSubscribeClick(): void {
+        const type = this.isSubscribedToNotifications ? SubscribeType.unsubscribe : SubscribeType.subscribe;
+        const postId = this.data.id;
+        const userId = this.appSession.userId;
+
+        const service = type === SubscribeType.subscribe ? this._postsServiceProxy.createPostNotification(postId, userId)
+            : this._postsServiceProxy.deletePostNotification(postId, userId);
+
+        service.pipe(takeUntil(this.destroyed$))
+            .subscribe(() => {
+                if (type === SubscribeType.subscribe) this.subscriberIds.push(userId);
+                else this.subscriberIds = this.subscriberIds.filter(s => s !== userId);
+            });
     }
 }
