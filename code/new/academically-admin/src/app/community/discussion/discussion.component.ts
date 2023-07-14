@@ -97,7 +97,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
             this.isLoadingRelatedDiscussions || this.isUpdatingSubscribers;
     }
     get isOwner(): boolean { return this.appSession.userId === this.discussion?.creatorUserId; }
-    get isSubscribedToNotifications(): boolean { return this.subscriberIds.includes(this.appSession.userId); }
+    get isSubscribedToNotifications(): boolean { return this.subscriberIds?.includes(this.appSession.userId); }
     get discussionTitle(): string { return this.discussion?.title; }
     get discussionDescription(): string { return this.discussion?.content; }
     get postTypeFilter(): PostType {

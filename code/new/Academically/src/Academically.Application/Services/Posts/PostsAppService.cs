@@ -112,7 +112,6 @@ namespace Academically.Services.Posts
                                                           .Where(w => w.IsHidden && w.CreatorUserId == userId)
                                                           .Select(s => s.PostId).ToList();
            var result = await _postRepository.GetAll()
-                                  .Include(p => p.CreatorUser)
                                   .Include(p => p.Children)
                                   .Include(e => e.Parent)
                                   .Include(p => p.PostAttachments)
@@ -151,8 +150,8 @@ namespace Academically.Services.Posts
                                                           .Where(w => w.IsHidden && w.CreatorUserId == userId)
                                                           .Select(s => s.PostId).ToList();
             var query = _postRepository.GetAll()
-                                   .Include(p => p.CreatorUser)
                                    .Include(p => p.Children)
+                                     .ThenInclude(c => c.CreatorUser)
                                    .Include(e => e.Parent)
                                    .Include(p => p.PostAttachments)
                                      .ThenInclude(a => a.Document)
@@ -181,6 +180,26 @@ namespace Academically.Services.Posts
                     attachment.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(attachment.DocumentId);
 
                 item.CommentsCount = await this.GetCommentsCountAsync(item.Id.ToString());
+
+                var participants = new List<UserDto>();
+                if (item.Children.Any())
+                {
+                    participants.AddRange(item.Children.Where(c => c.CreatorUser != null).OrderByDescending(c => c.CreationTime).Select(s => ObjectMapper.Map<UserDto>(s.CreatorUser)));
+                }
+                var commentsParticipant = await _commentsRepository.GetAll()
+                        .Where(w => w.ReferenceId == item.Id.ToString())
+                        .Include(c => c.CreatorUser)
+                        .Include(c => c.TaggedUser)
+                        .Select(s => ObjectMapper.Map<UserDto>(s.CreatorUser))
+                        .ToListAsync();
+
+                if (commentsParticipant.Any())
+                {
+                    participants.AddRange(commentsParticipant);
+                }
+                
+                item.Participants = participants.GroupBy(g => g.Id).ToList().Select(s => s.FirstOrDefault());
+                foreach (var p in item.Participants) if (p.ProfilePictureDocumentId.HasValue) p.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(p.ProfilePictureDocumentId.Value);
             }
 
             return new PagedResultDto<PostDto>(totalCount, result);
@@ -331,19 +350,22 @@ namespace Academically.Services.Posts
             var participants = new List<UserDto>();
             if (post.Children.Any())
             {
-                participants.AddRange(post.Children.Select(s => ObjectMapper.Map<UserDto>(s.CreatorUser)));
+                participants.AddRange(post.Children.Where(c => c.CreatorUser != null).OrderByDescending(c => c.CreationTime).Select(s => ObjectMapper.Map<UserDto>(s.CreatorUser)));
             }
-            var commentsParticipant = _commentsRepository.GetAll()
-                    .Where(w => w.ReferenceId == id.ToString())
+            var commentsParticipant = await _commentsRepository.GetAll()
+                    .Where(w => w.ReferenceId == post.Id.ToString())
                     .Include(c => c.CreatorUser)
                     .Include(c => c.TaggedUser)
-                    .Select(s => ObjectMapper.Map<UserDto>(s.CreatorUser));
+                    .Select(s => ObjectMapper.Map<UserDto>(s.CreatorUser))
+                    .ToListAsync();
 
             if (commentsParticipant.Any())
             {
                 participants.AddRange(commentsParticipant);
             }
+
             result.Participants = participants.GroupBy(g => g.Id).ToList().Select(s => s.FirstOrDefault());
+            foreach (var p in result.Participants) if (p.ProfilePictureDocumentId.HasValue) p.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(p.ProfilePictureDocumentId.Value);
 
             await FillInShared(result);
 
@@ -653,7 +675,6 @@ namespace Academically.Services.Posts
                 .Where(w => w.IsHidden && w.CreatorUserId == userId)
                 .Select(s => s.PostId).ToListAsync();
             var result = await _postRepository.GetAll()
-                .Include(p => p.CreatorUser)
                 .Include(p => p.Children)
                 .Include(e => e.Parent)
                 .Include(p => p.PostAttachments)
@@ -678,6 +699,26 @@ namespace Academically.Services.Posts
                     attachment.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(attachment.DocumentId);
 
                 item.CommentsCount = await this.GetCommentsCountAsync(item.Id.ToString());
+
+                var participants = new List<UserDto>();
+                if (item.Children.Any())
+                {
+                    participants.AddRange(item.Children.Where(c => c.CreatorUser != null).OrderByDescending(c => c.CreationTime).Select(s => ObjectMapper.Map<UserDto>(s.CreatorUser)));
+                }
+                var commentsParticipant = await _commentsRepository.GetAll()
+                        .Where(w => w.ReferenceId == item.Id.ToString())
+                        .Include(c => c.CreatorUser)
+                        .Include(c => c.TaggedUser)
+                        .Select(s => ObjectMapper.Map<UserDto>(s.CreatorUser))
+                        .ToListAsync();
+
+                if (commentsParticipant.Any())
+                {
+                    participants.AddRange(commentsParticipant);
+                }
+
+                item.Participants = participants.GroupBy(g => g.Id).ToList().Select(s => s.FirstOrDefault());
+                foreach (var p in item.Participants) if (p.ProfilePictureDocumentId.HasValue) p.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(p.ProfilePictureDocumentId.Value);
             }
 
             return result;

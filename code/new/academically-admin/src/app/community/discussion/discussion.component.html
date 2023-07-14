@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="discussion-info-time" role="button">
-                <span [tooltip]="convertMomentToPostDateFormat(discussion.creationTime)">{{ postDate }}</span>
+                <span [tooltip]="discussion?.creationTime ? convertMomentToPostDateFormat(discussion.creationTime) : ''">{{ postDate }}</span>
                 <span *ngIf="isEdited" class="post-heading-edited ml-1" role="button" (click)="goToHistory()">· Edited</span>
             </div>
             <div *ngIf="discussionTitle" class="discussion-info-header" [innerHTML]="discussionTitle"></div>

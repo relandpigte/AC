@@ -101,7 +101,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     get isShowOwnerTag(): boolean { return this.isOwner || !this.isUserFollowing(this.data?.creatorUser) || (this.isUserFollowing(this.data?.creatorUser) && this.showUnfollow)}
     get ReactionGroup() { return ReactionGroup; }
 
-    get isSubscribedToNotifications(): boolean { return this.subscriberIds.includes(this.appSession.userId); }
+    get isSubscribedToNotifications(): boolean { return this.subscriberIds?.includes(this.appSession.userId); }
 
     get IsLoading(): boolean { return this.isLoading || this.isLoadingSubscriberIds; }
 

@@ -219,6 +219,27 @@
                         }
                     }
                 }
+
+                &-participants {
+                    &:before {
+                        content:"•";
+                        padding-left: 5px;
+                        font-size: 8px;
+                    }
+
+                    &-people {
+                        &-item {
+                            &.avatar {
+                                width: 20px;
+                                height: 20px;
+
+                                .avatar-img {
+                                    border: 1px solid white;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
