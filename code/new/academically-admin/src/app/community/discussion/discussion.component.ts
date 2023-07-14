@@ -284,7 +284,8 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
     }
 
     handleSubscribeClick(type: SubscribeType): void {
-        this.isUpdatingSubscribers = true;
+        // This allows the shimmers to load the reason why the page flashes when button is clicked.
+        // this.isUpdatingSubscribers = true;
         const postId = this.discussion.id;
         const userId = this.appSession.userId;
 
