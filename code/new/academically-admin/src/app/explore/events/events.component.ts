@@ -156,7 +156,7 @@ export class ExploreEventsComponent extends AppComponentBase implements OnInit {
   }
 
   private loadPopular(currentCount: number): void {
-    this.isPopularLoading = true;
+    // this.isPopularLoading = true;
     this._eventsService.getByPopularity(this.appSession.userId, undefined, currentCount, this.popularItems)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isPopularLoading = false))
