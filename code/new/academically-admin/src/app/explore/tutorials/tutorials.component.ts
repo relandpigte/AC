@@ -112,7 +112,7 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
   }
 
   private loadGroupedByDates(currentCount: number, start?: moment.Moment, moving?: moment.Moment, end?: moment.Moment): void {
-    this.isLoading = true;
+    // this.isLoading = true;
     this._videoService.getByDates(this.appSession.userId, start,moving, end, DateGrains.Aged30, undefined, currentCount, this.itemsPerGroup)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoading = false))
@@ -150,7 +150,7 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
   }
 
   private loadPopular(currentCount: number): void {
-    this.isPopularLoading = true;
+    // this.isPopularLoading = true;
     this._videoService.getByPopularity(this.appSession.userId, undefined, currentCount, this.popularItems)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isPopularLoading = false))
