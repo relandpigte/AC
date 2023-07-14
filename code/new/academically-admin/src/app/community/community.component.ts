@@ -14,6 +14,7 @@ import {
   DisciplineTaxonomyDto,
   EventDto,
   EventsServiceProxy,
+  HubEvent,
   SearchDisciplineTaxonomyRequestDto,
   UserDto,
   UserFollowersServiceProxy,
@@ -36,6 +37,7 @@ import { UpsertPostComponent } from '../../shared/modals/upsert-post/upsert-post
 import { CommunityService } from './community.service';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { WrapperService } from '@shared/services/wrapper.service';
+import { HubService } from '@app/_shared/services/hub.service';
 
 @Component({
   selector: "app-community",
@@ -102,6 +104,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     private _router: Router,
     private _modalService: BsModalService,
     private _wrapperService: WrapperService,
+    private _hubService: HubService,
     private _taxonomyService: DisciplineTaxonomiesServiceProxy,
     private _userTopicsService: UserTopicsServiceProxy,
     private _coursesService: CoursesServiceProxy,
@@ -147,9 +150,17 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     this.getRecommendedArticles();
     this.getRecommendedEvents();
     this.getRecommendedTutorials();
+    this.subscribeToUserTopics();
 
     this._communityService.getIsLoading().subscribe((isLoading) => this.isLoadingCommunity$.next(isLoading));
     this.isLoading$.pipe(takeUntil(this.destroyed$)).subscribe(isLoading => this._wrapperService.toggleCanScroll(!isLoading));
+  }
+
+  async subscribeToUserTopics() {
+    const hub = await this._hubService.getUserTopicsHub({ 'userId': this.appSession.userId });
+    hub.on(HubEvent[HubEvent.UserTopicCreated], () => this.getUserTopics());
+    hub.on(HubEvent[HubEvent.UserTopicUpdated], () => this.getUserTopics());
+    hub.on(HubEvent[HubEvent.UserTopicDeleted], () => this.getUserTopics());
   }
 
   isTopicLoading(id: string, property?: string): boolean {

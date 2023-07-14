@@ -28,7 +28,7 @@ namespace Academically.Hubs
         Task NotifyUsersForReactionDeleted(ReactionDto reaction);
         Task NotifyUsersForUserTopicCreated(UserTopicDto userTopic);
         Task NotifyUsersForUserTopicUpdated(UserTopicDto userTopic);
-        Task NotifyUsersForUserTopicDeleted(Guid id);
+        Task NotifyUsersForUserTopicDeleted(UserTopicDto userTopic);
         Task NotifyUsersForServiceCreated(object service, ServicesType type);
         Task NotifyUsersForServiceUpdated(object service, ServicesType type);
         Task NotifyUsersForServiceDeleted(Guid id);
@@ -38,6 +38,7 @@ namespace Academically.Hubs
     {
         private const string FollowingGroup = "following-group";
         private const string ReactionsGroup = "reactions-group";
+        private const string UserTopicsGroup = "user-topics-group";
 
         private readonly IHubContext<UserTopicsHub> _userTopicsHub;
         private readonly IHubContext<PostsHub> _postsHub;
@@ -220,17 +221,38 @@ namespace Academically.Hubs
 
         public async Task NotifyUsersForUserTopicCreated(UserTopicDto userTopic)
         {
-            await _userTopicsHub.Clients.All.SendAsync(nameof(HubEvent.UserTopicCreated), userTopic);
+            if (userTopic.UserId != null)
+            {
+                await _userTopicsHub.Clients.Group($"{userTopic.UserId}").SendAsync(nameof(HubEvent.UserTopicCreated), userTopic);
+            }
+            else
+            {
+                await _userTopicsHub.Clients.Group(UserTopicsGroup).SendAsync(nameof(HubEvent.UserTopicCreated), userTopic);
+            }
         }
 
         public async Task NotifyUsersForUserTopicUpdated(UserTopicDto userTopic)
         {
-            await _userTopicsHub.Clients.All.SendAsync(nameof(HubEvent.UserTopicUpdated), userTopic);
+            if (userTopic.UserId != null)
+            {
+                await _userTopicsHub.Clients.Group($"{userTopic.UserId}").SendAsync(nameof(HubEvent.UserTopicUpdated), userTopic);
+            }
+            else
+            {
+                await _userTopicsHub.Clients.Group(UserTopicsGroup).SendAsync(nameof(HubEvent.UserTopicUpdated), userTopic);
+            }
         }
 
-        public async Task NotifyUsersForUserTopicDeleted(Guid id)
+        public async Task NotifyUsersForUserTopicDeleted(UserTopicDto userTopic)
         {
-            await _userTopicsHub.Clients.All.SendAsync(nameof(HubEvent.UserTopicDeleted), id);
+            if (userTopic.UserId != null)
+            {
+                await _userTopicsHub.Clients.Group($"{userTopic.UserId}").SendAsync(nameof(HubEvent.UserTopicDeleted), userTopic);
+            }
+            else
+            {
+                await _userTopicsHub.Clients.Group(UserTopicsGroup).SendAsync(nameof(HubEvent.UserTopicDeleted), userTopic);
+            }
         }
 
         public async Task NotifyUsersForServiceCreated(object service, ServicesType type)

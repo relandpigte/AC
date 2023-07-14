@@ -35,7 +35,7 @@ namespace Academically.Events
 
         public async Task HandleEventAsync(EntityDeletedEventData<UserTopic> eventData)
         {
-            await _hubManager.NotifyUsersForUserTopicDeleted(eventData.Entity.Id);
+            await _hubManager.NotifyUsersForUserTopicDeleted(_objectMapper.Map<UserTopicDto>(eventData.Entity));
         }
     }
 }

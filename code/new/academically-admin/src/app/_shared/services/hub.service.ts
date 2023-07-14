@@ -25,8 +25,8 @@ export class HubService {
     return this.getHub('questions', null, callback);
   }
 
-  public async getUserTopicsHub(): Promise<any> {
-    return await this.getHub(`userTopics`);
+  public async getUserTopicsHub(params?: Record<string, any>): Promise<any> {
+    return await this.getHub(`userTopics`, Utils.generateUrlParams(params));
   }
 
   public async getServicesHub(): Promise<any> {
@@ -63,23 +63,17 @@ export class HubService {
 
   private getHub(hubName: string, queryParam?: string, callback?: (connection?: any) => void): Promise<any> {
     const promise = new Promise(async (resolve, reject) => {
-
-      let path = abp.appPath + `signalr-${hubName}Hub`;
-      if(queryParam){
-        path += "?" + queryParam;
-      }
-      await abp.signalr.startConnection(path, (connection: any) => {
-        resolve(connection);
-      }).then(connection => {
-        if (callback) {
-          callback(connection);
-        }
+      jQuery.getScript(AppConsts.appBaseUrl + '/assets/abp/abp.signalr-client.js', async () => {
+        let path = abp.appPath + `signalr-${hubName}Hub`;
+        if (queryParam) path += "?" + queryParam;
+        await abp.signalr.startConnection(path, (connection: any) => {
+          resolve(connection);
+        }).then(connection => {
+          if (callback) {
+            callback(connection);
+          }
+        });
       });
-
-
-      // jQuery.getScript(AppConsts.appBaseUrl + '/assets/abp/abp.signalr-client.js', async () => {
-
-      // });
     });
     return promise;
   }
