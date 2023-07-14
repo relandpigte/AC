@@ -1,3 +1,25 @@
+:host {
+    ::ng-deep {
+        .tooltip {
+            filter: drop-shadow(0 0.75rem 1.5rem rgba(18, 38, 63, 0.03));
+            -o-filter: drop-shadow(0 0.75rem 1.5rem rgba(18, 38, 63, 0.03));
+            -ms-filter: drop-shadow(0 0.75rem 1.5rem rgba(18, 38, 63, 0.03));
+            -moz-filter: drop-shadow(0 0.75rem 1.5rem rgba(18, 38, 63, 0.03));
+            -webkit-filter: drop-shadow(0 0.75rem 1.5rem rgba(18, 38, 63, 0.03));
+
+            .tooltip-inner {
+                background-color: #031831;
+                max-width: none;
+                padding: 10px 15px;
+                color: #FFFFFF;
+                font-size: 15px;
+                font-weight: normal;
+                border-color: #031831;
+            }
+        }
+    }
+}
+
 .discussion {
     &-header {
         &-back {
@@ -61,6 +83,17 @@
             position: absolute;
             top: 30px;
             right: 24px;
+        }
+
+        &-time {
+            font-weight: 400;
+            font-size: 13px;
+            line-height: 17px;
+            display: flex;
+            align-items: center;
+            letter-spacing: -0.01em;
+            color: #95AAC9;
+            margin-bottom: 5px;
         }
 
         &-header {
