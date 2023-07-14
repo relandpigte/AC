@@ -36,8 +36,8 @@ export class Utils {
 
       function dispatch(e, name) {
         const direction = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-        position.x -= direction;
-        position.y -= direction;
+        position.x -= e.deltaX;
+        position.y -= e.deltaX;
 
         slider.container.dispatchEvent( new CustomEvent(name, { detail: { x: position.x, y: position.y } }) );
       }
