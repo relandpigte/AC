@@ -21,7 +21,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit {
 
   searchObj: any;
 
-  isLoadingUserTopics = false;
+  isLoadingUserTopics = true;
   isUnfollowingTopic = false;
   isSearching = false;
 
@@ -43,7 +43,6 @@ export class FollowingComponent extends AppComponentBase implements OnInit {
   handleOnSearch(searchObj: any): void {
     this.searchObj = searchObj;
 
-    this.isLoadingUserTopics = true;
     this._userTopics.getAllPaged(
       searchObj?.request?.searchFilter,
       this.appSession.userId,
