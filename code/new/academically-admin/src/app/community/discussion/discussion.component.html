@@ -9,13 +9,17 @@
                         <span class="fe fe-more-vertical"></span>
                     </a>
                     <div *ngIf="isOwner" class="dropdown-menu dropdown-menu-right">
-                      <div class="dropdown-item cursor-pointer">Edit discussion</div>
+                      <div class="dropdown-item cursor-pointer" (click)="handleEditDiscussion(discussion)">Edit discussion</div>
                       <div class="dropdown-item cursor-pointer">Delete discussion</div>
                     </div>
                     <div *ngIf="!isOwner" class="dropdown-menu dropdown-menu-right">
                         <div class="dropdown-item cursor-pointer">Report discussion</div>
                     </div>
                 </div>
+            </div>
+            <div class="discussion-info-time" role="button">
+                <span [tooltip]="convertMomentToPostDateFormat(discussion.creationTime)">{{ postDate }}</span>
+                <span *ngIf="isEdited" class="post-heading-edited ml-1" role="button" (click)="goToHistory()">· Edited</span>
             </div>
             <div *ngIf="discussionTitle" class="discussion-info-header" [innerHTML]="discussionTitle"></div>
             <div *ngIf="discussionDescription" class="discussion-info-description" [innerHTML]="discussionDescription" [style.marginTop.px]="10"></div>

@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import * as moment from 'moment';
 
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
@@ -14,6 +15,7 @@ import { StateUpdateType } from '@shared/services/state-base.service';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { UserFollowingService } from '@shared/services/user-following.service';
+import { AppConsts } from '@shared/AppConsts';
 
 enum PostFiltering {
     All = 'Community.Posts.Filtering.All',
@@ -41,7 +43,7 @@ enum SubscribeType {
 export class DiscussionComponent extends AppComponentBase implements OnInit, OnDestroy {
     postsStateService: PostsStateService;
 
-    private discussion: PostDto;
+    discussion: PostDto;
     children: PostDto[] = Array(3).fill([]).map(() => this.generateRandomPost()) as PostDto[];
     totalChildrenCount: number;
 
@@ -108,10 +110,15 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
             return PostType.Discussion;
         }
     }
+    get isEdited(): boolean { return this.discussion?.lastModificationTime != null; }
     get participantsCount(): number { return this.participants?.length ?? 0 + 1; }
     get postsCount(): number { return this.children?.length ?? 0; }
     get hiddenChildrenCount(): number { return this.totalChildrenCount - this.children.length; }
-    get shimmerType() { return ShimmerType }
+    get shimmerType() { return ShimmerType; }
+    get postDate(): string {
+        const time = moment(this.discussion.creationTime);
+        return this.convertMomentToPostDateAgo(time);
+    }
 
     async ngOnInit() {
         this.isLoadingPost = true;
@@ -132,6 +139,24 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
         this.pubSubService.stop();
     }
 
+    handleEditDiscussion(data: PostDto): void {
+        const modalSettings = this.defaultModalSettings as ModalOptions<UpsertPostComponent>;
+        modalSettings.class = 'modal-lg';
+
+        modalSettings.initialState = {
+            activeTab: 'add-discussion',
+            updateOnly: true,
+            model: data,
+            canRemoveAttachment: false
+        };
+
+        const modal = this._modalService.show(UpsertPostComponent, modalSettings).content;
+        modal.onPostCreated.subscribe(async () => {
+            this.notify.success(this.l('SavedSuccessfully'));
+            await this.initDiscussion();
+        });
+    }
+
     handleShareDiscussion(): void {
         const modalSettings = this.defaultModalSettings as ModalOptions<UpsertPostComponent>;
         modalSettings.class = 'modal-lg';
@@ -147,6 +172,11 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
             }
         };
         this._modalService.show(UpsertPostComponent, modalSettings).content;
+    }
+
+    goToHistory(): void {
+        const url = `${AppConsts.appBaseUrl}/app/community/edit-history/${this.discussion.id}`;
+        window.open(url, '_blank');
     }
 
     private async initDiscussion() {
