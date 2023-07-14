@@ -85,8 +85,6 @@ export class AllComponent extends AppComponentBase implements OnInit {
   }
 
   handleTopicFollowClick(key: string, topic: any): void {
-    this.isFollowingTopic = true;
-
     const request = new CreateUserTopicDto();
     request.userId = this.appSession.userId;
     request.disciplineTaxonomyId = topic.id;
@@ -103,8 +101,6 @@ export class AllComponent extends AppComponentBase implements OnInit {
   }
 
   handleTopicUnfollowClick(key: string, topic: any): void {
-    this.isUnfollowingTopic = true;
-
     this._userTopics.deleteByTopicId(topic.id)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isUnfollowingTopic = false))
