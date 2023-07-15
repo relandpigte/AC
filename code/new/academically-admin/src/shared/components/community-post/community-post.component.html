@@ -23,7 +23,7 @@
                     </button>
                 </div>
                 <div class="post-heading-owner-time" role="button">
-                    <span [tooltip]="data?.creationTime ? convertMomentToPostDateFormat(data.creationTime) : ''">{{ postDate }}</span>
+                    <span [tooltip]="data?.lastModificationTime ?  convertMomentToPostDateFormat(data.lastModificationTime) : data?.creationTime  ? convertMomentToPostDateFormat(data.creationTime) : ''">{{ postDate }}</span>
                     <span *ngIf="!hideEdited && isEdited" class="post-heading-edited ml-1" role="button" (click)="goToHistory()">· Edited</span>
                 </div>
             </div>

@@ -70,14 +70,17 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
 
     get shimmerType() { return ShimmerType; }
     get isShowMore(): boolean { return this.description?.length > this.showMoreLimit; }
-    get posterName(): string { return this.data.creatorUser?.fullName ?? 'Anonymous'; }
+    get posterName(): string { return this.data?.creatorUser?.fullName ?? 'Anonymous'; }
     get postDate(): string {
-        const time = moment(this.data.creationTime);
-        return this.convertMomentToPostDateAgo(time);
+        let time = null;
+        if (this.data?.lastModificationTime) time = moment(this.data.lastModificationTime);
+        else if (this.data?.creationTime) time = moment(this.data.creationTime);
+        if (time) return this.convertMomentToPostDateAgo(time);
+        return '';
     }
 
-    get title(): string { return this.data.title; }
-    get description(): string { return this.data.content ?? ''; }
+    get title(): string { return this.data?.title ?? ''; }
+    get description(): string { return this.data?.content ?? ''; }
     get isOwner(): boolean { return this.appSession.userId === this.data?.creatorUserId; }
     get isQuickPost(): boolean { return this.data?.type === PostType.QuickPost; }
     get isQuestion(): boolean { return this.data?.type === PostType.Question; }
@@ -114,9 +117,9 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
 
     async ngOnChanges(changes: SimpleChanges) {
         if ('data' in changes && this.data) {
-            this.userTopics = this.data.postTopics?.map?.(t => t.disciplineTaxonomy);
-            this.isHidden = this.data.isHidden;
-            this.isHiding = this.data.isHidden;
+            this.userTopics = this.data?.postTopics?.map?.(t => t.disciplineTaxonomy);
+            this.isHidden = this.data?.isHidden ?? true;
+            this.isHiding = this.data?.isHidden ?? true;
 
             await this.getFileAttachment();
             await this.getServiceAttachment();
@@ -141,13 +144,17 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     }
 
     goToDiscussion(): void {
-        const url = `${AppConsts.appBaseUrl}/app/community/discussion/${this.data.id}`;
-        window.open(url, '_blank');
+        if (this.data?.id) {
+            const url = `${AppConsts.appBaseUrl}/app/community/discussion/${this.data?.id}`;
+            window.open(url, '_blank');
+        }
     }
 
     goToHistory(): void {
-        const url = `${AppConsts.appBaseUrl}/app/community/edit-history/${this.data.id}`;
-        window.open(url, '_blank');
+        if (this.data?.id) {
+            const url = `${AppConsts.appBaseUrl}/app/community/edit-history/${this.data?.id}`;
+            window.open(url, '_blank');
+        }
     }
 
     onDeleteClick(id: string): void {
@@ -221,6 +228,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     }
 
     isUserFollowing(user: UserDto): boolean {
+        if (!user) return false;
         return this._userFollowingService.isUserFollowing(user);
     }
 
@@ -237,7 +245,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     }
 
     private async getFileAttachment() {
-        if (this.data.postAttachments) {
+        if (this.data?.postAttachments) {
             const [file] = this.data.postAttachments;
             if (file) {
                 const document = file.document;
@@ -250,7 +258,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     }
 
     private async getServiceAttachment() {
-        if (this.data.service) {
+        if (this.data?.service) {
             this.serviceAttachment = this.data.service;
         }
     }
@@ -271,17 +279,19 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     }
 
     handleSubscribeClick(): void {
-        const type = this.isSubscribedToNotifications ? SubscribeType.unsubscribe : SubscribeType.subscribe;
-        const postId = this.data.id;
-        const userId = this.appSession.userId;
+        if (this.data?.id) {
+            const type = this.isSubscribedToNotifications ? SubscribeType.unsubscribe : SubscribeType.subscribe;
+            const postId = this.data.id;
+            const userId = this.appSession.userId;
 
-        const service = type === SubscribeType.subscribe ? this._postsServiceProxy.createPostNotification(postId, userId)
-            : this._postsServiceProxy.deletePostNotification(postId, userId);
+            const service = type === SubscribeType.subscribe ? this._postsServiceProxy.createPostNotification(postId, userId)
+                : this._postsServiceProxy.deletePostNotification(postId, userId);
 
-        service.pipe(takeUntil(this.destroyed$))
-            .subscribe(() => {
-                if (type === SubscribeType.subscribe) this.subscriberIds.push(userId);
-                else this.subscriberIds = this.subscriberIds.filter(s => s !== userId);
-            });
+            service.pipe(takeUntil(this.destroyed$))
+                .subscribe(() => {
+                    if (type === SubscribeType.subscribe) this.subscriberIds.push(userId);
+                    else this.subscriberIds = this.subscriberIds.filter(s => s !== userId);
+                });
+        }
     }
 }

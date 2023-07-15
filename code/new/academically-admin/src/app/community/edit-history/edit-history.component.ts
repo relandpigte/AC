@@ -62,7 +62,7 @@ export class EditHistoryComponent extends AppComponentBase implements OnInit {
       const history = new PostDto(this.post);
       history.title = h.title ?? tempTitle;
       history.content = h.content ?? tempContent;
-      history.creationTime = h.changeTime;
+      history.lastModificationTime = h.changeTime;
       history.postTopics = h.postTopics?.map(t => {
         var postTopicDto = new PostTopicDto();
         postTopicDto.disciplineTaxonomy = t;
