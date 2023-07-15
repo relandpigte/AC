@@ -7,6 +7,7 @@
         [ngClass]="{'item-active': expression}"
         [isLoading]="allowLoader && isLoading"
         [isFeatured]="isFeatured"
+        customClass="custom-card-border custom-card-shadow"
         (onShareClick)="handleServiceCardShareClick($event)"
         (onClick)="handleServiceCardClick($event)"
       ></app-service-card>

@@ -23,6 +23,7 @@ import { UserFollowingService } from '@shared/services/user-following.service';
     @Input() options: ServiceCardOptions;
     @Input() data: any;
     @Input() actions: ServiceCardButton[];
+    @Input() customClass: string;
 
     @Output() onShareClick = new EventEmitter<any>();
     @Output() onClick = new EventEmitter<any>();

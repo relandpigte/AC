@@ -1,4 +1,4 @@
-<div *ngIf="type" class="service-card d-flex flex-column" [ngClass]="[isFeatured ? 'feature' : type]" (click)="handleClick()">
+<div *ngIf="type" class="service-card d-flex flex-column" [ngClass]="[isFeatured ? 'feature' : type, customClass ? customClass : '']" (click)="handleClick()">
     <app-shimmer [show]="isLoading" [shimmerType]="shimmerType"></app-shimmer>
 
     <div *ngIf="isFeatured" class="service-card-bg-img bg-center w-100 h-100" [ngStyle]="{ 'background-image': 'url(\'' + images[0].src + '\')' }" [ngClass]="[images[0].class ? images[0].class : '']">
