@@ -106,13 +106,24 @@
             </div>
             <div class="col p-0 ms-n2">
               <!-- Comment Body | START -->
-              <div class="comment-body">
+              <div class="comment-body w-100">
                 <div class="row gap-10 m-0">
                   <div class="col-auto p-0">
                     <h5 class="comment-title">{{ comment.creatorUser.fullName }}</h5>
                   </div>
                   <div class="col p-0 d-flex align-items-center">
                     <time class="comment-time" [title]="comment.creationTime | date:'short'">{{ convertMomentToDateAgo(comment.creationTime) }}</time>
+                  </div>
+                  <div *ngIf="currentUserLoggedIn === comment.creatorUser.id" class="comment-options d-flex justify-content-start align-items-center">
+                    <div class="dropdown">
+                      <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="fe fe-more-horizontal"></span>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-right">
+                        <div class="dropdown-item cursor-pointer">Edit comment</div>
+                        <div class="dropdown-item cursor-pointer" (click)="handleDeleteComment(comment.id)">Delete comment</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <p class="comment-text m-0" >
