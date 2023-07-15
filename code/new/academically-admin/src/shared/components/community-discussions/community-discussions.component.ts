@@ -1,16 +1,19 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { PostTypeReactionGroup } from '@shared/enums/post/reaction-group.enum';
 import { AddServiceComponent } from '@shared/modals/add-service/add-service.component';
-import { AvailableServiceDto, CommentDto, PostType, PostsServiceProxy, ReactionType, UserDto } from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, CommentDto, PostType, PostsServiceProxy, UserDto, CommentsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { CommentsStateService, MAX_COMMENT_LEVELS, MAX_REPLIES_TO_LOAD } from '@shared/services/comments-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Subject } from 'rxjs';
-import { finalize, takeUntil } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-community-discussions',
@@ -58,7 +61,9 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     private _elRef: ElementRef,
     private _modalService: BsModalService,
     private _hubService: HubService,
-    private _postsServiceProxy: PostsServiceProxy
+    private _postsServiceProxy: PostsServiceProxy,
+    private _modalDialogService: ModalDialogService,
+    private _commentServiceProxy: CommentsServiceProxy
   ) {
     super(injector);
   }
@@ -78,6 +83,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   get hasChildren(): boolean { return this.comments?.some(c => c.children?.length); }
   get isShowAddService(): boolean { return this.isTutor; }
   get reactionGroup() { return PostTypeReactionGroup[this.postType]; }
+  get currentUserLoggedIn(): number { return this.appSession.userId; }
 
   ngOnInit(): void {
     this.initCommentsAppStates();
@@ -91,6 +97,21 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
         else this.foldSubject$.next();
       }
     }
+  }
+
+  handleDeleteComment(id: string): void {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('DeleteCommentConfirmationMessage'),
+      confirmCb: (): void => {
+        this._commentServiceProxy.deleteComment(id)
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(() => {
+            this.notify.success(this.l('CommentSuccessfullyDeleted'));
+          });
+      }
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   private async initCommentsAppStates() {

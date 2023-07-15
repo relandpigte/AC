@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Castle.Core.Internal;
 
 namespace Academically.Services.Comments
 {
@@ -126,6 +127,22 @@ namespace Academically.Services.Comments
         public async Task DeleteReactionAsync(Guid id)
         {
             await _commentsReactionsRepository.DeleteAsync(id);
+        }
+
+        public async Task DeleteCommentAsync(Guid commentId)
+        {
+            await _commentsRepository.DeleteAsync(comment => comment.Id == commentId);
+            
+            var subComments = await _commentsRepository.GetAll()
+                .Where(e => e.ParentId == commentId).ToListAsync();
+
+            if (subComments.Count > 0)
+            {
+                foreach (var sc in subComments)
+                {
+                    await DeleteCommentAsync(sc.Id);
+                }
+            }
         }
 
         private async Task FillInService(CommentDto comment)
