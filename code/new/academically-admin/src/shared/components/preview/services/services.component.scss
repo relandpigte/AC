@@ -60,7 +60,7 @@
 
     &-content {
         background-color: #F9FBFD;
-        padding: 20px;
+        padding: 20px 20px 5px;
 
         &-author-article {
             & > * {
@@ -74,10 +74,14 @@
                 color: #6E84A3;
             }
         }
+
+        p {
+            margin-bottom: 5px;
+        }
     }
 
     &-info {
-        padding: 15px 20px 20px;
+        padding: 5px 20px 20px;
         border-top: 1px solid #E3EBF6;
 
         &-left {
@@ -159,6 +163,8 @@
         }
 
         &-right {
+            margin-bottom: 5px;
+
             &-learnmore {
                 width: 96px;
                 height: 28px;
