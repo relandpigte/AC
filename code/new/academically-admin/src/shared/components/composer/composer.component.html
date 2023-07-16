@@ -1,7 +1,7 @@
 <div class="composer d-flex flex-column custom-card-border" [style.marginBottom.px]="30" [ngClass]="{'composer-loading': isLoading}">
     <app-shimmer [show]="isLoading" [shimmerType]="shimmerType.Composer"></app-shimmer>
     <div class="composer-post d-flex flex-row flex-nowrap" [style.paddingBottom.px]="showBottomActions ? 0 : 20">
-        <div class="composer-post-avatar">
+        <div class="composer-post-avatar d-flex align-items-center">
             <a href="javascript: void(0);" class="avatar">
                 <img [src]="getProfilePicture(appSession.user.profilePictureUrl)" class="avatar-img rounded-circle" alt="profile" />
             </a>
