@@ -14,7 +14,7 @@
           </div>
 
           <div class="col p-0 ms-n2">
-            <div class="d-flex text-area-container" [style.padding.px]="10" [style.height.px]="addCommentEl.value !== '' ? 73 : 50">
+            <div class="d-flex text-area-container" [ngClass]="{'display-hint': addCommentEl.value !== ''}">
               <div class="col d-flex align-items-center p-0 ms-n2">
                 <!-- Reply Textarea | START -->
                 <form autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit(addCommentEl)" class="comment-box flex-grow-1">
@@ -60,7 +60,7 @@
           </div>
         </div>
 
-        <div *ngIf="selectedService" class="row gap-15" [style.marginTop.px]="5" [style.marginLeft.px]="55">
+        <div *ngIf="selectedService" class="row gap-15" [style.marginTop.px]="10" [style.marginLeft.px]="55">
           <app-service-preview-lite [service]="selectedService" [canRemove]="true" (onRemove)="selectedService = null"></app-service-preview-lite>
         </div>
 
@@ -170,7 +170,7 @@
                   <!-- Avatar | END -->
                 </div>
                 <div class="col p-0 ms-n2">
-                  <div class="d-flex text-area-container" [style.padding.px]="10" [style.height.px]="addReplyEl.innerHTML.length || taggedPerson ? 73 : 50">
+                  <div class="d-flex text-area-container" [ngClass]="{'display-hint': addReplyEl.innerHTML.length || taggedPerson}">
                     <div class="col d-flex align-items-center p-0 ms-n2 h-sroll h-sroll-hidden">
                       <!-- Reply Textarea | START -->
                       <form autocomplete="off" #replyForm="ngForm" (ngSubmit)="onFormSubmit(addReplyEl, comment.id)" class="comment-box flex-grow-1 d-flex flex-column">
