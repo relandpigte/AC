@@ -118,8 +118,8 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     async ngOnChanges(changes: SimpleChanges) {
         if ('data' in changes && this.data) {
             this.userTopics = this.data?.postTopics?.map?.(t => t.disciplineTaxonomy);
-            this.isHidden = this.data?.isHidden ?? true;
-            this.isHiding = this.data?.isHidden ?? true;
+            this.isHidden = this.data?.isHidden;
+            this.isHiding = this.data?.isHidden;
 
             await this.getFileAttachment();
             await this.getServiceAttachment();
