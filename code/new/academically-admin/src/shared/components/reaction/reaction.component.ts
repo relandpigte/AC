@@ -108,6 +108,10 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
         return `/assets/img/emoticons/bubble/${this.getReactionIcon(reactionType)}.svg`;
     }
 
+    getPopoverReactionHoverIconSrc(reactionType: ReactionType) {
+        return `/assets/img/emoticons/bubble/${this.getReactionIcon(reactionType)}_hover.svg`;
+    }
+
     getReactionLabel(reactionType: ReactionType) {
         return ReactionLabels[reactionType];
     }

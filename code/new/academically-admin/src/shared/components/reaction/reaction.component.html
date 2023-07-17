@@ -17,7 +17,8 @@
                 <div #popover class="reaction-action-popover d-none">
                     <div class="d-flex flex-nowrap justify-content-center align-items-center">
                         <div *ngFor="let type of ReactionTypes" class="reaction-action-popover-icon d-flex flex-nowrap justify-content-center align-items-center cursor-pointer" (click)="onReactClick(type)">
-                            <img [src]="getPopoverReactionIconSrc(type)" />
+                            <img class="normal" [src]="getPopoverReactionIconSrc(type)" />
+                            <img class="hovered" [src]="getPopoverReactionHoverIconSrc(type)" />
                         </div>
                     </div>
                 </div>
@@ -62,7 +63,8 @@
                 <div #popover class="reaction-action-popover d-none">
                     <div class="d-flex flex-nowrap justify-content-center align-items-center">
                         <div *ngFor="let type of ReactionTypes" class="reaction-action-popover-icon d-flex flex-nowrap justify-content-center align-items-center cursor-pointer" (click)="onReactClick(type)">
-                            <img [src]="getPopoverReactionIconSrc(type)" />
+                            <img class="normal" [src]="getPopoverReactionIconSrc(type)" />
+                            <img class="hovered" [src]="getPopoverReactionHoverIconSrc(type)" />
                         </div>
                     </div>
                 </div>

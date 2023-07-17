@@ -81,6 +81,24 @@
             transform: translate(-50%, calc(-100% - 5px));
 
             &-icon {
+                &:hover {
+                    .normal {
+                        display: none;
+                    }
+
+                    .hovered {
+                        display: block;
+                    }
+                }
+
+                .normal {
+                    display: block;
+                }
+
+                .hovered {
+                    display: none;
+                }
+
                 span {
                     width: 40px !important;
                     height: 40px !important;
