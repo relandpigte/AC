@@ -1,6 +1,4 @@
 .discussions {
-  padding-bottom: 9px;
-
   &-expander {
 
     &:empty {
@@ -8,7 +6,7 @@
     }
 
     &-child {
-      padding: 10px 10px 15px;
+      padding: 0 10px 15px;
       font-weight: 400;
       font-size: 15px;
       line-height: 17px;
@@ -108,6 +106,12 @@
 
     &.display-hint {
       height: 73px;
+      position: relative;
+
+      .comment-text-wrapper,
+      #message {
+        margin-top: -1.5rem;
+      }
     }
 
     &-instruction {
@@ -165,13 +169,20 @@
   }
 }
 
-.tier-2-comment {
+.tier-2-comment,
+.tier-3-comment {
   margin-top: 15px;
+  margin-bottom: 0;
 
   .avatar {
     width: 30px;
     height: 30px;
   }
+}
+
+.text-area-container-instruction {
+  position: absolute;
+  bottom: 12px;
 }
 
 .reply-indicator {
@@ -239,11 +250,24 @@
     letter-spacing: -0.01em;
     color: #12263F;
 
+    &-wrapper {
+      overflow: hidden;
+      overflow-wrap: break-word;
+      background: #F9FBFD;
+      border-radius: 10px;
+    }
+
     &-tagged {
       cursor: pointer;
-      font-weight: 400;
-      color: #2C7BE5;
-      margin-right: 5px;
+      font-weight: 600;
+      color: #12263F;
+      margin-right: 0;
+
+      &.editor {
+        font-weight: 400;
+        background-color: #CFE1F8;
+        margin-right: 5px;
+      }
     }
   }
 

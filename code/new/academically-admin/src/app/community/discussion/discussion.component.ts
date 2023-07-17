@@ -199,6 +199,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
 
     private async initDiscussion() {
         this.discussion = await this._postsService.get(this.id, false, false).toPromise();
+        this.discussionTopics = this.discussion?.postTopics?.map?.(t => t.disciplineTaxonomy);
     }
 
     private async initPostsAppStates() {
