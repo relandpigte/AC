@@ -10,7 +10,7 @@
             <li *ngFor="let r of reactionCounts | keyvalue"  class="nav-item h-100 d-flex justify-content-center align-items-center cursor-pointer"  [class.active]="selectedReactionType === r.key" (click)="selectedReactionType=r.key">
                 <div class="reaction-users-tabs-item d-flex justify-content-center align-items-center gap-5">
                     <div class="reaction-users-tabs-item-label">
-                        <span class="reaction-users-tabs-item-label-icon d-flex flex-nowrap justify-content-center align-items-center" [ngClass]="[getReactionColorClass(r.key)]" [class]="getReactionIcon(r.key)"></span>
+                        <img class="reaction-users-tabs-item-label-icon" [src]="getReactionIconSrc(r.key)" />
                     </div>
                     <div class="reaction-users-tabs-item-value">
                         {{ r.value }}
@@ -30,7 +30,7 @@
                 <div class="reaction-users-list-item-left flex-grow-1 d-flex flex-row flex-nowrap justify-content-center align-items-center gap-18">
                     <div class="reaction-users-list-item-avatar d-flex justify-content-center align-items-center position-relative">
                         <img [src]="getProfilePicture(u.profilePictureUrl)" class="avatar avatar-sm avatar-img rounded-circle" alt="profile" />
-                        <span class="reaction-users-list-item-avatar-icon d-flex justify-content-center align-items-center" [ngClass]="[getReactionColorClass(getUserReaction(u))]" [class]="getReactionIcon(getUserReaction(u))"></span>
+                        <img class="reaction-users-list-item-avatar-icon" [src]="getReactionIconSrc(getUserReaction(u))" />
                     </div>
                     <div class="reaction-users-list-item-status flex-grow-1 d-flex flex-column justify-content-center align-items-start gap-2">
                         <div class="reaction-users-list-item-status-name">{{ u.fullName }}</div>

@@ -11,14 +11,14 @@ export const ReactionTypes: { [group in ReactionGroup]: ReactionType[] } = {
 };
 
 export const ReactionIcons: { [type in ReactionType]: string } = {
-    [ReactionType.Like]: 'fe fe-thumbs-up',
-    [ReactionType.Heart]: 'fe fe-heart',
-    [ReactionType.Laugh]: 'fe fe-thumbs-down',
-    [ReactionType.Wow]: 'fe fe-thumbs-down',
-    [ReactionType.Sad]: 'fe fe-thumbs-down',
-    [ReactionType.Mad]: 'fe fe-thumbs-down',
-    [ReactionType.Upvote]: 'fe fe-arrow-up',
-    [ReactionType.Downvote]: 'fe fe-arrow-down'
+    [ReactionType.Like]: 'like',
+    [ReactionType.Heart]: 'love',
+    [ReactionType.Laugh]: 'like',
+    [ReactionType.Wow]: 'like',
+    [ReactionType.Sad]: 'sad',
+    [ReactionType.Mad]: 'sad',
+    [ReactionType.Upvote]: 'upvote',
+    [ReactionType.Downvote]: 'downvote'
 };
 
 export const ReactionLabels: { [type in ReactionType]: string } = {

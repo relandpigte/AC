@@ -96,6 +96,18 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
         return ReactionIcons[reactionType];
     }
 
+    getPostReactionIconSrc(reactionType: ReactionType) {
+        return `/assets/img/emoticons/post/${this.getReactionIcon(reactionType)}.svg`;
+    }
+
+    getCommentReactionIconSrc(reactionType: ReactionType) {
+        return `/assets/img/emoticons/comment/${this.getReactionIcon(reactionType)}.svg`;
+    }
+
+    getPopoverReactionIconSrc(reactionType: ReactionType) {
+        return `/assets/img/emoticons/bubble/${this.getReactionIcon(reactionType)}.svg`;
+    }
+
     getReactionLabel(reactionType: ReactionType) {
         return ReactionLabels[reactionType];
     }

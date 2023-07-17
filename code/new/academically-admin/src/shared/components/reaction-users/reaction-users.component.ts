@@ -58,8 +58,8 @@ export class ReactionUsersComponent extends AppComponentBase implements OnInit {
         return ReactionIcons[reactionType];
     }
 
-    getReactionColorClass(reactionType: ReactionType) {
-        return ReactionColorClass[reactionType];
+    getReactionIconSrc(reactionType: ReactionType) {
+        return `/assets/img/emoticons/comment/${this.getReactionIcon(reactionType)}.svg`;
     }
 
     isUserFollowing(user: UserDto): boolean {
