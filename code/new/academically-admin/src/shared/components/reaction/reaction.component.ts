@@ -26,6 +26,7 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
     @Input() hasTally = true;
     @Input() hasReply = true;
     @Input() hasReactionUsersList = false;
+    @Input() hasReactionCountsList = false;
 
     @Output() onReaction = new EventEmitter<ReactionType>();
     @Output() onReply = new EventEmitter<void>();

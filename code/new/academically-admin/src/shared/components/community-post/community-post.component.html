@@ -135,6 +135,7 @@
                         [hasAction]="false"
                         [hasReply]="false"
                         [hasReactionUsersList]="true"
+                        [hasReactionCountsList]="true"
                     ></app-reaction>
                     <div *ngIf="isDiscussion && !!data.participants?.length" class="post-actions-right-reactions-participants d-flex justify-content-end align-items-center gap-5">
                         <div class="post-actions-right-reactions-participants-count">{{ !!data.participants?.length ? data.participants?.length : 0 }}</div>

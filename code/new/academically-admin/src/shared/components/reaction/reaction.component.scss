@@ -67,18 +67,18 @@
         &-popover {
             position: absolute;
             top: 0;
-            left: 0;
+            left: 50%;
             background-color: white;
             padding: 5px;
             overflow: hidden;
             border: 1px solid var(--gray-300, #E4EBF6);
             border-radius: 40px;
             box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
-            -webkit-transform: translate(calc(-50% + 13px), calc(-100% - 5px));
-            -moz-transform: translate(calc(-50% + 13px), calc(-100% - 5px));
-            -ms-transform: translate(calc(-50% + 13px), calc(-100% - 5px));
-            -o-transform: translate(calc(-50% + 13px), calc(-100% - 5px));
-            transform: translate(calc(-50% + 13px), calc(-100% - 5px));
+            -webkit-transform: translate(-50%, calc(-100% - 5px));
+            -moz-transform: translate(-50%, calc(-100% - 5px));
+            -ms-transform: translate(-50%, calc(-100% - 5px));
+            -o-transform: translate(-50%, calc(-100% - 5px));
+            transform: translate(-50%, calc(-100% - 5px));
 
             &-icon {
                 span {
@@ -137,6 +137,34 @@
             &.cluster {
                 &:not(:last-child) {
                     margin-right: -5px;
+                }
+            }
+        }
+
+        &-value {
+            &-popover {
+                position: absolute;
+                top: 0;
+                left: 50%;
+                background-color: white;
+                padding: 5px;
+                overflow: hidden;
+                border: 1px solid var(--gray-300, #E4EBF6);
+                border-radius: 40px;
+                box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
+                -webkit-transform: translate(-50%, calc(-100% - 5px));
+                -moz-transform: translate(-50%, calc(-100% - 5px));
+                -ms-transform: translate(-50%, calc(-100% - 5px));
+                -o-transform: translate(-50%, calc(-100% - 5px));
+                transform: translate(-50%, calc(-100% - 5px));
+
+                &-icon {
+                    span {
+                        width: 24px !important;
+                        height: 24px !important;
+                        font-size: 14px !important;
+                        @extend .reaction-counts-icons;
+                    }
                 }
             }
         }

@@ -22,10 +22,26 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="hasTally && totalReactions" class="reaction-counts d-flex flex-nowrap justify-content-center align-items-center hide-empty" [class.cursor-pointer]="hasReactionUsersList" (click)="hasReactionUsersList ? onReactionUsersClick() : ''">
+            <div *ngIf="hasTally && totalReactions" class="reaction-counts d-flex flex-nowrap justify-content-center align-items-center hide-empty" [class.cursor-pointer]="hasReactionUsersList" (click)="hasReactionUsersList ? onReactionUsersClick() : ''" (mouseenter)="openPopover(true)" (mouseleave)="openPopover(false)">
                 <div class="reaction-counts-value cursor-default" style="margin-right: 5px;">{{ totalReactions }}</div>
-                <div class="reaction-counts-icons d-flex flex-nowrap justify-content-center align-items-center cluster" *ngFor="let type of activeReactionTypes" [ngClass]="[getReactionColorClass(type)]">
-                    <span [class]="getReactionIcon(type)"></span>
+                <div class="d-flex flex-nowrap justify-content-center align-items-center position-relative">
+                    <div class="reaction-counts-icons d-flex flex-nowrap justify-content-center align-items-center cluster" *ngFor="let type of activeReactionTypes" [ngClass]="[getReactionColorClass(type)]">
+                        <span [class]="getReactionIcon(type)"></span>
+                    </div>
+                    <div *ngIf="hasReactionCountsList" #popover class="reaction-counts-value-popover d-none" (mouseenter)="openPopover(true)" (mouseleave)="openPopover(false)">
+                        <div class="d-flex flex-nowrap justify-content-center align-items-center gap-15">
+                            <ng-container *ngFor="let type of ReactionTypes">
+                                <div *ngIf="getReactionCount(type) > 0" class="d-flex flex-nowrap justify-content-center align-items-center gap-2">
+                                    <div class="reaction-counts-value-popover-icon d-flex flex-nowrap justify-content-center align-items-center cursor-pointer">
+                                        <span class="d-flex flex-nowrap justify-content-center align-items-center" [ngClass]="[getReactionColorClass(type)]" [class]="getReactionIcon(type)"></span>
+                                    </div>
+                                    <div class="reaction-counts-value-popover-count d-flex flex-nowrap justify-content-center align-items-center cursor-pointer">
+                                        {{ getReactionCount(type) }}
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
                 </div>
             </div>
         </ng-container>
@@ -51,11 +67,25 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="hasTally" class="reaction-counts d-flex flex-nowrap justify-content-center align-items-center hide-empty" [class.cursor-pointer]="hasReactionUsersList" (click)="hasReactionUsersList ? onReactionUsersClick() : ''">
+            <div *ngIf="hasTally" class="reaction-counts d-flex flex-nowrap justify-content-center align-items-center hide-empty" [class.cursor-pointer]="hasReactionUsersList" (click)="hasReactionUsersList ? onReactionUsersClick() : ''" (mouseenter)="openPopover(true)" (mouseleave)="openPopover(false)">
                 <div *ngFor="let type of activeReactionTypes" class="reaction-counts-item d-flex flex-nowrap justify-content-center align-items-center gap-5">
                     <div class="reaction-counts-value cursor-default">{{ getReactionCount(type) }}</div>
                     <div class="reaction-counts-icons d-flex flex-nowrap justify-content-center align-items-center" [ngClass]="[getReactionColorClass(type)]">
                         <span [class]="getReactionIcon(type)"></span>
+                    </div>
+                </div>
+                <div *ngIf="hasReactionCountsList" #popover class="reaction-counts-value-popover d-none">
+                    <div class="d-flex flex-nowrap justify-content-center align-items-center gap-15">
+                        <ng-container *ngFor="let type of ReactionTypes">
+                            <div *ngIf="getReactionCount(type) > 0" class="d-flex flex-nowrap justify-content-center align-items-center gap-2">
+                                <div class="reaction-counts-value-popover-icon d-flex flex-nowrap justify-content-center align-items-center cursor-pointer">
+                                    <span class="d-flex flex-nowrap justify-content-center align-items-center" [ngClass]="[getReactionColorClass(type)]" [class]="getReactionIcon(type)"></span>
+                                </div>
+                                <div class="reaction-counts-value-popover-count d-flex flex-nowrap justify-content-center align-items-center cursor-pointer">
+                                    {{ getReactionCount(type) }}
+                                </div>
+                            </div>
+                        </ng-container>
                     </div>
                 </div>
             </div>
