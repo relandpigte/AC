@@ -37,6 +37,7 @@ import { PubSubService } from './services/pub-sub.service';
 export abstract class AppComponentBase implements OnDestroy {
   public isTutor: boolean;
   public isStudent: boolean;
+  public isCurrentUserAdmin: boolean;
 
   localizationSourceName = AppConsts.localization.defaultLocalizationSourceName;
 
@@ -80,6 +81,7 @@ export abstract class AppComponentBase implements OnDestroy {
     if (this.appSession.user) {
       this.isTutor = this.checkUserRole('tutor');
       this.isStudent = this.checkUserRole('student');
+      this.isCurrentUserAdmin = this.checkUserRole('admin');
     }
   }
 
