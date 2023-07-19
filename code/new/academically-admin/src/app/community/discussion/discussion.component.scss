@@ -72,11 +72,30 @@
         }
 
         .card-body {
-            padding: 32px 24px 20px;
+            padding: 24px 24px 15px;
         }
 
         .card-footer {
-            padding: 13px 24px 17px;
+            padding: 0 24px 24px;
+            border-top: 0 none;
+
+            button {
+                height: 34px;
+                padding: 7.5px 21.5px;
+                line-height: 1rem;
+
+                &.discussion-info-unsubscribe {
+                    background: rgba(44, 123, 229, 0.1);
+                    color: #2C7BE5;
+                    border: 0;
+                }
+                &.discussion-info-share {
+                    span {
+                        width: 16px;
+                        height: 13px;
+                    }
+                }
+            }
         }
 
         &-options {
@@ -93,7 +112,7 @@
             align-items: center;
             letter-spacing: -0.01em;
             color: #95AAC9;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
 
         &-header {
@@ -127,29 +146,6 @@
             font-size: 16px;
             line-height: 20px;
             color: #95AAC9;
-        }
-
-        &-invite {
-            padding: 7.5px 21.5px;
-        }
-
-        &-share {
-            @extend .discussion-info-invite;
-            span {
-                width: 16px;
-                height: 13px;
-            }
-        }
-
-        &-subscribe {
-            padding: 7.5px 21.5px;
-        }
-
-        &-unsubscribe {
-            padding: 7.5px 21.5px;
-            background: rgba(44, 123, 229, 0.1);
-            color: #2C7BE5;
-            border: 0;
         }
     }
 
