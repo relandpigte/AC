@@ -14,6 +14,9 @@ import { FileUtils } from '@shared/helpers/file-utils';
 export class AttachmentPreviewComponent extends AppComponentBase implements OnChanges {
     @Input() file: File;
     @Input() canRemove: boolean = true;
+    @Input() width: string;
+    @Input() height: string;
+    @Input() hasVideoControls = true;
 
     @Output() onRemove = new EventEmitter<any>();
 

@@ -1,4 +1,8 @@
-<div class="attachment position-relative custom-card-border custom-card-shadow">
+<div class="attachment position-relative custom-card-border custom-card-shadow d-flex justify-content-center align-items-center"
+    [style.height]="height ? height : 'auto'"
+    [style.width]="width ? width : 'auto'"
+    [class.bg-black]="isVideoAttachment"
+>
 
     <!-- OVERLAY ELEMENTS [START] -->
     <div
@@ -31,7 +35,7 @@
         class="attachment-video d-flex flex-wrap justify-content-center align-content-center align-items-center cursor-pointer"
         (click)="togglePlayVideo($event)"
     >
-        <video #videoAttachment [src]="sanitizedAttachmentUrl" class="bg-light" [controls]="isVideoPlaying" loop playsinline></video>
+        <video #videoAttachment [src]="sanitizedAttachmentUrl" class="bg-light" [controls]="hasVideoControls && isVideoPlaying" loop playsinline></video>
     </div>
 
     <div

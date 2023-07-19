@@ -13,6 +13,9 @@ import { AvailableServiceDto, CommentDto, PostType, PostsServiceProxy, UserDto, 
 import { CommentsStateService, MAX_COMMENT_LEVELS, MAX_REPLIES_TO_LOAD } from '@shared/services/comments-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
+import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
+import { FileUtils } from '@shared/helpers/file-utils';
+import { SafeUrl } from '@angular/platform-browser';
 
 
 @Component({
@@ -36,6 +39,8 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   @Output() onUpdateEmit = new EventEmitter<string>();
 
   @ViewChild('addCommentEl', { static: false }) addCommentEl: ElementRef;
+  @ViewChild('fileInput') fileInput: ElementRef;
+  @ViewChild('childFileInput') childFileInput: ElementRef;
   @ViewChildren(CommunityDiscussionsComponent) childDiscussions: QueryList<CommunityDiscussionsComponent>;
 
   commentsStateService: CommentsStateService;
@@ -54,6 +59,17 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   selectedServiceForChild: AvailableServiceDto;
 
   taggedPerson: UserDto;
+
+  sanitizedAttachmentUrl: SafeUrl;
+  sanitizedChildAttachmentUrl: SafeUrl;
+  fileAttachment: File;
+  childFileAttachment: File;
+
+  allowedExtensions: string[] = [];
+  private maxFileSize = fileUploadConfiguration.maxFileSize;
+  private imageExtensions = fileUploadConfiguration.allowedImageExtensions;
+  private videoExtensions = fileUploadConfiguration.videoExtensions;
+  private fileExtensions = fileUploadConfiguration.allowedFileExtensions;
 
   constructor(
     injector: Injector,
@@ -166,16 +182,17 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
 
   protected onFormSubmit(message: any, parentId?: string): void {
     this.isPosting = true;
-    const model = new CommentDto();
-    model.referenceId = this.referenceId;
-    model.parentId = parentId;
-    model.body = message.value ?? message.innerHTML;
-    model.taggedId = this.taggedPerson?.id;
-    model.serviceId = parentId ? this.selectedServiceForChild?.id : this.selectedService?.id;
-    model.serviceType = parentId ? this.selectedServiceForChild?.serviceType : this.selectedService?.serviceType;
-
-    if (model.body && model.body.trim()) {
-      this._postsServiceProxy.createComment(model)
+    const body = message.value ?? message.innerHTML;
+    if (body?.trim()) {
+      this._postsServiceProxy.createComment(
+        this.referenceId,
+        parentId,
+        body,
+        this.taggedPerson?.id,
+        parentId ? this.selectedServiceForChild?.id : this.selectedService?.id,
+        parentId ? this.selectedServiceForChild?.serviceType : this.selectedService?.serviceType,
+        [parentId ? this.fileAttachment : this.childFileAttachment].filter(x => x).map(f => FileUtils.getFileParameter(f))
+      )
         .pipe(
           takeUntil(this.destroyed$),
           finalize(() => {
@@ -186,6 +203,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
           message.innerHTML = '';
           message.blur();
           this.taggedPerson = null;
+          this.handleRemoveAttachment(!!parentId);
           if (parentId) this.selectedServiceForChild = null;
           else this.selectedService = null;
           this.notify.success(this.l('SuccessfullyPosted'));
@@ -267,6 +285,47 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
 
   protected getAttachedService(comment: CommentDto): any {
     return comment?.article ?? comment?.coaching ?? comment?.course ?? comment?.event ?? comment?.video;
+  }
+
+  handleRemoveAttachment(isChild = false): void {
+    if (isChild) {
+      this.childFileAttachment = null;
+      this.childFileInput.nativeElement.value = '';
+    } else {
+      this.fileAttachment = null;
+      this.fileInput.nativeElement.value = '';
+    }
+  }
+
+  handleImageUploadBtnClick(isChild = false): void {
+    this.allowedExtensions = [...this.imageExtensions, ...this.videoExtensions];
+    setTimeout(() => {
+      if (isChild) this.childFileInput.nativeElement.click();
+      else this.fileInput.nativeElement.click();
+    });
+  }
+
+  handleFileUploadBtnClick(isChild = false): void {
+    this.allowedExtensions = this.fileExtensions;
+    setTimeout(() => {
+      if (isChild) this.childFileInput.nativeElement.click();
+      else this.fileInput.nativeElement.click();
+    });
+  }
+
+  onFileChange(e: any, isChild = false) {
+    const file = e.target.files[0] as File;
+    if (FileUtils.validateFile(this, [file], this.maxFileSize, 1, this.allowedExtensions)) {
+      if (isChild) {
+        this.childFileAttachment = file;
+        this.sanitizedChildAttachmentUrl = FileUtils.getSanitizedFileUrl(this, file);
+      } else {
+        this.fileAttachment = file;
+        this.sanitizedAttachmentUrl = FileUtils.getSanitizedFileUrl(this, file);
+      }
+    }
+    if (isChild) this.childFileInput.nativeElement.value = '';
+    else this.fileInput.nativeElement.value = '';
   }
 
   doAddComment(): void {

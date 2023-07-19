@@ -13419,21 +13419,54 @@ export class PostsServiceProxy {
     }
 
     /**
+     * @param referenceId (optional) 
+     * @param parentId (optional) 
      * @param body (optional) 
+     * @param taggedId (optional) 
+     * @param serviceId (optional) 
+     * @param serviceType (optional) 
+     * @param attachments (optional) 
      * @return Success
      */
-    createComment(body: CommentDto | undefined): Observable<CommentDto> {
+    createComment(referenceId: string | undefined, parentId: string | undefined, body: string | undefined, taggedId: number | undefined, serviceId: string | undefined, serviceType: ServicesType | undefined, attachments: FileParameter[] | undefined): Observable<CommentDto> {
         let url_ = this.baseUrl + "/api/services/app/Posts/CreateComment";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
+        const content_ = new FormData();
+        if (referenceId === null || referenceId === undefined) {
+            // do nothing
+        } else
+            content_.append("ReferenceId", referenceId.toString());
+        if (parentId === null || parentId === undefined) {
+            // do nothing
+        } else
+            content_.append("ParentId", parentId.toString());
+        if (body === null || body === undefined) {
+            // do nothing
+        } else
+            content_.append("Body", body.toString());
+        if (taggedId === null || taggedId === undefined) {
+            // do nothing
+        } else
+            content_.append("TaggedId", taggedId.toString());
+        if (serviceId === null || serviceId === undefined) {
+            // do nothing
+        } else
+            content_.append("ServiceId", serviceId.toString());
+        if (serviceType === null || serviceType === undefined) {
+            // do nothing
+        } else
+            content_.append("ServiceType", serviceType.toString());
+        if (attachments === null || attachments === undefined) {
+            // do nothing
+        } else
+            attachments.forEach(item_ => content_.append("Attachments", item_.data, item_.fileName ? item_.fileName : "Attachments") );
 
         let options_ : any = {
             body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Content-Type": "application/json-patch+json",
                 "Accept": "text/plain"
             })
         };

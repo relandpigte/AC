@@ -8,6 +8,7 @@ using Academically.Services.Courses.Dto;
 using Academically.Services.Events.Dto;
 using Academically.Services.Videos.Dto;
 using Academically.Users.Dto;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;

@@ -510,10 +510,10 @@ namespace Academically.Services.Posts
             }; 
         }
 
-        public async Task<CommentDto> CreateCommentAsync(CommentDto input)
+        public async Task<CommentDto> CreateCommentAsync([FromForm] CreateCommentDto input)
         {
             var comment = ObjectMapper.Map<Comment>(input);
-            input.CreationTime = Clock.Now;
+            comment.CreationTime = Clock.Now;
             var createdId = await _commentsRepository.InsertAndGetIdAsync(comment);
             await this.CurrentUnitOfWork.SaveChangesAsync();
             var created = await _commentsRepository.GetAll()
@@ -525,6 +525,27 @@ namespace Academically.Services.Posts
                 .OrderByDescending(e => e.CreationTime)
                 .Where(e => e.Id == createdId)
                 .SingleOrDefaultAsync();
+
+            if (input.Attachments != null && input.Attachments.Any())
+            {
+                var fileExtensionList = input.Attachments.Select(a => Path.GetExtension(a.FileName).Substring((1))).ToList();
+                foreach (var f in fileExtensionList)
+                {
+                    var isValidExtension = Enum.IsDefined(typeof(AttachmentType), f.ToLower());
+                    if (!isValidExtension)
+                    {
+                        throw new InvalidOperationException("Invalid File Extension!");
+                    }
+                }
+
+                var userId = AbpSession.UserId.Value;
+                foreach (var attachment in input.Attachments)
+                {
+                    var document = await _documentsDomainService.CreateAsync(userId, attachment, DocumentType.PostAttachment);
+                    // Add created document to commentAttachments [new table] here
+                }
+            }
+
             return ObjectMapper.Map<CommentDto>(created);
         }
 
