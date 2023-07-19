@@ -1,7 +1,6 @@
 <ng-container *ngIf="show && (showAddComment || totalCommentsCount)">
   <div *ngIf="!isChild" class="discussions-separator" [ngClass]="{'expanded': totalCommentsCount || hasChildren}"></div>
   <div class="discussions-container" [class.p-0]="isChild">
-
     <div *ngIf="!isChild" class="discussions-top">
       <div class="discussion">
         <div *ngIf="showAddComment" class="row gap-15 m-0">
@@ -115,14 +114,14 @@
                   <div class="col p-0 d-flex align-items-center">
                     <time class="comment-time" [title]="comment.creationTime | date:'short'">{{ convertMomentToDateAgo(comment.creationTime) }}</time>
                   </div>
-                  <div *ngIf="currentUserLoggedIn === comment.creatorUser.id || isCurrentUserAdmin" class="comment-options d-flex justify-content-start align-items-center">
+                  <div *ngIf="isCurrentUserCan(comment.creatorUser.id)" class="comment-options d-flex justify-content-start align-items-center">
                     <div class="dropdown">
                       <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="fe fe-more-horizontal"></span>
                       </a>
                       <div class="dropdown-menu dropdown-menu-right">
-                        <div class="dropdown-item cursor-pointer">Edit comment</div>
-                        <div class="dropdown-item cursor-pointer" (click)="handleDeleteComment(comment.id)">Delete comment</div>
+                        <div *ngIf="isUserCanEditComment(comment.creatorUser.id)" class="dropdown-item cursor-pointer">Edit comment</div>
+                        <div *ngIf="isUserCanDeleteComment(comment.creatorUser.id)" class="dropdown-item cursor-pointer" (click)="handleDeleteComment(comment.id)">Delete comment</div>
                       </div>
                     </div>
                   </div>
@@ -154,6 +153,7 @@
                 [postType]="postType"
                 [isChild]="true"
                 [level]="level + 1"
+                [postCreatorId]="postCreatorId"
                 [reactionGroup]="reactionGroup"
                 [foldSubject$]="foldSubject$"
                 (onReplyEmit)="initiateReply($event)"

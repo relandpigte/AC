@@ -29,6 +29,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   @Input() parentId: string;
   @Input() postType: PostType;
   @Input() ctrlEnterToSubmit = false;
+  @Input() postCreatorId: number;
 
   @Input() foldSubject$ = new Subject();
 
@@ -82,8 +83,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   get isPartiallyExpanded(): boolean { return this.comments.length > 0 && this.totalCommentsCount >= this.comments.length; }
   get hasChildren(): boolean { return this.comments?.some(c => c.children?.length); }
   get isShowAddService(): boolean { return this.isTutor; }
-  get reactionGroup() { return PostTypeReactionGroup[this.postType]; }
-  get currentUserLoggedIn(): number { return this.appSession.userId; }
+  get isPostOwner(): boolean { return this.appSession.userId === this.postCreatorId; }
 
   ngOnInit(): void {
     this.initCommentsAppStates();
@@ -97,6 +97,18 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
         else this.foldSubject$.next();
       }
     }
+  }
+
+  isUserCanDeleteComment(userId: number): boolean {
+    return this.appSession.userId === userId || this.isCurrentUserAdmin || this.isPostOwner;
+  }
+
+  isUserCanEditComment(userId: number): boolean {
+    return this.appSession.userId === userId;
+  }
+
+  isCurrentUserCan(userId: number): boolean {
+    return this.isUserCanEditComment(userId) || this.isUserCanDeleteComment(userId);
   }
 
   handleDeleteComment(id: string): void {
