@@ -118,7 +118,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
     get hiddenChildrenCount(): number { return this.totalChildrenCount - this.children.length; }
     get shimmerType() { return ShimmerType; }
     get postDate(): string {
-        const time = moment(this.discussion.creationTime);
+        const time = moment(this.discussion?.creationTime);
         return this.convertMomentToPostDateAgo(time);
     }
 

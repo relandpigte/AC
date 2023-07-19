@@ -115,7 +115,7 @@
                   <div class="col p-0 d-flex align-items-center">
                     <time class="comment-time" [title]="comment.creationTime | date:'short'">{{ convertMomentToDateAgo(comment.creationTime) }}</time>
                   </div>
-                  <div *ngIf="currentUserLoggedIn === comment.creatorUser.id" class="comment-options d-flex justify-content-start align-items-center">
+                  <div *ngIf="currentUserLoggedIn === comment.creatorUser.id || isCurrentUserAdmin" class="comment-options d-flex justify-content-start align-items-center">
                     <div class="dropdown">
                       <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="fe fe-more-horizontal"></span>
