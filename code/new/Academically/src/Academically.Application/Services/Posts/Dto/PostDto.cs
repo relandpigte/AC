@@ -31,6 +31,9 @@ namespace Academically.Services.Posts.Dto
         [NotMapped]
         public int CommentsCount { get; set; }
 
+        [NotMapped]
+        public int SharesCount { get; set; }
+
         public IEnumerable<PostTopicDto> PostTopics { get; set; }
         public IEnumerable<PostAttachmentDto> PostAttachments { get; set; }
         public IEnumerable<PostDto> Children { get; set; }

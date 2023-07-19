@@ -138,6 +138,7 @@ namespace Academically.Services.Posts
                     attachment.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(attachment.DocumentId);
                 
                 item.CommentsCount = await this.GetCommentsCountAsync(item.Id.ToString());
+                item.SharesCount = await this.GetSharesCountAsync(item.Id.ToString());
             }
 
             return result;
@@ -180,6 +181,7 @@ namespace Academically.Services.Posts
                     attachment.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(attachment.DocumentId);
 
                 item.CommentsCount = await this.GetCommentsCountAsync(item.Id.ToString());
+                item.SharesCount = await this.GetSharesCountAsync(item.Id.ToString());
 
                 var participants = new List<UserDto>();
                 if (item.Children.Any())
@@ -619,6 +621,11 @@ namespace Academically.Services.Posts
             return await _commentsRepository.GetAll().Where(e => e.ReferenceId == referenceId).CountAsync();
         }
 
+        public async Task<int> GetSharesCountAsync(string referenceId)
+        {
+            return await _postRepository.GetAll().Where(e => e.SharedType == SharedType.Post && e.SharedId.HasValue && e.SharedId.ToString() == referenceId).CountAsync();
+        }
+
         private IQueryable<AvailableServiceDto> Sort(IQueryable<AvailableServiceDto> query, string sorting)
         {
             if (sorting.Contains("recent"))
@@ -699,6 +706,7 @@ namespace Academically.Services.Posts
                     attachment.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(attachment.DocumentId);
 
                 item.CommentsCount = await this.GetCommentsCountAsync(item.Id.ToString());
+                item.SharesCount = await this.GetSharesCountAsync(item.Id.ToString());
 
                 var participants = new List<UserDto>();
                 if (item.Children.Any())

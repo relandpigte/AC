@@ -13736,6 +13736,62 @@ export class PostsServiceProxy {
     }
 
     /**
+     * @param referenceId (optional) 
+     * @return Success
+     */
+    getSharesCount(referenceId: string | undefined): Observable<number> {
+        let url_ = this.baseUrl + "/api/services/app/Posts/GetSharesCount?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetSharesCount(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetSharesCount(<any>response_);
+                } catch (e) {
+                    return <Observable<number>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetSharesCount(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number>(<any>null);
+    }
+
+    /**
      * @param postId (optional) 
      * @param isHidden (optional) 
      * @param creationTime (optional) 
@@ -39132,6 +39188,7 @@ export class PostDto implements IPostDto {
     sharedType: SharedType;
     sharedServiceType: ServicesType;
     commentsCount: number;
+    sharesCount: number;
     postTopics: PostTopicDto[] | undefined;
     postAttachments: PostAttachmentDto[] | undefined;
     children: PostDto[] | undefined;
@@ -39176,6 +39233,7 @@ export class PostDto implements IPostDto {
             this.sharedType = _data["sharedType"];
             this.sharedServiceType = _data["sharedServiceType"];
             this.commentsCount = _data["commentsCount"];
+            this.sharesCount = _data["sharesCount"];
             if (Array.isArray(_data["postTopics"])) {
                 this.postTopics = [] as any;
                 for (let item of _data["postTopics"])
@@ -39248,6 +39306,7 @@ export class PostDto implements IPostDto {
         data["sharedType"] = this.sharedType;
         data["sharedServiceType"] = this.sharedServiceType;
         data["commentsCount"] = this.commentsCount;
+        data["sharesCount"] = this.sharesCount;
         if (Array.isArray(this.postTopics)) {
             data["postTopics"] = [];
             for (let item of this.postTopics)
@@ -39320,6 +39379,7 @@ export interface IPostDto {
     sharedType: SharedType;
     sharedServiceType: ServicesType;
     commentsCount: number;
+    sharesCount: number;
     postTopics: PostTopicDto[] | undefined;
     postAttachments: PostAttachmentDto[] | undefined;
     children: PostDto[] | undefined;
