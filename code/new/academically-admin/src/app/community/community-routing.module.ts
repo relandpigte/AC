@@ -44,7 +44,14 @@ import { AppRouteGuard } from '@shared/auth/auth-route-guard';
                     import('@app/community/edit-history/edit-history.module').then(
                       (m) => m.EditHistoryModule
                     ),
-                }
+                },
+              {
+                path: 'post/:id',
+                loadChildren: () =>
+                  import('@app/community/post/post.module').then(
+                    (m) => m.PostModule
+                  ),
+              }
             ]
           },
         ],

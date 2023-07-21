@@ -1,0 +1,11 @@
+<div class="post container-fluid">
+    <div class="row">
+        <div *ngFor="let p of posts"  class="post-content col">
+            <app-community-post-card
+                [isLoading]="isLoading"
+                [data]="p"
+                (onSharePost)="handleSharePost($event)"
+            ></app-community-post-card>
+        </div>
+    </div>
+</div>

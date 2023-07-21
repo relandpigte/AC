@@ -370,6 +370,8 @@ namespace Academically.Services.Posts
             foreach (var p in result.Participants) if (p.ProfilePictureDocumentId.HasValue) p.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(p.ProfilePictureDocumentId.Value);
 
             await FillInShared(result);
+            result.CommentsCount = await this.GetCommentsCountAsync(result.Id.ToString());
+            result.SharesCount = await this.GetSharesCountAsync(result.Id.ToString());
 
             return result;
         }
