@@ -118,14 +118,14 @@
                 </div>
             </div>
             <div class="post-actions-right flex-grow-1 d-flex justify-content-end align-items-center">
-                <div *ngIf="data.sharesCount" class="post-actions-right-shares cursor-pointer d-flex justify-content-center align-items-center">
-                    {{ data.sharesCount | shortNum: 1  }} shares
+                <div *ngIf="data?.sharesCount" class="post-actions-right-shares cursor-pointer d-flex justify-content-center align-items-center">
+                    {{ data?.sharesCount | shortNum: 1  }} shares
                 </div>
                 <div *ngIf="isQuickPost" class="post-actions-right-comments cursor-pointer d-flex justify-content-center align-items-center" [class.has-separator]="data.sharesCount" (click)="doToggleComments()">
-                    {{ data.commentsCount | shortNum: 1  }} comments
+                    {{ data?.commentsCount | shortNum: 1  }} comments
                 </div>
                 <div *ngIf="isQuestion" class="post-actions-right-comments cursor-pointer d-flex justify-content-center align-items-center" [class.has-separator]="data.sharesCount" (click)="doToggleComments()">
-                    {{ data.commentsCount | shortNum: 1 }} answers
+                    {{ data?.commentsCount | shortNum: 1 }} answers
                 </div>
                 <div *ngIf="isDiscussion" class="post-actions-right-comments cursor-pointer d-flex justify-content-center align-items-center" [class.has-separator]="data.sharesCount">
                     {{ data.children.length | shortNum: 1  }} posts

@@ -121,6 +121,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
 
   get isDiscussion(): boolean { return this._router.url.includes(['community', 'discussion'].join('/')); }
   get isEditHistory(): boolean { return this._router.url.includes(['community', 'edit-history'].join('/')); }
+  get isSinglePost(): boolean { return this._router.url.includes(['community', 'post'].join('/')); }
   get shimmerType() { return ShimmerType; }
 
   get isLoading$() {

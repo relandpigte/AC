@@ -66,7 +66,7 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
     }
 
     ngOnInit() {
-        this.reactionsCount = this.ReactionTypes.reduce((counts, curr) => Object.assign(counts, { [curr]: 0 }), {});
+        this.reactionsCount = this.ReactionTypes?.reduce((counts, curr) => Object.assign(counts, { [curr]: 0 }), {});
         this.getAllReactionCounts();
         this.subscribeToReactions();
     }
@@ -169,7 +169,7 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
     }
 
     private initActiveReactionTypes(): void {
-        this.activeReactionTypes = this.ReactionTypes.filter(r => this.reactionsCount[r] > 0);
+        this.activeReactionTypes = this.ReactionTypes?.filter(r => this.reactionsCount[r] > 0);
     }
 
     private initTotalReactions(): void {

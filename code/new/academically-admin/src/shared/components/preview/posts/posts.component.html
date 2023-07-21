@@ -1,4 +1,4 @@
-<div *ngIf="data" class="post-preview post-discussion d-flex flex-column custom-card-border custom-card-shadow" [ngClass]="{'has-post-attachment': file}">
+<div *ngIf="data" class="post-preview post-discussion d-flex flex-column custom-card-border custom-card-shadow" [ngClass]="{'has-post-attachment': file}" role="button" (click)="handlePostRedirection($event)">
     <div *ngIf="canRemove" class="post-preview-remove d-flex justify-content-center align-items-center cursor-pointer" (click)="removePost()">
         <span class="fe fe-x"></span>
     </div>
