@@ -4,11 +4,13 @@ using Academically.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Abp.Auditing;
 
 namespace Academically.Domain.Entities
 {
     [Table("Comments")]
-    public class Comment : CreationAuditedEntity<Guid>
+    [Audited]
+    public class Comment : FullAuditedEntity<Guid>
     {
         public string Body { get; set; }
         public Guid? ParentId { get; set; }

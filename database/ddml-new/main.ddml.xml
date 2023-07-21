@@ -166,4 +166,5 @@
 	<include file="ddml-new/ddml.2023-03-25-01-alter-post-add-shared-fields.xml" />
 	<include file="ddml-new/ddml.2023-04-25-01-alter-post-add-disciplinetaxonomyids.xml" />
 	<include file="ddml-new/ddml.2023-07-14-01-net6-missing-fields.xml" />
+	<include file="ddml-new/ddml.2023-07-21-01-alter-comment-table.xml" />
 </databaseChangeLog>

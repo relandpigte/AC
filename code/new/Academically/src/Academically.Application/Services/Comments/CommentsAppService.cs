@@ -15,9 +15,13 @@ using Academically.Users.Dto;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Academically.Domain.Enums;
+using AutoMapper;
 using Castle.Core.Internal;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Academically.Services.Comments
 {
@@ -143,6 +147,17 @@ namespace Academically.Services.Comments
                     await DeleteCommentAsync(sc.Id);
                 }
             }
+        }
+        
+        public async Task<CommentDto> UpdateAsync([FromForm] UpdateCommentDto input)
+        {
+            var comment = await _commentsRepository.GetAsync(input.Id);
+            if (comment == null) return null;
+
+            ObjectMapper.Map(input, comment);
+            comment = await _commentsRepository.UpdateAsync(comment);
+
+            return ObjectMapper.Map<CommentDto>(comment);
         }
 
         private async Task FillInService(CommentDto comment)
