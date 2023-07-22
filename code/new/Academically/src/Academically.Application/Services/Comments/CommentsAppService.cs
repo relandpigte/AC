@@ -15,12 +15,11 @@ using Academically.Users.Dto;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Academically.Domain.Enums;
+using Abp.EntityHistory;
+using Abp.Events.Bus.Entities;
 using AutoMapper;
-using Castle.Core.Internal;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Academically.Services.Comments
@@ -36,6 +35,7 @@ namespace Academically.Services.Comments
         private readonly IRepository<Video, Guid> _videoRepository;
         private readonly IRepository<Event, Guid> _eventRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
+        private readonly IRepository<EntityChange, long> _entityChangeRepository;
 
         public CommentsAppService(
             IRepository<Comment, Guid> commentsRepository,
@@ -46,7 +46,8 @@ namespace Academically.Services.Comments
             IRepository<Coaching, Guid> coachingRepository,
             IRepository<Video, Guid> videoRepository,
             IRepository<Event, Guid> eventRepository,
-            IDocumentsDomainService documentsDomainService)
+            IDocumentsDomainService documentsDomainService,
+            IRepository<EntityChange, long> entityChangeRepository)
         {
             _commentsRepository = commentsRepository;
             _commentsReactionsRepository = commentsReactionsRepository;
@@ -57,6 +58,7 @@ namespace Academically.Services.Comments
             _videoRepository = videoRepository;
             _eventRepository = eventRepository;
             _documentsDomainService = documentsDomainService;
+            _entityChangeRepository = entityChangeRepository;
         }
 
         public async Task<IEnumerable<CommentDto>> GetAllAsync(string referenceId)
@@ -84,6 +86,8 @@ namespace Academically.Services.Comments
             }
             return list;
         }
+        
+        
 
         public async Task<PagedResultDto<CommentDto>> GetAllRepliesAsync(PagedCommentResultRequestDto input)
         {
@@ -160,6 +164,17 @@ namespace Academically.Services.Comments
             return ObjectMapper.Map<CommentDto>(comment);
         }
 
+        public async Task<CommentDto> GetAsync(Guid id, bool includeHistory = false)
+        {
+            var comment = await _commentsRepository.GetAsync(id);
+            if (comment == null) return null;
+            
+            var result = ObjectMapper.Map<CommentDto>(comment);
+            if (includeHistory) result.CommentEditHistories = await GetCommentEditHistory(comment);
+
+            return result;
+        }
+
         private async Task FillInService(CommentDto comment)
         {
             if (comment == null || !comment.ServiceId.HasValue)
@@ -201,6 +216,35 @@ namespace Academically.Services.Comments
                 default:
                     break;
             }
+        }
+
+        private async Task<List<CommentEditHistoryDto>> GetCommentEditHistory(Comment comment)
+        {
+            var entityChanges = await _entityChangeRepository.GetAll()
+                .Include(x => x.PropertyChanges)
+                .Where(x => x.EntityTypeFullName == typeof(Comment).FullName && x.EntityId == $"\"{comment.Id}\"" && x.ChangeType == EntityChangeType.Updated)
+                .OrderByDescending(x => x.ChangeTime)
+                .ToListAsync();
+            
+            var histories = new List<CommentEditHistoryDto>();
+            foreach (var entityChange in entityChanges)
+            {
+                var history = new CommentEditHistoryDto 
+                { 
+                    ChangeTime = entityChange.ChangeTime 
+                };
+
+                foreach (var propertyChange in entityChange.PropertyChanges)
+                {
+                    switch (propertyChange.PropertyName)
+                    {
+                        case nameof(history.Body):
+                            history.Body = propertyChange.OriginalValue.Trim('"'); break;
+                    }
+                }
+                histories.Add(history);
+            }
+            return histories;
         }
     }
 }
