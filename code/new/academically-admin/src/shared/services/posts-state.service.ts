@@ -4,6 +4,8 @@ import { HubEvent, PostDto, PostsServiceProxy, PostType, UserTopicDto } from '..
 import { StateServiceBase, StateUpdate } from './state-base.service';
 
 import { HubService } from '@app/_shared/services/hub.service';
+
+import * as moment from 'moment';
 import * as _ from 'lodash';
 
 export const MAX_POSTS_TO_LOAD = 15;
@@ -69,13 +71,21 @@ export class PostsStateService extends StateServiceBase {
   }
 
   protected async setupSubscriptions(component: any, userId: number) {
+    const canViewPost = (post: PostDto): boolean => {
+      if (!post) return false;
+      const [type, parentId, creationTime] = this.loadArgs;
+      return (post.type === type && post.parentId === parentId && post.creationTime.isBefore(creationTime));
+    };
+
     const handleUpsertPosts = async (post: PostDto) => {
+      if (!canViewPost(post)) return;
       this.loading$.next(true);
       this.updateFromMap(this.posts, Utils.toObjectMap([post], (p) => p.id, (p) => p), this.posts$)
       this.loading$.next(false);
     };
 
     const handleDeletePosts = async (id: string) => {
+      if (!canViewPost(this.posts[id])) return;
       this.loading$.next(true);
       this.updateFromMap(this.posts, { [id]: null }, this.posts$);
       this.loading$.next(false);
@@ -90,6 +100,20 @@ export class PostsStateService extends StateServiceBase {
       console.error(err);
     }
     return null;
+  }
+
+  async updateServiceParams(params: { type: PostType | undefined, parentId: string | undefined, creationTime: moment.Moment | undefined }) {
+    this.loading$.next(true);
+    const existingArgs = this.actionArgs['load'];
+    this.actionArgs['load'] = [params.type, params.parentId, params.creationTime, existingArgs[3], existingArgs[4]];
+    try {
+      const posts = await this._postsService[this.fns[this.type ?? pageType.all]](...this.loadArgs).toPromise();
+      this.posts = Utils.toMap(posts.items);
+      this.totalPostsCount = posts.totalCount;
+    } catch (err) {
+      console.error(err);
+    }
+    this.loading$.next(false);
   }
 
   updateChildrenCount(post: PostDto) {
