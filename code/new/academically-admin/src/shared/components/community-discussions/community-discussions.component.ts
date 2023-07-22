@@ -42,17 +42,20 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   @ViewChild('addCommentEl', { static: false }) addCommentEl: ElementRef;
   @ViewChild('fileInput') fileInput: ElementRef;
   @ViewChild('childFileInput') childFileInput: ElementRef;
+  @ViewChild('editCommentReply') editCommentReply: ElementRef;
   @ViewChildren(CommunityDiscussionsComponent) childDiscussions: QueryList<CommunityDiscussionsComponent>;
 
   commentsStateService: CommentsStateService;
 
   isPosting = false;
   isLoadingComments: boolean = true;
+  isUpdatingComment: boolean;
 
   comments: CommentDto[] = [];
   totalCommentsCount: number;
 
   commentReplyId: string;
+  commentEditId: string;
   inputLength = 0;
 
   isShowServicePicker = false;
@@ -95,14 +98,17 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     }
   }
   get hiddenCommentsCount(): number { return this.totalCommentsCount - this.comments.length; }
-  get isExpanded(): boolean { return (this.totalCommentsCount > 1 && this.comments?.length === this.totalCommentsCount) || (this.totalCommentsCount === 1 && this.childDiscussions.toArray().some(c => c.isPartiallyExpanded)); }
+  get isExpanded(): boolean {
+    return (this.totalCommentsCount > 1 && this.comments?.length === this.totalCommentsCount) ||
+      (this.totalCommentsCount === 1 && this.childDiscussions.toArray().some(c => c.isPartiallyExpanded));
+  }
   get isPartiallyExpanded(): boolean { return this.comments.length > 0 && this.totalCommentsCount >= this.comments.length; }
   get hasChildren(): boolean { return this.comments?.some(c => c.children?.length); }
   get isShowAddService(): boolean { return this.isTutor; }
   get isPostOwner(): boolean { return this.appSession.userId === this.postCreatorId; }
 
-  ngOnInit(): void {
-    this.initCommentsAppStates();
+  async ngOnInit(): Promise<void> {
+    await this.initCommentsAppStates();
     this.initSubscriptions();
   }
 
@@ -140,6 +146,53 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       }
     };
     this._modalDialogService.showConfirmDialog(options);
+  }
+
+  isCommentEdited(comment: CommentDto): boolean {
+    return comment?.lastModificationTime != null;
+  }
+
+  handleEditComment(commentId: string): void {
+    this.commentEditId = commentId;
+    this.taggedPerson = this.comments.find(c => c.id === commentId)?.taggedUser;
+    setTimeout(() => this.placeCaretAtEnd(this.editCommentReply.nativeElement));
+    this._cdr.detectChanges();
+  }
+
+  protected onEditCommentSubmit(message: HTMLDivElement, comment: CommentDto): void {
+    const updated = new CommentDto(comment);
+    const body = message.innerHTML?.trim();
+    this.isUpdatingComment = true;
+
+    if (body && body !== updated.body) {
+      this._commentServiceProxy.update(
+        updated.referenceId,
+        updated.parentId,
+        body,
+        this.taggedPerson?.id,
+        updated.parentId ? this.selectedServiceForChild?.id : this.selectedService?.id,
+        updated.parentId ? this.selectedServiceForChild?.serviceType : this.selectedService?.serviceType,
+        [updated.parentId ? this.fileAttachment : this.childFileAttachment].filter(x => x).map(f => FileUtils.getFileParameter(f)),
+        updated.id
+      ).pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isUpdatingComment = false;
+        })
+      ).subscribe((c: CommentDto) => {
+        this.commentEditId = null;
+        this.taggedPerson = null;
+        this.handleRemoveAttachment(!!c.parentId);
+        if (c.parentId) {
+          this.selectedServiceForChild = null;
+        } else {
+          this.selectedService = null;
+        }
+        this.notify.success(this.l('CommentSuccessfullyUpdated'));
+      });
+
+      this._cdr.detectChanges();
+    }
   }
 
   private async initCommentsAppStates() {
@@ -192,6 +245,16 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       });
   }
 
+  private placeCaretAtEnd(div: HTMLDivElement): void {
+    const selection = window.getSelection();
+    const range = document.createRange();
+    selection.removeAllRanges();
+    range.selectNodeContents(div);
+    range.collapse(false);
+    selection.addRange(range);
+    div.focus();
+  }
+
   protected onFormSubmit(message: any, parentId?: string): void {
     this.isPosting = true;
     const body = message.value ?? message.innerHTML;
@@ -241,6 +304,9 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       if (!event.target?.innerHTML || isCursorAtTheStart(event.target)) this.taggedPerson = null;
     }
     if (post) setTimeout(() => this.inputLength = post.value.length);
+
+    // Escape [exit when editing comment]
+    if (event.keyCode === 27 && this.commentEditId) this.commentEditId = null;
   }
 
   protected onFoldClick(): void {

@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Domain.Uow;
 using Abp.EntityHistory;
 using Abp.Events.Bus.Entities;
 using AutoMapper;
@@ -155,7 +156,15 @@ namespace Academically.Services.Comments
         
         public async Task<CommentDto> UpdateAsync([FromForm] UpdateCommentDto input)
         {
-            var comment = await _commentsRepository.GetAsync(input.Id);
+            var comment = await _commentsRepository.GetAll()
+                .Include(e => e.CreatorUser)
+                .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.TaggedUser)
+                .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.CommentReactions)
+                .OrderByDescending(e => e.CreationTime)
+                .Where(e => e.Id == input.Id)
+                .SingleOrDefaultAsync();
             if (comment == null) return null;
 
             ObjectMapper.Map(input, comment);
@@ -163,10 +172,19 @@ namespace Academically.Services.Comments
 
             return ObjectMapper.Map<CommentDto>(comment);
         }
-
+        
         public async Task<CommentDto> GetAsync(Guid id, bool includeHistory = false)
         {
-            var comment = await _commentsRepository.GetAsync(id);
+            var comment = await _commentsRepository.GetAll()
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.TaggedUser)
+                    .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.CommentReactions)
+                .OrderByDescending(e => e.CreationTime)
+                .Where(e => e.Id == id)
+                .SingleOrDefaultAsync();
+            
             if (comment == null) return null;
             
             var result = ObjectMapper.Map<CommentDto>(comment);
