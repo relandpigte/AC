@@ -118,7 +118,7 @@
                     </div>
                     <div class="col p-0 d-flex align-items-center">
                       <time class="comment-time" [title]="comment.creationTime | date:'short'">{{ convertMomentToDateAgo(comment.creationTime) }}</time>
-                      <span *ngIf="isCommentEdited(comment)" class="comment-edited ml-1" role="button">· Edited</span>
+                      <span *ngIf="isCommentEdited(comment)" class="comment-edited ml-1" role="button" (click)="handleCommentHistoryPopup(comment.id)">· Edited</span>
                     </div>
                     <div *ngIf="isCurrentUserCan(comment.creatorUser.id)" class="comment-options d-flex justify-content-start align-items-center">
                       <div class="dropdown">

@@ -1,13 +1,12 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { finalize, takeUntil, take } from 'rxjs/operators';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
-import { PostTypeReactionGroup } from '@shared/enums/post/reaction-group.enum';
 import { AddServiceComponent } from '@shared/modals/add-service/add-service.component';
 import { AvailableServiceDto, CommentDto, PostType, PostsServiceProxy, UserDto, CommentsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { CommentsStateService, MAX_COMMENT_LEVELS, MAX_REPLIES_TO_LOAD } from '@shared/services/comments-state.service';
@@ -16,6 +15,7 @@ import { StateUpdateType } from '@shared/services/state-base.service';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { FileUtils } from '@shared/helpers/file-utils';
 import { SafeUrl } from '@angular/platform-browser';
+import { CommentHistoryComponent } from '@shared/modals/comment-history/comment-history.component';
 
 
 @Component({
@@ -157,6 +157,19 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     this.taggedPerson = this.comments.find(c => c.id === commentId)?.taggedUser;
     setTimeout(() => this.placeCaretAtEnd(this.editCommentReply.nativeElement));
     this._cdr.detectChanges();
+  }
+
+  handleCommentHistoryPopup(commentId: string): void {
+    this._commentServiceProxy.get(commentId, true)
+      .pipe(takeUntil(this.destroyed$), take(1))
+      .subscribe((c: CommentDto) => {
+        const modalSettings = this.defaultModalSettings as ModalOptions<CommentHistoryComponent>;
+        modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-comment-history ';
+        modalSettings.initialState = {
+          data: c
+        };
+        const history = this._modalService.show(CommentHistoryComponent, modalSettings).content;
+    });
   }
 
   protected onEditCommentSubmit(message: HTMLDivElement, comment: CommentDto): void {
