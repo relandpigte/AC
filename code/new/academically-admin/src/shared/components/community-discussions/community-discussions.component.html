@@ -110,45 +110,109 @@
             </div>
             <div class="col p-0 ms-n2">
               <!-- Comment Body | START -->
-              <div class="comment-body w-100">
-                <div class="row gap-10 m-0">
-                  <div class="col-auto p-0">
-                    <h5 class="comment-title">{{ comment.creatorUser.fullName }}</h5>
-                  </div>
-                  <div class="col p-0 d-flex align-items-center">
-                    <time class="comment-time" [title]="comment.creationTime | date:'short'">{{ convertMomentToDateAgo(comment.creationTime) }}</time>
-                  </div>
-                  <div *ngIf="isCurrentUserCan(comment.creatorUser.id)" class="comment-options d-flex justify-content-start align-items-center">
-                    <div class="dropdown">
-                      <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="fe fe-more-horizontal"></span>
-                      </a>
-                      <div class="dropdown-menu dropdown-menu-right">
-                        <div *ngIf="isUserCanEditComment(comment.creatorUser.id)" class="dropdown-item cursor-pointer">Edit comment</div>
-                        <div *ngIf="isUserCanDeleteComment(comment.creatorUser.id)" class="dropdown-item cursor-pointer" (click)="handleDeleteComment(comment.id)">Delete comment</div>
+              <ng-container *ngIf="!commentEditId || commentEditId !== comment.id">
+                <div class="comment-body w-100">
+                  <div class="row gap-10 m-0">
+                    <div class="col-auto p-0">
+                      <h5 class="comment-title">{{ comment.creatorUser.fullName }}</h5>
+                    </div>
+                    <div class="col p-0 d-flex align-items-center">
+                      <time class="comment-time" [title]="comment.creationTime | date:'short'">{{ convertMomentToDateAgo(comment.creationTime) }}</time>
+                      <span *ngIf="isCommentEdited(comment)" class="comment-edited ml-1" role="button">· Edited</span>
+                    </div>
+                    <div *ngIf="isCurrentUserCan(comment.creatorUser.id)" class="comment-options d-flex justify-content-start align-items-center">
+                      <div class="dropdown">
+                        <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <span class="fe fe-more-horizontal"></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                          <div
+                              *ngIf="isUserCanEditComment(comment.creatorUser.id)" class="dropdown-item cursor-pointer" (click)="handleEditComment(comment.id)">Edit comment</div>
+                          <div *ngIf="isUserCanDeleteComment(comment.creatorUser.id)" class="dropdown-item cursor-pointer" (click)="handleDeleteComment(comment.id)">Delete comment</div>
+                        </div>
                       </div>
                     </div>
                   </div>
+                  <p class="comment-text m-0" >
+                    <span *ngIf="comment.taggedUser" class="comment-text-tagged no-wrap">{{ comment.taggedUser.fullName }}</span> {{ comment.body }}
+                  </p>
                 </div>
-                <p class="comment-text m-0" >
-                  <span *ngIf="comment.taggedUser" class="comment-text-tagged no-wrap">{{ comment.taggedUser.fullName }}</span> {{ comment.body }}
-                </p>
-              </div>
-              <div *ngIf="hasAttachedService(comment)" class="comment-attachment d-flex flex-wrap flex-row" [style.marginTop.px]="5">
-                <app-service-preview-lite [service]="getAttachedService(comment)" [canRemove]="false"></app-service-preview-lite>
-              </div>
-              <!-- Comment Body | END -->
+                <div *ngIf="hasAttachedService(comment)" class="comment-attachment d-flex flex-wrap flex-row" [style.marginTop.px]="5">
+                  <app-service-preview-lite [service]="getAttachedService(comment)" [canRemove]="false"></app-service-preview-lite>
+                </div>
+                <!-- Comment Body | END -->
 
-              <!-- Comment Actions | START -->
-              <div class="comment-actions justify-content-start align-items-center gap-10 p-10">
-                <app-reaction
-                  [referenceId]="comment.id"
-                  [reactionGroup]="reactionGroup"
-                  [hasReactionUsersList]="true"
-                  (onReply)="initiateReply(comment.id)"
-                ></app-reaction>
-              </div>
-              <!-- Comment Actions | END -->
+                <!-- Comment Actions | START -->
+                <div class="comment-actions justify-content-start align-items-center gap-10 p-10">
+                  <app-reaction
+                      [referenceId]="comment.id"
+                      [reactionGroup]="reactionGroup"
+                      [hasReactionUsersList]="true"
+                      (onReply)="initiateReply(comment.id)"
+                  ></app-reaction>
+                </div>
+                <!-- Comment Actions | END -->
+              </ng-container>
+
+              <ng-container *ngIf="commentEditId === comment.id">
+                <div class="d-flex text-area-container" [ngClass]="{'display-hint': editCommentReply.innerHTML.length || taggedPerson || (commentEditId && editCommentReply.innerHTML.length)}" [style.margin-bottom.px]="15">
+                  <div class="col d-flex align-items-center p-0 ms-n2 h-sroll h-sroll-hidden">
+                    <!-- Reply Textarea | START -->
+                    <form #replyForm="ngForm" class="comment-box flex-grow-1 d-flex flex-column" autocomplete="off" (ngSubmit)="onEditCommentSubmit(editCommentReply, comment)">
+                      <div class="comment-text-wrapper form-control form-control-flush d-flex">
+                        <div *ngIf="taggedPerson" class="comment-text-tagged editor no-wrap">{{ taggedPerson.fullName }}</div>
+                        <div
+                            #editCommentReply
+                            [innerHTML]="comment.body"
+                            [id]="'add-reply-' + comment.id"
+                            class="text-area-text flex-grow-1 d-flex flex-wrap no-wrap"
+                            contenteditable="true"
+                            data-placeholder="Leave a comment..."
+                            [class.with-placeholder]="!taggedPerson"
+                            (keydown)="onMessageKeydown($event, replyForm)"
+                        ></div>
+                      </div>
+                    </form>
+                    <!-- Reply Textarea | END -->
+                  </div>
+                  <div class="col-auto align-self-center p-0" [ngClass]="editCommentReply.innerHTML.length || taggedPerson ? 'd-flex mt-auto' : null">
+                    <!-- Icons | START -->
+                    <div class="col-auto pr-0 align-self-center">
+                      <div class="text-muted d-flex gap-10">
+                        <a class="cursor-pointer d-flex justify-content-center align-items-center" [style.width.px]="18" [style.height.px]="18" (click)="handleImageUploadBtnClick(true)"><i class="fe fe-camera"></i></a>
+                        <a class="cursor-pointer d-flex justify-content-center align-items-center" [style.width.px]="18" [style.height.px]="18" (click)="handleFileUploadBtnClick(true)"><i class="fe fe-paperclip"></i></a>
+                        <a class="text-reset d-flex justify-content-center align-items-center" href="#!" data-toggle="tooltip" title="" data-original-title="Add emoticon" [class.disabled]="true">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                               stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-smile">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                            <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                            <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                          </svg>
+                        </a>
+                        <a class="cursor-pointer d-flex justify-content-center align-items-center" data-toggle="tooltip" title="" data-original-title="Add service" [class.disabled]="!isShowAddService" (click)="toggleServicePicker(true)">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                               stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                          </svg>
+                        </a>
+                      </div>
+                    </div>
+                    <!-- Icons | END -->
+                  </div>
+                  <div *ngIf="editCommentReply.innerHTML.length || taggedPerson" class="text-area-container-instruction">Press enter to <span>post</span></div>
+                </div>
+                <app-attachment-preview
+                    *ngIf="childFileAttachment"
+                    [file]="childFileAttachment"
+                    [height]="'75px'"
+                    [width]="'104px'"
+                    [hasVideoControls]="false"
+                    (onRemove)="handleRemoveAttachment(true)"
+                ></app-attachment-preview>
+              </ng-container>
+
 
               <app-community-discussions
                 [show]="show"
