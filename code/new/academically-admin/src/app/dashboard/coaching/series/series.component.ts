@@ -9,6 +9,7 @@ import { CreateCoachingComponent } from '../_components/create-coaching/create-c
 import { CoachingService } from '../_services/coaching.service';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { finalize } from '@node_modules/rxjs/operators';
+import { CommunityPostService } from '@shared/services/community-post.service';
 
 @Component({
   selector: 'app-series',
@@ -29,6 +30,7 @@ export class SeriesComponent extends AppComponentBase implements OnInit {
     private _router: Router,
     private _coachingsService: CoachingsServiceProxy,
     private _coachingService: CoachingService,
+    private _communityPostService: CommunityPostService,
     private _modalDialogService: ModalDialogService
   ) {
     super(injector);
@@ -79,7 +81,8 @@ export class SeriesComponent extends AppComponentBase implements OnInit {
         await this._coachingsService.updateStatus(this.model.id, CoachingStatus.Published)
           .pipe(takeUntil(this.destroyed$), finalize(() => {
             this.model.status = CoachingStatus.Published;
-            this.l('SavedSuccessfully');
+            this.notify.success(this.l('SavedSuccessfully'));
+            this._communityPostService.hasNewItemToShare({ serviceId: this.model.id });
           }))
           .toPromise();
       }
@@ -96,7 +99,7 @@ export class SeriesComponent extends AppComponentBase implements OnInit {
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
             this.model.status = CoachingStatus.Draft;
-            this.l('SavedSuccessfully');
+            this.notify.success(this.l('SavedSuccessfully'));
           });
       }
     };

@@ -8,6 +8,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppConsts } from '@shared/AppConsts';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { finalize } from '@node_modules/rxjs/operators';
+import { CommunityPostService } from '@shared/services/community-post.service';
 
 @Component({
   selector: 'app-single-article',
@@ -26,6 +27,7 @@ export class SingleArticleComponent extends AppComponentBase implements OnInit {
     route: ActivatedRoute,
     private _articleService: ArticleService,
     private _articlesService: ArticlesServiceProxy,
+    private _communityPostService: CommunityPostService,
     private _modalDialogService: ModalDialogService
   ) {
     super(injector);
@@ -61,7 +63,8 @@ export class SingleArticleComponent extends AppComponentBase implements OnInit {
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
             this.model.status = ArticleStatus.Published;
-            this.l('SavedSuccessfully');
+            this.notify.success(this.l('SavedSuccessfully'));
+            this._communityPostService.hasNewItemToShare({ serviceId: this.model.id });
           });
       }
     };
@@ -77,7 +80,7 @@ export class SingleArticleComponent extends AppComponentBase implements OnInit {
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
             this.model.status = ArticleStatus.Draft;
-            this.l('SavedSuccessfully');
+            this.notify.success(this.l('SavedSuccessfully'));
           });
       }
     };

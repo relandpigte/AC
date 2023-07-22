@@ -241,6 +241,13 @@ namespace Academically.Services.Courses
             return ObjectMapper.Map<CourseDto>(course);
         }
 
+        public async Task UpdateStatusAsync(Guid id, CourseStatus status)
+        {
+            var @event = await Repository.GetAsync(id);
+            @event.Status = status;
+            await Repository.UpdateAsync(@event);
+        }
+
         public async Task<CourseDto> UpdateSettings(UpdateCourseSettingsDto input)
         {
             var course = await Repository.GetAsync(input.Id);

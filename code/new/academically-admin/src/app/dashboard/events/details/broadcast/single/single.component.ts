@@ -7,6 +7,7 @@ import { EventDto, EventsServiceProxy, EventStatus } from '@shared/service-proxi
 import { takeUntil } from 'rxjs/operators';
 import { EventService } from '../../../_services/event.service';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { CommunityPostService } from '@shared/services/community-post.service';
 
 @Component({
   selector: 'app-single',
@@ -25,6 +26,7 @@ export class SingleComponent extends AppComponentBase implements OnInit {
     route: ActivatedRoute,
     private _eventService: EventService,
     private _eventsService: EventsServiceProxy,
+    private _communityPostService: CommunityPostService,
     private _modalDialogService: ModalDialogService
   ) {
     super(injector);
@@ -60,7 +62,8 @@ export class SingleComponent extends AppComponentBase implements OnInit {
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
             this.model.status = EventStatus.Published;
-            this.l('SavedSuccessfully');
+            this.notify.success(this.l('SavedSuccessfully'));
+            this._communityPostService.hasNewItemToShare({ serviceId: this.model.id });
           });
       }
     };
@@ -76,7 +79,7 @@ export class SingleComponent extends AppComponentBase implements OnInit {
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
             this.model.status = EventStatus.Draft;
-            this.l('SavedSuccessfully');
+            this.notify.success(this.l('SavedSuccessfully'));
           });
       }
     };
