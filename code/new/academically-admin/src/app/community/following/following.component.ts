@@ -170,9 +170,11 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     return this.selectedSorting === sort;
   }
 
-  handleFilteringChange(filter: PostFiltering): void {
+  async handleFilteringChange(filter: PostFiltering) {
     this.selectedFiltering = filter;
-    this.posts = this.postsStateService.getPostsByType(this.postTypeFilter);
+    await this.postsStateService.updateServiceParams({ type: this.postTypeFilter, parentId: undefined, creationTime: undefined });
+    this.posts = this.postsStateService.getAllPosts();
+    this.totalPostsCount = this.postsStateService.totalPostsCount;
   }
 
   handleSortingChange(sort: PostSorting): void {
