@@ -1,21 +1,22 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { finalize, takeUntil, take } from 'rxjs/operators';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { Subject } from 'rxjs';
+import { finalize, take, takeUntil } from 'rxjs/operators';
 
+import { SafeUrl } from '@angular/platform-browser';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
+import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
+import { PostTypeReactionGroup } from '@shared/enums/post/reaction-group.enum';
+import { FileUtils } from '@shared/helpers/file-utils';
 import { AddServiceComponent } from '@shared/modals/add-service/add-service.component';
-import { AvailableServiceDto, CommentDto, PostType, PostsServiceProxy, UserDto, CommentsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CommentHistoryComponent } from '@shared/modals/comment-history/comment-history.component';
+import { AvailableServiceDto, CommentDto, CommentsServiceProxy, PostType, PostsServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
 import { CommentsStateService, MAX_COMMENT_LEVELS, MAX_REPLIES_TO_LOAD } from '@shared/services/comments-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
-import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
-import { FileUtils } from '@shared/helpers/file-utils';
-import { SafeUrl } from '@angular/platform-browser';
-import { CommentHistoryComponent } from '@shared/modals/comment-history/comment-history.component';
 
 
 @Component({
@@ -106,6 +107,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   get hasChildren(): boolean { return this.comments?.some(c => c.children?.length); }
   get isShowAddService(): boolean { return this.isTutor; }
   get isPostOwner(): boolean { return this.appSession.userId === this.postCreatorId; }
+  get reactionGroup() { return PostTypeReactionGroup[this.postType]; }
 
   async ngOnInit(): Promise<void> {
     await this.initCommentsAppStates();
