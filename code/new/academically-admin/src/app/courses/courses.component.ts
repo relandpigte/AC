@@ -3,8 +3,10 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ActivatedRoute } from '@angular/router';
 import { CourseService } from './_services/course.service';
-import { CoursesServiceProxy, CourseDto } from '@shared/service-proxies/service-proxies';
+import { CoursesServiceProxy, CourseDto, CourseStatus } from '@shared/service-proxies/service-proxies';
 import { takeUntil } from 'rxjs/operators';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { CommunityPostService } from '@shared/services/community-post.service';
 
 enum CourseTab {
   Details = 'details',
@@ -24,12 +26,15 @@ export class CoursesComponent extends AppComponentBase implements OnInit, OnDest
   course: CourseDto = new CourseDto;
   currentTab = CourseTab.Details;
   CourseTab = CourseTab;
+  CourseStatus = CourseStatus;
 
   constructor(
     injector: Injector,
     private _route: ActivatedRoute,
     private _coursesService: CoursesServiceProxy,
     private _courseService: CourseService,
+    private _modalDialogService: ModalDialogService,
+    private _communityPostService: CommunityPostService
   ) {
     super(injector);
     this._route.paramMap.subscribe(paramMap => {
@@ -57,6 +62,39 @@ export class CoursesComponent extends AppComponentBase implements OnInit, OnDest
 
   ngOnDestroy(): void {
     this._courseService.course = new CourseDto();
+  }
+
+  onPublishClick(): void {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('PublishCourseConfirmationMessage'),
+      confirmCb: (): void => {
+        this._coursesService.updateStatus(this.course.id, CourseStatus.Published)
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(() => {
+            this.course.status = CourseStatus.Published;
+            this.notify.success(this.l('SavedSuccessfully'))
+            this._communityPostService.hasNewItemToShare({ serviceId: this.course.id });
+          });
+      }
+    };
+    this._modalDialogService.showConfirmDialog(options);
+  }
+
+  onUnpublishClick(): void {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('UnpublishCourseConfirmationMessage'),
+      confirmCb: (): void => {
+        this._coursesService.updateStatus(this.course.id, CourseStatus.Draft)
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(() => {
+            this.course.status = CourseStatus.Draft;
+            this.notify.success(this.l('SavedSuccessfully'))
+          });
+      }
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   private getCourse(): void {

@@ -7,6 +7,7 @@ import { CoachingDto, CoachingsServiceProxy, CoachingStatus } from '@shared/serv
 import { takeUntil } from 'rxjs/operators';
 import { CoachingService } from '../_services/coaching.service';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { CommunityPostService } from '@shared/services/community-post.service';
 
 @Component({
   selector: 'app-single',
@@ -25,6 +26,7 @@ export class SingleComponent extends AppComponentBase implements OnInit {
     route: ActivatedRoute,
     private _coachingService: CoachingService,
     private _coachingsService: CoachingsServiceProxy,
+    private _communityPostService: CommunityPostService,
     private _modalDialogService: ModalDialogService
   ) {
     super(injector);
@@ -58,7 +60,8 @@ export class SingleComponent extends AppComponentBase implements OnInit {
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
             this.model.status = CoachingStatus.Published;
-            this.l('SavedSuccessfully');
+            this.notify.success(this.l('SavedSuccessfully'));
+            this._communityPostService.hasNewItemToShare({ serviceId: this.id });
           });
       }
     };
@@ -74,7 +77,7 @@ export class SingleComponent extends AppComponentBase implements OnInit {
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
             this.model.status = CoachingStatus.Draft;
-            this.l('SavedSuccessfully');
+            this.notify.success(this.l('SavedSuccessfully'));
           });
       }
     };

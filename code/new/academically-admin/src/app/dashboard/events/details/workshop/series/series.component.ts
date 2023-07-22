@@ -8,6 +8,7 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { takeUntil } from 'rxjs/operators';
 import { CreateWorkshopComponent } from '../../../_components/create-workshop/create-workshop.component';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { CommunityPostService } from '@shared/services/community-post.service';
 
 @Component({
   selector: 'app-series',
@@ -28,6 +29,7 @@ export class SeriesComponent extends AppComponentBase implements OnInit {
     private _router: Router,
     private _workshopsService: EventsServiceProxy,
     private _workshopService: EventService,
+    private _communityPostService: CommunityPostService,
     private _modalDialogService: ModalDialogService
   ) {
     super(injector);
@@ -79,7 +81,8 @@ export class SeriesComponent extends AppComponentBase implements OnInit {
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
             this.model.status = EventStatus.Published;
-            this.l('SavedSuccessfully');
+            this.notify.success(this.l('SavedSuccessfully'));
+            this._communityPostService.hasNewItemToShare({ serviceId: this.model.id });
           });
       }
     };
@@ -95,7 +98,7 @@ export class SeriesComponent extends AppComponentBase implements OnInit {
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
             this.model.status = EventStatus.Draft;
-            this.l('SavedSuccessfully');
+            this.notify.success(this.l('SavedSuccessfully'));
           });
       }
     };

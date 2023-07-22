@@ -7,6 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 import { VideoService } from '../_services/video.service';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { finalize } from '@node_modules/rxjs/operators';
+import { CommunityPostService } from '@shared/services/community-post.service';
 
 @Component({
   selector: 'app-manage-video',
@@ -24,6 +25,7 @@ export class ManageVideoComponent extends AppComponentBase implements OnInit {
     route: ActivatedRoute,
     private _videoService: VideoService,
     private _videosService: VideosServiceProxy,
+    private _communityPostService: CommunityPostService,
     private _modalDialogService: ModalDialogService
   ) {
     super(injector);
@@ -54,7 +56,8 @@ export class ManageVideoComponent extends AppComponentBase implements OnInit {
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
             this.model.status = VideoStatus.Published;
-            this.l('SavedSuccessfully');
+            this.notify.success(this.l('SavedSuccessfully'));
+            this._communityPostService.hasNewItemToShare({ serviceId: this.model.id });
           });
       }
     };
@@ -70,7 +73,7 @@ export class ManageVideoComponent extends AppComponentBase implements OnInit {
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
             this.model.status = VideoStatus.Draft;
-            this.l('SavedSuccessfully');
+            this.notify.success(this.l('SavedSuccessfully'));
           });
       }
     };

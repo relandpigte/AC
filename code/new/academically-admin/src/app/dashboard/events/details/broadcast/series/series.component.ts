@@ -9,6 +9,7 @@ import { CreateBroadcastComponent } from '../../../_components/create-broadcast/
 import { EventService } from '../../../_services/event.service';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { finalize } from '@node_modules/rxjs/operators';
+import { CommunityPostService } from '@shared/services/community-post.service';
 
 @Component({
   selector: 'app-series',
@@ -29,6 +30,7 @@ export class SeriesComponent extends AppComponentBase implements OnInit {
     private _router: Router,
     private _eventsService: EventsServiceProxy,
     private _eventService: EventService,
+    private _communityPostService: CommunityPostService,
     private _modalDialogService: ModalDialogService
   ) {
     super(injector);
@@ -80,7 +82,8 @@ export class SeriesComponent extends AppComponentBase implements OnInit {
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
             this.model.status = EventStatus.Published;
-            this.l('SavedSuccessfully');
+            this.notify.success(this.l('SavedSuccessfully'));
+            this._communityPostService.hasNewItemToShare({ serviceId: this.model.id });
           });
       }
     };
@@ -96,7 +99,7 @@ export class SeriesComponent extends AppComponentBase implements OnInit {
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
             this.model.status = EventStatus.Draft;
-            this.l('SavedSuccessfully');
+            this.notify.success(this.l('SavedSuccessfully'));
           });
       }
     };
