@@ -74,7 +74,11 @@ export class PostsStateService extends StateServiceBase {
     const canViewPost = (post: PostDto): boolean => {
       if (!post) return false;
       const [type, parentId, creationTime] = this.loadArgs;
-      return (post.type === type && post.parentId === parentId && post.creationTime.isBefore(creationTime));
+      return (
+        (!type || post.type === type) &&
+        (!parentId || post.parentId === parentId) &&
+        (!creationTime || post.creationTime.isBefore(creationTime))
+      );
     };
 
     const handleUpsertPosts = async (post: PostDto) => {
