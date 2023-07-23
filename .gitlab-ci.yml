@@ -47,8 +47,8 @@ variables:
     - echo Debug - $SQLSCRIPT
     # download liquibase
     - aws s3 cp s3://wile-local-source/local/utils/liquibase-4.2.0.zip $CI_PROJECT_DIR/
-    - unzip $CI_PROJECT_DIR/liquibase-4.2.0.zip -d /opt/liquibase
-    - unzip $CI_PROJECT_DIR/artifacts/database.zip -d $CI_PROJECT_DIR/liquibase_scripts
+    - unzip -q $CI_PROJECT_DIR/liquibase-4.2.0.zip -d /opt/liquibase
+    - unzip -q $CI_PROJECT_DIR/artifacts/database.zip -d $CI_PROJECT_DIR/liquibase_scripts
     # install and config OpenVPN
     - which openvpn || (apt-get update -y -qq && apt-get install -y -qq openvpn) # Install openvpn if not available.
     - cat <<< $CLIENT_OVPN > /etc/openvpn/client.conf # Move vpn config from gitlab variable to config file.
@@ -94,7 +94,7 @@ variables:
     # - apt-get install -y python3-pip
     # - pip3 install awscli boto boto3
     - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-    - unzip awscliv2.zip
+    - unzip -q awscliv2.zip
     - ./aws/install
     - apt-get install -y jq
     - aws --version
@@ -126,7 +126,7 @@ variables:
     - yarn install
     - yarn init --yes 2>/dev/null
     - mkdir $CI_PROJECT_DIR/temp
-    - unzip $CI_PROJECT_DIR/artifacts/backend.zip -d $CI_PROJECT_DIR/temp
+    - unzip -q $CI_PROJECT_DIR/artifacts/backend.zip -d $CI_PROJECT_DIR/temp
     - rm $CI_PROJECT_DIR/artifacts/backend.zip # remove zip so we can create a new one
     - cd temp
 
