@@ -112,10 +112,11 @@ variables:
     # - printf '\e[95m%s SG Web is - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$SG_WEB"
     # Lookup Database Id
     - export DATABASE_ID=db-$APP_NAME-$env_name.$PUBLIC_DOMAIN
+    - ec2 describe-instances --filters "Name=instance-state-name,Values=running" "Name=tag:AppName,Values=$APP_NAME" "Name=tag:ProvisionedBy,Values=terraform" "Name=tag:Environment,Values=$ENV_NAME"
     - export LOCAL_IP=$(aws ec2 describe-instances --filters "Name=instance-state-name,Values=running" "Name=tag:AppName,Values=$APP_NAME" "Name=tag:ProvisionedBy,Values=terraform" "Name=tag:Environment,Values=$ENV_NAME" | jq -r ".[] | .[] | .Instances[].PrivateIpAddress")
     - export INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=instance-state-name,Values=running" "Name=tag:AppName,Values=$APP_NAME" "Name=tag:ProvisionedBy,Values=terraform" "Name=tag:Environment,Values=$ENV_NAME" | jq -r ".[] | .[] | .Instances[].InstanceId")
     - printf '\e[95m%s DatabaseId is - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$DATABASE_ID"
-    - printf '\e[95m%s Instance %s IP Address %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$INSTANCE_ID" "$LOCAL_IP"  
+    - printf '\e[95m%s Instance is %s IP Address is %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$INSTANCE_ID" "$LOCAL_IP"  
     - pwd
     
   script:
