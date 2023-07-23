@@ -150,7 +150,7 @@ variables:
    
     - cat appsettings.json
     - rm appsettings.bak
-    - zip -r $CI_PROJECT_DIR/artifacts/backend.zip .
+    - zip -rq $CI_PROJECT_DIR/artifacts/backend.zip .
 
     # Copy iis artifacts to S3 for deployment
     - cd $CI_PROJECT_DIR/artifacts/
@@ -262,7 +262,7 @@ build_schema:
   script:
     # Package Schema
     - "cd $CI_PROJECT_DIR/database" 
-    - zip -r $CI_PROJECT_DIR/artifacts/database.zip .
+    - zip -rq $CI_PROJECT_DIR/artifacts/database.zip .
     - echo "Zipped Packages Ready....."
     - "cd $CI_PROJECT_DIR/artifacts" 
     - ls -la
@@ -295,7 +295,7 @@ build_backend:
     - "cd $CI_PROJECT_DIR/$BACKEND_PATH" 
     - dotnet publish --configuration release --framework net6.0 --output bin/release/net6.0/output
     - "cd $CI_PROJECT_DIR/$BACKEND_PATH/bin/release/net6.0/output" 
-    - zip -r $CI_PROJECT_DIR/artifacts/backend.zip .
+    - zip -rq $CI_PROJECT_DIR/artifacts/backend.zip .
     - ls -la
   artifacts:
     paths:
