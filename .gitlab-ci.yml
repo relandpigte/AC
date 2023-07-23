@@ -109,6 +109,8 @@ variables:
     # - printf '\e[95m%s SG Web is - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$SG_WEB"
     # Lookup Database Id
     - export DATABASE_ID=db-$APP_NAME-$env_name.$PUBLIC_DOMAIN
+    - export LOCAL_IP=$(aws ec2 describe-instances --filters "Name=instance-state-name,Values=running" "Name=tag:AppName,Values=$APP_NAME" "Name=tag:ProvisionedBy,Values=terraform" "Name=tag:Environment,Values=$ENV_NAME" | jq -r ".[] | .[] | .Instances[].PrivateIpAddress")
+    - export INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=instance-state-name,Values=running" "Name=tag:AppName,Values=$APP_NAME" "Name=tag:ProvisionedBy,Values=terraform" "Name=tag:Environment,Values=$ENV_NAME" | jq -r ".[] | .[] | .Instances[].InstanceId")
     - printf '\e[95m%s DatabaseId is - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$DATABASE_ID"
     - pwd
     
@@ -151,16 +153,39 @@ variables:
     - aws s3 rm s3://$APP_NAME-$env_name-artifacts/ --recursive
     - aws s3 cp . s3://$APP_NAME-$env_name-artifacts/ --recursive
     - aws s3 ls s3://$APP_NAME-$env_name-artifacts
-    # Now Refresh the code on the EC2 Server
-    - printf '\e[95m%s Reset InstanceRefresh Tag on ASG %s to force refresh on %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$ASG" "$env_name"
-    - > 
-      aws autoscaling create-or-update-tags
-      --tags ResourceId=$ASG,ResourceType=auto-scaling-group,Key=InstanceRefresh,Value=$CI_JOB_STARTED_AT,PropagateAtLaunch=true
-    - >
-      aws autoscaling start-instance-refresh 
-      --auto-scaling-group-name $ASG 
-      --preferences '{"InstanceWarmup": 240, "MinHealthyPercentage": 50}'
-    - printf '\e[95m%s Update Backend complete \e[0m\n' "$(date +'%d-%m-%Y %T')"
+
+    # NEXT STEPS
+    # ##########
+    # 1. Create an AMI from instance
+    # 2. Attach the New AMI to the LaunchConfigTemplate
+
+    # Once we have provision the new server for this environment from the Golden Image, we need to create a new AMI and attach it to the Launch Config
+    - printf '\e[95m%s Create AMI from Instance %s IP Address %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$INSTANCE_ID" "$LOCAL_IP"  
+    - sleep 15 # wait to ensure we are good to create an AMI
+    - export AMI_ID=$(aws ec2 create-image --instance-id $INSTANCE_ID --name $ENV_NAME"-acad_$(date +'%Y%m%d_%H%M')" --description "Created by GitLab DevOPS Deployment" | jq -r ".[]")
+    # wait for AMI to be ready
+    - printf '\e[95m%s Waiting for AMI %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AMI_ID"  
+    - aws ec2 wait image-available --image-ids $AMI_ID
+    - printf '\e[95m%s AMI Ready %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AMI_ID"  
+    # Create new version of LaunchConfigTemplate
+    - printf '\e[95m%s Create new LaunchConfigTemplate version and refresh instances \e[0m\n' "$(date +'%d-%m-%Y %T')"  
+    - aws ec2 create-launch-template-version --launch-template-name $ENV_NAME"-"$AWS_DEFAULT_REGION"-acad.aws-web-lt" --version-description "Launched by GitLab $CI_COMMIT_AUTHOR, $CI_COMMIT_REF_SLUG " --launch-template-data '{"ImageId":"'$AMI_ID'","TagSpecifications":[{"ResourceType":"volume","Tags":[{"Key":"Cost Code","Value":"'$COST_CODE'"},{"Key":"Environment","Value":"'$ENV_NAME'"}]}]}' --source-version '$Latest'
+    # Start Instance Refresh
+    - aws autoscaling start-instance-refresh --auto-scaling-group-name $ENV_NAME"-"$AWS_DEFAULT_REGION"-acad.aws-web-asg"
+    - printf '\e[95m%s complete \e[0m\n' "$(date +'%d-%m-%Y %T')"
+
+
+
+    # # Now Refresh the code on the EC2 Server
+    # - printf '\e[95m%s Reset InstanceRefresh Tag on ASG %s to force refresh on %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$ASG" "$env_name"
+    # - > 
+    #   aws autoscaling create-or-update-tags
+    #   --tags ResourceId=$ASG,ResourceType=auto-scaling-group,Key=InstanceRefresh,Value=$CI_JOB_STARTED_AT,PropagateAtLaunch=true
+    # - >
+    #   aws autoscaling start-instance-refresh 
+    #   --auto-scaling-group-name $ASG 
+    #   --preferences '{"InstanceWarmup": 240, "MinHealthyPercentage": 50}'
+    # - printf '\e[95m%s Update Backend complete \e[0m\n' "$(date +'%d-%m-%Y %T')"
 
 
 .frontend: &frontend
