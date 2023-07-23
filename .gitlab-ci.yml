@@ -91,8 +91,11 @@ variables:
     - printf '\e[95m%s Deploying to AWS Region - %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AWS_DEFAULT_REGION"
     - apt-get update
     # install python, awscli & jq
-    - apt-get install -y python3-pip
-    - pip3 install awscli boto boto3
+    # - apt-get install -y python3-pip
+    # - pip3 install awscli boto boto3
+    - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    - unzip awscliv2.zip
+    - sudo ./aws/install
     - apt-get install -y jq
     - aws --version
     - jq --version
