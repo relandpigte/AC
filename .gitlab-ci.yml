@@ -174,9 +174,9 @@ variables:
     - printf '\e[95m%s AMI Ready %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AMI_ID"  
     # Create new version of LaunchConfigTemplate
     - printf '\e[95m%s Create new LaunchConfigTemplate version and refresh instances \e[0m\n' "$(date +'%d-%m-%Y %T')"  
-    - aws ec2 create-launch-template-version --launch-template-name $env_name"-"$AWS_DEFAULT_REGION"-academically.aws-web-lt" --version-description "Launched by GitLab $CI_COMMIT_AUTHOR, $CI_COMMIT_REF_SLUG " --launch-template-data '{"ImageId":"'$AMI_ID'","TagSpecifications":[{"ResourceType":"volume","Tags":[{"Key":"Cost Code","Value":"'$COST_CODE'"},{"Key":"Environment","Value":"'$env_name'"}]}]}' --source-version '$Latest'
+    - aws ec2 create-launch-template-version --launch-template-name $env_name"-"$AWS_DEFAULT_REGION"-academically.aws-api-lt" --version-description "Launched by GitLab $CI_COMMIT_AUTHOR, $CI_COMMIT_REF_SLUG " --launch-template-data '{"ImageId":"'$AMI_ID'","TagSpecifications":[{"ResourceType":"volume","Tags":[{"Key":"Cost Code","Value":"'$COST_CODE'"},{"Key":"Environment","Value":"'$env_name'"}]}]}' --source-version '$Latest'
     # Start Instance Refresh
-    - aws autoscaling start-instance-refresh --auto-scaling-group-name $env_name"-"$AWS_DEFAULT_REGION"-academically.aws-web-asg"
+    - aws autoscaling start-instance-refresh --auto-scaling-group-name $env_name"-"$AWS_DEFAULT_REGION"-academically.aws-api-asg"
     - printf '\e[95m%s complete \e[0m\n' "$(date +'%d-%m-%Y %T')"
 
 
