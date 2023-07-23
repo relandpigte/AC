@@ -167,16 +167,16 @@ variables:
     # Once we have provision the new server for this environment from the Golden Image, we need to create a new AMI and attach it to the Launch Config
     - printf '\e[95m%s Create AMI from Instance %s IP Address %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$INSTANCE_ID" "$LOCAL_IP"  
     - sleep 15 # wait to ensure we are good to create an AMI
-    - export AMI_ID=$(aws ec2 create-image --instance-id $INSTANCE_ID --name $env_name"-acad_$(date +'%Y%m%d_%H%M')" --description "Created by GitLab DevOPS Deployment" | jq -r ".[]")
+    - export AMI_ID=$(aws ec2 create-image --instance-id $INSTANCE_ID --name $env_name"-academically_$(date +'%Y%m%d_%H%M')" --description "Created by GitLab DevOPS Deployment" | jq -r ".[]")
     # wait for AMI to be ready
     - printf '\e[95m%s Waiting for AMI %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AMI_ID"  
     - aws ec2 wait image-available --image-ids $AMI_ID
     - printf '\e[95m%s AMI Ready %s \e[0m\n' "$(date +'%d-%m-%Y %T')" "$AMI_ID"  
     # Create new version of LaunchConfigTemplate
     - printf '\e[95m%s Create new LaunchConfigTemplate version and refresh instances \e[0m\n' "$(date +'%d-%m-%Y %T')"  
-    - aws ec2 create-launch-template-version --launch-template-name $env_name"-"$AWS_DEFAULT_REGION"-acad.aws-web-lt" --version-description "Launched by GitLab $CI_COMMIT_AUTHOR, $CI_COMMIT_REF_SLUG " --launch-template-data '{"ImageId":"'$AMI_ID'","TagSpecifications":[{"ResourceType":"volume","Tags":[{"Key":"Cost Code","Value":"'$COST_CODE'"},{"Key":"Environment","Value":"'$env_name'"}]}]}' --source-version '$Latest'
+    - aws ec2 create-launch-template-version --launch-template-name $env_name"-"$AWS_DEFAULT_REGION"-academically.aws-web-lt" --version-description "Launched by GitLab $CI_COMMIT_AUTHOR, $CI_COMMIT_REF_SLUG " --launch-template-data '{"ImageId":"'$AMI_ID'","TagSpecifications":[{"ResourceType":"volume","Tags":[{"Key":"Cost Code","Value":"'$COST_CODE'"},{"Key":"Environment","Value":"'$env_name'"}]}]}' --source-version '$Latest'
     # Start Instance Refresh
-    - aws autoscaling start-instance-refresh --auto-scaling-group-name $env_name"-"$AWS_DEFAULT_REGION"-acad.aws-web-asg"
+    - aws autoscaling start-instance-refresh --auto-scaling-group-name $env_name"-"$AWS_DEFAULT_REGION"-academically.aws-web-asg"
     - printf '\e[95m%s complete \e[0m\n' "$(date +'%d-%m-%Y %T')"
 
 
