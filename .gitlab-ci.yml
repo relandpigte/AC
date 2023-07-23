@@ -33,7 +33,7 @@ variables:
     - apt-get install -y mysql-client
     - mysql -V
     # need 5.1.48 of mysql driver
-    - aws s3 cp s3://academically-local-source/local/utils/mysql-connector-java-5.1.38.jar /usr/share/java/mysql-connector-java.jar
+    - aws s3 cp s3://academically-local-source/local/utils/mysql-connector-java-5.1.38-bin.jar /usr/share/java/mysql-connector-java.jar
     - ls -la
      # Create SQL Script
     - |-
