@@ -1,0 +1,36 @@
+<div class="modal-card card" role="dialog">
+    <div class="modal-content">
+        <div class="card-header">
+            <h3 class="card-header-title">Edit History</h3>
+            <button type="button" class="close" aria-label="Close" (click)="onCloseCommentHistoryModal()">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="card-body">
+            <div *ngFor="let comment of histories" class="comment d-flex gap-15">
+                <div class="comment-avatar">
+                    <a class="avatar" href="#">
+                        <img
+                            class="avatar-img rounded-circle"
+                            [src]="getProfilePictureFromDocument(comment.creatorUser.profilePictureDocument, comment.creatorUser.id)"
+                            [alt]="comment.creatorUser.fullName"
+                        />
+                    </a>
+                </div>
+                <div class="comment-body d-flex flex-column flex-grow-1">
+                    <div class="comment-info d-flex align-items-start gap-10">
+                        <h5 class="comment-title">{{ comment.creatorUser.fullName }}</h5>
+                        <span class="comment-time" role="button" [tooltip]="convertMomentToPostDateFormat(comment.lastModificationTime)">
+                            {{ convertMomentToPostDateAgo(comment.lastModificationTime) }}
+                        </span>
+                    </div>
+                    <div class="comment-text">
+                        <span *ngIf="comment.taggedUser" class="comment-text-tagged no-wrap">{{ comment.taggedUser.fullName }}</span> {{ comment.body }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body-bottom-text text-center">Edit history is visible to anyone who can see this comment.</div>
+        </div>
+    </div>
+</div>

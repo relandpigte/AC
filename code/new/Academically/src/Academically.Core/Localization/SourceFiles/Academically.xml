@@ -1662,6 +1662,7 @@
     <text name="AreYouSureWantToHideThisPost">Are you sure want to hide this post?</text>
     <text name="SuccessfullyDeleted">Successfully deleted</text>
     <text name="CommentSuccessfullyDeleted">Comment successfully deleted</text>
+    <text name="CommentSuccessfullyUpdated">Comment successfully updated</text>
     <text name="PostHiddenSuccessfully">Post hidden successfully</text>
     <text name="YouveHiddenAPost">You've hidden a post</text>
     <text name="StartTyping">Start Typing</text>
@@ -1818,6 +1819,10 @@
 	<text name="Generics.Reactions.Vote">Vote</text>
 	<text name="Generics.Reactions.Upvote">Upvote</text>
 	<text name="Generics.Reactions.Downvote">Downvote</text>
+	<!-- Course -->
+	<text name="CoursePreview">Course preview</text>
+	<text name="PublishCourseConfirmationMessage">Are you sure you want to publish this course?</text>
+	<text name="UnpublishCourseConfirmationMessage">Are you sure you want to unpublish this course? The status will change to Draft.</text>
 	<!-- Coaching -->
 	<text name="NewCoaching">New Coaching</text>
 	<text name="CreateCoaching">Create Coaching</text>
@@ -1909,7 +1914,7 @@
 	<text name="Community.Topics.Follow.Success">You are now following {0} topic.</text>
 	<text name="Community.Topics.NotInterested.Success">{0} topic will no longer be suggested to you.</text>
 	<text name="Community.Topics.Unfollow.Success">You have unfollowed {0} topic.</text>
-	<text name="Community.SharePost">Share post</text>
+	<text name="Community.SharePost">Share as a quick post</text>
 	<text name="Community.QuickPost">Quick post</text>
 	<text name="Community.AddQuestion">Add question</text>
     <text name="Community.EditQuestion">Edit question</text>
@@ -1934,6 +1939,9 @@
 	<!-- Community - Discussions -->
 	<text name="Community.Discussion.Add.Title">Write down the title of discussion...</text>
 	<text name="Community.Discussion.Add.Information">Add more information...</text>
+	<!-- Community - Share -->
+	<text name="Community.Share.AddToTimeline.Title">Add it to timeline</text>
+	<text name="Community.Share.AddToTimeline.Body">If you share this service to your timeline, it is will show in your profile and the feed.</text>
 	<!-- Events -->
 	<text name="EventsSchedule">From {0}</text>
 	  

@@ -67,6 +67,7 @@ import { PreviewServicesComponent } from '@shared/components/preview/services/se
 
 import { KeysPipe } from '@shared/pipes/keys.pipe';
 import { ShortenPipe } from '@shared/pipes/shorten.pipe';
+import { CommentHistoryComponent } from '@shared/modals/comment-history/comment-history.component';
 
 @NgModule({
   declarations: [
@@ -113,7 +114,8 @@ import { ShortenPipe } from '@shared/pipes/shorten.pipe';
     ShimmerComponent,
     PreviewPostsComponent,
     PreviewServicesComponent,
-    ShortenPipe
+    ShortenPipe,
+    CommentHistoryComponent
   ],
   imports: [
     CommonModule,
@@ -200,7 +202,8 @@ import { ShortenPipe } from '@shared/pipes/shorten.pipe';
     ShimmerComponent,
     PreviewPostsComponent,
     PreviewServicesComponent,
-    ShortenPipe
+    ShortenPipe,
+    CommentHistoryComponent
   ],
 })
 export class AppSharedModule { }

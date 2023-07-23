@@ -1,8 +1,8 @@
 <div [@routerTransition]>
-    <ng-container *ngIf="isDiscussion || isEditHistory">
+    <ng-container *ngIf="isDiscussion || isEditHistory || isSinglePost">
         <router-outlet></router-outlet>
     </ng-container>
-    <ng-container *ngIf="!isDiscussion && !isEditHistory">
+    <ng-container *ngIf="!isDiscussion && !isEditHistory && !isSinglePost">
         <div class="container-fluid">
             <div class="header-body pt-0">
                 <div class="row align-items-center"  [style.marginTop.px]="40">

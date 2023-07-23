@@ -4173,6 +4173,161 @@ export class CommentsServiceProxy {
         }
         return _observableOf<void>(<any>null);
     }
+
+    /**
+     * @param referenceId (optional) 
+     * @param parentId (optional) 
+     * @param body (optional) 
+     * @param taggedId (optional) 
+     * @param serviceId (optional) 
+     * @param serviceType (optional) 
+     * @param attachments (optional) 
+     * @param id (optional) 
+     * @return Success
+     */
+    update(referenceId: string | undefined, parentId: string | undefined, body: string | undefined, taggedId: number | undefined, serviceId: string | undefined, serviceType: ServicesType | undefined, attachments: FileParameter[] | undefined, id: string | undefined): Observable<CommentDto> {
+        let url_ = this.baseUrl + "/api/services/app/Comments/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (referenceId === null || referenceId === undefined) {
+            // do nothing
+        } else
+            content_.append("ReferenceId", referenceId.toString());
+        if (parentId === null || parentId === undefined) {
+            // do nothing
+        } else
+            content_.append("ParentId", parentId.toString());
+        if (body === null || body === undefined) {
+            // do nothing
+        } else
+            content_.append("Body", body.toString());
+        if (taggedId === null || taggedId === undefined) {
+            // do nothing
+        } else
+            content_.append("TaggedId", taggedId.toString());
+        if (serviceId === null || serviceId === undefined) {
+            // do nothing
+        } else
+            content_.append("ServiceId", serviceId.toString());
+        if (serviceType === null || serviceType === undefined) {
+            // do nothing
+        } else
+            content_.append("ServiceType", serviceType.toString());
+        if (attachments === null || attachments === undefined) {
+            // do nothing
+        } else
+            attachments.forEach(item_ => content_.append("Attachments", item_.data, item_.fileName ? item_.fileName : "Attachments") );
+        if (id === null || id === undefined) {
+            // do nothing
+        } else
+            content_.append("Id", id.toString());
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<CommentDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CommentDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<CommentDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CommentDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CommentDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @param includeHistory (optional) 
+     * @return Success
+     */
+    get(id: string | undefined, includeHistory: boolean | undefined): Observable<CommentDto> {
+        let url_ = this.baseUrl + "/api/services/app/Comments/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        if (includeHistory === null)
+            throw new Error("The parameter 'includeHistory' cannot be null.");
+        else if (includeHistory !== undefined)
+            url_ += "includeHistory=" + encodeURIComponent("" + includeHistory) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<CommentDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CommentDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<CommentDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CommentDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CommentDto>(<any>null);
+    }
 }
 
 @Injectable()
@@ -6343,6 +6498,63 @@ export class CoursesServiceProxy {
             }));
         }
         return _observableOf<CourseDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @param body (optional) 
+     * @return Success
+     */
+    updateStatus(id: string | undefined, body: CourseStatus | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Courses/UpdateStatus?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateStatus(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateStatus(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateStatus(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
     }
 
     /**
@@ -30618,6 +30830,12 @@ export enum CoachingType {
 
 export class CommentDto implements ICommentDto {
     id: string;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
     body: string | undefined;
     parentId: string | undefined;
     referenceId: string | undefined;
@@ -30636,6 +30854,7 @@ export class CommentDto implements ICommentDto {
     course: CourseDto;
     video: VideoDto;
     coaching: CoachingDto;
+    commentEditHistories: CommentEditHistoryDto[] | undefined;
 
     constructor(data?: ICommentDto) {
         if (data) {
@@ -30649,6 +30868,12 @@ export class CommentDto implements ICommentDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.creatorUserId = _data["creatorUserId"];
+            this.lastModificationTime = _data["lastModificationTime"] ? moment(_data["lastModificationTime"].toString()) : <any>undefined;
+            this.lastModifierUserId = _data["lastModifierUserId"];
+            this.isDeleted = _data["isDeleted"];
+            this.deleterUserId = _data["deleterUserId"];
+            this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
             this.body = _data["body"];
             this.parentId = _data["parentId"];
             this.referenceId = _data["referenceId"];
@@ -30675,6 +30900,11 @@ export class CommentDto implements ICommentDto {
             this.course = _data["course"] ? CourseDto.fromJS(_data["course"]) : <any>undefined;
             this.video = _data["video"] ? VideoDto.fromJS(_data["video"]) : <any>undefined;
             this.coaching = _data["coaching"] ? CoachingDto.fromJS(_data["coaching"]) : <any>undefined;
+            if (Array.isArray(_data["commentEditHistories"])) {
+                this.commentEditHistories = [] as any;
+                for (let item of _data["commentEditHistories"])
+                    this.commentEditHistories.push(CommentEditHistoryDto.fromJS(item));
+            }
         }
     }
 
@@ -30688,6 +30918,12 @@ export class CommentDto implements ICommentDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["creatorUserId"] = this.creatorUserId;
+        data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : <any>undefined;
+        data["lastModifierUserId"] = this.lastModifierUserId;
+        data["isDeleted"] = this.isDeleted;
+        data["deleterUserId"] = this.deleterUserId;
+        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
         data["body"] = this.body;
         data["parentId"] = this.parentId;
         data["referenceId"] = this.referenceId;
@@ -30714,6 +30950,11 @@ export class CommentDto implements ICommentDto {
         data["course"] = this.course ? this.course.toJSON() : <any>undefined;
         data["video"] = this.video ? this.video.toJSON() : <any>undefined;
         data["coaching"] = this.coaching ? this.coaching.toJSON() : <any>undefined;
+        if (Array.isArray(this.commentEditHistories)) {
+            data["commentEditHistories"] = [];
+            for (let item of this.commentEditHistories)
+                data["commentEditHistories"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -30727,6 +30968,12 @@ export class CommentDto implements ICommentDto {
 
 export interface ICommentDto {
     id: string;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
     body: string | undefined;
     parentId: string | undefined;
     referenceId: string | undefined;
@@ -30745,6 +30992,7 @@ export interface ICommentDto {
     course: CourseDto;
     video: VideoDto;
     coaching: CoachingDto;
+    commentEditHistories: CommentEditHistoryDto[] | undefined;
 }
 
 export class CommentDtoPagedResultDto implements ICommentDtoPagedResultDto {
@@ -30800,6 +31048,53 @@ export class CommentDtoPagedResultDto implements ICommentDtoPagedResultDto {
 export interface ICommentDtoPagedResultDto {
     items: CommentDto[] | undefined;
     totalCount: number;
+}
+
+export class CommentEditHistoryDto implements ICommentEditHistoryDto {
+    changeTime: moment.Moment;
+    body: string | undefined;
+
+    constructor(data?: ICommentEditHistoryDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.changeTime = _data["changeTime"] ? moment(_data["changeTime"].toString()) : <any>undefined;
+            this.body = _data["body"];
+        }
+    }
+
+    static fromJS(data: any): CommentEditHistoryDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CommentEditHistoryDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["changeTime"] = this.changeTime ? this.changeTime.toISOString() : <any>undefined;
+        data["body"] = this.body;
+        return data; 
+    }
+
+    clone(): CommentEditHistoryDto {
+        const json = this.toJSON();
+        let result = new CommentEditHistoryDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICommentEditHistoryDto {
+    changeTime: moment.Moment;
+    body: string | undefined;
 }
 
 export class CommentReactionDto implements ICommentReactionDto {

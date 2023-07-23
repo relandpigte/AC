@@ -1,21 +1,22 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { finalize, takeUntil } from 'rxjs/operators';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { Subject } from 'rxjs';
+import { finalize, take, takeUntil } from 'rxjs/operators';
 
+import { SafeUrl } from '@angular/platform-browser';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
+import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { PostTypeReactionGroup } from '@shared/enums/post/reaction-group.enum';
+import { FileUtils } from '@shared/helpers/file-utils';
 import { AddServiceComponent } from '@shared/modals/add-service/add-service.component';
-import { AvailableServiceDto, CommentDto, PostType, PostsServiceProxy, UserDto, CommentsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CommentHistoryComponent } from '@shared/modals/comment-history/comment-history.component';
+import { AvailableServiceDto, CommentDto, CommentsServiceProxy, PostType, PostsServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
 import { CommentsStateService, MAX_COMMENT_LEVELS, MAX_REPLIES_TO_LOAD } from '@shared/services/comments-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
-import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
-import { FileUtils } from '@shared/helpers/file-utils';
-import { SafeUrl } from '@angular/platform-browser';
 
 
 @Component({
@@ -42,17 +43,20 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   @ViewChild('addCommentEl', { static: false }) addCommentEl: ElementRef;
   @ViewChild('fileInput') fileInput: ElementRef;
   @ViewChild('childFileInput') childFileInput: ElementRef;
+  @ViewChild('editCommentReply') editCommentReply: ElementRef;
   @ViewChildren(CommunityDiscussionsComponent) childDiscussions: QueryList<CommunityDiscussionsComponent>;
 
   commentsStateService: CommentsStateService;
 
   isPosting = false;
   isLoadingComments: boolean = true;
+  isUpdatingComment: boolean;
 
   comments: CommentDto[] = [];
   totalCommentsCount: number;
 
   commentReplyId: string;
+  commentEditId: string;
   inputLength = 0;
 
   isShowServicePicker = false;
@@ -95,14 +99,18 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     }
   }
   get hiddenCommentsCount(): number { return this.totalCommentsCount - this.comments.length; }
-  get isExpanded(): boolean { return (this.totalCommentsCount > 1 && this.comments?.length === this.totalCommentsCount) || (this.totalCommentsCount === 1 && this.childDiscussions.toArray().some(c => c.isPartiallyExpanded)); }
+  get isExpanded(): boolean {
+    return (this.totalCommentsCount > 1 && this.comments?.length === this.totalCommentsCount) ||
+      (this.totalCommentsCount === 1 && this.childDiscussions.toArray().some(c => c.isPartiallyExpanded));
+  }
   get isPartiallyExpanded(): boolean { return this.comments.length > 0 && this.totalCommentsCount >= this.comments.length; }
   get hasChildren(): boolean { return this.comments?.some(c => c.children?.length); }
   get isShowAddService(): boolean { return this.isTutor; }
   get isPostOwner(): boolean { return this.appSession.userId === this.postCreatorId; }
+  get reactionGroup() { return PostTypeReactionGroup[this.postType]; }
 
-  ngOnInit(): void {
-    this.initCommentsAppStates();
+  async ngOnInit(): Promise<void> {
+    await this.initCommentsAppStates();
     this.initSubscriptions();
   }
 
@@ -140,6 +148,66 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       }
     };
     this._modalDialogService.showConfirmDialog(options);
+  }
+
+  isCommentEdited(comment: CommentDto): boolean {
+    return comment?.lastModificationTime != null;
+  }
+
+  handleEditComment(commentId: string): void {
+    this.commentEditId = commentId;
+    this.taggedPerson = this.comments.find(c => c.id === commentId)?.taggedUser;
+    setTimeout(() => this.placeCaretAtEnd(this.editCommentReply.nativeElement));
+    this._cdr.detectChanges();
+  }
+
+  handleCommentHistoryPopup(commentId: string): void {
+    this._commentServiceProxy.get(commentId, true)
+      .pipe(takeUntil(this.destroyed$), take(1))
+      .subscribe((c: CommentDto) => {
+        const modalSettings = this.defaultModalSettings as ModalOptions<CommentHistoryComponent>;
+        modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-comment-history ';
+        modalSettings.initialState = {
+          data: c
+        };
+        const history = this._modalService.show(CommentHistoryComponent, modalSettings).content;
+    });
+  }
+
+  protected onEditCommentSubmit(message: HTMLDivElement, comment: CommentDto): void {
+    const updated = new CommentDto(comment);
+    const body = message.innerHTML?.trim();
+    this.isUpdatingComment = true;
+
+    if (body && body !== updated.body) {
+      this._commentServiceProxy.update(
+        updated.referenceId,
+        updated.parentId,
+        body,
+        this.taggedPerson?.id,
+        updated.parentId ? this.selectedServiceForChild?.id : this.selectedService?.id,
+        updated.parentId ? this.selectedServiceForChild?.serviceType : this.selectedService?.serviceType,
+        [updated.parentId ? this.fileAttachment : this.childFileAttachment].filter(x => x).map(f => FileUtils.getFileParameter(f)),
+        updated.id
+      ).pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isUpdatingComment = false;
+        })
+      ).subscribe((c: CommentDto) => {
+        this.commentEditId = null;
+        this.taggedPerson = null;
+        this.handleRemoveAttachment(!!c.parentId);
+        if (c.parentId) {
+          this.selectedServiceForChild = null;
+        } else {
+          this.selectedService = null;
+        }
+        this.notify.success(this.l('CommentSuccessfullyUpdated'));
+      });
+
+      this._cdr.detectChanges();
+    }
   }
 
   private async initCommentsAppStates() {
@@ -192,6 +260,16 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       });
   }
 
+  private placeCaretAtEnd(div: HTMLDivElement): void {
+    const selection = window.getSelection();
+    const range = document.createRange();
+    selection.removeAllRanges();
+    range.selectNodeContents(div);
+    range.collapse(false);
+    selection.addRange(range);
+    div.focus();
+  }
+
   protected onFormSubmit(message: any, parentId?: string): void {
     this.isPosting = true;
     const body = message.value ?? message.innerHTML;
@@ -241,6 +319,9 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       if (!event.target?.innerHTML || isCursorAtTheStart(event.target)) this.taggedPerson = null;
     }
     if (post) setTimeout(() => this.inputLength = post.value.length);
+
+    // Escape [exit when editing comment]
+    if (event.keyCode === 27 && this.commentEditId) this.commentEditId = null;
   }
 
   protected onFoldClick(): void {

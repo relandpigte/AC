@@ -9,6 +9,7 @@ import { CreateArticleComponent } from '../_components/create-article/create-art
 import { ArticleService } from '../_services/article.service';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { finalize, take } from '@node_modules/rxjs/operators';
+import { CommunityPostService } from '@shared/services/community-post.service';
 
 @Component({
   selector: 'app-article-series',
@@ -29,6 +30,7 @@ export class ArticleSeriesComponent extends AppComponentBase implements OnInit {
     private _router: Router,
     private _articlesService: ArticlesServiceProxy,
     private _articleService: ArticleService,
+    private _communityPostService: CommunityPostService,
     private _modalDialogService: ModalDialogService
   ) {
     super(injector);
@@ -81,7 +83,8 @@ export class ArticleSeriesComponent extends AppComponentBase implements OnInit {
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
             this.model.status = ArticleStatus.Published;
-            this.l('SavedSuccessfully');
+            this.notify.success(this.l('SavedSuccessfully'));
+            this._communityPostService.hasNewItemToShare({ serviceId: this.model.id });
           });
       }
     };
@@ -97,7 +100,7 @@ export class ArticleSeriesComponent extends AppComponentBase implements OnInit {
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
             this.model.status = ArticleStatus.Draft;
-            this.l('SavedSuccessfully');
+            this.notify.success(this.l('SavedSuccessfully'));
           });
       }
     };

@@ -2,9 +2,10 @@ import { ChangeDetectorRef, Component, Injector, Input, OnChanges, OnInit, Simpl
 import * as moment from 'moment';
 
 import { AppComponentBase } from '@shared/app-component-base';
-import { PostDto } from '@shared/service-proxies/service-proxies';
+import { PostDto, PostType } from '@shared/service-proxies/service-proxies';
 import { FileUtils } from '@shared/helpers/file-utils';
 import { DisciplineTaxonomyDto } from '@shared/service-proxies/service-proxies';
+import { AppConsts } from '@shared/AppConsts';
 
 @Component({
   selector: 'app-preview-posts',
@@ -40,6 +41,21 @@ export class PreviewPostsComponent extends AppComponentBase implements OnInit, O
 
   removePost(): void {
     this.onRemove.emit();
+  }
+
+  handlePostRedirection(event: Event): void {
+    const element = (event.target as HTMLElement).tagName.toLowerCase();
+    switch (element) {
+      case 'span':
+      case 'div': {
+        const redirection = PostType.Discussion === this.data?.type ? 'discussion' : 'post';
+        const url = `${AppConsts.appBaseUrl}/app/community/${redirection}/${this.data?.id}`;
+        window.open(url, '_blank');
+        break;
+      }
+      default:
+        break;
+    }
   }
 
   async ngOnChanges(changes: SimpleChanges) {
