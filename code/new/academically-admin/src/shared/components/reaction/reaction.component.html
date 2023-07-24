@@ -11,7 +11,8 @@
                 [ngClass]="{ 'reaction-action': !isActionButton, 'reaction-action-btn': isActionButton }"
             >
                 <span class="btn-label d-flex flex-nowrap justify-content-center align-items-center cursor-pointer gap-9" [class]="MyReactionColorClass" (click)="toggleMyReaction()">
-                    <img *ngIf="isActionButton" [src]="getPostReactionIconSrc(MyReactionType ? MyReactionType : ReactionType.Like)" />
+                    <span *ngIf="isActionButton" [class]="getPostReactionFeatherIcon(MyReactionType ? MyReactionType : ReactionType.Like)"></span>
+                    <!-- <img *ngIf="isActionButton" [src]="getPostReactionIconSrc(MyReactionType ? MyReactionType : ReactionType.Like)" /> -->
                     {{ (MyReactionLabel ? MyReactionLabel : 'Generics.Reactions.Like') | localize }}
                 </span>
                 <div #popover class="reaction-action-popover d-none">
@@ -57,7 +58,8 @@
                 [ngClass]="{ 'reaction-action': !isActionButton, 'reaction-action-btn gap-9': isActionButton }"
             >
                 <span class="btn-label d-flex flex-nowrap justify-content-center align-items-center cursor-pointer" [class]="MyReactionColorClass" (click)="toggleMyReaction()">
-                    <img *ngIf="isActionButton" [src]="getPostReactionIconSrc(MyReactionType ? MyReactionType : ReactionType.Like)" />
+                    <span *ngIf="isActionButton" [class]="getPostReactionFeatherIcon(MyReactionType ? MyReactionType : ReactionType.Like)"></span>
+                    <!-- <img *ngIf="isActionButton" [src]="getPostReactionIconSrc(MyReactionType ? MyReactionType : ReactionType.Like)" /> -->
                     {{ (MyReactionLabel ? MyReactionLabel : 'Generics.Reactions.Vote') | localize }}
                 </span>
                 <div #popover class="reaction-action-popover d-none">
@@ -100,7 +102,8 @@
                 [class]="MyReactionColorClass"
                 [ngClass]="{ 'reaction-action': !isActionButton, 'reaction-action-btn': isActionButton }"
             >
-                <img *ngIf="isActionButton" [src]="getPostReactionIconSrc(MyReactionType ? MyReactionType : ReactionType.Like)" />
+                <span *ngIf="isActionButton" [class]="getPostReactionFeatherIcon(MyReactionType ? MyReactionType : ReactionType.Like)"></span>
+                <!-- <img *ngIf="isActionButton" [src]="getPostReactionIconSrc(MyReactionType ? MyReactionType : ReactionType.Like)" /> -->
                 {{ (MyReactionLabel ? MyReactionLabel : 'Generics.Reactions.Like') | localize }}
             </div>
             <div *ngIf="hasTally && totalReactions" class="reaction-counts d-flex flex-nowrap justify-content-center align-items-center hide-empty" [class.cursor-pointer]="hasReactionUsersList" (click)="hasReactionUsersList ? onReactionUsersClick() : ''">

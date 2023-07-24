@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ReactionColorClass, ReactionGroup, ReactionIcons, ReactionLabels, ReactionTypes } from '@shared/enums/post/reaction-group.enum';
+import { ReactionColorClass, ReactionFeatherIcons, ReactionGroup, ReactionIcons, ReactionLabels, ReactionTypes } from '@shared/enums/post/reaction-group.enum';
 import { HubEvent, ReactionDto, ReactionType, ReactionsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, of, timer } from 'rxjs';
@@ -94,6 +94,10 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
 
     getReactionIcon(reactionType: ReactionType) {
         return ReactionIcons[reactionType];
+    }
+
+    getPostReactionFeatherIcon(reactionType: ReactionType) {
+        return ReactionFeatherIcons[reactionType];
     }
 
     getPostReactionIconSrc(reactionType: ReactionType) {

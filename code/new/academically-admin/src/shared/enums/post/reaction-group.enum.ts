@@ -10,6 +10,17 @@ export const ReactionTypes: { [group in ReactionGroup]: ReactionType[] } = {
     [ReactionGroup.Votes]: [ ReactionType.Upvote, ReactionType.Downvote ]
 };
 
+export const ReactionFeatherIcons: { [type in ReactionType]: string } = {
+    [ReactionType.Like]: 'fe fe-thumbs-up',
+    [ReactionType.Heart]: 'fe fe-heart',
+    [ReactionType.Laugh]: 'fe fe-thumbs-up',
+    [ReactionType.Wow]: 'fe fe-thumbs-up',
+    [ReactionType.Sad]: 'fe fe-thumbs-down',
+    [ReactionType.Mad]: 'fe fe-thumbs-down',
+    [ReactionType.Upvote]: 'fe fe-arrow-up',
+    [ReactionType.Downvote]: 'fe fe-arrow-down'
+};
+
 export const ReactionIcons: { [type in ReactionType]: string } = {
     [ReactionType.Like]: 'like',
     [ReactionType.Heart]: 'love',
