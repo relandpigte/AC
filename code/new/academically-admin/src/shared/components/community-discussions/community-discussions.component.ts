@@ -272,7 +272,8 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
 
   protected onFormSubmit(message: any, parentId?: string): void {
     this.isPosting = true;
-    const body = message.value ?? message.innerHTML;
+    console.log(message.innerHTML);
+    const body = message.value || message.innerHTML;
     if (body?.trim()) {
       this._postsServiceProxy.createComment(
         this.referenceId,
@@ -298,6 +299,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
           else this.selectedService = null;
           this.notify.success(this.l('SuccessfullyPosted'));
         });
+      this._cdr.detectChanges();
     }
   }
 
