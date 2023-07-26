@@ -1,0 +1,16 @@
+<div class="card">
+    <div class="card-body text-center">
+        <img [alt]="profileFullName" class="avatar-img rounded-circle"
+             [src]="getProfilePicture(profilePictureUrl)" />
+        <h5 class="card-title">Casey Fyfe</h5>
+        <p class="card-text">You either die Spongebob or you live long enough to become Squidward. Worked at/with @Twitter.</p>
+        <a href="#" class="btn btn-light btn-sm">Coach</a>
+    </div>
+
+    <div class="card-footer d-flex justify-content-between">
+        <div class="coach-status online d-flex gap-5"><span>●</span>Online</div>
+        <div>
+            <button class="btn btn-outline-primary btn-sm coach-message"> {{ 'Message' | localize }}</button>
+        </div>
+    </div>
+</div>

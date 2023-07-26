@@ -256,8 +256,11 @@ namespace Academically.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.Pages_Posts,
                 PermissionNames.Pages_Posts_Create,
                 PermissionNames.Pages_Posts_Update,
-                PermissionNames.Pages_Posts_Delete
-
+                PermissionNames.Pages_Posts_Delete,
+                PermissionNames.Pages_Coaching,
+                PermissionNames.Pages_Coaching_About,
+                PermissionNames.Pages_Coaching_Discussion,
+                PermissionNames.Pages_Coaching_Reviews
             );
 
             #endregion
