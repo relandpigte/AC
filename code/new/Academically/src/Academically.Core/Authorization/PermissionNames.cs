@@ -226,5 +226,10 @@
         public const string Pages_Posts_Create = "Pages.Posts.Create";
         public const string Pages_Posts_Update = "Pages.Posts.Update";
         public const string Pages_Posts_Delete = "Pages.Posts.Delete";
+        
+        public const string Pages_Coaching = "Pages.Coaching";
+        public const string Pages_Coaching_About = "Pages.Coaching.About";
+        public const string Pages_Coaching_Discussion = "Pages.Coaching.Discussion";
+        public const string Pages_Coaching_Reviews = "Pages.Coaching.Reviews";
     }
 }

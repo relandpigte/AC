@@ -220,6 +220,13 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
               import('@app/community/community.module').then(
                 (m) => m.CommunityModule
               ),
+          },
+          {
+            path: 'coaching',
+            loadChildren: () =>
+              import('@app/coaching/coaching.module').then(
+                (m) => m.CoachingModule
+              ),
           }
         ]
       }

@@ -233,6 +233,11 @@ namespace Academically.Authorization
             postPermission.CreateChildPermission(PermissionNames.Pages_Posts_Create, L("Create"));
             postPermission.CreateChildPermission(PermissionNames.Pages_Posts_Delete, L("Update"));
             postPermission.CreateChildPermission(PermissionNames.Pages_Posts_Update, L("Delete"));
+
+            var coachingPermission = context.CreatePermission(PermissionNames.Pages_Coaching, L("Coaching"));
+            coachingPermission.CreateChildPermission(PermissionNames.Pages_Coaching_About, L("About"));
+            coachingPermission.CreateChildPermission(PermissionNames.Pages_Coaching_Discussion, L("Discussion"));
+            coachingPermission.CreateChildPermission(PermissionNames.Pages_Coaching_Reviews, L("Reviews"));
         }
 
         private static ILocalizableString L(string name)

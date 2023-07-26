@@ -647,20 +647,20 @@ export class ArticlesServiceProxy {
     }
 
     /**
-     * @param maxResultCount (optional) 
      * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
-    getAllForHome(maxResultCount: number | undefined, skipCount: number | undefined): Observable<ArticleDtoPagedResultDto> {
+    getAllForHome(skipCount: number | undefined, maxResultCount: number | undefined): Observable<ArticleDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Articles/GetAllForHome?";
-        if (maxResultCount === null)
-            throw new Error("The parameter 'maxResultCount' cannot be null.");
-        else if (maxResultCount !== undefined)
-            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
             url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -15495,20 +15495,20 @@ export class ProjectsServiceProxy {
     }
 
     /**
-     * @param maxResultCount (optional) 
      * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
-    getAllFormHome(maxResultCount: number | undefined, skipCount: number | undefined): Observable<ProjectDtoPagedResultDto> {
+    getAllFormHome(skipCount: number | undefined, maxResultCount: number | undefined): Observable<ProjectDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Projects/GetAllFormHome?";
-        if (maxResultCount === null)
-            throw new Error("The parameter 'maxResultCount' cannot be null.");
-        else if (maxResultCount !== undefined)
-            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
             url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -26901,20 +26901,20 @@ export class VideosServiceProxy {
     }
 
     /**
-     * @param maxResultCount (optional) 
      * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
-    getAllForHome(maxResultCount: number | undefined, skipCount: number | undefined): Observable<VideoDtoPagedResultDto> {
+    getAllForHome(skipCount: number | undefined, maxResultCount: number | undefined): Observable<VideoDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Videos/GetAllForHome?";
-        if (maxResultCount === null)
-            throw new Error("The parameter 'maxResultCount' cannot be null.");
-        else if (maxResultCount !== undefined)
-            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
             url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

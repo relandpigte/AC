@@ -1,0 +1,18 @@
+<app-community-side-card
+    header="Related coaching"
+    [items]="relatedCoaching"
+    [template]="relatedCoachingTemplate"
+></app-community-side-card>
+
+<ng-template #relatedCoachingTemplate let-item="item">
+    <div class="coaching d-flex flex-row flex-nowrap gap-15">
+        <app-shimmer [show]="false" [shimmerType]="shimmerType.SideCardAvatar"></app-shimmer>
+        <div class="coaching-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
+            <img [src]="getProfilePicture(item.creatorUser.profilePictureUrl)" class="avatar avatar-sm avatar-img rounded-circle" alt="profile" />
+        </div>
+        <div class="coaching-right flex-grow-1 d-flex flex-column justify-content-center gap-2">
+            <div class="coaching-name wrap-text">{{ item.name }}</div>
+            <div class="coaching-author wrap-text">{{ item.creatorUser.fullName }}</div>
+        </div>
+    </div>
+</ng-template>
