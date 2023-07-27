@@ -18,20 +18,20 @@ import { UserFollowingService } from '@shared/services/user-following.service';
 import { AppConsts } from '@shared/AppConsts';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
-enum PostFiltering {
+export enum PostFiltering {
     All = 'Community.Posts.Filtering.All',
     Post = 'Community.Posts.Filtering.Post',
     Question = 'Community.Posts.Filtering.Question',
     Discussion = 'Community.Posts.Filtering.Discussion'
 }
 
-enum PostSorting {
+export enum PostSorting {
     Latest = 'Community.Posts.Sorting.Latest',
     Replied = 'Community.Posts.Sorting.Replied',
     Reacted = 'Community.Posts.Sorting.Reacted'
 }
 
-enum SubscribeType {
+export enum SubscribeType {
     subscribe = 'Subscribe',
     unsubscribe = 'Unsubscribe'
 }

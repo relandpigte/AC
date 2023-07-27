@@ -75,7 +75,7 @@
                 <app-reaction
                     *ngIf="!isDiscussion"
                     [referenceId]="data?.id"
-                    [reactionGroup]="ReactionGroup.Emotions"
+                    [reactionGroup]="reactionGroup"
                     [isActionButton]="true"
                     [hasReply]="false"
                     [hasTally]="false"
@@ -134,7 +134,7 @@
                     <app-reaction
                         *ngIf="!isDiscussion"
                         [referenceId]="data?.id"
-                        [reactionGroup]="ReactionGroup.Emotions"
+                        [reactionGroup]="reactionGroup"
                         [hasAction]="false"
                         [hasReply]="false"
                         [hasReactionUsersList]="true"

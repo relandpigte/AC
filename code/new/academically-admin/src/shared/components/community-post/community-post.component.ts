@@ -10,7 +10,7 @@ import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { FileUtils } from '@shared/helpers/file-utils';
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
-import { AvailableServiceDto, DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, SharedType, UserDto } from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, ReactionType, SharedType, UserDto } from '@shared/service-proxies/service-proxies';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { UserFollowingService } from '@shared/services/user-following.service';
 import { CommunityDiscussionsComponent } from '../community-discussions/community-discussions.component';
@@ -34,6 +34,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     @Input() isHistoryCard: boolean;
     @Input() hideEdited: boolean;
     @Input() canOverrideOwner: boolean;
+    @Input() reactionGroup: ReactionGroup = ReactionGroup.Emotions;
 
     @Output() refresh = new EventEmitter();
     @Output() onUpdate = new EventEmitter();

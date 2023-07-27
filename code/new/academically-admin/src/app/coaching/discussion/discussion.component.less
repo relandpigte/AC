@@ -1,0 +1,80 @@
+.discussion {
+    &-controls {
+        &-left {
+            &-posts-count {
+                font-weight: 400;
+                font-size: 13px;
+                line-height: 17px;
+                color: #6E84A3;
+            }
+
+            .dropdown {
+                &-toggle,
+                &-toggle .fe {
+                    font-weight: 600;
+                    font-size: 16px;
+                    line-height: 20px;
+                    color: #12263F;
+                }
+            }
+        }
+
+        &-right {
+            font-weight: 400;
+            font-size: 13px;
+            line-height: 20px;
+            text-align: right;
+            letter-spacing: -0.01em;
+            color: #6E84A3;
+
+            .dropdown {
+                &-toggle,
+                &-toggle .fe {
+                    font-weight: 600;
+                    font-size: 13px;
+                    line-height: 20px;
+                    color: #12263F;
+                }
+            }
+        }
+    }
+
+    &-content {
+        &-left, &-right {
+            width: 0;
+        }
+
+        &-post {
+            &:empty {
+                display: none;
+            }
+
+            &.end {
+                .left, .right {
+                    width: 162px;
+                    height: 0.5px;
+                    background-color: #95AAC9;
+                }
+            }
+
+            &-load-more {
+                font-weight: 400;
+                font-size: 13px;
+                line-height: 17px;
+                text-align: center;
+                letter-spacing: -0.02em;
+                color: #3B516C;
+                padding: 20px;
+                border-radius: 0;
+                cursor: pointer;
+            }
+
+            &-no-more {
+                font-weight: 600;
+                font-size: 13px;
+                line-height: 17px;
+                color: #95AAC9;
+            }
+        }
+    }
+}

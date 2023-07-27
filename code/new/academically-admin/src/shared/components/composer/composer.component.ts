@@ -12,6 +12,7 @@ import { ShimmerType } from '../../enums/shimmer/shimmer-type.enum';
 export class CommunityComposerComponent extends AppComponentBase {
     @Input() showBottomActions = true;
     @Input() isLoading: boolean;
+    @Input() placeholder: string = 'Community.Composer.Placeholder';
 
     @Output() onQuickPostClick: EventEmitter<any> = new EventEmitter();
     @Output() onQuestionClick: EventEmitter<any> = new EventEmitter();
