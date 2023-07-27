@@ -212,7 +212,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
         const appStateServices: AppStateServices = {
             [this.postsStateId]: {
                 type: PostsStateService,
-                args: [this._hubService, this._postsService]
+                args: [this.appSession, this._hubService, this._postsService]
             }
         };
         await this.pubSubService.start(this, appStateConfig, appStateServices);

@@ -7,6 +7,7 @@ import { HubService } from '@app/_shared/services/hub.service';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
+import { AppSessionService } from '@shared/session/app-session.service';
 
 export const MAX_POSTS_TO_LOAD = 15;
 
@@ -17,9 +18,11 @@ export enum pageType {
 
 export class PostsStateService extends StateServiceBase {
   posts: Map<string, PostDto> = new Map();
+  newPosts: Map<string, PostDto> = new Map();
   totalPostsCount: number;
 
   posts$: Subject<StateUpdate<PostDto>> = new Subject();
+  newPosts$: Subject<StateUpdate<PostDto>> = new Subject();
   loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
   type: pageType;
@@ -29,6 +32,7 @@ export class PostsStateService extends StateServiceBase {
   };
 
   constructor(
+    private _appSession: AppSessionService,
     private _hubService: HubService,
     private _postsService: PostsServiceProxy
   ) {
@@ -71,39 +75,57 @@ export class PostsStateService extends StateServiceBase {
   }
 
   protected async setupSubscriptions(component: any, userId: number) {
-    const canViewPost = (post: PostDto): boolean => {
-      if (!post) return false;
-      const [type, parentId, creationTime] = this.loadArgs;
-      return (
-        (!type || post.type === type) &&
-        (!parentId || post.parentId === parentId) &&
-        (!creationTime || post.creationTime.isBefore(creationTime))
-      );
-    };
-
-    const handleUpsertPosts = async (post: PostDto) => {
-      if (!canViewPost(post)) return;
-      this.loading$.next(true);
-      this.updateFromMap(this.posts, Utils.toObjectMap([post], (p) => p.id, (p) => p), this.posts$)
-      this.loading$.next(false);
-    };
-
-    const handleDeletePosts = async (id: string) => {
-      if (!canViewPost(this.posts[id])) return;
-      this.loading$.next(true);
-      this.updateFromMap(this.posts, { [id]: null }, this.posts$);
-      this.loading$.next(false);
-    }
-
     try {
       const hub = await this._hubService.getPostsHub(...this.updateArgs);
-      hub.on(HubEvent[HubEvent.PostCreated], handleUpsertPosts);
-      hub.on(HubEvent[HubEvent.PostUpdated], handleUpsertPosts);
-      hub.on(HubEvent[HubEvent.PostDeleted], handleDeletePosts);
+      hub.on(HubEvent[HubEvent.PostCreated], this.handleNewPosts);
+      hub.on(HubEvent[HubEvent.PostUpdated], this.handleUpdatePosts);
+      hub.on(HubEvent[HubEvent.PostDeleted], this.handleDeletePosts);
     } catch (err) {
       console.error(err);
     }
     return null;
+  }
+
+  canViewPost = (post: PostDto): boolean => {
+    if (!post) return false;
+    const [type, parentId, creationTime] = this.loadArgs;
+    return (
+      (!type || post.type === type) &&
+      (!parentId || post.parentId === parentId) &&
+      (!creationTime || post.creationTime.isBefore(creationTime))
+    );
+  };
+
+  handleNewPosts = async (post: PostDto) => {
+    if (!this.canViewPost(post)) return;
+    this.loading$.next(true);
+    if (this._appSession.userId === post.creatorUserId) {
+      this.updateFromMap(this.posts, Utils.toObjectMap([post], (p) => p.id, (p) => p), this.posts$);
+    } else {
+      this.updateFromMap(this.newPosts, Utils.toObjectMap([post], (p) => p.id, (p) => p), this.newPosts$);
+    }
+    this.loading$.next(false);
+  };
+
+  handleUpdatePosts = async (post: PostDto) => {
+    if (!this.canViewPost(post)) return;
+    this.loading$.next(true);
+    this.updateFromMap(this.posts, Utils.toObjectMap([post], (p) => p.id, (p) => p), this.posts$);
+    this.loading$.next(false);
+  };
+
+  handleDeletePosts = async (id: string) => {
+    if (!this.canViewPost(this.posts[id])) return;
+    this.loading$.next(true);
+    this.updateFromMap(this.posts, { [id]: null }, this.posts$);
+    this.loading$.next(false);
+  }
+
+  async mergeNewPosts() {
+    this.loading$.next(true);
+    this.updateFromMap(this.posts, Utils.toObjectMap(Array.from(this.newPosts.values()).filter(p => this.canViewPost(p)), (p) => p.id, (p) => p), this.posts$);
+    this.loading$.next(false);
+    this.newPosts = new Map();
   }
 
   async updateServiceParams(params: { type: PostType | undefined, parentId: string | undefined, creationTime: moment.Moment | undefined }) {
