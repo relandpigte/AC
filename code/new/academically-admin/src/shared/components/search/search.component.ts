@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, ViewChild, OnInit } from '@angular/core';
 import { PagedListingComponentBase } from '@shared/paged-listing-component-base';
 import * as _ from 'lodash';
 import { BehaviorSubject } from 'rxjs';
@@ -26,8 +26,9 @@ export interface SortOption {
     templateUrl: './search.component.html',
     styleUrls: ['./search.component.scss']
 })
-export class SearchComponent<T> extends PagedListingComponentBase<T> implements OnChanges, AfterViewInit {
+export class SearchComponent<T> extends PagedListingComponentBase<T> implements OnChanges, AfterViewInit, OnInit {
     searchFilter: string;
+    containerHeight = 0;
 
     @ViewChild('searchInput', { static: true }) searchInput: ElementRef;
 
@@ -54,6 +55,11 @@ export class SearchComponent<T> extends PagedListingComponentBase<T> implements 
         super(injector);
     }
 
+    ngOnInit(): void {
+        // const searchContainer = document.querySelector('.search') as HTMLDivElement;
+        // console.log(searchContainer.clientHeight);
+    }
+
     ngOnChanges(changes: SimpleChanges): void {
         if ('options' in changes && this.options) {
             this.searchInputTrigger$
@@ -64,6 +70,10 @@ export class SearchComponent<T> extends PagedListingComponentBase<T> implements 
                 .subscribe(filter => {
                     this.searchFilter = filter;
                     this.handleOnSearch();
+
+                    const searchContainer = document.querySelector('.search') as HTMLDivElement;
+                    this.containerHeight = Math.max(this.containerHeight, searchContainer.clientHeight);
+                    searchContainer.style.height = `${this.containerHeight}px`;
                 });
         }
 
