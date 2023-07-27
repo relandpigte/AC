@@ -14,6 +14,11 @@
                         <app-about-coach></app-about-coach>
                         <app-about-related-coaching></app-about-related-coaching>
                     </ng-container>
+                    <ng-container *ngIf="isDiscussionTab">
+                        <app-coach-badge></app-coach-badge>
+                        <app-session-badge></app-session-badge>
+                        <app-about-related-coaching></app-about-related-coaching>
+                    </ng-container>
                 </div>
             </div>
         </div>

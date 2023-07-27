@@ -1852,6 +1852,7 @@
 	<text name="CoachingRequests">Coaching Requests</text>
 	<text name="CoachingPrograms">Coaching Programs</text>
 	<text name="DeleteCoachingConfirmationMessage">Are you sure you want to delete this coaching?</text>
+	<text name="Coaching.Composer.Placeholder">Ask question before the coaching start...</text>
 	<!-- Workshop -->
 	<text name="NewWorkshop">New Workshop</text>
 	<text name="CreateWorkshop">Create Workshop</text>
@@ -1903,6 +1904,7 @@
 	<text name="Explore">Explore</text>
 	<text name="ForYou">For You</text>
 	<!-- Community -->
+	<text name="Community.Composer.Placeholder">Start quick post...</text>
 	<text name="Community.Header1">Community</text>
 	<text name="Community.Header2">Interests</text>
 	<text name="Community.Topics">Topics</text>

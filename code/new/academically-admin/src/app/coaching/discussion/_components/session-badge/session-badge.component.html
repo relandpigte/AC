@@ -1,0 +1,44 @@
+<div class="card">
+    <div class="card-header">
+        About the session
+    </div>
+    <div class="card-body d-flex flex-column justify-content-center align-items-start gap-20 w-100">
+        <div class="self-booking d-flex justify-content-center align-items-center gap-10">
+            <div class="icon fe fe-calendar"></div>
+            <div class="label">Book By Yourself</div>
+        </div>
+
+        <div class="duration d-flex justify-content-center align-items-center gap-10">
+            <div class="icon fe fe-clock"></div>
+            <div class="label d-flex justify-content-center align-items-center gap-2">
+                <b>Duration:</b>
+                <div>2 hours</div>
+            </div>
+        </div>
+
+        <div class="ratings d-flex justify-content-center align-items-center gap-10">
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="icon fas fa-star active"></div>
+                <div class="icon fas fa-star active"></div>
+                <div class="icon fas fa-star active"></div>
+                <div class="icon fas fa-star active"></div>
+                <div class="icon fas fa-star"></div>
+            </div>
+            <div class="label">4.2/5.0</div>
+        </div>
+
+        <div class="description">
+            <span *ngIf="!showMore" [innerHTML]="(description | shorten : showMoreLimit) + ''"></span>
+            <span *ngIf="showMore" [innerHTML]="description"></span>
+            <a class="show-more" role="button" (click)="showMore = !showMore"> See {{ showMore ? 'less' : 'more' }}</a>
+        </div>
+
+        <div class="topics d-flex flex-wrap justify-content-start align-items-center gap-10">
+            <div class="topics-item">#Subatomic</div>
+            <div class="topics-item">#Molecular</div>
+            <div class="topics-item">#Preclinicaldentistry</div>
+            <div class="topics-item">#Lorem ipsumr</div>
+            <div class="topics-item">#Lorem ipsumr</div>
+        </div>
+    </div>
+</div>

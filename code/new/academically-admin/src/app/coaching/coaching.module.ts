@@ -7,6 +7,7 @@ import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 import { HeaderComponent } from './_components/header/header.component';
 import { CoachingAboutModule } from '@app/coaching/about/about.module';
+import { CoachingDiscussionModule } from './discussion/discussion.module';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { CoachingAboutModule } from '@app/coaching/about/about.module';
     CoachingRoutingModule,
     SharedModule,
     AppSharedModule,
-    CoachingAboutModule
+    CoachingAboutModule,
+    CoachingDiscussionModule
   ]
 })
 export class CoachingModule { }
