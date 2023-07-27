@@ -129,7 +129,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
 
   private async initPostsAppStates() {
     const appStateConfig: AppStateConfig = { [this.postsStateId]: { load: [undefined, undefined, undefined, 0, MAX_POSTS_TO_LOAD], update: true } };
-    const appStateServices: AppStateServices = { [this.postsStateId]: { type: PostsStateService, args: [this._hubService, this._postsService] } };
+    const appStateServices: AppStateServices = { [this.postsStateId]: { type: PostsStateService, args: [this.appSession, this._hubService, this._postsService] } };
     await this.pubSubService.start(this, appStateConfig, appStateServices);
     this.postsStateService = this.pubSubService.getStateService<PostsStateService>(this.postsStateId);
 

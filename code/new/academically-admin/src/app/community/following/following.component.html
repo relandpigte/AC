@@ -1,4 +1,5 @@
-<div class="container-fluid following d-flex flex-column flex-nowrap p-0">
+<div #followingContainer class="container-fluid following d-flex flex-column flex-nowrap position-relative p-0">
+    <app-new-post-floater [parentContainer]="followingContainer"></app-new-post-floater>
     <div *ngIf="!(isLoading$ | async)" class="following-controls d-flex flex-row justify-content-between" [style.marginBottom.px]="10">
       <div class="following-controls-filter">
         <div class="dropdown">

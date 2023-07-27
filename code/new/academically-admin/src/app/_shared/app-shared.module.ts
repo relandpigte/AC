@@ -64,6 +64,7 @@ import { AddTopicsComponent } from '@shared/modals/add-topics/add-topics.compone
 import { ShimmerComponent } from '@shared/components/shimmer/shimmer.component';
 import { PreviewPostsComponent } from '@shared/components/preview/posts/posts.component';
 import { PreviewServicesComponent } from '@shared/components/preview/services/services.component';
+import { NewPostFloaterComponent } from '@shared/components/new-post-floater/new-post-floater.component';
 
 import { KeysPipe } from '@shared/pipes/keys.pipe';
 import { ShortenPipe } from '@shared/pipes/shorten.pipe';
@@ -115,7 +116,8 @@ import { CommentHistoryComponent } from '@shared/modals/comment-history/comment-
     PreviewPostsComponent,
     PreviewServicesComponent,
     ShortenPipe,
-    CommentHistoryComponent
+    CommentHistoryComponent,
+    NewPostFloaterComponent
   ],
   imports: [
     CommonModule,
@@ -203,7 +205,8 @@ import { CommentHistoryComponent } from '@shared/modals/comment-history/comment-
     PreviewPostsComponent,
     PreviewServicesComponent,
     ShortenPipe,
-    CommentHistoryComponent
+    CommentHistoryComponent,
+    NewPostFloaterComponent
   ],
 })
 export class AppSharedModule { }

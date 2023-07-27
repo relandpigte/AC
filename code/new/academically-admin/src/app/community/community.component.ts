@@ -93,7 +93,7 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
         undefined,
         this.appSession.userId,
         UserTopicType.Following,
-        undefined
+        'recent'
       )
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => (this.isLoadingSuggestTopics$.next(false))));

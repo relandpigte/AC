@@ -1,0 +1,30 @@
+.floater {
+    &-container {
+        width: 121px;
+        height: 32px;
+        display: none !important;
+
+        position: absolute;
+        top: 0;
+        left: 50%;
+        z-index: 3;
+
+        font-size: 14px;
+        font-weight: 600;
+        color: white;
+        background-color: #2C7BE5;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px 0 rgba(18, 38, 63, 0.25);
+
+        transform: translate(-50%, calc(30px - 50%));
+
+        &.shown {
+            display: flex !important;
+        }
+
+        .icon {
+            font-weight: 600;
+            font-size: 14px;
+        }
+    }
+}
