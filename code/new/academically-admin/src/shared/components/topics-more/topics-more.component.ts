@@ -181,6 +181,7 @@ export class TopicsMoreComponent extends AppComponentBase implements OnInit {
             .subscribe((topics) => {
                 this.updateSearchResults(topics);
                 this.topics.delete(topic.id);
+                this.handleOnSearch(this.searchFilter);
                 this.notify.info(this.l('Community.Topics.NotInterested.Success', topic.name));
             });
     }
