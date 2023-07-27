@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, ViewChild, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { PagedListingComponentBase } from '@shared/paged-listing-component-base';
 import * as _ from 'lodash';
 import { BehaviorSubject } from 'rxjs';
@@ -26,7 +26,7 @@ export interface SortOption {
     templateUrl: './search.component.html',
     styleUrls: ['./search.component.scss']
 })
-export class SearchComponent<T> extends PagedListingComponentBase<T> implements OnChanges, AfterViewInit, OnInit {
+export class SearchComponent<T> extends PagedListingComponentBase<T> implements OnChanges, AfterViewInit {
     searchFilter: string;
     containerHeight = 0;
 
@@ -53,11 +53,6 @@ export class SearchComponent<T> extends PagedListingComponentBase<T> implements 
         injector: Injector
     ) {
         super(injector);
-    }
-
-    ngOnInit(): void {
-        // const searchContainer = document.querySelector('.search') as HTMLDivElement;
-        // console.log(searchContainer.clientHeight);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
