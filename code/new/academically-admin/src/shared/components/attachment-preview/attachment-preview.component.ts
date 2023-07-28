@@ -4,6 +4,8 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { FileUtils } from '@shared/helpers/file-utils';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { AttachmentViewerComponent } from '../attachment-viewer/attachment-viewer.component';
 
 @Component({
     selector: 'app-attachment-preview',
@@ -14,6 +16,8 @@ import { FileUtils } from '@shared/helpers/file-utils';
 export class AttachmentPreviewComponent extends AppComponentBase implements OnChanges {
     @Input() file: File;
     @Input() canRemove: boolean = true;
+    @Input() canView: boolean = false;
+
     @Input() width: string;
     @Input() height: string;
     @Input() hasVideoControls = true;
@@ -31,7 +35,8 @@ export class AttachmentPreviewComponent extends AppComponentBase implements OnCh
 
     constructor(
         injector: Injector,
-        private _cdr: ChangeDetectorRef
+        private _cdr: ChangeDetectorRef,
+        private _modalService: BsModalService
     ) {
         super(injector);
     }
@@ -70,5 +75,22 @@ export class AttachmentPreviewComponent extends AppComponentBase implements OnCh
 
         this.isVideoPlaying = !this.isVideoPlaying;
         this._cdr.detectChanges();
+    }
+
+    viewAttachment(evt): void {
+        evt.preventDefault();
+        evt.stopPropagation();
+        const modalSettings = this.defaultModalSettings;
+        modalSettings.class = 'modal-dialog-centered modal-fs';
+        modalSettings.initialState = {
+            url: this.sanitizedAttachmentUrl,
+            downloadUrl: FileUtils.getFileUrl(this.file),
+            extension: FileUtils.getFileExtension(this.file?.name)
+        };
+        this._modalService.show(AttachmentViewerComponent, modalSettings);
+    }
+
+    downloadFile(): void {
+        window.open(FileUtils.getFileUrl(this.file), '_blank');
     }
 }

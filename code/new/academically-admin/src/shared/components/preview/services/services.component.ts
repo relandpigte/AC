@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
@@ -23,7 +24,11 @@ export class PreviewServicesComponent extends AppComponentBase implements OnChan
   sanitized: ServiceCard;
   sanitizedOptions: ServiceCardOptions;
 
-  constructor(injector: Injector, private _profileService: ProfilesServiceProxy) {
+  constructor(
+    injector: Injector,
+    private _router: Router,
+    private _profileService: ProfilesServiceProxy
+  ) {
     super(injector);
   }
 
@@ -95,5 +100,9 @@ export class PreviewServicesComponent extends AppComponentBase implements OnChan
 
   removeService(): void {
     this.onRemove.emit();
+  }
+
+  viewService(): void {
+    this._router.navigate([`/app/${this.serviceTypeName.toLowerCase()}/about`]);
   }
 }

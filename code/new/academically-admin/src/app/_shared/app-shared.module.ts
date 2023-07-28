@@ -36,6 +36,7 @@ import { ProfilePictureChangerComponent } from './components/profile-picture-cha
 import { WhiteboardComponent } from './components/whiteboard/whiteboard.component';
 
 import { AttachmentPreviewComponent } from '@shared/components/attachment-preview/attachment-preview.component';
+import { AttachmentViewerComponent } from '@shared/components/attachment-viewer/attachment-viewer.component';
 import { AutocompleteComponent } from '@shared/components/autocomplete/autocomplete.component';
 import { CardClusterComponent } from '@shared/components/card-cluster/card-cluster.component';
 import { CarouselPillComponent } from '@shared/components/carousel-pill/carousel-pill.component';
@@ -101,6 +102,7 @@ import { CommentHistoryComponent } from '@shared/modals/comment-history/comment-
     AddServiceComponent,
     AddTopicsComponent,
     AttachmentPreviewComponent,
+    AttachmentViewerComponent,
     ServicePickerComponent,
     ServicePreviewComponent,
     ServicePreviewLiteComponent,
@@ -190,6 +192,7 @@ import { CommentHistoryComponent } from '@shared/modals/comment-history/comment-
     AutocompleteComponent,
     PillPickerComponent,
     AttachmentPreviewComponent,
+    AttachmentViewerComponent,
     ServicePickerComponent,
     ServicePreviewComponent,
     ServicePreviewLiteComponent,

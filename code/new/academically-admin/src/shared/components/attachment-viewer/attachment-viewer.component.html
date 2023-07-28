@@ -1,0 +1,24 @@
+<div class="actions d-flex justify-content-center align-items-center gap-20">
+    <button type="button" class="download" aria-label="Download" (click)="onDownloadClick()">
+        <i class="fe fe-download-cloud"></i>
+    </button>
+    <button type="button" class="close" aria-label="Close" (click)="onCloseClick()">
+        <span aria-hidden="true">×</span>
+    </button>
+</div>
+
+<div class="attachment-viewer d-flex justify-content-center align-items-center">
+    <div class="attachment-file">
+        <div *ngIf="isImageAttachment && url" class="attachment-image">
+        <img #attachment [src]="url" />
+    </div>
+
+    <div
+        *ngIf="isVideoAttachment && url"
+        class="attachment-video d-flex flex-wrap justify-content-center align-content-center align-items-center cursor-pointer"
+        (click)="togglePlayVideo($event)"
+    >
+        <video #attachment [src]="url" [controls]="true" loop playsinline></video>
+    </div>
+    </div>
+</div>
