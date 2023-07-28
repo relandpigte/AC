@@ -14,7 +14,7 @@
     </div>
 
     <div
-        *ngIf="isVideoAttachment"
+        *ngIf="isVideoAttachment && !canView"
         class="attachment-play d-flex justify-content-center align-items-center cursor-pointer"
         (click)="togglePlayVideo($event)"
     >
@@ -27,7 +27,7 @@
         *ngIf="isImageAttachment && sanitizedAttachmentUrl"
         class="attachment-image"
     >
-        <img [src]="sanitizedAttachmentUrl" />
+        <img [src]="sanitizedAttachmentUrl" [class.cursor-pointer]="canView" (click)="canView ? viewAttachment($event) : ''"/>
     </div>
 
     <div
@@ -35,7 +35,15 @@
         class="attachment-video d-flex flex-wrap justify-content-center align-content-center align-items-center cursor-pointer"
         (click)="togglePlayVideo($event)"
     >
-        <video #videoAttachment [src]="sanitizedAttachmentUrl" class="bg-light" [controls]="hasVideoControls && isVideoPlaying" loop playsinline></video>
+        <video #videoAttachment
+            [src]="sanitizedAttachmentUrl"
+            class="bg-light"
+            [class.cursor-pointer]="canView"
+            [controls]="hasVideoControls && isVideoPlaying && !canView"
+            [loop]="canView ? null : ''"
+            [playsinline]="canView ? null : ''"
+            (click)="canView ? viewAttachment($event) : ''"
+        ></video>
     </div>
 
     <div
@@ -45,6 +53,8 @@
             'video': isVideoAttachment,
             'file border-0 gap-20': !isImageAttachment && !isVideoAttachment
         }"
+        [class.cursor-pointer]="canView"
+        (click)="downloadFile()"
     >
         <div class="attachment-info-file d-flex justify-content-center align-items-center">
             <div class="d-flex justify-content-center align-items-center"><span class="fe fe-folder"></span></div>

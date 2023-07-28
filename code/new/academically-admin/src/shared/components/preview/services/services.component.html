@@ -1,4 +1,4 @@
-<div *ngIf="data" class="service-preview d-flex flex-column custom-card-border custom-card-shadow">
+<div *ngIf="data" class="service-preview d-flex flex-column custom-card-border custom-card-shadow" (click)="viewService()">
     <div *ngIf="canRemove" class="service-preview-remove d-flex justify-content-center align-items-center cursor-pointer" (click)="removeService()">
         <span class="fe fe-x"></span>
     </div>

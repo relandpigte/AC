@@ -2,10 +2,11 @@ import { ChangeDetectorRef, Component, Injector, Input, OnChanges, OnInit, Simpl
 import * as moment from 'moment';
 
 import { AppComponentBase } from '@shared/app-component-base';
-import { PostDto, PostType } from '@shared/service-proxies/service-proxies';
+import { PostDto, PostType, SharedType } from '@shared/service-proxies/service-proxies';
 import { FileUtils } from '@shared/helpers/file-utils';
 import { DisciplineTaxonomyDto } from '@shared/service-proxies/service-proxies';
 import { AppConsts } from '@shared/AppConsts';
+import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 
 @Component({
   selector: 'app-preview-posts',
@@ -32,6 +33,8 @@ export class PreviewPostsComponent extends AppComponentBase implements OnInit, O
   get postDate(): string { return this.postDateFormat(this.data?.creationTime); }
   get author(): string { return this.data?.creatorUser?.fullName; }
   get userTopics(): DisciplineTaxonomyDto[] { return this.data?.postTopics?.map?.(t => t.disciplineTaxonomy); }
+  get hasSharedService(): boolean { return this.data?.sharedId && this.data?.sharedType === SharedType.Service; }
+  get sharedService(): any { return ServiceCardUtils.getServiceData(this.data); }
 
   get isShowMore(): boolean {
     return this.description?.length > this.showMoreLimit;
