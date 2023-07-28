@@ -83,6 +83,11 @@
                 height: 34px;
                 padding: 7.5px 21.5px;
                 line-height: 1rem;
+                color: #6E84A3;
+
+                &.discussion-info-subscribe {
+                    color: white;
+                }
 
                 &.discussion-info-unsubscribe {
                     background: rgba(44, 123, 229, 0.1);
@@ -91,8 +96,8 @@
                 }
                 &.discussion-info-share {
                     span {
-                        width: 16px;
-                        height: 13px;
+                        width: 20px;
+                        height: 20px;
                     }
                 }
             }
