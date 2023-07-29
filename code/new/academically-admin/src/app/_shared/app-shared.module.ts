@@ -69,6 +69,7 @@ import { NewPostFloaterComponent } from '@shared/components/new-post-floater/new
 import { KeysPipe } from '@shared/pipes/keys.pipe';
 import { ShortenPipe } from '@shared/pipes/shorten.pipe';
 import { CommentHistoryComponent } from '@shared/modals/comment-history/comment-history.component';
+import { ServiceReviewComponent } from '@shared/components/service-review/service-review.component';
 
 @NgModule({
   declarations: [
@@ -117,7 +118,8 @@ import { CommentHistoryComponent } from '@shared/modals/comment-history/comment-
     PreviewServicesComponent,
     ShortenPipe,
     CommentHistoryComponent,
-    NewPostFloaterComponent
+    NewPostFloaterComponent,
+    ServiceReviewComponent
   ],
   imports: [
     CommonModule,
@@ -206,7 +208,8 @@ import { CommentHistoryComponent } from '@shared/modals/comment-history/comment-
     PreviewServicesComponent,
     ShortenPipe,
     CommentHistoryComponent,
-    NewPostFloaterComponent
+    NewPostFloaterComponent,
+    ServiceReviewComponent
   ],
 })
 export class AppSharedModule { }

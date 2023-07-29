@@ -19,7 +19,7 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
 
   get isAboutTab(): boolean { return this._router.url.includes(['coaching', 'about'].join('/')); }
   get isDiscussionTab(): boolean { return this._router.url.includes(['coaching', 'discussion'].join('/')); }
-  get isRatingsTab(): boolean { return this._router.url.includes(['coaching', 'ratings'].join('/')); }
+  get isReviewsTab(): boolean { return this._router.url.includes(['coaching', 'reviews'].join('/')); }
 
   ngOnInit(): void {
   }

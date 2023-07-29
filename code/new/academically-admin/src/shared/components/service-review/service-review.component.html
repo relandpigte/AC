@@ -1,0 +1,46 @@
+<div class="card review d-flex flex-column custom-card-border custom-card-shadow">
+    <div class="review-container d-flex flex-column">
+        <app-shimmer [show]="false" [shimmerType]="shimmerType.PostCard"></app-shimmer>
+        <div class="review-heading d-flex flex-row flex-nowrap align-items-center">
+            <div class="review-heading-avatar">
+                <a href="#" class="avatar avatar-sm">
+                    <img [src]="'https://i.pravatar.cc/300?u=' + randomNonZero(100)" class="avatar-img rounded-circle" alt="profile" />
+                </a>
+            </div>
+            <div class="review-heading-owner flex-grow-1 d-flex flex-column flex-nowrap gap-3">
+                <div class="review-heading-owner-name d-flex flex-row align-items-center gap-8">
+                    {{ 'Casey Fyfe' | titlecase }}
+                    <button
+                        type="button"
+                        class="btn btn-link review-heading-owner-follow d-flex justify-content-center align-items-center">
+                        <span class="text">
+                            {{ 'Follow' | localize }}
+                        </span>
+                    </button>
+                </div>
+                <div class="review-heading-owner-time" role="button">
+                    <span [tooltip]="'10:45 pm'">10:45 pm</span>
+                </div>
+            </div>
+        </div>
+        <div class="review-ratings d-flex align-items-center gap-10">
+            <div class="stars d-flex justify-content-center align-items-center">
+                <div class="icon fas fa-star active"></div>
+                <div class="icon fas fa-star active"></div>
+                <div class="icon fas fa-star active"></div>
+                <div class="icon fas fa-star active"></div>
+                <div class="icon fas fa-star"></div>
+            </div>
+            <span class="label">4.2/5.0</span>
+            <span class="badge badge-soft-success rounded-pill">
+                <i class="fe fe-plus mr-2"></i>Positive
+            </span>
+        </div>
+        <div class="review-content d-flex flex-column">
+            <div class="review-content-description">
+                I can’t even begin to express how good this final season of The Americans has been.
+                If you haven’t been watching, I implore you to do so.
+            </div>
+        </div>
+    </div>
+</div>

@@ -19,6 +19,9 @@
                         <app-session-badge></app-session-badge>
                         <app-about-related-coaching></app-about-related-coaching>
                     </ng-container>
+                    <ng-container *ngIf="isReviewsTab">
+                        <app-review-stats></app-review-stats>
+                    </ng-container>
                 </div>
             </div>
         </div>
