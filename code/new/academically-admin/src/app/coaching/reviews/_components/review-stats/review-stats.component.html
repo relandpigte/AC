@@ -1,0 +1,62 @@
+<div class="card custom-card-border custom-card-shadow">
+    <div class="card-body">
+        <div class="stat d-flex flex-column">
+            <div class="stat-title">96.9% Positive review</div>
+            <div class="stat-overall-rating d-flex justify-content-start">
+                <app-star-rating [actualRating]="4.2"></app-star-rating>
+                <span class="ml-1">4.2/5.0</span>
+            </div>
+            <div class="stat-overall-review">35 reviews</div>
+            <div class="stat-experience d-flex justify-content-start gap-30">
+                <div class="d-flex flex-column">
+                    <div class="d-flex align-content-center gap-8">
+                        <span class="badge badge-soft-success rounded-circle"><i class="fe fe-plus"></i></span>
+                        <span class="rating">31</span>
+                    </div>
+                    {{ 'Positive' | localize }}
+                </div>
+                <div class="d-flex flex-column">
+                    <div class="d-flex align-content-center gap-8">
+                        <span class="badge badge-soft-secondary rounded-circle"><i class="fas fa-circle neutral-icon-font font-size-sm" ></i></span>
+                        <span class="rating">31</span>
+                    </div>
+                    {{ 'Neutral' | localize }}
+                </div>
+                <div class="d-flex flex-column">
+                    <div class="d-flex align-content-center gap-8">
+                        <span class="badge badge-soft-danger rounded-circle"><i class="fe fe-minus"></i></span>
+                        <span class="rating">31</span>
+                    </div>
+                    {{ 'Negative' | localize }}
+                </div>
+            </div>
+            <div class="stat-breakdown">
+                <div class="d-flex justify-content-start gap-10">
+                    <div>5/5</div>
+                    <div><app-star-rating [actualRating]="5"></app-star-rating></div>
+                    <div>Accuracy & recentness</div>
+                </div>
+                <div class="d-flex gap-10">
+                    <div>4/5</div>
+                    <div><app-star-rating [actualRating]="4"></app-star-rating></div>
+                    <div>Value for money</div>
+                </div>
+                <div class="d-flex gap-10">
+                    <div>3/5</div>
+                    <div><app-star-rating [actualRating]="3"></app-star-rating></div>
+                    <div>Interaction & engagement</div>
+                </div>
+                <div class="d-flex gap-10">
+                    <div>2/5</div>
+                    <div><app-star-rating [actualRating]="2"></app-star-rating></div>
+                    <div>Design & structure</div>
+                </div>
+                <div class="d-flex gap-10">
+                    <div>1/5</div>
+                    <div><app-star-rating [actualRating]="1"></app-star-rating></div>
+                    <div>Communication & support</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

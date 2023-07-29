@@ -39,6 +39,13 @@ import { HeaderComponent } from '@app/coaching/_components/header/header.compone
                     (m) => m.CoachingDiscussionModule,
                   ),
               },
+              {
+                path: 'reviews',
+                loadChildren: () =>
+                  import('@app/coaching/reviews/reviews.module').then(
+                    (m) => m.CoachingReviewsModule
+                  ),
+              },
               { path: '', redirectTo: 'about' },
               { path: '**', redirectTo: 'about' },
             ]

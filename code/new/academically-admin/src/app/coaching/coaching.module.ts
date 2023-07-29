@@ -8,6 +8,7 @@ import { AppSharedModule } from '@app/_shared/app-shared.module';
 import { HeaderComponent } from './_components/header/header.component';
 import { CoachingAboutModule } from '@app/coaching/about/about.module';
 import { CoachingDiscussionModule } from './discussion/discussion.module';
+import { CoachingReviewsModule } from '@app/coaching/reviews/reviews.module';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { CoachingDiscussionModule } from './discussion/discussion.module';
     SharedModule,
     AppSharedModule,
     CoachingAboutModule,
-    CoachingDiscussionModule
+    CoachingDiscussionModule,
+    CoachingReviewsModule
   ]
 })
 export class CoachingModule { }

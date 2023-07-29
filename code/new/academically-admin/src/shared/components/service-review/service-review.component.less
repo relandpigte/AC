@@ -1,0 +1,154 @@
+:host {
+    &:empty {
+        display: none;
+    }
+
+    ::ng-deep {
+        .tooltip {
+            filter: drop-shadow(0 0.75rem 1.5rem rgba(18, 38, 63, 0.03));
+            -o-filter: drop-shadow(0 0.75rem 1.5rem rgba(18, 38, 63, 0.03));
+            -ms-filter: drop-shadow(0 0.75rem 1.5rem rgba(18, 38, 63, 0.03));
+            -moz-filter: drop-shadow(0 0.75rem 1.5rem rgba(18, 38, 63, 0.03));
+            -webkit-filter: drop-shadow(0 0.75rem 1.5rem rgba(18, 38, 63, 0.03));
+
+            .tooltip-inner {
+                background-color: #031831;
+                max-width: none;
+                padding: 10px 15px;
+                color: #FFFFFF;
+                font-size: 15px;
+                font-weight: normal;
+                border-color: #031831;
+            }
+
+            &.top {
+                .arrow {
+                    &:before {
+                        top: -1px;
+                        border-top-color: #031831;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.review {
+
+    &-container {
+        padding: 24px;
+    }
+
+    &-heading {
+        &-avatar {
+            margin-right: 15px;
+            width: 48px;
+            height: 48px;
+
+            img {
+                width: 48px;
+                height: 48px;
+            }
+        }
+
+        &-owner {
+            &-name {
+                font-weight: 600;
+                font-size: 15px;
+                line-height: 19px;
+                letter-spacing: -0.01em;
+                color: #12263F;
+            }
+
+            &-time {
+                font-weight: 600;
+                font-size: 13px;
+                line-height: 17px;
+                display: flex;
+                align-items: center;
+                letter-spacing: -0.01em;
+                color: #95AAC9;
+            }
+
+            &-follow {
+                font-weight: 400;
+                font-size: 13px;
+                line-height: normal;
+                text-align: center;
+                letter-spacing: -0.13px;
+                padding: 0;
+                color: #2C7BE5;
+
+                &.activated {
+                    color: #6E84A3;
+                }
+
+                &:before {
+                    content:"•";
+                    padding-right: 5px;
+                    font-size: 8px;
+                }
+
+                &:focus {
+                    box-shadow: none;
+                }
+
+                &:not(.activated):hover .text {
+                    text-underline-offset: 2px;
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+
+    &-ratings {
+        margin: 0.625rem 0;
+
+        .stars {
+            color: #3B516C;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            letter-spacing: -0.32px;
+
+            .icon {
+                color: #D2DDEC;
+
+                &.active {
+                    &::after {
+                        content: '';
+                        display: none;
+                    }
+
+                    color: #F5D83E;
+                }
+            }
+        }
+
+        .label {
+            color: #6E84A3;
+            font-size: 15px;
+        }
+    }
+
+    &-content {
+        &-description {
+            font-weight: 400;
+            font-size: 15px;
+            line-height: 23px;
+            display: flex;
+            align-items: center;
+            letter-spacing: -0.01em;
+            color: #12263F;
+
+            a {
+                color: #6E84A3;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+}
