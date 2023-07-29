@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 
@@ -16,8 +16,8 @@ export class ServiceReviewComponent extends AppComponentBase implements OnInit {
   }
 
   get shimmerType() { return ShimmerType; }
+  get tempAvatar(): string {  return 'https://i.pravatar.cc/300'; }
 
   ngOnInit(): void {
   }
-
 }
