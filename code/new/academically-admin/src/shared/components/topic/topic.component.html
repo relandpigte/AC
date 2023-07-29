@@ -1,4 +1,4 @@
-<div class="topic d-flex flex-row flex-nowrap align-items-center" [ngClass]="[customClass]" [class.parent]="isParent" (click)="handleTopicClick()" [title]="name">
+<div class="topic d-flex flex-row flex-nowrap align-items-center" [class.user-following]="isFollowed" [ngClass]="[customClass]" [class.parent]="isParent" (click)="handleTopicClick()" [title]="name">
     <ng-container *ngIf="isLoading">
         <div class="d-flex flex-column flex-grow-1 gap-4">
             <div class="box-shimmer-bar" [style.width.%]="80" [style.minHeight.px]="isParent ? 20 : 16"></div>
@@ -16,7 +16,7 @@
                 <div *ngIf="!isFollowed" class="topic-right-left-follow" (click)="handleFollowClick()"><i class="fas fa-plus"></i></div>
                 <div *ngIf="isFollowed" class="topic-right-left-follow" (click)="handleUnfollowClick()"><i class="fas fa-check"></i></div>
             </div>
-            <div *ngIf="showRemove" class="topic-right-right d-flex flex-row flex-nowrap align-items-center">
+            <div *ngIf="showRemove && !isFollowed" class="topic-right-right d-flex flex-row flex-nowrap align-items-center">
                 <div *ngIf="showFollow" class="topic-right-right-separator"></div>
                 <div class="topic-right-right-remove" (click)="handleRemoveClick()"><i class="fas fa-times"></i></div>
             </div>

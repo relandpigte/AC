@@ -96,4 +96,14 @@
             }
         }
     }
+
+    &.user-following {
+        background-color: #2C7BE51A;
+        border-color: #2C7BE5;
+
+        .topic-followers,
+        .topic-name {
+            color: #2C7BE5;
+        }
+    }
 }
