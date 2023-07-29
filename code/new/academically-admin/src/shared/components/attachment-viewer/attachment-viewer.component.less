@@ -1,0 +1,48 @@
+::ng-deep {
+    .modal-fs {
+        min-width: 100vw !important;
+        min-height: 100vh !important;
+        margin: 0 !important;
+
+        .modal-content {
+            min-width: 100vw !important;
+            min-height: 100vh !important;
+            background: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}
+
+.actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+    button {
+        padding: 0;
+        background-color: transparent;
+        border: 0;
+        color: #95aac9;
+        font-weight: 200;
+        opacity: 0.75;
+
+        &:hover {
+            opacity: 1;
+        }
+
+        &.close {
+            font-size: 30px;
+        }
+
+        &.download {
+            font-size: 18px;
+        }
+    }
+}
+
+img, video {
+    max-height: 90vh;
+    max-width: 90vw;
+}

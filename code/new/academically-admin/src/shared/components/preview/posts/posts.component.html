@@ -21,8 +21,10 @@
             *ngIf="fileAttachment"
             [file]="fileAttachment"
             [canRemove]="false"
+            [canView]="true"
             class="post-preview-attachment"
         ></app-attachment-preview>
+        <app-preview-services *ngIf="hasSharedService" [data]="sharedService" [canRemove]="false"></app-preview-services>
     </div>
 </div>
 <div *ngIf="!data" class="post-preview-not-available d-flex justify-content-center align-items-center custom-card-border custom-card-shadow">
