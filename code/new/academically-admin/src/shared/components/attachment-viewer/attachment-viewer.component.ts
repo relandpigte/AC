@@ -39,12 +39,14 @@ export class AttachmentViewerComponent extends AppComponentBase implements OnCha
 
     ngAfterViewInit(): void {
         if (this.attachment) {
-            const dimension = this.attachment.nativeElement.getBoundingClientRect();
-            if (dimension.width > dimension.height) {
-                this._renderer.setStyle(this.attachment.nativeElement, 'width', '100vw');
-            } else {
-                this._renderer.setStyle(this.attachment.nativeElement, 'height', '100vh');
-            }
+            setTimeout(() => {
+                const dimension = this.attachment.nativeElement.getBoundingClientRect();
+                if (dimension.width > dimension.height) {
+                    this._renderer.setStyle(this.attachment.nativeElement, 'width', '100vw');
+                } else {
+                    this._renderer.setStyle(this.attachment.nativeElement, 'height', '100vh');
+                }
+            }, 100);
         }
     }
 
