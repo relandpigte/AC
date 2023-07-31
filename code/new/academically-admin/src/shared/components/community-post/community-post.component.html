@@ -1,4 +1,4 @@
-<div class="card post d-flex flex-column" *ngIf="!isHidden" [ngClass]="{'post-loading': IsLoading}">
+<div class="card custom-card-border custom-card-shadow post d-flex flex-column" *ngIf="!isHidden" [ngClass]="{'post-loading': IsLoading}">
     <div class="post-container d-flex flex-column">
         <app-shimmer [show]="IsLoading" [shimmerType]="shimmerType.PostCard"></app-shimmer>
         <div class="post-heading d-flex flex-row flex-nowrap align-items-center">
