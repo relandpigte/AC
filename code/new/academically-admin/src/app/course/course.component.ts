@@ -19,6 +19,7 @@ export class CourseComponent extends  AppComponentBase implements OnInit {
 
   get isAboutTab(): boolean { return this._router.url.includes(['course', 'about'].join('/')); }
   get isDiscussionTab(): boolean { return this._router.url.includes(['course', 'discussion'].join('/')); }
+  get isReviews(): boolean { return this._router.url.includes(['course', 'reviews'].join('/')); }
 
   ngOnInit(): void {
   }

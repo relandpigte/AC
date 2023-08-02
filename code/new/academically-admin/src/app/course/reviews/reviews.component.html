@@ -1,0 +1,41 @@
+<div class="d-flex flex-column justify-content-center align-items-center w-100">
+
+    <div class="reviews-controls d-flex flex-row justify-content-between w-100">
+        <div class="reviews-controls-left d-flex align-items-end">
+            <div class="reviews-controls-left-posts-count">
+                24 reviews
+            </div>
+        </div>
+        <div class="reviews-controls-right d-flex flex-row align-items-center gap-10">
+            Sort by:
+            <div class="dropdown">
+                <a href="#" class="dropdown-ellipses dropdown-toggle d-flex flex-row align-items-center gap-5" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ 'Latest' | localize }} <span class="fe fe-chevron-down"></span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-left" [style.marginTop.px]="10">
+                    <div class="dropdown-item cursor-pointer d-flex justify-content-between">
+                        <div>{{ 'Latest' | localize }}</div>
+                        <i *ngIf="false" class="fe fe-check"></i>
+                    </div>
+                    <div class="dropdown-item cursor-pointer d-flex justify-content-between">
+                        <div>{{ 'Date' | localize }}</div>
+                        <i *ngIf="false" class="fe fe-check"></i>
+                    </div>
+                </div>
+            </div>
+
+            <select class="star-filter">
+                <option value="1">All stars</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="reviews-content w-100">
+        <app-service-review></app-service-review>
+        <app-service-review></app-service-review>
+        <app-service-review></app-service-review>
+        <app-service-review></app-service-review>
+        <app-service-review></app-service-review>
+    </div>
+</div>

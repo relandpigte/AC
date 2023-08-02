@@ -14,6 +14,9 @@
                         <app-instructor-badge></app-instructor-badge>
                         <app-related-courses></app-related-courses>
                     </ng-container>
+                    <ng-container *ngIf="isReviews">
+                        <app-review-stats></app-review-stats>
+                    </ng-container>
                 </div>
             </div>
         </div>
