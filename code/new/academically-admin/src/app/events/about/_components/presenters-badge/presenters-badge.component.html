@@ -1,0 +1,19 @@
+<div *ngIf="!(isLoading$ | async) && usersYouMayKnow?.length > 0" class="card presenters-content-post custom-card-shadow custom-card-border">
+    <div class="row align-items-center presenters-content-post-title">
+        <div class="col d-flex flex-wrap align-items-center justify-content-between">
+            <span class="presenters-content-post-title-heading">Presenters</span>
+            <span class="presenters-content-post-title-view-all cursor-pointer" [routerLink]="['users']">View All</span>
+        </div>
+    </div>
+    <div class="presenters-content-post-items">
+        <app-carousel
+            [items]="usersYouMayKnow"
+            [maxItems]="usersYouMayKnowMaxItems"
+            [itemWidth]="260"
+            [itemSpacing]="25"
+            [isLoading]="isLoading$ | async"
+            [isAutoFit]="true"
+            [isInfiteScroll]="true">
+        </app-carousel>
+    </div>
+</div>

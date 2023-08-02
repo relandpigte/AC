@@ -1,0 +1,52 @@
+<div class="header coaching-header">
+    <img [src]="getCoverPhoto(profileCoverPhotoUrl)" class="header-img-top" [alt]="profileFullName" />
+
+    <div [class.container]="themeSettings.navigationPosition === NavigationPosition.Topnav"
+         [class.container-fluid]="themeSettings.navigationPosition !== NavigationPosition.Topnav">
+        <div class="header-body mt-n5 mt-md-n6 position-relative">
+            <span class="event-type badge rounded-pill text-white position-absolute">Workshop</span>
+            <div class="row align-items-end">
+                <div class="col-auto">
+                    <div class="avatar avatar-xxl header-avatar-top">
+                        <div class="rounded bg-white d-flex flex-column align-items-center justify-content-center custom-card-shadow">
+                            <span class="day">15</span>
+                            <span class="month">May</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col mb-3 ml-n3 ml-md-n2">
+                    <h6 class="header-pretitle">WORKSHOP</h6>
+                    <h1 class="header-title">User experience learning single workshop</h1>
+                </div>
+                <div class="col-12 col-md-auto mt-2 mt-md-0 mb-md-3">
+                    <button class="btn btn-primary d-block d-md-inline-block custom-button-width">
+                        <span>&#163;</span>
+                        8.00
+                    </button>
+                    <button class="btn btn-light d-block d-md-inline-block custom-button-width">
+                        {{ 'Save' | localize }}
+                    </button>
+                    <button class="btn btn-light d-block d-md-inline-block">
+                        <span class="d-inline-block bg-center" [ngStyle]="{'background-image': 'url(assets/img/icon-share.svg)', 'width': '20px', 'height': '20px'}"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col">
+                    <ul class="nav nav-tabs nav-overflow header-tabs profile-menu">
+                        <li class="nav-item">
+                            <a [routerLink]="['about']" routerLinkActive="active" class="nav-link">
+                                {{ 'About' | localize }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a [routerLink]="['discussion']" routerLinkActive="active" class="nav-link">
+                                {{ 'Discussion' | localize }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+<div class="card custom-card-border custom-card-shadow">
+    <div class="badge">
+        <div class="d-flex flex-row justify-content-start align-items-center gap-15">
+            <img [alt]="profileFullName" class="avatar-img rounded-circle" [src]="getProfilePicture(profilePictureUrl)" />
+
+            <div class="d-flex flex-column justify-content-center align-items-start gap-2">
+                <div class="position">Organizer</div>
+                <div class="name">Jingying Chai</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer d-flex justify-content-between align-items-center">
+        <div class="status online d-flex gap-5"><span>●</span>Online</div>
+        <div>
+            <button class="btn btn-outline-primary btn-sm coach-message"> {{ 'Message' | localize }}</button>
+        </div>
+    </div>
+</div>

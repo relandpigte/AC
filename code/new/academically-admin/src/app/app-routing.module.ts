@@ -227,6 +227,13 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
               import('@app/coaching/coaching.module').then(
                 (m) => m.CoachingModule
               ),
+          },
+          {
+            path: 'events',
+            loadChildren: () =>
+              import('@app/events/events.module').then(
+                (m) => m.EventsModule
+              ),
           }
         ]
       }
