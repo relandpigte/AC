@@ -1,0 +1,36 @@
+.card {
+    &-body {
+        font-size: 18px;
+        color: #3B516C;
+
+        & > div {
+            margin-top: 0.938rem;
+
+            &:first-child {
+                margin-top: 0;
+            }
+        }
+
+        .ratings {
+            color: #3B516C;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            letter-spacing: -0.32px;
+
+            .icon {
+                color: #D2DDEC;
+
+                &.active {
+                    &::after {
+                        content: '';
+                        display: none;
+                    }
+
+                    color: #F5D83E;
+                }
+            }
+        }
+    }
+}

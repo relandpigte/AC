@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 
 @Component({
-  selector: 'app-workshop',
+  selector: 'app-events',
   templateUrl: './events.component.html',
   styleUrls: ['./events.component.less']
 })

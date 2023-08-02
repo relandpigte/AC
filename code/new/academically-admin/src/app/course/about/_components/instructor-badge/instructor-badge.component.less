@@ -1,0 +1,49 @@
+.card {
+    &-body {
+        padding-bottom: 0.938rem;
+
+        .avatar-img {
+            max-width: 82px;
+            margin: 25px auto 20px;
+        }
+        .btn {
+            min-width: 55px;
+            height: 18px;
+            color: #6E84A3;
+            line-height: .8rem;
+            font-size: 10px;
+        }
+    }
+
+    &-title {
+        font-size: 20px;
+        color: #12263F;
+        margin-bottom: .625rem;
+    }
+
+    &-text {
+        color: #6E84A3;
+        font-size: 13px;
+        margin-bottom: .625rem;
+    }
+
+    &-footer {
+        .coach-status {
+            color: #6E84A3;
+            font-size: 13px;
+
+            &.online > span {
+                color: #00D97E;
+            }
+
+            &.offline > span {
+                color: #6E84A3;
+            }
+        }
+        .btn {
+            min-width: 80px;
+            height: 26px;
+            line-height: 1rem;
+        }
+    }
+}

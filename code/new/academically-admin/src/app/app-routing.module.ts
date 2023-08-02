@@ -234,6 +234,13 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
               import('@app/events/events.module').then(
                 (m) => m.EventsModule
               ),
+          },
+          {
+            path: 'course',
+            loadChildren: () =>
+              import('@app/course/course.module').then(
+                (m) => m.CourseModule
+              ),
           }
         ]
       }

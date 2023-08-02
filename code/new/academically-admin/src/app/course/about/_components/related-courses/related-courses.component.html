@@ -1,0 +1,21 @@
+<div *ngIf="relatedCourses?.length" [style.marginTop.px]="24">
+    <app-community-side-card
+        header="Related courses"
+        [isLoading]="isLoadingRelatedCourses$ | async"
+        [items]="relatedCourses"
+        [template]="relatedCoursesTemplate"
+    ></app-community-side-card>
+</div>
+
+<ng-template #relatedCoursesTemplate let-item="item">
+    <div class="course d-flex flex-row flex-nowrap">
+        <app-shimmer [show]="isLoadingRelatedCourses$ | async" [shimmerType]="shimmerType.SideCardThumbnail"></app-shimmer>
+        <div class="course-left d-flex flex-column flex-nowrap justify-content-center align-items-center mr-3">
+            <div class="course-thumbnail bg-center flex-grow-1" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>
+        </div>
+        <div class="course-right flex-grow-1 d-flex flex-column justify-content-center gap-2">
+            <div class="course-name line-clamp">{{ item.name }}</div>
+            <div class="course-composition wrap-text">{{ getCourseComposition(item) }}</div>
+        </div>
+    </div>
+</ng-template>

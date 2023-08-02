@@ -1,0 +1,21 @@
+<div [@routerTransition]>
+    <div class="container-fluid course-content d-flex flex-row flex-nowrap mb-5">
+        <div class="course-content-left flex-grow-1">
+            <div class="row">
+                <div class="col col-sm-12">
+                    <router-outlet></router-outlet>
+                </div>
+            </div>
+        </div>
+        <div class="course-content-right">
+            <div class="row">
+                <div class="col col-sm-12">
+                    <ng-container *ngIf="isAboutTab">
+                        <app-instructor-badge></app-instructor-badge>
+                        <app-related-courses></app-related-courses>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
