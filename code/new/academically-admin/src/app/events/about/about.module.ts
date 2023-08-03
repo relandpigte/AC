@@ -25,7 +25,8 @@ import { PresentersBadgeComponent } from './_components/presenters-badge/present
   exports: [
     OrganizerBadgeComponent,
     RelatedEventsBadgeComponent,
-    AttendeesBadgeComponent
+    AttendeesBadgeComponent,
+    SessionBadgeComponent
   ],
   imports: [
     CommonModule,

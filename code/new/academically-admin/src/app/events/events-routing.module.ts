@@ -31,13 +31,13 @@ import { HeaderComponent } from '@app/events/_components/header/header.component
                     (m) => m.EventsAboutModule,
                   ),
               },
-              // {
-              //   path: 'discussion',
-              //   loadChildren: () =>
-              //     import('@app/coaching/discussion/discussion.module').then(
-              //       (m) => m.CoachingDiscussionModule,
-              //     ),
-              // },
+              {
+                path: 'discussion',
+                loadChildren: () =>
+                  import('@app/events/discussion/discussion.module').then(
+                    (m) => m.EventsDiscussionModule,
+                  ),
+              },
               { path: '', redirectTo: 'about' },
               { path: '**', redirectTo: 'about' },
             ]

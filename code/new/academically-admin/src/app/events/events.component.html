@@ -15,6 +15,12 @@
                         <app-attendees-badge></app-attendees-badge>
                         <app-related-events-badge></app-related-events-badge>
                     </ng-container>
+                    <ng-container *ngIf="isDiscussionTab">
+                        <app-organizer-badge></app-organizer-badge>
+                        <app-session-badge></app-session-badge>
+                        <app-attendees-badge></app-attendees-badge>
+                        <app-related-events-badge></app-related-events-badge>
+                    </ng-container>
                 </div>
             </div>
         </div>
