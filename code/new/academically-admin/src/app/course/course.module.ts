@@ -8,6 +8,7 @@ import { AppSharedModule } from '@app/_shared/app-shared.module';
 import { HeaderComponent } from './_components/header/header.component';
 import { CourseAboutModule } from '@app/course/about/about.module';
 import { CourseReviewsModule } from '@app/course/reviews/reviews.module';
+import { CourseDiscussionModule } from '@app/course/discussion/discussion.module';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { CourseReviewsModule } from '@app/course/reviews/reviews.module';
     SharedModule,
     AppSharedModule,
     CourseAboutModule,
-    CourseReviewsModule
+    CourseReviewsModule,
+    CourseDiscussionModule
   ]
 })
 export class CourseModule { }

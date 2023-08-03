@@ -32,6 +32,13 @@ import { HeaderComponent } from '@app/course/_components/header/header.component
                   ),
               },
               {
+                path: 'discussion',
+                loadChildren: () =>
+                  import('@app/course/discussion/discussion.module').then(
+                    (m) => m.CourseDiscussionModule,
+                  ),
+              },
+              {
                 path: 'reviews',
                 loadChildren: () =>
                   import('@app/course/reviews/reviews.module').then(
