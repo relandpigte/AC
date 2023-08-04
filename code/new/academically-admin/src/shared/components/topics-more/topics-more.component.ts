@@ -59,6 +59,7 @@ export class TopicsMoreComponent extends AppComponentBase implements OnInit {
     get topicValues(): any { return Array.from(this.topics.values()) }
 
     ngOnInit(): void {
+        this.setDefaultSearchContainerHeight();
     }
 
     private updateSearchResults(topics: DisciplineTaxonomyDto[]): void {
@@ -181,8 +182,21 @@ export class TopicsMoreComponent extends AppComponentBase implements OnInit {
             .subscribe((topics) => {
                 this.updateSearchResults(topics);
                 this.topics.delete(topic.id);
-                this.handleOnSearch(this.searchFilter);
                 this.notify.info(this.l('Community.Topics.NotInterested.Success', topic.name));
+                this.handleReplaceRemovedTopics();
             });
+    }
+
+    private handleReplaceRemovedTopics(): void {
+        this.searchProcess$(this.searchFilter)
+          .subscribe(topics => {
+              const topicToAdd = topics.slice(this.topics.size)[0];
+              this.topics.set(topicToAdd.id, topicToAdd);
+          });
+    }
+
+    private setDefaultSearchContainerHeight(): void {
+        const searchContainer = document.querySelector('.search') as HTMLDivElement;
+        searchContainer.style.height = '897px';
     }
 }
