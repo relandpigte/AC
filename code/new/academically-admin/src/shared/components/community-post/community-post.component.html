@@ -162,6 +162,7 @@
         [postType]="data?.type"
         [postCreatorId]="data?.creatorUserId"
         (onUpdateEmit)="handleCommentUpdates()"
+        (onDeleteComment)="doToggleComments()"
     ></app-community-discussions>
 </div>
 

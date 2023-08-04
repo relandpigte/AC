@@ -39,6 +39,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
 
   @Output() onReplyEmit = new EventEmitter<string>();
   @Output() onUpdateEmit = new EventEmitter<string>();
+  @Output() onDeleteComment = new Subject<void>();
 
   @ViewChild('addCommentEl', { static: false }) addCommentEl: ElementRef;
   @ViewChild('fileInput') fileInput: ElementRef;
@@ -142,8 +143,17 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       confirmCb: (): void => {
         this._commentServiceProxy.deleteComment(id)
           .pipe(takeUntil(this.destroyed$))
-          .subscribe(() => {
+          .subscribe(async () => {
             this.notify.success(this.l('CommentSuccessfullyDeleted'));
+            if (!this.comments.length) {
+              this.onDeleteComment.next();
+              this._postsServiceProxy.getAllCommentsPaged(this.referenceId, this.parentId, this.comments.length, MAX_REPLIES_TO_LOAD)
+                .subscribe(oldComments => {
+                  this.commentsStateService.pushMoreComments(oldComments.items);
+                  this.comments = this.commentsStateService.getAllComments({ direction: this.isChild ? 'asc' : 'desc' }).slice(0, 1);
+                  this._cdr.detectChanges();
+                });
+            }
           });
       }
     };
