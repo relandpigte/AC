@@ -36,7 +36,7 @@ export class NewPostFloaterComponent extends AppComponentBase implements OnInit,
     }
 
     ngAfterViewInit(): void {
-        this.listenToScrolls();
+        setTimeout(() => this.listenToScrolls(), 100);
     }
 
     private listenToScrolls(): void {
