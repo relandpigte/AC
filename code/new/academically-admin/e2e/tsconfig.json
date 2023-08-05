@@ -5,6 +5,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "lib": [
+      "es2019",
       "es2016"
     ],
     "module": "commonjs",

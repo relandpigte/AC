@@ -15,6 +15,7 @@ import { CreateEditBlockOutComponent } from './_components/create-edit-block-out
 import { CreateEditBookingComponent } from './_components/create-edit-booking/create-edit-booking.component';
 import { RescheduleHistoryComponent } from './_components/reschedule-history/reschedule-history.component';
 import { CreateEditSchedulesComponent } from './_components/create-edit-schedules/create-edit-schedules.component';
+import { DefaultSchedulesComponent } from './_components/create-edit-schedules/default-schedules/default-schedules.component';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -32,6 +33,7 @@ FullCalendarModule.registerPlugins([
     CreateEditBookingComponent,
     RescheduleHistoryComponent,
     CreateEditSchedulesComponent,
+    DefaultSchedulesComponent,
   ],
   imports: [
     CommonModule,

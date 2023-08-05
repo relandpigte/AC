@@ -168,6 +168,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
 
   onScheduleClick(): void {
     const modalSettings = this.defaultModalSettings as ModalOptions<CreateEditSchedulesComponent>;
+    modalSettings.class = 'modal-schedule';
     modalSettings.initialState = {
       userAvailabilities: this.userAvailabilities,
     };

@@ -11,6 +11,8 @@ import { takeUntil } from 'rxjs/operators';
 export abstract class AutoSaveComponentBase extends AppComponentBase implements OnDestroy {
   protected modelToSave: object;
   protected autoSaveCallback: () => void;
+  protected intervalMs = 1_000;
+
   private _autoSaveSub: Subscription;
 
   constructor(injector: Injector) {
@@ -31,7 +33,7 @@ export abstract class AutoSaveComponentBase extends AppComponentBase implements 
     }
     let content = JSON.stringify(_.cloneDeep(this.modelToSave));
     console.log('autosave initialzed!');
-    this._autoSaveSub = interval(1000)
+    this._autoSaveSub = interval(this.intervalMs)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(() => {
         const newModel = JSON.stringify(this.modelToSave);
