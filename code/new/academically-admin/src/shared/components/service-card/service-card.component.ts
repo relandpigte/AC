@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
+import { Clipboard } from '@angular/cdk/clipboard';
 import { AppComponentBase } from '@shared/app-component-base';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { DefaultServiceCardActions, DefaultServiceCardOptions, ServiceCard, ServiceCardButton, ServiceCardComposition, ServiceCardDates, ServiceCardImage, ServiceCardOptions, ServiceCardPeople, ServiceCardPerson, ServiceCardPill, ServiceCardPrice, ServiceCardReview, ServiceCardRsvp, ServiceCardSlots, ServiceCardType, UserServiceCardActions } from '@shared/models/service-card.model';
@@ -11,6 +12,7 @@ import { finalize, takeUntil } from 'rxjs/operators';
 
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { UserFollowingService } from '@shared/services/user-following.service';
+import { AppConsts } from '@shared/AppConsts';
 
 @Component({
     selector: 'app-service-card',
@@ -38,7 +40,8 @@ import { UserFollowingService } from '@shared/services/user-following.service';
         injector: Injector,
         private _modalService: BsModalService,
         private _postsService: PostsServiceProxy,
-        private _userFollowingService: UserFollowingService
+        private _userFollowingService: UserFollowingService,
+        private _clipboard: Clipboard
     ) {
         super(injector);
     }
@@ -399,8 +402,23 @@ import { UserFollowingService } from '@shared/services/user-following.service';
       }
     }
 
-    handleClick(): void {
-      this.onClick.emit(this.data);
+    handleCopyLink(event: Event): void {
+      event.stopPropagation();
+      const url = `${AppConsts.appBaseUrl}/app/${this.sanitized.type}/about/${this.data?.id}`;
+      this._clipboard.copy(url);
+      (<HTMLBodyElement>document.body).click();
+      this.notify.success(this.l('LinkCopiedToClipboard'));
+    }
+
+    handleClick(event: Event): void {
+      const element = (event.target as HTMLElement).tagName.toLowerCase();
+      switch (element) {
+        case 'span' :
+          break;
+        default:
+          this.onClick.emit(this.data);
+          break;
+      }
     }
 
     private handleServiceCardShareClick(service: any): void {

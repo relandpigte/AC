@@ -1,4 +1,4 @@
-<div *ngIf="type" class="service-card d-flex flex-column" [ngClass]="[isFeatured ? 'feature' : type, customClass ? customClass : '']" (click)="handleClick()">
+<div *ngIf="type" class="service-card d-flex flex-column" [ngClass]="[isFeatured ? 'feature' : type, customClass ? customClass : '']" (click)="handleClick($event)">
     <app-shimmer [show]="isLoading" [shimmerType]="shimmerType"></app-shimmer>
 
     <div *ngIf="isFeatured" class="service-card-bg-img bg-center w-100 h-100" [ngStyle]="{ 'background-image': 'url(\'' + images[0].src + '\')' }" [ngClass]="[images[0].class ? images[0].class : '']">
@@ -157,17 +157,25 @@
                 </ng-container>
 
                 <ng-container *ngSwitchCase="'share'">
-                    <button
-                        type="button"
-                        class="btn text-center d-flex flex-row justify-content-center align-items-center"
-                        [ngClass]="[action.class ? action.class : 'btn-light']"
-                        style="gap: 5px"
-                        (click)="handleShareClick($event)"
-                    >
-                        <span *ngIf="action.label">{{ action.label | localize}}</span>
-                        <i *ngIf="action.icon" [class]="action.icon"></i>
-                        <span class="service-card-actions-share-icon bg-center" [ngStyle]="{ 'background-image': 'url(\'assets/img/icon-share.svg\')' }"></span>
-                    </button>
+                    <div class="dropup" [style.z-index]="999">
+                        <button
+                            type="button"
+                            class="btn text-center d-flex flex-row justify-content-center align-items-center mydropdown"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                            [ngClass]="[action.class ? action.class : 'btn-light']"
+                            style="gap: 5px"
+                        >
+                            <span *ngIf="action.label">{{ action.label | localize}}</span>
+                            <i *ngIf="action.icon" [class]="action.icon"></i>
+                            <span class="service-card-actions-share-icon bg-center" [ngStyle]="{ 'background-image': 'url(\'assets/img/icon-share.svg\')' }"></span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-left" [style.margin-bottom.px]="2" [style.z-index]="99999">
+                            <div class="dropdown-item cursor-pointer" (click)="handleShareClick($event)">Share in post</div>
+                            <div class="dropdown-item cursor-pointer" (click)="handleCopyLink($event)" data-toggle="dropdown">Copy link</div>
+                        </div>
+                    </div>
                 </ng-container>
 
                 <ng-container *ngSwitchCase="'group'">
