@@ -49,12 +49,15 @@ namespace Academically.Services.UserAvailabilities
         [AbpAuthorize(PermissionNames.Pages_Calendar_Schedules)]
         public async Task CreateEdit(IEnumerable<UserAvailabilityDto> inputs)
         {
+            var preservedIds = inputs.Select(i => i.Id).Where(i => i != null).ToList();
             foreach (var input in inputs)
             {
                 var userAvailability = ObjectMapper.Map<UserAvailability>(input);
                 userAvailability.UserId = AbpSession.UserId.Value;
-                await _userAvailabilitiesRepository.InsertOrUpdateAsync(userAvailability);
+                var created = await _userAvailabilitiesRepository.InsertOrUpdateAsync(userAvailability);
+                preservedIds.Add(created.Id);
             }
+            await _userAvailabilitiesRepository.DeleteAsync(a => !preservedIds.Contains(a.Id));
         }
     }
 }

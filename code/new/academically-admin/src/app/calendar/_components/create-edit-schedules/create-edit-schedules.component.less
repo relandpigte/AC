@@ -1,3 +1,42 @@
+::ng-deep {
+  .modal-schedule {
+      width: 695px !important;
+      max-width: 100% !important;
+      min-height: 578px !important;
+      max-height: 100% !important;
+  }
+}
+
+.card {
+  &-header {
+    .nav-tabs {
+      height: 60px;
+      position: absolute;
+      top: 0;
+      right: 1.5rem;
+    }
+  }
+
+  &::ng-deep {
+    abp-modal-footer {
+      .card-footer {
+        gap: 20px;
+        justify-content: flex-end !important;
+
+        button {
+          width: 173px;
+          height: 34px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+
+    }
+  }
+
+}
+
 .dow-menu {
   border-right: 1px solid #EDF2F9;
 }

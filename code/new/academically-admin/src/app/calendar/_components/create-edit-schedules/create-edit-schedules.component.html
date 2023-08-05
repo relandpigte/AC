@@ -2,61 +2,39 @@
 
   <div class="modal-card card">
 
-    <div class="card-header">
+    <div class="card-header position-relative">
       <h4 class="card-header-title">
-        {{ DayOfWeek[selectedDayOfWeek] }} {{ 'Schedule' | localize }}
+        {{ 'Availability' | localize }}
       </h4>
-      <button type="button" class="close" aria-label="Close" (click)="onCloseClick()">
-        <span aria-hidden="true">×</span>
-      </button>
+
+      <ul class="nav nav-tabs nav-overflow header-tabs d-flex justify-content-center align-items-center">
+        <li class="nav-item h-100">
+          <span [class.active]="activeTab === 'default'" class="nav-link d-flex justify-content-center align-items-center h-100" role="button" (click)="activeTab = 'default'">
+            {{ 'Default' | localize }}
+          </span>
+        </li>
+        <li class="nav-item h-100">
+          <span [class.active]="activeTab === 'custom'" class="nav-link d-flex justify-content-center align-items-center h-100" role="button" (click)="activeTab = 'custom'">
+            {{ 'Custom' | localize }}
+          </span>
+        </li>
+      </ul>
     </div>
 
     <div class="card-body" [loader]="isLoading">
-      <div class="row">
-        <div class="col-auto dow-menu">
-          <ul class="nav nav-pills flex-column">
-            <li *ngFor="let dayOfWeek of DayOfWeek | enumToArray | keyvalue" class="nav-item">
-              <a [class.active]="selectedDayOfWeek == dayOfWeek.key"
-                (click)="$event.preventDefault(); onDayOfWeekClick(dayOfWeek.key)" class="nav-link" href="#!">
-                {{ dayOfWeek.value }}
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div class="col d-flex justify-content-center align-items-center">
-          <div>
-            <div class="form-group">
-              <div class="form-check">
-                <input [(ngModel)]="model.isAvailable" class="form-check-input" type="checkbox" value=""
-                  id="isAvailable" name="isAvailable" required>
-                <label class="form-check-label" for="isAvailable">
-                  {{ 'Available' }}?
-                </label>
-              </div>
-            </div>
-            <div class="form-row">
+      <ng-container [ngSwitch]="activeTab">
 
-              <div class="form-group col-6">
-                <label class="col-form-label" for="startTime">{{ 'StartTime' | localize}}</label>
-                <timepicker [(ngModel)]="startTime" [disabled]="!model.isAvailable" id="startTime" name="startTime"
-                  #startTimeModel="ngModel" #startTimeEl [minuteStep]="30" (ngModelChange)="onStartTimeChange()"
-                  required>
-                </timepicker>
-              </div>
+        <ng-container *ngSwitchCase="'default'">
+          <app-default-schedules [userAvailabilities]="userAvailabilities" (modelChanged)="handleModelChanged($event)"></app-default-schedules>
+        </ng-container>
 
-              <div class="form-group col-6">
-                <label class="col-form-label" for="endTime">{{ 'EndTime' | localize}}</label>
-                <timepicker [(ngModel)]="endTime" [disabled]="!model.isAvailable" id="endTime" name="endTime"
-                  #endTimeModel="ngModel" #endTimeEl [minuteStep]="30" (ngModelChange)="onEndTimeChange()" required>
-                </timepicker>
-              </div>
+        <ng-container *ngSwitchCase="'custom'">
 
-            </div>
-          </div>
-        </div>
-      </div>
+        </ng-container>
+
+      </ng-container>
     </div>
-    <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading" [saveDisabled]="isLoading"
+    <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading" [saveDisabled]="isLoading || !isModelValid"
       (onCancelClick)="onCloseClick()">
     </abp-modal-footer>
   </div>

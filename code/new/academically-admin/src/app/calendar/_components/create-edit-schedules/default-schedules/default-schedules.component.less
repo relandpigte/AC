@@ -1,0 +1,119 @@
+.schedule {
+    gap: 15px;
+    width: 100%;
+
+    &.disabled {
+      .schedule {
+        &-time, &-actions {
+          opacity: 0.5;
+
+          * {
+            cursor: default;
+            pointer-events: none;
+          }
+        }
+
+        &-actions {
+            &-plus {
+                .plus {
+                    &.active {
+                        display: none;
+                    }
+
+                    &.inactive {
+                        display: block;
+                    }
+                }
+            }
+        }
+      }
+    }
+
+    &-container {
+      gap: 20px;
+    }
+
+    &-available {
+        label {
+            width: 80px;
+        }
+    }
+
+    &-break {
+        label {
+            color: #2C7BE5;
+            width: 80px;
+        }
+    }
+
+    &-time {
+      gap: 18px;
+      color: #3B516C;
+      font-size: 15px;
+      font-style: normal;
+      font-weight: 400;
+
+
+      &-from, &-to {
+        .dropdown {
+          width: 130px;
+          height: 40px;
+          border-radius: 6px;
+          border: 1px solid #E3EBF6;
+          background: #FFF;
+
+          &-toggle {
+            color: #3B516C;
+            font-size: 15px;
+            font-style: normal;
+            font-weight: 400;
+            padding: 8px 15px;
+          }
+
+          &-menu {
+            margin-top: 5px;
+            min-height: 200px;
+            min-width: 103px;
+            height: 200px;
+            height: 103px;
+            max-height: 200px;
+            max-width: 103px;
+            padding: 5px;
+            overflow: hidden;
+          }
+
+          &-item {
+            padding: 10px;
+            &-container {
+              overflow: auto;
+              height: 100%;
+
+              &::-webkit-scrollbar {
+                width: 1.5px;
+              }
+
+              &::-webkit-scrollbar-thumb {
+                background: #D2DDEC;
+                border-radius: 10px;
+              }
+
+            }
+          }
+        }
+      }
+    }
+
+    &-actions {
+        &-plus {
+            .plus {
+                &.active {
+                    display: block;
+                }
+
+                &.inactive {
+                    display: none;
+                }
+            }
+        }
+    }
+  }
