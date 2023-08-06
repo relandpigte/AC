@@ -647,20 +647,20 @@ export class ArticlesServiceProxy {
     }
 
     /**
-     * @param skipCount (optional) 
      * @param maxResultCount (optional) 
+     * @param skipCount (optional) 
      * @return Success
      */
-    getAllForHome(skipCount: number | undefined, maxResultCount: number | undefined): Observable<ArticleDtoPagedResultDto> {
+    getAllForHome(maxResultCount: number | undefined, skipCount: number | undefined): Observable<ArticleDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Articles/GetAllForHome?";
-        if (skipCount === null)
-            throw new Error("The parameter 'skipCount' cannot be null.");
-        else if (skipCount !== undefined)
-            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
         if (maxResultCount === null)
             throw new Error("The parameter 'maxResultCount' cannot be null.");
         else if (maxResultCount !== undefined)
             url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -15495,20 +15495,20 @@ export class ProjectsServiceProxy {
     }
 
     /**
-     * @param skipCount (optional) 
      * @param maxResultCount (optional) 
+     * @param skipCount (optional) 
      * @return Success
      */
-    getAllFormHome(skipCount: number | undefined, maxResultCount: number | undefined): Observable<ProjectDtoPagedResultDto> {
+    getAllFormHome(maxResultCount: number | undefined, skipCount: number | undefined): Observable<ProjectDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Projects/GetAllFormHome?";
-        if (skipCount === null)
-            throw new Error("The parameter 'skipCount' cannot be null.");
-        else if (skipCount !== undefined)
-            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
         if (maxResultCount === null)
             throw new Error("The parameter 'maxResultCount' cannot be null.");
         else if (maxResultCount !== undefined)
             url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -26901,20 +26901,20 @@ export class VideosServiceProxy {
     }
 
     /**
-     * @param skipCount (optional) 
      * @param maxResultCount (optional) 
+     * @param skipCount (optional) 
      * @return Success
      */
-    getAllForHome(skipCount: number | undefined, maxResultCount: number | undefined): Observable<VideoDtoPagedResultDto> {
+    getAllForHome(maxResultCount: number | undefined, skipCount: number | undefined): Observable<VideoDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Videos/GetAllForHome?";
-        if (skipCount === null)
-            throw new Error("The parameter 'skipCount' cannot be null.");
-        else if (skipCount !== undefined)
-            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
         if (maxResultCount === null)
             throw new Error("The parameter 'maxResultCount' cannot be null.");
         else if (maxResultCount !== undefined)
             url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -47453,6 +47453,7 @@ export class UserAvailabilityDto implements IUserAvailabilityDto {
     isAvailable: boolean;
     startTime: string | undefined;
     endTime: string | undefined;
+    specificDate: moment.Moment | undefined;
 
     constructor(data?: IUserAvailabilityDto) {
         if (data) {
@@ -47470,6 +47471,7 @@ export class UserAvailabilityDto implements IUserAvailabilityDto {
             this.isAvailable = _data["isAvailable"];
             this.startTime = _data["startTime"];
             this.endTime = _data["endTime"];
+            this.specificDate = _data["specificDate"] ? moment(_data["specificDate"].toString()) : <any>undefined;
         }
     }
 
@@ -47487,6 +47489,7 @@ export class UserAvailabilityDto implements IUserAvailabilityDto {
         data["isAvailable"] = this.isAvailable;
         data["startTime"] = this.startTime;
         data["endTime"] = this.endTime;
+        data["specificDate"] = this.specificDate ? this.specificDate.toISOString() : <any>undefined;
         return data; 
     }
 
@@ -47504,6 +47507,7 @@ export interface IUserAvailabilityDto {
     isAvailable: boolean;
     startTime: string | undefined;
     endTime: string | undefined;
+    specificDate: moment.Moment | undefined;
 }
 
 export class UserCalendarEventDto implements IUserCalendarEventDto {

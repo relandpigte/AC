@@ -176,7 +176,7 @@ namespace Academically.Services.CalendarEvents
         {
             User tutor = new User();
             var userIds = new List<long>();
-            var project = await _projectsRepository.GetAsync(input.ProjectId.Value);
+            var project = input.ProjectId.HasValue ? await _projectsRepository.GetAsync(input.ProjectId.Value) : null;
             if (input.Type != CalendarEventType.Blocker && input.ProjectId != null)
             {
                 tutor = await _usersRepository.GetAll()
@@ -212,33 +212,36 @@ namespace Academically.Services.CalendarEvents
                     break;
             }
 
-            string clientRootAddress = (await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress)).Trim('/');
-            string viewDetailsLink = $"{clientRootAddress}/app/calendar/{tutor.Id}?goto={HttpUtility.UrlEncode(calendarEvent.StartTime.ToString("o", CultureInfo.InvariantCulture))}" +
-                $"&event-id={calendarEvent.Id}";
+            if (input.Type != CalendarEventType.Blocker)
+            {
+                string clientRootAddress = (await _settingManager.GetSettingValueAsync(AppSettingNames.App_ClientRootAddress)).Trim('/');
+                string viewDetailsLink = $"{clientRootAddress}/app/calendar/{tutor.Id}?goto={HttpUtility.UrlEncode(calendarEvent.StartTime.ToString("o", CultureInfo.InvariantCulture))}" +
+                    $"&event-id={calendarEvent.Id}";
 
-            var currentUser = await UserManager.GetUserByIdAsync(AbpSession.UserId.Value);
-            var notificationData = new LocalizableMessageNotificationData(new LocalizableString("NewBookingNotificationMessage", AcademicallyConsts.LocalizationSourceName));
-            notificationData["0"] = currentUser.FullName;
-            notificationData["1"] = calendarEvent.Title;
-            notificationData["2"] = project.Name;
-            notificationData.Properties.Add("Link", viewDetailsLink);
-            notificationData.Properties.Add("CreatorUserId", AbpSession.UserId.Value);
+                var currentUser = await UserManager.GetUserByIdAsync(AbpSession.UserId.Value);
+                var notificationData = new LocalizableMessageNotificationData(new LocalizableString("NewBookingNotificationMessage", AcademicallyConsts.LocalizationSourceName));
+                notificationData["0"] = currentUser.FullName;
+                notificationData["1"] = calendarEvent.Title;
+                notificationData["2"] = project?.Name ?? string.Empty;
+                notificationData.Properties.Add("Link", viewDetailsLink);
+                notificationData.Properties.Add("CreatorUserId", AbpSession.UserId.Value);
 
-            await _notificationPublisher.PublishAsync(
-                NotificationNames.Notifications_CalendarEvents_NewBooking,
-                notificationData,
-                userIds: new[] { new UserIdentifier(tutor.TenantId, tutor.Id) }
-            );
+                await _notificationPublisher.PublishAsync(
+                    NotificationNames.Notifications_CalendarEvents_NewBooking,
+                    notificationData,
+                    userIds: new[] { new UserIdentifier(tutor.TenantId, tutor.Id) }
+                );
 
-            notificationData["0"] = L("You");
-            notificationData["1"] = calendarEvent.Title;
-            notificationData["2"] = project.Name;
+                notificationData["0"] = L("You");
+                notificationData["1"] = calendarEvent.Title;
+                notificationData["2"] = project?.Name ?? string.Empty;
 
-            await _notificationPublisher.PublishAsync(
-                NotificationNames.Notifications_CalendarEvents_NewBooking,
-                notificationData,
-                userIds: new[] { new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value) }
-            );
+                await _notificationPublisher.PublishAsync(
+                    NotificationNames.Notifications_CalendarEvents_NewBooking,
+                    notificationData,
+                    userIds: new[] { new UserIdentifier(AbpSession.TenantId, AbpSession.UserId.Value) }
+                );
+            }
         }
 
         public async Task Update(CalendarEventDto input)

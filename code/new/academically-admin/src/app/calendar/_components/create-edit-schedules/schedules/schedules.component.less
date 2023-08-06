@@ -1,15 +1,22 @@
 .schedule {
-    gap: 15px;
     width: 100%;
+    gap: 14px;
 
     &.disabled {
       .schedule {
         &-time, &-actions {
-          opacity: 0.5;
+          opacity: 0.6;
 
           * {
             cursor: default;
             pointer-events: none;
+          }
+        }
+
+        &-available, &-break {
+          opacity: 0.6;
+          * {
+            color: #95AAC9;
           }
         }
 
@@ -29,8 +36,43 @@
       }
     }
 
+    &.removable {
+      .schedule {
+        &-time {
+          &-from, &-to {
+            .dropdown {
+              width: 115px;
+            }
+          }
+        }
+      }
+    }
+
     &-container {
       gap: 20px;
+    }
+
+    &-separator {
+      width: 100%;
+      border-bottom: 1px solid #EDF2F9;
+    }
+
+    &-day {
+      max-width: 140px;
+
+      .datepicker {
+        .input-group-text {
+          padding-left: 10px;
+          padding-right: 0;
+        }
+
+        input {
+          &:focus {
+            outline: none !important;
+            border-color: #d2ddec;
+          }
+        }
+      }
     }
 
     &-available {
@@ -115,5 +157,26 @@
                 }
             }
         }
+    }
+
+    &-add {
+      max-height: 20px;
+
+      .datepicker {
+        max-width: 140px;
+
+        label {
+          color: #2C7BE5;font-size: 15px;
+          font-style: normal;
+          font-weight: 600;
+          line-height: 152.402%;
+          letter-spacing: -0.15px;
+        }
+
+        input {
+          position: absolute;
+          right: 0;
+        }
+      }
     }
   }
