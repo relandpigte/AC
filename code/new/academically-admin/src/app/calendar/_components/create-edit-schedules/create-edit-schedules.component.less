@@ -2,9 +2,18 @@
   .modal-schedule {
       width: 695px !important;
       max-width: 100% !important;
-      min-height: 578px !important;
-      max-height: 100% !important;
+
+      .modal-content {
+        min-height: 578px !important;
+        max-height: 100% !important;
+      }
   }
+}
+
+:host {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .card {
@@ -29,6 +38,14 @@
           display: flex;
           justify-content: center;
           align-items: center;
+
+          &.btn.btn-white {
+            background-color: #EEEFF2 !important;
+
+            &:hover {
+              border-color: #EEEFF2 !important;
+            }
+          }
         }
       }
 

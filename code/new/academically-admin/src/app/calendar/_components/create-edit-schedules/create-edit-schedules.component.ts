@@ -4,6 +4,11 @@ import { UserAvailabilitiesServiceProxy, UserAvailabilityDto } from '@shared/ser
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
 
+export enum ScheduleType {
+  DEFAULT = 'default',
+  CUSTOM = 'custom'
+}
+
 @Component({
   selector: 'app-create-edit-schedules',
   templateUrl: './create-edit-schedules.component.html',
@@ -18,6 +23,11 @@ export class CreateEditSchedulesComponent extends AppComponentBase implements On
   isLoading = false;
 
   activeTab = 'default';
+
+
+  get scheduleType(): ScheduleType {
+    return this.activeTab === 'default' ? ScheduleType.DEFAULT : ScheduleType.CUSTOM;
+  }
 
   constructor(
     injector: Injector,

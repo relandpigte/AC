@@ -1810,6 +1810,7 @@
 	<text name="SortedBy">Sorted by</text>
 	<text name="Recent">Recent</text>
 	<text name="Popular">Popular</text>
+	<text name="Generics.Actions.AddDate">ADD DATE</text>
 	<text name="Generics.Reactions.Like">Like</text>
 	<text name="Generics.Reactions.Love">Love</text>
 	<text name="Generics.Reactions.Haha">Haha</text>

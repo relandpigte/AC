@@ -1,6 +1,6 @@
-<form class="form-horizontal" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
+<form class="form-horizontal d-flex flex-column flex-grow-1" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
 
-  <div class="modal-card card">
+  <div class="modal-card card d-flex flex-column justify-content-center flex-grow-1">
 
     <div class="card-header position-relative">
       <h4 class="card-header-title">
@@ -21,18 +21,8 @@
       </ul>
     </div>
 
-    <div class="card-body" [loader]="isLoading">
-      <ng-container [ngSwitch]="activeTab">
-
-        <ng-container *ngSwitchCase="'default'">
-          <app-default-schedules [userAvailabilities]="userAvailabilities" (modelChanged)="handleModelChanged($event)"></app-default-schedules>
-        </ng-container>
-
-        <ng-container *ngSwitchCase="'custom'">
-
-        </ng-container>
-
-      </ng-container>
+    <div class="card-body flex-grow-1" [loader]="isLoading">
+      <app-schedules [userAvailabilities]="userAvailabilities" [type]="scheduleType" (modelChanged)="handleModelChanged($event)"></app-schedules>
     </div>
     <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading" [saveDisabled]="isLoading || !isModelValid"
       (onCancelClick)="onCloseClick()">
