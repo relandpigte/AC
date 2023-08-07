@@ -3,10 +3,11 @@ import { debounceTime, finalize, takeUntil } from 'rxjs/operators';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import { TopicSorting } from '@shared/components/topic/topic.component';
+import { PostFocusField } from '@shared/enums/post/post-focus-field.enum';
 import { PostTabs } from '@shared/modals/upsert-post/upsert-post.component';
 import { DisciplineTaxonomiesServiceProxy, KeywordSearchStrategy, PostType } from '@shared/service-proxies/service-proxies';
-import { PostFocusField } from '@shared/enums/post/post-focus-field.enum';
 import { Subject } from 'rxjs';
+
 
 export interface VisibilityOptions {
   label: string;

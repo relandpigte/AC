@@ -42,12 +42,13 @@ export class SchedulesComponent extends AutoSaveComponentBase implements OnInit,
     newDateDpValue: Date;
 
     constructor(
-        injector: Injector,
+        injector: Injector
     ) {
         super(injector);
         this.datePickerConfig = new BsDatepickerConfig();
         this.datePickerConfig.showWeekNumbers = false;
         this.datePickerConfig.dateInputFormat = 'DD MMM, YYYY';
+        this.datePickerConfig.datesDisabled = [];
         this.datePickerConfig.adaptivePosition = true;
 
         const now = new Date();
@@ -67,7 +68,13 @@ export class SchedulesComponent extends AutoSaveComponentBase implements OnInit,
     }
 
     get customDates() {
-        return Object.keys(this.models).filter(k => !_.isNil(this.models[k].availability.specificDate)).map(k => +k);
+        return Object.keys(this.models)
+            .filter(k => !_.isNil(this.models[k].availability.specificDate))
+            .map(k => +k)
+            .reduce((list, curr) => {
+                if (curr === this.nowValue) return [curr, ...list];
+                return [...list, curr];
+            }, []);
     }
 
     init(): void {
@@ -149,10 +156,15 @@ export class SchedulesComponent extends AutoSaveComponentBase implements OnInit,
         const now = new Date();
         const filteredAvailabilities = this.userAvailabilities.filter(a => !_.isNil(a.specificDate));
         const specificDates = _.uniq(filteredAvailabilities.map(a => a.specificDate.valueOf()));
+
+        this.datePickerConfig.datesDisabled = _.uniq([...this.datePickerConfig.datesDisabled, now]);
+
         specificDates.forEach(specificDate => {
             const existing = _.minBy(filteredAvailabilities.filter((a) => a.specificDate?.valueOf() == specificDate), (a) => a.startTime);
             const existingStartTimeDate = existing?.startTime ? this.createDateFromTime(existing.startTime) : new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0);
             const existingEndTimeDate = existing?.endTime ? this.createDateFromTime(existing.endTime) : new Date(now.getFullYear(), now.getMonth(), now.getDate(), 18, 0, 0);
+
+            this.datePickerConfig.datesDisabled = _.uniq([...this.datePickerConfig.datesDisabled, existing.specificDate.toDate()]);
 
             this.models[specificDate] = {
                 availability: { ...existing, specificDateDpValue: existing.specificDate.toDate() },
@@ -232,6 +244,8 @@ export class SchedulesComponent extends AutoSaveComponentBase implements OnInit,
     }
 
     addAvailability(day: number): void {
+        if (day in this.models) return;
+
         const specificDate = moment(day);
         const specificDateDpValue = specificDate.toDate();
         const dayOfWeek = (specificDate.day() + 1) % 7;
@@ -239,6 +253,8 @@ export class SchedulesComponent extends AutoSaveComponentBase implements OnInit,
         const defaultAvailability = _.minBy(defaultAvailabilities.filter((e) => e.dayOfWeek == dayOfWeek), (a) => a.startTime);
         const defaultStartTimeDate = defaultAvailability?.startTime ? this.createDateFromTime(defaultAvailability.startTime) : new Date(specificDateDpValue.getFullYear(), specificDateDpValue.getMonth(), specificDateDpValue.getDate(), 9, 0, 0);
         const defaultEndTimeDate = defaultAvailability?.endTime ? this.createDateFromTime(defaultAvailability.endTime) : new Date(specificDateDpValue.getFullYear(), specificDateDpValue.getMonth(), specificDateDpValue.getDate(), 18, 0, 0);
+
+        this.datePickerConfig.datesDisabled = _.uniq([...this.datePickerConfig.datesDisabled, specificDateDpValue]);
 
         this.models[day] = {
             availability: {
@@ -301,7 +317,7 @@ export class SchedulesComponent extends AutoSaveComponentBase implements OnInit,
     addCustomAvailability(): void {
         const day = new Date(this.newDateDpValue.getFullYear(), this.newDateDpValue.getMonth(), this.newDateDpValue.getDate(), 0, 0, 0).valueOf();
         this.addAvailability(day);
-        this.newDateDpValue = null;
+        setTimeout(() => this.newDateDpValue = null);
     }
 
     removeCustomAvailability(day: number): void {

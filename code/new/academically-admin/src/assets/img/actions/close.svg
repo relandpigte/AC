@@ -1,0 +1,17 @@
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 7678">
+<g id="Ellipse 305" opacity="0.2" filter="url(#filter0_b_7144_136051)">
+<circle cx="10" cy="10" r="10" fill="#12263F"/>
+</g>
+<path id="Vector" d="M14 6L6 14" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_2" d="M6 6L14 14" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<filter id="filter0_b_7144_136051" x="-4" y="-4" width="28" height="28" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feGaussianBlur in="BackgroundImageFix" stdDeviation="2"/>
+<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_7144_136051"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_7144_136051" result="shape"/>
+</filter>
+</defs>
+</svg>

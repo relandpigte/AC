@@ -63,6 +63,7 @@ import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.comp
 import { AddServiceComponent } from '@shared/modals/add-service/add-service.component';
 import { AddTopicsComponent } from '@shared/modals/add-topics/add-topics.component';
 import { ShimmerComponent } from '@shared/components/shimmer/shimmer.component';
+import { PreviewLinksComponent } from '@shared/components/preview/links/links.component';
 import { PreviewPostsComponent } from '@shared/components/preview/posts/posts.component';
 import { PreviewServicesComponent } from '@shared/components/preview/services/services.component';
 import { NewPostFloaterComponent } from '@shared/components/new-post-floater/new-post-floater.component';
@@ -116,6 +117,7 @@ import { ServiceReviewComponent } from '@shared/components/service-review/servic
     ReactionComponent,
     ReactionUsersComponent,
     ShimmerComponent,
+    PreviewLinksComponent,
     PreviewPostsComponent,
     PreviewServicesComponent,
     ShortenPipe,
@@ -207,6 +209,7 @@ import { ServiceReviewComponent } from '@shared/components/service-review/servic
     ReactionComponent,
     ReactionUsersComponent,
     ShimmerComponent,
+    PreviewLinksComponent,
     PreviewPostsComponent,
     PreviewServicesComponent,
     ShortenPipe,
