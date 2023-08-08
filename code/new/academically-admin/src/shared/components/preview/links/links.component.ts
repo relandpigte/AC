@@ -11,7 +11,7 @@ import { LinkPreviewResponse, LinkPreviewService } from '@shared/services/link-p
 export class PreviewLinksComponent extends AppComponentBase implements OnInit, OnChanges {
   @ViewChild('videoFile') videoFile: ElementRef;
 
-  @Input() linkPreviews: LinkPreviewResponse;
+  @Input() linkPreview: LinkPreviewResponse;
   @Input() serviceType: ServicesType;
   @Input() canRemove: boolean = true;
 
@@ -40,14 +40,14 @@ export class PreviewLinksComponent extends AppComponentBase implements OnInit, O
   get isCompositionsShown(): boolean { return this.serviceType === ServicesType.Course || this.serviceType === ServicesType.Tutorial; }
   get isLinksShown(): boolean { return !this.serviceType; }
 
-  get img(): string { return this.linkPreviews?.image ?? 'https://marketplace.canva.com/EAEqfS4X0Xw/1/0/1600w/canva-most-attractive-youtube-thumbnail-wK95f3XNRaM.jpg'; }
+  get img(): string { return this.linkPreview?.image ?? 'https://marketplace.canva.com/EAEqfS4X0Xw/1/0/1600w/canva-most-attractive-youtube-thumbnail-wK95f3XNRaM.jpg'; }
   get video(): string { return 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'; }
   get schedule(): string { return 'FRI, 23 AUG 2022 AT 18:00'; }
-  get title(): string { return this.linkPreviews?.title ?? 'Search the world\'s information, including webpages, images, videos and more. Google has many special features to help you find exactly what you\'re looking for.'; }
-  get description(): string { return this.linkPreviews?.description ?? 'Lorem ipsum dolor sit amet, consectetur ipsumn sit amet, consectetur'; }
+  get title(): string { return this.linkPreview?.title ?? 'Search the world\'s information, including webpages, images, videos and more. Google has many special features to help you find exactly what you\'re looking for.'; }
+  get description(): string { return this.linkPreview?.description ?? 'Lorem ipsum dolor sit amet, consectetur ipsumn sit amet, consectetur'; }
   get author(): string { return 'Jingying Chai'; }
   get composition(): string { return '3 modules · 5 lessons'; }
-  get link(): string { return this.linkPreviews?.url ?? 'https://www.websitename.com/link'; }
+  get link(): string { return this.linkPreview?.url ?? 'https://www.websitename.com/link'; }
 
   ngOnInit(): void {
 

@@ -59,13 +59,7 @@ export class SchedulesComponent extends AutoSaveComponentBase implements OnInit,
         this.init();
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes.type) {
-            if (this.type === ScheduleType.CUSTOM && !(this.nowValue in this.models)) {
-                this.addAvailability(this.nowValue);
-            }
-        }
-    }
+    ngOnChanges(changes: SimpleChanges): void {}
 
     get customDates() {
         return Object.keys(this.models)
@@ -156,8 +150,6 @@ export class SchedulesComponent extends AutoSaveComponentBase implements OnInit,
         const now = new Date();
         const filteredAvailabilities = this.userAvailabilities.filter(a => !_.isNil(a.specificDate));
         const specificDates = _.uniq(filteredAvailabilities.map(a => a.specificDate.valueOf()));
-
-        this.datePickerConfig.datesDisabled = _.uniq([...this.datePickerConfig.datesDisabled, now]);
 
         specificDates.forEach(specificDate => {
             const existing = _.minBy(filteredAvailabilities.filter((a) => a.specificDate?.valueOf() == specificDate), (a) => a.startTime);
@@ -268,7 +260,12 @@ export class SchedulesComponent extends AutoSaveComponentBase implements OnInit,
                 const defaultBreakStartTime = this.createDateFromTime(b.startTime);
                 const defaultBreakEndTime = this.createDateFromTime(b.endTime);
                 return {
-                    availability: { ...b, id: null },
+                    availability: {
+                        ...b,
+                        id: null,
+                        dayOfWeek: null,
+                        specificDate: specificDate
+                    },
                     startTime: {
                         label: `${defaultBreakStartTime.getHours().toString().padStart(2, '0')}:${defaultBreakStartTime.getMinutes().toString().padStart(2, '0')}${defaultBreakStartTime.getHours() < 12 ? 'am' : 'pm'}`,
                         value: defaultBreakStartTime,

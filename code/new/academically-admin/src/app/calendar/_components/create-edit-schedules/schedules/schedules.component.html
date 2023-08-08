@@ -60,14 +60,13 @@
                 <div class="schedule-day flex-grow-1">
                     <div class="input-group input-group-merge datepicker" (click)="dp.show()">
                         <div class="input-group-prepend"><div class="input-group-text"><img src="/assets/img/actions/calendar.svg" class="calendar"></div></div>
-                        <div *ngIf="entry == nowValue" class="form-control form-control-prepended">{{ 'Today' | localize }}</div>
-                        <input *ngIf="entry != nowValue" [(ngModel)]="models[entry].availability.specificDateDpValue" [id]="'specific-date-' + entry" [name]="'specific-date-' + entry" type="text" class="form-control form-control-prepended" #dp="bsDatepicker" bsDatepicker [bsConfig]="datePickerConfig" />
+                        <input [(ngModel)]="models[entry].availability.specificDateDpValue" [id]="'specific-date-' + entry" [name]="'specific-date-' + entry" type="text" class="form-control form-control-prepended" #dp="bsDatepicker" bsDatepicker [bsConfig]="datePickerConfig" />
                     </div>
                 </div>
                 <div class="schedule-available">
                     <div class="custom-control custom-switch">
                     <input [(ngModel)]="models[entry].availability.isAvailable" type="checkbox" [id]="'isAvailable-' + entry" [name]="'isAvailable-' + entry" class="custom-control-input" [checked]="models[entry].availability.isAvailable" />
-                    <label class="custom-control-label" [for]="'isAvailable-' + nowValue">{{ models[entry].availability.isAvailable ? 'Available' : 'Unavailable' | localize }}</label>
+                    <label class="custom-control-label" [for]="'isAvailable-' + entry">{{ models[entry].availability.isAvailable ? 'Available' : 'Unavailable' | localize }}</label>
                     </div>
                 </div>
                 <div class="schedule-time d-flex justify-content-center align-items-center">
@@ -114,7 +113,6 @@
             <ng-container *ngFor="let b of models[entry].breaks; let i = index">
                 <ng-container *ngTemplateOutlet="breakTemplate; context: { day: entry, idx: i }"></ng-container>
             </ng-container>
-            <div *ngIf="entry == nowValue" class="schedule-separator"></div>
         </div>
         <div class="schedule-add d-flex justify-content-start align-items-center gap-5 w-100">
             <div class="input-group input-group-merge datepicker" (click)="newDateDp.show()">

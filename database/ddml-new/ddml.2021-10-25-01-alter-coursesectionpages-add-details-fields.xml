@@ -15,11 +15,6 @@
             <column name="Duration" type="TEXT(65535)"/>
         </addColumn>
     </changeSet>
-<changeSet author="paroksya-pc2 (generated)" id="1635157272178-3">
-        <addColumn tableName="academicallyCourseSectionPages">
-            <column name="Duration" type="TEXT(65535)"/>
-        </addColumn>
-    </changeSet>
     <changeSet author="paroksya-pc2 (generated)" id="1635157272178-4">
         <createIndex indexName="FK_CourseSectionPages_Documents_ImageDocumentId_idx" tableName="academicallyCourseSectionPages">
             <column name="ImageDocumentId"/>
