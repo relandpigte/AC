@@ -12,8 +12,9 @@ export class PreviewLinksComponent extends AppComponentBase implements OnInit, O
   @ViewChild('videoFile') videoFile: ElementRef;
 
   @Input() linkPreview: LinkPreviewResponse;
-  @Input() serviceType: ServicesType;
+  @Input() serviceType: ServicesType = ServicesType.Tutorial;
   @Input() canRemove: boolean = true;
+  @Input() canPlay: boolean = false;
 
   isRemoved = false;
   isVideoPlaying = false;
@@ -62,6 +63,8 @@ export class PreviewLinksComponent extends AppComponentBase implements OnInit, O
   togglePlayVideo(evt): void {
     evt.preventDefault();
     evt.stopPropagation();
+
+    if (!this.canPlay) return;
 
     if (this.isVideoPlaying) this.videoFile.nativeElement.pause();
     else this.videoFile.nativeElement.play();

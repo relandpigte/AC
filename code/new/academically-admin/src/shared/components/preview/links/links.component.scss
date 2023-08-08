@@ -61,7 +61,7 @@
         overflow: hidden;
 
         &:hover {
-            .link-preview-video-play {
+            .link-preview-video-play.can-play {
                 visibility: visible;
                 opacity: 0.5;
             }
@@ -71,12 +71,11 @@
             position: absolute;
             top: 50%;
             right: 50%;
-            z-index: 2;
             width: 22px;
             height: 22px;
 
-            visibility: hidden;
-            opacity: 0;
+            visibility: visible;
+            opacity: 0.5;
 
             -webkit-transform: translate(50%, -50%);
             -moz-transform: translate(50%, -50%);
@@ -89,6 +88,11 @@
             -ms-transition: all 0.2s ease-in-out;
             -o-transition: all 0.2s ease-in-out;
             transition: all 0.2s ease-in-out;
+
+            &.can-play {
+                visibility: hidden;
+                opacity: 0;
+            }
         }
 
         video {
