@@ -13,6 +13,7 @@ import { TeachingGridComponent } from './_components/teaching-grid/teaching-grid
 import { TeachingListComponent } from './_components/teaching-list/teaching-list.component';
 import { LearningGridComponent } from './_components/learning-grid/learning-grid.component';
 import { LearningListComponent } from './_components/learning-list/learning-list.component';
+import { DashboardModule } from '@app/dashboard/dashboard.module';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { LearningListComponent } from './_components/learning-list/learning-list
     CoursesRoutingModule,
     SharedModule,
     AppSharedModule,
+    DashboardModule,
   ],
 })
 export class CoursesModule { }

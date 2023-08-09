@@ -1,57 +1,53 @@
-<div class="container-fluid" [@routerTransition]>
-  <div class="row justify-content-center">
-    <div class="col-12">
-      <div class="header">
-        <div class="header-body">
-          <div class="row align-items-center">
-            <div class="col">
-              <h6 class="header-pretitle">{{ 'Dashboard' | localize }}</h6>
-              <h1 class="header-title">{{ 'Events' | localize }}</h1>
+<div [@routerTransition] class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12">
+               <div class="header">
+                <div class="header-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h6 class="header-pretitle">{{ 'Dashboard' | localize }}</h6>
+                            <h1 class="header-title">{{ 'Events' | localize }}</h1>
+                        </div>
+                        <div class="col-auto d-flex gap-10">
+                            <ng-container *ngIf="isTutor">
+                                <button (click)="onNewBroadcastClick()" class="btn btn-primary">
+                                    {{ 'NewBroadcast' | localize | titlecase }}
+                                </button>
+                                <button (click)="onNewWorkshopClick()" class="btn btn-primary">
+                                    {{ 'NewWorkshop' | localize | titlecase }}
+                                </button>
+                                <button *ngIf="isTutor" class="btn btn-white custom-card-border d-flex align-items-center gap-10" (click)="handleSwitchView()">
+                                    <span class="fe fe-refresh-cw"></span>
+                                    Switch to {{ switchButtonText }} view
+                                </button>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <app-sub-header [userView]="defaultUserView"></app-sub-header>
+                </div>
             </div>
-            <div class="col-auto">
-              <a href="#!new-broadcast" class="btn btn-primary ml-2" (click)="$event.preventDefault(); onNewBroadcastClick()"
-                *ngIf="isTutor">
-                {{ 'NewBroadcast' | localize | titlecase }}
-              </a>
-              <a href="#!new-workshop" class="btn btn-primary ml-2" (click)="$event.preventDefault(); onNewWorkshopClick()"
-                *ngIf="isTutor">
-                {{ 'NewWorkshop' | localize | titlecase }}
-              </a>
+
+            <div class="tab-content" [ngSwitch]="defaultUserView">
+                <ng-container *ngSwitchCase="dashboardServiceView.creator">
+                    <div class="tab-pane fade show active" id="created" role="tabpanel" aria-labelledby="created-tab">
+                        <app-teaching></app-teaching>
+                    </div>
+                    <div class="tab-pane fade" id="analytics" role="tabpanel" aria-labelledby="analytics-tab">
+                        This is analytics tab
+                    </div>
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                    <div class="tab-pane fade show active" id="purchased" role="tabpanel" aria-labelledby="purchased-tab">
+                        <app-learning></app-learning>
+                    </div>
+                    <div class="tab-pane fade" id="saved" role="tabpanel" aria-labelledby="save-tab">
+                        <p>This is saved tab content.</p>
+                    </div>
+                    <div class="tab-pane fade" id="discover" role="tabpanel" aria-labelledby="discover-tab">
+                        <p>This is Discover tab content.</p>
+                    </div>
+                </ng-container>
             </div>
-          </div>
         </div>
-      </div>
-
-      <div class="row align-items-center mt-n4 mb-4">
-        <div class="col">
-          <ul class="nav nav-tabs nav-tabs-sm nav-overflow">
-            <li *ngIf="isTutor" class="nav-item">
-              <a class="nav-link" [class.active]="isTutor" id="teaching-tab" data-toggle="tab" href="#teaching" role="tab"
-                aria-controls="teaching" aria-selected="true">{{ 'MyTeaching' | localize | titlecase }}</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" [class.active]="!isTutor" id="learning-tab" data-toggle="tab" href="#learning" role="tab"
-                aria-controls="learning" aria-selected="false">{{ 'MyLearning' | localize | titlecase }}</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="schedule-tab" data-toggle="tab" href="#schedule" role="tab"
-                aria-controls="schedule" aria-selected="false">{{ 'Schedule' | localize | titlecase }}</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="tab-content">
-        <div class="tab-pane fade" [ngClass]="[isTutor ? 'show active' : '']" id="teaching" role="tabpanel" aria-labelledby="teaching-tab">
-          <app-teaching></app-teaching>
-        </div>
-        <div class="tab-pane fade" [ngClass]="[!isTutor ? 'show active' : '']" id="learning" role="tabpanel" aria-labelledby="learning-tab">
-          <app-learning></app-learning>
-        </div>
-        <div class="tab-pane fade" id="schedule" role="tabpanel" aria-labelledby="schedule-tab">
-          <app-schedule></app-schedule>
-        </div>
-      </div>
     </div>
-  </div>
 </div>

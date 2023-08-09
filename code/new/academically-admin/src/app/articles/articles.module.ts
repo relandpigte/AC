@@ -8,6 +8,7 @@ import { ArticlesComponent } from './articles.component';
 import { ChooseTemplateComponent } from './_components/choose-template/choose-template.component';
 import { CreateArticleComponent } from './_components/create-article/create-article.component';
 import { LearningModule } from './_components/learning/learning.module';
+import { DashboardModule } from '@app/dashboard/dashboard.module';
 @NgModule({
   declarations: [
     ArticlesComponent,
@@ -21,6 +22,7 @@ import { LearningModule } from './_components/learning/learning.module';
     AppSharedModule,
     TeachingModule,
     LearningModule,
+    DashboardModule,
   ],
 })
 export class ArticlesModule { }
