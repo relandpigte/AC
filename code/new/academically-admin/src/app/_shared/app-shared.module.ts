@@ -72,6 +72,7 @@ import { KeysPipe } from '@shared/pipes/keys.pipe';
 import { ShortenPipe } from '@shared/pipes/shorten.pipe';
 import { CommentHistoryComponent } from '@shared/modals/comment-history/comment-history.component';
 import { ServiceReviewComponent } from '@shared/components/service-review/service-review.component';
+import { ServiceCardDashboardComponent } from '@shared/components/service-card-dashboard/service-card-dashboard.component';
 
 @NgModule({
   declarations: [
@@ -123,7 +124,8 @@ import { ServiceReviewComponent } from '@shared/components/service-review/servic
     ShortenPipe,
     CommentHistoryComponent,
     NewPostFloaterComponent,
-    ServiceReviewComponent
+    ServiceReviewComponent,
+    ServiceCardDashboardComponent
   ],
   imports: [
     CommonModule,
@@ -215,7 +217,8 @@ import { ServiceReviewComponent } from '@shared/components/service-review/servic
     ShortenPipe,
     CommentHistoryComponent,
     NewPostFloaterComponent,
-    ServiceReviewComponent
+    ServiceReviewComponent,
+    ServiceCardDashboardComponent
   ],
 })
 export class AppSharedModule { }

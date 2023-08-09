@@ -1,0 +1,64 @@
+.article {
+    font-size: 15px;
+
+    &-title {
+        font-size: 18px;
+        color: #12263F;
+        margin-bottom: 0.313rem;
+    }
+
+    &-description {
+        color: #3B516C;
+        margin-bottom: 0.625rem;
+    }
+
+    &-status {
+        color: #6E84A3;
+
+        .icon {
+            background-image: url("/assets/img/status/completed.svg");
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            margin-right: 0.625rem;
+        }
+    }
+
+    &-actions {
+        min-width: 23.2112%;
+        border-left: 1px solid #D2DDEC;
+
+        .btn {
+            &:focus,
+            &:active {
+                outline: 0 !important;
+                box-shadow: 0 0 0;
+            }
+
+            &.read {
+                span {
+                    background-image: url("/assets/img/actions/read.svg");
+
+                    &:hover {
+                        background-image: url("/assets/img/actions/read-hover.svg");
+                    }
+                }
+            }
+
+            &.review {
+                span {
+                    background-image: url("/assets/img/actions/review.svg");
+
+                    &:hover {
+                        background-image: url("/assets/img/actions/review-hover.svg");
+                    }
+                }
+            }
+
+            span {
+                width: 53px;
+                height: 53px;
+            }
+        }
+    }
+}

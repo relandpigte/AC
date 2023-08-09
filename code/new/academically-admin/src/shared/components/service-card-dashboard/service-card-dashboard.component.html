@@ -1,0 +1,28 @@
+
+<div class="card custom-card-border" [ngClass]="cardType">
+    <div class="card-body">
+        <div class="row d-flex align-items-stretch gap-20" [ngSwitch]="cardType">
+            <ng-container *ngSwitchCase="'article'">
+                <div class="col">
+                    <h3 [class]="cardType + '-title'">{{ name }}</h3>
+                    <p [class]="cardType + '-description'">{{ description | shorten : 110 }}</p>
+                    <span [class]="cardType + '-status d-flex align-items-center'">
+                        Unread
+<!--                        <i class="icon completed"></i> You've read this-->
+                    </span>
+                </div>
+                <div [class]="cardType + '-actions col-auto my-auto d-flex justify-content-center'">
+                    <button class="read btn d-flex flex-column text-primary align-items-center gap-5 p-0">
+                        <span class="block bg-center"></span> Read
+                    </button>
+<!--                    <button class="review btn d-flex flex-column text-primary align-items-center gap-5 p-0">-->
+<!--                        <span class="block bg-center"></span> Review-->
+<!--                    </button>-->
+<!--                    <button class="read btn d-flex flex-column text-primary align-items-center gap-5 p-0">-->
+<!--                        <span class="block bg-center"></span> Read again-->
+<!--                    </button>-->
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

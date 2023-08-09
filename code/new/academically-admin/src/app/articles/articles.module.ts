@@ -9,11 +9,13 @@ import { ChooseTemplateComponent } from './_components/choose-template/choose-te
 import { CreateArticleComponent } from './_components/create-article/create-article.component';
 import { LearningModule } from './_components/learning/learning.module';
 import { DashboardModule } from '@app/dashboard/dashboard.module';
+import { PurchasedComponent } from './_components/purchased/purchased.component';
 @NgModule({
   declarations: [
     ArticlesComponent,
     ChooseTemplateComponent,
     CreateArticleComponent,
+    PurchasedComponent,
   ],
   imports: [
     CommonModule,
