@@ -8,6 +8,7 @@ import {LearningModule} from './_components/learning/learning.module';
 import { VideosComponent } from './videos.component';
 import { ChooseVideoTemplateComponent } from './_components/choose-video-template/choose-video-template.component';
 import { CreateVideoComponent } from './_components/create-video/create-video.component';
+import { DashboardModule } from '@app/dashboard/dashboard.module';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { CreateVideoComponent } from './_components/create-video/create-video.co
     SharedModule,
     AppSharedModule,
     TeachingModule,
-    LearningModule
+    LearningModule,
+    DashboardModule
   ],
 })
 export class VideosModule { }

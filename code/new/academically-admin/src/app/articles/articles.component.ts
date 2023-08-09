@@ -9,6 +9,7 @@ import { ArticleTemplate } from './_models/article-template';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { CreateArticleComponent } from './_components/create-article/create-article.component';
 import { takeUntil } from 'rxjs/operators';
+import { DashboardService, DashboardServiceView } from '@app/dashboard/_services/dashboard.service';
 
 @Component({
   selector: 'app-articles',
@@ -24,11 +25,21 @@ export class ArticlesComponent extends AppComponentBase implements OnInit {
     private _articleService: ArticleService,
     private _router: Router,
     private _articlesService: ArticlesServiceProxy,
+    private _dashboardService: DashboardService
   ) {
     super(injector);
   }
 
+  get dashboardServiceView() { return DashboardServiceView; }
+  get switchButtonText(): string { return this._dashboardService.switchButtonText(); }
+  get defaultUserView(): DashboardServiceView { return this._dashboardService.getUserView(); }
+
   ngOnInit(): void {
+    this._dashboardService.setUserView(DashboardServiceView.learner);
+  }
+
+  handleSwitchView(): void {
+    this._dashboardService.handleSwitchView();
   }
 
   onNewArticleClick(): void {

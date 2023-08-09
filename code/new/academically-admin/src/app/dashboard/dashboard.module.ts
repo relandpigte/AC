@@ -12,6 +12,7 @@ import { UpcomingSessionsComponent } from './overview/upcoming-sessions/upcoming
 import { RecentProjectsComponent } from './overview/recent-projects/recent-projects.component';
 import { RecentActivityComponent } from './overview/recent-activity/recent-activity.component';
 import { ProfileSummaryComponent } from './overview/profile-summary/profile-summary.component';
+import { SubHeaderComponent } from './_components/sub-header/sub-header.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { ProfileSummaryComponent } from './overview/profile-summary/profile-summ
     RecentProjectsComponent,
     RecentActivityComponent,
     ProfileSummaryComponent,
+    SubHeaderComponent
   ],
   imports: [
     CommonModule,
@@ -30,5 +32,8 @@ import { ProfileSummaryComponent } from './overview/profile-summary/profile-summ
     AppSharedModule,
     VerificationsModule,
   ],
+  exports: [
+    SubHeaderComponent
+  ]
 })
 export class DashboardModule { }

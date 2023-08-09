@@ -11,6 +11,7 @@ import { LearningComponent } from './learning/learning.component';
 import { TeachingComponent } from './teaching/teaching.component';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { CoachingComponent } from './coaching.component';
+import { DashboardModule } from '@app/dashboard/dashboard.module';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { CoachingComponent } from './coaching.component';
     CoachingRoutingModule,
     SharedModule,
     AppSharedModule,
-    ProgramsModule
+    ProgramsModule,
+    DashboardModule
   ],
 })
 export class CoachingModule { }

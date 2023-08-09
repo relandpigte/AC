@@ -1,4 +1,4 @@
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
@@ -9,6 +9,7 @@ import { ChooseTemplateComponent } from './_components/choose-template/choose-te
 import { CreateBroadcastComponent } from './_components/create-broadcast/create-broadcast.component';
 import { CreateWorkshopComponent } from './_components/create-workshop/create-workshop.component';
 import { EventsTemplate } from './_models/events-template';
+import { DashboardService, DashboardServiceView } from '@app/dashboard/_services/dashboard.service';
 
 @Component({
   selector: 'app-dashboard-events',
@@ -16,14 +17,27 @@ import { EventsTemplate } from './_models/events-template';
   styleUrls: ['./events.component.less'],
   animations: [appModuleAnimation()],
 })
-export class EventsComponent extends AppComponentBase  {
+export class EventsComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _router: Router,
     private _modalService: BsModalService,
-    private _eventsService: EventsServiceProxy
+    private _eventsService: EventsServiceProxy,
+    private _dashboardService: DashboardService
   ) {
     super(injector);
+  }
+
+  get dashboardServiceView() { return DashboardServiceView; }
+  get switchButtonText(): string { return this._dashboardService.switchButtonText(); }
+  get defaultUserView(): DashboardServiceView { return this._dashboardService.getUserView(); }
+
+  ngOnInit(): void {
+    this._dashboardService.setUserView(DashboardServiceView.learner);
+  }
+
+  handleSwitchView(): void {
+    this._dashboardService.handleSwitchView();
   }
 
   onNewBroadcastClick(): void {

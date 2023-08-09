@@ -1,13 +1,14 @@
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CoachingsServiceProxy, CoachingType, CreateCoachingDto } from '@shared/service-proxies/service-proxies';
+import { CoachingsServiceProxy, CoachingType, CreateCoachingDto, ServicesType } from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { takeUntil } from 'rxjs/operators';
 import { ChooseTemplateComponent } from './_components/choose-template/choose-template.component';
 import { CreateCoachingComponent } from './_components/create-coaching/create-coaching.component';
 import { CoachingTemplate } from './_models/coaching-template';
+import { DashboardService, DashboardServiceView } from '@app/dashboard/_services/dashboard.service';
 
 @Component({
   selector: 'app-coaching',
@@ -15,14 +16,24 @@ import { CoachingTemplate } from './_models/coaching-template';
   styleUrls: ['./coaching.component.less'],
   animations: [appModuleAnimation()],
 })
-export class CoachingComponent extends AppComponentBase  {
+export class CoachingComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _router: Router,
     private _modalService: BsModalService,
-    private _coachingService: CoachingsServiceProxy
+    private _coachingService: CoachingsServiceProxy,
+    public _dashboardService: DashboardService
   ) {
     super(injector);
+  }
+
+  get dashboardServiceView() { return DashboardServiceView; }
+  get serviceType() { return ServicesType.Coaching; }
+  get switchButtonText(): string { return this._dashboardService.switchButtonText(); }
+  get defaultUserView(): DashboardServiceView { return this._dashboardService.getUserView(); }
+
+  ngOnInit(): void {
+    this._dashboardService.setUserView(DashboardServiceView.learner);
   }
 
   onNewCoachingClick(): void {
@@ -49,5 +60,9 @@ export class CoachingComponent extends AppComponentBase  {
           });
       });
     });
+  }
+
+  handleSwitchView(): void {
+    this._dashboardService.handleSwitchView();
   }
 }

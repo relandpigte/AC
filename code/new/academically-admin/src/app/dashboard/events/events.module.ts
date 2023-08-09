@@ -12,6 +12,7 @@ import { EventsComponent } from './events.component';
 import { LearningComponent } from './learning/learning.component';
 import { TeachingComponent } from './teaching/teaching.component';
 import { ScheduleComponent } from './schedule/schedule.component';
+import { DashboardModule } from '@app/dashboard/dashboard.module';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { ScheduleComponent } from './schedule/schedule.component';
     EventsRoutingModule,
     SharedModule,
     AppSharedModule,
-    ProgramsModule
+    ProgramsModule,
+    DashboardModule
   ],
 })
 export class EventsModule { }

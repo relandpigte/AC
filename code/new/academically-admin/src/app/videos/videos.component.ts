@@ -9,6 +9,7 @@ import { takeUntil } from 'rxjs/operators';
 import { VideoTemplate } from './_models/video-template';
 import { VideoService } from './_services/video.service';
 import { Router } from '@angular/router';
+import { DashboardService, DashboardServiceView } from '@app/dashboard/_services/dashboard.service';
 
 @Component({
   selector: 'app-videos',
@@ -24,11 +25,21 @@ export class VideosComponent extends AppComponentBase implements OnInit {
     private _videoService: VideoService,
     private _router: Router,
     private _videosService: VideosServiceProxy,
+    private _dashboardService: DashboardService
   ) {
     super(injector);
   }
 
+  get dashboardServiceView() { return DashboardServiceView; }
+  get switchButtonText(): string { return this._dashboardService.switchButtonText(); }
+  get defaultUserView(): DashboardServiceView { return this._dashboardService.getUserView(); }
+
   ngOnInit(): void {
+    this._dashboardService.setUserView(DashboardServiceView.learner);
+  }
+
+  handleSwitchView(): void {
+    this._dashboardService.handleSwitchView();
   }
 
   onNewVideoClick(): void {
