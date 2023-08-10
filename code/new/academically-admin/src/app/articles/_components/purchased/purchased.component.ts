@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ArticleDtoPagedResultDto, ArticlesServiceProxy, ArticleStatus, ArticleType } from '@shared/service-proxies/service-proxies';
+import { ArticleDtoPagedResultDto, ArticlesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from '@node_modules/rxjs/operators';
 
 @Component({
@@ -8,11 +8,12 @@ import { finalize, takeUntil } from '@node_modules/rxjs/operators';
 })
 export class PurchasedComponent extends AppComponentBase implements OnInit {
   articles: ArticleDtoPagedResultDto;
-  ArticleStatus = ArticleStatus;
-  ArticleType = ArticleType;
   isLoading = true;
 
-  constructor(injector: Injector, private _articleService: ArticlesServiceProxy) {
+  constructor(
+    injector: Injector,
+    private _articlesService: ArticlesServiceProxy
+  ) {
     super(injector);
   }
 
@@ -21,7 +22,7 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
   }
 
   private loadArticles(): void {
-    this._articleService.getAll(undefined, undefined, undefined, undefined, undefined, undefined)
+    this._articlesService.getAll(undefined, undefined, undefined, undefined, undefined, undefined)
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => this.isLoading = false)

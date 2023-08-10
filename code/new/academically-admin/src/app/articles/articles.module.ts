@@ -10,12 +10,14 @@ import { CreateArticleComponent } from './_components/create-article/create-arti
 import { LearningModule } from './_components/learning/learning.module';
 import { DashboardModule } from '@app/dashboard/dashboard.module';
 import { PurchasedComponent } from './_components/purchased/purchased.component';
+import { CreatedComponent } from './_components/created/created.component';
 @NgModule({
   declarations: [
     ArticlesComponent,
     ChooseTemplateComponent,
     CreateArticleComponent,
     PurchasedComponent,
+    CreatedComponent,
   ],
   imports: [
     CommonModule,

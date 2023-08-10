@@ -73,6 +73,7 @@ import { ShortenPipe } from '@shared/pipes/shorten.pipe';
 import { CommentHistoryComponent } from '@shared/modals/comment-history/comment-history.component';
 import { ServiceReviewComponent } from '@shared/components/service-review/service-review.component';
 import { ServiceCardDashboardComponent } from '@shared/components/service-card-dashboard/service-card-dashboard.component';
+import { RouterModule } from '@node_modules/@angular/router';
 
 @NgModule({
   declarations: [
@@ -149,7 +150,8 @@ import { ServiceCardDashboardComponent } from '@shared/components/service-card-d
     PopoverModule.forRoot(),
     CarouselModule,
     PickerModule,
-    EmojiModule
+    EmojiModule,
+    RouterModule
   ],
   exports: [
     SharedModule,

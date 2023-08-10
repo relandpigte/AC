@@ -1,6 +1,12 @@
 .article {
     font-size: 15px;
 
+    &.archive {
+        .article-title {
+            color: #6E84A3;
+        }
+    }
+
     &-title {
         font-size: 18px;
         color: #12263F;
@@ -21,6 +27,33 @@
             height: 20px;
             display: inline-block;
             margin-right: 0.625rem;
+        }
+
+        & > span {
+            padding: 0 0.625rem 0 0;
+
+            &:before {
+                content: "";
+                height: 12px;
+                width: 1px;
+                background-color: #D2DDEC;
+                display: inline-block;
+                margin-right: 0.625rem;
+                vertical-align: middle;
+                margin-top: -3px;
+            }
+
+            &:first-child {
+                &:before {
+                    margin: 0;
+                    width: 0;
+                }
+            }
+
+            .avatar{
+                width: 20px;
+                height: 20px;
+            }
         }
     }
 
