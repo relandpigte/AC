@@ -6,6 +6,7 @@ export interface ServiceCard {
     info?: string;
     description?: string;
     location?: string;
+    status?: ServiceCardStatus;
 
     owner: ServiceCardPerson;
     people?: ServiceCardPeople;
@@ -31,7 +32,7 @@ export interface ServiceCardOptions {
     headingType?: HeadingType;
     isShowDescription?: boolean;
     isShowQuickPreview?: boolean;
-    isShowProgress?: boolean,
+    isShowProgress?: boolean;
     isShowDetails?: boolean;
     isShowDetailsPrice?: boolean;
     isShowDetailsComposition?: boolean;
@@ -41,6 +42,8 @@ export interface ServiceCardOptions {
     isShowDetailsReviews?: boolean;
     isDetailsReviewsSeparated?: boolean;
     isShowActions?: boolean;
+    isSHowPurchased?: boolean;
+    isShowEnrolled?: boolean;
 }
 
 export const DefaultServiceCardOptions: ServiceCardOptions = {
@@ -62,8 +65,10 @@ export const DefaultServiceCardOptions: ServiceCardOptions = {
     isShowDetailsRsvp: false,
     isShowDetailsReviews: false,
     isDetailsReviewsSeparated: false,
-    isShowActions: true
-}
+    isShowActions: true,
+    isSHowPurchased: false,
+    isShowEnrolled: false
+};
 
 export const DefaultServiceCardActions: ServiceCardButton[] = [
     { type: 'submit', action: 'save', label: 'Save', class: 'btn-light' },
@@ -76,8 +81,9 @@ export const UserServiceCardActions: ServiceCardButton[] = [
 ];
 
 export type ServiceCardType = 'course' | 'tutorial' | 'article' | 'event' | 'broadcast' | 'coaching' | 'workshop' | 'user' | 'space' | 'feature';
-export type ServiceCardButtonType = 'submit' | 'group' | 'share' | 'follow';
+export type ServiceCardButtonType = 'submit' | 'group' | 'share' | 'follow' | 'read' | 'join' | 'review' | 'play' | 'continue' | 'book';
 export type HeadingType = 'location' | 'schedule';
+export type ServiceCardStatusType = 'read' | 'unread' | 'archived' | 'published' | 'completed' | 'draft' | 'onprogress';
 
 export interface ServiceCardPerson {
     avatar?: ServiceCardImage;
@@ -105,6 +111,13 @@ export interface ServiceCardDates {
     lastActiveDate?: moment.Moment;
 }
 
+export interface ServiceCardStatus {
+    type: ServiceCardStatusType;
+    label?: string;
+    class?: string;
+    show?: boolean;
+}
+
 export interface ServiceCardComposition {
     modules?: number;
     lessons?: number;
@@ -114,6 +127,7 @@ export interface ServiceCardComposition {
     sessions?: number;
     videos?: number;
     durationInSec?: number;
+    units: number;
 }
 
 export interface ServiceCardImage {
@@ -133,13 +147,13 @@ export interface ServiceCardPill {
 }
 
 export interface ServiceCardButton {
-	type: ServiceCardButtonType;
-    action?: string;
-	label?: string;
-	icon?: string;
-    class?: string;
-	size?: number;
-	buttons?: ServiceCardButton[];
+      type: ServiceCardButtonType;
+      action?: string;
+      label?: string;
+      icon?: string;
+      class?: string;
+      size?: number;
+      buttons?: ServiceCardButton[];
 }
 
 export interface ServiceCardReview {

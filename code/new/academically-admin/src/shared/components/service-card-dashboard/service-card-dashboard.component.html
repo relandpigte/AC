@@ -1,67 +1,124 @@
 
 <div class="card custom-card-border" [ngClass]="cardType" [class.archive]="isArchive">
     <div class="card-body">
-        <div class="row d-flex align-items-stretch gap-20" [ngSwitch]="cardType">
-            <ng-container *ngSwitchCase="'article'">
-                <div class="col">
-                    <h3 [class]="cardType + '-title'">{{ name }}</h3>
-                    <p [class]="cardType + '-description'">{{ description | shorten : 110 }}</p>
-                    <div *ngIf="!isCreator" [class]="cardType + '-status'" class="d-flex align-items-center">
-                        <span>Unread</span>
-<!--                        <span><i class="icon completed"></i> You've read this</span>-->
-                    </div>
-                    <div *ngIf="isCreator" [class]="cardType + '-status'" class="d-flex align-items-center">
-                        <span class="avatar-group d-none d-md-inline-flex">
-                            <a href="#" class="avatar avatar-xs" data-bs-toggle="tooltip" aria-label="Ab Hadley" data-bs-original-title="Ab Hadley">
-                                <img [src]="avatar" class="avatar-img rounded-circle" alt="...">
-                            </a>
-                            <a href="#" class="avatar avatar-xs" data-bs-toggle="tooltip" aria-label="Adolfo Hess" data-bs-original-title="Adolfo Hess">
-                                <img [src]="avatar" class="avatar-img rounded-circle" alt="...">
-                            </a>
-                            <a href="#" class="avatar avatar-xs" data-bs-toggle="tooltip" aria-label="Daniela Dewitt" data-bs-original-title="Daniela Dewitt">
-                                <img [src]="avatar" class="avatar-img rounded-circle" alt="...">
-                            </a>
-                        </span>
-                        <span [class]="cardType + '-status-purchased'">20 Purchased</span>
-<!--                        <span [class]="cardType + '-status-archive text-primary'">Archive</span>-->
-                        <span [class]="cardType + '-status-published text-success'">Published</span>
-<!--                        <span [class]="cardType + '-status-draft text-danger'">Draft</span>-->
-                    </div>
-                </div>
-                <div *ngIf="!isCreator" [class]="cardType + '-actions'" class="col-auto my-auto d-flex justify-content-center">
-                    <button class="read btn d-flex flex-column text-primary align-items-center gap-5 p-0">
-                        <span class="block bg-center"></span> Read
-                    </button>
-<!--                    <button class="review btn d-flex flex-column text-primary align-items-center gap-5 p-0">-->
-<!--                        <span class="block bg-center"></span> Review-->
-<!--                    </button>-->
-<!--                    <button class="read btn d-flex flex-column text-primary align-items-center gap-5 p-0">-->
-<!--                        <span class="block bg-center"></span> Read again-->
-<!--                    </button>-->
-                </div>
-                <div *ngIf="isCreator" class="col-auto my-auto">
-                    <div class="dropdown">
-                        <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
-                           aria-haspopup="true" aria-expanded="false">
-                            <i class="fe fe-more-vertical"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a href="javascript:void(0)" class="dropdown-item" [routerLink]="['/app/articles/tutor-portal', id]">
-                                {{ 'Overview' | localize }}
-                            </a>
-                            <a *ngIf="articleType === ArticleType.SingleArticle" href="javascript:void(0)" class="dropdown-item" [routerLink]="['/app/articles/', id]">
-                                {{ 'Edit' | localize }}
-                            </a>
-                            <a *ngIf="articleType === ArticleType.ArticleSeries" href="javascript:void(0)" class="dropdown-item" [routerLink]="['/app/articles/article-series', id]">
-                                {{ 'Edit' | localize }}
-                            </a>
-                            <a href="javascript:void(0)" class="dropdown-item" (click)="handleDelete(id)">
-                                {{ 'Delete' | localize }}
-                            </a>
+        <div class="row d-flex align-items-center" [ngSwitch]="cardType">
+            <div *ngIf="sanitizedOptions?.isShowImages" [class]="cardType + '-thumbnail-wrapper'" class="col-auto">
+                <a href="javascript:void(0)" class="avatar avatar-lg avatar-4by3">
+                    <img [src]="images[0].src" alt="..." class="avatar-img rounded">
+                </a>
+            </div>
+
+            <div class="col pr-4">
+                <h3 [class]="cardType + '-title title'">{{ name }}</h3>
+                <p *ngIf="sanitizedOptions?.isShowInfo" [class]="cardType + '-info'"> {{ info | shorten : 110 }} </p>
+
+                <p *ngIf="this.sanitizedOptions?.isShowDetailsComposition && !!compositionString && isCreator" [class]="cardType + '-info'">
+                    {{ compositionString }}
+                </p>
+
+                <div *ngIf="progress !== null && sanitizedOptions?.isShowProgress && !isCreator" [class]="cardType + '-progress'" class="row d-flex align-items-center g-0">
+                    <div class="col">
+                        <div class="progress progress-sm">
+                            <div class="progress-bar" role="progressbar" [style.width.%]="progress"></div>
                         </div>
                     </div>
+                    <div class="col-auto p-0">
+                        <div class="small">{{ progress }}%</div>
+                    </div>
                 </div>
-            </ng-container>
+
+                <div *ngIf="!isCreator && status && status?.show" [class]="cardType + '-status'" class="d-flex align-items-center">
+                    <ng-container [ngSwitch]="status.type">
+                        <ng-container *ngSwitchCase="'unread'">
+                            <span class="d-flex">{{ status?.label | localize }}</span>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'read'">
+                            <span class="d-flex"><i class="icon completed"></i> {{ status?.label | localize }}</span>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'completed'">
+                            <span class="d-flex"><i class="icon completed"></i> {{ status?.label | localize }}</span>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'onprogress'">
+                            <span class="d-flex"> {{ status?.label | localize }}</span>
+                        </ng-container>
+                    </ng-container>
+
+                </div>
+
+                <div *ngIf="isCreator" [class]="cardType + '-status'" class="d-flex align-items-center">
+                    <ng-container *ngIf="status?.type === 'draft' else notDraft">
+                        <span class="text-danger">{{ status?.label | localize }}</span>
+                    </ng-container>
+
+                    <ng-template #notDraft>
+                        <span *ngIf="people && people?.isShowAvatars && people?.people && people?.avatarStackCount > 0" class="avatar-group d-none d-md-inline-flex">
+                            <ng-container *ngFor="let p of people?.people?.slice(0, people?.avatarStackCount)">
+                                 <a *ngIf="p.avatar" href="#" class="avatar avatar-xs">
+                                    <img [src]="p.avatar.src" class="avatar-img rounded-circle" alt="...">
+                                </a>
+                            </ng-container>
+                        </span>
+
+                        <span *ngIf="learners && sanitizedOptions?.isSHowPurchased">{{ learners }} Purchased</span>
+                        <span *ngIf="learners && sanitizedOptions?.isShowEnrolled">{{ learners }} Enrolled</span>
+
+                        <ng-container [ngSwitch]="status?.type">
+                            <ng-container *ngSwitchCase="'published'">
+                                <span class="text-success">{{ status?.label | localize }}</span>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="'archive'">
+                                <span class="text-primary">{{ status?.label | localize }}</span>
+                            </ng-container>
+                        </ng-container>
+                    </ng-template>
+                </div>
+            </div>
+
+            <div *ngIf="!isCreator" [class]="cardType + '-actions'" class="col-auto my-auto d-flex justify-content-center">
+                <ng-container *ngIf="sanitizedActions && sanitizedOptions?.isShowActions">
+                    <ng-container *ngFor="let action of sanitizedActions">
+                        <ng-container [ngSwitch]="action.type">
+                            <ng-container *ngSwitchCase="'read'">
+                                <button class="read btn d-flex flex-column text-primary align-items-center gap-5 p-0" (click)="handleClickAction(id)">
+                                    <span class="block bg-center"></span> {{ action.label | localize}}
+                                </button>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="'review'">
+                                <button class="review btn d-flex flex-column text-primary align-items-center gap-5 p-0" (click)="handleClickAction(id)">
+                                    <span class="block bg-center"></span> {{ action.label | localize}}
+                                </button>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="'join'">
+                                <button class="join btn d-flex flex-column text-primary align-items-center gap-5 p-0" (click)="handleClickAction(id)">
+                                    <span class="block bg-center"></span> {{ action.label | localize}}
+                                </button>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+            </div>
+            <div *ngIf="isCreator" class="col-auto my-auto">
+                <div class="dropdown">
+                    <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        <i class="fe fe-more-vertical"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a href="javascript:void(0)" class="dropdown-item" [routerLink]="['/app/articles/tutor-portal', id]">
+                            {{ 'Overview' | localize }}
+                        </a>
+                        <a *ngIf="articleType === ArticleType.SingleArticle" href="javascript:void(0)" class="dropdown-item" [routerLink]="['/app/articles/', id]">
+                            {{ 'Edit' | localize }}
+                        </a>
+                        <a *ngIf="articleType === ArticleType.ArticleSeries" href="javascript:void(0)" class="dropdown-item" [routerLink]="['/app/articles/article-series', id]">
+                            {{ 'Edit' | localize }}
+                        </a>
+                        <a href="javascript:void(0)" class="dropdown-item" (click)="handleDelete(id)">
+                            {{ 'Delete' | localize }}
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

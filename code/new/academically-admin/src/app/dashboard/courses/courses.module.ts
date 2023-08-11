@@ -14,6 +14,8 @@ import { TeachingListComponent } from './_components/teaching-list/teaching-list
 import { LearningGridComponent } from './_components/learning-grid/learning-grid.component';
 import { LearningListComponent } from './_components/learning-list/learning-list.component';
 import { DashboardModule } from '@app/dashboard/dashboard.module';
+import { CreatedComponent } from './_components/created/created.component';
+import { PurchasedComponent } from './_components/purchased/purchased.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,8 @@ import { DashboardModule } from '@app/dashboard/dashboard.module';
     TeachingListComponent,
     LearningGridComponent,
     LearningListComponent,
+    CreatedComponent,
+    PurchasedComponent,
   ],
   imports: [
     CommonModule,

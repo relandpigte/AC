@@ -1,4 +1,4 @@
-<ng-container *ngIf="articles?.items.length">
+<ng-container *ngIf="courses">
     <div class="card custom-card-border">
         <div class="card-header">
             <div class="row align-items-center">
@@ -19,7 +19,7 @@
     </div>
 
     <app-service-card-dashboard
-        *ngFor="let data of articles?.items"
+        *ngFor="let data of courses"
         [data]="data"
         [isLoading]="isLoading"
         [isCreator]="isTutor"

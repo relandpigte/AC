@@ -1,8 +1,20 @@
 import { Component, Injector, Input, OnInit, Output } from '@angular/core';
+import { Subject } from 'rxjs';
+
 import { AppComponentBase } from '@shared/app-component-base';
-import { ServiceCardType } from '@shared/models/service-card.model';
 import {
-  ArticleDto, ArticleStatus,
+  DefaultServiceCardActions,
+  DefaultServiceCardOptions,
+  ServiceCard,
+  ServiceCardButton, ServiceCardComposition, ServiceCardImage,
+  ServiceCardOptions,
+  ServiceCardPeople,
+  ServiceCardPerson, ServiceCardStatus,
+  ServiceCardType, UserServiceCardActions
+} from '@shared/models/service-card.model';
+import {
+  ArticleDto,
+  ArticleStatus,
   ArticleType,
   CoachingDto,
   CourseDto,
@@ -11,8 +23,8 @@ import {
   UserDto,
   VideoDto
 } from '@shared/service-proxies/service-proxies';
-import { ServiceCardDashboard } from '@shared/models/service-card-dashboard.model';
-import { Subject } from 'rxjs';
+import * as _ from 'lodash';
+import { event } from 'jquery';
 
 @Component({
   selector: 'app-service-card-dashboard',
@@ -23,11 +35,15 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   @Input() data: any;
   @Input() isLoading: boolean;
   @Input() isCreator: boolean;
-  @Input() isArchive: boolean;
+  @Input() options: ServiceCardOptions;
+  @Input() actions: ServiceCardButton[];
 
-  @Output() onDelete: Subject<string> = new Subject<string>();
+  @Output() onDelete: Subject<any> = new Subject<any>();
+  @Output() onClickAction: Subject<any> = new Subject<any>();
 
-  sanitized: ServiceCardDashboard;
+  sanitized: ServiceCard;
+  sanitizedOptions: ServiceCardOptions;
+  sanitizedActions: ServiceCardButton[];
 
   ArticleStatus = ArticleStatus;
   ArticleType = ArticleType;
@@ -38,32 +54,130 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     super(injector);
   }
 
-  get id(): string { return this.data.id; }
-  get cardType(): ServiceCardType { return this.sanitized.type; }
-  get name(): string { return this.sanitized.name; }
-  get description(): string { return this.sanitized.description; }
-  get articleType(): number { return this.data.type; }
-  get avatar(): string { return `https://i.pravatar.cc/100?u=${this.id}`; }
+  get id(): string { return this.data?.id; }
+  get cardType(): ServiceCardType { return this.sanitized?.type; }
+  get images(): ServiceCardImage[] { return this.sanitized?.images; }
+  get name(): string { return this.sanitized?.name; }
+  get info(): string { return this.sanitized?.info; }
+  get articleType(): number { return this.data?.type; }
+  get people(): ServiceCardPeople { return this.sanitized?.people; }
+  get status(): ServiceCardStatus { return this.sanitized?.status; }
+  get learners(): number { return 20; }
+  get progress(): number | null {
+    if (this.status?.type === 'completed') { return null; }
+    return this.sanitized?.progress ?? 0;
+  }
+  get composition(): ServiceCardComposition { return this.sanitized?.composition; }
+  get compositionString(): string {
+    if (!this.composition) { return null; }
+    const composition = [];
+    _.forEach(this.composition, (value, key) => {
+      composition.push(`${value} ${key}`);
+    });
+    return composition.join(', ');
+  }
+  get isArchive(): boolean { return this.sanitized?.status?.type === 'archived'; }
 
   ngOnInit(): void {
     this.sanitizedData();
-    console.log(this.data);
   }
 
   handleDelete(id: string): void {
     this.onDelete.next(id);
   }
 
+  handleClickAction(data: any): void {
+    this.onClickAction.next(data);
+  }
+
   private sanitizedData(): void {
-    this.sanitized = <ServiceCardDashboard>{};
+    this.sanitized = <ServiceCard>{};
+    this.sanitizedOptions = _.merge({}, DefaultServiceCardOptions, this.options);
+    this.sanitizedActions = _.merge([], DefaultServiceCardActions, this.actions);
 
     this.sanitized.type = this.getCardType();
-    this.sanitized.name = this.data.name;
-    this.sanitized.description = this.data.description;
+    this.sanitized.name = this.data?.name;
+    this.sanitized.info = this.data?.description;
+    this.sanitized.images = [{ src: this.data.thumbnailImageUrl ?? 'assets/img/img-placeholder.png' }];
+
+    this.sanitized.people = <ServiceCardPeople>{};
+    this.sanitized.people.people = Array(this.randomNonZero(45, 12))
+      .fill({} as ServiceCardPerson).map(i => ({
+        ...this.sanitized.owner, avatar: {
+          src: `https://i.pravatar.cc/50?u=${this.uuidv4()}`
+        }
+      }));
+    this.sanitized.people.avatarStackCount = 3;
+
+    this.setValueOverrides();
+    this.setOptionOverrides();
+  }
+
+  private setValueOverrides(): void {
+    switch (this.cardType) {
+      case 'article':
+        this.sanitized.people.isShowAvatars = true;
+        this.sanitized.status = this.isCreator ?
+          <ServiceCardStatus>{ type: 'published', label: 'Published', show: true } :
+          <ServiceCardStatus>{ type: 'read', label: 'You’ve read this', show: true };
+        this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'read', label: 'Read again' });
+        break;
+      case 'broadcast':
+        break;
+      case 'coaching':
+        break;
+      case 'course':
+        this.sanitized.composition = this.sanitized.composition ?? {} as ServiceCardComposition;
+        this.sanitized.composition.units = this.data?.units ?? 4;
+        this.sanitized.composition.modules = this.data?.modules ?? 3;
+        this.sanitized.composition.lessons = this.data?.lessons ?? 5;
+        this.sanitized.status = this.isCreator ?
+          <ServiceCardStatus>{ type: 'published', label: 'Published', show: true } :
+          <ServiceCardStatus>{ type: 'onprogress', label: 'Lesson 1 - Start your new journey', show: true };
+        this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Start course' });
+        this.sanitized.progress = this.data?.progress;
+        this.sanitized.people.isShowAvatars = true;
+        break;
+      case 'event':
+        break;
+      case 'space':
+        break;
+      case 'tutorial':
+        break;
+      case 'workshop':
+        break;
+    }
+  }
+
+  private setOptionOverrides(): void {
+    switch (this.cardType) {
+      case 'article':
+        if (!this.options || !('isShowInfo' in this.options)) { this.sanitizedOptions.isShowInfo = true; }
+        if (!this.options || !('isShowImages' in this.options)) { this.sanitizedOptions.isShowImages = false; }
+        if (!this.options || !('isSHowPurchased' in this.options)) { this.sanitizedOptions.isSHowPurchased = true; }
+        break;
+      case 'broadcast':
+        break;
+      case 'coaching':
+        break;
+      case 'course':
+        if (!this.options || !('isShowProgress' in this.options)) { this.sanitizedOptions.isShowProgress = true; }
+        if (!this.options || !('isShowDetailsComposition' in this.options)) { this.sanitizedOptions.isShowDetailsComposition = true; }
+        if (!this.options || !('isSHowPurchased' in this.options)) { this.sanitizedOptions.isShowEnrolled = true; }
+        break;
+      case 'event':
+        break;
+      case 'space':
+        break;
+      case 'tutorial':
+        break;
+      case 'workshop':
+        break;
+    }
   }
 
   private getCardType(): ServiceCardType {
-    switch (this.data.constructor) {
+    switch (this.data?.constructor) {
       case EventDto: {
         const { category } = this.data as EventDto;
         if (category === EventCategory.Broadcast) {

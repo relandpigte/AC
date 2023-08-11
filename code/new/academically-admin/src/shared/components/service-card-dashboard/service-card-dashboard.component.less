@@ -1,8 +1,21 @@
+.course,
 .article {
     font-size: 15px;
 
+    &-thumbnail-wrapper {
+        .avatar {
+            width: 8.125rem;
+            height: 5.125rem;
+        }
+    }
+
+    &-progress {
+        width: 97%;
+        margin-bottom: 0.313rem;
+    }
+
     &.archive {
-        .article-title {
+        .title {
             color: #6E84A3;
         }
     }
@@ -13,7 +26,7 @@
         margin-bottom: 0.313rem;
     }
 
-    &-description {
+    &-info {
         color: #3B516C;
         margin-bottom: 0.625rem;
     }
@@ -84,6 +97,16 @@
 
                     &:hover {
                         background-image: url("/assets/img/actions/review-hover.svg");
+                    }
+                }
+            }
+
+            &.join {
+                span {
+                    background-image: url("/assets/img/actions/join.svg");
+
+                    &:hover {
+                        background-image: url("/assets/img/actions/join-hover.svg");
                     }
                 }
             }
