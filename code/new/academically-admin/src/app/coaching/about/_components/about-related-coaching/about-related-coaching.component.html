@@ -2,7 +2,7 @@
     header="Related coaching"
     [items]="relatedCoaching"
     [template]="relatedCoachingTemplate"
-    [isLoading]="true"
+    [isLoading]="isLoading$ | async"
 ></app-community-side-card>
 
 <ng-template #relatedCoachingTemplate let-item="item" let-isLoading="isLoading">

@@ -1,5 +1,5 @@
 <div class="card custom-card-border custom-card-shadow">
-    <app-shimmer [show]="true" [shimmerType]="shimmerType.LandingLeftAbout"></app-shimmer>
+    <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.LandingLeftAbout"></app-shimmer>
     <div class="card-header">
         <div class="row align-items-center">
             <div class="col">

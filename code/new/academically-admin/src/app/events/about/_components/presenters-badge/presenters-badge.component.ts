@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { Injector } from '@node_modules/@angular/core';
-import { of } from 'rxjs';
+import { combineLatest, of } from 'rxjs';
 import { UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
+import { LandingPagesService } from '@shared/services/landing-pages.service';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-presenters-badge',
@@ -17,12 +19,12 @@ export class PresentersBadgeComponent extends AppComponentBase implements OnInit
   constructor(
     injector: Injector,
     private _usersService: UserServiceProxy,
+    private _landingPageService: LandingPagesService
   ) {
     super(injector);
   }
 
-  get isLoading$() { return of(this.isLoading_usersYouMayKnow); }
-
+  get isLoading$() { return combineLatest([ this.isLoading_usersYouMayKnow, this._landingPageService.isLoading$ ]).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
 
   ngOnInit(): void {
     this.loadInfiniteData(this._usersService, 'getAll', ['', true, true, 'creationTime desc', 0, 6], 'usersYouMayKnow');

@@ -1,5 +1,5 @@
 <div class="d-flex flex-column justify-content-center align-items-center w-100 position-relative">
-    <app-shimmer [show]="true" [shimmerType]="shimmerType.LandingLeftReview" backgroundColor="#f9fbfd"></app-shimmer>
+    <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.LandingLeftReview" backgroundColor="#f9fbfd"></app-shimmer>
 
     <div class="reviews-controls d-flex flex-row justify-content-between w-100">
         <div class="reviews-controls-left d-flex align-items-end">

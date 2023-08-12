@@ -1,5 +1,5 @@
 <div class="card custom-card-shadow custom-card-border">
-    <app-shimmer [show]="true" [shimmerType]="shimmerType.LandingLeftCurriculum"></app-shimmer>
+    <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.LandingLeftCurriculum"></app-shimmer>
 
     <div class="card-header border-bottom-0">
         <h4 class="card-header-title">

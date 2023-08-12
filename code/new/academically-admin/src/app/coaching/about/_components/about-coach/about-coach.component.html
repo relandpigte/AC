@@ -1,5 +1,5 @@
 <div class="card custom-card-border custom-card-shadow">
-    <app-shimmer [show]="true" [shimmerType]="shimmerType.LandingRightAuthor"></app-shimmer>
+    <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.LandingRightAuthor"></app-shimmer>
     <div class="card-body text-center">
         <img [alt]="profileFullName" class="avatar-img rounded-circle"
              [src]="getProfilePicture(profilePictureUrl)" />

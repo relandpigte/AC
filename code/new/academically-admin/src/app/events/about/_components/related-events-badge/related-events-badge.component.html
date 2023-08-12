@@ -1,79 +1,27 @@
-<div class="card custom-card-border custom-card-shadow">
-    <div class="card-header">
-        <h4 class="card-header-title">Related events</h4>
-        <a class="small" href="#!">View all</a>
-    </div>
+<div [style.marginTop.px]="24">
+    <app-community-side-card
+        header="Related events"
+        [isLoading]="isLoading$ | async"
+        [items]="relatedEvents"
+        [template]="relatedEventsTemplate"
+    ></app-community-side-card>
+</div>
 
-    <div class="card-body">
-        <div class="list-group list-group-flush my-n3">
-            <div class="list-group-item">
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <a href="#" class="avatar avatar-4by3">
-                            <img src="https://placehold.co/200" alt="..." class="avatar-img rounded">
-                        </a>
-                    </div>
-                    <div class="col ms-n2 pl-0">
-                        <p class="small text-primary mb-0">
-                            <time>FROM 18:00-21:00, 23 AUG,2022</time>
-                        </p>
-                        <h4 class="mb-1 font-weight-normal">
-                            <a href="#">Lorem ipsum dolor sit amet, consectetur</a>
-                        </h4>
-                    </div>
-                </div>
-            </div>
-            <div class="list-group-item">
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <a href="#" class="avatar avatar-4by3">
-                            <img src="https://placehold.co/200" alt="..." class="avatar-img rounded">
-                        </a>
-                    </div>
-                    <div class="col ms-n2 pl-0">
-                        <p class="small text-primary mb-0">
-                            <time>FROM 18:00-21:00, 23 AUG,2022</time>
-                        </p>
-                        <h4 class="mb-1 font-weight-normal">
-                            <a href="#">Lorem ipsum dolor sit amet, consectetur</a>
-                        </h4>
-                    </div>
-                </div>
-            </div>
-            <div class="list-group-item">
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <a href="#" class="avatar avatar-4by3">
-                            <img src="https://placehold.co/200" alt="..." class="avatar-img rounded">
-                        </a>
-                    </div>
-                    <div class="col ms-n2 pl-0">
-                        <p class="small text-primary mb-0">
-                            <time>FROM 18:00-21:00, 23 AUG,2022</time>
-                        </p>
-                        <h4 class="mb-1 font-weight-normal">
-                            <a href="#">Lorem ipsum dolor sit amet, consectetur</a>
-                        </h4>
-                    </div>
-                </div>
-            </div>
-            <div class="list-group-item">
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <a href="#" class="avatar avatar-4by3">
-                            <img src="https://placehold.co/200" alt="..." class="avatar-img rounded">
-                        </a>
-                    </div>
-                    <div class="col ms-n2 pl-0">
-                        <p class="small text-primary mb-0">
-                            <time>FROM 18:00-21:00, 23 AUG,2022</time>
-                        </p>
-                        <h4 class="mb-1 font-weight-normal">
-                            <a href="#">Lorem ipsum dolor sit amet, consectetur</a>
-                        </h4>
-                    </div>
-                </div>
-            </div>
+<ng-template #relatedEventsTemplate let-item="item" let-isLoading="isLoading">
+    <div class="d-flex align-items-center position-relative" [style.paddingTop.px]="15" [style.paddingBottom.px]="15">
+        <app-shimmer [show]="isLoading" [shimmerType]="shimmerType.SideCardThumbnail"></app-shimmer>
+        <div class="d-flex justify-content-center align-items-center">
+            <a href="#" class="avatar avatar-4by3">
+                <img src="https://placehold.co/200" alt="..." class="avatar-img rounded">
+            </a>
+        </div>
+        <div class="flex-grow-1 d-flex flex-column w-100 ms-n2 pl-0" [style.gap.px]="0">
+            <p class="small text-primary mb-0">
+                <time>FROM 18:00-21:00, 23 AUG,2022</time>
+            </p>
+            <h4 class="mb-1 font-weight-normal">
+                <a href="#">Lorem ipsum dolor sit amet, consectetur</a>
+            </h4>
         </div>
     </div>
-</div>
+</ng-template>

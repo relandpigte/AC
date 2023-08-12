@@ -1,7 +1,7 @@
 <div *ngIf="relatedCourses?.length" [style.marginTop.px]="24">
     <app-community-side-card
         header="Related courses"
-        [isLoading]="isLoadingRelatedCourses$ | async"
+        [isLoading]="isLoading$ | async"
         [items]="relatedCourses"
         [template]="relatedCoursesTemplate"
     ></app-community-side-card>

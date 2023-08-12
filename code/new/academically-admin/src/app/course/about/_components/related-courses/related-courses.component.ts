@@ -2,9 +2,10 @@ import { Component, Injector, OnInit } from '@angular/core';
 import * as _ from 'lodash';
 import { AppComponentBase } from '@shared/app-component-base';
 import { CourseDto, CoursesServiceProxy, DateGrains } from '@shared/service-proxies/service-proxies';
-import { BehaviorSubject } from 'rxjs';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, of } from 'rxjs';
+import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
+import { LandingPagesService } from '@shared/services/landing-pages.service';
 
 @Component({
   selector: 'app-related-courses',
@@ -19,12 +20,14 @@ export class RelatedCoursesComponent extends AppComponentBase implements OnInit 
 
   constructor(
     injector: Injector,
-    private _coursesService: CoursesServiceProxy
+    private _coursesService: CoursesServiceProxy,
+    private _landingPageService: LandingPagesService
   ) {
     super(injector);
   }
 
   get shimmerType() { return ShimmerType; }
+  get isLoading$() { return combineLatest([this.isLoadingRelatedCourses$, this._landingPageService.isLoading$]).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
 
   ngOnInit(): void {
     this.getRelatedCourses();

@@ -6,6 +6,7 @@ import { NavigationPosition } from '@shared/enums/theme-settings/navigation-posi
 import { IThemeSetting } from '@shared/interfaces/theme-setting.interface';
 import { ThemeManagerService } from '@shared/services/theme-manager.service';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
+import { LandingPagesService } from '@shared/services/landing-pages.service';
 
 @Component({
   selector: 'app-header',
@@ -21,7 +22,8 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
 
   constructor(
     injector: Injector,
-    _themeSettingsService: ThemeManagerService
+    _themeSettingsService: ThemeManagerService,
+    private _landingPageService: LandingPagesService
   ) {
     super(injector);
     this.themeSettings = _themeSettingsService.getConfiguration();
@@ -30,6 +32,8 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
   get profilePictureUrl(): string { return this.appSession.user.profilePictureUrl; }
   get profileFullName(): string { return `${this.appSession.user.name} ${this.appSession.user.surname}`; }
   get profileCoverPhotoUrl(): string { return this.appSession.user.coverPictureUrl; }
+
+  get isLoading$() { return this._landingPageService.isLoading$; }
 
   ngOnInit(): void { }
 }
