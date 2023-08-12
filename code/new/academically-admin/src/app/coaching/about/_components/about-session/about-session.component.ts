@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 
 @Component({
   selector: 'app-about-session',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./about-session.component.less']
 })
 export class AboutSessionComponent implements OnInit {
+
+  shimmerType = ShimmerType;
 
   constructor() { }
 

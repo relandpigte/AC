@@ -1394,7 +1394,35 @@ a.disabled {
 
 each(range(1px, 100px, 1), {
     .gap-@{index} {
-      gap: @value;
+      gap: @value !important;
+    }
+  }
+);
+
+each(range(1px, 2000px, 1), {
+    .w-@{index}-px {
+      width: @value !important;
+    }
+  }
+);
+
+each(range(1px, 2000px, 1), {
+    .h-@{index}-px {
+      height: @value !important;
+    }
+  }
+);
+
+each(range(1px, 100px, 1), {
+    .mt-@{index}-px {
+      margin-top: @value !important;
+    }
+  }
+);
+
+each(range(1px, 100px, 1), {
+    .mb-@{index}-px {
+      margin-bottom: @value !important;
     }
   }
 );

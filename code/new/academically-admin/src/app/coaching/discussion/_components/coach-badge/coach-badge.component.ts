@@ -1,5 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
+import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 
 @Component({
   selector: 'app-coach-badge',
@@ -7,6 +8,8 @@ import { AppComponentBase } from '@shared/app-component-base';
   styleUrls: ['./coach-badge.component.less']
 })
 export class CoachBadgeComponent extends AppComponentBase implements OnInit {
+
+  shimmerType = ShimmerType;
 
   constructor(
     injector: Injector

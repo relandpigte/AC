@@ -5,7 +5,7 @@
     </div>
     <div class="side-card-items">
         <div *ngFor="let row of items" class="side-card-items-row" (click)="handleItemClick(row)">
-            <ng-container *ngTemplateOutlet="template; context: { item: row }"></ng-container>
+            <ng-container *ngTemplateOutlet="template; context: { item: row, isLoading: isLoading }"></ng-container>
         </div>
     </div>
 </div>

@@ -10,6 +10,7 @@ import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 export class ShimmerComponent extends AppComponentBase implements OnInit {
   @Input() show: boolean;
   @Input() shimmerType: ShimmerType;
+  @Input() backgroundColor: string;
 
   constructor(injector: Injector) {
     super(injector);

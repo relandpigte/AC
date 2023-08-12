@@ -2,11 +2,12 @@
     header="Related coaching"
     [items]="relatedCoaching"
     [template]="relatedCoachingTemplate"
+    [isLoading]="true"
 ></app-community-side-card>
 
-<ng-template #relatedCoachingTemplate let-item="item">
+<ng-template #relatedCoachingTemplate let-item="item" let-isLoading="isLoading">
     <div class="coaching d-flex flex-row flex-nowrap gap-15">
-        <app-shimmer [show]="false" [shimmerType]="shimmerType.SideCardAvatar"></app-shimmer>
+        <app-shimmer [show]="isLoading" [shimmerType]="shimmerType.SideCardThumbnail"></app-shimmer>
         <div class="coaching-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
             <img [src]="getProfilePicture(item.creatorUser.profilePictureUrl)" class="avatar avatar-sm avatar-img rounded-circle" alt="profile" />
         </div>

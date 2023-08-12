@@ -53,7 +53,8 @@ export class CoachingDiscussionComponent extends AppComponentBase implements OnI
   }
 
   get isLoading$() {
-    return combineLatest(this.loadingSources$).pipe(switchMap((loaders) => of(loaders.some(l => l))));
+    return of(true);
+    // return combineLatest(this.loadingSources$).pipe(switchMap((loaders) => of(loaders.some(l => l))));
   }
 
   get loadingSources$() {

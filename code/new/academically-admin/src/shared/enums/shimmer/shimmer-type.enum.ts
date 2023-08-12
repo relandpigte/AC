@@ -10,5 +10,12 @@ export enum ShimmerType {
   ServiceCard,
   DiscussionCard,
   TopicsCarousel,
-  InlineButtons
+  InlineButtons,
+  LandingHeader,
+  LandingLeftAbout,
+  LandingLeftLearnings,
+  LandingRightAuthor,
+  LandingRightCreator,
+  LandingRightRelated,
+  LandingRightAbout
 }

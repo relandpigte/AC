@@ -1,5 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
+import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 
 @Component({
   selector: 'app-session-badge',
@@ -9,6 +10,8 @@ import { AppComponentBase } from '@shared/app-component-base';
 export class SessionBadgeComponent extends AppComponentBase implements OnInit {
   readonly showMoreLimit: number = 255;
   showMore = false;
+
+  shimmerType = ShimmerType;
 
   constructor(
     injector: Injector
