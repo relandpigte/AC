@@ -14,8 +14,10 @@ export enum ShimmerType {
   LandingHeader,
   LandingLeftAbout,
   LandingLeftLearnings,
+  LandingLeftReview,
   LandingRightAuthor,
   LandingRightCreator,
   LandingRightRelated,
-  LandingRightAbout
+  LandingRightAbout,
+  LandingRightReview
 }
