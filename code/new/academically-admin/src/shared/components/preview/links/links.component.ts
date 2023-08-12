@@ -12,7 +12,7 @@ export class PreviewLinksComponent extends AppComponentBase implements OnInit, O
   @ViewChild('videoFile') videoFile: ElementRef;
 
   @Input() linkPreview: LinkPreviewResponse;
-  @Input() serviceType: ServicesType = ServicesType.Tutorial;
+  @Input() serviceType: ServicesType;
   @Input() canRemove: boolean = true;
   @Input() canPlay: boolean = false;
 

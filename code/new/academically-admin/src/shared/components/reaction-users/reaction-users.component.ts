@@ -1,10 +1,10 @@
 
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ReactionColorClass, ReactionIcons } from '@shared/enums/post/reaction-group.enum';
+import { ReactionIcons } from '@shared/enums/post/reaction-group.enum';
 import { ReactionDto, ReactionType, UserDto } from '@shared/service-proxies/service-proxies';
 import { UserFollowingService } from '@shared/services/user-following.service';
-import * as _ from 'lodash';
+import { flatMap } from 'lodash';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -47,7 +47,7 @@ export class ReactionUsersComponent extends AppComponentBase implements OnInit {
 
     getReactionUsers(): UserDto[] {
         if (this.selectedReactionType) return this.reactionUsers[this.selectedReactionType];
-        return _.flatMap(this.reactionUsers);
+        return flatMap(this.reactionUsers);
     }
 
     getUserReaction(user: UserDto): ReactionType {

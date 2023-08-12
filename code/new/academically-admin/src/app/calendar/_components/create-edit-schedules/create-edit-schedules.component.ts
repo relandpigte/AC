@@ -3,6 +3,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { UserAvailabilitiesServiceProxy, UserAvailabilityDto } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
+import { flatMap } from 'lodash';
 
 export enum ScheduleType {
   DEFAULT = 'default',
@@ -48,7 +49,7 @@ export class CreateEditSchedulesComponent extends AppComponentBase implements On
     this.isLoading = true;
     const availabilities = [
       ...Object.keys(this.defaultModels).map(m => this.defaultModels[m].availability),
-      ...Object.keys(this.defaultModels).flatMap(m => this.defaultModels[m].breaks).map(m => m.availability)
+      ...(flatMap(Object.keys(this.defaultModels), m => this.defaultModels[m].breaks).map(m => m.availability))
     ];
     this._userAvailabilitiesService.createEdit(availabilities)
       .pipe(takeUntil(this.destroyed$))
