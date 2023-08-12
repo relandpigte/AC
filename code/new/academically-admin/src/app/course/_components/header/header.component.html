@@ -1,4 +1,5 @@
-<div class="header coaching-header">
+<div class="header coaching-header position-relative">
+    <app-shimmer [show]="true" [shimmerType]="shimmerType.LandingHeader" backgroundColor="#f9fbfd"></app-shimmer>
     <img [src]="getCoverPhoto(profileCoverPhotoUrl)" class="header-img-top" [alt]="profileFullName" />
 
     <div [class.container]="themeSettings.navigationPosition === NavigationPosition.Topnav"

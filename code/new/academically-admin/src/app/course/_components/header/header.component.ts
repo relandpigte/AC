@@ -5,6 +5,7 @@ import { UserDto } from '@shared/service-proxies/service-proxies';
 import { NavigationPosition } from '@shared/enums/theme-settings/navigation-position.enum';
 import { IThemeSetting } from '@shared/interfaces/theme-setting.interface';
 import { ThemeManagerService } from '@shared/services/theme-manager.service';
+import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 
 @Component({
   selector: 'app-header',
@@ -15,6 +16,8 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
   user: UserDto;
   themeSettings: IThemeSetting;
   NavigationPosition = NavigationPosition;
+
+  shimmerType = ShimmerType;
 
   constructor(
     injector: Injector,

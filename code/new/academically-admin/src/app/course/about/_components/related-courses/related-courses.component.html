@@ -7,9 +7,9 @@
     ></app-community-side-card>
 </div>
 
-<ng-template #relatedCoursesTemplate let-item="item">
+<ng-template #relatedCoursesTemplate let-item="item" let-isLoading="isLoading">
     <div class="course d-flex flex-row flex-nowrap">
-        <app-shimmer [show]="isLoadingRelatedCourses$ | async" [shimmerType]="shimmerType.SideCardThumbnail"></app-shimmer>
+        <app-shimmer [show]="isLoading" [shimmerType]="shimmerType.SideCardThumbnail"></app-shimmer>
         <div class="course-left d-flex flex-column flex-nowrap justify-content-center align-items-center mr-3">
             <div class="course-thumbnail bg-center flex-grow-1" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>
         </div>
