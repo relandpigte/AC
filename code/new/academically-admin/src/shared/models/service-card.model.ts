@@ -41,9 +41,11 @@ export interface ServiceCardOptions {
     isShowDetailsRsvp?: boolean;
     isShowDetailsReviews?: boolean;
     isDetailsReviewsSeparated?: boolean;
+    isShowDate?: boolean;
     isShowActions?: boolean;
     isSHowPurchased?: boolean;
     isShowEnrolled?: boolean;
+    isShowGoing?: boolean;
 }
 
 export const DefaultServiceCardOptions: ServiceCardOptions = {
@@ -65,9 +67,11 @@ export const DefaultServiceCardOptions: ServiceCardOptions = {
     isShowDetailsRsvp: false,
     isShowDetailsReviews: false,
     isDetailsReviewsSeparated: false,
+    isShowDate: false,
     isShowActions: true,
     isSHowPurchased: false,
-    isShowEnrolled: false
+    isShowEnrolled: false,
+    isShowGoing: false
 };
 
 export const DefaultServiceCardActions: ServiceCardButton[] = [

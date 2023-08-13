@@ -6,7 +6,7 @@ import {
   DefaultServiceCardActions,
   DefaultServiceCardOptions,
   ServiceCard,
-  ServiceCardButton, ServiceCardComposition, ServiceCardImage,
+  ServiceCardButton, ServiceCardComposition, ServiceCardDates, ServiceCardImage,
   ServiceCardOptions,
   ServiceCardPeople,
   ServiceCardPerson, ServiceCardStatus,
@@ -78,8 +78,18 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     return composition.join(', ');
   }
   get compositionVideoDuration(): string { return this.composition?.durationInSec ? moment.utc(this.composition?.durationInSec * 1000).format(`${this.composition?.durationInSec >= 3600 ? 'HH:' : ''}mm:ss`) : null; }
+  get isDraft(): boolean { return this.sanitized?.status?.type === 'draft'; }
   get isArchive(): boolean { return this.sanitized?.status?.type === 'archived'; }
   get sessionDuration(): string { return humanizeDuration(this.composition.durationInSec * 1000); }
+  get isScheduleNear(): boolean { return this.sanitized?.dates?.startDate.diff(moment(), 'hours') < 1; }
+  get schedule(): string {
+    if (!this.sanitized?.dates?.startDate) return null;
+    if (this.sanitized.dates.startDate.diff(moment(), 'minutes') < 1) return this.l('LiveNow');
+    else if (this.sanitized.dates.startDate.diff(moment(), 'hours') < 1) return this.l('StartingIn', this.convertMomentToDateAgo(this.sanitized.dates.startDate, true));
+    return this.l('StartingFrom', this.sanitized.dates.startDate.format('dddd, DD MMMM YYYY'), this.sanitized.dates.startDate.format('HH:mm'), this.sanitized.dates.endDate.format('HH:mm'));
+  }
+  get scheduleDay(): string { return this.isDraft ? '--' : this.sanitized?.dates?.startDate?.format('DD'); }
+  get scheduleMonth(): string { return this.isDraft ? '---' : this.sanitized?.dates?.startDate?.format('MMM'); }
 
   ngOnInit(): void {
     this.sanitizedData();
@@ -112,6 +122,11 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
       }));
     this.sanitized.people.avatarStackCount = 3;
 
+    const tempDate = moment().add(Math.floor(Math.random() * (2 - 1) + 1), 'days');
+    this.sanitized.dates = {} as ServiceCardDates;
+    this.sanitized.dates.startDate = this.data.eventDateTime ?? tempDate;
+    this.sanitized.dates.endDate = this.data.endDate ?? tempDate.add(Math.floor(Math.random() * (2 - 1) + 1), 'minutes');
+
     this.sanitized.owner = {} as ServiceCardPerson;
     this.sanitized.owner.avatar = {} as ServiceCardImage;
     this.sanitized.owner.avatar.src = this.data?.creatorUser?.profilePictureUrl ?? this.data.profilePictureUrl ?? 'assets/img/anonymous.png';
@@ -133,6 +148,22 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'read', label: 'Read again' });
         break;
       case 'broadcast':
+        this.sanitized.people.isShowAvatars = true;
+        if (this.isCreator) {
+          const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
+          switch(tempStatus) {
+            case 1:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
+              break;
+            case 2:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
+              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
+              break;
+            case 3:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
+              break;
+          }
+        }
         break;
       case 'coaching':
         this.sanitized.composition = this.sanitized.composition ?? {} as ServiceCardComposition;
@@ -205,6 +236,22 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         }
         break;
       case 'workshop':
+        this.sanitized.people.isShowAvatars = true;
+        if (this.isCreator) {
+          const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
+          switch(tempStatus) {
+            case 1:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
+              break;
+            case 2:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
+              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
+              break;
+            case 3:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
+              break;
+          }
+        }
         break;
     }
   }
@@ -217,6 +264,10 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         if (!this.options || !('isSHowPurchased' in this.options)) { this.sanitizedOptions.isSHowPurchased = true; }
         break;
       case 'broadcast':
+        if (!this.options || !('headingType' in this.options)) this.sanitizedOptions.headingType = 'schedule';
+        if (!this.options || !('isShowDate' in this.options)) { this.sanitizedOptions.isShowDate = true; }
+        if (!this.options || !('isShowHeading' in this.options)) { this.sanitizedOptions.isShowHeading = true; }
+        if (!this.options || !('isShowGoing' in this.options)) { this.sanitizedOptions.isShowGoing = true; }
         break;
       case 'coaching':
         if (!this.options || !('isShowQuickPreview' in this.options)) { this.sanitizedOptions.isShowQuickPreview = true; }
@@ -236,6 +287,10 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         if (!this.options || !('isShowQuickPreview' in this.options)) { this.sanitizedOptions.isShowQuickPreview = true; }
         break;
       case 'workshop':
+        if (!this.options || !('headingType' in this.options)) this.sanitizedOptions.headingType = 'schedule';
+        if (!this.options || !('isShowDate' in this.options)) { this.sanitizedOptions.isShowDate = true; }
+        if (!this.options || !('isShowHeading' in this.options)) { this.sanitizedOptions.isShowHeading = true; }
+        if (!this.options || !('isShowGoing' in this.options)) { this.sanitizedOptions.isShowGoing = true; }
         break;
     }
   }

@@ -2,6 +2,12 @@
 <div class="card custom-card-border" [ngClass]="cardType" [class.archive]="isArchive">
     <div class="card-body">
         <div class="row d-flex align-items-center" [ngSwitch]="cardType">
+
+            <div *ngIf="sanitizedOptions?.isShowDate" [class]="cardType + '-date'" class="col-auto position-relative d-flex flex-column justify-content-center align-items-center">
+                <div class="day">{{ scheduleDay }}</div>
+                <div class="month">{{ scheduleMonth }}</div>
+            </div>
+
             <div *ngIf="sanitizedOptions?.isShowImages" [class]="cardType + '-thumbnail-wrapper'" class="col-auto position-relative">
                 <a href="javascript:void(0)" class="avatar avatar-lg avatar-4by3">
                     <img [src]="images[0].src" alt="..." class="avatar-img rounded">
@@ -23,6 +29,12 @@
             </div>
 
             <div class="col pr-4">
+                <div *ngIf="this.sanitizedOptions?.isShowHeading" [class]="cardType + '-heading heading'" [class.text-danger]="isScheduleNear">
+                    <span *ngIf="this.sanitizedOptions?.headingType === 'location' && location" class="location">{{ location }}</span>
+                    <span *ngIf="this.sanitizedOptions?.headingType === 'schedule' && schedule" class="schedule">{{ schedule }}</span>
+                    <span *ngIf="this.sanitizedOptions?.isShowHeadingSlots" class="slots">{{ slotsCount }} {{ slotsUnit }} left</span>
+                </div>
+
                 <h3 [class]="cardType + '-title title'">{{ name }}</h3>
                 <p *ngIf="sanitizedOptions?.isShowInfo" [class]="cardType + '-info'"> {{ info | shorten : 110 }} </p>
 
@@ -81,6 +93,7 @@
 
                         <span *ngIf="learners && sanitizedOptions?.isSHowPurchased">{{ learners }} Purchased</span>
                         <span *ngIf="learners && sanitizedOptions?.isShowEnrolled">{{ learners }} Enrolled</span>
+                        <span *ngIf="learners && sanitizedOptions?.isShowGoing"><span class="learners">{{ learners }} people</span> going, <span class="organizer">you</span> are the organizer</span>
 
                         <ng-container [ngSwitch]="status?.type">
                             <ng-container *ngSwitchCase="'published'">

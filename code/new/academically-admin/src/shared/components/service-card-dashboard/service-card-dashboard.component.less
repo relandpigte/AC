@@ -1,8 +1,26 @@
+.broadcast,
 .coaching,
 .course,
 .article,
-.tutorial {
+.tutorial,
+.workshop {
     font-size: 15px;
+
+    &-date {
+        font-size: 24px;
+        font-style: normal;
+        font-weight: bold;
+        line-height: normal;
+        width: 100px;
+
+        .day {
+            color: #12263F;
+        }
+
+        .month {
+            color: #2C7BE5;
+        }
+    }
 
     &-thumbnail {
         &-wrapper {
@@ -57,9 +75,24 @@
     }
 
     &.archive {
-        .title {
+        .heading, .title {
             color: #6E84A3;
         }
+
+        .learners, .organizer {
+            font-weight: normal;
+        }
+    }
+
+    &-heading {
+        color: #2C7BE5;
+        font-size: 15px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        letter-spacing: 0.75px;
+        text-transform: uppercase;
+        margin-bottom: 0.313rem;
     }
 
     &-title {
@@ -87,6 +120,10 @@
             height: 20px;
             display: inline-block;
             margin-right: 0.625rem;
+        }
+
+        .learners, .organizer {
+            font-weight: bold;
         }
 
         & > span {
@@ -178,15 +215,6 @@
 
 .coaching {
     &-thumbnail {
-        &-wrapper {
-            .avatar {
-                width: 83px;
-                height: 83px;
-                border-radius: 10px;
-            }
-
-        }
-
         &-preview {
             .avatar {
                 display: block !important;
@@ -202,7 +230,21 @@
             }
         }
     }
+}
 
+.broadcast,
+.coaching,
+.workshop {
+    &-thumbnail {
+        &-wrapper {
+            .avatar {
+                width: 83px;
+                height: 83px;
+                border-radius: 10px;
+            }
+
+        }
+    }
     &-status {
         & > span {
             &:first-child {
