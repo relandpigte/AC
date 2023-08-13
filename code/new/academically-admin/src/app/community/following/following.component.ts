@@ -11,9 +11,8 @@ import { StateUpdateType } from '@shared/services/state-base.service';
 import { CommunityDiscussionsComponent } from '@shared/components/community-discussions/community-discussions.component';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { CommunityService } from '../community.service';
-import { SharedType } from '@shared/service-proxies/service-proxies';
+import { SharedType, PostSort } from '@shared/service-proxies/service-proxies';
 import { of } from 'rxjs';
-import { WrapperService } from '@shared/services/wrapper.service';
 
 enum PostFiltering {
   All = 'Community.Posts.Filtering.All',
@@ -23,9 +22,8 @@ enum PostFiltering {
 }
 
 enum PostSorting {
-  Latest = 'Community.Posts.Sorting.Latest',
-  Replied = 'Community.Posts.Sorting.Replied',
-  Reacted = 'Community.Posts.Sorting.Reacted'
+  Activity = 'Community.Posts.Sorting.Activity',
+  Latest = 'Community.Posts.Sorting.Latest'
 }
 
 @Component({
@@ -87,6 +85,14 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
   }
   get hiddenPostsCount(): number { return this.totalPostsCount - this.posts.length; }
   get isLoading$() { return of(this.isLoadingPosts || this.commentContainer?.isLoadingComments || this.isLoading_usersYouMayKnow || this.isLoading_recommendedCourses); }
+  get postSort(): PostSort {
+    switch(this.selectedSorting) {
+      case PostSorting.Activity:
+        return PostSort.Activity;
+      default:
+        return PostSort.Latest;
+    }
+  }
 
   async ngOnInit() {
     this.loadInfiniteData(this._usersService, 'getAll', ['', true, true, 'creationTime desc', 0, 6], 'usersYouMayKnow');
@@ -128,7 +134,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
   }
 
   private async initPostsAppStates() {
-    const appStateConfig: AppStateConfig = { [this.postsStateId]: { load: [undefined, undefined, undefined, 0, MAX_POSTS_TO_LOAD], update: true } };
+    const appStateConfig: AppStateConfig = { [this.postsStateId]: { load: [undefined, undefined, undefined, this.postSort, 0, MAX_POSTS_TO_LOAD], update: true } };
     const appStateServices: AppStateServices = { [this.postsStateId]: { type: PostsStateService, args: [this.appSession, this._hubService, this._postsService] } };
     await this.pubSubService.start(this, appStateConfig, appStateServices);
     this.postsStateService = this.pubSubService.getStateService<PostsStateService>(this.postsStateId);
@@ -172,13 +178,26 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
 
   async handleFilteringChange(filter: PostFiltering) {
     this.selectedFiltering = filter;
-    await this.postsStateService.updateServiceParams({ type: this.postTypeFilter, parentId: undefined, creationTime: undefined });
+    await this.postsStateService.updateServiceParams({
+      type: this.postTypeFilter,
+      parentId: undefined,
+      creationTime: undefined,
+      postSort: this.postSort
+    });
     this.posts = this.postsStateService.getAllPosts();
     this.totalPostsCount = this.postsStateService.totalPostsCount;
   }
 
-  handleSortingChange(sort: PostSorting): void {
+  async handleSortingChange(sort: PostSorting) {
     this.selectedSorting = sort;
+    await this.postsStateService.updateServiceParams({
+      type: this.postTypeFilter,
+      parentId: undefined,
+      creationTime: undefined,
+      postSort: this.postSort
+    });
+    this.posts = this.postsStateService.getAllPosts();
+    this.totalPostsCount = this.postsStateService.totalPostsCount;
   }
 
   handleChildrenUpdate(post: PostDto) {
@@ -189,7 +208,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     // we don't need to display loader when loading more items.
     // this.postsStateService.loading$.next(true);
     const lastPostCreationTime = this.posts?.[this.posts.length - 1]?.creationTime;
-    this._postsService.getAllPostsPaged(undefined, undefined, lastPostCreationTime, 0, MAX_POSTS_TO_LOAD)
+    this._postsService.getAllPostsPaged(undefined, undefined, lastPostCreationTime, this.postSort, 0, MAX_POSTS_TO_LOAD)
         .subscribe(posts => {
           this.postsStateService.pushMorePosts(posts.items);
           this.posts = this.postsStateService.getAllPosts();

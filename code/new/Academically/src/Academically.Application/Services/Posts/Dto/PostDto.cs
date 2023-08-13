@@ -11,6 +11,7 @@ using Academically.Users.Dto;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace Academically.Services.Posts.Dto
 {
@@ -34,12 +35,18 @@ namespace Academically.Services.Posts.Dto
         [NotMapped]
         public int SharesCount { get; set; }
 
+        [NotMapped]
+        public int ReactionsCount { get; set; }
+
         public IEnumerable<PostTopicDto> PostTopics { get; set; }
         public IEnumerable<PostAttachmentDto> PostAttachments { get; set; }
         public IEnumerable<PostDto> Children { get; set; }
         public IEnumerable<UserDto> Participants { get; set; }
         public IEnumerable<PostNotificationDto> PostNotification { get; set; }
         public IEnumerable<PostVisibilityDto> PostVisibility { get; set; }
+
+        [NotMapped]
+        public double ActivityPoints { get { return (this.CommentsCount * 2) + this.ReactionsCount + this.Children.Sum(c => c.ActivityPoints); } }
 
         [NotMapped]
         public PostDto SharedPost { get; set; }

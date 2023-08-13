@@ -55,6 +55,7 @@ namespace Academically.Services.Posts
         private readonly IRepository<Coaching, Guid> _coachingRepository;
         private readonly IRepository<Video, Guid> _videoRepository;
         private readonly IRepository<Event, Guid> _eventRepository;
+        private readonly IRepository<Reaction, Guid> _reactionsRepository;
         private readonly IRepository<EntityChange, long> _entityChangeRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IArticlesAppService _articlesAppService;
@@ -75,6 +76,7 @@ namespace Academically.Services.Posts
             IRepository<Coaching, Guid> coachingRepository,
             IRepository<Video, Guid> videoRepository,
             IRepository<Event, Guid> eventRepository,
+            IRepository<Reaction, Guid> reactionsRepository,
             IRepository<Comment, Guid> commentsRepository,
             IRepository<EntityChange, long> entityChangeRepository,
             IDocumentsDomainService documentsDomainService,
@@ -96,6 +98,7 @@ namespace Academically.Services.Posts
             _coursesAppService = coursesAppService;
             _videosAppService = videosAppService;
             _eventsAppService = eventsAppService;
+            _reactionsRepository = reactionsRepository;
             _commentsRepository = commentsRepository;
             _articlesRepository = articlesRepository;
             _coursesRepository = coursesRepository;
@@ -139,6 +142,7 @@ namespace Academically.Services.Posts
                 
                 item.CommentsCount = await this.GetCommentsCountAsync(item.Id.ToString());
                 item.SharesCount = await this.GetSharesCountAsync(item.Id.ToString());
+                item.ReactionsCount = await this.GetReactionsCountAsync(item.Id.ToString());
             }
 
             return result;
@@ -161,17 +165,18 @@ namespace Academically.Services.Posts
                                    .Include(p => p.CreatorUser)
                                      .ThenInclude(u => u.ProfilePictureDocument)
                                    .Include(p => p.PostNotification)
-                                   .Where(e => !e.IsDeleted)
+                                   .Where(p => !p.IsDeleted)
+                                   .Where(p => !p.IsHidden)
+                                   .Where(p => !userHiddenPost.Contains(p.Id))
                                    .WhereIf(request.Type.HasValue, p => p.Type == request.Type)
                                    .WhereIf(request.ParentId.HasValue, p => p.ParentId == request.ParentId)
                                    .WhereIf(!request.ParentId.HasValue, p => p.ParentId == null)
-                                   .WhereIf(request.CreationTime.HasValue, p => p.CreationTime < request.CreationTime)
-                                   .Where(e => e.IsHidden == false && !userHiddenPost.Contains(e.Id))
-                                   .OrderByDescending(p => p.CreationTime);
+                                   .WhereIf(request.CreationTime.HasValue, p => p.CreationTime < request.CreationTime);
+
             var totalCount = await query.CountAsync();
-            var result = await query.PageBy(request)
-                                   .Select(p => ObjectMapper.Map<PostDto>(p))
+            var result = await query.Select(p => ObjectMapper.Map<PostDto>(p))
                                    .ToListAsync();
+
             foreach (var item in result)
             {
                 if (item.SharedId.HasValue)
@@ -182,11 +187,18 @@ namespace Academically.Services.Posts
 
                 item.CommentsCount = await this.GetCommentsCountAsync(item.Id.ToString());
                 item.SharesCount = await this.GetSharesCountAsync(item.Id.ToString());
+                item.ReactionsCount = await this.GetReactionsCountAsync(item.Id.ToString());
 
                 var participants = new List<UserDto>();
                 if (item.Children.Any())
                 {
                     participants.AddRange(item.Children.Where(c => c.CreatorUser != null).OrderByDescending(c => c.CreationTime).Select(s => ObjectMapper.Map<UserDto>(s.CreatorUser)));
+                    foreach (var child in item.Children)
+                    {
+                        child.CommentsCount = await this.GetCommentsCountAsync(child.Id.ToString());
+                        child.SharesCount = await this.GetSharesCountAsync(child.Id.ToString());
+                        child.ReactionsCount = await this.GetReactionsCountAsync(child.Id.ToString());
+                    }
                 }
                 var commentsParticipant = await _commentsRepository.GetAll()
                         .Where(w => w.ReferenceId == item.Id.ToString())
@@ -203,6 +215,13 @@ namespace Academically.Services.Posts
                 item.Participants = participants.GroupBy(g => g.Id).ToList().Select(s => s.FirstOrDefault());
                 foreach (var p in item.Participants) if (p.ProfilePictureDocumentId.HasValue) p.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(p.ProfilePictureDocumentId.Value);
             }
+
+            if (request.PostSort.HasValue && request.PostSort == PostSort.Activity)
+                result = result.OrderByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
+            else
+                result = result.OrderByDescending(p => p.CreationTime).ToList();
+
+            result = result.Skip(request.SkipCount).Take(request.MaxResultCount).ToList();
 
             return new PagedResultDto<PostDto>(totalCount, result);
         }
@@ -372,6 +391,7 @@ namespace Academically.Services.Posts
             await FillInShared(result);
             result.CommentsCount = await this.GetCommentsCountAsync(result.Id.ToString());
             result.SharesCount = await this.GetSharesCountAsync(result.Id.ToString());
+            result.ReactionsCount = await this.GetReactionsCountAsync(result.Id.ToString());
 
             return result;
         }
@@ -649,6 +669,12 @@ namespace Academically.Services.Posts
             return await _postRepository.GetAll().Where(e => e.SharedType == SharedType.Post && e.SharedId.HasValue && e.SharedId.ToString() == referenceId).CountAsync();
         }
 
+        public async Task<int> GetReactionsCountAsync(string referenceId)
+        {
+            return await _reactionsRepository.GetAll().Where(e => e.ReferenceId == referenceId).CountAsync();
+        }
+
+
         private IQueryable<AvailableServiceDto> Sort(IQueryable<AvailableServiceDto> query, string sorting)
         {
             if (sorting.Contains("recent"))
@@ -730,6 +756,7 @@ namespace Academically.Services.Posts
 
                 item.CommentsCount = await this.GetCommentsCountAsync(item.Id.ToString());
                 item.SharesCount = await this.GetSharesCountAsync(item.Id.ToString());
+                item.ReactionsCount = await this.GetReactionsCountAsync(item.Id.ToString());
 
                 var participants = new List<UserDto>();
                 if (item.Children.Any())

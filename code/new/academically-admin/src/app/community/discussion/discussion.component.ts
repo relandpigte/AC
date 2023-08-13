@@ -8,7 +8,7 @@ import * as moment from 'moment';
 
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
-import { DisciplineTaxonomyDto, PostDto, PostsServiceProxy, PostType, SharedType, UserDto } from '@shared/service-proxies/service-proxies';
+import { DisciplineTaxonomyDto, PostDto, PostSort, PostsServiceProxy, PostType, SharedType, UserDto } from '@shared/service-proxies/service-proxies';
 import { MAX_POSTS_TO_LOAD, PostsStateService } from '@shared/services/posts-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
@@ -26,9 +26,8 @@ export enum PostFiltering {
 }
 
 export enum PostSorting {
-    Latest = 'Community.Posts.Sorting.Latest',
-    Replied = 'Community.Posts.Sorting.Replied',
-    Reacted = 'Community.Posts.Sorting.Reacted'
+    Activity = 'Community.Posts.Sorting.Activity',
+    Latest = 'Community.Posts.Sorting.Latest'
 }
 
 export enum SubscribeType {
@@ -121,6 +120,14 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
         const time = moment(this.discussion?.creationTime);
         return this.convertMomentToPostDateAgo(time);
     }
+    get postSort(): PostSort {
+        switch(this.selectedSorting) {
+          case PostSorting.Activity:
+            return PostSort.Activity;
+          default:
+            return PostSort.Latest;
+        }
+      }
 
     async ngOnInit() {
         this.isLoadingPost = true;
@@ -205,7 +212,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
     private async initPostsAppStates() {
         const appStateConfig: AppStateConfig = {
             [this.postsStateId]: {
-                load: [undefined, this.discussionId, undefined, 0, MAX_POSTS_TO_LOAD],
+                load: [undefined, this.discussionId, undefined, this.postSort, 0, MAX_POSTS_TO_LOAD],
                 update: { postId: this.discussionId }
             }
         };
@@ -328,8 +335,17 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
         return this.creator?.id === item?.id;
     }
 
-    handleSortingChange(sort: PostSorting): void {
+    async handleSortingChange(sort: PostSorting) {
         this.selectedSorting = sort;
+        await this.postsStateService.updateServiceParams({
+            type: undefined,
+            parentId: this.discussionId,
+            creationTime: undefined,
+            postSort: this.postSort
+        });
+
+        this.children = this.postsStateService.getAllPosts();
+        this.totalChildrenCount = this.postsStateService.totalPostsCount;
     }
 
     handleSubscribeClick(type: SubscribeType): void {
@@ -357,7 +373,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
         // we don't need to display loader when loading more items.
         // this.postsStateService.loading$.next(true);
         const lastPostCreationTime = this.children?.[this.children.length - 1]?.creationTime;
-        this._postsService.getAllPostsPaged(undefined, undefined, lastPostCreationTime, 0, MAX_POSTS_TO_LOAD)
+        this._postsService.getAllPostsPaged(undefined, undefined, lastPostCreationTime, this.postSort, 0, MAX_POSTS_TO_LOAD)
             .subscribe(posts => {
               this.postsStateService.pushMorePosts(posts.items);
               this.children = this.postsStateService.getAllPosts();
