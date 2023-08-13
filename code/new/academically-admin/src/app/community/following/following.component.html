@@ -55,29 +55,20 @@
 
             <div
               class="dropdown-item cursor-pointer d-flex justify-content-between"
+              [class.selected]="isSelectedSorting(postSortingEnum.Activity)"
+              (click)="handleSortingChange(postSortingEnum.Activity)"
+            >
+              <div>{{ postSortingEnum.Activity  | localize }}</div>
+              <i *ngIf="isSelectedSorting(postSortingEnum.Activity)" class="fe fe-check"></i>
+            </div>
+
+            <div
+              class="dropdown-item cursor-pointer d-flex justify-content-between"
               [class.selected]="isSelectedSorting(postSortingEnum.Latest)"
               (click)="handleSortingChange(postSortingEnum.Latest)"
             >
               <div>{{ postSortingEnum.Latest  | localize }}</div>
               <i *ngIf="isSelectedSorting(postSortingEnum.Latest)" class="fe fe-check"></i>
-            </div>
-
-            <div
-              class="dropdown-item cursor-pointer d-flex justify-content-between"
-              [class.selected]="isSelectedSorting(postSortingEnum.Replied)"
-              (click)="handleSortingChange(postSortingEnum.Replied)"
-            >
-              <div>{{ postSortingEnum.Replied  | localize }}</div>
-              <i *ngIf="isSelectedSorting(postSortingEnum.Replied)" class="fe fe-check"></i>
-            </div>
-
-            <div
-              class="dropdown-item cursor-pointer d-flex justify-content-between"
-              [class.selected]="isSelectedSorting(postSortingEnum.Reacted)"
-              (click)="handleSortingChange(postSortingEnum.Reacted)"
-            >
-              <div>{{ postSortingEnum.Reacted  | localize }}</div>
-              <i *ngIf="isSelectedSorting(postSortingEnum.Reacted)" class="fe fe-check"></i>
             </div>
 
           </div>
@@ -87,7 +78,12 @@
 
     <ng-container *ngFor="let p of posts">
       <div class="community-content-post">
-        <app-community-post-card [isLoading]="isLoading$ | async" [data]="p" (onChildrenUpdate)="handleChildrenUpdate(p)" (onSharePost)="handleSharePost($event)"></app-community-post-card>
+        <app-community-post-card
+          [isLoading]="isLoading$ | async"
+          [data]="p"
+          (onChildrenUpdate)="handleChildrenUpdate(p)"
+          (onSharePost)="handleSharePost($event)"
+        ></app-community-post-card>
       </div>
     </ng-container>
 

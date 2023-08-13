@@ -9,5 +9,6 @@ namespace Academically.Services.Comments.Dto
         public PostType? Type { get; set; }
         public Guid? ParentId { get; set; }
         public DateTime? CreationTime { get; set; }
+        public PostSort? PostSort { get; set; }
     }
 }

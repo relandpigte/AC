@@ -1,6 +1,6 @@
 import { BehaviorSubject, Subject } from 'rxjs';
 import { Utils } from '../helpers/utils';
-import { HubEvent, PostDto, PostsServiceProxy, PostType, UserTopicDto } from '../service-proxies/service-proxies';
+import { HubEvent, PostDto, PostSort, PostsServiceProxy, PostType, UserTopicDto } from '../service-proxies/service-proxies';
 import { StateServiceBase, StateUpdate } from './state-base.service';
 
 import { HubService } from '@app/_shared/services/hub.service';
@@ -39,21 +39,9 @@ export class PostsStateService extends StateServiceBase {
     super();
   }
 
-  getAllPosts = (sorting?: { pred?: (p: any) => any; direction?: 'desc' | 'asc'; }) =>
-    _.orderBy(
-      Array.from(this.posts.values()),
-      sorting?.pred ?? ((p) => p.creationTime),
-      sorting?.direction ?? 'desc'
-    );
+  getAllPosts = () => Array.from(this.posts.values());
 
-  getPostsByType = (type?: PostType, sorting?: { pred: () => any; direction: 'desc' | 'asc' }) =>
-    _.orderBy(
-      Array.from(this.posts.values()).filter((p) => _.isNil(type) || p.type === type),
-      sorting?.pred ?? ((p) => p.creationTime),
-      sorting?.direction ?? 'desc'
-    );
-
-   getPostsByTopic = async (topics: UserTopicDto[]) => {
+  getPostsByTopic = async (topics: UserTopicDto[]) => {
     try {
       const selectedTopics = Object.values(topics).map(x => x.disciplineTaxonomyId);
       return await this._postsService.getPostsByTopics(selectedTopics).toPromise();
@@ -128,10 +116,10 @@ export class PostsStateService extends StateServiceBase {
     this.newPosts = new Map();
   }
 
-  async updateServiceParams(params: { type: PostType | undefined, parentId: string | undefined, creationTime: moment.Moment | undefined }) {
+  async updateServiceParams(params: { type: PostType | undefined, parentId: string | undefined, creationTime: moment.Moment | undefined, postSort: PostSort | undefined }) {
     this.loading$.next(true);
     const existingArgs = this.actionArgs['load'];
-    this.actionArgs['load'] = [params.type, params.parentId, params.creationTime, existingArgs[3], existingArgs[4]];
+    this.actionArgs['load'] = [params.type, params.parentId, params.creationTime, params.postSort, existingArgs[4], existingArgs[5]];
     try {
       const posts = await this._postsService[this.fns[this.type ?? pageType.all]](...this.loadArgs).toPromise();
       this.posts = Utils.toMap(posts.items);

@@ -13068,11 +13068,14 @@ export class PostsServiceProxy {
     3 = Shared
      * @param parentId (optional) 
      * @param creationTime (optional) 
+     * @param postSort (optional) 0 = Activity
+    
+    1 = Latest
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAllPostsPaged(type: PostType | undefined, parentId: string | undefined, creationTime: moment.Moment | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PostDtoPagedResultDto> {
+    getAllPostsPaged(type: PostType | undefined, parentId: string | undefined, creationTime: moment.Moment | undefined, postSort: PostSort | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PostDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Posts/GetAllPostsPaged?";
         if (type === null)
             throw new Error("The parameter 'type' cannot be null.");
@@ -13086,6 +13089,10 @@ export class PostsServiceProxy {
             throw new Error("The parameter 'creationTime' cannot be null.");
         else if (creationTime !== undefined)
             url_ += "CreationTime=" + encodeURIComponent(creationTime ? "" + creationTime.toJSON() : "") + "&";
+        if (postSort === null)
+            throw new Error("The parameter 'postSort' cannot be null.");
+        else if (postSort !== undefined)
+            url_ += "PostSort=" + encodeURIComponent("" + postSort) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -14015,6 +14022,62 @@ export class PostsServiceProxy {
     }
 
     protected processGetSharesCount(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number>(<any>null);
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @return Success
+     */
+    getReactionsCount(referenceId: string | undefined): Observable<number> {
+        let url_ = this.baseUrl + "/api/services/app/Posts/GetReactionsCount?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetReactionsCount(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetReactionsCount(<any>response_);
+                } catch (e) {
+                    return <Observable<number>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetReactionsCount(response: HttpResponseBase): Observable<number> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -39517,12 +39580,14 @@ export class PostDto implements IPostDto {
     sharedServiceType: ServicesType;
     commentsCount: number;
     sharesCount: number;
+    reactionsCount: number;
     postTopics: PostTopicDto[] | undefined;
     postAttachments: PostAttachmentDto[] | undefined;
     children: PostDto[] | undefined;
     participants: UserDto[] | undefined;
     postNotification: PostNotificationDto[] | undefined;
     postVisibility: PostVisibilityDto[] | undefined;
+    readonly activityPoints: number;
     sharedPost: PostDto;
     sharedServiceArticle: ArticleDto;
     sharedServiceEvent: EventDto;
@@ -39562,6 +39627,7 @@ export class PostDto implements IPostDto {
             this.sharedServiceType = _data["sharedServiceType"];
             this.commentsCount = _data["commentsCount"];
             this.sharesCount = _data["sharesCount"];
+            this.reactionsCount = _data["reactionsCount"];
             if (Array.isArray(_data["postTopics"])) {
                 this.postTopics = [] as any;
                 for (let item of _data["postTopics"])
@@ -39592,6 +39658,7 @@ export class PostDto implements IPostDto {
                 for (let item of _data["postVisibility"])
                     this.postVisibility.push(PostVisibilityDto.fromJS(item));
             }
+            (<any>this).activityPoints = _data["activityPoints"];
             this.sharedPost = _data["sharedPost"] ? PostDto.fromJS(_data["sharedPost"]) : <any>undefined;
             this.sharedServiceArticle = _data["sharedServiceArticle"] ? ArticleDto.fromJS(_data["sharedServiceArticle"]) : <any>undefined;
             this.sharedServiceEvent = _data["sharedServiceEvent"] ? EventDto.fromJS(_data["sharedServiceEvent"]) : <any>undefined;
@@ -39635,6 +39702,7 @@ export class PostDto implements IPostDto {
         data["sharedServiceType"] = this.sharedServiceType;
         data["commentsCount"] = this.commentsCount;
         data["sharesCount"] = this.sharesCount;
+        data["reactionsCount"] = this.reactionsCount;
         if (Array.isArray(this.postTopics)) {
             data["postTopics"] = [];
             for (let item of this.postTopics)
@@ -39665,6 +39733,7 @@ export class PostDto implements IPostDto {
             for (let item of this.postVisibility)
                 data["postVisibility"].push(item.toJSON());
         }
+        data["activityPoints"] = this.activityPoints;
         data["sharedPost"] = this.sharedPost ? this.sharedPost.toJSON() : <any>undefined;
         data["sharedServiceArticle"] = this.sharedServiceArticle ? this.sharedServiceArticle.toJSON() : <any>undefined;
         data["sharedServiceEvent"] = this.sharedServiceEvent ? this.sharedServiceEvent.toJSON() : <any>undefined;
@@ -39708,12 +39777,14 @@ export interface IPostDto {
     sharedServiceType: ServicesType;
     commentsCount: number;
     sharesCount: number;
+    reactionsCount: number;
     postTopics: PostTopicDto[] | undefined;
     postAttachments: PostAttachmentDto[] | undefined;
     children: PostDto[] | undefined;
     participants: UserDto[] | undefined;
     postNotification: PostNotificationDto[] | undefined;
     postVisibility: PostVisibilityDto[] | undefined;
+    activityPoints: number;
     sharedPost: PostDto;
     sharedServiceArticle: ArticleDto;
     sharedServiceEvent: EventDto;
@@ -39898,6 +39969,12 @@ export interface IPostNotificationDto {
     creatorUserId: number | undefined;
     postId: string;
     notifyUserId: number | undefined;
+}
+
+/** 0 = Activity 1 = Latest */
+export enum PostSort {
+    Activity = 0,
+    Latest = 1,
 }
 
 export class PostTopicDto implements IPostTopicDto {

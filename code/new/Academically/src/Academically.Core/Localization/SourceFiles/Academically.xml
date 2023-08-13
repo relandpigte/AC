@@ -1930,6 +1930,7 @@
 	<text name="Community.Posts.Filtering.Post">Post</text>
 	<text name="Community.Posts.Filtering.Question">Question</text>
 	<text name="Community.Posts.Filtering.Discussion">Discussion</text>
+	<text name="Community.Posts.Sorting.Activity">Most Activity</text>
 	<text name="Community.Posts.Sorting.Latest">Latest</text>
 	<text name="Community.Posts.Sorting.Replied">Most Replied</text>
 	<text name="Community.Posts.Sorting.Reacted">Most Reacted</text>

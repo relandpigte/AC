@@ -81,32 +81,38 @@
                             {{ selectedSorting | localize }} <span class="fe fe-chevron-down"></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-left" [style.marginTop.px]="10">
-                            <div class="dropdown-item cursor-pointer d-flex justify-content-between"
-                                [class.selected]="isSelectedSorting(postSortingEnum.Latest)" (click)="handleSortingChange(postSortingEnum.Latest)">
-                                <div>{{ postSortingEnum.Latest | localize }}</div>
+
+                            <div
+                                class="dropdown-item cursor-pointer d-flex justify-content-between"
+                                [class.selected]="isSelectedSorting(postSortingEnum.Activity)"
+                                (click)="handleSortingChange(postSortingEnum.Activity)"
+                            >
+                                <div>{{ postSortingEnum.Activity  | localize }}</div>
+                                <i *ngIf="isSelectedSorting(postSortingEnum.Activity)" class="fe fe-check"></i>
+                            </div>
+
+                            <div
+                                class="dropdown-item cursor-pointer d-flex justify-content-between"
+                                [class.selected]="isSelectedSorting(postSortingEnum.Latest)"
+                                (click)="handleSortingChange(postSortingEnum.Latest)"
+                            >
+                                <div>{{ postSortingEnum.Latest  | localize }}</div>
                                 <i *ngIf="isSelectedSorting(postSortingEnum.Latest)" class="fe fe-check"></i>
                             </div>
 
-                            <div class="dropdown-item cursor-pointer d-flex justify-content-between"
-                                [class.selected]="isSelectedSorting(postSortingEnum.Replied)"
-                                (click)="handleSortingChange(postSortingEnum.Replied)">
-                                <div>{{ postSortingEnum.Replied | localize }}</div>
-                                <i *ngIf="isSelectedSorting(postSortingEnum.Replied)" class="fe fe-check"></i>
-                            </div>
-
-                            <div class="dropdown-item cursor-pointer d-flex justify-content-between"
-                                [class.selected]="isSelectedSorting(postSortingEnum.Reacted)"
-                                (click)="handleSortingChange(postSortingEnum.Reacted)">
-                                <div>{{ postSortingEnum.Reacted | localize }}</div>
-                                <i *ngIf="isSelectedSorting(postSortingEnum.Reacted)" class="fe fe-check"></i>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div *ngFor="let p of children" class="discussion-content-post">
-                <app-community-post-card [isLoading]="isLoading" *ngIf="!p.isHidden && !p.isDeleted" [data]="p" [canOverrideOwner]="true" (onChildrenUpdate)="handleChildrenUpdate(p)"></app-community-post-card>
+                <app-community-post-card
+                    *ngIf="!p.isHidden && !p.isDeleted"
+                    [isLoading]="isLoading"
+                    [data]="p"
+                    [canOverrideOwner]="true"
+                    (onChildrenUpdate)="handleChildrenUpdate(p)"
+                ></app-community-post-card>
             </div>
 
             <div *ngIf="hiddenChildrenCount" class="card discussion-content-post-load-more" (click)="onLoadMore()">
