@@ -25,6 +25,7 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import * as humanizeDuration from 'humanize-duration';
 
 @Component({
   selector: 'app-service-card-dashboard',
@@ -78,6 +79,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   }
   get compositionVideoDuration(): string { return this.composition?.durationInSec ? moment.utc(this.composition?.durationInSec * 1000).format(`${this.composition?.durationInSec >= 3600 ? 'HH:' : ''}mm:ss`) : null; }
   get isArchive(): boolean { return this.sanitized?.status?.type === 'archived'; }
+  get sessionDuration(): string { return humanizeDuration(this.composition.durationInSec * 1000); }
 
   ngOnInit(): void {
     this.sanitizedData();
@@ -110,6 +112,13 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
       }));
     this.sanitized.people.avatarStackCount = 3;
 
+    this.sanitized.owner = {} as ServiceCardPerson;
+    this.sanitized.owner.avatar = {} as ServiceCardImage;
+    this.sanitized.owner.avatar.src = this.data?.creatorUser?.profilePictureUrl ?? this.data.profilePictureUrl ?? 'assets/img/anonymous.png';
+    this.sanitized.owner.fullName = this.data?.creatorUser?.fullName?? this.data.fullName ??  'Anonymous';
+    this.sanitized.owner.isShowAvatar = true;
+    this.sanitized.owner.isShowFullName = true;
+
     this.setValueOverrides();
     this.setOptionOverrides();
   }
@@ -126,6 +135,25 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
       case 'broadcast':
         break;
       case 'coaching':
+        this.sanitized.composition = this.sanitized.composition ?? {} as ServiceCardComposition;
+        this.sanitized.composition.sessions = 1;
+        this.sanitized.composition.durationInSec = Math.floor(Math.random() * (10000 - 20) + 20);
+        this.sanitized.people.isShowAvatars = true;
+
+        if (this.isCreator) {
+          const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
+          switch(tempStatus) {
+            case 1:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
+              break;
+            case 2:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
+              break;
+            case 3:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
+              break;
+          }
+        }
         break;
       case 'course':
         this.sanitized.composition = this.sanitized.composition ?? {} as ServiceCardComposition;
@@ -151,7 +179,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         if (this.isCreator) {
           this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
         } else {
-          const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
+          const tempStatus = Math.floor(Math.random() * (5 - 1) + 1);
           switch(tempStatus) {
             case 1:
               this.sanitized.status = <ServiceCardStatus>{ type: 'onprogress', label: 'Tutorial 1 - Start your new journey', show: true };
@@ -191,11 +219,13 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
       case 'broadcast':
         break;
       case 'coaching':
+        if (!this.options || !('isShowQuickPreview' in this.options)) { this.sanitizedOptions.isShowQuickPreview = true; }
+        if (!this.options || !('isSHowPurchased' in this.options)) { this.sanitizedOptions.isSHowPurchased = true; }
         break;
       case 'course':
         if (!this.options || !('isShowProgress' in this.options)) { this.sanitizedOptions.isShowProgress = true; }
         if (!this.options || !('isShowDetailsComposition' in this.options)) { this.sanitizedOptions.isShowDetailsComposition = true; }
-        if (!this.options || !('isSHowPurchased' in this.options)) { this.sanitizedOptions.isShowEnrolled = true; }
+        if (!this.options || !('isShowEnrolled' in this.options)) { this.sanitizedOptions.isShowEnrolled = true; }
         break;
       case 'event':
         break;

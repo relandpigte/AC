@@ -44,6 +44,7 @@
     "famfamfam-flags": "^1.0.0",
     "file-saver": "^2.0.5",
     "google-libphonenumber": "^3.2.18",
+    "humanize-duration": "^3.29.0",
     "intl-tel-input": "^17.0.12",
     "keen-slider": "^6.8.3",
     "link-preview-js": "^3.0.4",

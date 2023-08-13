@@ -15,6 +15,10 @@
                             {{ compositionVideoDuration }}
                         </div>
                     </div>
+
+                    <a *ngIf="sanitized?.owner?.avatar?.src" href="javascript:void(0)" class="avatar d-none">
+                        <img [src]="sanitized.owner.avatar.src" alt="..." class="avatar-img">
+                    </a>
                 </div>
             </div>
 
@@ -24,6 +28,12 @@
 
                 <p *ngIf="this.sanitizedOptions?.isShowDetailsComposition && !!compositionString && isCreator" [class]="cardType + '-info'">
                     {{ compositionString }}
+                </p>
+
+                <p *ngIf="this.sanitizedOptions?.isShowQuickPreview && isCreator" [class]="cardType + '-info-preview'">
+                    <span *ngIf="composition?.sessions && composition?.durationInSec" class="coaching">
+                        {{ sessionDuration }}
+                    </span>
                 </p>
 
                 <div *ngIf="progress !== null && sanitizedOptions?.isShowProgress && !isCreator" [class]="cardType + '-progress'" class="row d-flex align-items-center g-0">
@@ -76,7 +86,7 @@
                             <ng-container *ngSwitchCase="'published'">
                                 <span class="text-success">{{ status?.label | localize }}</span>
                             </ng-container>
-                            <ng-container *ngSwitchCase="'archive'">
+                            <ng-container *ngSwitchCase="'archived'">
                                 <span class="text-primary">{{ status?.label | localize }}</span>
                             </ng-container>
                         </ng-container>
