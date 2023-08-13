@@ -48,6 +48,13 @@ import { DashboardComponent } from './dashboard.component';
                 (m) => m.EventsModule
               ),
           },
+          {
+            path: 'tutorials',
+            loadChildren: () =>
+              import('@app/dashboard/tutorials/tutorials.module').then(
+                (m) => m.TutorialsModule
+              ),
+          },
           { path: '', redirectTo: 'overview' },
         ],
       }

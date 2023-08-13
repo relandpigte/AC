@@ -1,11 +1,52 @@
 .course,
-.article {
+.article,
+.tutorial {
     font-size: 15px;
 
-    &-thumbnail-wrapper {
-        .avatar {
-            width: 8.125rem;
-            height: 5.125rem;
+    &-thumbnail {
+        &-wrapper {
+            .avatar {
+                width: 8.125rem;
+                height: 5.125rem;
+            }
+        }
+
+        &-preview {
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            .video {
+                &-play {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 44px;
+                    height: 44px;
+                    opacity: 0.7;
+                }
+
+                &-duration {
+                    position: absolute;
+                    bottom: 0;
+                    right: 12px;
+                    font-size: 10px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: normal;
+                    background-color: white;
+                    color: #617FA9;
+                    width: 55px;
+                    height: 18px;
+                    padding: 0 6px 0 10px;
+                    border-top-left-radius: 15px;
+
+                    &-play {
+                        font-size: 8px;
+                    }
+                }
+            }
         }
     }
 
@@ -107,6 +148,16 @@
 
                     &:hover {
                         background-image: url("/assets/img/actions/join-hover.svg");
+                    }
+                }
+            }
+
+            &.play {
+                span {
+                    background-image: url("/assets/img/actions/play_2.svg");
+
+                    &:hover {
+                        background-image: url("/assets/img/actions/play_2-hover.svg");
                     }
                 }
             }

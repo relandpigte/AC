@@ -2,10 +2,20 @@
 <div class="card custom-card-border" [ngClass]="cardType" [class.archive]="isArchive">
     <div class="card-body">
         <div class="row d-flex align-items-center" [ngSwitch]="cardType">
-            <div *ngIf="sanitizedOptions?.isShowImages" [class]="cardType + '-thumbnail-wrapper'" class="col-auto">
+            <div *ngIf="sanitizedOptions?.isShowImages" [class]="cardType + '-thumbnail-wrapper'" class="col-auto position-relative">
                 <a href="javascript:void(0)" class="avatar avatar-lg avatar-4by3">
                     <img [src]="images[0].src" alt="..." class="avatar-img rounded">
                 </a>
+
+                <div *ngIf="this.sanitizedOptions?.isShowQuickPreview" [class]="cardType + '-thumbnail-preview'" class="d-flex align-items-center w-100 h-100">
+                    <div *ngIf="composition?.videos" class="video d-flex align-items-center w-100 h-100">
+                        <img src="../../../assets/img/actions/play.svg" class="video-play">
+                        <div class="video-duration d-flex justify-content-start align-items-center gap-8">
+                            <i class="fas fa-play video-duration-play"></i>
+                            {{ compositionVideoDuration }}
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="col pr-4">
@@ -90,6 +100,11 @@
                             </ng-container>
                             <ng-container *ngSwitchCase="'join'">
                                 <button class="join btn d-flex flex-column text-primary align-items-center gap-5 p-0" (click)="handleClickAction(id)">
+                                    <span class="block bg-center"></span> {{ action.label | localize}}
+                                </button>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="'play'">
+                                <button class="play btn d-flex flex-column text-primary align-items-center gap-5 p-0" (click)="handleClickAction(id)">
                                     <span class="block bg-center"></span> {{ action.label | localize}}
                                 </button>
                             </ng-container>

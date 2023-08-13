@@ -1,0 +1,48 @@
+<div class="container-fluid" [@routerTransition]>
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="header">
+                <div class="header-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h6 class="header-pretitle">{{ 'Dashboard' | localize }}</h6>
+                            <h1 class="header-title">{{ 'Tutorials' | localize }}</h1>
+                        </div>
+                        <div class="col-auto d-flex gap-10">
+                            <button *ngIf="isTutor" class="btn btn-primary">
+                                {{ 'CreateVideo' | localize | titlecase }}
+                            </button>
+                            <button *ngIf="isTutor" class="btn btn-white custom-card-border d-flex align-items-center gap-10" (click)="handleSwitchView()">
+                                <span class="fe fe-refresh-cw"></span>
+                                Switch to {{ switchButtonText }} view
+                            </button>
+                        </div>
+                    </div>
+                    <app-sub-header [userView]="defaultUserView"></app-sub-header>
+                </div>
+            </div>
+
+            <div class="tab-content" [ngSwitch]="defaultUserView">
+                <ng-container *ngSwitchCase="dashboardServiceView.creator">
+                    <div class="tab-pane fade show active" id="created" role="tabpanel" aria-labelledby="created-tab">
+                        <app-created></app-created>
+                    </div>
+                    <div class="tab-pane fade" id="analytics" role="tabpanel" aria-labelledby="analytics-tab">
+                        This is analytics tab
+                    </div>
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                    <div class="tab-pane fade show active" id="purchased" role="tabpanel" aria-labelledby="purchased-tab">
+                        <app-purchased></app-purchased>
+                    </div>
+                    <div class="tab-pane fade" id="saved" role="tabpanel" aria-labelledby="save-tab">
+                        <p>This is saved tab content.</p>
+                    </div>
+                    <div class="tab-pane fade" id="discover" role="tabpanel" aria-labelledby="discover-tab">
+                        <p>This is Discover tab content.</p>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

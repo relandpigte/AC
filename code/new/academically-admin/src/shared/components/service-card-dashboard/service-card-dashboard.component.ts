@@ -24,7 +24,7 @@ import {
   VideoDto
 } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
-import { event } from 'jquery';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-service-card-dashboard',
@@ -76,6 +76,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     });
     return composition.join(', ');
   }
+  get compositionVideoDuration(): string { return this.composition?.durationInSec ? moment.utc(this.composition?.durationInSec * 1000).format(`${this.composition?.durationInSec >= 3600 ? 'HH:' : ''}mm:ss`) : null; }
   get isArchive(): boolean { return this.sanitized?.status?.type === 'archived'; }
 
   ngOnInit(): void {
@@ -143,6 +144,37 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
       case 'space':
         break;
       case 'tutorial':
+        this.sanitized.composition = this.sanitized.composition ?? {} as ServiceCardComposition;
+        this.sanitized.composition.videos = 1;
+        this.sanitized.composition.durationInSec = Math.floor(Math.random() * (3600 - 20) + 20);
+
+        if (this.isCreator) {
+          this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
+        } else {
+          const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
+          switch(tempStatus) {
+            case 1:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'onprogress', label: 'Tutorial 1 - Start your new journey', show: true };
+              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'play', label: 'Play Tutorial' });
+              this.sanitized.progress = 0;
+              break;
+            case 2:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'onprogress', label: 'Tutorial 1 - Start your new journey', show: true };
+              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'play', label: 'Continue' });
+              this.sanitized.progress = Math.floor(Math.random() * (100 - 1) + 1);
+              break;
+            case 3:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'completed', label: 'Congratulations! You\'ve finished this tutorial.', show: true };
+              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'review', label: 'Leave review' });
+              this.sanitized.progress = null;
+              break;
+            case 4:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'completed', label: 'Congratulations! You\'ve finished this tutorial.', show: true };
+              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'play', label: 'Play again' });
+              this.sanitized.progress = null;
+              break;
+          }
+        }
         break;
       case 'workshop':
         break;
@@ -170,6 +202,8 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
       case 'space':
         break;
       case 'tutorial':
+        if (!this.options || !('isShowProgress' in this.options)) { this.sanitizedOptions.isShowProgress = true; }
+        if (!this.options || !('isShowQuickPreview' in this.options)) { this.sanitizedOptions.isShowQuickPreview = true; }
         break;
       case 'workshop':
         break;
