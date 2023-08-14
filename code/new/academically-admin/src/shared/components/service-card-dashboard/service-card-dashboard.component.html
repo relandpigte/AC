@@ -1,14 +1,14 @@
 
 <div class="card custom-card-border" [ngClass]="cardType" [class.archive]="isArchive">
     <div class="card-body">
-        <div class="row d-flex align-items-center" [ngSwitch]="cardType">
+        <div class="d-flex align-items-center gap-20" [ngSwitch]="cardType">
 
-            <div *ngIf="sanitizedOptions?.isShowDate" [class]="cardType + '-date'" class="col-auto position-relative d-flex flex-column justify-content-center align-items-center">
+            <div *ngIf="sanitizedOptions?.isShowDate" [class]="cardType + '-date'" class="position-relative d-flex flex-column justify-content-center align-items-center">
                 <div class="day">{{ scheduleDay }}</div>
                 <div class="month">{{ scheduleMonth }}</div>
             </div>
 
-            <div *ngIf="sanitizedOptions?.isShowImages" [class]="cardType + '-thumbnail-wrapper'" class="col-auto position-relative">
+            <div *ngIf="sanitizedOptions?.isShowImages" [class]="cardType + '-thumbnail-wrapper'" class="position-relative">
                 <a href="javascript:void(0)" class="avatar avatar-lg avatar-4by3">
                     <img [src]="images[0].src" alt="..." class="avatar-img rounded">
                 </a>
@@ -28,7 +28,7 @@
                 </div>
             </div>
 
-            <div class="col pr-4">
+            <div class="flex-grow-1 pr-4">
                 <div *ngIf="this.sanitizedOptions?.isShowHeading" [class]="cardType + '-heading heading'" [class.text-danger]="isScheduleNear">
                     <span *ngIf="this.sanitizedOptions?.headingType === 'location' && location" class="location">{{ location }}</span>
                     <span *ngIf="this.sanitizedOptions?.headingType === 'schedule' && schedule" class="schedule">{{ schedule }}</span>
@@ -107,7 +107,7 @@
                 </div>
             </div>
 
-            <div *ngIf="!isCreator" [class]="cardType + '-actions'" class="col-auto my-auto d-flex justify-content-center">
+            <div *ngIf="!isCreator" [class]="cardType + '-actions'" class="d-flex justify-content-center">
                 <ng-container *ngIf="sanitizedActions && sanitizedOptions?.isShowActions">
                     <ng-container *ngFor="let action of sanitizedActions">
                         <ng-container [ngSwitch]="action.type">
@@ -135,7 +135,7 @@
                     </ng-container>
                 </ng-container>
             </div>
-            <div *ngIf="isCreator" class="col-auto my-auto">
+            <div *ngIf="isCreator">
                 <div class="dropdown">
                     <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">

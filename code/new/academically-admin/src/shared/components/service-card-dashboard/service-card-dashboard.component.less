@@ -11,7 +11,7 @@
         font-style: normal;
         font-weight: bold;
         line-height: normal;
-        width: 100px;
+        width: 70px;
 
         .day {
             color: #12263F;
@@ -49,14 +49,14 @@
                 &-duration {
                     position: absolute;
                     bottom: 0;
-                    right: 12px;
+                    right: 0;
                     font-size: 10px;
                     font-style: normal;
                     font-weight: 400;
                     line-height: normal;
                     background-color: white;
                     color: #617FA9;
-                    width: 55px;
+                    width: 65px;
                     height: 18px;
                     padding: 0 6px 0 10px;
                     border-top-left-radius: 15px;
@@ -156,6 +156,7 @@
 
     &-actions {
         min-width: 23.2112%;
+        max-width: 100%;
         border-left: 1px solid #D2DDEC;
 
         .btn {
@@ -218,13 +219,13 @@
         &-preview {
             .avatar {
                 display: block !important;
-                width: 38px;
-                height: 38px;
+                width: 38px !important;
+                height: 38px !important;
+                border-radius: 50% !important;
                 position: absolute;
                 right: -5px;
                 bottom: -5px;
                 background-color: #fff;
-                border-radius: 50%;
                 border: 2px solid #fff;
                 overflow: hidden;
             }

@@ -6,6 +6,7 @@ import { AppSharedModule } from '@app/_shared/app-shared.module';
 import { CreateCoachingComponent } from './_components/create-coaching/create-coaching.component';
 import { ChooseTemplateComponent } from './_components/choose-template/choose-template.component';
 import { ProgramsModule } from './_components/programs/programs.module';
+import { CreatedComponent } from './_components/created/created.component';
 import { RequestsComponent } from './_components/requests/requests.component';
 import { LearningComponent } from './learning/learning.component';
 import { TeachingComponent } from './teaching/teaching.component';
@@ -21,7 +22,8 @@ import { DashboardModule } from '@app/dashboard/dashboard.module';
     ScheduleComponent,
     CreateCoachingComponent,
     ChooseTemplateComponent,
-    RequestsComponent
+    RequestsComponent,
+    CreatedComponent,
   ],
   imports: [
     CommonModule,

@@ -6,6 +6,7 @@ import { AppSharedModule } from '@app/_shared/app-shared.module';
 import { CreateWorkshopComponent } from './_components/create-workshop/create-workshop.component';
 import { CreateBroadcastComponent } from './_components/create-broadcast/create-broadcast.component';
 import { ChooseTemplateComponent } from './_components/choose-template/choose-template.component';
+import { CreatedComponent } from './_components/created/created.component';
 import { RequestsComponent } from './_components/requests/requests.component';
 import { ProgramsModule } from './_components/programs/programs.module';
 import { EventsComponent } from './events.component';
@@ -20,6 +21,7 @@ import { DashboardModule } from '@app/dashboard/dashboard.module';
     CreateWorkshopComponent,
     CreateBroadcastComponent,
     ChooseTemplateComponent,
+    CreatedComponent,
     RequestsComponent,
     LearningComponent,
     TeachingComponent,

@@ -8,7 +8,7 @@ import { AppComponentBase } from '@shared/app-component-base';
   styleUrls: ['./purchased.component.less']
 })
 export class PurchasedComponent extends AppComponentBase implements OnInit {
-  tutorials: VideoDto[] = Array(4).fill([]).map(() => this.generateRandomTutorial()) as VideoDto[];
+  tutorials: VideoDto[] = Array(Math.floor(Math.random() * (10 - 4) + 4)).fill([]).map(() => this.generateRandomTutorial()) as VideoDto[];
   isLoading = true;
 
   constructor(

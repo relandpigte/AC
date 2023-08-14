@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { VideoDto } from '@shared/service-proxies/service-proxies';
+import { EventDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-created',
@@ -8,7 +8,7 @@ import { VideoDto } from '@shared/service-proxies/service-proxies';
   styleUrls: ['./created.component.less']
 })
 export class CreatedComponent extends AppComponentBase implements OnInit {
-  tutorials: VideoDto[] = Array(Math.floor(Math.random() * (10 - 4) + 4)).fill([]).map(() => this.generateRandomTutorial()) as VideoDto[];
+  events: EventDto[] = Array(Math.floor(Math.random() * (10 - 4) + 4)).fill([]).map(() => this.generateRandomEvent()) as EventDto[];
   isLoading = true;
 
   constructor(
@@ -18,6 +18,6 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.tutorials);
+    console.log(this.events);
   }
 }
