@@ -65,7 +65,7 @@
                             <span class="d-flex">{{ status?.label | localize }}</span>
                         </ng-container>
                         <ng-container *ngSwitchCase="'read'">
-                            <span class="d-flex"><i class="icon completed"></i> {{ status?.label | localize }}</span>
+                            <span class="d-flex">{{ status?.label | localize }}</span>
                         </ng-container>
                         <ng-container *ngSwitchCase="'completed'">
                             <span class="d-flex"><i class="icon completed"></i> {{ status?.label | localize }}</span>
@@ -78,7 +78,7 @@
                 </div>
 
                 <div *ngIf="isCreator" [class]="cardType + '-status'" class="d-flex align-items-center">
-                    <ng-container *ngIf="status?.type === 'draft' else notDraft">
+                    <ng-container *ngIf="isDraft else notDraft">
                         <span class="text-danger">{{ status?.label | localize }}</span>
                     </ng-container>
 

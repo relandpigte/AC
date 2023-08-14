@@ -164,7 +164,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'read', label: 'Read' });
               break;
             case 2:
-              this.sanitized.status = <ServiceCardStatus>{ type: 'onprogress', label: 'You’ve read this.', show: true };
+              this.sanitized.status = <ServiceCardStatus>{ type: 'completed', label: 'You’ve read this.', show: true };
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'read', label: 'Read Again' });
               break;
             case 3:
@@ -214,16 +214,52 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         }
         break;
       case 'course':
-        this.sanitized.composition = this.sanitized.composition ?? {} as ServiceCardComposition;
-        this.sanitized.composition.units = this.data?.units ?? 4;
-        this.sanitized.composition.modules = this.data?.modules ?? 3;
-        this.sanitized.composition.lessons = this.data?.lessons ?? 5;
-        this.sanitized.status = this.isCreator ?
-          <ServiceCardStatus>{ type: 'published', label: 'Published', show: true } :
-          <ServiceCardStatus>{ type: 'onprogress', label: 'Lesson 1 - Start your new journey', show: true };
-        this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Start course' });
-        this.sanitized.progress = this.data?.progress;
-        this.sanitized.people.isShowAvatars = true;
+        if (this.isCreator) {
+          this.sanitized.composition = this.sanitized.composition ?? {} as ServiceCardComposition;
+          this.sanitized.composition.units = this.data?.units ?? 4;
+          this.sanitized.composition.modules = this.data?.modules ?? 3;
+          this.sanitized.composition.lessons = this.data?.lessons ?? 5;
+          this.sanitized.people.isShowAvatars = true;
+
+          const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
+          switch (tempStatus) {
+            case 1:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
+              break;
+            case 2:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
+              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
+              break;
+            case 3:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
+              break;
+          }
+        } else {
+          this.sanitized.progress = this.data?.progress;
+          const tempStatus = Math.floor(Math.random() * (5 - 1) + 1);
+          switch (tempStatus) {
+            case 1:
+              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Start course' });
+              this.sanitized.status = <ServiceCardStatus>{ type: 'read', label: 'Lesson 1 - Start your new journey', show: true };
+              this.sanitized.progress = 0;
+              break;
+            case 2:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'onprogress', label: 'Tutorial 1 - Start your new journey', show: true };
+              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Continue' });
+              this.sanitized.progress = Math.floor(Math.random() * (100 - 1) + 1);
+              break;
+            case 3:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'completed', label: 'Congratulations! You’ve finished this course', show: true };
+              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'review', label: 'Leave review' });
+              this.sanitized.progress = null;
+              break;
+            case 4:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'completed', label: 'Congratulations! You’ve finished this course', show: true };
+              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Start again' });
+              this.sanitized.progress = null;
+              break;
+          }
+        }
         break;
       case 'event':
         break;
