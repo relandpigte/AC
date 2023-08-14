@@ -84,7 +84,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   get sessionDuration(): string { return humanizeDuration(this.composition.durationInSec * 1000); }
   get isScheduleNear(): boolean { return this.sanitized?.dates?.startDate.diff(moment(), 'hours') < 1; }
   get schedule(): string {
-    if (!this.sanitized?.dates?.startDate) return null;
+    if (this.isDraft || !this.sanitized?.dates?.startDate) return this.l('Unscheduled');
     if (this.sanitized.dates.startDate.diff(moment(), 'minutes') < 1) return this.l('LiveNow');
     else if (this.sanitized.dates.startDate.diff(moment(), 'hours') < 1) return this.l('StartingIn', this.convertMomentToDateAgo(this.sanitized.dates.startDate, true));
     return this.l('StartingFrom', this.sanitized.dates.startDate.format('dddd, DD MMMM YYYY'), this.sanitized.dates.startDate.format('HH:mm'), this.sanitized.dates.endDate.format('HH:mm'));

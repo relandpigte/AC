@@ -93,7 +93,7 @@
 
                         <span *ngIf="learners && sanitizedOptions?.isSHowPurchased">{{ learners }} Purchased</span>
                         <span *ngIf="learners && sanitizedOptions?.isShowEnrolled">{{ learners }} Enrolled</span>
-                        <span *ngIf="learners && sanitizedOptions?.isShowGoing"><span class="learners">{{ learners }} people</span> going, <span class="organizer">you</span> are the organizer</span>
+                        <span *ngIf="learners && sanitizedOptions?.isShowGoing"><span class="learners">{{ learners }} people</span> going, <span class="organizer">you</span> are the <span class="role">organizer</span></span>
 
                         <ng-container [ngSwitch]="status?.type">
                             <ng-container *ngSwitchCase="'published'">
