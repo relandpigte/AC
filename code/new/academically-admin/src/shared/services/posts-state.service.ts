@@ -103,7 +103,7 @@ export class PostsStateService extends StateServiceBase {
   };
 
   handleDeletePosts = async (id: string) => {
-    if (!this.canViewPost(this.posts[id])) return;
+    if (!this.canViewPost(this.posts.get(id))) return;
     this.loading$.next(true);
     this.updateFromMap(this.posts, { [id]: null }, this.posts$);
     this.loading$.next(false);
