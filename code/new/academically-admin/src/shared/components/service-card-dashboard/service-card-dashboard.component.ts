@@ -73,6 +73,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     if (!this.composition) { return null; }
     const composition = [];
     _.forEach(this.composition, (value, key) => {
+      if (this.cardType === 'tutorial' && key === 'durationInSec') { return; }
       composition.push(`${value} ${key}`);
     });
     return composition.join(', ');
@@ -142,16 +143,42 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     switch (this.cardType) {
       case 'article':
         this.sanitized.people.isShowAvatars = true;
-        this.sanitized.status = this.isCreator ?
-          <ServiceCardStatus>{ type: 'published', label: 'Published', show: true } :
-          <ServiceCardStatus>{ type: 'read', label: 'You’ve read this', show: true };
-        this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'read', label: 'Read again' });
+        if (this.isCreator) {
+          const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
+          switch (tempStatus) {
+            case 1:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
+              break;
+            case 2:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
+              break;
+            case 3:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
+              break;
+          }
+        } else {
+          const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
+          switch (tempStatus) {
+            case 1:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'unread', label: 'Unread', show: true };
+              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'read', label: 'Read' });
+              break;
+            case 2:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'onprogress', label: 'You’ve read this.', show: true };
+              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'read', label: 'Read Again' });
+              break;
+            case 3:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'completed', label: 'You’ve read this', show: true };
+              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'review', label: 'Leave review' });
+              break;
+          }
+        }
         break;
       case 'broadcast':
         this.sanitized.people.isShowAvatars = true;
         if (this.isCreator) {
           const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
-          switch(tempStatus) {
+          switch (tempStatus) {
             case 1:
               this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
               break;
@@ -173,7 +200,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
 
         if (this.isCreator) {
           const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
-          switch(tempStatus) {
+          switch (tempStatus) {
             case 1:
               this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
               break;
@@ -208,10 +235,24 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         this.sanitized.composition.durationInSec = Math.floor(Math.random() * (3600 - 20) + 20);
 
         if (this.isCreator) {
-          this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
+          this.sanitized.people.isShowAvatars = true;
+          this.sanitized.composition.videos = 20;
+          const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
+          switch (tempStatus) {
+            case 1:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
+              break;
+            case 2:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
+              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
+              break;
+            case 3:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
+              break;
+          }
         } else {
           const tempStatus = Math.floor(Math.random() * (5 - 1) + 1);
-          switch(tempStatus) {
+          switch (tempStatus) {
             case 1:
               this.sanitized.status = <ServiceCardStatus>{ type: 'onprogress', label: 'Tutorial 1 - Start your new journey', show: true };
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'play', label: 'Play Tutorial' });
@@ -264,7 +305,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         if (!this.options || !('isSHowPurchased' in this.options)) { this.sanitizedOptions.isSHowPurchased = true; }
         break;
       case 'broadcast':
-        if (!this.options || !('headingType' in this.options)) this.sanitizedOptions.headingType = 'schedule';
+        if (!this.options || !('headingType' in this.options)) { this.sanitizedOptions.headingType = 'schedule'; }
         if (!this.options || !('isShowDate' in this.options)) { this.sanitizedOptions.isShowDate = true; }
         if (!this.options || !('isShowHeading' in this.options)) { this.sanitizedOptions.isShowHeading = true; }
         if (!this.options || !('isShowGoing' in this.options)) { this.sanitizedOptions.isShowGoing = true; }
@@ -285,9 +326,11 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
       case 'tutorial':
         if (!this.options || !('isShowProgress' in this.options)) { this.sanitizedOptions.isShowProgress = true; }
         if (!this.options || !('isShowQuickPreview' in this.options)) { this.sanitizedOptions.isShowQuickPreview = true; }
+        if (!this.options || !('isSHowPurchased' in this.options)) { this.sanitizedOptions.isSHowPurchased = true; }
+        if (!this.options || !('isShowDetailsComposition' in this.options)) { this.sanitizedOptions.isShowDetailsComposition = true; }
         break;
       case 'workshop':
-        if (!this.options || !('headingType' in this.options)) this.sanitizedOptions.headingType = 'schedule';
+        if (!this.options || !('headingType' in this.options)) { this.sanitizedOptions.headingType = 'schedule'; }
         if (!this.options || !('isShowDate' in this.options)) { this.sanitizedOptions.isShowDate = true; }
         if (!this.options || !('isShowHeading' in this.options)) { this.sanitizedOptions.isShowHeading = true; }
         if (!this.options || !('isShowGoing' in this.options)) { this.sanitizedOptions.isShowGoing = true; }
