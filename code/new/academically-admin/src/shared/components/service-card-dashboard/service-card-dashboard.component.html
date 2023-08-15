@@ -83,7 +83,7 @@
                     </ng-container>
 
                     <ng-template #notDraft>
-                        <span *ngIf="people && people?.isShowAvatars && people?.people && people?.avatarStackCount > 0" class="avatar-group d-none d-md-inline-flex">
+                        <span *ngIf="people && people?.isShowAvatars && people?.people && people?.avatarStackCount > 0" class="avatar-group avatar-showing d-none d-md-inline-flex p-0">
                             <ng-container *ngFor="let p of people?.people?.slice(0, people?.avatarStackCount)">
                                  <a *ngIf="p.avatar" href="#" class="avatar avatar-xs">
                                     <img [src]="p.avatar.src" class="avatar-img rounded-circle" alt="...">
@@ -91,9 +91,9 @@
                             </ng-container>
                         </span>
 
-                        <span *ngIf="learners && sanitizedOptions?.isSHowPurchased">{{ learners }} Purchased</span>
-                        <span *ngIf="learners && sanitizedOptions?.isShowEnrolled">{{ learners }} Enrolled</span>
-                        <span *ngIf="learners && sanitizedOptions?.isShowGoing"><span class="learners">{{ learners }} people</span> going, <span class="organizer">you</span> are the <span class="role">organizer</span></span>
+                        <span *ngIf="learners && sanitizedOptions?.isSHowPurchased" [ngClass]="{'avatar-showing': people?.isShowAvatars}">{{ learners }} Purchased</span>
+                        <span *ngIf="learners && sanitizedOptions?.isShowEnrolled" [ngClass]="{'avatar-showing': people?.isShowAvatars}">{{ learners }} Enrolled</span>
+                        <span *ngIf="learners && sanitizedOptions?.isShowGoing" [ngClass]="{'avatar-showing': people?.isShowAvatars}"><span class="learners">{{ learners }} people</span> going, <span class="organizer">you</span> are the <span class="role">organizer</span></span>
 
                         <ng-container [ngSwitch]="status?.type">
                             <ng-container *ngSwitchCase="'published'">

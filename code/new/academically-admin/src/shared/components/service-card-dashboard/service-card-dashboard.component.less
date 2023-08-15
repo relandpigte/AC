@@ -1,3 +1,11 @@
+::ng-deep {
+    .search {
+        .card-header {
+            max-height: 56px;
+        }
+    }
+}
+
 .broadcast,
 .coaching,
 .course,
@@ -147,9 +155,19 @@
                 }
             }
 
-            .avatar{
-                width: 20px;
-                height: 20px;
+            .avatar-group {
+                .avatar{
+                    width: 20px;
+                    height: 20px;
+                }
+            }
+
+            &.avatar-showing {
+                &:nth-child(2) {
+                    &:before {
+                        width: 0;
+                    }
+                }
             }
         }
     }
@@ -244,19 +262,6 @@
                 border-radius: 10px;
             }
 
-        }
-    }
-    &-status {
-        & > span {
-            &:first-child {
-                padding: 0;
-            }
-
-            &:nth-child(2) {
-                &:before {
-                    width: 0px;
-                }
-            }
         }
     }
 }
