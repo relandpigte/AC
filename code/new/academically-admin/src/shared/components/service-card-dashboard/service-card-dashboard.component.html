@@ -1,7 +1,7 @@
 
 <div class="card custom-card-border" [ngClass]="cardType" [class.archive]="isArchive">
     <div class="card-body">
-        <div class="d-flex align-items-center gap-20" [ngSwitch]="cardType">
+        <div class="d-flex gap-20" [ngSwitch]="cardType">
 
             <div *ngIf="sanitizedOptions?.isShowDate" [class]="cardType + '-date'" class="position-relative d-flex flex-column justify-content-center align-items-center">
                 <div class="day">{{ scheduleDay }}</div>
@@ -42,7 +42,7 @@
                     {{ compositionString }}
                 </p>
 
-                <p *ngIf="this.sanitizedOptions?.isShowQuickPreview && isCreator" [class]="cardType + '-info-preview'">
+                <p *ngIf="this.sanitizedOptions?.isShowQuickPreview && sessionDuration && isCreator" [class]="cardType + '-info-preview'">
                     <span *ngIf="composition?.sessions && composition?.durationInSec" class="coaching">
                         {{ sessionDuration }}
                     </span>
