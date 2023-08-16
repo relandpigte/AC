@@ -1,0 +1,111 @@
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-header-title cursor-pointer" (click)="handleGotoCurrentMonth()">{{ dateTitle }}</h4>
+
+        <div class="calendar-controls">
+            <button type="button" class="btn" (click)="handleNextMonth()"><span class="fas fa-chevron-left"></span></button>
+            <button type="button" class="btn" (click)="handlePrevMonth()"><span class="fas fa-chevron-right"></span></button>
+        </div>
+    </div>
+    <div class="card-body">
+        <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+        <h4 class="card-body-header">
+            {{ dateNow }}
+        </h4>
+        <div class="list-group list-group-flush my-n3">
+            <div class="list-group-item">
+                <div class="d-flex align-items-center gap-15">
+                    <div class="list-group-item-avatar">
+                        <a href="#" class="avatar">
+                            <img src="assets/img/avatar-placeholder.png" alt="..." class="avatar-img rounded-circle">
+                        </a>
+                    </div>
+                    <div class="list-group-item-text">
+                        <span class="pre-title live">STARTING IN 3 MINUTES</span>
+                        <h4 class="title mb-1 font-weight-normal">
+                            <a href="#">Lorem ipsum dolor sit am...</a>
+                        </h4>
+                        <p class="small mb-0 text-muted composition">
+                            Coaching with <span class="organizer">Jingying Chai</span>
+                        </p>
+                    </div>
+                    <div>
+                        <a href="#!" class="btn btn-sm btn-white">Join</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="list-group-item">
+                <div class="d-flex align-items-center gap-15">
+                    <div class="list-group-item-avatar">
+                        <a href="#" class="avatar">
+                            <img src="assets/img/avatar-placeholder.png" alt="..." class="avatar-img rounded-circle">
+                        </a>
+                    </div>
+                    <div class="list-group-item-text">
+                        <span class="pre-title">18:00-21:00, 23 AUG,2022</span>
+                        <h4 class="title mb-1 font-weight-normal">
+                            <a href="#">Lorem ipsum dolor sit am...</a>
+                        </h4>
+                        <p class="small mb-0 text-muted composition">
+                            Coaching with <span class="organizer">Jingying Chai</span>
+                        </p>
+                    </div>
+                    <div>
+                        <a href="#!" class="btn btn-sm btn-white">Join</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="list-group-item">
+                <div class="d-flex align-items-center gap-15">
+                    <div class="list-group-item-avatar">
+                        <a href="#" class="avatar">
+                            <img src="assets/img/img-placeholder.png" alt="..." class="avatar-img rounded">
+                        </a>
+                    </div>
+                    <div class="list-group-item-text">
+                        <span class="pre-title">18:00-21:00, 23 AUG,2022</span>
+                        <h4 class="title mb-1 font-weight-normal">
+                            <a href="#">Lorem ipsum dolor sit am...</a>
+                        </h4>
+                        <p class="small mb-0 text-muted composition">
+                            <span class="organizer">You</span> and <span class="people">32 others</span> are going
+                        </p>
+                    </div>
+                    <div>
+                        <a href="#!" class="btn btn-sm btn-white">Join</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="list-group-item">
+                <div class="d-flex align-items-center gap-15">
+                    <div class="list-group-item-avatar">
+                        <a href="#" class="avatar">
+                            <img src="assets/img/img-placeholder.png" alt="..." class="avatar-img rounded">
+                        </a>
+                    </div>
+                    <div class="list-group-item-text">
+                        <span class="pre-title">18:00-21:00, 23 AUG,2022</span>
+                        <h4 class="title mb-1 font-weight-normal">
+                            <a href="#">Lorem ipsum dolor sit am...</a>
+                        </h4>
+                        <p class="small mb-0 text-muted composition">
+                            <span class="organizer">You</span> and <span class="people">32 others</span> are going
+                        </p>
+                    </div>
+                    <div>
+                        <a href="#!" class="btn btn-sm btn-white">Join</a>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+    <div class="card-footer">
+        <a class="text-primary d-block text-center w-100" [routerLink]="['/app/student-calendar']">Go to schedule</a>
+    </div>
+</div>

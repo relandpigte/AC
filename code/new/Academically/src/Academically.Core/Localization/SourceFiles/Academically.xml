@@ -1956,5 +1956,6 @@
     <text name="LastActive">Active {0}</text>
     <text name="ReviewCount">{0} reviews</text>
     <text name="AreYouSure">Are you sure?</text>
+    <text name="CurrentLearning">Current learning</text>
   </texts>
 </localizationDictionary>

@@ -39,6 +39,8 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   @Input() options: ServiceCardOptions;
   @Input() actions: ServiceCardButton[];
 
+  @Input() isOverview: boolean;
+
   @Output() onDelete: Subject<any> = new Subject<any>();
   @Output() onClickAction: Subject<any> = new Subject<any>();
 

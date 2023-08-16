@@ -1,0 +1,103 @@
+::ng-deep {
+    .fc {
+        table {
+            border-style: none !important;
+            td, th {
+                border-style: none !important;
+            }
+            th {
+                margin-bottom: 9px;
+            }
+        }
+
+        &-col-header-cell-cushion {
+            padding: 0 0 9px !important;
+        }
+
+        &-daygrid {
+            &-day {
+                &.fc-day-today {
+                    background-color: transparent !important;
+
+                    .fc-daygrid-day-top {
+                        background-color: #2C7BE5;
+
+                        a {
+                            color: white;
+                        }
+                    }
+                }
+                &-events {
+                    display: none;
+                }
+
+                &-top {
+                    flex-direction: row !important;
+                    justify-content: center;
+                    align-items: center;
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    margin: 0 auto 5px;
+                }
+
+                &-number {
+                    padding: 0 !important;
+                }
+
+                &-frame {
+                }
+            }
+        }
+    }
+}
+
+.card {
+    &-header {
+        padding: 0.5rem 1.25rem;
+
+        .calendar-controls {
+            button {
+                box-shadow: 0 0 0;
+                outline: 0 none;
+            }
+        }
+    }
+
+    &-body {
+        padding: 1.25rem;
+
+        &-header {
+            margin: 1.25rem 0 0.625rem;
+        }
+    }
+}
+
+.list {
+    &-group {
+        &-item {
+            &-avatar {
+                margin-right: 9px;
+            }
+
+            &-text {
+                .pre-title {
+                    font-size: 11px;
+                    color: #2C7BE5;
+
+                    &.live {
+                        color: #E52C2C;
+                    }
+                }
+
+                .composition {
+                    .people,
+                    .role,
+                    .organizer {
+                        font-weight: bold;
+                    }
+                }
+            }
+        }
+    }
+}

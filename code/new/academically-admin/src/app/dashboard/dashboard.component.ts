@@ -9,6 +9,7 @@ import { environment } from 'environments/environment';
 import { AppConsts } from '@shared/AppConsts';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { DashboardService, DashboardServiceView } from '@app/dashboard/_services/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,13 +28,23 @@ export class DashboardComponent extends AppComponentBase implements OnInit {
     private _router: Router,
     private _route: ActivatedRoute,
     private _paymentsService: PaymentsServiceProxy,
-    private _modalDialogService: ModalDialogService
+    private _modalDialogService: ModalDialogService,
+    private _dashboardService: DashboardService
   ) {
     super(injector);
     this.user = this.appSession.user;
   }
 
+  get dashboardServiceView() { return DashboardServiceView; }
+  get switchButtonText(): string { return this._dashboardService.switchButtonText(); }
+  get defaultUserView(): DashboardServiceView { return this._dashboardService.getUserView(); }
+
+  handleSwitchView(): void {
+    this._dashboardService.handleSwitchView();
+  }
+
   ngOnInit(): void {
+    this._dashboardService.setUserView(DashboardServiceView.learner);
     this.greetings = this.getGreetings();
     this._route.queryParams.subscribe(paramMap => {
       if (paramMap.code) {

@@ -1,71 +1,62 @@
 <div [@routerTransition]>
-  <div class="header">
-    <div class="container-fluid">
-      <div class="header-body">
-        <div class="row align-items-end">
-          <div class="col mb-md-0 mb-3">
-            <h6 class="header-pretitle">
-              {{ 'Dashboard' | localize }}
-            </h6>
-            <h1 class="header-title">
-              {{ greetings }}, {{ user.name }}
-            </h1>
-          </div>
-          <div style="display: inline-flex;" class="col-md-auto col-12">
-            <div *ngIf="isTutor" class=" btn-group btn-block ml-md-2 inline" dropdown>
-              <button *ngIf="permission.isGranted('Pages.Courses')" dropdownToggle type="button"
-                class="btn btn-primary  dropdown-toggle">
-                {{ 'Create' | localize}} <span class="caret"></span>
-              </button>
-              <ul *dropdownMenu class="dropdown-menu" role="menu">
-                <li role="menuitem"><a class="dropdown-item btn" (click)="onCreateClick()">{{ 'Course' | localize}}</a>
-                </li>
-              </ul>
+    <div class="header">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="d-flex">
+                    <div>
+                        <h6 class="header-pretitle">{{ 'Dashboard' | localize }}</h6>
+                        <h1 class="header-title">{{ greetings }}, {{ user.name }}</h1>
+                    </div>
+                    <div *ngIf="isTutor" class="ml-auto p-2 d-flex flex-row gap-10">
+                        <div class="dropdown" *ngIf="defaultUserView === dashboardServiceView.creator">
+                            <a href="#" class="btn btn-primary d-flex gap-9" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="fe fe-plus"></span>
+                                {{ 'Create' | localize}}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <div class="dropdown-item cursor-pointer" (click)="onCreateClick()">{{ 'Course' | localize}}</div>
+                                <div class="dropdown-item cursor-pointer">{{ 'Broadcast' | localize}}</div>
+                                <div class="dropdown-item cursor-pointer">{{ 'Workshop' | localize}}</div>
+                                <div class="dropdown-item cursor-pointer">{{ 'Coaching' | localize}}</div>
+                                <div class="dropdown-item cursor-pointer">{{ 'Article' | localize}}</div>
+                                <div class="dropdown-item cursor-pointer">{{ 'Tutorial' | localize}}</div>
+                            </div>
+                        </div>
+
+                        <button *ngIf="isTutor" class="btn btn-white custom-card-border d-flex gap-9" (click)="handleSwitchView()">
+                            <span class="fe fe-refresh-cw"></span>
+                            Switch to {{ switchButtonText }} view
+                        </button>
+                    </div>
+                </div>
             </div>
-
-            <a [routerLink]="['/app/new-project']" class="btn btn-primary"
-              *ngIf="permission.isGranted('Pages.ServiceWizard.CreateProject')">
-              {{ 'CreateNewProject' | localize}}
-            </a>
-
-            <a [routerLink]="['/app/projects']" class="btn btn-primary col-md-7"
-              [class.ml-md-2]="permission.isGranted('Pages.Projects.Browse')"
-              *ngIf="permission.isGranted('Pages.Projects.Browse')">
-              {{ 'SeeAllProjects' | localize}}
-            </a>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
-  <div class="container-fluid">
-    <ng-container *ngIf="!isOnboarding && !user.stripeUserId && isTutor">
-
-      <div class="row justify-content-between align-items-center">
-        <div class="col-12">
-          <div class="alert alert-warning alert-dismissible mb-0 mt-3" role="alert">
-            <div class="row align-items-center">
-              <div class="col-auto">
-                <i class="fe fe-alert-triangle display-5"></i>
-              </div>
-              <div class="col">
-                <h3 class="mb-2">{{ 'StripeConnectionRequired' | localize }}!</h3>
-                {{ 'StripeConnectionMessage' | localize }}
-              </div>
-              <div class="col-auto mr-n5">
-                <button (click)="onConnectStripeClick()" class="btn btn-primary btn-sm" type="button">
-                  {{ 'ConnectStripe' | localize }}
-                </button>
-              </div>
+    <div class="container-fluid">
+        <ng-container *ngIf="!isOnboarding && !user.stripeUserId && isTutor && false">
+            <div class="row justify-content-between align-items-center">
+                <div class="col-12">
+                    <div class="alert alert-warning alert-dismissible mb-0 mt-3" role="alert">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <i class="fe fe-alert-triangle display-5"></i>
+                            </div>
+                            <div class="col">
+                                <h3 class="mb-2">{{ 'StripeConnectionRequired' | localize }}!</h3>
+                                {{ 'StripeConnectionMessage' | localize }}
+                            </div>
+                            <div class="col-auto mr-n5">
+                                <button (click)="onConnectStripeClick()" class="btn btn-primary btn-sm" type="button">
+                                    {{ 'ConnectStripe' | localize }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
+            <hr class="my-5">
+        </ng-container>
 
-      <hr class="my-5">
-
-    </ng-container>
-
-    <app-overview *ngIf="permission.isGranted('Pages.Dashboard.Overview')"></app-overview>
-  </div>
+        <app-overview *ngIf="permission.isGranted('Pages.Dashboard.Overview')"></app-overview>
+    </div>
 </div>
