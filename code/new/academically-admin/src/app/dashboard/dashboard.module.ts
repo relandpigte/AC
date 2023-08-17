@@ -20,6 +20,11 @@ import { CalendarModule } from '@app/calendar/calendar.module';
 import { StudentCalendarComponent } from '@app/dashboard/overview/learner/student-calendar/student-calendar.component';
 import { StudentLearningComponent } from '@app/dashboard/overview/learner/student-learning/student-learning.component';
 import { StudentMetricsComponent } from './overview/learner/student-metrics/student-metrics.component';
+import { TutorMetricsComponent } from './overview/creator/tutor-metrics/tutor-metrics.component';
+import { TutorRevenueComponent } from './overview/creator/tutor-revenue/tutor-revenue.component';
+import { TutorCreatedComponent } from './overview/creator/tutor-created/tutor-created.component';
+import { TutorCalendarComponent } from './overview/creator/tutor-calendar/tutor-calendar.component';
+import { TutorStudentsComponent } from './overview/creator/tutor-students/tutor-students.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +40,12 @@ import { StudentMetricsComponent } from './overview/learner/student-metrics/stud
     LearnerComponent,
     StudentLearningComponent,
     StudentCalendarComponent,
-    StudentMetricsComponent
+    StudentMetricsComponent,
+    TutorMetricsComponent,
+    TutorRevenueComponent,
+    TutorCreatedComponent,
+    TutorCalendarComponent,
+    TutorStudentsComponent
   ],
   imports: [
     CommonModule,
