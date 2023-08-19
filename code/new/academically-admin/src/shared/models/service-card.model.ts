@@ -20,6 +20,8 @@ export interface ServiceCard {
     composition?: ServiceCardComposition;
     reviews?: ServiceCardReview;
     rsvp?: ServiceCardRsvp;
+
+    booking?: any;
 }
 
 export interface ServiceCardOptions {
@@ -46,6 +48,8 @@ export interface ServiceCardOptions {
     isSHowPurchased?: boolean;
     isShowEnrolled?: boolean;
     isShowGoing?: boolean;
+    isShowMajorParticipants?: boolean;
+    isShowCoachingDetails?: boolean;
 }
 
 export const DefaultServiceCardOptions: ServiceCardOptions = {
@@ -68,7 +72,7 @@ export const DefaultServiceCardOptions: ServiceCardOptions = {
     isShowDetailsReviews: false,
     isDetailsReviewsSeparated: false,
     isShowDate: false,
-    isShowActions: true,
+    isShowActions: false,
     isSHowPurchased: false,
     isShowEnrolled: false,
     isShowGoing: false

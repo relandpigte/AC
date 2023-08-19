@@ -8,6 +8,7 @@ import { ChooseTemplateComponent } from './_components/choose-template/choose-te
 import { ProgramsModule } from './_components/programs/programs.module';
 import { CreatedComponent } from './_components/created/created.component';
 import { RequestsComponent } from './_components/requests/requests.component';
+import { BookingsComponent } from './_components/bookings/bookings.component';
 import { LearningComponent } from './learning/learning.component';
 import { TeachingComponent } from './teaching/teaching.component';
 import { ScheduleComponent } from './schedule/schedule.component';
@@ -24,6 +25,7 @@ import { PurchasedComponent } from './_components/purchased/purchased.component'
     CreateCoachingComponent,
     ChooseTemplateComponent,
     RequestsComponent,
+    BookingsComponent,
     CreatedComponent,
     PurchasedComponent
   ],

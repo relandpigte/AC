@@ -27,7 +27,7 @@
             <div class="tab-content" [ngSwitch]="defaultUserView">
                 <ng-container *ngSwitchCase="dashboardServiceView.creator">
                     <div class="tab-pane fade show active" id="bookings" role="tabpanel" aria-labelledby="bookings-tab">
-                        this is bookings tab
+                        <app-bookings></app-bookings>
                     </div>
                     <div class="tab-pane fade" id="created" role="tabpanel" aria-labelledby="created-tab">
                         <app-created></app-created>
