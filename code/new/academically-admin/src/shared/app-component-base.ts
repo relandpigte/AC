@@ -287,6 +287,10 @@ export abstract class AppComponentBase implements OnDestroy {
     return `${user.name.charAt(0)}${user.surname.charAt(0)}`;
   }
 
+  getRndInteger(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1) ) + min;
+  }
+
   protected chunkArrayInGroups(arr, size) {
     var result = [];
     for (var i=0; i<arr.length; i+=size)

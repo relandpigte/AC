@@ -1,0 +1,25 @@
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-header-title">{{ 'CurrentLearning' | localize }}</h4>
+    </div>
+    <div class="card-body py-0">
+        <ng-container *ngIf="courses?.length">
+            <div class="service-card" *ngFor="let data of courses">
+                <app-service-card-dashboard
+                    [data]="data"
+                    [isLoading]="isLoading"
+                    [isOverview]="true"
+                ></app-service-card-dashboard>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="articles?.length">
+            <div class="service-card" *ngFor="let data of articles">
+                <app-service-card-dashboard
+                    [data]="data"
+                    [isLoading]="isLoading"
+                    [isOverview]="true"
+                ></app-service-card-dashboard>
+            </div>
+        </ng-container>
+    </div>
+</div>

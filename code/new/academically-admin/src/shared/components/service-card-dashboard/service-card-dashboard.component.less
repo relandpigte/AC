@@ -1,3 +1,11 @@
+::ng-deep {
+    .search {
+        .card-header {
+            max-height: 56px;
+        }
+    }
+}
+
 .broadcast,
 .coaching,
 .course,
@@ -26,7 +34,7 @@
         &-wrapper {
             .avatar {
                 width: 8.125rem;
-                height: 5.125rem;
+                height: 5.188rem;
             }
         }
 
@@ -103,11 +111,15 @@
 
     &-info {
         color: #3B516C;
-        margin-bottom: 0.625rem;
+        margin-bottom: 0.313rem;
 
         &-duration {
             color: #3B516C;
-            margin-bottom: 0.625rem;
+            margin-bottom: 0.313rem;
+        }
+
+        &-preview {
+            margin-bottom: 0.313rem;
         }
     }
 
@@ -115,7 +127,10 @@
         color: #6E84A3;
 
         .icon {
-            background-image: url("/assets/img/status/completed.svg");
+            background-image: url(/assets/img/status/completed.svg);
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
             width: 20px;
             height: 20px;
             display: inline-block;
@@ -148,15 +163,19 @@
                 }
             }
 
-            &:nth-child(2) {
-                &:before {
-                    width: 0px;
+            .avatar-group {
+                .avatar{
+                    width: 20px;
+                    height: 20px;
                 }
             }
 
-            .avatar{
-                width: 20px;
-                height: 20px;
+            &.avatar-showing {
+                &:nth-child(2) {
+                    &:before {
+                        width: 0;
+                    }
+                }
             }
         }
     }
@@ -217,6 +236,17 @@
                 width: 53px;
                 height: 53px;
             }
+        }
+    }
+
+    &.overview-page {
+        margin-bottom: 0;
+        border-radius: 0;
+        box-shadow: 0 0 0;
+        border: 0;
+
+        .card-body {
+            padding: 1.5rem 0;
         }
     }
 }

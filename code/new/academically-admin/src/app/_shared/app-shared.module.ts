@@ -1,6 +1,7 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { EmojiModule } from '@ctrl/ngx-emoji-mart/ngx-emoji';
@@ -73,7 +74,6 @@ import { ShortenPipe } from '@shared/pipes/shorten.pipe';
 import { CommentHistoryComponent } from '@shared/modals/comment-history/comment-history.component';
 import { ServiceReviewComponent } from '@shared/components/service-review/service-review.component';
 import { ServiceCardDashboardComponent } from '@shared/components/service-card-dashboard/service-card-dashboard.component';
-import { RouterModule } from '@node_modules/@angular/router';
 
 @NgModule({
   declarations: [

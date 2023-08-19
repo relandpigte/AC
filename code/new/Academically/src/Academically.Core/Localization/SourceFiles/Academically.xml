@@ -1956,5 +1956,12 @@
     <text name="LastActive">Active {0}</text>
     <text name="ReviewCount">{0} reviews</text>
     <text name="AreYouSure">Are you sure?</text>
+
+    <!-- Dashboard -->
+    <text name="CurrentLearning">Current learning</text>
+    <text name="TotalRevenue">Total Revenue</text>
+    <text name="ServicesCreated">Service Created</text>
+    <text name="OverallPositiveReviews">Overalll Positive Reviews</text>
+    <text name="MyStudents">My students</text>
   </texts>
 </localizationDictionary>

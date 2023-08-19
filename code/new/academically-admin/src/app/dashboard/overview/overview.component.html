@@ -1,13 +1,8 @@
-<app-metrics *ngIf="isTutor"></app-metrics>
-<div class="row">
-  <div class="col-md-8">
-    <app-recent-projects *ngIf="permission.isGranted('Pages.Dashboard.Overview.RecentProjects')"></app-recent-projects>
-    <app-recent-activity *ngIf="permission.isGranted('Pages.Dashboard.Overview.RecentActivity')"></app-recent-activity>
-  </div>
-  <div class="col-md-4">
-    <app-profile-summary *ngIf="permission.isGranted('Pages.Dashboard.Overview.ProfileSummary')"></app-profile-summary>
-    <app-upcoming-sessions></app-upcoming-sessions>
-    <app-verifications *ngIf="permission.isGranted('Pages.Widgets.Verifications')" [isTutor]="isTutor">
-    </app-verifications>
-  </div>
-</div>
+<ng-container [ngSwitch]="defaultUserView">
+    <ng-container *ngSwitchCase="dashboardServiceView.creator">
+        <app-creator></app-creator>
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+        <app-learner></app-learner>
+    </ng-container>
+</ng-container>

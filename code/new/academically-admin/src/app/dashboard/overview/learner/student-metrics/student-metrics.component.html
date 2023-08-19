@@ -1,0 +1,50 @@
+<div class="row">
+    <div class="col-12 col-md-4">
+        <div class="card">
+            <div class="card-body" [loader]="isLoading">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h6 class="text-uppercase text-muted mb-2">{{ 'Purchased' | localize }}</h6>
+                        <span class="h2 mb-0 align-middle">12</span>
+                    </div>
+                    <div class="col-auto">
+                        <span class="card-fas fas fa-pound-sign text-muted mb-0"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-4">
+        <div class="card">
+            <div class="card-body" [loader]="isLoading">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h6 class="text-uppercase text-muted mb-2">{{ 'Completed' | localize }}</h6>
+                        <span class="h2 mb-0 align-middle">2</span>
+                    </div>
+                    <div class="col-auto">
+                        <span class="card-fas fe fe-check-square text-muted mb-0"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-4">
+        <div class="card">
+            <div class="card-body" [loader]="isLoading">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h6 class="text-uppercase text-muted mb-2">{{ 'Followers' | localize }}</h6>
+                        <span class="h2 mb-0 align-middle">32</span>
+                        <span class="badge badge-soft-success ml-2">+3.5%</span>
+                    </div>
+                    <div class="col-auto">
+                        <span class="card-fas fe fe-users text-muted mb-0"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

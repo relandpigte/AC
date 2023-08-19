@@ -13,6 +13,18 @@ import { RecentProjectsComponent } from './overview/recent-projects/recent-proje
 import { RecentActivityComponent } from './overview/recent-activity/recent-activity.component';
 import { ProfileSummaryComponent } from './overview/profile-summary/profile-summary.component';
 import { SubHeaderComponent } from './_components/sub-header/sub-header.component';
+import { CreatorComponent } from './overview/creator/creator.component';
+import { LearnerComponent } from './overview/learner/learner.component';
+import { FullCalendarModule } from '@node_modules/@fullcalendar/angular';
+import { CalendarModule } from '@app/calendar/calendar.module';
+import { StudentCalendarComponent } from '@app/dashboard/overview/learner/student-calendar/student-calendar.component';
+import { StudentLearningComponent } from '@app/dashboard/overview/learner/student-learning/student-learning.component';
+import { StudentMetricsComponent } from './overview/learner/student-metrics/student-metrics.component';
+import { TutorMetricsComponent } from './overview/creator/tutor-metrics/tutor-metrics.component';
+import { TutorRevenueComponent } from './overview/creator/tutor-revenue/tutor-revenue.component';
+import { TutorCreatedComponent } from './overview/creator/tutor-created/tutor-created.component';
+import { TutorCalendarComponent } from './overview/creator/tutor-calendar/tutor-calendar.component';
+import { TutorStudentsComponent } from './overview/creator/tutor-students/tutor-students.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +35,17 @@ import { SubHeaderComponent } from './_components/sub-header/sub-header.componen
     RecentProjectsComponent,
     RecentActivityComponent,
     ProfileSummaryComponent,
-    SubHeaderComponent
+    SubHeaderComponent,
+    CreatorComponent,
+    LearnerComponent,
+    StudentLearningComponent,
+    StudentCalendarComponent,
+    StudentMetricsComponent,
+    TutorMetricsComponent,
+    TutorRevenueComponent,
+    TutorCreatedComponent,
+    TutorCalendarComponent,
+    TutorStudentsComponent
   ],
   imports: [
     CommonModule,
@@ -31,6 +53,8 @@ import { SubHeaderComponent } from './_components/sub-header/sub-header.componen
     SharedModule,
     AppSharedModule,
     VerificationsModule,
+    FullCalendarModule,
+    CalendarModule
   ],
   exports: [
     SubHeaderComponent

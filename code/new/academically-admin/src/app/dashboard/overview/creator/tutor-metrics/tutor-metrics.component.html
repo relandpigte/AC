@@ -1,0 +1,68 @@
+<div class="row">
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card">
+            <div class="card-body" [loader]="isLoading">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h6 class="text-uppercase text-muted mb-2">{{ 'TotalRevenue' | localize }}</h6>
+                        <span class="h2 mb-0 align-middle">&#163;24,500</span>
+                        <span class="badge badge-soft-success ml-2">+3.5%</span>
+                    </div>
+                    <div class="col-auto">
+                        <span class="card-fas fas fa-pound-sign text-muted mb-0"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-xl-3">
+        <div class="card">
+            <div class="card-body" [loader]="isLoading">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h6 class="text-uppercase text-muted mb-2">{{ 'ServicesCreated' | localize }}</h6>
+                        <span class="h2 mb-0 align-middle">12</span>
+                    </div>
+                    <div class="col-auto">
+                        <span class="h2 fe fe-plus text-muted mb-0"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-xl-3">
+        <div class="card">
+            <div class="card-body" [loader]="isLoading">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h6 class="text-uppercase text-muted mb-2">{{ 'Followers' | localize }}</h6>
+                        <span class="h2 mb-0 align-middle">32</span>
+                        <span class="badge badge-soft-success ml-2">+3.5%</span>
+                    </div>
+                    <div class="col-auto">
+                        <span class="card-fas fe fe-users text-muted mb-0"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-xl-3">
+        <div class="card">
+            <div class="card-body" [loader]="isLoading">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h6 class="text-uppercase text-muted mb-2">{{ 'OverallPositiveReviews' | localize }}</h6>
+                        <span class="h2 mb-0 align-middle">{{ profileMetric.positiveReviewsPercentage }}%</span>
+                        <span class="badge badge-soft-success ml-2">{{ profileMetric.totalReviews }} {{ 'Reviews' | localize }}</span>
+                    </div>
+                    <div class="col-auto">
+                        <span class="h2 fe fe-star text-muted mb-0"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
