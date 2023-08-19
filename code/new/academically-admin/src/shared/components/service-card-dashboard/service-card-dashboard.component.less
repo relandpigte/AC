@@ -32,6 +32,28 @@
 
     &-major-participants {
         width: 80px;
+
+        &.is-creator {
+            .avatar {
+                &.tutor {
+                    top: 0;
+                    left: 0;
+                    bottom: unset;
+                    right: unset;
+                    z-index: 1;
+                }
+
+                &.student {
+                    bottom: 0;
+                    right: 0;
+                    top: unset;
+                    left: unset;
+                    z-index: 2;
+                }
+
+            }
+        }
+
         .avatar {
             width: 55px;
             height: 55px;
@@ -42,13 +64,19 @@
             position: absolute;
 
             &.tutor {
-                top: 0;
-                left: 0;
+                bottom: 0;
+                right: 0;
+                top: unset;
+                left: unset;
+                z-index: 2;
             }
 
             &.student {
-                bottom: 0;
-                right: 0;
+                top: 0;
+                left: 0;
+                bottom: unset;
+                right: unset;
+                z-index: 1;
             }
         }
     }
@@ -106,7 +134,7 @@
     }
 
     &.archive {
-        .heading, .title {
+        .heading, .title, .info, .info-preview {
             color: #6E84A3;
         }
 

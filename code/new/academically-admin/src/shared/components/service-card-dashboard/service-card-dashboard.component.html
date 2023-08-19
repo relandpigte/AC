@@ -1,5 +1,5 @@
 
-<div [class]="'card ' + cardType" [ngClass]="{ 'overview-page': isOverview }" [class.archive]="isArchive">
+<div [class]="'card ' + cardType" [ngClass]="{ 'overview-page': isOverview }" [class.archive]="isArchive || isExpired">
     <div class="card-body">
         <div class="d-flex gap-20" [ngSwitch]="cardType">
 
@@ -8,7 +8,7 @@
                 <div class="month">{{ scheduleMonth }}</div>
             </div>
 
-            <div *ngIf="isBooked && sanitizedOptions?.isShowMajorParticipants" [class]="cardType + '-major-participants'" class="position-relative d-flex flex-column justify-content-center align-items-center">
+            <div *ngIf="isBooked && sanitizedOptions?.isShowMajorParticipants" [class]="cardType + '-major-participants'" [class.is-creator]="isCreator" class="position-relative d-flex flex-column justify-content-center align-items-center">
                 <a *ngIf="sanitized.owner.avatar.src" href="#" class="avatar avatar-xs tutor">
                     <img [src]="sanitized.owner.avatar.src" class="avatar-img rounded-circle" alt="...">
                 </a>
@@ -44,14 +44,14 @@
                     <span *ngIf="this.sanitizedOptions?.isShowHeadingSlots" class="slots">{{ slotsCount }} {{ slotsUnit }} left</span>
                 </div>
 
-                <h3 class="flex-grow-1" [class]="cardType + '-title title'">{{ name }}</h3>
-                <p *ngIf="sanitizedOptions?.isShowInfo" [class]="cardType + '-info'"> {{ info | shorten : 110 }} </p>
+                <h3 [class]="cardType + '-title title'">{{ name }}</h3>
+                <p *ngIf="sanitizedOptions?.isShowInfo" [class]="cardType + '-info info'"> {{ info | shorten : 110 }} </p>
 
-                <p *ngIf="this.sanitizedOptions?.isShowDetailsComposition && !!compositionString && isCreator" [class]="cardType + '-info'">
+                <p *ngIf="this.sanitizedOptions?.isShowDetailsComposition && !!compositionString && isCreator" [class]="cardType + '-info info'">
                     {{ compositionString }} | {{ this.sanitizedOptions.isShowQuickPreview }}
                 </p>
 
-                <p *ngIf="this.sanitizedOptions?.isShowQuickPreview && sessionDuration && isCreator" [class]="cardType + '-info-preview'">
+                <p *ngIf="this.sanitizedOptions?.isShowQuickPreview && sessionDuration && isCreator" [class]="cardType + '-info-preview info-preview'">
                     <span *ngIf="composition?.sessions && composition?.durationInSec" class="coaching">
                         {{ sessionDuration }}
                     </span>
@@ -86,27 +86,34 @@
 
                 </div>
 
-                <div *ngIf="isCreator" [class]="cardType + '-status'" class="d-flex align-items-center gap-10">
+                <div [class]="cardType + '-status'" class="flex-grow-1 d-flex align-items-end gap-10">
                     <ng-container *ngIf="isDraft else notDraft">
                         <span class="text-danger">{{ status?.label | localize }}</span>
                     </ng-container>
 
                     <ng-template #notDraft>
-                        <ng-container *ngIf="!isBooked">
-                            <span *ngIf="people && people?.isShowAvatars && people?.people && people?.avatarStackCount > 0" class="avatar-group avatar-showing d-none d-md-inline-flex">
-                                <ng-container *ngFor="let p of people?.people?.slice(0, people?.avatarStackCount)">
-                                    <a *ngIf="p.avatar" href="#" class="avatar avatar-xs">
-                                        <img [src]="p.avatar.src" class="avatar-img rounded-circle" alt="...">
-                                    </a>
+                        <span *ngIf="people && people?.isShowAvatars && people?.people && people?.avatarStackCount > 0" class="avatar-group avatar-showing d-none d-md-inline-flex">
+                            <ng-container *ngFor="let p of people?.people?.slice(0, people?.avatarStackCount)">
+                                <a *ngIf="p.avatar" href="#" class="avatar avatar-xs">
+                                    <img [src]="p.avatar.src" class="avatar-img rounded-circle" alt="...">
+                                </a>
+                            </ng-container>
+                        </span>
+
+                        <ng-container *ngIf="learners">
+                            <span *ngIf="sanitizedOptions?.isSHowPurchased" [class.has-separator]="sanitizedOptions?.isShowGoing || sanitizedOptions?.isShowStatus">{{ learners }} Purchased</span>
+                            <span *ngIf="sanitizedOptions?.isShowEnrolled" [class.has-separator]="sanitizedOptions?.isShowGoing || sanitizedOptions?.isShowStatus">{{ learners }} Enrolled</span>
+                            <span *ngIf="sanitizedOptions?.isShowGoing" [class.has-separator]="sanitizedOptions?.isShowStatus">
+                                <ng-container *ngIf="isCreator">
+                                    <span class="learners">{{ learners }} people</span> going, <span class="organizer">you</span> are the <span class="role">organizer</span>
+                                </ng-container>
+                                <ng-container *ngIf="!isCreator">
+                                    <span class="organizer">You</span> and <span class="learners">{{ learners }} others</span> are going.
                                 </ng-container>
                             </span>
+                        </ng-container>
 
-                            <ng-container *ngIf="learners">
-                                <span *ngIf="sanitizedOptions?.isSHowPurchased" class="has-separator">{{ learners }} Purchased</span>
-                                <span *ngIf="sanitizedOptions?.isShowEnrolled" class="has-separator">{{ learners }} Enrolled</span>
-                                <span *ngIf="sanitizedOptions?.isShowGoing" class="has-separator"><span class="learners">{{ learners }} people</span> going, <span class="organizer">you</span> are the <span class="role">organizer</span></span>
-                            </ng-container>
-
+                        <ng-container *ngIf="sanitizedOptions?.isShowStatus">
                             <ng-container [ngSwitch]="status?.type">
                                 <ng-container *ngSwitchCase="'published'">
                                     <span class="text-success">{{ status?.label | localize }}</span>
@@ -116,11 +123,10 @@
                                 </ng-container>
                             </ng-container>
                         </ng-container>
-                        <ng-container *ngIf="isBooked">
-                            <ng-container *ngIf="sanitizedOptions?.isShowCoachingDetails">
-                                <span class="has-separator"><span class="coach">You</span> are coaching <span class="student">{{ coachingStudentFullName }}</span></span>
-                                <span class="duration">{{ coachingDuration }}</span>
-                            </ng-container>
+
+                        <ng-container *ngIf="sanitizedOptions?.isShowCoachingDetails">
+                            <span class="has-separator"><span class="coach">You</span> are coaching <span class="student">{{ coachingStudentFullName }}</span></span>
+                            <span class="duration">{{ coachingDuration }}</span>
                         </ng-container>
                     </ng-template>
                 </div>

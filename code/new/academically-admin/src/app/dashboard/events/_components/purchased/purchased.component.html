@@ -1,0 +1,39 @@
+<ng-container *ngIf="courses">
+
+    <app-shimmer
+        [isBlock]="true"
+        [show]="isLoading$ | async"
+        [shimmerType]="shimmerType.DashboardPurchased"
+        backgroundColor="#f9fbfd"
+    ></app-shimmer>
+
+    <ng-container *ngIf="!(isLoading$ | async)">
+
+        <div class="card custom-card-border search">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <form>
+                            <div class="input-group input-group-flush">
+                                <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="fe fe-search"></i>
+                                </span>
+                                </div>
+                                <input class="list-search form-control" type="search" name="Search" placeholder="Search" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <app-service-card-dashboard
+            *ngFor="let data of courses"
+            [data]="data"
+            [isLoading]="isLoading"
+            (onDelete)="onDeleteClick(data.id)"
+        ></app-service-card-dashboard>
+
+    </ng-container>
+</ng-container>

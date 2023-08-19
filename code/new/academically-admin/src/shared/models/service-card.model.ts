@@ -48,6 +48,7 @@ export interface ServiceCardOptions {
     isSHowPurchased?: boolean;
     isShowEnrolled?: boolean;
     isShowGoing?: boolean;
+    isShowStatus?: boolean;
     isShowMajorParticipants?: boolean;
     isShowCoachingDetails?: boolean;
 }

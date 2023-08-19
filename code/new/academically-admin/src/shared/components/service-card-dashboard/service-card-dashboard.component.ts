@@ -85,6 +85,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   get compositionVideoDuration(): string { return this.composition?.durationInSec ? moment.utc(this.composition?.durationInSec * 1000).format(`${this.composition?.durationInSec >= 3600 ? 'HH:' : ''}mm:ss`) : null; }
   get isDraft(): boolean { return this.sanitized?.status?.type === 'draft'; }
   get isArchive(): boolean { return this.sanitized?.status?.type === 'archived'; }
+  get isExpired(): boolean { return this.sanitized.dates.startDate.isBefore(moment()); }
   get sessionDuration(): string { return humanizeDuration(this.composition.durationInSec * 1000); }
   get isScheduleNear(): boolean { return this.sanitized?.dates?.startDate.diff(moment(), 'hours') < 1; }
   get schedule(): string {
@@ -160,12 +161,15 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
           switch (tempStatus) {
             case 1:
               this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               break;
             case 2:
               this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               break;
             case 3:
               this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               break;
           }
         } else {
@@ -173,15 +177,18 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
           switch (tempStatus) {
             case 1:
               this.sanitized.status = <ServiceCardStatus>{ type: 'unread', label: 'Unread', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'read', label: 'Read' });
               break;
             case 2:
               this.sanitized.status = <ServiceCardStatus>{ type: 'completed', label: 'You’ve read this.', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'read', label: 'Read Again' });
               this.sanitizedOptions.isShowActions = true;
               break;
             case 3:
               this.sanitized.status = <ServiceCardStatus>{ type: 'completed', label: 'You’ve read this', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'review', label: 'Leave review' });
               this.sanitizedOptions.isShowActions = true;
               break;
@@ -195,44 +202,55 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
           switch (tempStatus) {
             case 1:
               this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               break;
             case 2:
               this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
               this.sanitizedOptions.isShowActions = true;
               break;
             case 3:
               this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               break;
+          }
+        } else {
+          this.sanitizedOptions.isShowActions = true;
+          if (this.isExpired) {
+            this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'review', label: 'Leave review' });
+          } else {
+            this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
           }
         }
         break;
       case 'coaching':
-        this.sanitized.composition = this.sanitized.composition ?? {} as ServiceCardComposition;
-        this.sanitized.composition.sessions = 1;
-        this.sanitized.composition.durationInSec = Math.floor(Math.random() * (10000 - 20) + 20);
-        this.sanitized.people.isShowAvatars = true;
-
         if (this.isCreator) {
           if (this.isBooked) {
-            if (this.sanitized.dates.startDate.isBefore(moment())) {
-              this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
-            } else {
+            if (!this.isExpired) {
               this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join session' });
               this.sanitizedOptions.isShowActions = true;
             }
           } else {
+            this.sanitized.composition = this.sanitized.composition ?? {} as ServiceCardComposition;
+            this.sanitized.composition.sessions = 1;
+            this.sanitized.composition.durationInSec = Math.floor(Math.random() * (10000 - 20) + 20);
+            this.sanitized.people.isShowAvatars = true;
+
             const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
             switch (tempStatus) {
               case 1:
                 this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
+                this.sanitizedOptions.isShowStatus = true;
                 break;
               case 2:
                 this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
+                this.sanitizedOptions.isShowStatus = true;
                 break;
               case 3:
                 this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
+                this.sanitizedOptions.isShowStatus = true;
                 break;
             }
           }
@@ -250,14 +268,17 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
           switch (tempStatus) {
             case 1:
               this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               break;
             case 2:
               this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
               this.sanitizedOptions.isShowActions = true;
               break;
             case 3:
               this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               break;
           }
         } else {
@@ -268,22 +289,26 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Start course' });
               this.sanitizedOptions.isShowActions = true;
               this.sanitized.status = <ServiceCardStatus>{ type: 'read', label: 'Lesson 1 - Start your new journey', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               this.sanitized.progress = 0;
               break;
             case 2:
               this.sanitized.status = <ServiceCardStatus>{ type: 'onprogress', label: 'Tutorial 1 - Start your new journey', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Continue' });
               this.sanitizedOptions.isShowActions = true;
               this.sanitized.progress = Math.floor(Math.random() * (100 - 1) + 1);
               break;
             case 3:
               this.sanitized.status = <ServiceCardStatus>{ type: 'completed', label: 'Congratulations! You’ve finished this course', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'review', label: 'Leave review' });
               this.sanitizedOptions.isShowActions = true;
               this.sanitized.progress = null;
               break;
             case 4:
               this.sanitized.status = <ServiceCardStatus>{ type: 'completed', label: 'Congratulations! You’ve finished this course', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Start again' });
               this.sanitizedOptions.isShowActions = true;
               this.sanitized.progress = null;
@@ -307,14 +332,17 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
           switch (tempStatus) {
             case 1:
               this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               break;
             case 2:
               this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
               this.sanitizedOptions.isShowActions = true;
               break;
             case 3:
               this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               break;
           }
         } else {
@@ -322,24 +350,28 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
           switch (tempStatus) {
             case 1:
               this.sanitized.status = <ServiceCardStatus>{ type: 'onprogress', label: 'Tutorial 1 - Start your new journey', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'play', label: 'Play Tutorial' });
               this.sanitizedOptions.isShowActions = true;
               this.sanitized.progress = 0;
               break;
             case 2:
               this.sanitized.status = <ServiceCardStatus>{ type: 'onprogress', label: 'Tutorial 1 - Start your new journey', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'play', label: 'Continue' });
               this.sanitizedOptions.isShowActions = true;
               this.sanitized.progress = Math.floor(Math.random() * (100 - 1) + 1);
               break;
             case 3:
               this.sanitized.status = <ServiceCardStatus>{ type: 'completed', label: 'Congratulations! You\'ve finished this tutorial.', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'review', label: 'Leave review' });
               this.sanitizedOptions.isShowActions = true;
               this.sanitized.progress = null;
               break;
             case 4:
               this.sanitized.status = <ServiceCardStatus>{ type: 'completed', label: 'Congratulations! You\'ve finished this tutorial.', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'play', label: 'Play again' });
               this.sanitizedOptions.isShowActions = true;
               this.sanitized.progress = null;
@@ -354,14 +386,17 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
           switch(tempStatus) {
             case 1:
               this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               break;
             case 2:
               this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
               this.sanitizedOptions.isShowActions = true;
               break;
             case 3:
               this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
+              this.sanitizedOptions.isShowStatus = true;
               break;
           }
         }

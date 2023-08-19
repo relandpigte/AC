@@ -8,6 +8,7 @@ import { CreateBroadcastComponent } from './_components/create-broadcast/create-
 import { ChooseTemplateComponent } from './_components/choose-template/choose-template.component';
 import { CreatedComponent } from './_components/created/created.component';
 import { RequestsComponent } from './_components/requests/requests.component';
+import { PurchasedComponent } from './_components/purchased/purchased.component';
 import { ProgramsModule } from './_components/programs/programs.module';
 import { EventsComponent } from './events.component';
 import { LearningComponent } from './learning/learning.component';
@@ -26,6 +27,7 @@ import { DashboardModule } from '@app/dashboard/dashboard.module';
     LearningComponent,
     TeachingComponent,
     ScheduleComponent,
+    PurchasedComponent,
   ],
   imports: [
     CommonModule,
