@@ -30,4 +30,5 @@ export enum ShimmerType {
   DashboardCreated,
   DashboardPurchased,
   DashboardSaved,
+  DashboardForYou,
 }
