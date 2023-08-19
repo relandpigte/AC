@@ -141,9 +141,16 @@
             }
 
             &:first-child {
+                padding: 0;
                 &:before {
                     margin: 0;
                     width: 0;
+                }
+            }
+
+            &:nth-child(2) {
+                &:before {
+                    width: 0px;
                 }
             }
 
@@ -244,19 +251,6 @@
                 border-radius: 10px;
             }
 
-        }
-    }
-    &-status {
-        & > span {
-            &:first-child {
-                padding: 0;
-            }
-
-            &:nth-child(2) {
-                &:before {
-                    width: 0px;
-                }
-            }
         }
     }
 }

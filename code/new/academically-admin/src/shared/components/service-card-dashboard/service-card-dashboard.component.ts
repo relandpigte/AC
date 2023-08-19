@@ -185,6 +185,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
             case 2:
               this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
+              this.sanitizedOptions.isShowActions = true;
               break;
             case 3:
               this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
@@ -323,6 +324,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
             case 2:
               this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
+              this.sanitizedOptions.isShowActions = true;
               break;
             case 3:
               this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
