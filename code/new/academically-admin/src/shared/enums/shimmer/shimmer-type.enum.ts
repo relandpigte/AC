@@ -26,5 +26,8 @@ export enum ShimmerType {
   DashboardHeaderCreator,
   DashboardOverviewStats,
   DashboardOverviewLearning,
-  DashboardOverviewCalendar
+  DashboardOverviewCalendar,
+  DashboardCreated,
+  DashboardPurchased,
+  DashboardSaved,
 }

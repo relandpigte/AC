@@ -19,6 +19,6 @@ export class OverviewComponent extends AppComponentBase implements OnInit {
   get defaultUserView(): DashboardServiceView { return this._dashboardService.getUserView(); }
 
   ngOnInit(): void {
-    this._dashboardService.setUserView(DashboardServiceView.creator);
+    this._dashboardService.setUserView(DashboardServiceView.learner);
   }
 }
