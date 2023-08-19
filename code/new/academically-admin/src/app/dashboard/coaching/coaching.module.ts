@@ -13,6 +13,7 @@ import { TeachingComponent } from './teaching/teaching.component';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { CoachingComponent } from './coaching.component';
 import { DashboardModule } from '@app/dashboard/dashboard.module';
+import { PurchasedComponent } from './_components/purchased/purchased.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { DashboardModule } from '@app/dashboard/dashboard.module';
     ChooseTemplateComponent,
     RequestsComponent,
     CreatedComponent,
+    PurchasedComponent
   ],
   imports: [
     CommonModule,

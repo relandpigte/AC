@@ -1,12 +1,14 @@
-<ng-container *ngIf="events">
+<ng-container *ngIf="coachings">
+
     <app-shimmer
         [isBlock]="true"
         [show]="isLoading$ | async"
-        [shimmerType]="shimmerType.DashboardCreated"
+        [shimmerType]="shimmerType.DashboardPurchased"
         backgroundColor="#f9fbfd"
     ></app-shimmer>
 
     <ng-container *ngIf="!(isLoading$ | async)">
+
         <div class="card custom-card-border search">
             <div class="card-header">
                 <div class="row align-items-center">
@@ -27,11 +29,11 @@
         </div>
 
         <app-service-card-dashboard
-            *ngFor="let data of events"
+            *ngFor="let data of coachings"
             [data]="data"
             [isLoading]="isLoading"
-            [isCreator]="isTutor"
             (onDelete)="onDeleteClick(data.id)"
         ></app-service-card-dashboard>
+
     </ng-container>
 </ng-container>

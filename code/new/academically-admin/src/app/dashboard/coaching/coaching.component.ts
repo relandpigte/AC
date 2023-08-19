@@ -9,6 +9,8 @@ import { ChooseTemplateComponent } from './_components/choose-template/choose-te
 import { CreateCoachingComponent } from './_components/create-coaching/create-coaching.component';
 import { CoachingTemplate } from './_models/coaching-template';
 import { DashboardService, DashboardServiceView } from '@app/dashboard/_services/dashboard.service';
+import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
+import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 
 @Component({
   selector: 'app-coaching',
@@ -17,12 +19,14 @@ import { DashboardService, DashboardServiceView } from '@app/dashboard/_services
   animations: [appModuleAnimation()],
 })
 export class CoachingComponent extends AppComponentBase implements OnInit {
+  shimmerType = ShimmerType;
   constructor(
     injector: Injector,
     private _router: Router,
     private _modalService: BsModalService,
     private _coachingService: CoachingsServiceProxy,
-    public _dashboardService: DashboardService
+    public _dashboardService: DashboardService,
+    private _dashboardPageService: DashboardPagesService
   ) {
     super(injector);
   }
@@ -31,9 +35,13 @@ export class CoachingComponent extends AppComponentBase implements OnInit {
   get serviceType() { return ServicesType.Coaching; }
   get switchButtonText(): string { return this._dashboardService.switchButtonText(); }
   get defaultUserView(): DashboardServiceView { return this._dashboardService.getUserView(); }
+  get isLearnerView(): boolean { return this._dashboardService.getUserView() === DashboardServiceView.learner; }
+  get isCreatorView(): boolean { return this._dashboardService.getUserView() === DashboardServiceView.creator; }
+  get isLoading$() { return this._dashboardPageService.isLoading$; }
 
   ngOnInit(): void {
     this._dashboardService.setUserView(DashboardServiceView.learner);
+    setTimeout(() => this._dashboardPageService.setIsLoading(false), 3000);
   }
 
   onNewCoachingClick(): void {

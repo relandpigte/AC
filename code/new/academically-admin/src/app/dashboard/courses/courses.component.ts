@@ -31,7 +31,6 @@ export class CoursesComponent extends AppComponentBase implements OnInit {
   get defaultUserView(): DashboardServiceView { return this._dashboardService.getUserView(); }
   get isLearnerView(): boolean { return this._dashboardService.getUserView() === DashboardServiceView.learner; }
   get isCreatorView(): boolean { return this._dashboardService.getUserView() === DashboardServiceView.creator; }
-
   get isLoading$() { return this._dashboardPageService.isLoading$; }
 
   ngOnInit(): void {

@@ -1,6 +1,8 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
+import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { CourseDto } from '@shared/service-proxies/service-proxies';
+import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 
 @Component({
   selector: 'app-created',
@@ -10,12 +12,16 @@ import { CourseDto } from '@shared/service-proxies/service-proxies';
 export class CreatedComponent extends AppComponentBase implements OnInit {
   courses: CourseDto[] = Array(4).fill([]).map(() => this.generateRandomCourse()) as CourseDto[];
   isLoading = true;
+  shimmerType = ShimmerType;
 
   constructor(
-    injector: Injector
+    injector: Injector,
+    private _dashboardPageService: DashboardPagesService
   ) {
     super(injector);
   }
+
+  get isLoading$() { return this._dashboardPageService.isLoading$; }
 
   ngOnInit(): void {
     console.log(this.courses);

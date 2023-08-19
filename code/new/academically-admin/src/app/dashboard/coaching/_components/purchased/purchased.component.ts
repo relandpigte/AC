@@ -1,17 +1,18 @@
 import { Component, Injector, OnInit } from '@angular/core';
+import { CoachingDto } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
-import { EventDto } from '@shared/service-proxies/service-proxies';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 
 @Component({
-  selector: 'app-created',
-  templateUrl: './created.component.html',
-  styleUrls: ['./created.component.less']
+  selector: 'app-purchased',
+  templateUrl: './purchased.component.html',
+  styleUrls: ['./purchased.component.less']
 })
-export class CreatedComponent extends AppComponentBase implements OnInit {
-  events: EventDto[] = Array(Math.floor(Math.random() * (10 - 4) + 4)).fill([]).map(() => this.generateRandomEvent()) as EventDto[];
+export class PurchasedComponent extends AppComponentBase implements OnInit {
+  coachings: CoachingDto[] = Array(4).fill([]).map(() => this.generateRandomCoaching()) as CoachingDto[];
   isLoading = true;
+
   shimmerType = ShimmerType;
 
   constructor(
@@ -23,7 +24,5 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
 
   get isLoading$() { return this._dashboardPageService.isLoading$; }
 
-  ngOnInit(): void {
-    console.log(this.events);
-  }
+  ngOnInit(): void {}
 }

@@ -10,6 +10,8 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { CreateArticleComponent } from './_components/create-article/create-article.component';
 import { takeUntil } from 'rxjs/operators';
 import { DashboardService, DashboardServiceView } from '@app/dashboard/_services/dashboard.service';
+import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
+import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 
 @Component({
   selector: 'app-articles',
@@ -18,14 +20,15 @@ import { DashboardService, DashboardServiceView } from '@app/dashboard/_services
   animations: [appModuleAnimation()],
 })
 export class ArticlesComponent extends AppComponentBase implements OnInit {
-
+  shimmerType = ShimmerType;
   constructor(
     injector: Injector,
     private _modalService: BsModalService,
     private _articleService: ArticleService,
     private _router: Router,
     private _articlesService: ArticlesServiceProxy,
-    private _dashboardService: DashboardService
+    private _dashboardService: DashboardService,
+    private _dashboardPageService: DashboardPagesService
   ) {
     super(injector);
   }
@@ -33,9 +36,13 @@ export class ArticlesComponent extends AppComponentBase implements OnInit {
   get dashboardServiceView() { return DashboardServiceView; }
   get switchButtonText(): string { return this._dashboardService.switchButtonText(); }
   get defaultUserView(): DashboardServiceView { return this._dashboardService.getUserView(); }
+  get isLearnerView(): boolean { return this._dashboardService.getUserView() === DashboardServiceView.learner; }
+  get isCreatorView(): boolean { return this._dashboardService.getUserView() === DashboardServiceView.creator; }
+  get isLoading$() { return this._dashboardPageService.isLoading$; }
 
   ngOnInit(): void {
     this._dashboardService.setUserView(DashboardServiceView.learner);
+    setTimeout(() => this._dashboardPageService.setIsLoading(false), 3000);
   }
 
   handleSwitchView(): void {

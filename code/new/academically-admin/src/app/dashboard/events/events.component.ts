@@ -10,6 +10,8 @@ import { CreateBroadcastComponent } from './_components/create-broadcast/create-
 import { CreateWorkshopComponent } from './_components/create-workshop/create-workshop.component';
 import { EventsTemplate } from './_models/events-template';
 import { DashboardService, DashboardServiceView } from '@app/dashboard/_services/dashboard.service';
+import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
+import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 
 @Component({
   selector: 'app-dashboard-events',
@@ -18,12 +20,14 @@ import { DashboardService, DashboardServiceView } from '@app/dashboard/_services
   animations: [appModuleAnimation()],
 })
 export class EventsComponent extends AppComponentBase implements OnInit {
+  shimmerType = ShimmerType;
   constructor(
     injector: Injector,
     private _router: Router,
     private _modalService: BsModalService,
     private _eventsService: EventsServiceProxy,
-    private _dashboardService: DashboardService
+    private _dashboardService: DashboardService,
+    private _dashboardPageService: DashboardPagesService
   ) {
     super(injector);
   }
@@ -31,9 +35,13 @@ export class EventsComponent extends AppComponentBase implements OnInit {
   get dashboardServiceView() { return DashboardServiceView; }
   get switchButtonText(): string { return this._dashboardService.switchButtonText(); }
   get defaultUserView(): DashboardServiceView { return this._dashboardService.getUserView(); }
+  get isLearnerView(): boolean { return this._dashboardService.getUserView() === DashboardServiceView.learner; }
+  get isCreatorView(): boolean { return this._dashboardService.getUserView() === DashboardServiceView.creator; }
+  get isLoading$() { return this._dashboardPageService.isLoading$; }
 
   ngOnInit(): void {
     this._dashboardService.setUserView(DashboardServiceView.learner);
+    setTimeout(() => this._dashboardPageService.setIsLoading(false), 3000);
   }
 
   handleSwitchView(): void {
