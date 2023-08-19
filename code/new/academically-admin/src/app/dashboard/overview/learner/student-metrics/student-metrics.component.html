@@ -1,7 +1,8 @@
 <div class="row">
     <div class="col-12 col-md-4">
         <div class="card">
-            <div class="card-body" [loader]="isLoading">
+            <div class="card-body">
+                <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.DashboardOverviewStats"></app-shimmer>
                 <div class="row align-items-center">
                     <div class="col">
                         <h6 class="text-uppercase text-muted mb-2">{{ 'Purchased' | localize }}</h6>
@@ -17,7 +18,8 @@
 
     <div class="col-12 col-md-4">
         <div class="card">
-            <div class="card-body" [loader]="isLoading">
+            <div class="card-body">
+                <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.DashboardOverviewStats"></app-shimmer>
                 <div class="row align-items-center">
                     <div class="col">
                         <h6 class="text-uppercase text-muted mb-2">{{ 'Completed' | localize }}</h6>
@@ -33,7 +35,8 @@
 
     <div class="col-12 col-md-4">
         <div class="card">
-            <div class="card-body" [loader]="isLoading">
+            <div class="card-body">
+                <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.DashboardOverviewStats"></app-shimmer>
                 <div class="row align-items-center">
                     <div class="col">
                         <h6 class="text-uppercase text-muted mb-2">{{ 'Followers' | localize }}</h6>

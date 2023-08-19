@@ -3,6 +3,8 @@ import * as moment from 'moment';
 import { Calendar, CalendarOptions, FullCalendarComponent } from '@fullcalendar/angular';
 import { DateClickArg } from '@fullcalendar/interaction';
 import { AppComponentBase } from '@shared/app-component-base';
+import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
+import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 
 @Component({
   selector: 'app-tutor-calendar',
@@ -21,14 +23,18 @@ export class TutorCalendarComponent extends AppComponentBase implements OnInit, 
     dateClick: this.handleDateClick.bind(this)
   };
 
+  shimmerType = ShimmerType;
+
   constructor(
-    injector: Injector
+    injector: Injector,
+    private _dashboardPageService: DashboardPagesService
   ) {
     super(injector);
   }
 
   get dateNow(): string { return moment().format('dddd, DD MMMM YYYY'); }
   get dateTitle(): string { return moment().format('MMMM, YYYY'); }
+  get isLoading$() { return this._dashboardPageService.isLoading$; }
 
   ngOnInit(): void {
   }

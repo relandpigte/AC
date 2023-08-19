@@ -1,4 +1,4 @@
-<div *ngIf="show" class="shimmer" [ngSwitch]="shimmerType" [style.backgroundColor]="backgroundColor">
+<div *ngIf="show" class="shimmer" [ngSwitch]="shimmerType" [style.backgroundColor]="backgroundColor" [class.block]="isBlock">
     <!--  Discussion card | Article card  -->
     <ng-container *ngSwitchCase="ShimmerType.PostCard">
         <div class="shimmer-row d-flex flex-row p-24">
@@ -428,6 +428,100 @@
                     <div class="shimmer-row-comment-bar m-0 w-80-px h-10-px mw-100"></div>
                 </div>
                 <div class="shimmer-row-comment-bar m-0 w-76-px h-28-px mw-100"></div>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="ShimmerType.DashboardHeaderLearner">
+        <div class="shimmer-row d-flex justify-content-between align-items-center w-100 h-100">
+            <div class="d-flex justify-content-between align-items-start w-100">
+                <div class="shimmer-row-comment-bar m-0 w-431-px h-25-px mw-100"></div>
+                <div class="shimmer-row-comment-bar mx-0 mb-0 w-134-px h-40-px mw-100" [style.marginTop.px]="10"></div>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="ShimmerType.DashboardHeaderCreator">
+        <div class="shimmer-row d-flex justify-content-between align-items-center w-100 h-100">
+            <div class="d-flex justify-content-between align-items-start w-100">
+                <div class="shimmer-row-comment-bar m-0 w-431-px h-25-px mw-100"></div>
+                <div class="d-flex gap-10" [style.marginTop.px]="10">
+                    <div class="shimmer-row-comment-bar mx-0 mb-0 w-134-px h-40-px mw-100"></div>
+                    <div class="shimmer-row-comment-bar mx-0 mb-0 w-134-px h-40-px mw-100"></div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="ShimmerType.DashboardOverviewStats">
+        <div class="shimmer-row d-flex justify-content-between align-items-center w-100 h-100" [style.padding.px]="24" [style.paddingLeft.px]="22" [style.paddingRight.px]="22">
+            <div class="d-flex flex-column align-items-start gap-10 w-100">
+                <div class="shimmer-row-comment-bar m-0 w-114-px h-15-px mw-100"></div>
+                <div class="shimmer-row-comment-bar m-0 w-308-px h-15-px mw-100"></div>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="ShimmerType.DashboardOverviewLearning">
+        <div class="shimmer-row d-flex justify-content-between align-items-center w-100 h-100" [style.padding.px]="24" [style.paddingTop.px]="20" [style.paddingBottom.px]="48">
+            <div class="d-flex flex-column align-items-start gap-48 w-100">
+                <div class="shimmer-row-comment-bar m-0 w-255-px h-15-px mw-100"></div>
+                <div class="d-flex justify-content-between align-items-start gap-20 w-100">
+                    <div class="shimmer-row-comment-bar m-0 w-130-px h-83-px mw-100"></div>
+                    <div class="flex-grow-1 d-flex flex-column align-items-start gap-20">
+                        <div class="shimmer-row-comment-bar m-0 w-100 h-15-px"></div>
+                        <div class="shimmer-row-comment-bar m-0 w-207-px h-15-px mw-100"></div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-start gap-20 w-100">
+                    <div class="shimmer-row-comment-bar m-0 w-130-px h-83-px mw-100"></div>
+                    <div class="flex-grow-1 d-flex flex-column align-items-start gap-20">
+                        <div class="shimmer-row-comment-bar m-0 w-100 h-15-px"></div>
+                        <div class="shimmer-row-comment-bar m-0 w-207-px h-15-px mw-100"></div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-start gap-20 w-100">
+                    <div class="shimmer-row-comment-bar m-0 w-130-px h-83-px mw-100"></div>
+                    <div class="flex-grow-1 d-flex flex-column align-items-start gap-20">
+                        <div class="shimmer-row-comment-bar m-0 w-100 h-15-px"></div>
+                        <div class="shimmer-row-comment-bar m-0 w-207-px h-15-px mw-100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="ShimmerType.DashboardOverviewCalendar">
+        <div class="shimmer-row d-flex justify-content-between align-items-center w-100 h-100" [style.padding.px]="20" [style.paddingTop.px]="75" [style.paddingBottom.px]="15">
+            <div class="d-flex flex-column align-items-start gap-30 w-100">
+                <div class="d-flex justify-content-between align-items-center gap-20 w-100">
+                    <div class="shimmer-row-comment-bar m-0 w-64-px h-55-px mw-100"></div>
+                    <div class="flex-grow-1 d-flex flex-column align-items-start gap-16">
+                        <div class="shimmer-row-comment-bar m-0 w-100 h-10-px"></div>
+                        <div class="shimmer-row-comment-bar m-0 w-147-px h-10-px mw-100"></div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center gap-20 w-100">
+                    <div class="shimmer-row-comment-bar m-0 w-64-px h-55-px mw-100"></div>
+                    <div class="flex-grow-1 d-flex flex-column align-items-start gap-16">
+                        <div class="shimmer-row-comment-bar m-0 w-100 h-10-px"></div>
+                        <div class="shimmer-row-comment-bar m-0 w-147-px h-10-px mw-100"></div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center gap-20 w-100">
+                    <div class="shimmer-row-comment-bar m-0 w-64-px h-55-px mw-100"></div>
+                    <div class="flex-grow-1 d-flex flex-column align-items-start gap-16">
+                        <div class="shimmer-row-comment-bar m-0 w-100 h-10-px"></div>
+                        <div class="shimmer-row-comment-bar m-0 w-147-px h-10-px mw-100"></div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center gap-20 w-100">
+                    <div class="shimmer-row-comment-bar m-0 w-64-px h-55-px mw-100"></div>
+                    <div class="flex-grow-1 d-flex flex-column align-items-start gap-16">
+                        <div class="shimmer-row-comment-bar m-0 w-100 h-10-px"></div>
+                        <div class="shimmer-row-comment-bar m-0 w-147-px h-10-px mw-100"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </ng-container>

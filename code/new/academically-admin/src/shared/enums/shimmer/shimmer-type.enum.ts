@@ -21,5 +21,10 @@ export enum ShimmerType {
   LandingRightRelated,
   LandingRightAbout,
   LandingRightAttendees,
-  LandingRightReview
+  LandingRightReview,
+  DashboardHeaderLearner,
+  DashboardHeaderCreator,
+  DashboardOverviewStats,
+  DashboardOverviewLearning,
+  DashboardOverviewCalendar
 }

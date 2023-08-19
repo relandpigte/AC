@@ -8,6 +8,11 @@
     background-color: var(--white);
     border-radius: 10px;
 
+    &.block {
+        position: relative;
+        display: block;
+    }
+
     &-row {
         width: 0;
         animation: fullView 0.5s forwards cubic-bezier(0.250, 0.460, 0.450, 0.940);

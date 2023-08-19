@@ -1,7 +1,8 @@
 <div [@routerTransition]>
     <div class="header">
         <div class="container-fluid">
-            <div class="header-body">
+            <div class="header-body position-relative" [class.border-0]="isLoading$ | async">
+                <app-shimmer [show]="isLoading$ | async" [shimmerType]="isLearnerView ? shimmerType.DashboardHeaderLearner : shimmerType.DashboardHeaderCreator" backgroundColor="#f9fbfd"></app-shimmer>
                 <div class="d-flex">
                     <div>
                         <h6 class="header-pretitle">{{ 'Dashboard' | localize }}</h6>

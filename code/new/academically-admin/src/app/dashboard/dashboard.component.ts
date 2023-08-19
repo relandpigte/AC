@@ -10,6 +10,8 @@ import { AppConsts } from '@shared/AppConsts';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { DashboardService, DashboardServiceView } from '@app/dashboard/_services/dashboard.service';
+import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
+import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,6 +24,8 @@ export class DashboardComponent extends AppComponentBase implements OnInit {
   greetings: string;
   isOnboarding = false;
 
+  shimmerType = ShimmerType;
+
   constructor(
     injector: Injector,
     private _modalService: BsModalService,
@@ -29,7 +33,8 @@ export class DashboardComponent extends AppComponentBase implements OnInit {
     private _route: ActivatedRoute,
     private _paymentsService: PaymentsServiceProxy,
     private _modalDialogService: ModalDialogService,
-    private _dashboardService: DashboardService
+    private _dashboardService: DashboardService,
+    private _dashboardPageService: DashboardPagesService,
   ) {
     super(injector);
     this.user = this.appSession.user;
@@ -38,6 +43,11 @@ export class DashboardComponent extends AppComponentBase implements OnInit {
   get dashboardServiceView() { return DashboardServiceView; }
   get switchButtonText(): string { return this._dashboardService.switchButtonText(); }
   get defaultUserView(): DashboardServiceView { return this._dashboardService.getUserView(); }
+
+  get isLearnerView(): boolean { return this._dashboardService.getUserView() === DashboardServiceView.learner; }
+  get isCreatorView(): boolean { return this._dashboardService.getUserView() === DashboardServiceView.creator; }
+
+  get isLoading$() { return this._dashboardPageService.isLoading$; }
 
   handleSwitchView(): void {
     this._dashboardService.handleSwitchView();
@@ -66,6 +76,8 @@ export class DashboardComponent extends AppComponentBase implements OnInit {
         this.isOnboarding = false;
       }
     });
+
+    setTimeout(() => this._dashboardPageService.setIsLoading(false), 3000);
   }
 
   getGreetings(): string {

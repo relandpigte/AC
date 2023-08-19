@@ -11,6 +11,7 @@ export class ShimmerComponent extends AppComponentBase implements OnInit {
   @Input() show: boolean;
   @Input() shimmerType: ShimmerType;
   @Input() backgroundColor: string;
+  @Input() isBlock = false;
 
   constructor(injector: Injector) {
     super(injector);
