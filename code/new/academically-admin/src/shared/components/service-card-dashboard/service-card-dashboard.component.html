@@ -39,6 +39,7 @@
 
             <div class="flex-grow-1 d-flex flex-column">
                 <div *ngIf="this.sanitizedOptions?.isShowHeading" [class]="cardType + '-heading heading'" [class.text-danger]="isScheduleNear">
+                    <span *ngIf="this.sanitizedOptions?.headingType === 'unbooked'" class="unbooked"> UNBOOKED </span>
                     <span *ngIf="this.sanitizedOptions?.headingType === 'location' && location" class="location">{{ location }}</span>
                     <span *ngIf="this.sanitizedOptions?.headingType === 'schedule' && schedule" class="schedule">{{ schedule }}</span>
                     <span *ngIf="this.sanitizedOptions?.isShowHeadingSlots" class="slots">{{ slotsCount }} {{ slotsUnit }} left</span>
@@ -48,7 +49,7 @@
                 <p *ngIf="sanitizedOptions?.isShowInfo" [class]="cardType + '-info info'"> {{ info | shorten : 110 }} </p>
 
                 <p *ngIf="this.sanitizedOptions?.isShowDetailsComposition && !!compositionString && isCreator" [class]="cardType + '-info info'">
-                    {{ compositionString }} | {{ this.sanitizedOptions.isShowQuickPreview }}
+                    {{ compositionString }}
                 </p>
 
                 <p *ngIf="this.sanitizedOptions?.isShowQuickPreview && sessionDuration && isCreator" [class]="cardType + '-info-preview info-preview'">
@@ -125,14 +126,20 @@
                         </ng-container>
 
                         <ng-container *ngIf="sanitizedOptions?.isShowCoachingDetails">
-                            <span class="has-separator"><span class="coach">You</span> are coaching <span class="student">{{ coachingStudentFullName }}</span></span>
-                            <span class="duration">{{ coachingDuration }}</span>
+                            <ng-container *ngIf="isCreator">
+                                <span class="has-separator"><span class="coach">You</span> are coaching <span class="student">{{ coachingStudentFullName }}</span></span>
+                                <span class="duration">{{ coachingDuration }}</span>
+                            </ng-container>
+                            <ng-container *ngIf="!isCreator">
+                                <span class="has-separator">Coaching with <span class="coach">{{ coachingTutorFullName }}</span>.</span>
+                                <span class="duration">{{ coachingDuration }}</span>
+                            </ng-container>
                         </ng-container>
                     </ng-template>
                 </div>
             </div>
 
-            <div *ngIf="sanitizedActions && sanitizedOptions?.isShowActions" [class]="cardType + '-actions'" class="d-flex justify-content-center">
+            <div *ngIf="sanitizedActions && sanitizedOptions?.isShowActions" [class]="cardType + '-actions'" class="d-flex justify-content-center align-items-center">
                 <ng-container *ngFor="let action of sanitizedActions">
                     <ng-container [ngSwitch]="action.type">
                         <ng-container *ngSwitchCase="'read'">
@@ -153,6 +160,16 @@
                         <ng-container *ngSwitchCase="'play'">
                             <button class="play btn d-flex flex-column text-primary align-items-center gap-5 p-0" (click)="handleClickAction(id)">
                                 <span class="block bg-center"></span> {{ action.label | localize}}
+                            </button>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'book'">
+                            <button class="book btn d-flex flex-column text-primary align-items-center gap-5 p-0" (click)="handleClickAction(id)">
+                                <span class="block bg-center"></span> {{ action.label | localize}}
+                            </button>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'buy'">
+                            <button class="buy btn d-flex justify-content-center align-items-center w-115-px h-35-px" (click)="handleClickAction(id)">
+                                {{ action.label | localize}}
                             </button>
                         </ng-container>
                     </ng-container>

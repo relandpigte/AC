@@ -32,6 +32,7 @@
             *ngFor="let data of coachings"
             [data]="data"
             [isLoading]="isLoading"
+            [additionalData]="additionalData"
             (onDelete)="onDeleteClick(data.id)"
         ></app-service-card-dashboard>
 

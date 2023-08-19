@@ -23,6 +23,13 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
   }
 
   get isLoading$() { return this._dashboardPageService.isLoading$; }
+  get additionalData() {
+    return {
+      booking: {
+        durationInSec: Math.floor(Math.random() * (9000000 - 30000) + 30000),
+      }
+    };
+  }
 
   ngOnInit(): void {}
 }

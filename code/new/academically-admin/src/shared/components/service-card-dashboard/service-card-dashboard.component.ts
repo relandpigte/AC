@@ -86,6 +86,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   get isDraft(): boolean { return this.sanitized?.status?.type === 'draft'; }
   get isArchive(): boolean { return this.sanitized?.status?.type === 'archived'; }
   get isExpired(): boolean { return this.sanitized.dates.startDate.isBefore(moment()); }
+  get hasReviewed(): boolean { return true; }
   get sessionDuration(): string { return humanizeDuration(this.composition.durationInSec * 1000); }
   get isScheduleNear(): boolean { return this.sanitized?.dates?.startDate.diff(moment(), 'hours') < 1; }
   get schedule(): string {
@@ -97,6 +98,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   get scheduleDay(): string { return this.isDraft ? '--' : this.sanitized?.dates?.startDate?.format('DD'); }
   get scheduleMonth(): string { return this.isDraft ? '---' : this.sanitized?.dates?.startDate?.format('MMM'); }
   get isBooked():boolean { return !!this.sanitized?.booking; }
+  get coachingTutorFullName(): string { return this.sanitized.owner.fullName ?? 'Casey Fyfe'; }
   get coachingStudentFullName(): string { return this.sanitized?.booking?.student?.fullName ?? 'Casey Fyfe'; }
   get coachingStudentAvatarSrc(): string { return this.sanitized?.booking?.student?.avatar?.src ?? 'assets/img/anonymous.png'; }
   get coachingDuration(): string { return humanizeDuration(this.sanitized?.booking?.durationInSec ?? 60000); }
@@ -225,6 +227,10 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         }
         break;
       case 'coaching':
+        this.sanitized.composition = this.sanitized.composition ?? {} as ServiceCardComposition;
+        this.sanitized.composition.sessions = 1;
+        this.sanitized.composition.durationInSec = Math.floor(Math.random() * (10000 - 20) + 20);
+
         if (this.isCreator) {
           if (this.isBooked) {
             if (!this.isExpired) {
@@ -233,11 +239,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
               this.sanitizedOptions.isShowActions = true;
             }
           } else {
-            this.sanitized.composition = this.sanitized.composition ?? {} as ServiceCardComposition;
-            this.sanitized.composition.sessions = 1;
-            this.sanitized.composition.durationInSec = Math.floor(Math.random() * (10000 - 20) + 20);
             this.sanitized.people.isShowAvatars = true;
-
             const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
             switch (tempStatus) {
               case 1:
@@ -253,6 +255,25 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
                 this.sanitizedOptions.isShowStatus = true;
                 break;
             }
+          }
+        } else {
+          if (this.isBooked) {
+            this.sanitizedOptions.headingType = 'schedule';
+            if (this.isExpired) {
+                this.sanitizedOptions.isShowActions = true;
+              if (this.hasReviewed) {
+                this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'buy', label: 'Buy again' });
+              } else {
+                this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'review', label: 'Leave review' });
+              }
+            } else {
+              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
+              this.sanitizedOptions.isShowActions = true;
+            }
+          } else {
+            this.sanitizedOptions.headingType = 'unbooked';
+            this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'book', label: 'Book a time' });
+            this.sanitizedOptions.isShowActions = true;
           }
         }
         break;
@@ -418,15 +439,22 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         if (!this.options || !('isShowGoing' in this.options)) { this.sanitizedOptions.isShowGoing = true; }
         break;
       case 'coaching':
-        if (this.isBooked) {
+        if (this.isCreator) {
+          if (this.isBooked) {
+            if (!this.options || !('isShowHeading' in this.options)) { this.sanitizedOptions.isShowHeading = true; }
+            if (!this.options || !('headingType' in this.options)) { this.sanitizedOptions.headingType = 'schedule'; }
+            if (!this.options || !('isShowMajorParticipants' in this.options)) { this.sanitizedOptions.isShowMajorParticipants = true; }
+            if (!this.options || !('isShowCoachingDetails' in this.options)) { this.sanitizedOptions.isShowCoachingDetails = true; }
+          } else {
+            if (!this.options || !('isShowQuickPreview' in this.options)) { this.sanitizedOptions.isShowQuickPreview = true; }
+            if (!this.options || !('isSHowPurchased' in this.options)) { this.sanitizedOptions.isSHowPurchased = true; }
+          }
+        } else {
           if (!this.options || !('isShowHeading' in this.options)) { this.sanitizedOptions.isShowHeading = true; }
-          if (!this.options || !('headingType' in this.options)) { this.sanitizedOptions.headingType = 'schedule'; }
           if (!this.options || !('isShowMajorParticipants' in this.options)) { this.sanitizedOptions.isShowMajorParticipants = true; }
           if (!this.options || !('isShowCoachingDetails' in this.options)) { this.sanitizedOptions.isShowCoachingDetails = true; }
-        } else {
-          if (!this.options || !('isShowQuickPreview' in this.options)) { this.sanitizedOptions.isShowQuickPreview = true; }
-          if (!this.options || !('isSHowPurchased' in this.options)) { this.sanitizedOptions.isSHowPurchased = true; }
         }
+
         break;
       case 'course':
         if (!this.options || !('isShowProgress' in this.options)) { this.sanitizedOptions.isShowProgress = true; }
