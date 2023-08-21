@@ -48,6 +48,7 @@
     <Folder Include="Services\EducationLevels\Dto\" />
     <Folder Include="Services\PhoneVerifications\" />
     <Folder Include="Services\PhoneVerifications\Dto\" />
+    <Folder Include="Services\SavedServices\Dto\" />
     <Folder Include="Services\UserResearchInterests\" />
     <Folder Include="Services\UserResearchInterests\Dto\" />
     <Folder Include="Services\ResearchMethods\" />

@@ -27,6 +27,7 @@ namespace Academically.Services.Videos
         private readonly IRepository<Video, Guid> _videosRepository;
         private readonly IRepository<Reaction, Guid> _reactionsRepository;
         private readonly IRepository<StudentVideo, Guid> _studentVideoRepository;
+        private readonly IRepository<SavedService, Guid> _savedServiceRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IExploreRepository _exploreRepository;
 
@@ -34,6 +35,7 @@ namespace Academically.Services.Videos
             IRepository<Video, Guid> videosRepository,
             IRepository<Reaction, Guid> reactionsRepository,
             IRepository<StudentVideo, Guid> studentVideoRepository,
+            IRepository<SavedService, Guid> savedServiceRepository,
             IDocumentsDomainService documentsDomainService,
             IExploreRepository exploreRepository
             )
@@ -41,6 +43,7 @@ namespace Academically.Services.Videos
             _videosRepository = videosRepository;
             _reactionsRepository = reactionsRepository;
             _studentVideoRepository = studentVideoRepository;
+            _savedServiceRepository = savedServiceRepository;
             _documentsDomainService = documentsDomainService;
             _exploreRepository = exploreRepository;
         }
@@ -313,7 +316,6 @@ namespace Academically.Services.Videos
                 .Select(e => ObjectMapper.Map<VideoDto>(e))
                 .ToListAsync();
 
-           
             return (await GetVideosDetailsAsync(videos)).GroupByDateRangePagedExt(input.Grain.Value, input.MaxResultCount);
         }
 
@@ -362,6 +364,9 @@ namespace Academically.Services.Videos
                 vid.LikeCount = await _reactionsRepository.CountAsync(e => e.ReferenceId == vid.Id.ToString()
                     && e.Type == ReactionType.Like);
                 vid.VideoCount = vid.Children.Count();
+
+                var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == vid.Id.ToString());
+                vid.IsSaved = savedService != null;
             }
 
             return topVideos;

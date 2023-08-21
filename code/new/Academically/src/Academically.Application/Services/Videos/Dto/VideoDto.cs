@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Abp.Domain.Entities.Auditing;
@@ -48,6 +49,9 @@ namespace Academically.Services.Videos.Dto
 
         public int LikeCount { get; set; }
         public string ThumbnailImageUrl { get; set; }
+
+        [NotMapped]
+        public bool IsSaved { get; set; }
 
         public VideoDto()
 		{

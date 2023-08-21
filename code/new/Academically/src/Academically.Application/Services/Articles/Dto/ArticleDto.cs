@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Abp.Domain.Entities.Auditing;
@@ -44,6 +45,9 @@ namespace Academically.Services.Articles.Dto
 		public int PopularityWeight { get; set; }
         public string ThumbnailImageUrl { get; set; }
 		public int ArticlesCount { get; set; } = 0;
+
+        [NotMapped]
+        public bool IsSaved { get; set; }
 
         public ArticleDto()
 		{

@@ -39,7 +39,7 @@
             [isLoading]="isLoading_upcomingBroadcasts"
             (onRequestNewData)="handleUpcomingBroadcastsRequestData($event)"
             (onServiceCardShareClick)="handleServiceCardShareClick($event)"
-            (onServiceCardClick)="handleEventServiceCardClick($event)">
+            (onServiceCardClick)="handleBroadcastServiceCardClick($event)">
           </app-carousel>
         </ng-container>
 
@@ -60,7 +60,7 @@
             [isLoading]="isLoading_upcomingWorkshops"
             (onRequestNewData)="handleUpcomingWorkshopsRequestData($event)"
             (onServiceCardShareClick)="handleServiceCardShareClick($event)"
-            (onServiceCardClick)="handleEventServiceCardClick($event)">
+            (onServiceCardClick)="handleWorkshopServiceCardClick($event)">
           </app-carousel>
         </ng-container>
 

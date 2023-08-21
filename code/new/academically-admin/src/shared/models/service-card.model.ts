@@ -7,6 +7,7 @@ export interface ServiceCard {
     description?: string;
     location?: string;
     status?: ServiceCardStatus;
+    isSaved?: boolean;
 
     owner: ServiceCardPerson;
     people?: ServiceCardPeople;
@@ -80,7 +81,7 @@ export const DefaultServiceCardOptions: ServiceCardOptions = {
 };
 
 export const DefaultServiceCardActions: ServiceCardButton[] = [
-    { type: 'submit', action: 'save', label: 'Save', class: 'btn-light' },
+    { type: 'save', action: 'save', label: 'Save', class: 'btn-light' },
     { type: 'share', action: 'share', class: 'btn-light' }
 ];
 
@@ -90,7 +91,7 @@ export const UserServiceCardActions: ServiceCardButton[] = [
 ];
 
 export type ServiceCardType = 'course' | 'tutorial' | 'article' | 'event' | 'broadcast' | 'coaching' | 'workshop' | 'user' | 'space' | 'feature';
-export type ServiceCardButtonType = 'submit' | 'group' | 'share' | 'follow' | 'read' | 'join' | 'review' | 'play' | 'continue' | 'book' | 'buy';
+export type ServiceCardButtonType = 'submit' | 'save' | 'group' | 'share' | 'follow' | 'read' | 'join' | 'review' | 'play' | 'continue' | 'book' | 'buy';
 export type HeadingType = 'location' | 'schedule' | 'unbooked';
 export type ServiceCardStatusType = 'read' | 'unread' | 'archived' | 'published' | 'completed' | 'draft' | 'onprogress';
 

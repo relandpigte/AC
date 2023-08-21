@@ -83,6 +83,7 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.DisciplineTaxonomiesServiceProxy,
         ApiServiceProxies.UserTopicsServiceProxy,
         ApiServiceProxies.PostsServiceProxy,
+        ApiServiceProxies.SavedServicesServiceProxy,
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
 })

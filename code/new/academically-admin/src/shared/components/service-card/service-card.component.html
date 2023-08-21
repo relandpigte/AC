@@ -64,7 +64,7 @@
             <span *ngIf="this.sanitizedOptions?.isShowHeadingSlots" class="service-card-body-heading-slots">{{ slotsCount }} {{ slotsUnit }} left</span>
         </div>
 
-        <div class="service-card-body-name" [style.marginTop.px]="owner?.isBannerAvatar && owner?.avatar ? 15 : 5" [class.centered]="type === 'user'">{{ name }}</div>
+        <div class="service-card-body-name line-clamp-2" [style.marginTop.px]="owner?.isBannerAvatar && owner?.avatar ? 15 : 5" [class.centered]="type === 'user'">{{ name }}</div>
 
         <div *ngIf="this.sanitizedOptions?.isShowInfo" class="service-card-body-info">{{ info }}</div>
 
@@ -150,9 +150,21 @@
         <ng-container *ngFor="let action of sanitizedActions">
             <ng-container [ngSwitch]="action.type">
                 <ng-container *ngSwitchCase="'save'">
-                    <button type="button" class="btn text-center flex-grow-1 d-flex flex-row justify-content-center align-items-center" [ngClass]="[action.class ? action.class : 'btn-light']" style="gap: 5px">
-                        <span *ngIf="action.label">{{ action.label | localize}}</span>
-                        <i *ngIf="action.icon" [class]="action.icon"></i>
+                    <button
+                        type="button"
+                        class="btn text-center flex-grow-1 d-flex flex-row justify-content-center align-items-center w-127-px gap-5"
+                        [ngClass]="[action.class ? action.class : 'btn-light']"
+                        [class.saved]="isSaved"
+                        (click)="handleSaveClick($event)"
+                    >
+                        <ng-container *ngIf="isSaved; else savedActionTemplate">
+                            <span>{{ 'Saved' | localize }}</span>
+                            <i class="fe fe-check"></i>
+                        </ng-container>
+                        <ng-template #savedActionTemplate>
+                            <span *ngIf="action.label">{{ action.label | localize}}</span>
+                            <i *ngIf="action.icon" [class]="action.icon"></i>
+                        </ng-template>
                     </button>
                 </ng-container>
 
@@ -180,7 +192,7 @@
 
                 <ng-container *ngSwitchCase="'group'">
                     <div class="btn-group flex-grow-1">
-                        <button type="button" class="btn dropdown-toggle d-flex justify-content-center align-items-center" data-toggle="dropdown" [ngClass]="[action.class ? action.class : 'btn-light']" style="gap: 5px">
+                        <button type="button" class="btn dropdown-toggle d-flex justify-content-center align-items-center w-127-px" data-toggle="dropdown" [ngClass]="[action.class ? action.class : 'btn-light']" style="gap: 5px">
                             <span *ngIf="action.label">{{ action.label | localize}}</span>
                             <i *ngIf="action.icon" [class]="action.icon"></i>
                         </button>
@@ -196,7 +208,7 @@
                 <ng-container *ngSwitchCase="'follow'">
                     <button
                         type="button"
-                        class="btn text-center flex-grow-1 d-flex flex-row justify-content-center align-items-center border-0"
+                        class="btn text-center flex-grow-1 d-flex flex-row justify-content-center align-items-center w-127-px border-0"
                         [ngClass]="[action.class ? action.class : 'btn-light']"
                         style="gap: 5px"
                         [class.following]="isUserFollowing(data)"
@@ -208,7 +220,7 @@
                 </ng-container>
 
                 <ng-container *ngSwitchDefault>
-                    <button type="button" class="btn text-center flex-grow-1 d-flex flex-row justify-content-center align-items-center" [ngClass]="[action.class ? action.class : 'btn-light']" style="gap: 5px">
+                    <button type="button" class="btn text-center flex-grow-1 d-flex flex-row justify-content-center align-items-center w-127-px" [ngClass]="[action.class ? action.class : 'btn-light']" style="gap: 5px">
                         <span *ngIf="action.label">{{ action.label | localize}}</span>
                         <i *ngIf="action.icon" [class]="action.icon"></i>
                     </button>

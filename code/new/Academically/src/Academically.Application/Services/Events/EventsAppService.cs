@@ -41,6 +41,7 @@ namespace Academically.Services.Events
         private readonly ISettingManager _settingManager;
         private readonly IRepository<EventPoll, Guid> _eventPollRepository;
         private readonly IRepository<EventResource, Guid> _eventResourceRepository;
+        private readonly IRepository<SavedService, Guid> _savedServiceRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IExploreRepository _exploreRepository;
 
@@ -54,6 +55,7 @@ namespace Academically.Services.Events
             IRepository<Event, Guid> repository,
             IRepository<EventPoll, Guid> eventPollRepository,
             IRepository<EventResource, Guid> eventResourceRepository,
+            IRepository<SavedService, Guid> savedServiceRepository,
             IDocumentsDomainService documentsDomainService,
             IExploreRepository exploreRepository
             ) : base(repository)
@@ -68,6 +70,7 @@ namespace Academically.Services.Events
             _settingManager = settingManager;
             _eventPollRepository = eventPollRepository;
             _eventResourceRepository = eventResourceRepository;
+            _savedServiceRepository = savedServiceRepository;
             _documentsDomainService = documentsDomainService;
             _exploreRepository = exploreRepository;
         }
@@ -204,6 +207,9 @@ namespace Academically.Services.Events
                     vid.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(vid.ThumbnailDocumentId.Value);
                 if (vid.CreatorUser.ProfilePictureDocumentId.HasValue)
                     vid.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(vid.CreatorUser.ProfilePictureDocumentId.Value);
+
+                var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == vid.Id.ToString());
+                vid.IsSaved = savedService != null;
             }
             return popularEvents;
         }

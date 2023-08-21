@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Abp.Domain.Entities.Auditing;
@@ -51,5 +52,8 @@ namespace Academically.Services.Courses.Dto
         public int Lessons { get; set; }
         public decimal Progress { get; set; }
         public int Units { get; set; }
+
+        [NotMapped]
+        public bool IsSaved { get; set; }
     }
 }

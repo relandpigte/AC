@@ -13,6 +13,7 @@ using Academically.Services.Explore.Dto;
 using Academically.Services.Posts.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,18 +26,21 @@ namespace Academically.Services.Articles
         private readonly IRepository<Article, Guid> _articlesRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IRepository<StudentArticle, Guid> _studentArticleRepository;
+        private readonly IRepository<SavedService, Guid> _savedServiceRepository;
         private readonly IExploreRepository _exploreRepository;
 
         public ArticlesAppService(
             IRepository<Article, Guid> articlesRepository,
             IDocumentsDomainService documentsDomainService,
             IRepository<StudentArticle, Guid> studentArticleRepository,
+            IRepository<SavedService, Guid> savedServiceRepository,
             IExploreRepository exploreRepository
             )
         {
             _articlesRepository = articlesRepository;
             _documentsDomainService = documentsDomainService;
             _studentArticleRepository = studentArticleRepository;
+            _savedServiceRepository = savedServiceRepository;
             _exploreRepository = exploreRepository;
         }
 
@@ -224,8 +228,6 @@ namespace Academically.Services.Articles
                 .Select(e => ObjectMapper.Map<ArticleDto>(e))
                 .ToListAsync();
 
-            
-
             return (await GetArticleDetailsAsync(articles)).GroupByDateRangePagedExt(input.Grain.Value, input.MaxResultCount);
         }
 
@@ -269,6 +271,9 @@ namespace Academically.Services.Articles
                     article.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(article.ThumbnailDocumentId.Value);
                 if (article.CreatorUser.ProfilePictureDocumentId.HasValue)
                     article.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(article.CreatorUser.ProfilePictureDocumentId.Value);
+
+                var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == article.Id.ToString());
+                article.IsSaved = savedService != null;
 
                 article.ArticlesCount = article.Children.Count();
             }

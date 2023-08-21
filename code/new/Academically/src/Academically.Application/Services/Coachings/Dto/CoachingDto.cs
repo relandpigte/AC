@@ -9,6 +9,7 @@ using Academically.Services.SpokenLanugages.Dto;
 using Academically.Users.Dto;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Services.Coachings.Dto
 {
@@ -104,5 +105,8 @@ namespace Academically.Services.Coachings.Dto
 
         public IEnumerable<CoachingDto> Children { get; set; }
         public int PopularityWeight { get; set; }
+
+        [NotMapped]
+        public bool IsSaved { get; set; }
     }
 }

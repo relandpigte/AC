@@ -18570,6 +18570,122 @@ export class RoleServiceProxy {
 }
 
 @Injectable()
+export class SavedServicesServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @return Success
+     */
+    save(referenceId: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/SavedServices/Save?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSave(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSave(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSave(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @return Success
+     */
+    delete(referenceId: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/SavedServices/Delete?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class ServicesServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -28331,6 +28447,7 @@ export class ArticleDto implements IArticleDto {
     popularityWeight: number;
     thumbnailImageUrl: string | undefined;
     articlesCount: number;
+    isSaved: boolean;
 
     constructor(data?: IArticleDto) {
         if (data) {
@@ -28373,6 +28490,7 @@ export class ArticleDto implements IArticleDto {
             this.popularityWeight = _data["popularityWeight"];
             this.thumbnailImageUrl = _data["thumbnailImageUrl"];
             this.articlesCount = _data["articlesCount"];
+            this.isSaved = _data["isSaved"];
         }
     }
 
@@ -28415,6 +28533,7 @@ export class ArticleDto implements IArticleDto {
         data["popularityWeight"] = this.popularityWeight;
         data["thumbnailImageUrl"] = this.thumbnailImageUrl;
         data["articlesCount"] = this.articlesCount;
+        data["isSaved"] = this.isSaved;
         return data; 
     }
 
@@ -28453,6 +28572,7 @@ export interface IArticleDto {
     popularityWeight: number;
     thumbnailImageUrl: string | undefined;
     articlesCount: number;
+    isSaved: boolean;
 }
 
 export class ArticleDtoPagedResultDto implements IArticleDtoPagedResultDto {
@@ -30043,6 +30163,7 @@ export class CoachingDto implements ICoachingDto {
     creatorUser: UserDto;
     children: CoachingDto[] | undefined;
     popularityWeight: number;
+    isSaved: boolean;
 
     constructor(data?: ICoachingDto) {
         if (data) {
@@ -30146,6 +30267,7 @@ export class CoachingDto implements ICoachingDto {
                     this.children.push(CoachingDto.fromJS(item));
             }
             this.popularityWeight = _data["popularityWeight"];
+            this.isSaved = _data["isSaved"];
         }
     }
 
@@ -30249,6 +30371,7 @@ export class CoachingDto implements ICoachingDto {
                 data["children"].push(item.toJSON());
         }
         data["popularityWeight"] = this.popularityWeight;
+        data["isSaved"] = this.isSaved;
         return data; 
     }
 
@@ -30348,6 +30471,7 @@ export interface ICoachingDto {
     creatorUser: UserDto;
     children: CoachingDto[] | undefined;
     popularityWeight: number;
+    isSaved: boolean;
 }
 
 export class CoachingDtoPagedResultDto implements ICoachingDtoPagedResultDto {
@@ -32173,6 +32297,7 @@ export class CourseDto implements ICourseDto {
     lessons: number;
     progress: number;
     units: number;
+    isSaved: boolean;
 
     constructor(data?: ICourseDto) {
         if (data) {
@@ -32221,6 +32346,7 @@ export class CourseDto implements ICourseDto {
             this.lessons = _data["lessons"];
             this.progress = _data["progress"];
             this.units = _data["units"];
+            this.isSaved = _data["isSaved"];
         }
     }
 
@@ -32269,6 +32395,7 @@ export class CourseDto implements ICourseDto {
         data["lessons"] = this.lessons;
         data["progress"] = this.progress;
         data["units"] = this.units;
+        data["isSaved"] = this.isSaved;
         return data; 
     }
 
@@ -32313,6 +32440,7 @@ export interface ICourseDto {
     lessons: number;
     progress: number;
     units: number;
+    isSaved: boolean;
 }
 
 export class CourseDtoPagedResultDto implements ICourseDtoPagedResultDto {
@@ -35367,6 +35495,7 @@ export class EventDto implements IEventDto {
     creatorUser: UserDto;
     children: EventDto[] | undefined;
     popularityWeight: number;
+    isSaved: boolean;
 
     constructor(data?: IEventDto) {
         if (data) {
@@ -35484,6 +35613,7 @@ export class EventDto implements IEventDto {
                     this.children.push(EventDto.fromJS(item));
             }
             this.popularityWeight = _data["popularityWeight"];
+            this.isSaved = _data["isSaved"];
         }
     }
 
@@ -35601,6 +35731,7 @@ export class EventDto implements IEventDto {
                 data["children"].push(item.toJSON());
         }
         data["popularityWeight"] = this.popularityWeight;
+        data["isSaved"] = this.isSaved;
         return data; 
     }
 
@@ -35714,6 +35845,7 @@ export interface IEventDto {
     creatorUser: UserDto;
     children: EventDto[] | undefined;
     popularityWeight: number;
+    isSaved: boolean;
 }
 
 export class EventDtoPagedResultDto implements IEventDtoPagedResultDto {
@@ -49494,6 +49626,7 @@ export class VideoDto implements IVideoDto {
     children: VideoDto[] | undefined;
     likeCount: number;
     thumbnailImageUrl: string | undefined;
+    isSaved: boolean;
 
     constructor(data?: IVideoDto) {
         if (data) {
@@ -49543,6 +49676,7 @@ export class VideoDto implements IVideoDto {
             }
             this.likeCount = _data["likeCount"];
             this.thumbnailImageUrl = _data["thumbnailImageUrl"];
+            this.isSaved = _data["isSaved"];
         }
     }
 
@@ -49592,6 +49726,7 @@ export class VideoDto implements IVideoDto {
         }
         data["likeCount"] = this.likeCount;
         data["thumbnailImageUrl"] = this.thumbnailImageUrl;
+        data["isSaved"] = this.isSaved;
         return data; 
     }
 
@@ -49637,6 +49772,7 @@ export interface IVideoDto {
     children: VideoDto[] | undefined;
     likeCount: number;
     thumbnailImageUrl: string | undefined;
+    isSaved: boolean;
 }
 
 export class VideoDtoPagedResultDto implements IVideoDtoPagedResultDto {

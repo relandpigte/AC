@@ -10,6 +10,7 @@ using Academically.Services.SpokenLanugages.Dto;
 using Academically.Users.Dto;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Services.Events.Dto
 {
@@ -118,5 +119,8 @@ namespace Academically.Services.Events.Dto
 
         public IEnumerable<EventDto> Children { get; set; }
         public int PopularityWeight { get; set; }
+
+        [NotMapped]
+        public bool IsSaved { get; set; }
     }
 }

@@ -3,7 +3,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { AppComponentBase } from '@shared/app-component-base';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { DefaultServiceCardActions, DefaultServiceCardOptions, ServiceCard, ServiceCardButton, ServiceCardComposition, ServiceCardDates, ServiceCardImage, ServiceCardOptions, ServiceCardPeople, ServiceCardPerson, ServiceCardPill, ServiceCardPrice, ServiceCardReview, ServiceCardRsvp, ServiceCardSlots, ServiceCardType, UserServiceCardActions } from '@shared/models/service-card.model';
-import { ArticleDto, CoachingDto, CourseDto, EventCategory, EventDto, PostsServiceProxy, UserDto, VideoDto } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, CoachingDto, CourseDto, EventCategory, EventDto, PostsServiceProxy, SavedServicesServiceProxy, UserDto, VideoDto } from '@shared/service-proxies/service-proxies';
 
 import * as _ from 'lodash';
 import * as moment from 'moment';
@@ -41,6 +41,7 @@ import { AppConsts } from '@shared/AppConsts';
         private _modalService: BsModalService,
         private _postsService: PostsServiceProxy,
         private _userFollowingService: UserFollowingService,
+        private _savedService: SavedServicesServiceProxy,
         private _clipboard: Clipboard
     ) {
         super(injector);
@@ -120,6 +121,7 @@ import { AppConsts } from '@shared/AppConsts';
     get reviewCount(): number { return this.reviews?.count; }
     get owner(): ServiceCardPerson { return this.sanitized?.owner; }
     get people(): ServiceCardPeople { return this.sanitized?.people; }
+    get isSaved(): boolean { return this.sanitized?.isSaved; }
 
     private getCardType(): ServiceCardType {
       if (this.data instanceof EventDto) {
@@ -164,6 +166,8 @@ import { AppConsts } from '@shared/AppConsts';
       this.sanitized.description = this.data?.description;
       this.sanitized.location = this.data?.location;
 
+      this.sanitized.isSaved = this.data?.isSaved;
+
       this.sanitized.pill = {} as ServiceCardPill;
       this.sanitized.pill.label =  this.sanitized.pill.label ?? this.sanitized.type;
 
@@ -182,6 +186,7 @@ import { AppConsts } from '@shared/AppConsts';
       this.sanitized.owner.isShowFullName = true;
 
       this.sanitizedActions = _.merge([], this.type === 'user' ? UserServiceCardActions : DefaultServiceCardActions, this.actions);
+      this.sanitizedOptions.isShowActions = true;
 
       this.setValueOverrides();
       this.setOptionOverrides();
@@ -391,6 +396,21 @@ import { AppConsts } from '@shared/AppConsts';
       //   if (!this.options || !('isShowProgress' in this.options)) this.sanitizedOptions.isShowProgress = true;
       //   if (!this.options || !('isShowDetails' in this.options)) this.sanitizedOptions.isShowDetails = false;
       // }
+    }
+
+    handleSaveClick(evt): void {
+      evt.stopPropagation();
+      if (this.data?.id) {
+        if (this.isSaved) {
+          this._savedService.delete(this.data.id).subscribe(() => {
+            this.sanitized.isSaved = false;
+          });
+        } else {
+          this._savedService.save(this.data.id).subscribe(() => {
+            this.sanitized.isSaved = true;
+          });
+        }
+      }
     }
 
     handleShareClick(evt): void {

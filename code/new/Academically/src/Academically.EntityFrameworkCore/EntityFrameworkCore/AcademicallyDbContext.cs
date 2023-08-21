@@ -118,6 +118,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<PostAttachment> PostAttachments { get; set; }
         public virtual DbSet<PostVisibility> PostVisibility { get; set; }
         public virtual DbSet<PostNotification> PostNotification { get; set; }
+        public virtual DbSet<SavedService> SavedService { get; set; }
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
         {

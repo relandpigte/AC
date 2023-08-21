@@ -22,6 +22,7 @@ using Academically.Services.Explore.Dto;
 using Academically.Services.Posts.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 
 namespace Academically.Services.Courses
 {
@@ -35,6 +36,7 @@ namespace Academically.Services.Courses
         private readonly IRepository<CourseRatingArea, Guid> _courseRatingAreaRepository;
         private readonly IRepository<CourseConversation, Guid> _courseConversationRepository;
         private readonly IRepository<CourseConversationReaction, Guid> _courseConversationReactionRepository;
+        private readonly IRepository<SavedService, Guid> _savedServiceRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IExploreRepository _exploreRepository;
 
@@ -47,6 +49,7 @@ namespace Academically.Services.Courses
             IRepository<CourseRatingArea, Guid> courseRatingAreaRepository,
             IRepository<CourseConversation, Guid> courseConversationRepository,
             IRepository<CourseConversationReaction, Guid> courseConversationReactionRepository,
+            IRepository<SavedService, Guid> savedServiceRepository,
             IDocumentsDomainService documentsDomainService,
             IExploreRepository exploreRepository
             ) : base(coursesRepository)
@@ -60,6 +63,7 @@ namespace Academically.Services.Courses
             _courseRatingAreaRepository = courseRatingAreaRepository;
             _courseConversationRepository = courseConversationRepository;
             _courseConversationReactionRepository = courseConversationReactionRepository;
+            _savedServiceRepository = savedServiceRepository;
         }
 
         public override async Task<CourseDto> GetAsync(EntityDto<Guid> input)
@@ -215,6 +219,9 @@ namespace Academically.Services.Courses
 
                 if (studentCourses.Any(x => x.CourseId == course.Id))
                     course.Progress = studentCourses.FirstOrDefault(x => x.CourseId == course.Id).Progress;
+
+                var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == course.Id.ToString());
+                course.IsSaved = savedService != null;
             }
 
             return popularCourses;

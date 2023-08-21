@@ -35,6 +35,7 @@ namespace Academically.Services.Coachings
         private readonly RoleManager _roleManager;
         private readonly IRepository<User, long> _usersRepository;
         private readonly IRepository<CoachingPresenter, Guid> _coachingPresentersRepository;
+        private readonly IRepository<SavedService, Guid> _savedServiceRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IExploreRepository _exploreRepository;
 
@@ -43,6 +44,7 @@ namespace Academically.Services.Coachings
             IRepository<User, long> usersRepository,
             IRepository<CoachingPresenter, Guid> coachingPresentersRepository,
             IRepository<Coaching, Guid> repository,
+            IRepository<SavedService, Guid> savedServiceRepository,
             IDocumentsDomainService documentsDomainService,
             IExploreRepository exploreRepository
             ) : base(repository)
@@ -52,6 +54,7 @@ namespace Academically.Services.Coachings
             _roleManager = roleManager;
             _usersRepository = usersRepository;
             _coachingPresentersRepository = coachingPresentersRepository;
+            _savedServiceRepository = savedServiceRepository;
             _documentsDomainService = documentsDomainService;
             _exploreRepository = exploreRepository;
         }
@@ -201,6 +204,9 @@ namespace Academically.Services.Coachings
                         coaching.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(coaching.ThumbnailDocumentId.Value);
                     if (coaching.CreatorUser.ProfilePictureDocumentId.HasValue)
                         coaching.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(coaching.CreatorUser.ProfilePictureDocumentId.Value);
+
+                    var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == coaching.Id.ToString());
+                    coaching.IsSaved = savedService != null;
                 }
 
                 result.Add(topic, new PagedResultDto<CoachingDto>(totalCount, coachings));
@@ -230,6 +236,9 @@ namespace Academically.Services.Coachings
                     coaching.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(coaching.ThumbnailDocumentId.Value);
                 if (coaching.CreatorUser.ProfilePictureDocumentId.HasValue)
                     coaching.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(coaching.CreatorUser.ProfilePictureDocumentId.Value);
+
+                var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == coaching.Id.ToString());
+                coaching.IsSaved = savedService != null;
             }
 
             return coachings.GroupByDateRangePagedExt(input.Grain.Value, input.MaxResultCount);
@@ -257,6 +266,8 @@ namespace Academically.Services.Coachings
                 if (popular.CreatorUser.ProfilePictureDocumentId.HasValue)
                     popular.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(popular.CreatorUser.ProfilePictureDocumentId.Value);
 
+                var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == popular.Id.ToString());
+                popular.IsSaved = savedService != null;
             }
 
             return popularCoachings.GroupByPopularityPagedExt(input.MaxResultCount);
