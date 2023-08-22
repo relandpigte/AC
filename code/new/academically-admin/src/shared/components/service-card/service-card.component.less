@@ -634,6 +634,7 @@
 
         button {
             height: 34px;
+            border: none !important;
 
             &.btn-light {
                 background-color: @service-card-action-button-background-color;
@@ -642,6 +643,10 @@
             &.saved {
                 background-color: rgba(44, 123, 229, 0.1);
                 color: #2C7BE5;
+            }
+
+            &:focus {
+                box-shadow: none !important;
             }
         }
 
