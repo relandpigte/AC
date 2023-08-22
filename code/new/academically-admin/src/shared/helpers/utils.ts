@@ -34,6 +34,10 @@ export class Utils {
       let position;
       let wheelActive;
 
+      function canExecuteOrientation(evt) {
+        return Math.abs(evt.deltaX) > Math.abs(evt.deltaY);
+      }
+
       function dispatch(e, name) {
         const direction = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
         position.x -= e.deltaX;
@@ -56,6 +60,7 @@ export class Utils {
       }
 
       function eventWheel(e) {
+        if (!canExecuteOrientation(e)) return;
         e.preventDefault();
         if (!wheelActive) {
           wheelStart(e);
