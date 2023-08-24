@@ -1963,5 +1963,8 @@
     <text name="ServicesCreated">Service Created</text>
     <text name="OverallPositiveReviews">Overalll Positive Reviews</text>
     <text name="MyStudents">My students</text>
+    
+    <!-- Chat -->
+    <text name="WriteAMessage">Write a message</text>
   </texts>
 </localizationDictionary>

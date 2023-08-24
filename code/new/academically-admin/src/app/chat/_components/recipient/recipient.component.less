@@ -1,0 +1,76 @@
+.recipient {
+    padding: 0.938rem 0.875rem;
+    border-radius: 0.625rem;
+    cursor: pointer;
+
+    &.active, &:hover {
+        background-color: #F9FAFC;
+    }
+
+    &-avatar {
+        width: 45px;
+        height: 45px;
+        margin-right: 0.938rem;
+
+        &-status {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            line-height: 0;
+            bottom: -1px;
+            right: -1px;
+        }
+    }
+
+    &-details {
+        &-name {
+            font-size: 0.938rem;
+            color: #1F2D3D;
+            padding: 3px 0 2px;
+
+            a {
+                color: #1F2D3D;
+            }
+        }
+
+        &-chat-preview {
+            font-size: 0.813rem;
+            color: #6E84A3;
+        }
+    }
+
+    &-message-details {
+        .time {
+            font-size: 0.813rem;
+            color: #6E84A3;
+            padding: 3px 0 2px;
+        }
+
+        .status {
+            min-width: 16px;
+            height: 16px;
+            overflow: hidden;
+            text-indent: -999rem;
+            font-size: 0.625rem;
+            line-height: 1rem;
+
+            &.unseen {
+                line-height: normal;
+                background: url('/assets/img/chat/check-delivered.svg') no-repeat 0 0 transparent;
+            }
+
+            &.seen {
+                line-height: normal;
+                background: url('/assets/img/chat/check-read.svg') no-repeat 0 0 transparent;
+
+            }
+
+            &.unread {
+                background-color: #2C7BE5;
+                border-radius: 6px;
+                color: white;
+                text-indent: 0;
+            }
+        }
+    }
+}

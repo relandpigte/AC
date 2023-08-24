@@ -1,0 +1,80 @@
+.conversation {
+    &-header {
+        padding: 1.25rem 1.5rem;
+
+        &-avatar {
+            margin-right: 1.125rem;
+
+            .avatar {
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        &-recipient {
+            margin-right: 1.5rem;
+
+            & > h4 {
+                font-weight: normal;
+                font-size: 0.938rem;
+                margin: 3px 0 2px;
+            }
+
+            & > p {
+                font-size: 0.813rem;
+                margin: 0 0 3px;
+                color: #6E84A3;
+            }
+        }
+    }
+
+    &-content {
+        padding: 1.25rem 1.5rem;
+    }
+
+    &-day-title {
+        .title {
+            padding: 0.25rem 0.75rem;
+            background-color: #F9FBFD;
+            color: #6E84A3;
+            font-size: 12px;
+            border-radius: 0.625rem;
+        }
+    }
+
+    &-status {
+        font-size: 12px;
+        color: #6E84A3;
+        margin-top: -0.938rem;
+    }
+
+    &-wrapper {
+        .message {
+            max-width: 34.375rem;
+            padding: 0.875rem 1rem;
+            border-radius: 0.625rem;
+        }
+
+        .avatar {
+            width: 2.188rem;
+            height: 2.188rem;
+        }
+
+        &.sender {
+            align-self: flex-end;
+            .message {
+                background-color: #2C7BE5;
+                color: #FFFFFF;
+            }
+        }
+
+        &.recipient {
+            gap: 0.625rem;
+
+            .message {
+                background-color: #F9FBFD;
+                color: #12263F;
+            }
+        }
+    }
+}

@@ -1,0 +1,26 @@
+<div class="recipient d-flex align-items-center" [ngClass]="{'active': isActive}">
+    <div class="recipient-avatar position-relative">
+        <a href="#" class="avatar">
+            <img src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
+        </a>
+        <span class="recipient-avatar-status text-success">●</span>
+    </div>
+
+    <div class="d-flex flex-grow-1">
+        <div class="recipient-details d-flex flex-column">
+            <div class="recipient-details-name">
+                <a href="#">Dianna Smiley</a>
+            </div>
+            <div class="recipient-details-chat-preview">
+                <p class="m-0">We need to start project...</p>
+            </div>
+        </div>
+
+        <div class="recipient-message-details d-flex flex-column ml-auto align-items-end">
+            <span class="time">9:06 am</span>
+            <span class="text-center d-block status" [ngClass]="chatStatusClass">
+                <span>2</span>
+            </span>
+        </div>
+    </div>
+</div>

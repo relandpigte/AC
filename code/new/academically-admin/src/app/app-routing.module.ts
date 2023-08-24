@@ -241,6 +241,13 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
               import('@app/course/course.module').then(
                 (m) => m.CourseModule
               ),
+          },
+          {
+            path: 'chat',
+            loadChildren: () =>
+              import('@app/chat/chat.module').then(
+                (m) => m.ChatModule
+              ),
           }
         ]
       }
