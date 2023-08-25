@@ -1,0 +1,26 @@
+<div class="d-flex">
+    <div class="conversation-wrapper d-flex" [ngClass]="isSender ? 'sender' : 'recipient'">
+        <div class="message">
+            <div class="message-header d-flex align-items-center gap-10">
+                <div class="user-info d-flex gap-5">
+                    <div class="name font-weight-bold">Casey Fyfe</div>
+                    <span class="time">1h</span>
+                </div>
+                <div class="actions ml-auto">
+                    <div class="dropdown">
+                        <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="fe fe-more-horizontal"></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <div class="dropdown-item cursor-pointer">Action 1</div>
+                            <div class="dropdown-item cursor-pointer">Action 2</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="message-content">
+                {{ chatMessage }}
+            </div>
+        </div>
+    </div>
+</div>

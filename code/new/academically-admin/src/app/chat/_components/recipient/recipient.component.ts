@@ -14,7 +14,6 @@ export enum ChatStatus {
 })
 export class RecipientComponent extends AppComponentBase implements OnInit {
   @Input() isActive: boolean;
-
   chatStatus = ChatStatus;
 
   constructor(
@@ -24,9 +23,11 @@ export class RecipientComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
-  get chatStatusClass(): any { return this.chatStatus[this.getRndInteger(0, 2)]; }
+  // get chatStatusClass(): any { return this.chatStatus[this.getRndInteger(0, 2)]; }
+  get chatStatusClass(): string { return 'seen'; }
 
   ngOnInit(): void {
+    this._crd.detectChanges();
   }
 
 }

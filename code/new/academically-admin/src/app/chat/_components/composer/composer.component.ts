@@ -1,6 +1,8 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { NgForm } from '@angular/forms';
+import { ChatModel, ChatService } from '@app/chat/_services/chat.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-composer',
@@ -8,10 +10,11 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./composer.component.less']
 })
 export class ComposerComponent extends AppComponentBase implements OnInit {
-
+  model: ChatModel;
 
   constructor(
-    injector: Injector
+    injector: Injector,
+    private _chatService: ChatService
   ) {
     super(injector);
   }
@@ -20,7 +23,19 @@ export class ComposerComponent extends AppComponentBase implements OnInit {
   }
 
   handleWriteMessage(f: NgForm): void {
-    console.log(f.value);
+    if (f.value.message === '') {
+      return;
+    }
+    this.model = {
+      id: this.uuidv4(),
+      message: f.value.message,
+      creatorUserId: this.appSession.userId.toString(),
+      creationTime: new Date(moment.now()),
+      isSeen: new Date(moment.now())
+    };
+
+    this._chatService.addData(this.model);
+    f.resetForm();
   }
 
   onMessageKeydown(event: any, f: NgForm): void {
