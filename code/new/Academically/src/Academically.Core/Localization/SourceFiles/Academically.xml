@@ -1966,5 +1966,6 @@
     
     <!-- Chat -->
     <text name="WriteAMessage">Write a message</text>
+    <text name="MessageInfo">Message info</text>
   </texts>
 </localizationDictionary>

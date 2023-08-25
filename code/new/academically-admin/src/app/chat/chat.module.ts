@@ -9,6 +9,7 @@ import { SearchFilterComponent } from './_components/search-filter/search-filter
 import { ConversationComponent } from './_components/conversation/conversation.component';
 import { ComposerComponent } from './_components/composer/composer.component';
 import { RecipientComponent } from './_components/recipient/recipient.component';
+import { MessageInfoComponent } from './_components/conversation/_components/message-info/message-info.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { RecipientComponent } from './_components/recipient/recipient.component'
     SearchFilterComponent,
     ConversationComponent,
     ComposerComponent,
-    RecipientComponent
+    RecipientComponent,
+    MessageInfoComponent
   ],
   imports: [
     CommonModule,

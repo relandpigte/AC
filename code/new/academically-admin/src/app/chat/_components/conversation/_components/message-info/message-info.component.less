@@ -1,0 +1,33 @@
+.card {
+    &-header {
+        padding: 1.25rem 1.5rem;
+    }
+
+    &-body {
+        padding: 0 1.5rem 0.313rem;
+
+        & > div {
+            padding: 1.25rem 0;
+
+            .text-muted {
+                font-size: 13px;
+            }
+
+            .icon {
+                & > span {
+                    width: 16px;
+                    height: 16px;
+                    line-height: 1rem;
+                }
+
+                &-read {
+                    background: url(/assets/img/chat/check-read.svg) no-repeat 0 0 transparent;
+                }
+
+                &-delivered {
+                    background: url(/assets/img/chat/check-delivered.svg) no-repeat 0 0 transparent;
+                }
+            }
+        }
+    }
+}

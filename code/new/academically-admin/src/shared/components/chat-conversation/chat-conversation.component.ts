@@ -1,6 +1,7 @@
-import { Component, Injector, Input, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ChatModel } from '@app/chat/_services/chat.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-chat-conversation',
@@ -9,6 +10,7 @@ import { ChatModel } from '@app/chat/_services/chat.service';
 })
 export class ChatConversationComponent extends AppComponentBase implements OnInit {
   @Input() data: ChatModel;
+  @Output() onMessageInfoClick: Subject<ChatModel> = new Subject<ChatModel>();
 
   constructor(injector: Injector) {
     super(injector);
@@ -20,4 +22,7 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
   ngOnInit(): void {
   }
 
+  handleMessageInfoPopup(data: ChatModel): void {
+    this.onMessageInfoClick.next(data);
+  }
 }
