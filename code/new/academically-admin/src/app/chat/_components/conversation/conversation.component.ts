@@ -64,6 +64,10 @@ export class ConversationComponent extends AppComponentBase implements OnInit, A
     const modal = this._modalService.show(MessageInfoComponent, modalSettings).content;
   }
 
+  handleMessageReply(data: ChatModel): void {
+    this._chatService.replyToMessage$.next(data);
+  }
+
   handleCloseClick(): void {
     this.onCloseClick.emit();
   }

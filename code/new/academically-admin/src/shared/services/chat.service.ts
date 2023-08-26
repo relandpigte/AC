@@ -8,9 +8,11 @@ export interface ChatModel {
   referenceId?: number;
   message: string;
   creationTime: Date;
+  creatorUser?: any;
   creatorUserId: string;
   isSeen: Date;
   isDeleted?: boolean;
+  parentMessage?: ChatModel;
 }
 
 @Injectable({
@@ -18,6 +20,7 @@ export interface ChatModel {
 })
 export class ChatService {
   openChat$: Subject<any> = new Subject();
+  replyToMessage$: Subject<ChatModel> = new Subject();
 
   private data: ChatModel[] = [
     {
@@ -33,7 +36,15 @@ export class ChatService {
       message: 'Yes, your example of defining an interface only for the particular items would be a more useful way to do it.',
       creationTime: new Date(moment.now()),
       creatorUserId: '123',
-      isSeen: new Date(moment.now())
+      isSeen: new Date(moment.now()),
+      parentMessage: {
+        id: '1',
+        referenceId: 555,
+        message: 'This is the message that you like.',
+        creationTime: new Date(moment.now()),
+        creatorUserId: this._appSessionService.userId.toString(),
+        isSeen: new Date(moment.now())
+      }
     },
     {
       id: '3',

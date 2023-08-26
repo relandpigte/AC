@@ -26,7 +26,10 @@
             </div>
         </div>
         <div class="chat-content-right d-flex flex-column flex-grow-1">
-            <app-composer-conversation (onReplyClick)="handleOnReply()"></app-composer-conversation>
+            <app-composer-conversation
+                [replyingTo]="replyingTo"
+                (onReplyClick)="handleOnReply()"
+            ></app-composer-conversation>
         </div>
     </div>
 </div>

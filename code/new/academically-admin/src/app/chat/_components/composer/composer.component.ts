@@ -1,9 +1,9 @@
-import { Component, Injector, OnInit, Output } from '@angular/core';
-import { AppComponentBase } from '@shared/app-component-base';
+import { Component, Injector, Input, OnInit, Output } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { AppComponentBase } from '@shared/app-component-base';
+import { ChatModel, ChatService } from '@shared/services/chat.service';
 import * as moment from 'moment';
 import { Subject } from 'rxjs';
-import { ChatModel, ChatService } from '@shared/services/chat.service';
 
 @Component({
   selector: 'app-composer',
@@ -13,6 +13,7 @@ import { ChatModel, ChatService } from '@shared/services/chat.service';
 export class ComposerComponent extends AppComponentBase implements OnInit {
   model: ChatModel;
 
+  @Input() replyingTo: ChatModel;
   @Output() onReply: Subject<any> = new Subject<any>();
 
   constructor(
@@ -21,6 +22,9 @@ export class ComposerComponent extends AppComponentBase implements OnInit {
   ) {
     super(injector);
   }
+
+  get replyingToRecipient(): string { return this.replyingTo?.creatorUser?.firstName ?? 'Miyah'; }
+  get replyingToMessage(): string { return this.replyingTo?.message ?? 'I can even begin to express how good this final season'; }
 
   ngOnInit(): void {
   }
@@ -37,9 +41,18 @@ export class ComposerComponent extends AppComponentBase implements OnInit {
       isSeen: new Date(moment.now())
     };
 
+    if (this.replyingTo) {
+      this.model.parentMessage = this.replyingTo;
+    }
+
     this._chatService.addChatData(this.model);
     f.resetForm();
+    this._chatService.replyToMessage$.next(null);
     this.onReply.next();
+  }
+
+  handleRemoveReplyTo(): void {
+    this._chatService.replyToMessage$.next(null);
   }
 
   onMessageKeydown(event: any, f: NgForm): void {

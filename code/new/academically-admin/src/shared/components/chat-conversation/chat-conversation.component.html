@@ -1,6 +1,17 @@
 <div class="d-flex">
-    <div class="conversation-wrapper d-flex" [ngClass]="isSender ? 'sender' : 'recipient'">
-        <div class="message">
+    <div class="conversation-wrapper d-flex flex-column gap-5" [class.has-reply]="parentMessage" [ngClass]="isSender ? 'sender' : 'recipient'">
+        <div *ngIf="parentMessage" class="parent-message">
+            <div class="parent-message-header d-flex flex-column align-items-start gap-3">
+                <div class="user-info d-flex gap-5">
+                    <div class="name font-weight-bold">Casey Fyfe</div>
+                    <span class="time">1h</span>
+                </div>
+                <div class="parent-message-content" [class.message-deleted]="parentMessage.isDeleted">
+                    {{ isDeleted ? ('MessageDeleted' | localize) : parentMessage.message }}
+                </div>
+            </div>
+        </div>
+        <div class="message position-relative">
             <div class="message-header d-flex align-items-center gap-10">
                 <div class="user-info d-flex gap-5">
                     <div class="name font-weight-bold">Casey Fyfe</div>
@@ -13,7 +24,7 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
                             <div class="dropdown-item cursor-pointer" (click)="handleMessageInfoPopup(data)">Message info</div>
-                            <div class="dropdown-item cursor-pointer">Reply</div>
+                            <div class="dropdown-item cursor-pointer" (click)="handleMessageReply()">Reply</div>
                             <div class="dropdown-item cursor-pointer" (click)="handleMessageDelete(data.id)">Delete message</div>
                         </div>
                     </div>

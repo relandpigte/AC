@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { Subject } from 'rxjs';
 import { ChatModel, ChatService } from '@shared/services/chat.service';
@@ -11,6 +11,8 @@ import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-d
 })
 export class ChatConversationComponent extends AppComponentBase implements OnInit {
   @Input() data: ChatModel;
+
+  @Output() onReplyClick: EventEmitter<ChatModel> = new EventEmitter();
   @Output() onMessageInfoClick: Subject<ChatModel> = new Subject<ChatModel>();
 
   constructor(
@@ -22,6 +24,7 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
   }
 
   get chatMessage(): string { return this.data?.message; }
+  get parentMessage(): ChatModel { return this.data?.parentMessage; }
   get isSender(): boolean { return this.data?.creatorUserId.toString() === this.appSession.userId.toString(); }
   get isDeleted(): boolean { return this.data?.isDeleted; }
 
@@ -30,6 +33,10 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
 
   handleMessageInfoPopup(data: ChatModel): void {
     this.onMessageInfoClick.next(data);
+  }
+
+  handleMessageReply(): void {
+    this.onReplyClick.emit(this.data);
   }
 
   handleMessageDelete(chatId: string): void {

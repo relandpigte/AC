@@ -6,6 +6,9 @@
         (onCloseClick)="handleCloseClick()"
     ></app-conversation>
 </div>
-<div class="chat-conversation-composer border-top mt-auto">
-    <app-composer (onReply)="handleReplyClick()"></app-composer>
+<div class="chat-conversation-composer border-top mt-auto" [class.has-attachment]="!!replyingTo">
+    <app-composer
+        [replyingTo]="replyingTo"
+        (onReply)="handleReplyClick()"
+    ></app-composer>
 </div>

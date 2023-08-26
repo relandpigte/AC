@@ -45,7 +45,12 @@
             </div>
 
             <ng-container *ngIf="data.length > 0">
-                <app-chat-conversation *ngFor="let d of data" [data]="d" (onMessageInfoClick)="handleMessageInfoPopup(d)"></app-chat-conversation>
+                <app-chat-conversation
+                    *ngFor="let d of data"
+                    [data]="d"
+                    (onMessageInfoClick)="handleMessageInfoPopup(d)"
+                    (onReplyClick)="handleMessageReply(d)"
+                ></app-chat-conversation>
             </ng-container>
 
             <div class="conversation-status text-right">

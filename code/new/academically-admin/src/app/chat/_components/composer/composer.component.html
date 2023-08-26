@@ -1,3 +1,13 @@
+<div *ngIf="replyingTo" class="replying-to d-flex justify-content-between align-items-start gap-3">
+    <div class="replying-to-info d-flex flex-column">
+        <div class="replying-to-info-recipient">Replying to {{ replyingToRecipient | titlecase }}</div>
+        <div class="replying-to-info-message">{{ replyingToMessage }}</div>
+    </div>
+    <div class="replying-to-info-action cursor-pointer d-flex justify-content-center align-items-center w-19-px h-19-px" (click)="handleRemoveReplyTo()">
+        <img src="/assets/img/actions/close_2.svg" class="close w-100 h-100">
+    </div>
+</div>
+
 <div class="composer d-flex align-items-center align-content-around gap-15">
     <form class="composer-text flex-grow-1" #f="ngForm" (ngSubmit)="handleWriteMessage(f)">
         <label class="sr-only">{{ 'WriteAMessage' | localize }}</label>
