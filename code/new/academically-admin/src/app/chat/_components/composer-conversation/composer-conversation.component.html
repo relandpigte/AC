@@ -1,0 +1,11 @@
+<div class="chat-conversations-wrapper">
+    <app-conversation
+        [hasActions]="hasActions"
+        [hasClose]="hasClose"
+        [showAttachmentInfo]="showAttachmentInfo"
+        (onCloseClick)="handleCloseClick()"
+    ></app-conversation>
+</div>
+<div class="chat-conversation-composer border-top mt-auto">
+    <app-composer (onReply)="handleReplyClick()"></app-composer>
+</div>

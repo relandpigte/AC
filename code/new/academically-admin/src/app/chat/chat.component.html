@@ -26,12 +26,7 @@
             </div>
         </div>
         <div class="chat-content-right d-flex flex-column flex-grow-1">
-            <div class="chat-conversations-wrapper">
-                <app-conversation></app-conversation>
-            </div>
-            <div class="chat-conversation-composer border-top mt-auto">
-                <app-composer (onReply)="handleOnReply()"></app-composer>
-            </div>
+            <app-composer-conversation (onReplyClick)="handleOnReply()"></app-composer-conversation>
         </div>
     </div>
 </div>

@@ -10,8 +10,8 @@ import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.servi
 import { StateUpdateType } from '@shared/services/state-base.service';
 import { WrapperService } from '@shared/services/wrapper.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { BehaviorSubject, combineLatest, of } from 'rxjs';
-import { switchMap, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, of } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-discussion',
@@ -69,7 +69,7 @@ export class CoachingDiscussionComponent extends AppComponentBase implements OnI
     private _modalService: BsModalService,
     private _hubService: HubService,
     private _postsService: PostsServiceProxy,
-    private _wrapperService: WrapperService
+    private _wrapperService: WrapperService,
   ) {
     super(injector);
   }
@@ -140,5 +140,4 @@ export class CoachingDiscussionComponent extends AppComponentBase implements OnI
         .pipe(takeUntil(this.destroyed$))
         .subscribe(() => {});
   }
-
 }

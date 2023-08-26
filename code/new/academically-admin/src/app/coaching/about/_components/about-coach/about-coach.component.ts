@@ -1,6 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
+import { ChatService } from '@shared/services/chat.service';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
 
 @Component({
@@ -14,7 +15,8 @@ export class AboutCoachComponent extends AppComponentBase implements OnInit {
 
   constructor(
     injector: Injector,
-    private _landingPageService: LandingPagesService
+    private _landingPageService: LandingPagesService,
+    private _chatService: ChatService
   ) {
     super(injector);
   }
@@ -26,4 +28,7 @@ export class AboutCoachComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
   }
 
+  onMessageClick(): void {
+    this._chatService.openChat$.next();
+  }
 }

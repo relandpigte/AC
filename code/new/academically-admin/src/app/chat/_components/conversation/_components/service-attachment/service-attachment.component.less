@@ -1,0 +1,44 @@
+.service {
+    &-attachment {
+        padding: 15px 24px;
+
+        &-image {
+            border-radius: 5px;
+        }
+
+        &-info {
+            &-name {
+                color: #1F2D3D;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: normal;
+                letter-spacing: -0.12px;
+            }
+
+            &-type {
+                color: #6E84A3;
+                font-size: 11px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+                letter-spacing: -0.11px
+            }
+        }
+
+        &-action {
+            width: 35px;
+            height: 35px;
+
+            .action {
+                background-size: cover;
+                background-position: center;
+                background-image: url("/assets/img/actions/join.svg");
+
+                &:hover {
+                    background-image: url("/assets/img/actions/join-hover.svg");
+                }
+            }
+        }
+    }
+}

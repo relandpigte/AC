@@ -1,6 +1,8 @@
 import * as moment from 'moment';
 
 export interface ServiceCard {
+    id?: string;
+
     type: ServiceCardType;
     name?: string;
     info?: string;

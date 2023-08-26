@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AppSessionService } from '@shared/session/app-session.service';
 import * as moment from 'moment';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 export interface ChatModel {
   id: string;
@@ -17,6 +17,8 @@ export interface ChatModel {
   providedIn: 'root'
 })
 export class ChatService {
+  openChat$: Subject<any> = new Subject();
+
   private data: ChatModel[] = [
     {
       id: '1',

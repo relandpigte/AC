@@ -9,12 +9,11 @@ import { AppComponentBase } from '@shared/app-component-base';
 export class EventsAboutComponent extends AppComponentBase implements OnInit {
 
   constructor(
-    injector: Injector
+    injector: Injector,
   ) {
     super(injector);
   }
 
   ngOnInit(): void {
   }
-
 }

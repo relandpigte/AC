@@ -29,6 +29,8 @@ export class ServiceCardUtils {
         let sanitizedOptions = _.merge({}, DefaultServiceCardOptions, options);
         let sanitizedService = {} as ServiceCard;
 
+        sanitizedService.id = data.id;
+
         sanitizedService.type = ServiceCardUtils.getCardType(data);
         sanitizedService.images = [{ src: data.thumbnailImageUrl ?? 'assets/img/img-placeholder.png' }];
         sanitizedService.name = data?.name;

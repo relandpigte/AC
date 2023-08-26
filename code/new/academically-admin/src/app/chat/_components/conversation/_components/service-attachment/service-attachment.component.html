@@ -1,0 +1,10 @@
+<div class="service-attachment d-flex justify-content-between align-items-center gap-15">
+    <div class="service-attachment-image w-41-px h-35-px bg-center" [ngStyle]="{ 'background-image': 'url(\'' + images[0].src + '\')' }" [ngClass]="[images[0].class ? images[0].class : '']"></div>
+    <div class="service-attachment-info d-flex flex-column flex-grow-1">
+        <div class="service-attachment-info-name">{{ name }}</div>
+        <div class="service-attachment-info-type">{{ type | titlecase }}</div>
+    </div>
+    <div class="service-attachment-action cursor-pointer 35-px h-35-px">
+        <div class="action w-100 h-100"></div>
+    </div>
+</div>

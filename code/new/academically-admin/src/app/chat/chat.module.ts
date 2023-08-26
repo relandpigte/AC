@@ -8,8 +8,10 @@ import { AppSharedModule } from '../_shared/app-shared.module';
 import { SearchFilterComponent } from './_components/search-filter/search-filter.component';
 import { ConversationComponent } from './_components/conversation/conversation.component';
 import { ComposerComponent } from './_components/composer/composer.component';
+import { ComposerConversationComponent } from './_components/composer-conversation/composer-conversation.component';
 import { RecipientComponent } from './_components/recipient/recipient.component';
 import { MessageInfoComponent } from './_components/conversation/_components/message-info/message-info.component';
+import { ServiceAttachmentComponent } from './_components/conversation/_components/service-attachment/service-attachment.component';
 
 
 @NgModule({
@@ -18,8 +20,10 @@ import { MessageInfoComponent } from './_components/conversation/_components/mes
     SearchFilterComponent,
     ConversationComponent,
     ComposerComponent,
+    ComposerConversationComponent,
     RecipientComponent,
-    MessageInfoComponent
+    MessageInfoComponent,
+    ServiceAttachmentComponent
   ],
   imports: [
     CommonModule,

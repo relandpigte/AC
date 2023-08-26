@@ -16,7 +16,7 @@
                 </p>
             </div>
 
-            <div class="conversation-header-actions d-flex align-items-center ml-auto">
+            <div *ngIf="hasActions" class="conversation-header-actions d-flex align-items-center ml-auto">
                 <div class="dropdown">
                     <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="fe fe-more-horizontal"></span>
@@ -27,7 +27,15 @@
                     </div>
                 </div>
             </div>
+
+            <div *ngIf="hasClose" class="conversation-header-close d-flex align-items-center cursor-pointer ml-auto" (click)="handleCloseClick()">
+                <img src="/assets/img/actions/close_2.svg" class="close">
+            </div>
         </div>
+    </div>
+
+    <div *ngIf="showAttachmentInfo && attachedService" class="conversation-attachment border-bottom">
+        <app-service-attachment [data]="attachedService"></app-service-attachment>
     </div>
 
     <div class="conversation-content scroll-wrapper" #scrollWrapper>
