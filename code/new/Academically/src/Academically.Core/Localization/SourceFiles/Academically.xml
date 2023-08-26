@@ -1967,5 +1967,9 @@
     <!-- Chat -->
     <text name="WriteAMessage">Write a message</text>
     <text name="MessageInfo">Message info</text>
+    <text name="DeleteThisMessage">Delete this message?</text>
+    <text name="DeleteMessageConfirmation">If you are sure to delete the conversation, this is an irreversible action</text>
+    <text name="MessageWasDeleted">This message was deleted</text>
+    <text name="MessageDeleted">You deleted this message</text>
   </texts>
 </localizationDictionary>

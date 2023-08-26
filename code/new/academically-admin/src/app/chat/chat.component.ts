@@ -7,7 +7,6 @@ import { AppComponentBase } from '@shared/app-component-base';
   styleUrls: ['./chat.component.less']
 })
 export class ChatComponent extends AppComponentBase implements OnInit {
-
   constructor(
     injector: Injector
   ) {
@@ -15,5 +14,9 @@ export class ChatComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  handleOnReply(): void {
+    console.log('this triggered!');
   }
 }

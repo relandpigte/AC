@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AppSessionService } from '../../../shared/session/app-session.service';
+import { AppSessionService } from '@shared/session/app-session.service';
 import * as moment from 'moment';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 
@@ -10,6 +10,7 @@ export interface ChatModel {
   creationTime: Date;
   creatorUserId: string;
   isSeen: Date;
+  isDeleted?: boolean;
 }
 
 @Injectable({
@@ -45,12 +46,19 @@ export class ChatService {
   constructor(private _appSessionService: AppSessionService) {
   }
 
-  getData(): Observable<ChatModel[]> {
+  getChatData(): Observable<ChatModel[]> {
     return this.dataSubject.asObservable();
   }
 
-  addData(newItem: ChatModel): void {
+  addChatData(newItem: ChatModel): void {
     this.data.push(newItem);
     this.dataSubject.next(this.data);
+  }
+
+  removeChatData(chatId: string): void {
+    const chatIndex = this.data.findIndex(c => c.id === chatId);
+    this.data[chatIndex].isDeleted = true;
+
+    this.dataSubject.next((this.data));
   }
 }

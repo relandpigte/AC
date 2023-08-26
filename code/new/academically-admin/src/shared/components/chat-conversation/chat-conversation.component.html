@@ -14,13 +14,13 @@
                         <div class="dropdown-menu dropdown-menu-right">
                             <div class="dropdown-item cursor-pointer" (click)="handleMessageInfoPopup(data)">Message info</div>
                             <div class="dropdown-item cursor-pointer">Reply</div>
-                            <div class="dropdown-item cursor-pointer">Delete</div>
+                            <div class="dropdown-item cursor-pointer" (click)="handleMessageDelete(data.id)">Delete message</div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="message-content">
-                {{ chatMessage }}
+            <div class="message-content" [class.message-deleted]="isDeleted">
+                {{ isDeleted ? ('MessageDeleted' | localize) : chatMessage }}
             </div>
         </div>
     </div>

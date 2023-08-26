@@ -30,17 +30,19 @@
         </div>
     </div>
 
-    <div class="conversation-content d-flex flex-column gap-20">
-        <div class="conversation-day-title text-center">
-            <span class="title mx-auto">Today</span>
-        </div>
+    <div class="conversation-content scroll-wrapper" #scrollWrapper>
+        <div class="d-flex flex-column gap-20" #scrollContent>
+            <div class="conversation-day-title text-center">
+                <span class="title mx-auto">Today</span>
+            </div>
 
-        <ng-container *ngIf="data.length > 0">
-            <app-chat-conversation *ngFor="let d of data" [data]="d" (onMessageInfoClick)="handleMessageInfoPopup(d)"></app-chat-conversation>
-        </ng-container>
+            <ng-container *ngIf="data.length > 0">
+                <app-chat-conversation *ngFor="let d of data" [data]="d" (onMessageInfoClick)="handleMessageInfoPopup(d)"></app-chat-conversation>
+            </ng-container>
 
-        <div class="conversation-status text-right">
-            <span class="title">Delivered</span>
+            <div class="conversation-status text-right">
+                <span class="title">Delivered</span>
+            </div>
         </div>
     </div>
 </div>

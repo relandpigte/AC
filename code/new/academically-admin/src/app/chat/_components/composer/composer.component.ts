@@ -1,8 +1,9 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { NgForm } from '@angular/forms';
-import { ChatModel, ChatService } from '@app/chat/_services/chat.service';
 import * as moment from 'moment';
+import { Subject } from 'rxjs';
+import { ChatModel, ChatService } from '@shared/services/chat.service';
 
 @Component({
   selector: 'app-composer',
@@ -11,6 +12,8 @@ import * as moment from 'moment';
 })
 export class ComposerComponent extends AppComponentBase implements OnInit {
   model: ChatModel;
+
+  @Output() onReply: Subject<any> = new Subject<any>();
 
   constructor(
     injector: Injector,
@@ -34,8 +37,9 @@ export class ComposerComponent extends AppComponentBase implements OnInit {
       isSeen: new Date(moment.now())
     };
 
-    this._chatService.addData(this.model);
+    this._chatService.addChatData(this.model);
     f.resetForm();
+    this.onReply.next();
   }
 
   onMessageKeydown(event: any, f: NgForm): void {

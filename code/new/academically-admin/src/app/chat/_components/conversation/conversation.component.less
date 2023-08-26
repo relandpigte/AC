@@ -40,6 +40,22 @@
 
     &-content {
         padding: 1.25rem 1.5rem;
+        max-height: 50vh;
+
+        &.scroll-wrapper {
+            overflow: auto;
+            margin-right: 4px;
+            scroll-behavior: smooth;
+
+            &::-webkit-scrollbar {
+                width: 1.5px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: #D2DDEC;
+                border-radius: 10px;
+            }
+        }
     }
 
     &-day-title {

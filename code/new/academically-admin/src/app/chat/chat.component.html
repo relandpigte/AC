@@ -30,7 +30,7 @@
                 <app-conversation></app-conversation>
             </div>
             <div class="chat-conversation-composer border-top mt-auto">
-                <app-composer></app-composer>
+                <app-composer (onReply)="handleOnReply()"></app-composer>
             </div>
         </div>
     </div>
