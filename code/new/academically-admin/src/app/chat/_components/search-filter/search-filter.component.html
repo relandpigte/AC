@@ -9,6 +9,18 @@
             <input class="form-control" type="search" name="search" placeholder="Search messages"/>
         </div>
     </form>
-    <button class="btn search-btn search-btn-action border flex-grow-1"></button>
+    <div class="dropdown flex-grow-1">
+        <div class="search-btn search-btn-action border" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></div>
+        <div class="dropdown-menu dropdown-menu-left w-188-px">
+            <div class="dropdown-item cursor-pointer d-flex justify-content-between align-items-center" (click)="handleChangeCollection($event, 0)">
+                <span>Inbox</span>
+                <img *ngIf="collection === 0" src="/assets/img/chat/check.svg" class="check w-18-px h-18-px">
+            </div>
+            <div class="dropdown-item cursor-pointer d-flex justify-content-between align-items-center" (click)="handleChangeCollection($event, 1)">
+                Archived
+                <img *ngIf="collection === 1" src="/assets/img/chat/check.svg" class="check w-18-px h-18-px">
+            </div>
+        </div>
+    </div>
     <button class="btn search-btn search-btn-create border flex-grow-1"></button>
 </div>

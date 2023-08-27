@@ -20,10 +20,12 @@
 
             <ng-container *ngIf="!isConversationEmpty else emptyConversations">
                 <div class="chat-content-left-recipients">
-                    <app-recipient></app-recipient>
-                    <app-recipient [isActive]="true"></app-recipient>
-                    <app-recipient></app-recipient>
-                    <app-recipient></app-recipient>
+                    <ng-container *ngIf="selectedChannel === 0">
+                        <app-recipient *ngFor="let c of inboxChannels" [channel]="c"></app-recipient>
+                    </ng-container>
+                    <ng-container *ngIf="selectedChannel === 1">
+                        <app-recipient *ngFor="let c of archivedChannels" [channel]="c"></app-recipient>
+                    </ng-container>
                 </div>
             </ng-container>
         </div>

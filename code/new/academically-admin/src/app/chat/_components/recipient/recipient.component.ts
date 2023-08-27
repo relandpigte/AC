@@ -1,5 +1,7 @@
 import { ChangeDetectorRef, Component, Injector, Input, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
+import { ChannelModel } from '@shared/services/chat.service';
+import * as moment from 'moment';
 
 export enum ChatStatus {
   unread,
@@ -13,6 +15,7 @@ export enum ChatStatus {
   styleUrls: ['./recipient.component.less']
 })
 export class RecipientComponent extends AppComponentBase implements OnInit {
+  @Input() channel: ChannelModel;
   @Input() isActive: boolean;
   chatStatus = ChatStatus;
 
@@ -25,6 +28,9 @@ export class RecipientComponent extends AppComponentBase implements OnInit {
 
   // get chatStatusClass(): any { return this.chatStatus[this.getRndInteger(0, 2)]; }
   get chatStatusClass(): string { return 'seen'; }
+  get recipientName(): string { return this.channel?.creatorUser?.fullName ?? 'Unknown User'; }
+  get receivedDate(): string { return this.channel?.creationTime ? this.convertMomentToShortDateFormat(moment(this.channel?.creationTime)) : '9:00 am'; }
+  get latestMessage(): string { return this.channel?.latestMessage ?? 'The quick brown fox jumped over the lazy dog.'; }
 
   ngOnInit(): void {
     this._crd.detectChanges();

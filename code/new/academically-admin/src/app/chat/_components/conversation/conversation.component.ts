@@ -3,7 +3,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { takeUntil } from 'rxjs/operators';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { MessageInfoComponent } from '@app/chat/_components/conversation/_components/message-info/message-info.component';
-import { ChatModel, ChatService } from '@shared/services/chat.service';
+import { ChannelModel, ChatModel, ChatService } from '@shared/services/chat.service';
 import { ServiceCard } from '@shared/models/service-card.model';
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 
@@ -16,6 +16,7 @@ export class ConversationComponent extends AppComponentBase implements OnInit, A
   @ViewChild('scrollContent', { static: true }) content?: ElementRef<HTMLDivElement>;
   @ViewChild('scrollWrapper', { static: true }) wrapper?: ElementRef<HTMLDivElement>;
 
+  @Input() channel: ChannelModel;
   @Input() hasActions = true;
   @Input() hasClose = false;
   @Input() showAttachmentInfo = true;
@@ -70,5 +71,9 @@ export class ConversationComponent extends AppComponentBase implements OnInit, A
 
   handleCloseClick(): void {
     this.onCloseClick.emit();
+  }
+
+  handleArchiveChannel(): void {
+    this._chatService.archiveChannel$.next(this.channel);
   }
 }

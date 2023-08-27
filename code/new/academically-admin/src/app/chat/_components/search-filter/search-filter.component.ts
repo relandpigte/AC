@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ChatService } from '@shared/services/chat.service';
 
 @Component({
   selector: 'app-search-filter',
@@ -7,9 +8,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SearchFilterComponent implements OnInit {
 
-  constructor() { }
+  collection = 0;
+
+  constructor(
+    private _chatService: ChatService
+  ) { }
 
   ngOnInit(): void {
   }
 
+  handleChangeCollection(evt, collection): void {
+    this.collection = collection;
+    this._chatService.selectedChannel$.next(collection);
+    evt.stopPropagation();
+  }
 }
