@@ -31,6 +31,10 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     this._chatService.archiveChannel$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(channel => this.handleOnArchiveChannel(channel));
+
+    this._chatService.deleteChannel$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(channel => this.handleOnDeleteChannel(channel));
   }
 
   get isConversationEmpty(): boolean { return false; }
@@ -64,5 +68,9 @@ export class ChatComponent extends AppComponentBase implements OnInit {
 
   handleOnArchiveChannel(channel: ChannelModel): void {
     console.log('archive this: ', channel);
+  }
+
+  handleOnDeleteChannel(channel: ChannelModel): void {
+    console.log('delete this: ', channel);
   }
 }

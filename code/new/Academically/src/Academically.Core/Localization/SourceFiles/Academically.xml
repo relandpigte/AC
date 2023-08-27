@@ -1973,5 +1973,7 @@
     <text name="MessageDeleted">You deleted this message</text>
     <text name="NoMessages">No messages</text>
     <text name="NoConversations">No conversations</text>
+	<text name="DeleteThisConversation">Delete this conversation?</text>
+	<text name="DeleteConversationConfirmation">If you are sure to delete the conversation, this is an irreversible action</text>
   </texts>
 </localizationDictionary>

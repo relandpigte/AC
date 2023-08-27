@@ -6,6 +6,7 @@ import { MessageInfoComponent } from '@app/chat/_components/conversation/_compon
 import { ChannelModel, ChatModel, ChatService } from '@shared/services/chat.service';
 import { ServiceCard } from '@shared/models/service-card.model';
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 @Component({
   selector: 'app-conversation',
@@ -30,7 +31,8 @@ export class ConversationComponent extends AppComponentBase implements OnInit, A
   constructor(
     injector: Injector,
     private _chatService: ChatService,
-    private _modalService: BsModalService
+    private _modalService: BsModalService,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
   }
@@ -75,5 +77,17 @@ export class ConversationComponent extends AppComponentBase implements OnInit, A
 
   handleArchiveChannel(): void {
     this._chatService.archiveChannel$.next(this.channel);
+  }
+
+  handleDeleteChannel(): void {
+      const options: ModalDialogOptions = {
+        title: this.l('DeleteThisConversation'),
+        text: this.l('DeleteConversationConfirmation'),
+        btnConfirmText: 'Delete',
+        confirmCb: (): void => {
+          this._chatService.deleteChannel$.next(this.channel);
+        }
+      };
+      this._modalDialogService.showConfirmDialog(options);
   }
 }

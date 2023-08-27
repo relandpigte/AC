@@ -33,6 +33,7 @@ export class ChatService {
   selectedChannel$: BehaviorSubject<number> = new BehaviorSubject(0);
   openChat$: Subject<any> = new Subject();
   replyToMessage$: Subject<ChatModel> = new Subject();
+  deleteChannel$: Subject<ChannelModel> = new Subject();
   archiveChannel$: Subject<ChannelModel> = new Subject();
 
   private data: ChatModel[] = [
