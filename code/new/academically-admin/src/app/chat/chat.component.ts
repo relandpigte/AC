@@ -22,6 +22,9 @@ export class ChatComponent extends AppComponentBase implements OnInit {
       .subscribe(replyingTo => this.replyingTo = replyingTo);
   }
 
+  get isConversationEmpty(): boolean { return true; }
+  get isMessageEmpty(): boolean { return true; }
+
   ngOnInit(): void {
   }
 

@@ -18,18 +18,34 @@
         <div class="chat-content-left border-right">
             <app-search-filter></app-search-filter>
 
-            <div class="chat-content-left-recipients">
-                <app-recipient></app-recipient>
-                <app-recipient [isActive]="true"></app-recipient>
-                <app-recipient></app-recipient>
-                <app-recipient></app-recipient>
-            </div>
+            <ng-container *ngIf="!isConversationEmpty else emptyConversations">
+                <div class="chat-content-left-recipients">
+                    <app-recipient></app-recipient>
+                    <app-recipient [isActive]="true"></app-recipient>
+                    <app-recipient></app-recipient>
+                    <app-recipient></app-recipient>
+                </div>
+            </ng-container>
         </div>
         <div class="chat-content-right d-flex flex-column flex-grow-1">
-            <app-composer-conversation
-                [replyingTo]="replyingTo"
-                (onReplyClick)="handleOnReply()"
-            ></app-composer-conversation>
+            <ng-container *ngIf="!isMessageEmpty else emptyMessages">
+                <app-composer-conversation
+                    [replyingTo]="replyingTo"
+                    (onReplyClick)="handleOnReply()"
+                ></app-composer-conversation>
+            </ng-container>
         </div>
     </div>
 </div>
+
+<ng-template #emptyConversations>
+    <div class="chat-empty-conversations">
+        <span>{{ 'NoConversations' | localize }}</span>
+    </div>
+</ng-template>
+
+<ng-template #emptyMessages>
+    <div class="chat-empty-messages d-flex h-100p">
+        <span class="m-auto">{{ 'NoMessages' | localize }}</span>
+    </div>
+</ng-template>
