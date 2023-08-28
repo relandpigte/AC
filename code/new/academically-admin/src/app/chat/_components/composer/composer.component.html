@@ -8,14 +8,18 @@
     </div>
 </div>
 
-<div class="composer d-flex align-items-center align-content-around gap-15">
+<div class="composer d-flex align-items-center align-content-around gap-15" [class.typing]="!!f?.value?.message">
     <form class="composer-text flex-grow-1" #f="ngForm" (ngSubmit)="handleWriteMessage(f)">
         <label class="sr-only">{{ 'WriteAMessage' | localize }}</label>
         <textarea name="message" ngModel (keydown)="onMessageKeydown($event, f)" class="form-control form-control-flush"
                   data-toggle="autosize" rows="1" placeholder="{{ 'WriteAMessage' | localize }}" [maxlength]="500"></textarea>
+
+        <div *ngIf="!!f?.value?.message" class="composer-instruction text-muted">
+            Press enter to <span class="text-primary">post</span>
+        </div>
     </form>
 
-    <div class="composer-actions d-flex gap-10 text-muted">
+    <div class="composer-actions d-flex gap-10 text-muted align-self-end">
         <a class="text-reset me-3" href="#" data-bs-toggle="tooltip" aria-label="Add photo"
            data-bs-original-title="Add photo">
             <i class="fe fe-camera"></i>

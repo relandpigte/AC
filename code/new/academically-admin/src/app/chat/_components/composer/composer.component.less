@@ -31,12 +31,25 @@
     padding: 13px;
     height: 50px;
 
+    &.typing {
+        height: 73px;
+
+        textarea {
+            height: auto;
+            padding-top: 0;
+        }
+    }
+
     &-text {
         textarea {
             overflow: hidden;
             overflow-wrap: break-word;
             height: 41px;
         }
+    }
+
+    &-instruction {
+        font-size: 13px;
     }
 
     &-actions {
