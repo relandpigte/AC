@@ -1,7 +1,7 @@
 <div class="d-flex">
     <div class="conversation-wrapper d-flex flex-column gap-5" [class.has-reply]="parentMessage" [ngClass]="isSender ? 'sender' : 'recipient'">
         <div class="d-flex gap-10">
-            <div *ngIf="!isSender" [style.width.px]="35" [style.height.px]="35"></div>
+            <div *ngIf="!isSender && parentMessage" [style.width.px]="35" [style.height.px]="35"></div>
             <div *ngIf="parentMessage" class="parent-message">
                 <div class="parent-message-header d-flex flex-column align-items-start gap-3">
                     <div class="user-info d-flex gap-5">
