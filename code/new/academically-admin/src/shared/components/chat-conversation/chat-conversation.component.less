@@ -5,7 +5,8 @@
 .conversation {
     &-wrapper {
         .message {
-            max-width: 34.375rem;
+            width: 100%;
+            max-width: 550px;
             padding: 0.875rem 1rem;
             border-radius: 0.625rem;
 
@@ -15,8 +16,12 @@
         }
 
         .avatar {
-            width: 2.188rem;
-            height: 2.188rem;
+            width: 35px;
+            height: 35px;
+            img {
+                width: 35px;
+                height: 35px;
+            }
         }
 
         &.sender {
@@ -83,6 +88,7 @@
 
 .parent {
     &-message {
+        max-width: 550px;
         padding: 14px 16px;
         border-radius: 12px;
         border: 1px solid #D2DDEC;

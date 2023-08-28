@@ -1,37 +1,52 @@
 <div class="d-flex">
     <div class="conversation-wrapper d-flex flex-column gap-5" [class.has-reply]="parentMessage" [ngClass]="isSender ? 'sender' : 'recipient'">
-        <div *ngIf="parentMessage" class="parent-message">
-            <div class="parent-message-header d-flex flex-column align-items-start gap-3">
-                <div class="user-info d-flex gap-5">
-                    <div class="name font-weight-bold">Casey Fyfe</div>
-                    <span class="time">1h</span>
-                </div>
-                <div class="parent-message-content" [class.message-deleted]="parentMessage.isDeleted">
-                    {{ isDeleted ? ('MessageDeleted' | localize) : parentMessage.message }}
-                </div>
-            </div>
-        </div>
-        <div class="message position-relative">
-            <div class="message-header d-flex align-items-center gap-10">
-                <div class="user-info d-flex gap-5">
-                    <div class="name font-weight-bold">Casey Fyfe</div>
-                    <span class="time">1h</span>
-                </div>
-                <div class="actions ml-auto">
-                    <div class="dropdown">
-                        <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="fe fe-more-horizontal"></span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <div class="dropdown-item cursor-pointer" (click)="handleMessageInfoPopup(data)">Message info</div>
-                            <div class="dropdown-item cursor-pointer" (click)="handleMessageReply()">Reply</div>
-                            <div class="dropdown-item cursor-pointer" (click)="handleMessageDelete(data.id)">Delete message</div>
-                        </div>
+        <div class="d-flex gap-10">
+            <div *ngIf="!isSender" [style.width.px]="35" [style.height.px]="35"></div>
+            <div *ngIf="parentMessage" class="parent-message">
+                <div class="parent-message-header d-flex flex-column align-items-start gap-3">
+                    <div class="user-info d-flex gap-5">
+                        <div class="name font-weight-bold">Casey Fyfe</div>
+                        <span class="time">1h</span>
+                    </div>
+                    <div class="parent-message-content" [class.message-deleted]="parentMessage.isDeleted">
+                        {{ isDeleted ? ('MessageDeleted' | localize) : parentMessage.message }}
                     </div>
                 </div>
             </div>
-            <div class="message-content" [class.message-deleted]="isDeleted">
-                {{ isDeleted ? ('MessageDeleted' | localize) : chatMessage }}
+        </div>
+
+        <div class="d-flex gap-10">
+            <div *ngIf="!isSender" class="avatar flex-grow-1">
+                <img class="avatar-img rounded-circle" src="assets/img/anonymous.png" alt="..."/>
+            </div>
+
+            <div class="message position-relative">
+                <div class="message-header d-flex align-items-center gap-10">
+                    <div class="user-info d-flex gap-5">
+                        <div class="name font-weight-bold">Casey Fyfe</div>
+                        <span class="time">1h</span>
+                    </div>
+                    <div class="actions ml-auto">
+                        <div class="dropdown">
+                            <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false">
+                                <span class="fe fe-more-horizontal"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <div class="dropdown-item cursor-pointer" (click)="handleMessageInfoPopup(data)">Message
+                                    info
+                                </div>
+                                <div class="dropdown-item cursor-pointer" (click)="handleMessageReply()">Reply</div>
+                                <div class="dropdown-item cursor-pointer" (click)="handleMessageDelete(data.id)">Delete
+                                    message
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="message-content" [class.message-deleted]="isDeleted">
+                    {{ isDeleted ? ('MessageDeleted' | localize) : chatMessage }}
+                </div>
             </div>
         </div>
     </div>
