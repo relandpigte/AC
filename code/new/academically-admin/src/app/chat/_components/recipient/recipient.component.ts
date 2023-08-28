@@ -16,7 +16,6 @@ export enum ChatStatus {
 })
 export class RecipientComponent extends AppComponentBase implements OnInit {
   @Input() channel: ChannelModel;
-  @Input() isActive: boolean;
   chatStatus = ChatStatus;
 
   constructor(
@@ -27,6 +26,7 @@ export class RecipientComponent extends AppComponentBase implements OnInit {
   }
 
   // get chatStatusClass(): any { return this.chatStatus[this.getRndInteger(0, 2)]; }
+  get isActive(): boolean { return this.channel?.isActive }
   get chatStatusClass(): string { return 'seen'; }
   get recipientName(): string { return this.channel?.creatorUser?.fullName ?? 'Unknown User'; }
   get receivedDate(): string { return this.channel?.creationTime ? this.convertMomentToShortDateFormat(moment(this.channel?.creationTime)) : '9:00 am'; }
