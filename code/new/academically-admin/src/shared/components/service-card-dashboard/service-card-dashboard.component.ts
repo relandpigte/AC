@@ -272,6 +272,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
             }
           } else {
             this.sanitizedOptions.headingType = 'unbooked';
+            this.sanitizedOptions.isShowQuickPreview = true;
             this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'book', label: 'Book a time' });
             this.sanitizedOptions.isShowActions = true;
           }

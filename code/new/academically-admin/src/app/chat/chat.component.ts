@@ -42,6 +42,10 @@ export class ChatComponent extends AppComponentBase implements OnInit {
 
   get inboxChannels() { return this.channels.filter(c => !c.isArchived && !c.isDeleted); }
   get archivedChannels() { return this.channels.filter(c => c.isArchived && !c.isDeleted); }
+  get listHeader(): string {
+    if (this.selectedChannel === 1) return 'Archived';
+    return null;
+  }
 
   ngOnInit(): void {
     this.initChannels();
@@ -60,6 +64,10 @@ export class ChatComponent extends AppComponentBase implements OnInit {
       { id: '9', latestMessage: 'Test message 001...', creatorUser: { id: '9', fullName: 'Stewart Bobson' } },
       { id: '10', latestMessage: 'Test message 001...', creatorUser: { id: '10', fullName: 'Albert Eiffel' }, isArchived: true }
     ];
+  }
+
+  switchToInbox(): void {
+    this._chatService.selectedChannel$.next(0);
   }
 
   handleOnReply(): void {

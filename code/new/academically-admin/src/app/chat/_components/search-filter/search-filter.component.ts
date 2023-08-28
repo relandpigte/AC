@@ -12,7 +12,10 @@ export class SearchFilterComponent implements OnInit {
 
   constructor(
     private _chatService: ChatService
-  ) { }
+  ) {
+    this._chatService.selectedChannel$
+      .subscribe(collection => this.collection = collection);
+  }
 
   ngOnInit(): void {
   }
