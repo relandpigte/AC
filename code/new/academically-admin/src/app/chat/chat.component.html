@@ -17,7 +17,10 @@
     <div class="chat position-relative d-flex flex-row border mb-5">
         <div class="chat-content-left border-right">
             <app-search-filter></app-search-filter>
-
+            <div *ngIf="listHeader" class="chat-content-left-nav d-flex justify-content-start align-items-center gap-10 cursor-pointer" (click)="switchToInbox()">
+                <img src="/assets/img/chat/back.svg" class="back w-14-px h-14-px">
+                {{ listHeader }}
+            </div>
             <ng-container *ngIf="!isConversationEmpty else emptyConversations">
                 <div class="chat-content-left-recipients">
                     <ng-container *ngIf="selectedChannel === 0">
