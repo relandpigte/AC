@@ -1,0 +1,50 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="reland.pigte" id="1101">
+        <createTable tableName="channelmessages">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Message" type="LONGTEXT"/>
+            <column name="IsSeen" type="datetime"/>
+            <column name="ParentId" type="CHAR(36)" />
+            <column name="ChannelId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsDeleted" type="BIT">
+                <constraints nullable="false"/>
+			</column>
+            <column name="DeleterUserId" type="BIGINT">
+                <constraints nullable="true"/>
+			</column>
+            <column name="DeletionTime" type="DATETIME">
+                <constraints nullable="true"/>
+			</column>
+            <column name="LastModificationTime" type="DATETIME">
+                <constraints nullable="true"/>
+			</column>
+            <column name="LastModifierUserId" type="BIGINT">
+                <constraints nullable="true"/>
+			</column>
+            <column name="CreationTime" type="DATETIME">
+                <constraints nullable="false"/>
+			</column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="reland.pigte" id="1102">
+        <createIndex indexName="FK_ChannelMessages_CreatorUserId_idx" tableName="channelmessages">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+   
+    <changeSet author="reland.pigte" id="1103">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="channelmessages" constraintName="FK_ChannelMessages_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+
+
+</databaseChangeLog>
