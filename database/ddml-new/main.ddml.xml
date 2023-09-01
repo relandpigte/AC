@@ -169,4 +169,7 @@
 	<include file="ddml-new/ddml.2023-07-21-01-alter-comment-table.xml" />
 	<include file="ddml-new/ddml.2023-08-02-01-alter-user-availabilities-table.xml" />
 	<include file="ddml-new/ddml.2023-08-21-01-create-savedservices-table.xml" />
+	<include file="ddml-new/ddml.2023-08-25-01-create-channels-tables.xml" />
+	<include file="ddml-new/ddml.2023-08-25-01-create-channelMembers-tables.xml" />
+	<include file="ddml-new/ddml.2023-08-25-01-create-channelMessages-tables.xml" />
 </databaseChangeLog>
