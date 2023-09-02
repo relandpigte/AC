@@ -13,7 +13,7 @@ export class SearchFilterComponent implements OnInit {
   constructor(
     private _chatService: ChatService
   ) {
-    this._chatService.selectedChannel$
+    this._chatService.selectedChannelType$
       .subscribe(collection => this.collection = collection);
   }
 
@@ -22,7 +22,7 @@ export class SearchFilterComponent implements OnInit {
 
   handleChangeCollection(evt, collection): void {
     this.collection = collection;
-    this._chatService.selectedChannel$.next(collection);
+    this._chatService.selectedChannelType$.next(collection);
     evt.stopPropagation();
   }
 }

@@ -1,7 +1,9 @@
 ﻿using Abp.Dependency;
 using Abp.Domain.Repositories;
+using Academically.Authorization.Users;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Services.Chats.Dto;
 using Academically.Services.Comments.Dto;
 using Academically.Services.Posts.Dto;
 using Academically.Services.Reactions.Dto;
@@ -32,6 +34,10 @@ namespace Academically.Hubs
         Task NotifyUsersForServiceCreated(object service, ServicesType type);
         Task NotifyUsersForServiceUpdated(object service, ServicesType type);
         Task NotifyUsersForServiceDeleted(Guid id);
+        Task NotifyUsersForChatMessageCreated(ChannelMessageDto message);
+        Task NotifyUsersForChatMessageUpdated(ChannelMessageDto message);
+        Task NotifyUsersForChatMessageDeleted(ChannelMessageDto message);
+        Task NotifyUsersForChatTyping(Guid channelId, long userId);
     }
 
     public class HubManager : IHubManager
@@ -45,6 +51,8 @@ namespace Academically.Hubs
         private readonly IHubContext<CommentsHub> _commentsHub;
         private readonly IHubContext<ServicesHub> _servicesHub;
         private readonly IHubContext<ReactionsHub> _reactionsHub;
+        private readonly IHubContext<ChannelsHub> _channelsHub;
+        private readonly IHubContext<ChannelMessagesHub> _channelMessagesHub;
         private readonly IRepository<Post, Guid> _postRepository;
         private readonly IRepository<Comment, Guid> _commentsRepository;
         private readonly IRepository<Reaction, Guid> _reactionsRepository;
@@ -54,6 +62,8 @@ namespace Academically.Hubs
             IHubContext<CommentsHub> commentsHub,
             IHubContext<ServicesHub> servicesHub,
             IHubContext<ReactionsHub> reactionsHub,
+            IHubContext<ChannelsHub> channelsHub,
+            IHubContext<ChannelMessagesHub> channelMessagesHub,
             IRepository<Post, Guid> postRepository,
             IRepository<Comment, Guid> commentsRepository,
             IRepository<Reaction, Guid> reactionsRepository)
@@ -63,6 +73,8 @@ namespace Academically.Hubs
             _commentsHub = commentsHub;
             _servicesHub = servicesHub;
             _reactionsHub = reactionsHub;
+            _channelsHub = channelsHub;
+            _channelMessagesHub = channelMessagesHub;
             _postRepository = postRepository;
             _commentsRepository = commentsRepository;
             _reactionsRepository = reactionsRepository;
@@ -268,6 +280,29 @@ namespace Academically.Hubs
         public async Task NotifyUsersForServiceDeleted(Guid id)
         {
             await _servicesHub.Clients.All.SendAsync(nameof(HubEvent.ServiceDeleted), id);
+        }
+
+        public async Task NotifyUsersForChatMessageCreated(ChannelMessageDto message)
+        {
+            await _channelsHub.Clients.Group($"ch-{message.ChannelId}").SendAsync(nameof(HubEvent.ChatCreated), message);
+            await _channelMessagesHub.Clients.Group($"ch-msg-{message.ChannelId}").SendAsync(nameof(HubEvent.ChatCreated), message);
+        }
+
+        public async Task NotifyUsersForChatMessageUpdated(ChannelMessageDto message)
+        {
+            await _channelsHub.Clients.Group($"ch-{message.ChannelId}").SendAsync(nameof(HubEvent.ChatUpdated), message);
+            await _channelMessagesHub.Clients.Group($"ch-msg-{message.ChannelId}").SendAsync(nameof(HubEvent.ChatUpdated), message);
+        }
+
+        public async Task NotifyUsersForChatMessageDeleted(ChannelMessageDto message)
+        {
+            await _channelsHub.Clients.Group($"ch-{message.ChannelId}").SendAsync(nameof(HubEvent.ChatDeleted), message);
+            await _channelMessagesHub.Clients.Group($"ch-msg-{message.ChannelId}").SendAsync(nameof(HubEvent.ChatDeleted), message);
+        }
+
+        public async Task NotifyUsersForChatTyping(Guid channelId, long userId)
+        {
+            await _channelsHub.Clients.Group($"ch-{channelId}").SendAsync(nameof(HubEvent.ChatTyping), userId);
         }
 
     }

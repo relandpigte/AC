@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ChannelDto } from '@shared/service-proxies/service-proxies';
 import { AppSessionService } from '@shared/session/app-session.service';
 import * as moment from 'moment';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
@@ -30,11 +31,11 @@ export interface ChatModel {
   providedIn: 'root'
 })
 export class ChatService {
-  selectedChannel$: BehaviorSubject<number> = new BehaviorSubject(0);
+  selectedChannelType$: BehaviorSubject<number> = new BehaviorSubject(0);
   openChat$: Subject<any> = new Subject();
   replyToMessage$: Subject<ChatModel> = new Subject();
-  deleteChannel$: Subject<ChannelModel> = new Subject();
-  archiveChannel$: Subject<ChannelModel> = new Subject();
+  deleteChannel$: Subject<ChannelDto> = new Subject();
+  archiveChannel$: Subject<ChannelDto> = new Subject();
 
   private data: ChatModel[] = [
     {

@@ -19,6 +19,10 @@
         CommentReactionDeleted,
         ReactionCreated,
         ReactionUpdated,
-        ReactionDeleted
+        ReactionDeleted,
+        ChatCreated,
+        ChatUpdated,
+        ChatDeleted,
+        ChatTyping,
     }
 }

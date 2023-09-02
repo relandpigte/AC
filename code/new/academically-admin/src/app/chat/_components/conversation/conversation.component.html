@@ -47,10 +47,10 @@
                 <span class="title mx-auto">Today</span>
             </div>
 
-            <ng-container *ngIf="data.length > 0">
+            <ng-container *ngIf="channelMessages.length > 0">
                 <app-chat-conversation
-                    *ngFor="let d of data"
-                    [data]="d"
+                    *ngFor="let message of channelMessages"
+                    [data]="message"
                     (onMessageInfoClick)="handleMessageInfoPopup(d)"
                     (onReplyClick)="handleMessageReply(d)"
                 ></app-chat-conversation>

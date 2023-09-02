@@ -1,7 +1,13 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
+import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ChannelModel, ChatModel, ChatService } from '@shared/services/chat.service';
-import { takeUntil } from 'rxjs/operators';
+import { ChannelDto, ChatsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ChannelsStateService, channelsType } from '@shared/services/channels-state.service';
+import { ChatModel, ChatService } from '@shared/services/chat.service';
+import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
+import { StateUpdateType } from '@shared/services/state-base.service';
+import { BehaviorSubject, combineLatest, of } from 'rxjs';
+import { skip, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-chat',
@@ -9,76 +15,132 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./chat.component.less']
 })
 export class ChatComponent extends AppComponentBase implements OnInit {
+  channelsStateService: ChannelsStateService;
+
   replyingTo: ChatModel;
 
-  channels: ChannelModel[] = [];
-  selectedChannel: number = 0;
+  channels: ChannelDto[] = [];
+  totalChannelsCount = 0;
+
+  selectedChannelType;
+  selectedChannel: ChannelDto;
+
+  isLoadingList$ = new BehaviorSubject<boolean>(true);
 
   constructor(
     injector: Injector,
-    private _chatService: ChatService
+    private _cdr: ChangeDetectorRef,
+    private _chatService: ChatService,
+    private _hubService: HubService,
+    private _chatsService: ChatsServiceProxy,
   ) {
     super(injector);
 
     this._chatService.replyToMessage$
       .pipe(takeUntil(this.destroyed$))
+      .pipe(skip(1))
       .subscribe(replyingTo => this.replyingTo = replyingTo);
 
-    this._chatService.selectedChannel$
+    this._chatService.selectedChannelType$
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(selectedChannel => this.selectedChannel = selectedChannel);
+      .pipe(skip(1))
+      .subscribe(async selectedChannelType => {
+        this.selectedChannelType = selectedChannelType;
+
+        await this.channelsStateService.updateServiceParams({
+          type: selectedChannelType === 0 ? channelsType.inbox : channelsType.archived,
+          userId: this.appSession.userId
+        });
+
+        this.channels = this.channelsStateService.getAllChannels();
+        this.totalChannelsCount = this.channelsStateService.totalChannelsCount;
+        this.selectedChannel = this.channels?.[0];
+      });
 
     this._chatService.archiveChannel$
       .pipe(takeUntil(this.destroyed$))
+      .pipe(skip(1))
       .subscribe(channel => this.handleOnArchiveChannel(channel));
 
     this._chatService.deleteChannel$
       .pipe(takeUntil(this.destroyed$))
+      .pipe(skip(1))
       .subscribe(channel => this.handleOnDeleteChannel(channel));
   }
 
-  get isConversationEmpty(): boolean { return false; }
-  get isMessageEmpty(): boolean { return false; }
+  get channelsStateId(): string { return 'chats'; }
 
-  get inboxChannels() { return this.channels.filter(c => !c.isArchived && !c.isDeleted); }
-  get archivedChannels() { return this.channels.filter(c => c.isArchived && !c.isDeleted); }
+  get isLoading$() { return combineLatest(this.loadingSources$).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
+  get loadingSources$() { return [ this.isLoadingList$ ]; }
+
+  get isConversationEmpty(): boolean { return !this.channels?.length; }
+  get isMessageEmpty(): boolean { return !this.selectedChannel?.messages?.length; }
+
+  get inboxChannels() { return this.channels.filter(c => !c.isArchive && !c.isDeleted); }
+  get archivedChannels() { return this.channels.filter(c => c.isArchive && !c.isDeleted); }
   get listHeader(): string {
-    if (this.selectedChannel === 1) return 'Archived';
+    if (this.selectedChannelType === 1) return 'Archived';
     return null;
   }
 
-  ngOnInit(): void {
-    this.initChannels();
+  async ngOnInit() {
+    await this.initChannelsAppStates();
   }
 
-  private initChannels(): void {
-    this.channels = [
-      { id: '1', latestMessage: 'Test message 001...', creatorUser: { id: '1', fullName: 'Roger Reeves' }, isActive: true },
-      { id: '2', latestMessage: 'Test message 001...', creatorUser: { id: '2', fullName: 'Casey Fyfe' } },
-      { id: '3', latestMessage: 'Test message 001...', creatorUser: { id: '3', fullName: 'Sharon Peters' }, isArchived: true },
-      { id: '4', latestMessage: 'Test message 001...', creatorUser: { id: '4', fullName: 'Macey Williams' } },
-      { id: '5', latestMessage: 'Test message 001...', creatorUser: { id: '5', fullName: 'Robert Specks' } },
-      { id: '6', latestMessage: 'Test message 001...', creatorUser: { id: '6', fullName: 'Sam Mewton' }, isArchived: true },
-      { id: '7', latestMessage: 'Test message 001...', creatorUser: { id: '7', fullName: 'Shubert Hobbs' } },
-      { id: '8', latestMessage: 'Test message 001...', creatorUser: { id: '8', fullName: 'Michelle Storks' } },
-      { id: '9', latestMessage: 'Test message 001...', creatorUser: { id: '9', fullName: 'Stewart Bobson' } },
-      { id: '10', latestMessage: 'Test message 001...', creatorUser: { id: '10', fullName: 'Albert Eiffel' }, isArchived: true }
-    ];
+  private async initChannelsAppStates() {
+    const appStateConfig: AppStateConfig = {
+        [this.channelsStateId]: {
+            load: [this.appSession.userId],
+            update: {}
+        }
+    };
+    const appStateServices: AppStateServices = {
+        [this.channelsStateId]: {
+            type: ChannelsStateService,
+            args: [this._hubService, this._chatsService]
+        }
+    };
+    await this.pubSubService.start(this, appStateConfig, appStateServices);
+    this.channelsStateService = this.pubSubService.getStateService<ChannelsStateService>(this.channelsStateId);
+    this.channelsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingList$.next(loading));
+    this.channelsStateService.channels$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
+        switch(event.type) {
+          case StateUpdateType.Add:
+              this.channels = [event.data].concat(this.channels);
+              this.totalChannelsCount++;
+              break;
+          case StateUpdateType.Update:
+              this.channels = this.channels.map(c => c.id === event.data.id ? event.data : c);
+              break;
+          case StateUpdateType.Delete:
+              this.channels = this.channels.filter(c => c.id != event.data.id);
+              this.totalChannelsCount--;
+              break;
+        }
+        this._cdr.detectChanges();
+    });
+    this.channels = this.channelsStateService.getAllChannels();
+    this.totalChannelsCount = this.channelsStateService.totalChannelsCount;
+    this.selectedChannel = this.channels?.[0];
   }
 
   switchToInbox(): void {
-    this._chatService.selectedChannel$.next(0);
+    this._chatService.selectedChannelType$.next(0);
+  }
+
+  handleOnChannelSelect(channel: ChannelDto) {
+    this.selectedChannel = channel;
   }
 
   handleOnReply(): void {
     console.log('this triggered!');
   }
 
-  handleOnArchiveChannel(channel: ChannelModel): void {
+  handleOnArchiveChannel(channel: ChannelDto): void {
     console.log('archive this: ', channel);
   }
 
-  handleOnDeleteChannel(channel: ChannelModel): void {
+  handleOnDeleteChannel(channel: ChannelDto): void {
     console.log('delete this: ', channel);
   }
 }
