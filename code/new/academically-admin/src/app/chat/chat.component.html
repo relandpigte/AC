@@ -24,10 +24,20 @@
             <ng-container *ngIf="!isConversationEmpty else emptyConversations">
                 <div class="chat-content-left-recipients">
                     <ng-container *ngIf="selectedChannel === 0">
-                        <app-recipient *ngFor="let c of inboxChannels" [channel]="c"></app-recipient>
+                        <app-recipient
+                            *ngFor="let c of inboxChannels"
+                            [channel]="c"
+                            [isActive]="c.id === selectedChannelId"
+                            (click)="handleOnChannelSelect(c)"
+                        ></app-recipient>
                     </ng-container>
                     <ng-container *ngIf="selectedChannel === 1">
-                        <app-recipient *ngFor="let c of archivedChannels" [channel]="c"></app-recipient>
+                        <app-recipient
+                            *ngFor="let c of archivedChannels"
+                            [channel]="c"
+                            [isActive]="c.id === selectedChannelId"
+                            (click)="handleOnChannelSelect(c)"
+                        ></app-recipient>
                     </ng-container>
                 </div>
             </ng-container>
@@ -35,6 +45,7 @@
         <div class="chat-content-right d-flex flex-column flex-grow-1">
             <ng-container *ngIf="!isMessageEmpty else emptyMessages">
                 <app-composer-conversation
+                    [channel]="selectedChannel"
                     [replyingTo]="replyingTo"
                     (onReplyClick)="handleOnReply()"
                 ></app-composer-conversation>

@@ -119,6 +119,9 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<PostVisibility> PostVisibility { get; set; }
         public virtual DbSet<PostNotification> PostNotification { get; set; }
         public virtual DbSet<SavedService> SavedService { get; set; }
+        public virtual DbSet<Channel> Channels { get; set; }
+        public virtual DbSet<ChannelMessage> ChannelMessages { get; set; }
+        public virtual DbSet<ChannelMember> ChannelMembers { get; set; }
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
         {

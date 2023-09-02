@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Injector, Input, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
+import { ChannelDto } from '@shared/service-proxies/service-proxies';
 import { ChatModel, ChatService } from '@shared/services/chat.service';
 
 @Component({
@@ -8,6 +9,7 @@ import { ChatModel, ChatService } from '@shared/services/chat.service';
     styleUrls: ['./composer-conversation.component.less']
 })
 export class ComposerConversationComponent extends AppComponentBase {
+    @Input() channel: ChannelDto;
     @Input() hasActions = true;
     @Input() hasClose = false;
     @Input() showAttachmentInfo = true;

@@ -45,6 +45,14 @@ export class HubService {
     return await this.getHub(`reactions`, Utils.generateUrlParams(params));
   }
 
+  public async getChannelsHub(params?: Record<string, any>): Promise<any> {
+    return await this.getHub(`channels`, Utils.generateUrlParams(params));
+  }
+
+  public async getChannelMessagesHub(params?: Record<string, any>): Promise<any> {
+    return await this.getHub(`channelMessages`, Utils.generateUrlParams(params));
+  }
+
   public getCommentsHubWithParam(referenceId?: string, parentId?: string): Promise<any> {
     let queryParam = null;
     if(referenceId){

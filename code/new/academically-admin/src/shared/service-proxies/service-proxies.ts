@@ -2198,6 +2198,837 @@ export class CalendarEventsServiceProxy {
 }
 
 @Injectable()
+export class ChatsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param channelId (optional) 
+     * @return Success
+     */
+    archiveChannel(channelId: string | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/services/app/Chats/ArchiveChannel?";
+        if (channelId === null)
+            throw new Error("The parameter 'channelId' cannot be null.");
+        else if (channelId !== undefined)
+            url_ += "channelId=" + encodeURIComponent("" + channelId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processArchiveChannel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processArchiveChannel(<any>response_);
+                } catch (e) {
+                    return <Observable<boolean>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<boolean>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processArchiveChannel(response: HttpResponseBase): Observable<boolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<boolean>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createChannelMessage(body: CreateChannelMessageInputDto | undefined): Observable<ChannelMessageDto> {
+        let url_ = this.baseUrl + "/api/services/app/Chats/CreateChannelMessage";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateChannelMessage(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateChannelMessage(<any>response_);
+                } catch (e) {
+                    return <Observable<ChannelMessageDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ChannelMessageDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateChannelMessage(response: HttpResponseBase): Observable<ChannelMessageDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ChannelMessageDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ChannelMessageDto>(<any>null);
+    }
+
+    /**
+     * @param channelId (optional) 
+     * @return Success
+     */
+    deleteChannel(channelId: string | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/services/app/Chats/DeleteChannel?";
+        if (channelId === null)
+            throw new Error("The parameter 'channelId' cannot be null.");
+        else if (channelId !== undefined)
+            url_ += "channelId=" + encodeURIComponent("" + channelId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteChannel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteChannel(<any>response_);
+                } catch (e) {
+                    return <Observable<boolean>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<boolean>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDeleteChannel(response: HttpResponseBase): Observable<boolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<boolean>(<any>null);
+    }
+
+    /**
+     * @param userId (optional) 
+     * @return Success
+     */
+    getAllArchivedChannelsForUser(userId: number | undefined): Observable<ChannelDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Chats/GetAllArchivedChannelsForUser?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllArchivedChannelsForUser(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllArchivedChannelsForUser(<any>response_);
+                } catch (e) {
+                    return <Observable<ChannelDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ChannelDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllArchivedChannelsForUser(response: HttpResponseBase): Observable<ChannelDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(ChannelDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ChannelDto[]>(<any>null);
+    }
+
+    /**
+     * @param channelId (optional) 
+     * @return Success
+     */
+    getAllChannelMembers(channelId: string | undefined): Observable<ChannelMemberDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Chats/GetAllChannelMembers?";
+        if (channelId === null)
+            throw new Error("The parameter 'channelId' cannot be null.");
+        else if (channelId !== undefined)
+            url_ += "channelId=" + encodeURIComponent("" + channelId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllChannelMembers(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllChannelMembers(<any>response_);
+                } catch (e) {
+                    return <Observable<ChannelMemberDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ChannelMemberDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllChannelMembers(response: HttpResponseBase): Observable<ChannelMemberDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(ChannelMemberDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ChannelMemberDto[]>(<any>null);
+    }
+
+    /**
+     * @param channelId (optional) 
+     * @return Success
+     */
+    getAllChannelMessages(channelId: string | undefined): Observable<ChannelMessageDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Chats/GetAllChannelMessages?";
+        if (channelId === null)
+            throw new Error("The parameter 'channelId' cannot be null.");
+        else if (channelId !== undefined)
+            url_ += "channelId=" + encodeURIComponent("" + channelId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllChannelMessages(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllChannelMessages(<any>response_);
+                } catch (e) {
+                    return <Observable<ChannelMessageDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ChannelMessageDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllChannelMessages(response: HttpResponseBase): Observable<ChannelMessageDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(ChannelMessageDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ChannelMessageDto[]>(<any>null);
+    }
+
+    /**
+     * @param userId (optional) 
+     * @return Success
+     */
+    getAllChannelsForUser(userId: number | undefined): Observable<ChannelDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Chats/GetAllChannelsForUser?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllChannelsForUser(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllChannelsForUser(<any>response_);
+                } catch (e) {
+                    return <Observable<ChannelDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ChannelDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllChannelsForUser(response: HttpResponseBase): Observable<ChannelDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(ChannelDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ChannelDto[]>(<any>null);
+    }
+
+    /**
+     * @param userId (optional) 
+     * @return Success
+     */
+    getAllInboxChannelsForUser(userId: number | undefined): Observable<ChannelDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Chats/GetAllInboxChannelsForUser?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllInboxChannelsForUser(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllInboxChannelsForUser(<any>response_);
+                } catch (e) {
+                    return <Observable<ChannelDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ChannelDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllInboxChannelsForUser(response: HttpResponseBase): Observable<ChannelDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(ChannelDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ChannelDto[]>(<any>null);
+    }
+
+    /**
+     * @param channelId (optional) 
+     * @return Success
+     */
+    getChannel(channelId: string | undefined): Observable<ChannelDto> {
+        let url_ = this.baseUrl + "/api/services/app/Chats/GetChannel?";
+        if (channelId === null)
+            throw new Error("The parameter 'channelId' cannot be null.");
+        else if (channelId !== undefined)
+            url_ += "channelId=" + encodeURIComponent("" + channelId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetChannel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetChannel(<any>response_);
+                } catch (e) {
+                    return <Observable<ChannelDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ChannelDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetChannel(response: HttpResponseBase): Observable<ChannelDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ChannelDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ChannelDto>(<any>null);
+    }
+
+    /**
+     * @param channelMemberId (optional) 
+     * @return Success
+     */
+    getChannelMember(channelMemberId: string | undefined): Observable<ChannelMemberDto> {
+        let url_ = this.baseUrl + "/api/services/app/Chats/GetChannelMember?";
+        if (channelMemberId === null)
+            throw new Error("The parameter 'channelMemberId' cannot be null.");
+        else if (channelMemberId !== undefined)
+            url_ += "channelMemberId=" + encodeURIComponent("" + channelMemberId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetChannelMember(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetChannelMember(<any>response_);
+                } catch (e) {
+                    return <Observable<ChannelMemberDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ChannelMemberDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetChannelMember(response: HttpResponseBase): Observable<ChannelMemberDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ChannelMemberDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ChannelMemberDto>(<any>null);
+    }
+
+    /**
+     * @param channelMessageId (optional) 
+     * @return Success
+     */
+    getChannelMessage(channelMessageId: string | undefined): Observable<ChannelMessageDto> {
+        let url_ = this.baseUrl + "/api/services/app/Chats/GetChannelMessage?";
+        if (channelMessageId === null)
+            throw new Error("The parameter 'channelMessageId' cannot be null.");
+        else if (channelMessageId !== undefined)
+            url_ += "channelMessageId=" + encodeURIComponent("" + channelMessageId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetChannelMessage(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetChannelMessage(<any>response_);
+                } catch (e) {
+                    return <Observable<ChannelMessageDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ChannelMessageDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetChannelMessage(response: HttpResponseBase): Observable<ChannelMessageDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ChannelMessageDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ChannelMessageDto>(<any>null);
+    }
+
+    /**
+     * @param channelId (optional) 
+     * @return Success
+     */
+    reportTyping(channelId: string | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/services/app/Chats/ReportTyping?";
+        if (channelId === null)
+            throw new Error("The parameter 'channelId' cannot be null.");
+        else if (channelId !== undefined)
+            url_ += "channelId=" + encodeURIComponent("" + channelId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processReportTyping(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processReportTyping(<any>response_);
+                } catch (e) {
+                    return <Observable<boolean>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<boolean>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processReportTyping(response: HttpResponseBase): Observable<boolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<boolean>(<any>null);
+    }
+
+    /**
+     * @param channelId (optional) 
+     * @return Success
+     */
+    unarchiveChannel(channelId: string | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/services/app/Chats/UnarchiveChannel?";
+        if (channelId === null)
+            throw new Error("The parameter 'channelId' cannot be null.");
+        else if (channelId !== undefined)
+            url_ += "channelId=" + encodeURIComponent("" + channelId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUnarchiveChannel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUnarchiveChannel(<any>response_);
+                } catch (e) {
+                    return <Observable<boolean>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<boolean>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUnarchiveChannel(response: HttpResponseBase): Observable<boolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<boolean>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateChannelMessage(body: UpdateChannelMessageInputDto | undefined): Observable<ChannelMessageDto> {
+        let url_ = this.baseUrl + "/api/services/app/Chats/UpdateChannelMessage";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateChannelMessage(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateChannelMessage(<any>response_);
+                } catch (e) {
+                    return <Observable<ChannelMessageDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ChannelMessageDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateChannelMessage(response: HttpResponseBase): Observable<ChannelMessageDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ChannelMessageDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ChannelMessageDto>(<any>null);
+    }
+}
+
+@Injectable()
 export class CoachingPollsServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -30075,6 +30906,303 @@ export interface IChangeUserLanguageDto {
     languageName: string;
 }
 
+export class ChannelDto implements IChannelDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    name: string | undefined;
+    isArchive: boolean;
+    isActive: boolean;
+    creatorUser: UserDto;
+    messages: ChannelMessageDto[] | undefined;
+    members: ChannelMemberDto[] | undefined;
+
+    constructor(data?: IChannelDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.lastModificationTime = _data["lastModificationTime"] ? moment(_data["lastModificationTime"].toString()) : <any>undefined;
+            this.lastModifierUserId = _data["lastModifierUserId"];
+            this.isDeleted = _data["isDeleted"];
+            this.deleterUserId = _data["deleterUserId"];
+            this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
+            this.name = _data["name"];
+            this.isArchive = _data["isArchive"];
+            this.isActive = _data["isActive"];
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages.push(ChannelMessageDto.fromJS(item));
+            }
+            if (Array.isArray(_data["members"])) {
+                this.members = [] as any;
+                for (let item of _data["members"])
+                    this.members.push(ChannelMemberDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ChannelDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ChannelDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : <any>undefined;
+        data["lastModifierUserId"] = this.lastModifierUserId;
+        data["isDeleted"] = this.isDeleted;
+        data["deleterUserId"] = this.deleterUserId;
+        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
+        data["name"] = this.name;
+        data["isArchive"] = this.isArchive;
+        data["isActive"] = this.isActive;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item.toJSON());
+        }
+        if (Array.isArray(this.members)) {
+            data["members"] = [];
+            for (let item of this.members)
+                data["members"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): ChannelDto {
+        const json = this.toJSON();
+        let result = new ChannelDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IChannelDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    name: string | undefined;
+    isArchive: boolean;
+    isActive: boolean;
+    creatorUser: UserDto;
+    messages: ChannelMessageDto[] | undefined;
+    members: ChannelMemberDto[] | undefined;
+}
+
+export class ChannelMemberDto implements IChannelMemberDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    userId: number;
+    channelId: string;
+    creatorUser: UserDto;
+    channel: ChannelDto;
+
+    constructor(data?: IChannelMemberDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.lastModificationTime = _data["lastModificationTime"] ? moment(_data["lastModificationTime"].toString()) : <any>undefined;
+            this.lastModifierUserId = _data["lastModifierUserId"];
+            this.isDeleted = _data["isDeleted"];
+            this.deleterUserId = _data["deleterUserId"];
+            this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
+            this.userId = _data["userId"];
+            this.channelId = _data["channelId"];
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+            this.channel = _data["channel"] ? ChannelDto.fromJS(_data["channel"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ChannelMemberDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ChannelMemberDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : <any>undefined;
+        data["lastModifierUserId"] = this.lastModifierUserId;
+        data["isDeleted"] = this.isDeleted;
+        data["deleterUserId"] = this.deleterUserId;
+        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
+        data["userId"] = this.userId;
+        data["channelId"] = this.channelId;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        data["channel"] = this.channel ? this.channel.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): ChannelMemberDto {
+        const json = this.toJSON();
+        let result = new ChannelMemberDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IChannelMemberDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    userId: number;
+    channelId: string;
+    creatorUser: UserDto;
+    channel: ChannelDto;
+}
+
+export class ChannelMessageDto implements IChannelMessageDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    message: string | undefined;
+    isSeen: moment.Moment;
+    parentId: string | undefined;
+    channelId: string;
+    creatorUser: UserDto;
+    parent: ChannelMessageDto;
+    channel: ChannelDto;
+
+    constructor(data?: IChannelMessageDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.lastModificationTime = _data["lastModificationTime"] ? moment(_data["lastModificationTime"].toString()) : <any>undefined;
+            this.lastModifierUserId = _data["lastModifierUserId"];
+            this.isDeleted = _data["isDeleted"];
+            this.deleterUserId = _data["deleterUserId"];
+            this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
+            this.message = _data["message"];
+            this.isSeen = _data["isSeen"] ? moment(_data["isSeen"].toString()) : <any>undefined;
+            this.parentId = _data["parentId"];
+            this.channelId = _data["channelId"];
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+            this.parent = _data["parent"] ? ChannelMessageDto.fromJS(_data["parent"]) : <any>undefined;
+            this.channel = _data["channel"] ? ChannelDto.fromJS(_data["channel"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ChannelMessageDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ChannelMessageDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : <any>undefined;
+        data["lastModifierUserId"] = this.lastModifierUserId;
+        data["isDeleted"] = this.isDeleted;
+        data["deleterUserId"] = this.deleterUserId;
+        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
+        data["message"] = this.message;
+        data["isSeen"] = this.isSeen ? this.isSeen.toISOString() : <any>undefined;
+        data["parentId"] = this.parentId;
+        data["channelId"] = this.channelId;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
+        data["channel"] = this.channel ? this.channel.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): ChannelMessageDto {
+        const json = this.toJSON();
+        let result = new ChannelMessageDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IChannelMessageDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    message: string | undefined;
+    isSeen: moment.Moment;
+    parentId: string | undefined;
+    channelId: string;
+    creatorUser: UserDto;
+    parent: ChannelMessageDto;
+    channel: ChannelDto;
+}
+
 export class CoachingDto implements ICoachingDto {
     id: string;
     type: CoachingType;
@@ -32963,6 +34091,61 @@ export enum CourseStatus {
 export enum CourseType {
     Standard = 1,
     Cohort = 2,
+}
+
+export class CreateChannelMessageInputDto implements ICreateChannelMessageInputDto {
+    message: string | undefined;
+    recipientUserId: number;
+    channelId: string | undefined;
+    parentId: string | undefined;
+
+    constructor(data?: ICreateChannelMessageInputDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.message = _data["message"];
+            this.recipientUserId = _data["recipientUserId"];
+            this.channelId = _data["channelId"];
+            this.parentId = _data["parentId"];
+        }
+    }
+
+    static fromJS(data: any): CreateChannelMessageInputDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateChannelMessageInputDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["message"] = this.message;
+        data["recipientUserId"] = this.recipientUserId;
+        data["channelId"] = this.channelId;
+        data["parentId"] = this.parentId;
+        return data; 
+    }
+
+    clone(): CreateChannelMessageInputDto {
+        const json = this.toJSON();
+        let result = new CreateChannelMessageInputDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateChannelMessageInputDto {
+    message: string | undefined;
+    recipientUserId: number;
+    channelId: string | undefined;
+    parentId: string | undefined;
 }
 
 export class CreateCoachingDto implements ICreateCoachingDto {
@@ -38208,7 +39391,7 @@ export interface IGroupedPermissionDtoListResultDto {
     items: GroupedPermissionDto[] | undefined;
 }
 
-/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted */
+/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted 18 = ChatCreated 19 = ChatUpdated 20 = ChatDeleted 21 = ChatTyping */
 export enum HubEvent {
     PostCreated = 0,
     PostUpdated = 1,
@@ -38228,6 +39411,10 @@ export enum HubEvent {
     ReactionCreated = 15,
     ReactionUpdated = 16,
     ReactionDeleted = 17,
+    ChatCreated = 18,
+    ChatUpdated = 19,
+    ChatDeleted = 20,
+    ChatTyping = 21,
 }
 
 export class ICustomAttributeProvider implements IICustomAttributeProvider {
@@ -45955,6 +47142,53 @@ export interface IUpdateArticleSettingsDto {
     commentModeration: boolean;
     customUrl: string | undefined;
     isVisible: boolean;
+}
+
+export class UpdateChannelMessageInputDto implements IUpdateChannelMessageInputDto {
+    channelMessageId: string;
+    message: string | undefined;
+
+    constructor(data?: IUpdateChannelMessageInputDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.channelMessageId = _data["channelMessageId"];
+            this.message = _data["message"];
+        }
+    }
+
+    static fromJS(data: any): UpdateChannelMessageInputDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateChannelMessageInputDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["channelMessageId"] = this.channelMessageId;
+        data["message"] = this.message;
+        return data; 
+    }
+
+    clone(): UpdateChannelMessageInputDto {
+        const json = this.toJSON();
+        let result = new UpdateChannelMessageInputDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateChannelMessageInputDto {
+    channelMessageId: string;
+    message: string | undefined;
 }
 
 export class UpdateCoachingDto implements IUpdateCoachingDto {
