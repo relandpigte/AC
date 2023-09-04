@@ -10,16 +10,16 @@ export const environment = {
   webRtc: {
     stun: {
       servers: [
-        'stun:turn-academically-ci.sourcecloud-dev.uk:3478',
+        'stun:turn-ci.academically-dev.uk:3478',
       ]
     },
     turn: {
       servers: [
-        'turn:turn-academically-ci.sourcecloud-dev.uk:3478?transport=udp',
-        'turn:turn-academically-ci.sourcecloud-dev.uk:3478?transport=tcp',
+        'turn:turn-ci.academically-dev.uk:3478?transport=udp',
+        'turn:turn-ci.academically-dev.uk:3478?transport=tcp',
       ],
-      username: 'turn_user',
-      password: 'Wsc4e9dnckso1ejz97zorjf',
+      username: 'acad_turn_user',
+      password: 'cd33s:3s0f.B2BfdGDVV2alS',
     }
   },
   providers: {

@@ -23,5 +23,5 @@ This README would normally document whatever steps are necessary to get your app
 
 ### Who do I talk to? ###
 
-* Repo owner: jroblangley787@gmail.com
+* Repo owner: roblangley787@gmail.com
 * 

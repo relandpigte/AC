@@ -10,19 +10,19 @@ export const environment = {
   webRtc: {
     stun: {
       servers: [
-        'stun:74.125.247.128:3478',
+        'stun:turn-uat.academically-dev.uk:3478',
         'stun:[2001:4860:4864:4:8000::]:3478',
       ]
     },
     turn: {
       servers: [
-        'turn:74.125.247.128:3478?transport=udp',
+        'turn:turn-uat.academically-dev.uk:3478?transport=udp',
         'turn:[2001:4860:4864:4:8000::]:3478?transport=udp',
-        'turn:74.125.247.128:3478?transport=tcp',
+        'turn:turn-uat.academically-dev.uk:3478?transport=tcp',
         'turn:[2001:4860:4864:4:8000::]:3478?transport=tcp',
       ],
-      username: 'CJL8kokGEgZ9eARpCUwYqvGggqMKIICjBTAK',
-      password: 'DyyYyerG+RbPOlWQg3El0vJTaCY=',
+      username: 'acad_turn_user',
+      password: 'cd33s:3s0f.B2BfdGDVV2alS',
     }
   },
   providers: {
