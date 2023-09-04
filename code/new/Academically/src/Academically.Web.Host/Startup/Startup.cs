@@ -65,7 +65,12 @@ namespace Academically.Web.Host.Startup
             IdentityRegistrar.Register(services);
             AuthConfigurer.Configure(services, _appConfiguration);
 
-            services.AddSignalR();
+            services.AddSignalR()
+                .AddNewtonsoftJsonProtocol(opts =>
+                {
+                    opts.PayloadSerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
+
 
             // Configure CORS for angular2 UI
             services.AddCors(

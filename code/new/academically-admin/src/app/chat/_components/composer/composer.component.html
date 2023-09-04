@@ -11,7 +11,7 @@
 <div class="composer d-flex align-items-center align-content-around gap-15" [class.typing]="!!f?.value?.message">
     <form class="composer-text flex-grow-1" #f="ngForm" (ngSubmit)="handleWriteMessage(f)">
         <label class="sr-only">{{ 'WriteAMessage' | localize }}</label>
-        <textarea name="message" ngModel (keydown)="onMessageKeydown($event, f)" class="form-control form-control-flush"
+        <textarea #messageInput name="message" ngModel (keydown)="onMessageKeydown($event, f)" class="form-control form-control-flush"
                   data-toggle="autosize" rows="1" placeholder="{{ 'WriteAMessage' | localize }}" [maxlength]="500"></textarea>
 
         <div *ngIf="!!f?.value?.message" class="composer-instruction text-muted">

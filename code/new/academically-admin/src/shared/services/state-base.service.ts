@@ -4,12 +4,14 @@ import { AppStateActionNames} from './pub-sub.service';
 export interface StateUpdate<T> {
     data: T;
     type: StateUpdateType;
+    silent?: boolean;
 }
 
 export enum StateUpdateType {
     Add = 'add',
     Update = 'update',
-    Delete = 'delete'
+    Delete = 'delete',
+    Silent = 'silent'
 }
 
 export abstract class StateServiceBase {
@@ -41,22 +43,22 @@ export abstract class StateServiceBase {
         this.subscriptions = [];
     }
 
-    protected updateFromMap<T extends U, U>(existingMap: Map<string, T>, updateMap: { [key: string]: U }, updateSub$: any) {
+    protected updateFromMap<T extends U, U>(existingMap: Map<string, T>, updateMap: { [key: string]: U }, updateSub$: any, silent?: boolean) {
         const updateKeys = Object.keys(updateMap);
         updateKeys.forEach(k => {
             if (updateMap[k]) {
                 const type = existingMap.has(k) ? StateUpdateType.Update : StateUpdateType.Add;
                 existingMap.set(k, { ...existingMap.get(k), ...updateMap[k] } as T);
-                this.sendUpdateEvent(updateSub$, existingMap.get(k), type);
+                this.sendUpdateEvent(updateSub$, existingMap.get(k), type, silent);
             } else {
                 const item = existingMap.get(k);
                 existingMap.delete(k);
-                this.sendUpdateEvent(updateSub$, item, StateUpdateType.Delete);
+                this.sendUpdateEvent(updateSub$, item, StateUpdateType.Delete, silent);
             }
         });
     }
 
-    protected sendUpdateEvent<T>(subject: Subject<StateUpdate<T>>, data: T, type: StateUpdateType) {
-        subject.next({ data, type });
+    protected sendUpdateEvent<T>(subject: Subject<StateUpdate<T>>, data: T, type: StateUpdateType, silent?: boolean) {
+        subject.next({ data, type, silent });
     }
 }

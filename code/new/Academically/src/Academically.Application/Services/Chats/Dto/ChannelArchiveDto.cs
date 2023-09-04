@@ -6,13 +6,11 @@ using Abp.Domain.Entities.Auditing;
 
 namespace Academically.Services.Chats.Dto
 {
-    [AutoMap(typeof(ChannelMember))]
-    public class ChannelMemberDto : FullAuditedEntity<Guid>
+    [AutoMap(typeof(ChannelArchive))]
+    public class ChannelArchiveDto : FullAuditedEntity<Guid>
     {
-        public long UserId { get; set; }
         public Guid ChannelId { get; set; }
-        public bool IsTyping { get; set; }
-        public UserDto User { get; set; }
+        public UserDto CreatorUser { get; set; }
         public ChannelDto Channel { get; set; }
     }
 }

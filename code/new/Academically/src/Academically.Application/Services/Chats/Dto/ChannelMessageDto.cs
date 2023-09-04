@@ -10,7 +10,7 @@ namespace Academically.Services.Chats.Dto
     public class ChannelMessageDto : FullAuditedEntity<Guid>
     {
         public string Message { get; set; }
-        public DateTime IsSeen { get; set; }
+        public DateTime? IsSeen { get; set; }
         public Guid? ParentId { get; set; }
         public Guid ChannelId { get; set; }
         public UserDto CreatorUser { get; set; }

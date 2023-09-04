@@ -13,6 +13,7 @@ using System.Threading.Channels;
 using Channel = Academically.Domain.Entities.Channel;
 using Academically.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using Abp.Timing;
 
 namespace Academically.Services.Chats
 {
@@ -21,18 +22,21 @@ namespace Academically.Services.Chats
         private readonly IRepository<Channel, Guid> _channelRepository;
         private readonly IRepository<ChannelMessage, Guid> _channelMessageRepository;
         private readonly IRepository<ChannelMember, Guid> _channelMemberRepository;
+        private readonly IRepository<ChannelArchive, Guid> _channelArchiveRepository;
         private readonly IHubContext<ChannelsHub> _channelsHub;
 
         public ChatsAppService(
             IRepository<Channel, Guid> channelRepository,
             IRepository<ChannelMessage, Guid> channelMessageRepository,
             IRepository<ChannelMember, Guid> channelMemberRepository,
+            IRepository<ChannelArchive, Guid> channelArchiveRepository,
             IHubContext<ChannelsHub> channelsHub
         )
         {
             this._channelRepository = channelRepository;
             this._channelMessageRepository = channelMessageRepository;
             this._channelMemberRepository = channelMemberRepository;
+            this._channelArchiveRepository = channelArchiveRepository;
             this._channelsHub = channelsHub;
         }
 
@@ -40,7 +44,7 @@ namespace Academically.Services.Chats
         {
             var channel = await this._channelRepository.GetAsync(channelId);
             if (channel == null) return false;
-            channel.IsArchive = true;
+            await this._channelArchiveRepository.InsertAsync(new ChannelArchive { ChannelId = channelId });
             return true;
         }
 
@@ -51,53 +55,34 @@ namespace Academically.Services.Chats
             if (input.ChannelId.HasValue)
             {
                 var existingChannel = await this._channelRepository.GetAsync(input.ChannelId.Value);
-                if (existingChannel == null) existingChannel = await this.PrepareChannel(input.RecipientUserId);
                 message.ChannelId = existingChannel.Id;
             }
             else
             {
-                var existingChannel = await this.PrepareChannel(input.RecipientUserId);
-                message.ChannelId = existingChannel.Id;
+                var channel = await this._channelRepository.InsertAsync(new Channel());
+                await CurrentUnitOfWork.SaveChangesAsync();
+                var currentUser = await GetCurrentUserAsync();
+                await this._channelMemberRepository.InsertAsync(new ChannelMember
+                {
+                    ChannelId = channel.Id,
+                    UserId = currentUser.Id
+                });
+
+                await this._channelMemberRepository.InsertAsync(new ChannelMember
+                {
+                    ChannelId = channel.Id,
+                    UserId = input.RecipientUserId
+                });
+                message.ChannelId = channel.Id;
             }
             
             message.Message = input.Message;
+            message.ParentId = input.ParentId;
 
             var result = await this._channelMessageRepository.InsertAsync(message);
 
             if (result == null) return null;
             else return ObjectMapper.Map<ChannelMessageDto>(result);
-        }
-
-        private async Task<Channel> PrepareChannel(long recipientUserId, string channelName = "")
-        {
-            var channel = await this.CreateChannel(channelName);
-            await this.CreateChannelMembers(channel.Id, recipientUserId);
-            return channel;
-        }
-
-        [UnitOfWork]
-        private async Task<Channel> CreateChannel(string channelName = "")
-        {
-            var channel = new Channel();
-            channel.Name = channelName;
-            return await this._channelRepository.InsertAsync(channel);
-        }
-
-        [UnitOfWork]
-        private async Task CreateChannelMembers(Guid channelId, long recipientUserId)
-        {
-            var currentUser = await GetCurrentUserAsync();
-            await this._channelMemberRepository.InsertAsync(new ChannelMember
-            {
-                ChannelId = channelId,
-                UserId = currentUser.Id
-            });
-
-            await this._channelMemberRepository.InsertAsync(new ChannelMember
-            {
-                ChannelId = channelId,
-                UserId = recipientUserId
-            });
         }
 
         public async Task<bool> DeleteChannel(Guid channelId)
@@ -112,8 +97,12 @@ namespace Academically.Services.Chats
         {
             return await this._channelRepository.GetAll()
                     .Include(c => c.Members)
-                    .Include(c => c.CreatorUser)
-                    .Where(c => c.IsArchive == true)
+                        .ThenInclude(m => m.User)
+                    .Include(c => c.Messages)
+                    .Include(c => c.Archives)
+                    .Where(c => !c.IsDeleted)
+                    .Where(c => c.Members.Any(m => m.UserId == userId))
+                    .Where(c => c.Archives.Any(a => a.CreatorUserId == userId))
                     .Select(c => ObjectMapper.Map<ChannelDto>(c))
                     .ToListAsync();
         }
@@ -150,6 +139,9 @@ namespace Academically.Services.Chats
         {
             return await this._channelRepository.GetAll()
                     .Include(c => c.Members)
+                        .ThenInclude(m => m.User)
+                    .Include(c => c.Messages)
+                    .Where(c => !c.IsDeleted)
                     .Where(c => c.Members.Any(m => m.UserId == userId))
                     .Select(c => ObjectMapper.Map<ChannelDto>(c))
                     .ToListAsync();
@@ -159,8 +151,12 @@ namespace Academically.Services.Chats
         {
             return await this._channelRepository.GetAll()
                     .Include(c => c.Members)
-                    .Include(c => c.CreatorUser)
-                    .Where(c => c.IsArchive == false)
+                        .ThenInclude(m => m.User)
+                    .Include(c => c.Messages)
+                    .Include(c => c.Archives)
+                    .Where(c => !c.IsDeleted)
+                    .Where(c => c.Members.Any(m => m.UserId == userId))
+                    .Where(c => !c.Archives.Any(a => a.CreatorUserId == userId))
                     .Select(c => ObjectMapper.Map<ChannelDto>(c))
                     .ToListAsync();
         }
@@ -169,15 +165,11 @@ namespace Academically.Services.Chats
         {
             return await this._channelRepository.GetAll()
                     .Include(c => c.Messages)
-                        .ThenInclude(m => m.Channel)
-                    .Include(c => c.Messages)
                         .ThenInclude(m => m.Parent)
                     .Include(c => c.Messages)
                         .ThenInclude(m => m.CreatorUser)
                     .Include(c => c.Members)
                         .ThenInclude(m => m.User)
-                    .Include(c => c.Members)
-                        .ThenInclude(m => m.Channel)
                     .Where(c => c.Id == channelId)
                     .Select(c => ObjectMapper.Map<ChannelDto>(c))
                     .SingleOrDefaultAsync();
@@ -213,7 +205,10 @@ namespace Academically.Services.Chats
         {
             var channel = await this._channelRepository.GetAsync(channelId);
             if (channel == null) return false;
-            channel.IsArchive = false;
+            var archive = await this._channelArchiveRepository.GetAll()
+                .Where(a => a.ChannelId == channelId)
+                .FirstOrDefaultAsync();
+            if (archive != null) await this._channelArchiveRepository.DeleteAsync(archive.Id);
             return true;
         }
 
@@ -224,5 +219,32 @@ namespace Academically.Services.Chats
             message.Message = input.Message;
             return ObjectMapper.Map<ChannelMessageDto>(message);
         }
+
+        public async Task<bool> SeenChannelMessages(Guid channelId,DateTime targetMessagesDateTime)
+        {
+            var currentUser = await GetCurrentUserAsync();
+            var messages = await this._channelMessageRepository.GetAll()
+                    .Where(m => m.ChannelId == channelId)
+                    .Where(m => m.CreatorUserId != currentUser.Id)
+                    .Where(m => m.IsSeen == null)
+                    .Where(m => m.CreationTime <= targetMessagesDateTime)
+                    .ToListAsync();
+
+            messages?.ForEach(m => m.IsSeen = Clock.Now);
+            return true;
+        }
+
+        public async Task<bool> SetChannelMemberTyping(Guid channelId, bool isTyping)
+        {
+            var currentUser = await GetCurrentUserAsync();
+            var messages = await this._channelMemberRepository.GetAll()
+                    .Where(m => m.ChannelId == channelId)
+                    .Where(m => m.UserId == currentUser.Id)
+                    .ToListAsync();
+
+            messages?.ForEach(m => m.IsTyping = isTyping);
+            return true;
+        }
+
     }
 }

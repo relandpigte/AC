@@ -1,15 +1,16 @@
-<div class="chat-conversations-wrapper">
+<div *ngIf="!isSearchingUser" class="chat-conversations-wrapper">
     <app-conversation
         [channel]="channel"
         [hasActions]="hasActions"
         [hasClose]="hasClose"
         [showAttachmentInfo]="showAttachmentInfo"
+        [isRecipientTyping]="isRecipientTyping"
         (onCloseClick)="handleCloseClick()"
     ></app-conversation>
 </div>
-<div class="chat-conversation-composer border-top mt-auto" [class.has-attachment]="!!replyingTo">
+<div *ngIf="!isSearchingUser" class="chat-conversation-composer border-top mt-auto" [class.has-attachment]="!!replyingTo">
     <app-composer
         [replyingTo]="replyingTo"
-        (onReply)="handleReplyClick()"
+        (onReply)="handleReplyClick($event)"
     ></app-composer>
 </div>

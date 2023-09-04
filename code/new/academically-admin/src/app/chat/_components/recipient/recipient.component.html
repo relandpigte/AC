@@ -1,6 +1,6 @@
 <div class="recipient d-flex align-items-center gap-15" [ngClass]="{'active': isActive}">
     <div class="recipient-avatar position-relative">
-        <a href="#" class="avatar">
+        <a href="javascript:void(0)" class="avatar">
             <img src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
         </a>
         <span class="recipient-avatar-status text-success">●</span>
@@ -9,17 +9,18 @@
     <div class="d-flex flex-grow-1">
         <div class="recipient-details d-flex flex-column">
             <div class="recipient-details-name">
-                <a href="#">{{ recipientName | titlecase }}</a>
+                <a href="javascript:void(0)">{{ channelName | titlecase }}</a>
             </div>
             <div class="recipient-details-chat-preview w-154-px">
-                <p class="m-0 wrap-text">{{ latestMessage }}</p>
+                <p *ngIf="!isRecipientTyping" class="m-0 wrap-text">{{ latestMessage.message }}</p>
+                <p *ngIf="isRecipientTyping" class="m-0 wrap-text typing">Typing</p>
             </div>
         </div>
 
         <div class="recipient-message-details d-flex flex-column ml-auto align-items-end">
-            <span class="time">{{ receivedDate }}</span>
+            <span class="time">{{ receivedDateStr }}</span>
             <span class="text-center d-block status" [ngClass]="chatStatusClass">
-                <span>2</span>
+                <span>{{ unreadCount }}</span>
             </span>
         </div>
     </div>

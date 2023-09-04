@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { Subject } from 'rxjs';
-import { ChatModel, ChatService } from '@shared/services/chat.service';
+import { ChannelMessageDto } from '@shared/service-proxies/service-proxies';
+import { ChatService } from '@shared/services/chat.service';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-chat-conversation',
@@ -10,10 +11,10 @@ import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-d
   styleUrls: ['./chat-conversation.component.less']
 })
 export class ChatConversationComponent extends AppComponentBase implements OnInit {
-  @Input() data: ChatModel;
+  @Input() data: ChannelMessageDto;
 
-  @Output() onReplyClick: EventEmitter<ChatModel> = new EventEmitter();
-  @Output() onMessageInfoClick: Subject<ChatModel> = new Subject<ChatModel>();
+  @Output() onReplyClick: EventEmitter<ChannelMessageDto> = new EventEmitter();
+  @Output() onMessageInfoClick: Subject<ChannelMessageDto> = new Subject<ChannelMessageDto>();
 
   constructor(
     injector: Injector,
@@ -24,14 +25,14 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
   }
 
   get chatMessage(): string { return this.data?.message; }
-  get parentMessage(): ChatModel { return this.data?.parentMessage; }
+  get parentMessage(): ChannelMessageDto { return this.data?.parent; }
   get isSender(): boolean { return this.data?.creatorUserId.toString() === this.appSession.userId.toString(); }
   get isDeleted(): boolean { return this.data?.isDeleted; }
 
   ngOnInit(): void {
   }
 
-  handleMessageInfoPopup(data: ChatModel): void {
+  handleMessageInfoPopup(data: ChannelMessageDto): void {
     this.onMessageInfoClick.next(data);
   }
 

@@ -1,13 +1,25 @@
-import { ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { HubService } from '@app/_shared/services/hub.service';
+import { SearchUsersComponent } from '@app/chat/_components/search-users/search-users.component';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ChannelDto, ChatsServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  ChannelDto,
+  ChannelMessageDto,
+  ChatsServiceProxy,
+  CreateChannelMessageInputDto,
+  UserDto
+} from '@shared/service-proxies/service-proxies';
 import { ChannelsStateService, channelsType } from '@shared/services/channels-state.service';
-import { ChatModel, ChatService } from '@shared/services/chat.service';
+import { ChatService } from '@shared/services/chat.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
-import { skip, switchMap, takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, skip, switchMap, takeUntil } from 'rxjs/operators';
+
+export interface MessageComposeData {
+  parentId?: string;
+  message: string;
+};
 
 @Component({
   selector: 'app-chat',
@@ -17,15 +29,20 @@ import { skip, switchMap, takeUntil } from 'rxjs/operators';
 export class ChatComponent extends AppComponentBase implements OnInit {
   channelsStateService: ChannelsStateService;
 
-  replyingTo: ChatModel;
+  replyingTo: ChannelMessageDto;
 
   channels: ChannelDto[] = [];
   totalChannelsCount = 0;
 
-  selectedChannelType;
+  selectedChannelType = 0;
   selectedChannel: ChannelDto;
 
   isLoadingList$ = new BehaviorSubject<boolean>(true);
+
+  isSearchingUser: boolean;
+  replyingToUser: UserDto;
+
+  @ViewChild(SearchUsersComponent) searchUsersComponent: SearchUsersComponent;
 
   constructor(
     injector: Injector,
@@ -54,7 +71,7 @@ export class ChatComponent extends AppComponentBase implements OnInit {
 
         this.channels = this.channelsStateService.getAllChannels();
         this.totalChannelsCount = this.channelsStateService.totalChannelsCount;
-        this.selectedChannel = this.channels?.[0];
+        this._chatService.selectedChannel$.next(this.channels?.[0]);
       });
 
     this._chatService.archiveChannel$
@@ -66,6 +83,30 @@ export class ChatComponent extends AppComponentBase implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .pipe(skip(1))
       .subscribe(channel => this.handleOnDeleteChannel(channel));
+
+    this._chatService.replyingToUser$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(user => this.replyingToUser = user);
+
+    this._chatService.selectedChannel$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(channel => {
+        this.selectedChannel = channel;
+        this._chatService.replyingToUser$.next(channel?.members?.find(m => m.userId !== this.appSession.userId)?.user);
+      });
+
+    this._chatService.isSearchingUser$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(searching => this.isSearchingUser = searching);
+
+    this._chatService.userTyping$
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(distinctUntilChanged())
+      .subscribe(isTyping => {
+        if (this.selectedChannel) {
+          this._chatsService.setChannelMemberTyping(this.selectedChannel.id, isTyping).pipe(takeUntil(this.destroyed$)).subscribe();
+        }
+      });
   }
 
   get channelsStateId(): string { return 'chats'; }
@@ -74,17 +115,25 @@ export class ChatComponent extends AppComponentBase implements OnInit {
   get loadingSources$() { return [ this.isLoadingList$ ]; }
 
   get isConversationEmpty(): boolean { return !this.channels?.length; }
-  get isMessageEmpty(): boolean { return !this.selectedChannel?.messages?.length; }
+  get isMessageEmpty(): boolean { return  !this.selectedChannel?.messages?.length; }
 
-  get inboxChannels() { return this.channels.filter(c => !c.isArchive && !c.isDeleted); }
-  get archivedChannels() { return this.channels.filter(c => c.isArchive && !c.isDeleted); }
   get listHeader(): string {
     if (this.selectedChannelType === 1) return 'Archived';
     return null;
   }
 
+  get isRecipientTyping(): boolean {
+    const channel = this.channels.find(c => c.id === this.selectedChannel?.id);
+    return channel?.members?.find(m => m.userId !== this.appSession.userId)?.isTyping ?? false;
+  }
+
   async ngOnInit() {
     await this.initChannelsAppStates();
+  }
+
+  handleOnComposeMessage(): void {
+    this._chatService.isSearchingUser$.next(true);
+    this.searchUsersComponent?.searchInput.nativeElement.focus();
   }
 
   private async initChannelsAppStates() {
@@ -110,7 +159,13 @@ export class ChatComponent extends AppComponentBase implements OnInit {
               this.totalChannelsCount++;
               break;
           case StateUpdateType.Update:
-              this.channels = this.channels.map(c => c.id === event.data.id ? event.data : c);
+              if (event.silent) {
+                this.channels = this.channels.map(c => c.id === event.data.id ? event.data : c);
+              } else {
+                const idx = this.channels.findIndex(c => c.id === event.data.id);
+                this.channels.splice(idx, 1);
+                this.channels = [event.data].concat(this.channels);
+              }
               break;
           case StateUpdateType.Delete:
               this.channels = this.channels.filter(c => c.id != event.data.id);
@@ -121,26 +176,43 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     });
     this.channels = this.channelsStateService.getAllChannels();
     this.totalChannelsCount = this.channelsStateService.totalChannelsCount;
-    this.selectedChannel = this.channels?.[0];
+    this._chatService.selectedChannel$.next(this.channels?.[0]);
   }
 
   switchToInbox(): void {
     this._chatService.selectedChannelType$.next(0);
   }
 
+  // tslint:disable-next-line: member-ordering
   handleOnChannelSelect(channel: ChannelDto) {
-    this.selectedChannel = channel;
+    this._chatService.selectedChannel$.next(channel);
+    this._chatService.isSearchingUser$.next(false);
   }
 
-  handleOnReply(): void {
-    console.log('this triggered!');
+  // tslint:disable-next-line: member-ordering
+  handleOnReply(messageComposeData: MessageComposeData): void {
+    const channelMessage = new CreateChannelMessageInputDto();
+    channelMessage.parentId = messageComposeData.parentId;
+    channelMessage.message = messageComposeData.message;
+    channelMessage.recipientUserId = this.replyingToUser?.id;
+    channelMessage.channelId = this.selectedChannel?.id;
+
+    this._chatsService.createChannelMessage(channelMessage)
+      .subscribe((message) => {
+        this._chatService.replyToMessage$.next(null);
+        this.selectedChannel = this.channels.find(c => c.id === message.channelId);
+      });
   }
 
   handleOnArchiveChannel(channel: ChannelDto): void {
-    console.log('archive this: ', channel);
+    this._chatsService.archiveChannel(channel.id).subscribe(() => {
+      this._chatService.selectedChannelType$.next(this.selectedChannelType);
+    });
   }
 
   handleOnDeleteChannel(channel: ChannelDto): void {
-    console.log('delete this: ', channel);
+    this._chatsService.deleteChannel(channel.id).subscribe(() => {
+      this._chatService.selectedChannelType$.next(this.selectedChannelType);
+    });
   }
 }

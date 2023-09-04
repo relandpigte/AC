@@ -204,10 +204,12 @@ export abstract class AppComponentBase implements OnDestroy {
     return moment(date).fromNow(removeSuffix);
   }
 
-  convertMomentToPostDateAgo(date: Moment): string {
+  convertMomentToPostDateAgo(date: Moment, withAgoSuffix = true): string {
     const time = moment(date).format('hh:mm');
     const month = moment(date).format('D MMMM');
     const year = moment(date).format('D MMMM YYYY');
+
+    const formatWithAgo = (value: string) => `${value}${withAgoSuffix ? ' ago' : ''}`;
 
     moment.relativeTimeThreshold('s', 60);
     moment.relativeTimeThreshold('h', 24);
@@ -215,10 +217,10 @@ export abstract class AppComponentBase implements OnDestroy {
     moment.updateLocale('en', {
       relativeTime : {
         s: () => 'Just now',
-        m:  '%dm ago',
-        mm: (n) => `${n}m ago`,
-        h:  '1h ago',
-        hh: '%dh ago',
+        m:  formatWithAgo('%dm'),
+        mm: (n) => formatWithAgo(`${n}m`),
+        h:  formatWithAgo('1h'),
+        hh: formatWithAgo('%dh'),
         d: () => `Yesterday at ${time}`,
         dd: (n) => {
           if (n <= 13) {
@@ -253,8 +255,8 @@ export abstract class AppComponentBase implements OnDestroy {
   }
 
   convertMomentToShortDateFormat(date: Moment): string {
-    if (moment().diff(date, 'days') < 1) return moment(date).format('hh:mm a');
-    return moment(date).format('dddd, DD MMMM YYYY [at] hh:mm a');
+    if (moment().diff(date, 'days') < 1) return moment.utc(date).local().format('hh:mm a');
+    return moment.utc(date).local().format('dddd, DD MMMM YYYY [at] hh:mm a');
   }
 
   getCourseImageUrl(courseImageUrl: string): string {

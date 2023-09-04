@@ -10,6 +10,7 @@ using Academically.Services.Reactions.Dto;
 using Academically.Services.UserTopics.Dto;
 using Microsoft.AspNetCore.SignalR;
 using System;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace Academically.Hubs
@@ -34,10 +35,12 @@ namespace Academically.Hubs
         Task NotifyUsersForServiceCreated(object service, ServicesType type);
         Task NotifyUsersForServiceUpdated(object service, ServicesType type);
         Task NotifyUsersForServiceDeleted(Guid id);
-        Task NotifyUsersForChatMessageCreated(ChannelMessageDto message);
-        Task NotifyUsersForChatMessageUpdated(ChannelMessageDto message);
-        Task NotifyUsersForChatMessageDeleted(ChannelMessageDto message);
-        Task NotifyUsersForChatTyping(Guid channelId, long userId);
+        Task NotifyUsersForChannelMessageCreated(ChannelMessageDto message);
+        Task NotifyUsersForChannelMessageUpdated(ChannelMessageDto message);
+        Task NotifyUsersForChannelMessageDeleted(ChannelMessageDto message);
+        Task NotifyUsersForChannelMemberTyping(ChannelDto channel);
+        Task NotifyUsersForChannelArchive(ChannelDto channel);
+        Task NotifyUsersForChannelUnarchive(ChannelDto channel);
     }
 
     public class HubManager : IHubManager
@@ -45,6 +48,8 @@ namespace Academically.Hubs
         private const string FollowingGroup = "following-group";
         private const string ReactionsGroup = "reactions-group";
         private const string UserTopicsGroup = "user-topics-group";
+        private const string AllChannels = "ch-all";
+        private const string AllMsgChannels = "ch-msg-all";
 
         private readonly IHubContext<UserTopicsHub> _userTopicsHub;
         private readonly IHubContext<PostsHub> _postsHub;
@@ -282,28 +287,40 @@ namespace Academically.Hubs
             await _servicesHub.Clients.All.SendAsync(nameof(HubEvent.ServiceDeleted), id);
         }
 
-        public async Task NotifyUsersForChatMessageCreated(ChannelMessageDto message)
+        public async Task NotifyUsersForChannelMessageCreated(ChannelMessageDto message)
         {
-            await _channelsHub.Clients.Group($"ch-{message.ChannelId}").SendAsync(nameof(HubEvent.ChatCreated), message);
-            await _channelMessagesHub.Clients.Group($"ch-msg-{message.ChannelId}").SendAsync(nameof(HubEvent.ChatCreated), message);
+            await _channelsHub.Clients.Group(AllChannels).SendAsync(nameof(HubEvent.ChannelMessageCreated), message);
+            await _channelMessagesHub.Clients.Group($"ch-msg-{message.ChannelId}").SendAsync(nameof(HubEvent.ChannelMessageCreated), message);
         }
 
-        public async Task NotifyUsersForChatMessageUpdated(ChannelMessageDto message)
+        public async Task NotifyUsersForChannelMessageUpdated(ChannelMessageDto message)
         {
-            await _channelsHub.Clients.Group($"ch-{message.ChannelId}").SendAsync(nameof(HubEvent.ChatUpdated), message);
-            await _channelMessagesHub.Clients.Group($"ch-msg-{message.ChannelId}").SendAsync(nameof(HubEvent.ChatUpdated), message);
+            await _channelsHub.Clients.Group(AllChannels).SendAsync(nameof(HubEvent.ChannelMessageUpdated), message);
+            await _channelMessagesHub.Clients.Group($"ch-msg-{message.ChannelId}").SendAsync(nameof(HubEvent.ChannelMessageUpdated), message);
         }
 
-        public async Task NotifyUsersForChatMessageDeleted(ChannelMessageDto message)
+        public async Task NotifyUsersForChannelMessageDeleted(ChannelMessageDto message)
         {
-            await _channelsHub.Clients.Group($"ch-{message.ChannelId}").SendAsync(nameof(HubEvent.ChatDeleted), message);
-            await _channelMessagesHub.Clients.Group($"ch-msg-{message.ChannelId}").SendAsync(nameof(HubEvent.ChatDeleted), message);
+            await _channelsHub.Clients.Group(AllChannels).SendAsync(nameof(HubEvent.ChannelMessageDeleted), message);
+            await _channelMessagesHub.Clients.Group($"ch-msg-{message.ChannelId}").SendAsync(nameof(HubEvent.ChannelMessageDeleted), message);
         }
 
-        public async Task NotifyUsersForChatTyping(Guid channelId, long userId)
+        public async Task NotifyUsersForChannelMemberTyping(ChannelDto channel)
         {
-            await _channelsHub.Clients.Group($"ch-{channelId}").SendAsync(nameof(HubEvent.ChatTyping), userId);
+            await _channelsHub.Clients.Group(AllChannels).SendAsync(nameof(HubEvent.ChannelMemberTyping), channel);
+            await _channelsHub.Clients.Group($"ch-{channel.Id}").SendAsync(nameof(HubEvent.ChannelMemberTyping), channel);
         }
 
+        public async Task NotifyUsersForChannelArchive(ChannelDto channel)
+        {
+            await _channelsHub.Clients.Group(AllChannels).SendAsync(nameof(HubEvent.ChannelArchive), channel);
+            await _channelsHub.Clients.Group($"ch-{channel.Id}").SendAsync(nameof(HubEvent.ChannelArchive), channel);
+        }
+
+        public async Task NotifyUsersForChannelUnarchive(ChannelDto channel)
+        {
+            await _channelsHub.Clients.Group(AllChannels).SendAsync(nameof(HubEvent.ChannelUnarchive), channel);
+            await _channelsHub.Clients.Group($"ch-{channel.Id}").SendAsync(nameof(HubEvent.ChannelUnarchive), channel);
+        }
     }
 }

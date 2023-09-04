@@ -15,6 +15,8 @@ export class ChannelMessagesStateService extends StateServiceBase {
     channelMessages$: Subject<StateUpdate<ChannelMessageDto>> = new Subject();
     loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
+    hub: any;
+
     type: channelMessagesType;
     fns = {
         [channelMessagesType.all]: 'getAllChannelMessages'
@@ -41,13 +43,21 @@ export class ChannelMessagesStateService extends StateServiceBase {
         this.loading$.next(false);
     }
 
+    async stop() {
+        super.stop();
+        if (this.hub) {
+            this.hub.off(HubEvent[HubEvent.ChannelMessageCreated], this.handleUpsertChannelMessages);
+            this.hub.off(HubEvent[HubEvent.ChannelMessageUpdated], this.handleUpsertChannelMessages);
+            this.hub.off(HubEvent[HubEvent.ChannelMessageDeleted], this.handleDeleteChannelMessages);
+        }
+    }
+
     protected async setupSubscriptions(component: any, userId: number) {
         try {
-            const hub = await this._hubService.getChannelMessagesHub(...this.updateArgs);
-            hub.on(HubEvent[HubEvent.ChatCreated], this.handleUpsertChannelMessages);
-            hub.on(HubEvent[HubEvent.ChatUpdated], this.handleUpsertChannelMessages);
-            hub.on(HubEvent[HubEvent.ChatDeleted], this.handleDeleteChannelMessages);
-            hub.on(HubEvent[HubEvent.ChatTyping], this.handleUpsertChannelMessages);
+            this.hub = await this._hubService.getChannelMessagesHub(...this.updateArgs);
+            this.hub.on(HubEvent[HubEvent.ChannelMessageCreated], this.handleUpsertChannelMessages);
+            this.hub.on(HubEvent[HubEvent.ChannelMessageUpdated], this.handleUpsertChannelMessages);
+            this.hub.on(HubEvent[HubEvent.ChannelMessageDeleted], this.handleDeleteChannelMessages);
         } catch (err) {
             console.error(err);
         }

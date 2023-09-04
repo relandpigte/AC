@@ -3,13 +3,13 @@
         <div class="d-flex align-items-center">
             <div class="conversation-header-avatar">
                 <a href="#" class="avatar">
-                    <img src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
+                    <img [src]="getProfilePictureFromDocument(profileDocument, userId)" class="avatar-img rounded-circle" [alt]="recipientFullName" />
                 </a>
             </div>
 
             <div class="conversation-header-recipient d-flex flex-column flex-grow-1">
                 <h4 class="name">
-                    <a href="#">Dianna Smiley</a>
+                    <a href="#">{{ recipientFullName | titlecase }}</a>
                 </h4>
                 <p class="status">
                     <span class="text-success">●</span> Online
@@ -49,15 +49,21 @@
 
             <ng-container *ngIf="channelMessages.length > 0">
                 <app-chat-conversation
+                    [attr.id]="'msg-' + message.id"
                     *ngFor="let message of channelMessages"
                     [data]="message"
-                    (onMessageInfoClick)="handleMessageInfoPopup(d)"
-                    (onReplyClick)="handleMessageReply(d)"
+                    (onMessageInfoClick)="handleMessageInfoPopup(message)"
+                    (onReplyClick)="handleMessageReply(message)"
                 ></app-chat-conversation>
             </ng-container>
 
-            <div class="conversation-status text-right">
-                <span class="title">Delivered</span>
+            <div class="conversation-info d-flex flex-column w-100">
+                <div *ngIf="isShowLastMessageInfo" class="conversation-status text-right">
+                    <span class="title">{{ lastMessageInfoStr }}</span>
+                </div>
+                <div *ngIf="isRecipientTyping" class="conversation-typing text-left">
+                    <span class="title">{{ recipientName }} is typing</span>
+                </div>
             </div>
         </div>
     </div>

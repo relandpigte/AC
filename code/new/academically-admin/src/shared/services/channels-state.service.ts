@@ -1,7 +1,7 @@
 import { HubService } from '@app/_shared/services/hub.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { Utils } from '../helpers/utils';
-import { ChannelDto, ChatsServiceProxy, HubEvent } from '../service-proxies/service-proxies';
+import { ChannelDto, ChannelMemberDto, ChannelMessageDto, ChatsServiceProxy, HubEvent } from '../service-proxies/service-proxies';
 import { StateServiceBase, StateUpdate } from './state-base.service';
 
 export enum channelsType {
@@ -17,7 +17,9 @@ export class ChannelsStateService extends StateServiceBase {
     channels$: Subject<StateUpdate<ChannelDto>> = new Subject();
     loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
-    type: channelsType;
+    hub: any;
+
+    type: channelsType = channelsType.inbox;
     fns = {
         [channelsType.all]: 'getAllChannelsForUser',
         [channelsType.inbox]: 'getAllInboxChannelsForUser',
@@ -45,13 +47,27 @@ export class ChannelsStateService extends StateServiceBase {
         this.loading$.next(false);
     }
 
+    async stop() {
+        super.stop();
+        if (this.hub) {
+            this.hub.off(HubEvent[HubEvent.ChannelMessageCreated], this.handleUpsertChannels);
+            this.hub.off(HubEvent[HubEvent.ChannelMessageUpdated], this.handleUpsertChannels);
+            this.hub.off(HubEvent[HubEvent.ChannelMessageDeleted], this.handleDeleteChannels);
+            this.hub.off(HubEvent[HubEvent.ChannelMemberTyping], this.handleChannelMemberTyping);
+            this.hub.off(HubEvent[HubEvent.ChannelArchive], this.handleUpsertChannels);
+            this.hub.off(HubEvent[HubEvent.ChannelUnarchive], this.handleUpsertChannels);
+        }
+    }
+
     protected async setupSubscriptions(component: any, userId: number) {
         try {
-            const hub = await this._hubService.getChannelsHub(...this.updateArgs);
-            hub.on(HubEvent[HubEvent.ChatCreated], this.handleUpsertChannels);
-            hub.on(HubEvent[HubEvent.ChatUpdated], this.handleUpsertChannels);
-            hub.on(HubEvent[HubEvent.ChatDeleted], this.handleDeleteChannels);
-            hub.on(HubEvent[HubEvent.ChatTyping], this.handleUpsertChannels);
+            this.hub = await this._hubService.getChannelsHub(...this.updateArgs);
+            this.hub.on(HubEvent[HubEvent.ChannelMessageCreated], this.handleUpsertChannels);
+            this.hub.on(HubEvent[HubEvent.ChannelMessageUpdated], this.handleUpsertChannels);
+            this.hub.on(HubEvent[HubEvent.ChannelMessageDeleted], this.handleDeleteChannels);
+            this.hub.on(HubEvent[HubEvent.ChannelMemberTyping], this.handleChannelMemberTyping);
+            this.hub.on(HubEvent[HubEvent.ChannelArchive], this.handleUpsertChannels);
+            this.hub.on(HubEvent[HubEvent.ChannelUnarchive], this.handleUpsertChannels);
         } catch (err) {
             console.error(err);
         }
@@ -67,19 +83,28 @@ export class ChannelsStateService extends StateServiceBase {
             channel.members.some(m => m.userId === userId);
     };
 
-    handleUpsertChannels = async (channel: ChannelDto) => {
+    handleUpsertChannels = async (channelMessage: ChannelMessageDto) => {
+        const channel = channelMessage.channel;
         if (!this.canViewChannel(channel)) return;
         this.loading$.next(true);
         this.updateFromMap(this.channels, Utils.toObjectMap([channel], (c) => c.id, (p) => p), this.channels$);
         this.loading$.next(false);
     };
 
-    handleDeleteChannels = async (channel: ChannelDto) => {
+    handleDeleteChannels = async (channelMessage: ChannelMessageDto) => {
+        const channel = channelMessage.channel;
         if (!this.canViewChannel(channel)) return;
         this.loading$.next(true);
         this.updateFromMap(this.channels, { [channel.id]: null }, this.channels$);
         this.loading$.next(false);
     }
+
+    handleChannelMemberTyping = async (channel: ChannelDto) => {
+        if (!this.canViewChannel(channel)) return;
+        this.loading$.next(true);
+        this.updateFromMap(this.channels, Utils.toObjectMap([channel], (c) => c.id, (p) => p), this.channels$, true);
+        this.loading$.next(false);
+    };
 
     async updateServiceParams(params: { type: channelsType | undefined, userId: number | undefined }) {
         this.loading$.next(true);

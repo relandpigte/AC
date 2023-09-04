@@ -68,9 +68,26 @@
         }
     }
 
+    &-info {
+        margin-top: -0.938rem;
+    }
+
     &-status {
         font-size: 12px;
         color: #6E84A3;
-        margin-top: -0.938rem;
+    }
+
+    &-typing {
+        color: #6E84A3;
+        font-size: 13px;
+        font-style: italic;
+        font-weight: 400;
+        letter-spacing: -0.13px;
+
+        &::after {
+            display: inline-block;
+            animation: dotty steps(1,end) 2s infinite;
+            content: '';
+        }
     }
 }

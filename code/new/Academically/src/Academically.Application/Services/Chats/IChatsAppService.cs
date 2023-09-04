@@ -18,6 +18,8 @@ namespace Academically.Services.Chats
         Task<List<ChannelMemberDto>> GetAllChannelMembers(Guid channelId);
         Task<ChannelMessageDto> CreateChannelMessage(CreateChannelMessageInputDto input);
         Task<ChannelMessageDto> UpdateChannelMessage(UpdateChannelMessageInputDto input);
+        Task<bool> SeenChannelMessages(Guid channelId, DateTime targetMessagesDateTime);
+        Task<bool> SetChannelMemberTyping(Guid channelId, bool isTyping);
         Task<bool> ArchiveChannel(Guid channelId);
         Task<bool> UnarchiveChannel(Guid channelId);
         Task<bool> DeleteChannel(Guid channelId);

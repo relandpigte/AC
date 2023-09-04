@@ -5,8 +5,8 @@
             <div *ngIf="parentMessage" class="parent-message">
                 <div class="parent-message-header d-flex flex-column align-items-start gap-3">
                     <div class="user-info d-flex gap-5">
-                        <div class="name font-weight-bold">Casey Fyfe</div>
-                        <span class="time">1h</span>
+                        <div class="name font-weight-bold">{{ parentMessage?.creatorUser?.fullName | titlecase }}</div>
+                        <span class="time">{{ convertMomentToPostDateAgo(parentMessage?.creationTime, false) }}</span>
                     </div>
                     <div class="parent-message-content" [class.message-deleted]="parentMessage.isDeleted">
                         {{ isDeleted ? ('MessageDeleted' | localize) : parentMessage.message }}
@@ -23,8 +23,8 @@
             <div class="message position-relative">
                 <div class="message-header d-flex align-items-center gap-10">
                     <div class="user-info d-flex gap-5">
-                        <div class="name font-weight-bold">Casey Fyfe</div>
-                        <span class="time">1h</span>
+                        <div class="name font-weight-bold">{{ data?.creatorUser?.fullName | titlecase }}</div>
+                        <span class="time">{{ convertMomentToPostDateAgo(data?.creationTime, false) }}</span>
                     </div>
                     <div class="actions ml-auto">
                         <div class="dropdown">

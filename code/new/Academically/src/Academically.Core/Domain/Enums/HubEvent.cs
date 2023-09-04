@@ -20,9 +20,11 @@
         ReactionCreated,
         ReactionUpdated,
         ReactionDeleted,
-        ChatCreated,
-        ChatUpdated,
-        ChatDeleted,
-        ChatTyping,
+        ChannelMessageCreated,
+        ChannelMessageUpdated,
+        ChannelMessageDeleted,
+        ChannelMemberTyping,
+        ChannelArchive,
+        ChannelUnarchive,
     }
 }

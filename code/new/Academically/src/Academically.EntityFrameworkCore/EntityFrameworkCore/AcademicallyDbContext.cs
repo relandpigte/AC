@@ -122,6 +122,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<Channel> Channels { get; set; }
         public virtual DbSet<ChannelMessage> ChannelMessages { get; set; }
         public virtual DbSet<ChannelMember> ChannelMembers { get; set; }
+        public virtual DbSet<ChannelArchive> ChannelArchives { get; set; }
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
         {

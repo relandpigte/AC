@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Injector, Input, Output } from '@angular/core';
+import { MessageComposeData } from '@app/chat/chat.component';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ChannelDto } from '@shared/service-proxies/service-proxies';
-import { ChatModel, ChatService } from '@shared/services/chat.service';
+import { ChannelDto, ChannelMessageDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
     selector: 'app-composer-conversation',
@@ -14,7 +14,9 @@ export class ComposerConversationComponent extends AppComponentBase {
     @Input() hasClose = false;
     @Input() showAttachmentInfo = true;
 
-    @Input() replyingTo: ChatModel;
+    @Input() replyingTo: ChannelMessageDto;
+    @Input() isSearchingUser: boolean;
+    @Input() isRecipientTyping = false;
 
     @Output() onReplyClick = new EventEmitter();
     @Output() onCloseClick = new EventEmitter();
@@ -25,8 +27,8 @@ export class ComposerConversationComponent extends AppComponentBase {
         super(injector);
     }
 
-    handleReplyClick(): void {
-        this.onReplyClick.emit();
+    handleReplyClick(messageComposeData: MessageComposeData): void {
+        this.onReplyClick.emit(messageComposeData);
     }
 
     handleCloseClick(): void {
