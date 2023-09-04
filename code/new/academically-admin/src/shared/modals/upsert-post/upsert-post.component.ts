@@ -3,7 +3,7 @@ import { SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Emoji } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { debounceTime, finalize, takeUntil } from 'rxjs/operators';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
@@ -12,6 +12,8 @@ import { FileUtils } from '@shared/helpers/file-utils';
 import { AvailableServiceDto, PostsServiceProxy, PostType, SharedType, UpdatePostDto } from '@shared/service-proxies/service-proxies';
 import { CommunityPostService } from '@shared/services/community-post.service';
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
+import { LinkPreviewResponse, LinkPreviewService } from '@shared/services/link-preview.service';
+import { Subject } from 'rxjs';
 
 export enum PostTabs {
   QuickPost = 'quick-post',
@@ -31,6 +33,7 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
   parentPostId: string;
   model: any;
   selectedService: AvailableServiceDto;
+  sharedLinks: LinkPreviewResponse[];
 
   isCreating = false;
   isShowServicePicker = false;
@@ -49,6 +52,8 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
   @ViewChild('fileInput') fileInput: ElementRef;
   @Output() onPostCreated = new EventEmitter<any>();
 
+  linkPreviewTrigger$: Subject<void> = new Subject();
+
   private maxFileSize = fileUploadConfiguration.maxFileSize;
   private imageExtensions = fileUploadConfiguration.allowedImageExtensions;
   private videoExtensions = fileUploadConfiguration.videoExtensions;
@@ -59,10 +64,16 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
     private _router: Router,
     private _modal: BsModalRef,
     private _cdr: ChangeDetectorRef,
+    private _linkPreviewService: LinkPreviewService,
     private _postSub: CommunityPostService,
     private _postsService: PostsServiceProxy
   ) {
     super(injector);
+
+    this.linkPreviewTrigger$
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(debounceTime(1000))
+      .subscribe(() => this.getLinkPreviews());
   }
 
   get canAddAttachment(): boolean { return this.model && !this.model.file && !this.model.serviceId; }
@@ -178,10 +189,11 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
       });
   }
 
-  handleModelChanged(model: any): void {
+  async handleModelChanged(model: any) {
     this.model = {...this.model, ...model};
     this.model.information = this.model?.information ?? this.model?.content ?? '';
     this._cdr.detectChanges();
+    this.linkPreviewTrigger$.next();
   }
 
   handleImageUploadBtnClick(): void {
@@ -276,5 +288,9 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
         }
       }
     }
+  }
+
+  private async getLinkPreviews() {
+    this.sharedLinks = await this._linkPreviewService.getAllLinkPreviews(this.model.information);
   }
 }

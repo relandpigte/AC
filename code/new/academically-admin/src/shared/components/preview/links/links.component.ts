@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, Injector, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ServicesType } from '@shared/service-proxies/service-proxies';
-import { LinkPreviewResponse, LinkPreviewService } from '@shared/services/link-preview.service';
+import { LinkPreviewResponse } from '@shared/services/link-preview.service';
 
 @Component({
   selector: 'app-preview-links',
@@ -12,7 +12,6 @@ export class PreviewLinksComponent extends AppComponentBase implements OnInit, O
   @ViewChild('videoFile') videoFile: ElementRef;
 
   @Input() linkPreview: LinkPreviewResponse;
-  @Input() serviceType: ServicesType;
   @Input() canRemove: boolean = true;
   @Input() canPlay: boolean = false;
 
@@ -23,12 +22,12 @@ export class PreviewLinksComponent extends AppComponentBase implements OnInit, O
 
   constructor(
     injector: Injector,
-    private _cdr: ChangeDetectorRef,
-    private _linkPreviewService: LinkPreviewService
+    private _cdr: ChangeDetectorRef
   ) {
     super(injector);
   }
 
+  get serviceType(): ServicesType { return this.linkPreview?.type; }
   get isSquareImg(): boolean { return this.serviceType === ServicesType.Event; }
   get isCircleImg(): boolean { return this.serviceType === ServicesType.Coaching; }
   get isRectangleImg(): boolean { return !this.isSquareImg && !this.isCircleImg; }

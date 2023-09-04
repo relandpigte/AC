@@ -17,7 +17,7 @@
               <div class="col d-flex align-items-center p-0 ms-n2">
                 <!-- Reply Textarea | START -->
                 <form autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit(addCommentEl)" class="comment-box flex-grow-1">
-                  <textarea #addCommentEl id="message" name="message" (keydown)="onMessageKeydown($event, form, addCommentEl)"
+                  <textarea #addCommentEl id="message" name="message" (keydown)="onMessageKeydown($event, form, { el: addCommentEl, isChild: false })"
                     class="form-control form-control-flush" placeholder="Leave a comment..." [maxLength]="500"
                     style="overflow: hidden; overflow-wrap: break-word; height: 41px;"
                   ></textarea>
@@ -60,6 +60,13 @@
                 [hasVideoControls]="false"
                 (onRemove)="handleRemoveAttachment()"
             ></app-attachment-preview>
+            <ng-container *ngIf="sharedLinks?.length">
+              <app-preview-links
+                  *ngFor="let link of sharedLinks"
+                  [linkPreview]="link"
+                  [canRemove]="true"
+              ></app-preview-links>
+            </ng-container>
           </div>
         </div>
 
@@ -169,7 +176,7 @@
                             contenteditable="true"
                             data-placeholder="Leave a comment..."
                             [class.with-placeholder]="!taggedPerson"
-                            (keydown)="onMessageKeydown($event, editReplyForm)"
+                            (keydown)="onMessageKeydown($event, editReplyForm, { el: editCommentReply, isChild: true })"
                         ></div>
                       </div>
                     </form>
@@ -211,6 +218,13 @@
                     [hasVideoControls]="false"
                     (onRemove)="handleRemoveAttachment(true)"
                 ></app-attachment-preview>
+                <ng-container *ngIf="childSharedLinks?.length">
+                  <app-preview-links
+                      *ngFor="let link of childSharedLinks"
+                      [linkPreview]="link"
+                      [canRemove]="true"
+                  ></app-preview-links>
+                </ng-container>
               </ng-container>
 
 
@@ -251,7 +265,7 @@
                             contenteditable="true"
                             data-placeholder="Leave a comment..."
                             [class.with-placeholder]="!taggedPerson"
-                            (keydown)="onMessageKeydown($event, replyForm)"
+                            (keydown)="onMessageKeydown($event, replyForm, { el: addReplyEl, isChild: true })"
                           ></div>
                         </div>
                       </form>
@@ -293,6 +307,13 @@
                       [hasVideoControls]="false"
                       (onRemove)="handleRemoveAttachment(true)"
                   ></app-attachment-preview>
+                  <ng-container *ngIf="childSharedLinks?.length">
+                    <app-preview-links
+                        *ngFor="let link of childSharedLinks"
+                        [linkPreview]="link"
+                        [canRemove]="true"
+                    ></app-preview-links>
+                  </ng-container>
                 </div>
               </div>
 
