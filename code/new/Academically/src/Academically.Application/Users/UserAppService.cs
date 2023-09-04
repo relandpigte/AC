@@ -275,30 +275,32 @@ namespace Academically.Users
 
         public async Task<Tuple<List<UserDto>, List<UserDto>>> SearchUsersByName([FromForm] PagedUserResultRequestDto input)
         {
+            var connectedUsers = await GetSearchedUsers(input);
+            var otherUsers = await GetSearchedUsers(input, false);
+
+            return Tuple.Create(connectedUsers, otherUsers);
+        }
+
+        private async Task<List<UserDto>> GetSearchedUsers(PagedUserResultRequestDto input, bool isFollowing = true)
+        {
+            var adminRole = await _roleManager.GetRoleByNameAsync(StaticRoleNames.Tenants.Admin);
             var following = await _userFollowersRepository.GetAll()
                 .Where(x => x.CreatorUserId == AbpSession.UserId.Value)
                 .Select(x => x.UserId)
                 .ToListAsync();
             
-            var usersFollowing =  await Repository.GetAll()
+            return await Repository.GetAll()
                 .Include(u => u.ProfilePictureDocument)
-                .Where(u => u.Id != _abpSession.UserId.Value && following.Contains(u.Id) && !input.Keyword.IsNullOrWhiteSpace())
+                .Where(u => u.Id != _abpSession.UserId.Value && isFollowing ?
+                    following.Contains(u.Id) :
+                    !following.Contains(u.Id))
+                .Where(e => e.Roles.Any(r => r.RoleId != adminRole.Id) && !input.Keyword.IsNullOrWhiteSpace())
                 .WhereIf(!input.Keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(input.Keyword) || x.Surname.Contains(input.Keyword))
                 .WhereIf(input.IsActive.HasValue, x => x.IsActive == input.IsActive)
                 .WhereIf(input.ExcludeSelf.HasValue, x => x.Id != _abpSession.UserId.Value)
                 .Select(u => ObjectMapper.Map<UserDto>(u))
                 .ToListAsync();
 
-            var otherUsers = await Repository.GetAll()
-                .Include(u => u.ProfilePictureDocument)
-                .Where(u => u.Id != _abpSession.UserId.Value && !following.Contains(u.Id) && !input.Keyword.IsNullOrWhiteSpace())
-                .WhereIf(!input.Keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(input.Keyword) || x.Surname.Contains(input.Keyword))
-                .WhereIf(input.IsActive.HasValue, x => x.IsActive == input.IsActive)
-                .WhereIf(input.ExcludeSelf.HasValue, x => x.Id != _abpSession.UserId.Value)
-                .Select(u => ObjectMapper.Map<UserDto>(u))
-                .ToListAsync();
-
-            return Tuple.Create(usersFollowing, otherUsers);
         }
 
         private async Task UpdateLockOutEnabled(User user)
