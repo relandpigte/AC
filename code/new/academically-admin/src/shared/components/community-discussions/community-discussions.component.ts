@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Subject } from 'rxjs';
-import { finalize, take, takeUntil } from 'rxjs/operators';
+import { debounceTime, finalize, take, takeUntil } from 'rxjs/operators';
 
 import { SafeUrl } from '@angular/platform-browser';
 import { HubService } from '@app/_shared/services/hub.service';
@@ -17,6 +17,7 @@ import { AvailableServiceDto, CommentDto, CommentsServiceProxy, PostType, PostsS
 import { CommentsStateService, MAX_COMMENT_LEVELS, MAX_REPLIES_TO_LOAD } from '@shared/services/comments-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
+import { LinkPreviewResponse, LinkPreviewService } from '@shared/services/link-preview.service';
 
 
 @Component({
@@ -70,6 +71,11 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   sanitizedChildAttachmentUrl: SafeUrl;
   fileAttachment: File;
   childFileAttachment: File;
+  sharedLinks: LinkPreviewResponse[];
+  childSharedLinks: LinkPreviewResponse[];
+
+  linkPreviewTrigger$: Subject<string> = new Subject();
+  childLinkPreviewTrigger$: Subject<string> = new Subject();
 
   allowedExtensions: string[] = [];
   private maxFileSize = fileUploadConfiguration.maxFileSize;
@@ -85,9 +91,20 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     private _hubService: HubService,
     private _postsServiceProxy: PostsServiceProxy,
     private _modalDialogService: ModalDialogService,
+    private _linkPreviewService: LinkPreviewService,
     private _commentServiceProxy: CommentsServiceProxy
   ) {
     super(injector);
+
+    this.linkPreviewTrigger$
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(debounceTime(1000))
+      .subscribe(async message => this.sharedLinks = await this._linkPreviewService.getAllLinkPreviews(message));
+
+    this.childLinkPreviewTrigger$
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(debounceTime(1000))
+      .subscribe(async message => this.childSharedLinks = await this._linkPreviewService.getAllLinkPreviews(message));
   }
 
   get commentsStateId(): string { return `comments-${this.referenceId}-${this.parentId}`; }
@@ -313,7 +330,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     }
   }
 
-  protected onMessageKeydown(event: any, form: NgForm, post?: any): void {
+  protected onMessageKeydown(event: any, form: NgForm, post?: { el: any, isChild: boolean }): void {
     const isCursorAtTheStart = (el) => {
       const range = window.getSelection().getRangeAt(0)
       const pre_range = document.createRange();
@@ -330,7 +347,14 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     if (event.keyCode === 8) {
       if (!event.target?.innerHTML || isCursorAtTheStart(event.target)) this.taggedPerson = null;
     }
-    if (post) setTimeout(() => this.inputLength = post.value.length);
+    if (post) {
+      setTimeout(() => {
+        const contentValue = post.el.value ?? post.el.innerHTML;
+        this.inputLength = contentValue.length
+        if (post?.isChild) this.childLinkPreviewTrigger$.next(contentValue);
+        else this.linkPreviewTrigger$.next(contentValue);
+      });
+    }
 
     // Escape [exit when editing comment]
     if (event.keyCode === 27 && this.commentEditId) this.commentEditId = null;

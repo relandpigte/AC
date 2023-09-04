@@ -5,10 +5,14 @@
     <div *ngIf="isImgShown" class="link-preview-image" [ngClass]="{ 'square': isSquareImg, 'circle': isCircleImg, 'rectangle': isRectangleImg }">
         <div [ngStyle]="{ 'background-image': 'url(\'' + img + '\')' }"></div>
     </div>
-    <div *ngIf="isVideoShown" class="link-preview-video d-flex flex-column justify-content-center align-items-center position-relative" (click)="togglePlayVideo($event)">
+    <div *ngIf="isVideoShown" class="link-preview-video d-flex flex-column justify-content-center align-items-center position-relative">
+        <img *ngIf="!isVideoPlaying" [class.can-play]="canPlay" src="/assets/img/actions/play.svg" class="link-preview-video-play">
+        <div [ngStyle]="{ 'background-image': 'url(\'' + img + '\')' }"></div>
+    </div>
+    <!-- <div *ngIf="isVideoShown" class="link-preview-video d-flex flex-column justify-content-center align-items-center position-relative" (click)="togglePlayVideo($event)">
         <img *ngIf="!isVideoPlaying" [class.can-play]="canPlay" src="/assets/img/actions/play.svg" class="link-preview-video-play cursor-pointer">
         <video #videoFile [src]="video" class="bg-light cursor-pointer" loop playsinline></video>
-    </div>
+    </div> -->
     <div class="link-preview-content flex-grow-1 d-flex flex-column justify-content-center align-items-center gap-2">
         <div *ngIf="isScheduleShown" class="link-preview-schedule w-100">
             {{ schedule }}

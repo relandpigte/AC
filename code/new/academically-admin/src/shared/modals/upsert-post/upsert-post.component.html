@@ -91,6 +91,13 @@
             (onBack)="isShowEmojiPicker = false"
             (onSelect)="handleOnEmojiSelect($event)"
         ></app-emoji-picker>
+        <ng-container *ngIf="sharedLinks?.length">
+            <app-preview-links
+                *ngFor="let link of sharedLinks"
+                [linkPreview]="link"
+                [canRemove]="true"
+            ></app-preview-links>
+        </ng-container>
     </div>
 
     <div class="card-footer d-flex justify-content-between">
