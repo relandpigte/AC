@@ -1,25 +1,33 @@
-import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { AppComponentBase } from '@shared/app-component-base';
-import { switchMap, takeUntil } from 'rxjs/operators';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { MessageInfoComponent } from '@app/chat/_components/conversation/_components/message-info/message-info.component';
-import { ChannelModel, ChatModel, ChatService } from '@shared/services/chat.service';
-import { ServiceCard } from '@shared/models/service-card.model';
-import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
-import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
-import { ChannelMessagesStateService } from '@shared/services/channel-messages-state.service';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { HubService } from '@app/_shared/services/hub.service';
-import { ChannelDto, ChannelMessageDto, ChatsServiceProxy } from '@shared/service-proxies/service-proxies';
-import { BehaviorSubject, combineLatest, of } from 'rxjs';
+import { MessageInfoComponent } from '@app/chat/_components/conversation/_components/message-info/message-info.component';
+import { AppComponentBase } from '@shared/app-component-base';
+import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
+import { ServiceCard } from '@shared/models/service-card.model';
+import {
+  ChannelDto,
+  ChannelMessageDto,
+  ChatsServiceProxy,
+  DocumentDto,
+  UserDto
+} from '@shared/service-proxies/service-proxies';
+import { ChannelMessagesStateService } from '@shared/services/channel-messages-state.service';
+import { ChatService } from '@shared/services/chat.service';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
+import * as _ from 'lodash';
+import * as moment from 'moment';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { BehaviorSubject, Subject, combineLatest, of } from 'rxjs';
+import { debounceTime, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-conversation',
   templateUrl: './conversation.component.html',
   styleUrls: ['./conversation.component.less']
 })
-export class ConversationComponent extends AppComponentBase implements OnInit, OnChanges, AfterViewChecked {
+export class ConversationComponent extends AppComponentBase implements OnInit, OnChanges {
   channelMessagesStateService: ChannelMessagesStateService;
 
   @ViewChild('scrollContent', { static: true }) content?: ElementRef<HTMLDivElement>;
@@ -29,20 +37,25 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
   @Input() hasActions = true;
   @Input() hasClose = false;
   @Input() showAttachmentInfo = true;
+  @Input() isRecipientTyping = false;
 
   @Output() onActionClick: EventEmitter<any> = new EventEmitter();
   @Output() onCloseClick: EventEmitter<any> = new EventEmitter();
 
   channelMessages: ChannelMessageDto[] = [];
   totalChannelMessagesCount = 0;
+  replyingToUser: UserDto;
 
   attachedService: ServiceCard;
 
   isLoadingMessages$ = new BehaviorSubject<boolean>(true);
 
+  seenMessagesTrigger$ = new Subject();
+
   constructor(
     injector: Injector,
     private _cdr: ChangeDetectorRef,
+    private _elRef: ElementRef,
     private _chatService: ChatService,
     private _hubService: HubService,
     private _chatsService: ChatsServiceProxy,
@@ -55,27 +68,46 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
   get isLoading$() { return combineLatest(this.loadingSources$).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
   get loadingSources$() { return [ this.isLoadingMessages$ ]; }
 
-  get selectedChannelId(): string { return this.channel.id; }
+  get selectedChannelId(): string { return this.channel?.id; }
   get channelMessagesStateId(): string { return `chat-messages-${this.selectedChannelId}`; }
 
+  get lastMessage(): ChannelMessageDto { return this.channelMessages?.length ? this.channelMessages[this.channelMessages.length - 1] : null; }
+  get isShowLastMessageInfo(): boolean { return this.lastMessage?.creatorUserId === this.appSession.userId; }
+  get lastMessageInfoStr(): string {
+    if (this.lastMessage.isSeen) return 'Seen';
+    else return 'Delivered';
+  }
+
+  get userId(): number { return this.replyingToUser?.id; }
+  get profileDocument(): DocumentDto { return this.replyingToUser?.profilePictureDocument; }
+  get recipientName(): string { return this.replyingToUser?.name; }
+  get recipientFullName(): string { return this.replyingToUser?.fullName; }
+
   async ngOnInit() {
-    await this.initChannelMessagesAppStates();
+    this._chatService.replyingToUser$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(user => this.replyingToUser = user);
+
+    this.seenMessagesTrigger$
+      .pipe(debounceTime(1000))
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(() => this.handleSeenMessages())
   }
 
   async ngOnChanges(changes: SimpleChanges) {
     if ('channel' in changes && this.channel) {
+      await this.initChannelMessagesAppStates();
       await this.channelMessagesStateService.updateServiceParams({ type: undefined, channelId: this.selectedChannelId });
       this.channelMessages = this.channelMessagesStateService.getAllChannelMessages();
       this.totalChannelMessagesCount = this.channelMessagesStateService.totalChannelMessagesCount;
     }
   }
 
-  ngAfterViewChecked(): void {
-    const { clientHeight } = this.content.nativeElement;
-    this.wrapper.nativeElement.scrollTo(0, clientHeight);
-  }
-
   private async initChannelMessagesAppStates() {
+    if (this.channelMessagesStateService) {
+      await this.channelMessagesStateService.stop();
+    }
+
     const appStateConfig: AppStateConfig = {
         [this.channelMessagesStateId]: {
             load: [this.selectedChannelId],
@@ -94,7 +126,7 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
     this.channelMessagesStateService.channelMessages$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
         switch(event.type) {
           case StateUpdateType.Add:
-              this.channelMessages = [event.data].concat(this.channelMessages);
+              this.channelMessages = this.channelMessages.concat([event.data]);
               this.totalChannelMessagesCount++;
               break;
           case StateUpdateType.Update:
@@ -106,9 +138,34 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
               break;
         }
         this._cdr.detectChanges();
+        this.focusLatestUnreadMessage();
     });
     this.channelMessages = this.channelMessagesStateService.getAllChannelMessages();
     this.totalChannelMessagesCount = this.channelMessagesStateService.totalChannelMessagesCount;
+    this.focusLatestUnreadMessage();
+  }
+
+  private focusLatestUnreadMessage(): void {
+    setTimeout(() => {
+      let latestMessage = null;
+      if (this.channelMessages?.length) {
+        latestMessage = this.channelMessages[this.channelMessages.length - 1];
+        let latestUnseenMessageIdx = null;
+        if (latestMessage.creatorUserId !== this.appSession.userId) {
+          const unseenMessages = this.channelMessages.filter(m => !m.isSeen);
+          const oldestUnseenMessage = unseenMessages ? _.minBy(unseenMessages, 'creationTime') : null;
+          latestUnseenMessageIdx = oldestUnseenMessage ? this.channelMessages.findIndex(m => m.id === oldestUnseenMessage.id) : null;
+        }
+        latestMessage = latestUnseenMessageIdx ? this.channelMessages[latestUnseenMessageIdx] : latestMessage;
+      }
+
+      if (latestMessage) {
+        this._elRef.nativeElement.querySelector(`#msg-${latestMessage.id}`)?.scrollIntoView({ behavior: 'smooth' });
+        this.seenMessagesTrigger$.next();
+      } else {
+        this.wrapper.nativeElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
   }
 
   private getAttachedService(): void {
@@ -116,18 +173,24 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
     this.attachedService = service;
   }
 
-  handleMessageInfoPopup(data: ChatModel): void {
+  // tslint:disable-next-line: member-ordering
+  handleMessageInfoPopup(data: ChannelMessageDto): void {
     const modalSettings = <ModalOptions<MessageInfoComponent>>this.defaultModalSettings;
     modalSettings.backdrop = true;
     modalSettings.ignoreBackdropClick = false;
     modalSettings.keyboard = true;
         modalSettings.class = 'modal-dialog-centered modal-sm modal-message-info';
     modalSettings.initialState = {
+      channelMessage: data
     };
     const modal = this._modalService.show(MessageInfoComponent, modalSettings).content;
   }
 
-  handleMessageReply(data: ChatModel): void {
+  async handleSeenMessages() {
+    this._chatsService.seenChannelMessages(this.selectedChannelId, moment()).subscribe(() => {});
+  }
+
+  handleMessageReply(data: ChannelMessageDto): void {
     this._chatService.replyToMessage$.next(data);
   }
 

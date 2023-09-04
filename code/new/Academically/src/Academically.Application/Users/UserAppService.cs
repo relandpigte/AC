@@ -21,9 +21,12 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Academically.Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Academically.Users
 {
@@ -39,6 +42,7 @@ namespace Academically.Users
         private readonly UrlEncoder _urlEncoder;
         private readonly ISettingManager _settingManager;
         private readonly IDocumentsDomainService _documentsDomainService;
+        private readonly IRepository<UserFollower, Guid> _userFollowersRepository;
 
         public UserAppService(
             IRepository<User, long> repository,
@@ -50,7 +54,8 @@ namespace Academically.Users
             LogInManager logInManager,
             UrlEncoder urlEncoder,
             ISettingManager settingManager,
-            IDocumentsDomainService documentsDomainService
+            IDocumentsDomainService documentsDomainService,
+            IRepository<UserFollower, Guid> userFollowersRepository
             )
             : base(repository)
         {
@@ -63,6 +68,7 @@ namespace Academically.Users
             _urlEncoder = urlEncoder;
             _settingManager = settingManager;
             _documentsDomainService = documentsDomainService;
+            _userFollowersRepository = userFollowersRepository;
         }
 
         [AbpAuthorize(PermissionNames.Pages_Users_Create)]
@@ -267,11 +273,40 @@ namespace Academically.Users
             return true;
         }
 
+        public async Task<Tuple<List<UserDto>, List<UserDto>>> SearchUsersByName([FromForm] PagedUserResultRequestDto input)
+        {
+            var following = await _userFollowersRepository.GetAll()
+                .Where(x => x.CreatorUserId == AbpSession.UserId.Value)
+                .Select(x => x.UserId)
+                .ToListAsync();
+            
+            var usersFollowing =  await Repository.GetAll()
+                .Include(u => u.ProfilePictureDocument)
+                .Where(u => u.Id != _abpSession.UserId.Value && following.Contains(u.Id) && !input.Keyword.IsNullOrWhiteSpace())
+                .WhereIf(!input.Keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(input.Keyword) || x.Surname.Contains(input.Keyword))
+                .WhereIf(input.IsActive.HasValue, x => x.IsActive == input.IsActive)
+                .WhereIf(input.ExcludeSelf.HasValue, x => x.Id != _abpSession.UserId.Value)
+                .Select(u => ObjectMapper.Map<UserDto>(u))
+                .ToListAsync();
+
+            var otherUsers = await Repository.GetAll()
+                .Include(u => u.ProfilePictureDocument)
+                .Where(u => u.Id != _abpSession.UserId.Value && !following.Contains(u.Id) && !input.Keyword.IsNullOrWhiteSpace())
+                .WhereIf(!input.Keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(input.Keyword) || x.Surname.Contains(input.Keyword))
+                .WhereIf(input.IsActive.HasValue, x => x.IsActive == input.IsActive)
+                .WhereIf(input.ExcludeSelf.HasValue, x => x.Id != _abpSession.UserId.Value)
+                .Select(u => ObjectMapper.Map<UserDto>(u))
+                .ToListAsync();
+
+            return Tuple.Create(usersFollowing, otherUsers);
+        }
+
         private async Task UpdateLockOutEnabled(User user)
         {
             user.IsLockoutEnabled = false;
             await _userManager.UpdateAsync(user);
         }
+        
     }
 }
 

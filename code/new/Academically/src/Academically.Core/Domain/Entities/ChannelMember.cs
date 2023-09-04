@@ -14,6 +14,8 @@ namespace Academically.Domain.Entities
 
         public Guid ChannelId { get; set; }
 
+        public bool IsTyping { get; set; }
+
         [ForeignKey("UserId")]
         public virtual User User { get; set; }
 

@@ -3026,6 +3026,128 @@ export class ChatsServiceProxy {
         }
         return _observableOf<ChannelMessageDto>(<any>null);
     }
+
+    /**
+     * @param channelId (optional) 
+     * @param targetMessagesDateTime (optional) 
+     * @return Success
+     */
+    seenChannelMessages(channelId: string | undefined, targetMessagesDateTime: moment.Moment | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/services/app/Chats/SeenChannelMessages?";
+        if (channelId === null)
+            throw new Error("The parameter 'channelId' cannot be null.");
+        else if (channelId !== undefined)
+            url_ += "channelId=" + encodeURIComponent("" + channelId) + "&";
+        if (targetMessagesDateTime === null)
+            throw new Error("The parameter 'targetMessagesDateTime' cannot be null.");
+        else if (targetMessagesDateTime !== undefined)
+            url_ += "targetMessagesDateTime=" + encodeURIComponent(targetMessagesDateTime ? "" + targetMessagesDateTime.toJSON() : "") + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSeenChannelMessages(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSeenChannelMessages(<any>response_);
+                } catch (e) {
+                    return <Observable<boolean>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<boolean>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSeenChannelMessages(response: HttpResponseBase): Observable<boolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<boolean>(<any>null);
+    }
+
+    /**
+     * @param channelId (optional) 
+     * @param isTyping (optional) 
+     * @return Success
+     */
+    setChannelMemberTyping(channelId: string | undefined, isTyping: boolean | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/services/app/Chats/SetChannelMemberTyping?";
+        if (channelId === null)
+            throw new Error("The parameter 'channelId' cannot be null.");
+        else if (channelId !== undefined)
+            url_ += "channelId=" + encodeURIComponent("" + channelId) + "&";
+        if (isTyping === null)
+            throw new Error("The parameter 'isTyping' cannot be null.");
+        else if (isTyping !== undefined)
+            url_ += "isTyping=" + encodeURIComponent("" + isTyping) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSetChannelMemberTyping(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSetChannelMemberTyping(<any>response_);
+                } catch (e) {
+                    return <Observable<boolean>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<boolean>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSetChannelMemberTyping(response: HttpResponseBase): Observable<boolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<boolean>(<any>null);
+    }
 }
 
 @Injectable()
@@ -24624,6 +24746,90 @@ export class UserServiceProxy {
     }
 
     /**
+     * @param keyword (optional) 
+     * @param isActive (optional) 
+     * @param excludeSelf (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    searchUsersByName(keyword: string | undefined, isActive: boolean | undefined, excludeSelf: boolean | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserDtoListUserDtoListTuple> {
+        let url_ = this.baseUrl + "/api/services/app/User/SearchUsersByName";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (keyword === null || keyword === undefined) {
+            // do nothing
+        } else
+            content_.append("Keyword", keyword.toString());
+        if (isActive === null || isActive === undefined) {
+            // do nothing
+        } else
+            content_.append("IsActive", isActive.toString());
+        if (excludeSelf === null || excludeSelf === undefined) {
+            // do nothing
+        } else
+            content_.append("ExcludeSelf", excludeSelf.toString());
+        if (sorting === null || sorting === undefined) {
+            // do nothing
+        } else
+            content_.append("Sorting", sorting.toString());
+        if (skipCount === null || skipCount === undefined) {
+            // do nothing
+        } else
+            content_.append("SkipCount", skipCount.toString());
+        if (maxResultCount === null || maxResultCount === undefined) {
+            // do nothing
+        } else
+            content_.append("MaxResultCount", maxResultCount.toString());
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSearchUsersByName(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSearchUsersByName(<any>response_);
+                } catch (e) {
+                    return <Observable<UserDtoListUserDtoListTuple>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserDtoListUserDtoListTuple>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSearchUsersByName(response: HttpResponseBase): Observable<UserDtoListUserDtoListTuple> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserDtoListUserDtoListTuple.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserDtoListUserDtoListTuple>(<any>null);
+    }
+
+    /**
      * @param id (optional) 
      * @return Success
      */
@@ -31028,7 +31234,8 @@ export class ChannelMemberDto implements IChannelMemberDto {
     deletionTime: moment.Moment | undefined;
     userId: number;
     channelId: string;
-    creatorUser: UserDto;
+    isTyping: boolean;
+    user: UserDto;
     channel: ChannelDto;
 
     constructor(data?: IChannelMemberDto) {
@@ -31052,7 +31259,8 @@ export class ChannelMemberDto implements IChannelMemberDto {
             this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
             this.userId = _data["userId"];
             this.channelId = _data["channelId"];
-            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+            this.isTyping = _data["isTyping"];
+            this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
             this.channel = _data["channel"] ? ChannelDto.fromJS(_data["channel"]) : <any>undefined;
         }
     }
@@ -31076,7 +31284,8 @@ export class ChannelMemberDto implements IChannelMemberDto {
         data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
         data["userId"] = this.userId;
         data["channelId"] = this.channelId;
-        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        data["isTyping"] = this.isTyping;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
         data["channel"] = this.channel ? this.channel.toJSON() : <any>undefined;
         return data; 
     }
@@ -31100,7 +31309,8 @@ export interface IChannelMemberDto {
     deletionTime: moment.Moment | undefined;
     userId: number;
     channelId: string;
-    creatorUser: UserDto;
+    isTyping: boolean;
+    user: UserDto;
     channel: ChannelDto;
 }
 
@@ -31114,7 +31324,7 @@ export class ChannelMessageDto implements IChannelMessageDto {
     deleterUserId: number | undefined;
     deletionTime: moment.Moment | undefined;
     message: string | undefined;
-    isSeen: moment.Moment;
+    isSeen: moment.Moment | undefined;
     parentId: string | undefined;
     channelId: string;
     creatorUser: UserDto;
@@ -31195,7 +31405,7 @@ export interface IChannelMessageDto {
     deleterUserId: number | undefined;
     deletionTime: moment.Moment | undefined;
     message: string | undefined;
-    isSeen: moment.Moment;
+    isSeen: moment.Moment | undefined;
     parentId: string | undefined;
     channelId: string;
     creatorUser: UserDto;
@@ -39391,7 +39601,7 @@ export interface IGroupedPermissionDtoListResultDto {
     items: GroupedPermissionDto[] | undefined;
 }
 
-/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted 18 = ChatCreated 19 = ChatUpdated 20 = ChatDeleted 21 = ChatTyping */
+/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted 18 = ChannelMessageCreated 19 = ChannelMessageUpdated 20 = ChannelMessageDeleted 21 = ChannelMemberTyping 22 = ChannelArchive 23 = ChannelUnarchive */
 export enum HubEvent {
     PostCreated = 0,
     PostUpdated = 1,
@@ -39411,10 +39621,12 @@ export enum HubEvent {
     ReactionCreated = 15,
     ReactionUpdated = 16,
     ReactionDeleted = 17,
-    ChatCreated = 18,
-    ChatUpdated = 19,
-    ChatDeleted = 20,
-    ChatTyping = 21,
+    ChannelMessageCreated = 18,
+    ChannelMessageUpdated = 19,
+    ChannelMessageDeleted = 20,
+    ChannelMemberTyping = 21,
+    ChannelArchive = 22,
+    ChannelUnarchive = 23,
 }
 
 export class ICustomAttributeProvider implements IICustomAttributeProvider {
@@ -49189,6 +49401,69 @@ export interface IUserDto {
     timeZoneId: string | undefined;
     roleNames: string[] | undefined;
     roleDisplayNames: string[] | undefined;
+}
+
+export class UserDtoListUserDtoListTuple implements IUserDtoListUserDtoListTuple {
+    readonly item1: UserDto[] | undefined;
+    readonly item2: UserDto[] | undefined;
+
+    constructor(data?: IUserDtoListUserDtoListTuple) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["item1"])) {
+                (<any>this).item1 = [] as any;
+                for (let item of _data["item1"])
+                    (<any>this).item1.push(UserDto.fromJS(item));
+            }
+            if (Array.isArray(_data["item2"])) {
+                (<any>this).item2 = [] as any;
+                for (let item of _data["item2"])
+                    (<any>this).item2.push(UserDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): UserDtoListUserDtoListTuple {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserDtoListUserDtoListTuple();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.item1)) {
+            data["item1"] = [];
+            for (let item of this.item1)
+                data["item1"].push(item.toJSON());
+        }
+        if (Array.isArray(this.item2)) {
+            data["item2"] = [];
+            for (let item of this.item2)
+                data["item2"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): UserDtoListUserDtoListTuple {
+        const json = this.toJSON();
+        let result = new UserDtoListUserDtoListTuple();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserDtoListUserDtoListTuple {
+    item1: UserDto[] | undefined;
+    item2: UserDto[] | undefined;
 }
 
 export class UserDtoPagedResultDto implements IUserDtoPagedResultDto {

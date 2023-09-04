@@ -1,0 +1,28 @@
+<div class="search-users">
+    <div class="search-users-header border-bottom">
+        <form class="search-users-form flex-grow-1" #f="ngForm">
+            <div class="form-group mb-0">
+                <input #searchInput name="search" ngModel type="text" class="form-control" placeholder="Type a users name" (keyup)="handleSearchUsers(f)" [ngClass]="{ 'searching': f.value.search && isUserSearchResults }">
+            </div>
+            <div *ngIf="isUserSearchResults" class="search-users-results border border-top-0">
+                <ul *ngIf="isConnectedUsers" class="search-users-connected d-flex flex-column gap-15">
+                    <li *ngFor="let user of connectedUsers" class="d-flex align-items-center gap-10 cursor-pointer" (click)="handleAddRecipient(user)">
+                        <a href="javascript: void(0);" class="avatar avatar-sm">
+                            <img [src]="getProfilePictureFromDocument(user.profilePictureDocument, user.id)" class="avatar-img rounded-circle" alt="profile" />
+                        </a>
+                        <span class="name">{{ user.fullName }}</span>
+                    </li>
+                </ul>
+                <h3 *ngIf="otherUsers" class="search-users-title">More users</h3>
+                <ul *ngIf="otherUsers" class="search-users-others d-flex flex-column gap-15">
+                    <li *ngFor="let user of otherUsers" class="d-flex align-items-center gap-10 cursor-pointer" (click)="handleAddRecipient(user)">
+                        <a href="javascript: void(0);" class="avatar avatar-sm">
+                            <img [src]="getProfilePictureFromDocument(user.profilePictureDocument, user.id)" class="avatar-img rounded-circle" alt="profile" />
+                        </a>
+                        <span class="name">{{ user.fullName }}</span>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+</div>

@@ -8,7 +8,10 @@
             <column name="UserId" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-             <column name="ChannelId" type="CHAR(36)">
+            <column name="ChannelId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsTyping" defaultValueBoolean="false" type="BIT(1)">
                 <constraints nullable="false"/>
             </column>
             
@@ -42,8 +45,18 @@
         </createIndex>
     </changeSet>
 
+    <changeSet author="reland.pigte" id="1104">
+        <createIndex indexName="FK_ChannelMembers_ChannelId_idx" tableName="channelmembers">
+            <column name="ChannelId"/>
+        </createIndex>
+    </changeSet>
+
     <changeSet author="reland.pigte" id="1103">
         <addForeignKeyConstraint baseColumnNames="UserId" baseTableName="channelmembers" constraintName="FK_ChannelMembers_UserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+
+    <changeSet author="reland.pigte" id="1105">
+        <addForeignKeyConstraint baseColumnNames="ChannelId" baseTableName="channelmembers" constraintName="FK_ChannelMembers_ChannelId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="channels" validate="true"/>
     </changeSet>
 
 </databaseChangeLog>

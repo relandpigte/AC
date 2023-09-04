@@ -22,5 +22,7 @@ namespace Academically.Domain.Entities
         public virtual ICollection<ChannelMessage> Messages { get; set; }
 
         public virtual ICollection<ChannelMember> Members { get; set; }
+
+        public virtual ICollection<ChannelArchive> Archives { get; set; }
     }
 }

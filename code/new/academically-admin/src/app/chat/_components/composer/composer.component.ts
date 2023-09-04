@@ -1,9 +1,11 @@
-import { Component, Injector, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { MessageComposeData } from '@app/chat/chat.component';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ChatModel, ChatService } from '@shared/services/chat.service';
-import * as moment from 'moment';
+import { ChannelMessageDto } from '@shared/service-proxies/service-proxies';
+import { ChatService } from '@shared/services/chat.service';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-composer',
@@ -11,19 +13,29 @@ import { Subject } from 'rxjs';
   styleUrls: ['./composer.component.less']
 })
 export class ComposerComponent extends AppComponentBase implements OnInit {
-  model: ChatModel;
+  @ViewChild('messageInput') messageInput: ElementRef<HTMLInputElement>;
 
-  @Input() replyingTo: ChatModel;
-  @Output() onReply: Subject<any> = new Subject<any>();
+  @Input() replyingTo: ChannelMessageDto;
+  @Output() onReply: Subject<MessageComposeData> = new Subject();
+
+  typingTimer$: any;
 
   constructor(
     injector: Injector,
     private _chatService: ChatService
   ) {
     super(injector);
+
+    this._chatService.replyToMessage$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(replyingTo => {
+        this.replyingTo = replyingTo;
+        this.messageInput.nativeElement.scrollIntoView({ behavior: 'smooth' });
+        this.messageInput.nativeElement.focus();
+      });
   }
 
-  get replyingToRecipient(): string { return this.replyingTo?.creatorUser?.firstName ?? 'Miyah'; }
+  get replyingToRecipient(): string { return this.replyingTo?.creatorUser?.name ?? 'Miyah'; }
   get replyingToMessage(): string { return this.replyingTo?.message ?? 'I can even begin to express how good this final season'; }
 
   ngOnInit(): void {
@@ -33,22 +45,11 @@ export class ComposerComponent extends AppComponentBase implements OnInit {
     if (f.value.message === '') {
       return;
     }
-    this.model = {
-      id: this.uuidv4(),
-      message: f.value.message,
-      creatorUserId: this.appSession.userId.toString(),
-      creationTime: new Date(moment.now()),
-      isSeen: new Date(moment.now())
-    };
-
-    if (this.replyingTo) {
-      this.model.parentMessage = this.replyingTo;
-    }
-
-    this._chatService.addChatData(this.model);
+    this.onReply.next({
+      parentId: this.replyingTo?.id,
+      message: f.value.message
+    });
     f.resetForm();
-    this._chatService.replyToMessage$.next(null);
-    this.onReply.next();
   }
 
   handleRemoveReplyTo(): void {
@@ -56,13 +57,19 @@ export class ComposerComponent extends AppComponentBase implements OnInit {
   }
 
   onMessageKeydown(event: any, f: NgForm): void {
-    if (event.keyCode === 13) {
+    if (event.keyCode === 13 && !!f.value.message?.trim()) {
       f.ngSubmit.emit();
       event.preventDefault();
-    }
-
-    if (event.keyCode === 27) {
+    } else if (event.keyCode === 27) {
       // Escape - exit writing a message
+    } else {
+      this.reportTyping();
     }
+  }
+
+  private reportTyping(): void {
+    this._chatService.userTyping$.next(true);
+    if (this.typingTimer$) clearTimeout(this.typingTimer$);
+    this.typingTimer$ = setTimeout(() => this._chatService.userTyping$.next(false), 1000);
   }
 }
