@@ -13,8 +13,8 @@
                         <span class="name">{{ user.fullName }}</span>
                     </li>
                 </ul>
-                <h3 *ngIf="otherUsers" class="search-users-title">More users</h3>
-                <ul *ngIf="otherUsers" class="search-users-others d-flex flex-column gap-15">
+                <h3 *ngIf="isOtherUsers && isConnectedUsers" class="search-users-title">More users</h3>
+                <ul *ngIf="isOtherUsers" class="search-users-others d-flex flex-column gap-15">
                     <li *ngFor="let user of otherUsers" class="d-flex align-items-center gap-10 cursor-pointer" (click)="handleAddRecipient(user)">
                         <a href="javascript: void(0);" class="avatar avatar-sm">
                             <img [src]="getProfilePictureFromDocument(user.profilePictureDocument, user.id)" class="avatar-img rounded-circle" alt="profile" />
