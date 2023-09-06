@@ -15,6 +15,7 @@ using Academically.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Abp.Timing;
 using Academically.Domain.Services.Documents;
+using static AutoMapper.Internal.ExpressionFactory;
 
 namespace Academically.Services.Chats
 {
@@ -197,7 +198,7 @@ namespace Academically.Services.Chats
 
         public async Task<ChannelDto> GetChannel(Guid channelId)
         {
-            return await this._channelRepository.GetAll()
+            var channel = await this._channelRepository.GetAll()
                     .Include(c => c.Messages)
                         .ThenInclude(m => m.Parent)
                     .Include(c => c.Messages)
@@ -207,6 +208,14 @@ namespace Academically.Services.Chats
                     .Where(c => c.Id == channelId)
                     .Select(c => ObjectMapper.Map<ChannelDto>(c))
                     .SingleOrDefaultAsync();
+
+            foreach (var member in channel.Members)
+            {
+                if (member.User.ProfilePictureDocumentId.HasValue)
+                    member.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(member.User.ProfilePictureDocumentId.Value);
+            }
+
+            return channel;
         }
 
         public async Task<ChannelMemberDto> GetChannelMember(Guid channelMemberId)
@@ -221,13 +230,20 @@ namespace Academically.Services.Chats
 
         public async Task<ChannelMessageDto> GetChannelMessage(Guid channelMessageId)
         {
-            return await this._channelMessageRepository.GetAll()
+            var message = await this._channelMessageRepository.GetAll()
                     .Include(m => m.Channel)
                     .Include(m => m.Parent)
                     .Include(m => m.CreatorUser)
                     .Where(m => m.Id == channelMessageId)
                     .Select(m => ObjectMapper.Map<ChannelMessageDto>(m))
                     .SingleOrDefaultAsync();
+
+            if (message?.CreatorUser?.ProfilePictureDocumentId.HasValue ?? false)
+            {
+                message.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(message.CreatorUser.ProfilePictureDocumentId.Value);
+            }
+
+            return message;
         }
 
         public async Task<bool> ReportTyping(Guid channelId)
