@@ -17,7 +17,8 @@
 
         <div class="d-flex gap-10">
             <div *ngIf="!isSender" class="avatar flex-grow-1">
-                <img class="avatar-img rounded-circle" src="assets/img/anonymous.png" alt="..."/>
+                <img *ngIf="data?.creatorUser?.profilePictureUrl" class="avatar-img rounded-circle" [src]="getProfilePicture(data?.creatorUser?.profilePictureUrl)" [alt]="data?.creatorUser?.fullName"/>
+                <img *ngIf="!data?.creatorUser?.profilePictureUrl" class="avatar-img rounded-circle" src="assets/img/anonymous.png" alt="..."/>
             </div>
 
             <div class="message position-relative">

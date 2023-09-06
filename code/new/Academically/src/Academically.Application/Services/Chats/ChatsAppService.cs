@@ -14,11 +14,13 @@ using Channel = Academically.Domain.Entities.Channel;
 using Academically.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Abp.Timing;
+using Academically.Domain.Services.Documents;
 
 namespace Academically.Services.Chats
 {
     public class ChatsAppService : AcademicallyAppServiceBase, IChatsAppService
     {
+        private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IRepository<Channel, Guid> _channelRepository;
         private readonly IRepository<ChannelMessage, Guid> _channelMessageRepository;
         private readonly IRepository<ChannelMember, Guid> _channelMemberRepository;
@@ -26,6 +28,7 @@ namespace Academically.Services.Chats
         private readonly IHubContext<ChannelsHub> _channelsHub;
 
         public ChatsAppService(
+            IDocumentsDomainService documentsDomainService,
             IRepository<Channel, Guid> channelRepository,
             IRepository<ChannelMessage, Guid> channelMessageRepository,
             IRepository<ChannelMember, Guid> channelMemberRepository,
@@ -33,6 +36,7 @@ namespace Academically.Services.Chats
             IHubContext<ChannelsHub> channelsHub
         )
         {
+            this._documentsDomainService = documentsDomainService;
             this._channelRepository = channelRepository;
             this._channelMessageRepository = channelMessageRepository;
             this._channelMemberRepository = channelMemberRepository;
@@ -95,7 +99,7 @@ namespace Academically.Services.Chats
 
         public async Task<List<ChannelDto>> GetAllArchivedChannelsForUser(long? userId)
         {
-            return await this._channelRepository.GetAll()
+            var channels = await this._channelRepository.GetAll()
                     .Include(c => c.Members)
                         .ThenInclude(m => m.User)
                     .Include(c => c.Messages)
@@ -105,6 +109,17 @@ namespace Academically.Services.Chats
                     .Where(c => c.Archives.Any(a => a.CreatorUserId == userId))
                     .Select(c => ObjectMapper.Map<ChannelDto>(c))
                     .ToListAsync();
+
+            foreach (var channel in channels)
+            {
+                foreach (var member in channel.Members)
+                {
+                    if (member.User.ProfilePictureDocumentId.HasValue)
+                        member.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(member.User.ProfilePictureDocumentId.Value);
+                }
+            }
+
+            return channels;
         }
 
         public async Task<List<ChannelMemberDto>> GetAllChannelMembers(Guid channelId)
@@ -122,7 +137,7 @@ namespace Academically.Services.Chats
 
         public async Task<List<ChannelMessageDto>> GetAllChannelMessages(Guid channelId)
         {
-            return await this._channelRepository.GetAll()
+            var messages = await this._channelRepository.GetAll()
                     .Include(c => c.Messages)
                         .ThenInclude(m => m.Channel)
                     .Include(c => c.Messages)
@@ -133,6 +148,14 @@ namespace Academically.Services.Chats
                     .SelectMany(c => c.Messages)
                     .Select(m => ObjectMapper.Map<ChannelMessageDto>(m))
                     .ToListAsync();
+
+            foreach (var message in messages)
+            {
+                if (message.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    message.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(message.CreatorUser.ProfilePictureDocumentId.Value);
+            }
+
+            return messages;
         }
 
         public async Task<List<ChannelDto>> GetAllChannelsForUser(long? userId)
@@ -149,7 +172,7 @@ namespace Academically.Services.Chats
 
         public async Task<List<ChannelDto>> GetAllInboxChannelsForUser(long? userId)
         {
-            return await this._channelRepository.GetAll()
+            var channels = await this._channelRepository.GetAll()
                     .Include(c => c.Members)
                         .ThenInclude(m => m.User)
                     .Include(c => c.Messages)
@@ -159,6 +182,17 @@ namespace Academically.Services.Chats
                     .Where(c => !c.Archives.Any(a => a.CreatorUserId == userId))
                     .Select(c => ObjectMapper.Map<ChannelDto>(c))
                     .ToListAsync();
+
+            foreach (var channel in channels)
+            {
+                foreach (var member in channel.Members)
+                {
+                    if (member.User.ProfilePictureDocumentId.HasValue)
+                        member.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(member.User.ProfilePictureDocumentId.Value);
+                }
+            }
+
+            return channels;
         }
 
         public async Task<ChannelDto> GetChannel(Guid channelId)

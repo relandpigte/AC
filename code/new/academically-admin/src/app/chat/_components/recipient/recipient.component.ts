@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ChannelDto, ChannelMessageDto } from '@shared/service-proxies/service-proxies';
+import { ChannelDto, ChannelMessageDto, UserDto } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 
 export enum ChatStatus {
@@ -33,6 +33,10 @@ export class RecipientComponent extends AppComponentBase implements OnInit, OnCh
 
   get isRecipientTyping(): boolean {
     return this.channel?.members?.find(m => m.userId !== this.appSession.userId)?.isTyping ?? false;
+  }
+
+  get recipientUser(): UserDto {
+    return this.channel?.members?.find(m => m.userId !== this.appSession.userId)?.user;
   }
 
   ngOnInit(): void {

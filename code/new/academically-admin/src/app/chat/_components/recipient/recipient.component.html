@@ -1,7 +1,8 @@
 <div class="recipient d-flex align-items-center gap-15" [ngClass]="{'active': isActive}">
     <div class="recipient-avatar position-relative">
         <a href="javascript:void(0)" class="avatar">
-            <img src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
+            <img *ngIf="recipientUser" [src]="getProfilePicture(recipientUser.profilePictureUrl)" [alt]="recipientUser.fullName" class="avatar-img rounded-circle">
+            <img *ngIf="!recipientUser"src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
         </a>
         <span class="recipient-avatar-status text-success">●</span>
     </div>
