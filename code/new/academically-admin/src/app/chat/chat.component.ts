@@ -76,12 +76,10 @@ export class ChatComponent extends AppComponentBase implements OnInit {
 
     this._chatService.archiveChannel$
       .pipe(takeUntil(this.destroyed$))
-      .pipe(skip(1))
       .subscribe(channel => this.handleOnArchiveChannel(channel));
 
     this._chatService.deleteChannel$
       .pipe(takeUntil(this.destroyed$))
-      .pipe(skip(1))
       .subscribe(channel => this.handleOnDeleteChannel(channel));
 
     this._chatService.replyingToUser$
