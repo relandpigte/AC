@@ -62,7 +62,7 @@
                     <span class="title">{{ lastMessageInfoStr }}</span>
                 </div>
                 <div *ngIf="isRecipientTyping" class="conversation-typing text-left">
-                    <span class="title">{{ recipientName }} is typing</span>
+                    <span class="title">{{ recipientName | titlecase }} is typing</span>
                 </div>
             </div>
         </div>

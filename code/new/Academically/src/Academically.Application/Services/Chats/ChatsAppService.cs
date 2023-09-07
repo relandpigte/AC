@@ -233,6 +233,7 @@ namespace Academically.Services.Chats
             var message = await this._channelMessageRepository.GetAll()
                     .Include(m => m.Channel)
                     .Include(m => m.Parent)
+                        .ThenInclude(p => p.CreatorUser)
                     .Include(m => m.CreatorUser)
                     .Where(m => m.Id == channelMessageId)
                     .Select(m => ObjectMapper.Map<ChannelMessageDto>(m))
