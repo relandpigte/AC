@@ -13,6 +13,7 @@ import { RecipientComponent } from './_components/recipient/recipient.component'
 import { MessageInfoComponent } from './_components/conversation/_components/message-info/message-info.component';
 import { ServiceAttachmentComponent } from './_components/conversation/_components/service-attachment/service-attachment.component';
 import { SearchUsersComponent } from './_components/search-users/search-users.component';
+import { SearchKeywordComponent } from './_components/search-keyword/search-keyword.component';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { SearchUsersComponent } from './_components/search-users/search-users.co
     RecipientComponent,
     MessageInfoComponent,
     ServiceAttachmentComponent,
-    SearchUsersComponent
+    SearchUsersComponent,
+    SearchKeywordComponent,
   ],
   imports: [
     CommonModule,

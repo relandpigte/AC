@@ -3148,6 +3148,62 @@ export class ChatsServiceProxy {
         }
         return _observableOf<boolean>(<any>null);
     }
+
+    /**
+     * @param keyword (optional) 
+     * @return Success
+     */
+    searchByKeyword(keyword: string | undefined): Observable<SearchByKeywordResponseDto> {
+        let url_ = this.baseUrl + "/api/services/app/Chats/SearchByKeyword?";
+        if (keyword === null)
+            throw new Error("The parameter 'keyword' cannot be null.");
+        else if (keyword !== undefined)
+            url_ += "keyword=" + encodeURIComponent("" + keyword) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSearchByKeyword(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSearchByKeyword(<any>response_);
+                } catch (e) {
+                    return <Observable<SearchByKeywordResponseDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<SearchByKeywordResponseDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSearchByKeyword(response: HttpResponseBase): Observable<SearchByKeywordResponseDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SearchByKeywordResponseDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<SearchByKeywordResponseDto>(<any>null);
+    }
 }
 
 @Injectable()
@@ -39929,6 +39985,53 @@ export interface ILocationSuggestion {
     url: string | undefined;
 }
 
+export class MatchedChannelsDto implements IMatchedChannelsDto {
+    channel: ChannelDto;
+    matchCount: number;
+
+    constructor(data?: IMatchedChannelsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.channel = _data["channel"] ? ChannelDto.fromJS(_data["channel"]) : <any>undefined;
+            this.matchCount = _data["matchCount"];
+        }
+    }
+
+    static fromJS(data: any): MatchedChannelsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new MatchedChannelsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["channel"] = this.channel ? this.channel.toJSON() : <any>undefined;
+        data["matchCount"] = this.matchCount;
+        return data; 
+    }
+
+    clone(): MatchedChannelsDto {
+        const json = this.toJSON();
+        let result = new MatchedChannelsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IMatchedChannelsDto {
+    channel: ChannelDto;
+    matchCount: number;
+}
+
 export class MemberInfo implements IMemberInfo {
     memberType: MemberTypes;
     declaringType: Type;
@@ -43727,6 +43830,73 @@ export class RuntimeTypeHandle implements IRuntimeTypeHandle {
 
 export interface IRuntimeTypeHandle {
     value: IntPtr;
+}
+
+export class SearchByKeywordResponseDto implements ISearchByKeywordResponseDto {
+    keyword: string | undefined;
+    users: UserDto[] | undefined;
+    channels: MatchedChannelsDto[] | undefined;
+
+    constructor(data?: ISearchByKeywordResponseDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.keyword = _data["keyword"];
+            if (Array.isArray(_data["users"])) {
+                this.users = [] as any;
+                for (let item of _data["users"])
+                    this.users.push(UserDto.fromJS(item));
+            }
+            if (Array.isArray(_data["channels"])) {
+                this.channels = [] as any;
+                for (let item of _data["channels"])
+                    this.channels.push(MatchedChannelsDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): SearchByKeywordResponseDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SearchByKeywordResponseDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["keyword"] = this.keyword;
+        if (Array.isArray(this.users)) {
+            data["users"] = [];
+            for (let item of this.users)
+                data["users"].push(item.toJSON());
+        }
+        if (Array.isArray(this.channels)) {
+            data["channels"] = [];
+            for (let item of this.channels)
+                data["channels"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): SearchByKeywordResponseDto {
+        const json = this.toJSON();
+        let result = new SearchByKeywordResponseDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISearchByKeywordResponseDto {
+    keyword: string | undefined;
+    users: UserDto[] | undefined;
+    channels: MatchedChannelsDto[] | undefined;
 }
 
 export class SearchDisciplineTaxonomyRequestDto implements ISearchDisciplineTaxonomyRequestDto {

@@ -38,6 +38,7 @@ export class ChatService {
   userTyping$: Subject<boolean> = new Subject();
 
   replyingToUser$: BehaviorSubject<UserDto> = new BehaviorSubject<UserDto>(null);
+  searchUser$: Subject<string> = new Subject<string>();
   searchKeyword$: Subject<string> = new Subject<string>();
 
   isSearchingUser$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);

@@ -6,7 +6,7 @@
                     <i class="fe fe-search"></i>
                 </span>
             </div>
-            <input class="form-control" type="search" name="search" placeholder="Search messages"/>
+            <input id="search-filter" class="form-control" type="search" name="search" placeholder="Search messages" (input)="searchFilterTrigger$.next($event.target.value)"/>
         </div>
     </form>
     <div class="dropdown flex-grow-1">

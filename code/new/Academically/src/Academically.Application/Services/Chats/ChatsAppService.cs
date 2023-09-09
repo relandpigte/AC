@@ -16,6 +16,9 @@ using Microsoft.AspNetCore.SignalR;
 using Abp.Timing;
 using Academically.Domain.Services.Documents;
 using static AutoMapper.Internal.ExpressionFactory;
+using Academically.Authorization.Users;
+using Academically.Users.Dto;
+using System.Text.RegularExpressions;
 
 namespace Academically.Services.Chats
 {
@@ -26,6 +29,7 @@ namespace Academically.Services.Chats
         private readonly IRepository<ChannelMessage, Guid> _channelMessageRepository;
         private readonly IRepository<ChannelMember, Guid> _channelMemberRepository;
         private readonly IRepository<ChannelArchive, Guid> _channelArchiveRepository;
+        private readonly IRepository<User, long> _userRepository;
         private readonly IHubContext<ChannelsHub> _channelsHub;
 
         public ChatsAppService(
@@ -34,6 +38,7 @@ namespace Academically.Services.Chats
             IRepository<ChannelMessage, Guid> channelMessageRepository,
             IRepository<ChannelMember, Guid> channelMemberRepository,
             IRepository<ChannelArchive, Guid> channelArchiveRepository,
+            IRepository<User, long> userRepository,
             IHubContext<ChannelsHub> channelsHub
         )
         {
@@ -42,6 +47,7 @@ namespace Academically.Services.Chats
             this._channelMessageRepository = channelMessageRepository;
             this._channelMemberRepository = channelMemberRepository;
             this._channelArchiveRepository = channelArchiveRepository;
+            this._userRepository = userRepository;
             this._channelsHub = channelsHub;
         }
 
@@ -295,6 +301,28 @@ namespace Academically.Services.Chats
 
             messages?.ForEach(m => m.IsTyping = isTyping);
             return true;
+        }
+
+        public async Task<SearchByKeywordResponseDto> SearchByKeyword(string keyword)
+        {
+            var searchResults = new SearchByKeywordResponseDto();
+
+            Regex.Replace(keyword, @"\s+", "");
+
+            var users = await this._userRepository.GetAll()
+                    .Where(u => u.Name.ToLower().Contains(keyword.ToLower()) || u.Surname.ToLower().Contains(keyword.ToLower()) || (u.Name + u.Surname).ToLower().Contains(keyword.ToLower()))
+                    .Select(u => ObjectMapper.Map<UserDto>(u))
+                    .ToListAsync();
+            
+            foreach(var user in users)
+            {
+                if (user.ProfilePictureDocumentId.HasValue)
+                    user.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(user.ProfilePictureDocumentId.Value);
+            }
+
+            searchResults.Users = users;
+
+            return searchResults;
         }
 
     }

@@ -31,7 +31,7 @@ export class SearchUsersComponent extends AppComponentBase implements OnInit {
   get isConnectedUsers(): boolean { return this.connectedUsers.length > 0; }
 
   ngOnInit(): void {
-    this._chatService.searchKeyword$
+    this._chatService.searchUser$
       .pipe(
         takeUntil(this.destroyed$),
         debounceTime(500),
@@ -45,7 +45,7 @@ export class SearchUsersComponent extends AppComponentBase implements OnInit {
   }
 
   handleSearchUsers(f: NgForm): void {
-    this._chatService.searchKeyword$.next(f.value.search);
+    this._chatService.searchUser$.next(f.value.search);
   }
 
   handleAddRecipient(user: UserDto): void {

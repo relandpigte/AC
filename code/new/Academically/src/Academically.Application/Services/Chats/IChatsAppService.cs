@@ -24,5 +24,6 @@ namespace Academically.Services.Chats
         Task<bool> UnarchiveChannel(Guid channelId);
         Task<bool> DeleteChannel(Guid channelId);
         Task<bool> ReportTyping(Guid channelId);
+        Task<SearchByKeywordResponseDto> SearchByKeyword(string keyword);
     }
 }

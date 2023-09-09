@@ -64,7 +64,7 @@ export class RecipientComponent extends AppComponentBase implements OnInit, OnCh
 
   private setReceivedDateStr(): void {
     if (this.latestMessage) {
-      this.receivedDateStr = this.convertMomentToShortDateFormat(this.latestMessage.creationTime);
+      this.receivedDateStr = this.convertMomentToShorterDateFormat(this.latestMessage.creationTime);
     }
   }
 

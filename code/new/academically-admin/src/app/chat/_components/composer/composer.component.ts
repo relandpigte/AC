@@ -1,4 +1,4 @@
-import { Component, ElementRef, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injector, Input, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MessageComposeData } from '@app/chat/chat.component';
 import { AppComponentBase } from '@shared/app-component-base';
@@ -12,7 +12,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './composer.component.html',
   styleUrls: ['./composer.component.less']
 })
-export class ComposerComponent extends AppComponentBase implements OnInit {
+export class ComposerComponent extends AppComponentBase {
   @ViewChild('messageInput') messageInput: ElementRef<HTMLInputElement>;
 
   @Input() replyingTo: ChannelMessageDto;
@@ -38,7 +38,8 @@ export class ComposerComponent extends AppComponentBase implements OnInit {
   get replyingToRecipient(): string { return this.replyingTo?.creatorUser?.name ?? 'Miyah'; }
   get replyingToMessage(): string { return this.replyingTo?.message ?? 'I can even begin to express how good this final season'; }
 
-  ngOnInit(): void {
+  focusMessageComposer(): void {
+    this.messageInput?.nativeElement?.focus();
   }
 
   handleWriteMessage(f: NgForm): void {

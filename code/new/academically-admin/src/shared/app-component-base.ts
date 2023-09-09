@@ -259,6 +259,11 @@ export abstract class AppComponentBase implements OnDestroy {
     return moment.utc(date).local().format('dddd, DD MMMM YYYY [at] hh:mm a');
   }
 
+  convertMomentToShorterDateFormat(date: Moment): string {
+    if (moment().diff(date, 'days') < 1) return moment.utc(date).local().format('hh:mm a');
+    return moment.utc(date).local().format('D MMM[,] hh:mm a');
+  }
+
   getCourseImageUrl(courseImageUrl: string): string {
     if (courseImageUrl) {
       return courseImageUrl;

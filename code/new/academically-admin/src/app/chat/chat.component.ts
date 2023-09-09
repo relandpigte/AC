@@ -15,6 +15,8 @@ import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.servi
 import { StateUpdateType } from '@shared/services/state-base.service';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { distinctUntilChanged, skip, switchMap, takeUntil } from 'rxjs/operators';
+import { SearchFilterComponent } from './_components/search-filter/search-filter.component';
+import { ComposerConversationComponent } from './_components/composer-conversation/composer-conversation.component';
 
 export interface MessageComposeData {
   parentId?: string;
@@ -40,9 +42,12 @@ export class ChatComponent extends AppComponentBase implements OnInit {
   isLoadingList$ = new BehaviorSubject<boolean>(true);
 
   isSearchingUser: boolean;
+  isSearchingKeyword: boolean;
   replyingToUser: UserDto;
 
   @ViewChild(SearchUsersComponent) searchUsersComponent: SearchUsersComponent;
+  @ViewChild(SearchFilterComponent) searchFilterComponent: SearchFilterComponent;
+  @ViewChild(ComposerConversationComponent) composerConversationComponent: ComposerConversationComponent;
 
   constructor(
     injector: Injector,
@@ -96,6 +101,10 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     this._chatService.isSearchingUser$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(searching => this.isSearchingUser = searching);
+
+    this._chatService.searchKeyword$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(keyword => this.isSearchingKeyword = !!keyword);
 
     this._chatService.userTyping$
       .pipe(takeUntil(this.destroyed$))
@@ -212,5 +221,16 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     this._chatsService.deleteChannel(channel.id).subscribe(() => {
       this._chatService.selectedChannelType$.next(this.selectedChannelType);
     });
+  }
+
+  handleOnSelectUser(user: UserDto): void {
+    this.searchFilterComponent.clearSearchFilter();
+
+    const channel = this.channels.find(c => c.members.some(m => m.userId === user.id));
+    if (channel) this.handleOnChannelSelect(channel);
+    else {
+      this._chatService.selectedChannel$.next(null);
+      setTimeout(() => this._chatService.replyingToUser$.next(user));
+    }
   }
 }

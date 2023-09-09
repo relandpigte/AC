@@ -21,8 +21,15 @@
                 <img src="/assets/img/chat/back.svg" class="back w-14-px h-14-px">
                 {{ listHeader }}
             </div>
+            <ng-container>
+                <div [attr.hidden]="isSearchingKeyword ? null : ''">
+                    <app-search-keyword
+                        (onSelectUser)="handleOnSelectUser($event)"
+                    ></app-search-keyword>
+                </div>
+            </ng-container>
             <ng-container *ngIf="!isConversationEmpty else emptyConversations">
-                <div class="chat-content-left-recipients">
+                <div class="chat-content-left-recipients" [attr.hidden]="isSearchingKeyword ? '' : null">
                     <app-recipient
                         *ngFor="let c of channels"
                         [channel]="c"
