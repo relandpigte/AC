@@ -3150,6 +3150,110 @@ export class ChatsServiceProxy {
     }
 
     /**
+     * @param channelId (optional) 
+     * @return Success
+     */
+    createChannelNotification(channelId: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Chats/CreateChannelNotification?";
+        if (channelId === null)
+            throw new Error("The parameter 'channelId' cannot be null.");
+        else if (channelId !== undefined)
+            url_ += "channelId=" + encodeURIComponent("" + channelId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateChannelNotification(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateChannelNotification(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateChannelNotification(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param channelId (optional) 
+     * @return Success
+     */
+    deleteChannelNotification(channelId: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Chats/DeleteChannelNotification?";
+        if (channelId === null)
+            throw new Error("The parameter 'channelId' cannot be null.");
+        else if (channelId !== undefined)
+            url_ += "channelId=" + encodeURIComponent("" + channelId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteChannelNotification(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteChannelNotification(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDeleteChannelNotification(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
      * @param keyword (optional) 
      * @return Success
      */
@@ -31183,6 +31287,7 @@ export class ChannelDto implements IChannelDto {
     creatorUser: UserDto;
     messages: ChannelMessageDto[] | undefined;
     members: ChannelMemberDto[] | undefined;
+    channelNotifications: ChannelNotificationDto[] | undefined;
 
     constructor(data?: IChannelDto) {
         if (data) {
@@ -31216,6 +31321,11 @@ export class ChannelDto implements IChannelDto {
                 this.members = [] as any;
                 for (let item of _data["members"])
                     this.members.push(ChannelMemberDto.fromJS(item));
+            }
+            if (Array.isArray(_data["channelNotifications"])) {
+                this.channelNotifications = [] as any;
+                for (let item of _data["channelNotifications"])
+                    this.channelNotifications.push(ChannelNotificationDto.fromJS(item));
             }
         }
     }
@@ -31251,6 +31361,11 @@ export class ChannelDto implements IChannelDto {
             for (let item of this.members)
                 data["members"].push(item.toJSON());
         }
+        if (Array.isArray(this.channelNotifications)) {
+            data["channelNotifications"] = [];
+            for (let item of this.channelNotifications)
+                data["channelNotifications"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -31277,6 +31392,7 @@ export interface IChannelDto {
     creatorUser: UserDto;
     messages: ChannelMessageDto[] | undefined;
     members: ChannelMemberDto[] | undefined;
+    channelNotifications: ChannelNotificationDto[] | undefined;
 }
 
 export class ChannelMemberDto implements IChannelMemberDto {
@@ -31467,6 +31583,61 @@ export interface IChannelMessageDto {
     creatorUser: UserDto;
     parent: ChannelMessageDto;
     channel: ChannelDto;
+}
+
+export class ChannelNotificationDto implements IChannelNotificationDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    channelId: string;
+
+    constructor(data?: IChannelNotificationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.channelId = _data["channelId"];
+        }
+    }
+
+    static fromJS(data: any): ChannelNotificationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ChannelNotificationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["channelId"] = this.channelId;
+        return data; 
+    }
+
+    clone(): ChannelNotificationDto {
+        const json = this.toJSON();
+        let result = new ChannelNotificationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IChannelNotificationDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    channelId: string;
 }
 
 export class CoachingDto implements ICoachingDto {

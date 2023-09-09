@@ -24,5 +24,7 @@ namespace Academically.Domain.Entities
         public virtual ICollection<ChannelMember> Members { get; set; }
 
         public virtual ICollection<ChannelArchive> Archives { get; set; }
+        
+        public virtual ICollection<ChannelNotification> ChannelNotifications { get; set; }
     }
 }

@@ -1,15 +1,12 @@
 ﻿using Abp.Domain.Repositories;
-using Abp.Domain.Uow;
 using Academically.Domain.Entities;
 using Academically.Services.Chats.Dto;
 using Academically.Services.Posts.Dto;
 using System;
 using System.Collections.Generic;
-using System.Linq.Dynamic.Core;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Channels;
 using Channel = Academically.Domain.Entities.Channel;
 using Academically.Hubs;
 using Microsoft.AspNetCore.SignalR;
@@ -19,6 +16,7 @@ using static AutoMapper.Internal.ExpressionFactory;
 using Academically.Authorization.Users;
 using Academically.Users.Dto;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Academically.Services.Chats
 {
@@ -31,6 +29,7 @@ namespace Academically.Services.Chats
         private readonly IRepository<ChannelArchive, Guid> _channelArchiveRepository;
         private readonly IRepository<User, long> _userRepository;
         private readonly IHubContext<ChannelsHub> _channelsHub;
+        private readonly IRepository<ChannelNotification, Guid> _channelNotificationRepository;
 
         public ChatsAppService(
             IDocumentsDomainService documentsDomainService,
@@ -39,7 +38,8 @@ namespace Academically.Services.Chats
             IRepository<ChannelMember, Guid> channelMemberRepository,
             IRepository<ChannelArchive, Guid> channelArchiveRepository,
             IRepository<User, long> userRepository,
-            IHubContext<ChannelsHub> channelsHub
+            IHubContext<ChannelsHub> channelsHub,
+            IRepository<ChannelNotification, Guid> channelNotificationRepository
         )
         {
             this._documentsDomainService = documentsDomainService;
@@ -49,6 +49,7 @@ namespace Academically.Services.Chats
             this._channelArchiveRepository = channelArchiveRepository;
             this._userRepository = userRepository;
             this._channelsHub = channelsHub;
+            this._channelNotificationRepository = channelNotificationRepository;
         }
 
         public async Task<bool> ArchiveChannel(Guid channelId)
@@ -171,6 +172,7 @@ namespace Academically.Services.Chats
                     .Include(c => c.Members)
                         .ThenInclude(m => m.User)
                     .Include(c => c.Messages)
+                    .Include(c => c.ChannelNotifications)
                     .Where(c => !c.IsDeleted)
                     .Where(c => c.Members.Any(m => m.UserId == userId))
                     .Select(c => ObjectMapper.Map<ChannelDto>(c))
@@ -184,6 +186,7 @@ namespace Academically.Services.Chats
                         .ThenInclude(m => m.User)
                     .Include(c => c.Messages)
                     .Include(c => c.Archives)
+                    .Include(c => c.ChannelNotifications)
                     .Where(c => !c.IsDeleted)
                     .Where(c => c.Members.Any(m => m.UserId == userId))
                     .Where(c => !c.Archives.Any(a => a.CreatorUserId == userId))
@@ -301,6 +304,18 @@ namespace Academically.Services.Chats
 
             messages?.ForEach(m => m.IsTyping = isTyping);
             return true;
+        }
+        
+        public async Task CreateChannelNotification(Guid channelId)
+        {
+            await _channelNotificationRepository.InsertAsync(new ChannelNotification { ChannelId = channelId });
+        }
+
+        public async Task DeleteChannelNotification(Guid channelId)
+        {
+            var currentUser = await GetCurrentUserAsync();
+            await _channelNotificationRepository
+                .DeleteAsync(c => c.ChannelId == channelId && c.CreatorUserId == currentUser.Id);
         }
 
         public async Task<SearchByKeywordResponseDto> SearchByKeyword(string keyword)
