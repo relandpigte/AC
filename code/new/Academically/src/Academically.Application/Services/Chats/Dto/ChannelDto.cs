@@ -16,5 +16,6 @@ namespace Academically.Services.Chats.Dto
         public UserDto CreatorUser { get; set; }
         public IEnumerable<ChannelMessageDto> Messages { get; set; }
         public IEnumerable<ChannelMemberDto> Members { get; set; }
+        public IEnumerable<ChannelNotificationDto> ChannelNotifications { get; set; }
     }
 }

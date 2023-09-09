@@ -1,6 +1,20 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Injector,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import { HubService } from '@app/_shared/services/hub.service';
-import { MessageInfoComponent } from '@app/chat/_components/conversation/_components/message-info/message-info.component';
+import {
+  MessageInfoComponent
+} from '@app/chat/_components/conversation/_components/message-info/message-info.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 import { ServiceCard } from '@shared/models/service-card.model';
@@ -12,15 +26,15 @@ import {
   UserDto
 } from '@shared/service-proxies/service-proxies';
 import { ChannelMessagesStateService } from '@shared/services/channel-messages-state.service';
-import { ChatService } from '@shared/services/chat.service';
+import { ChatService, NotificationType } from '@shared/services/chat.service';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { BehaviorSubject, Subject, combineLatest, of } from 'rxjs';
-import { debounceTime, switchMap, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, of, Subject } from 'rxjs';
+import { debounceTime, finalize, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-conversation',
@@ -45,6 +59,7 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
   channelMessages: ChannelMessageDto[] = [];
   totalChannelMessagesCount = 0;
   replyingToUser: UserDto;
+  unSubscribedIds: number[] = [];
 
   attachedService: ServiceCard;
 
@@ -82,8 +97,12 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
   get profileDocument(): DocumentDto { return this.replyingToUser?.profilePictureDocument; }
   get recipientName(): string { return this.replyingToUser?.name; }
   get recipientFullName(): string { return this.replyingToUser?.fullName; }
+  get notificationType() { return NotificationType; }
+  get isMuteNotifications(): boolean { return this.unSubscribedIds?.includes(this.appSession.userId); }
 
-  async ngOnInit() {
+  async ngOnInit(): Promise<void> {
+    this.getUnsubscribedIds();
+
     this._chatService.replyingToUser$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(user => this.replyingToUser = user);
@@ -91,7 +110,8 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
     this.seenMessagesTrigger$
       .pipe(debounceTime(1000))
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(() => this.handleSeenMessages())
+      .subscribe(() => this.handleSeenMessages());
+    this._cdr.detectChanges();
   }
 
   async ngOnChanges(changes: SimpleChanges) {
@@ -101,6 +121,25 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
       this.channelMessages = this.channelMessagesStateService.getAllChannelMessages();
       this.totalChannelMessagesCount = this.channelMessagesStateService.totalChannelMessagesCount;
     }
+  }
+
+  getUnsubscribedIds(): void {
+    this.unSubscribedIds = this.channel?.channelNotifications?.map(n => n.creatorUserId);
+  }
+
+  handleNotification(type: NotificationType): void {
+    const chatNotification = type === NotificationType.Mute ?
+      this._chatsService.createChannelNotification(this.channel?.id) :
+      this._chatsService.deleteChannelNotification(this.channel?.id);
+
+    chatNotification.pipe(takeUntil(this.destroyed$))
+      .subscribe((): void => {
+        if (type === this.notificationType.Mute) {
+          this.unSubscribedIds.push(this.appSession.userId);
+        } else {
+          this.unSubscribedIds = this.unSubscribedIds.filter(s => s !== this.appSession.userId);
+        }
+      });
   }
 
   private async initChannelMessagesAppStates() {
@@ -213,4 +252,6 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
       };
       this._modalDialogService.showConfirmDialog(options);
   }
+
+  protected readonly NotificationType = NotificationType;
 }

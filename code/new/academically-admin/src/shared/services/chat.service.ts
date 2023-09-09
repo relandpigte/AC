@@ -26,6 +26,11 @@ export interface ChatModel {
   parentMessage?: ChatModel;
 }
 
+export enum NotificationType {
+  Mute = 'Mute',
+  Unmute = 'Unmute'
+}
+
 @Injectable({
   providedIn: 'root'
 })
