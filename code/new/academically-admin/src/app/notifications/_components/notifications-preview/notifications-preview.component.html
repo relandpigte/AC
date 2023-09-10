@@ -1,85 +1,227 @@
-<div *ngIf="!isModal; else modalTemplate" class="btn-group mr-4 d-none d-md-flex" dropdown placement="bottom left"
-  container="body">
-  <a href (click)="$event.preventDefault();" dropdownToggle class="navbar-user-link">
+<div *ngIf="!isModal; else modalTemplate" class="btn-group mr-4 d-none d-md-flex dropdown">
+    <a href (click)="$event.preventDefault();" class="navbar-user-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <span class="icon notification-icon">
       <i class="fe fe-bell"></i>
       <span class="badge bg-primary unread-count" *ngIf="unreadCount">{{ unreadCount }}</span>
     </span>
-  </a>
-  <div *dropdownMenu class="dropdown-menu dropdown-menu-card dropdown-menu-right">
-    <ng-container *ngTemplateOutlet="modalHeader">
-    </ng-container>
-    <div class="card-body notifications-container">
-      <ng-container *ngTemplateOutlet="notificationList"></ng-container>
+    </a>
+    <div class="dropdown-menu dropdown-menu-card dropdown-menu-right">
+        <ng-container *ngTemplateOutlet="modalHeader">
+        </ng-container>
+        <div class="card-body notifications-container">
+            <ng-container *ngTemplateOutlet="notificationList"></ng-container>
+        </div>
     </div>
-  </div>
 </div>
 
 <ng-template #modalTemplate>
-  <div [class]="buttonClass">
-    <a href (click)="$event.preventDefault(); onNotificationsModalShow();" class="navbar-user-link">
+    <div [class]="buttonClass">
+        <a href (click)="$event.preventDefault(); onNotificationsModalShow();" class="navbar-user-link">
       <span class="icon notification-icon">
         <i class="fe fe-bell"></i>
         <span class="badge bg-primary unread-count" *ngIf="unreadCount">{{ unreadCount }}</span>
       </span>
-    </a>
-  </div>
-  <div bsModal #notificationsModal="bs-modal" class="modal fade fixed-left" id="modalDemo" tabindex="-1" role="dialog"
-    aria-hidden="true">
-    <div class="modal-dialog card modal-dialog-vertical rounded-0" role="document">
-      <form class="modal-content">
-        <ng-container *ngTemplateOutlet="modalHeader">
-        </ng-container>
-        <div class="modal-body notifications-container">
-          <ng-container *ngTemplateOutlet="notificationList"></ng-container>
-        </div>
-      </form>
+        </a>
     </div>
-  </div>
+    <div bsModal #notificationsModal="bs-modal" class="modal fade fixed-left" id="modalDemo" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog card modal-dialog-vertical rounded-0" role="document">
+            <form class="modal-content">
+                <ng-container *ngTemplateOutlet="modalHeader">
+                </ng-container>
+                <div class="modal-body notifications-container">
+                    <ng-container *ngTemplateOutlet="notificationList"></ng-container>
+                </div>
+            </form>
+        </div>
+    </div>
 </ng-template>
 
 <ng-template #modalHeader>
-  <div class="card-header">
-    <h5 class="card-header-title">
-      {{ 'Notifications' | localize }}
-    </h5>
-    <a [routerLink]="['/app/notifications']" href="#" class="small">
-      {{ 'ViewAll' | localize }}
-    </a>
-  </div>
+    <div class="card-header">
+        <h5 class="card-header-title">
+            {{ 'Notifications' | localize }}
+        </h5>
+        <a [routerLink]="['/app/notifications']" href="#" class="small">
+            {{ 'ViewAll' | localize }}
+        </a>
+    </div>
+
+    <ul class="card-nav nav nav-tabs px-4">
+        <li class="nav-item">
+            <a href="#all" class="nav-link active" data-toggle="tab" role="tab">
+                {{ 'All' | localize | titlecase }}
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#unread" class="nav-link" data-toggle="tab" role="tab">
+                {{ 'Unread' | localize | titlecase }}
+            </a>
+        </li>
+    </ul>
 </ng-template>
 
 <ng-template #notificationList>
-  <div class="list-group list-group-flush list-group-activity">
-    <a *ngFor="let notification of notifications"
-      [class.unread-notification]="notification.state === UserNotificationState.Unread"
-      class="list-group-item text-reset notification-item"
-      (click)="$event.preventDefault(); onNotificationClick(notification)" href="#">
-      <div class="row">
-        <div class="col-auto">
-          <div class="avatar avatar-sm">
-            <img [src]="getProfilePicture(notification.userProfilePictureUrl)" alt="..."
-              class="avatar-img rounded-circle">
-          </div>
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+            <div class="notification list-group list-group-flush list-group-activity my-n3">
+                <a class="notification-item list-group-item text-reset" href="#!">
+                    <div class="d-flex gap-10">
+                        <div class="notification-avatar avatar avatar-sm flex-grow-1">
+                            <img class="avatar-img rounded-circle" src="/assets/img/avatar-placeholder.png" alt="...">
+                        </div>
+                        <div class="notification-content">
+                            <p><span>Jessie Heart</span> and <span>4 others</span> liked <span>Casey Fyfe</span>‘s post: “I can’t even begin to express how good...”</p>
+                            <span class="time">2m ago</span>
+                        </div>
+                        <div class="align-self-center" *ngIf="false">
+                            <span class="notification-status text-primary">●</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a class="notification-item list-group-item text-reset" href="#!">
+                    <div class="d-flex gap-10">
+                        <div class="notification-avatar avatar avatar-sm flex-grow-1">
+                            <img class="avatar-img rounded-circle" src="/assets/img/avatar-placeholder.png" alt="...">
+                        </div>
+                        <div class="notification-content">
+                            <p><span>Jessie Heart</span> and <span>Leah Palermo</span> commented on your post.</p>
+                            <span class="time">2m ago</span>
+                        </div>
+                        <div class="align-self-center">
+                            <span class="notification-status text-primary">●</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a class="notification-item list-group-item text-reset" href="#!">
+                    <div class="d-flex gap-10">
+                        <div class="notification-avatar avatar avatar-sm flex-grow-1">
+                            <img class="avatar-img rounded-circle" src="/assets/img/avatar-placeholder.png" alt="...">
+                        </div>
+                        <div class="notification-content">
+                            <p><span>Jessie Heart</span> commented on your post in <span>Discussion on the new way to process data</span>: “I cant ev...”</p>
+                            <span class="time">2m ago</span>
+                        </div>
+                        <div class="align-self-center">
+                            <span class="notification-status text-primary">●</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a class="notification-item list-group-item text-reset" href="#!">
+                    <div class="d-flex gap-10">
+                        <div class="notification-avatar avatar avatar-sm flex-grow-1">
+                            <img class="avatar-img rounded-circle" src="/assets/img/avatar-placeholder.png" alt="...">
+                        </div>
+                        <div class="notification-content">
+                            <p><span>Jessie Heart</span> and <span>4 others</span> replied to your answer.</p>
+                            <span class="time">2m ago</span>
+                        </div>
+                        <div class="align-self-center">
+                            <span class="notification-status text-primary">●</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
         </div>
-        <div class="col ms-n2">
-          <div class="small" [innerHTML]="notification.notificationMessage">
-          </div>
-          <small class="text-muted">
-            {{ notification.creationTime }}
-          </small>
+        <div class="tab-pane fade" id="unread" role="tabpanel" aria-labelledby="unread-tab">
+            <div class="notification list-group list-group-flush list-group-activity my-n3">
+                <a class="notification-item list-group-item text-reset" href="#!">
+                    <div class="d-flex gap-10">
+                        <div class="notification-avatar avatar avatar-sm flex-grow-1">
+                            <img class="avatar-img rounded-circle" src="/assets/img/avatar-placeholder.png" alt="...">
+                        </div>
+                        <div class="notification-content">
+                            <p><span>Jessie Heart</span> and <span>4 others</span> liked <span>Casey Fyfe</span>‘s post: “I can’t even begin to express how good...”</p>
+                            <span class="time">2m ago</span>
+                        </div>
+                        <div class="align-self-center">
+                            <span class="notification-status text-primary">●</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a class="notification-item list-group-item text-reset" href="#!">
+                    <div class="d-flex gap-10">
+                        <div class="notification-avatar avatar avatar-sm flex-grow-1">
+                            <img class="avatar-img rounded-circle" src="/assets/img/avatar-placeholder.png" alt="...">
+                        </div>
+                        <div class="notification-content">
+                            <p><span>Jessie Heart</span> and <span>Leah Palermo</span> commented on your post.</p>
+                            <span class="time">2m ago</span>
+                        </div>
+                        <div class="align-self-center">
+                            <span class="notification-status text-primary">●</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a class="notification-item list-group-item text-reset" href="#!">
+                    <div class="d-flex gap-10">
+                        <div class="notification-avatar avatar avatar-sm flex-grow-1">
+                            <img class="avatar-img rounded-circle" src="/assets/img/avatar-placeholder.png" alt="...">
+                        </div>
+                        <div class="notification-content">
+                            <p><span>Jessie Heart</span> commented on your post in <span>Discussion on the new way to process data</span>: “I cant ev...”</p>
+                            <span class="time">2m ago</span>
+                        </div>
+                        <div class="align-self-center">
+                            <span class="notification-status text-primary">●</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a class="notification-item list-group-item text-reset" href="#!">
+                    <div class="d-flex gap-10">
+                        <div class="notification-avatar avatar avatar-sm flex-grow-1">
+                            <img class="avatar-img rounded-circle" src="/assets/img/avatar-placeholder.png" alt="...">
+                        </div>
+                        <div class="notification-content">
+                            <p><span>Jessie Heart</span> and <span>4 others</span> replied to your answer.</p>
+                            <span class="time">2m ago</span>
+                        </div>
+                        <div class="align-self-center">
+                            <span class="notification-status text-primary">●</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
         </div>
-        <div class="col-auto align-self-center">
-          <button *ngIf="notification.state === UserNotificationState.Unread"
-            (click)="onReadNotificationClick($event, notification)"
-            class="btn btn-sm btn-rounded-circle btn-primary btn-read-notification">&nbsp;</button>
-        </div>
-      </div>
-    </a>
-    <a *ngIf="!notifications || !notifications.length" class="list-group-item text-reset">
-      <p class="text-center text-muted p-0 m-0">
-        {{ 'NoRecentNotification' | localize }}
-      </p>
-    </a>
-  </div>
+    </div>
+
+    <div class="list-group list-group-flush list-group-activity">
+        <a *ngFor="let notification of notifications"
+           [class.unread-notification]="notification.state === UserNotificationState.Unread"
+           class="list-group-item text-reset notification-item"
+           (click)="$event.preventDefault(); onNotificationClick(notification)" href="#">
+            <div class="row">
+                <div class="col-auto">
+                    <div class="avatar avatar-sm">
+                        <img [src]="getProfilePicture(notification.userProfilePictureUrl)" alt="..."
+                             class="avatar-img rounded-circle">
+                    </div>
+                </div>
+                <div class="col ms-n2">
+                    <div class="small" [innerHTML]="notification.notificationMessage">
+                    </div>
+                    <small class="text-muted">
+                        {{ notification.creationTime }}
+                    </small>
+                </div>
+                <div class="col-auto align-self-center">
+                    <button *ngIf="notification.state === UserNotificationState.Unread"
+                            (click)="onReadNotificationClick($event, notification)"
+                            class="btn btn-sm btn-rounded-circle btn-primary btn-read-notification">&nbsp;
+                    </button>
+                </div>
+            </div>
+        </a>
+<!--        <a *ngIf="!notifications || !notifications.length" class="list-group-item text-reset">-->
+<!--            <p class="text-center text-muted p-0 m-0">-->
+<!--                {{ 'NoRecentNotification' | localize }}-->
+<!--            </p>-->
+<!--        </a>-->
+    </div>
 </ng-template>

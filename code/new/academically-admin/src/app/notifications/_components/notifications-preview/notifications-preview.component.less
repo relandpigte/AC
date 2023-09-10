@@ -1,37 +1,80 @@
 .notifications-container {
-  margin : 0 !important;
-  padding: 10px !important;
+    margin: 0 !important;
+    padding: 20px !important;
 
-  .notification-item {
-    padding      : 10px;
-    margin-bottom: 2px;
-    border-radius: 5px;
+    .notification-item {
+        padding: 10px;
+        margin-bottom: 2px;
+        border-radius: 5px;
 
-    &::before {
-      left: 30px;
+        &::before {
+            left: 30px;
+        }
     }
-  }
 }
 
 .notification-icon {
-  position: relative;
+    position: relative;
 
-  .unread-count {
-    color        : #FFFFFF;
-    border-radius: 50%;
-    font-size    : 8px;
-    position     : absolute;
-    top          : 0;
-    right        : 0;
-  }
+    .unread-count {
+        color: #FFFFFF;
+        border-radius: 50%;
+        font-size: 8px;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
 }
 
 .unread-notification {
-  background: #d7eff6;
+    background: #d7eff6;
 
-  .btn-read-notification {
-    width        : 15px;
-    height       : 15px;
-    margin-bottom: 20px;
-  }
+    .btn-read-notification {
+        width: 15px;
+        height: 15px;
+        margin-bottom: 20px;
+    }
+}
+
+.notification {
+    &-item {
+        padding: 10px 0 !important;
+        margin: 0 !important;
+
+        &::before {
+            left: 22px !important;
+        }
+    }
+
+    &-avatar {
+        width: 45px;
+        height: 45px;
+
+        img {
+            width: 45px;
+            height: 45px;
+        }
+    }
+
+    &-content {
+        p {
+            margin: 0;
+            font-size: 15px;
+            color: #3B516C;
+
+            span {
+                font-weight: 600;
+                color: #12263F;
+            }
+        }
+
+        .time {
+            font-size: 15px;
+            color: #95AAC9;
+        }
+    }
+
+    &-status {
+        font-size: 18px;
+    }
 }
