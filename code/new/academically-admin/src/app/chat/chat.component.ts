@@ -3,10 +3,10 @@ import { HubService } from '@app/_shared/services/hub.service';
 import { SearchUsersComponent } from '@app/chat/_components/search-users/search-users.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import {
+  AvailableServiceDto,
   ChannelDto,
   ChannelMessageDto,
   ChatsServiceProxy,
-  CreateChannelMessageInputDto,
   UserDto
 } from '@shared/service-proxies/service-proxies';
 import { ChannelsStateService, channelsType } from '@shared/services/channels-state.service';
@@ -17,11 +17,12 @@ import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { distinctUntilChanged, skip, switchMap, takeUntil } from 'rxjs/operators';
 import { SearchFilterComponent } from './_components/search-filter/search-filter.component';
 import { ComposerConversationComponent } from './_components/composer-conversation/composer-conversation.component';
+import { FileUtils } from '@shared/helpers/file-utils';
 
 export interface MessageComposeData {
   parentId?: string;
   message: string;
-};
+}
 
 @Component({
   selector: 'app-chat',
@@ -44,6 +45,8 @@ export class ChatComponent extends AppComponentBase implements OnInit {
   isSearchingUser: boolean;
   isSearchingKeyword: boolean;
   replyingToUser: UserDto;
+  fileAttachment: File;
+  selectedService: AvailableServiceDto;
 
   @ViewChild(SearchUsersComponent) searchUsersComponent: SearchUsersComponent;
   @ViewChild(SearchFilterComponent) searchFilterComponent: SearchFilterComponent;
@@ -114,6 +117,14 @@ export class ChatComponent extends AppComponentBase implements OnInit {
           this._chatsService.setChannelMemberTyping(this.selectedChannel.id, isTyping).pipe(takeUntil(this.destroyed$)).subscribe();
         }
       });
+
+    this._chatService.fileAttachment$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(file => this.fileAttachment = file);
+
+    this._chatService.selectedService$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(service => this.selectedService = service);
   }
 
   get channelsStateId(): string { return 'chats'; }
@@ -186,6 +197,7 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     this._chatService.selectedChannel$.next(this.channels?.[0]);
   }
 
+  // tslint:disable-next-line: member-ordering
   switchToInbox(): void {
     this._chatService.selectedChannelType$.next(0);
   }
@@ -198,31 +210,38 @@ export class ChatComponent extends AppComponentBase implements OnInit {
 
   // tslint:disable-next-line: member-ordering
   handleOnReply(messageComposeData: MessageComposeData): void {
-    const channelMessage = new CreateChannelMessageInputDto();
-    channelMessage.parentId = messageComposeData.parentId;
-    channelMessage.message = messageComposeData.message;
-    channelMessage.recipientUserId = this.replyingToUser?.id;
-    channelMessage.channelId = this.selectedChannel?.id;
-
-    this._chatsService.createChannelMessage(channelMessage)
-      .subscribe((message) => {
+    this._chatsService.createChannelMessage(
+      messageComposeData.message,
+      this.replyingToUser?.id,
+      this.selectedChannel?.id,
+      messageComposeData.parentId,
+      this.selectedService?.id,
+      this.selectedService?.serviceType,
+      [this.fileAttachment].filter(x => x).map(f => FileUtils.getFileParameter(f))
+    )
+      .subscribe((message): void => {
         this._chatService.replyToMessage$.next(null);
+        this._chatService.fileAttachment$.next(null);
+        this._chatService.selectedService$.next(null);
         this.selectedChannel = this.channels.find(c => c.id === message.channelId);
       });
   }
 
+  // tslint:disable-next-line: member-ordering
   handleOnArchiveChannel(channel: ChannelDto): void {
     this._chatsService.archiveChannel(channel.id).subscribe(() => {
       this._chatService.selectedChannelType$.next(this.selectedChannelType);
     });
   }
 
+  // tslint:disable-next-line: member-ordering
   handleOnDeleteChannel(channel: ChannelDto): void {
     this._chatsService.deleteChannel(channel.id).subscribe(() => {
       this._chatService.selectedChannelType$.next(this.selectedChannelType);
     });
   }
 
+  // tslint:disable-next-line: member-ordering
   handleOnSelectUser(user: UserDto): void {
     this.searchFilterComponent.clearSearchFilter();
 

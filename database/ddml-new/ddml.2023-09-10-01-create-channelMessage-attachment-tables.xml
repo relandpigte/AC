@@ -1,0 +1,47 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="rpigte" id="1">
+        <createTable tableName="channelmessageattachments">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="ChannelMessageId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DocumentId" type="CHAR(36)"/>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="rpigte" id="2">
+        <createIndex indexName="FK_ChannelMessageAttachment_ChannelMessageId_idx" tableName="channelmessageattachments">
+            <column name="ChannelMessageId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="rpigte" id="3">
+        <createIndex indexName="FK_ChannelMessageAttachment_DocumentId_idx" tableName="channelmessageattachments">
+            <column name="DocumentId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="rpigte" id="4">
+        <createIndex indexName="FK_ChannelMessageAttachment_CreatorUserId_idx" tableName="channelmessageattachments">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+
+    
+    <changeSet author="rpigte" id="5">
+        <addForeignKeyConstraint baseColumnNames="ChannelMessageId" baseTableName="channelmessageattachments" constraintName="FK_ChannelMessageAttachment_ChannelMessageId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="channelmessages" validate="true"/>
+    </changeSet>
+    <changeSet author="rpigte" id="6">
+        <addForeignKeyConstraint baseColumnNames="DocumentId" baseTableName="channelmessageattachments" constraintName="FK_ChannelMessageAttachment_DocumentId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="documents" validate="true"/>
+    </changeSet>
+      <changeSet author="rpigte" id="7">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="channelmessageattachments" constraintName="FK_ChannelMessageAttachment_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

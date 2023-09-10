@@ -1,9 +1,9 @@
 ﻿using Abp.Domain.Repositories;
 using Academically.Domain.Entities;
 using Academically.Services.Chats.Dto;
-using Academically.Services.Posts.Dto;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +12,20 @@ using Academically.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Abp.Timing;
 using Academically.Domain.Services.Documents;
-using static AutoMapper.Internal.ExpressionFactory;
 using Academically.Authorization.Users;
 using Academically.Users.Dto;
 using System.Text.RegularExpressions;
+using Academically.Domain.Enums;
+using Academically.Services.Articles;
+using Academically.Services.Articles.Dto;
+using Academically.Services.Coachings;
+using Academically.Services.Coachings.Dto;
+using Academically.Services.Courses;
+using Academically.Services.Courses.Dto;
+using Academically.Services.Events;
+using Academically.Services.Events.Dto;
+using Academically.Services.Videos;
+using Academically.Services.Videos.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using System.IO.Compression;
@@ -32,6 +42,11 @@ namespace Academically.Services.Chats
         private readonly IRepository<User, long> _userRepository;
         private readonly IHubContext<ChannelsHub> _channelsHub;
         private readonly IRepository<ChannelNotification, Guid> _channelNotificationRepository;
+        private readonly IRepository<Article, Guid> _articlesRepository;
+        private readonly IRepository<Course, Guid> _coursesRepository;
+        private readonly IRepository<Coaching, Guid> _coachingRepository;
+        private readonly IRepository<Video, Guid> _videoRepository;
+        private readonly IRepository<Event, Guid> _eventRepository;
 
         public ChatsAppService(
             IDocumentsDomainService documentsDomainService,
@@ -41,17 +56,27 @@ namespace Academically.Services.Chats
             IRepository<ChannelArchive, Guid> channelArchiveRepository,
             IRepository<User, long> userRepository,
             IHubContext<ChannelsHub> channelsHub,
-            IRepository<ChannelNotification, Guid> channelNotificationRepository
+            IRepository<ChannelNotification, Guid> channelNotificationRepository,
+            IRepository<Article, Guid> articlesRepository,
+            IRepository<Course, Guid> coursesRepository,
+            IRepository<Coaching, Guid> coachingRepository,
+            IRepository<Video, Guid> videoRepository,
+            IRepository<Event, Guid> eventRepository
         )
         {
-            this._documentsDomainService = documentsDomainService;
-            this._channelRepository = channelRepository;
-            this._channelMessageRepository = channelMessageRepository;
-            this._channelMemberRepository = channelMemberRepository;
-            this._channelArchiveRepository = channelArchiveRepository;
-            this._userRepository = userRepository;
-            this._channelsHub = channelsHub;
-            this._channelNotificationRepository = channelNotificationRepository;
+            _documentsDomainService = documentsDomainService;
+            _channelRepository = channelRepository;
+            _channelMessageRepository = channelMessageRepository;
+            _channelMemberRepository = channelMemberRepository;
+            _channelArchiveRepository = channelArchiveRepository;
+            _userRepository = userRepository;
+            _channelsHub = channelsHub;
+            _channelNotificationRepository = channelNotificationRepository;
+            _articlesRepository = articlesRepository;
+            _coursesRepository = coursesRepository;
+            _coachingRepository = coachingRepository;
+            _videoRepository = videoRepository;
+            _eventRepository = eventRepository;
         }
 
         public async Task<bool> ArchiveChannel(Guid channelId)
@@ -62,10 +87,11 @@ namespace Academically.Services.Chats
             return true;
         }
 
-        public async Task<ChannelMessageDto> CreateChannelMessage(CreateChannelMessageInputDto input)
+        public async Task<ChannelMessageDto> CreateChannelMessage([FromForm] CreateChannelMessageInputDto input)
         {
             var message = new ChannelMessage();
-
+            var currentUser = await GetCurrentUserAsync();
+            
             if (input.ChannelId.HasValue)
             {
                 var existingChannel = await this._channelRepository.GetAsync(input.ChannelId.Value);
@@ -75,7 +101,6 @@ namespace Academically.Services.Chats
             {
                 var channel = await this._channelRepository.InsertAsync(new Channel());
                 await CurrentUnitOfWork.SaveChangesAsync();
-                var currentUser = await GetCurrentUserAsync();
                 await this._channelMemberRepository.InsertAsync(new ChannelMember
                 {
                     ChannelId = channel.Id,
@@ -92,11 +117,26 @@ namespace Academically.Services.Chats
             
             message.Message = input.Message;
             message.ParentId = input.ParentId;
+            message.ServiceId = input.ServiceId;
+            message.ServiceType = input.ServiceType;
 
             var result = await this._channelMessageRepository.InsertAsync(message);
 
-            if (result == null) return null;
-            else return ObjectMapper.Map<ChannelMessageDto>(result);
+            if (input.Attachments == null || !input.Attachments.Any())
+                return result == null ? null : ObjectMapper.Map<ChannelMessageDto>(result);
+            
+            var fileExtensionList = input.Attachments.Select(a => Path.GetExtension(a.FileName)[1..]).ToList();
+            if (fileExtensionList.Select(f => Enum.IsDefined(typeof(AttachmentType), f.ToLower())).Any(isValidExtension => !isValidExtension))
+            {
+                throw new InvalidOperationException("Invalid File Extension!");
+            }
+                
+            foreach (var attachment in input.Attachments)
+            {
+                await _documentsDomainService.CreateAsync(currentUser.Id, attachment, DocumentType.ChannelMessageAttachment);
+            }
+
+            return result == null ? null : ObjectMapper.Map<ChannelMessageDto>(result);
         }
 
         public async Task<bool> DeleteChannel(Guid channelId)
@@ -154,6 +194,9 @@ namespace Academically.Services.Chats
                         .ThenInclude(m => m.Parent)
                     .Include(c => c.Messages)
                         .ThenInclude(m => m.CreatorUser)
+                    .Include(c => c.Messages)
+                        .ThenInclude(m => m.ChannelMessageAttachments)
+                        .ThenInclude(m => m.Document)
                     .Where(c => c.Id == channelId)
                     .SelectMany(c => c.Messages)
                     .Select(m => ObjectMapper.Map<ChannelMessageDto>(m))
@@ -163,6 +206,8 @@ namespace Academically.Services.Chats
             {
                 if (message.CreatorUser.ProfilePictureDocumentId.HasValue)
                     message.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(message.CreatorUser.ProfilePictureDocumentId.Value);
+
+                await FillInService(message);
             }
 
             return messages;
@@ -201,6 +246,11 @@ namespace Academically.Services.Chats
                 {
                     if (member.User.ProfilePictureDocumentId.HasValue)
                         member.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(member.User.ProfilePictureDocumentId.Value);
+                }
+
+                foreach (var message in channel.Messages)
+                {
+                    await FillInService(message);
                 }
             }
 
@@ -254,7 +304,8 @@ namespace Academically.Services.Chats
             {
                 message.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(message.CreatorUser.ProfilePictureDocumentId.Value);
             }
-
+            
+            await FillInService(message);
             return message;
         }
 
@@ -375,6 +426,46 @@ namespace Academically.Services.Chats
             searchResults.Channels = matchedChannels;
 
             return searchResults;
+        }
+        
+        private async Task FillInService(ChannelMessageDto message)
+        {
+            if (message?.ServiceId == null) return;
+
+            switch (message.ServiceType)
+            {
+                case ServicesType.Event:
+                case ServicesType.Workshop:
+                    var event_ = await _eventRepository.GetAsync(message.ServiceId.Value);
+                    message.Event = ObjectMapper.Map<EventDto>(event_);
+                    if (message.Event.ThumbnailDocumentId.HasValue)
+                        message.Event.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(message.Event.ThumbnailDocumentId.Value);
+                    break;
+                case ServicesType.Course:
+                    var course = await _coursesRepository.GetAsync(message.ServiceId.Value);
+                    message.Course = ObjectMapper.Map<CourseDto>(course);
+                    if (message.Course.ImageDocumentId.HasValue)
+                        message.Course.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(course.ImageDocumentId.Value);
+                    break;
+                case ServicesType.Tutorial:
+                    var video = await _videoRepository.GetAsync(message.ServiceId.Value);
+                    message.Video = ObjectMapper.Map<VideoDto>(video);
+                    if (message.Video.ThumbnailDocumentId.HasValue)
+                        message.Video.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(message.Video.ThumbnailDocumentId.Value);
+                    break;
+                case ServicesType.Article:
+                    var article = await _articlesRepository.GetAsync(message.ServiceId.Value);
+                    message.Article = ObjectMapper.Map<ArticleDto>(article);
+                    if (message.Article.ThumbnailDocumentId.HasValue)
+                        message.Article.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(message.Article.ThumbnailDocumentId.Value);
+                    break;
+                case ServicesType.Coaching:
+                    var coaching = await _coachingRepository.GetAsync(message.ServiceId.Value);
+                    message.Coaching = ObjectMapper.Map<CoachingDto>(coaching);
+                    if (message.Coaching.ThumbnailDocumentId.HasValue)
+                        message.Coaching.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(coaching.ThumbnailDocumentId.Value);
+                    break;
+            }
         }
 
     }

@@ -4,6 +4,38 @@
     gap: 10px;
 }
 
+app-attachment-preview {
+    &::ng-deep {
+        .attachment {
+            margin: 0;
+
+            &:hover {
+                .attachment{
+                    &-remove {
+                        display: flex !important;
+                    }
+                }
+            }
+
+            &-remove {
+                top: 10px;
+                right: 10px;
+                opacity: 0.9 !important;
+                display: none !important;
+            }
+
+            &-play {
+                width: 31px;
+                height: 31px;
+                color: #12263F;
+                opacity: 0.9 !important;
+                background-color: white;
+                font-size: 14px;
+            }
+        }
+    }
+}
+
 .replying-to {
     &-info {
         &-recipient {

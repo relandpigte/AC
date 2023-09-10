@@ -8,24 +8,24 @@
     </div>
 </div>
 
-<div class="composer d-flex align-items-center align-content-around gap-15" [class.typing]="!!f?.value?.message">
+<div class="composer d-flex align-items-center align-content-around gap-15" [class.typing]="!!f?.value?.message || hasAttachments">
     <form class="composer-text flex-grow-1" #f="ngForm" (ngSubmit)="handleWriteMessage(f)">
         <label class="sr-only">{{ 'WriteAMessage' | localize }}</label>
         <textarea #messageInput name="message" ngModel (keydown)="onMessageKeydown($event, f)" class="form-control form-control-flush"
                   data-toggle="autosize" rows="1" placeholder="{{ 'WriteAMessage' | localize }}" [maxlength]="500"></textarea>
 
-        <div *ngIf="!!f?.value?.message" class="composer-instruction text-muted">
+        <div *ngIf="!!f?.value?.message || hasAttachments" class="composer-instruction text-muted">
             Press enter to <span class="text-primary">post</span>
         </div>
     </form>
 
     <div class="composer-actions d-flex gap-10 text-muted align-self-end">
         <a class="text-reset me-3" href="#" data-bs-toggle="tooltip" aria-label="Add photo"
-           data-bs-original-title="Add photo">
+           data-bs-original-title="Add photo" (click)="handleImageUploadBtnClick($event)">
             <i class="fe fe-camera"></i>
         </a>
         <a class="text-reset me-3" href="#" data-bs-toggle="tooltip" aria-label="Attach file"
-           data-bs-original-title="Attach file">
+           data-bs-original-title="Attach file" (click)="handleFileUploadBtnClick($event)">
             <i class="fe fe-paperclip"></i>
         </a>
         <a class="text-reset" href="#" data-bs-toggle="tooltip" aria-label="Add reactions"
@@ -40,7 +40,7 @@
             </svg>
         </a>
         <a class="text-reset" href="#" data-bs-toggle="tooltip" aria-label="Add service"
-           data-bs-original-title="Add service">
+           data-bs-original-title="Add service" (click)="toggleServicePicker($event)" [class.disabled]="!isShowAddService">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor"
                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus">
@@ -50,3 +50,22 @@
         </a>
     </div>
 </div>
+
+<app-attachment-preview
+    *ngIf="fileAttachment"
+    [file]="fileAttachment"
+    height="75px"
+    width="104px"
+    [hasVideoControls]="false"
+    (onRemove)="handleRemoveAttachment()"
+></app-attachment-preview>
+
+<div *ngIf="selectedService" class="d-flex gap-15" [style.max-width.px]="340">
+    <app-service-preview-lite
+        [service]="selectedService"
+        [canRemove]="true"
+        (onRemove)="handleRemoveSelectedService()"
+    ></app-service-preview-lite>
+</div>
+
+<input #fileInput (change)="onFileChange($event)" [accept]="allowedExtensions" class="hidden position-absolute" type="file">

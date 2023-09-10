@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Academically.Domain.Enums;
+using Microsoft.AspNetCore.Http;
 
 namespace Academically.Services.Chats.Dto
 {
@@ -12,5 +11,8 @@ namespace Academically.Services.Chats.Dto
         public long RecipientUserId { get; set; }
         public Guid? ChannelId { get; set; }
         public Guid? ParentId { get; set; }
+        public Guid? ServiceId { get; set; }
+        public ServicesType? ServiceType { get; set; }
+        public IEnumerable<IFormFile> Attachments { get; set; }
     }
 }

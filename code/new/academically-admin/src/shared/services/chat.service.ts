@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ChannelDto, ChannelMessageDto, UserDto } from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, ChannelDto, ChannelMessageDto, UserDto } from '@shared/service-proxies/service-proxies';
 import { AppSessionService } from '@shared/session/app-session.service';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { SafeUrl } from '@angular/platform-browser';
 
 export interface ChannelModel {
   id: string,
@@ -48,6 +49,11 @@ export class ChatService {
 
   isSearchingUser$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   selectedChannel$: BehaviorSubject<ChannelDto> = new BehaviorSubject<ChannelDto>(null);
+
+  fileAttachment$: BehaviorSubject<File> = new BehaviorSubject<File>(null);
+  sanitizedAttachmentUrl$: BehaviorSubject<SafeUrl> = new BehaviorSubject<SafeUrl>(null);
+
+  selectedService$: BehaviorSubject<AvailableServiceDto> = new BehaviorSubject<AvailableServiceDto>(null);
 
   private data: ChatModel[] = [];
   private dataSubject = new BehaviorSubject<ChatModel[]>(this.data);
