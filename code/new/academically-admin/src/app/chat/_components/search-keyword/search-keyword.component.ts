@@ -18,7 +18,6 @@ export class SearchKeywordComponent extends AppComponentBase implements OnInit {
     isLoadingList$ = new BehaviorSubject<boolean>(true);
 
     searchResults: SearchByKeywordResponseDto;
-    matchedChannelsMap: Map<string, MatchedChannelsDto> = new Map<string, MatchedChannelsDto>();
 
     constructor(
         injector: Injector,
@@ -32,7 +31,7 @@ export class SearchKeywordComponent extends AppComponentBase implements OnInit {
     get loadingSources$() { return [ this.isLoadingList$ ]; }
 
     get matchedUsers() { return this.searchResults?.users ?? []; }
-    get matchedChannels() { return  Array.from(this.matchedChannelsMap.values()); }
+    get matchedChannels() { return  this.searchResults?.channels ?? []; }
 
     ngOnInit(): void {
         this._chatService.searchKeyword$
@@ -41,17 +40,17 @@ export class SearchKeywordComponent extends AppComponentBase implements OnInit {
             .subscribe(keyword => this.handleOnSearchKeyword(keyword))
     }
 
-    getChannelRecipient(channel: ChannelDto): ChannelMemberDto {
-        return channel.members.find(m => m.userId !== this.appSession.userId);
+    getChannelRecipient(matched: MatchedChannelsDto): ChannelMemberDto {
+        return matched?.channel?.members?.find(m => m.userId !== this.appSession.userId);
     }
 
-    getChannelRecipientUser(channel: ChannelDto): UserDto {
-        return this.getChannelRecipient(channel)?.user;
+    getChannelRecipientUser(matched: MatchedChannelsDto): UserDto {
+        return this.getChannelRecipient(matched)?.user;
     }
 
-    getChannelName(channel: ChannelDto): string {
-        const recipient = this.getChannelRecipient(channel);
-        return recipient?.user?.fullName ?? '';
+    getChannelName(matched: MatchedChannelsDto): string {
+        const user = this.getChannelRecipientUser(matched);
+        return user?.fullName ?? '';
     }
 
     handleOnSearchKeyword(keyword: string): void {
@@ -59,13 +58,7 @@ export class SearchKeywordComponent extends AppComponentBase implements OnInit {
         this._chatsService.searchByKeyword(keyword)
             .pipe(takeUntil(this.destroyed$))
             .pipe(finalize(() => this.isLoadingList$.next(false)))
-            .subscribe(result => {
-                this.searchResults = result;
-
-                if (this.searchResults?.channels?.length) {
-                    this.matchedChannelsMap = Utils.toMap(this.searchResults.channels);
-                }
-            });
+            .subscribe(result => this.searchResults = result);
     }
 
     handleOnSelectUser(user: UserDto): void {

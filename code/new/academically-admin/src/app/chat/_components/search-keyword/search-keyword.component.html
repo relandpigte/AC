@@ -14,16 +14,19 @@
     <div *ngIf="matchedChannels?.length" class="search-results-messages d-flex flex-column">
         <div class="search-results-messages-title">{{ 'Messages' | localize }}</div>
         <div class="search-results-messages-list d-flex flex-column">
-            <div *ngFor="let channel of matchedChannels" class="search-results-messages-list-item d-flex align-items-center gap-15">
+            <div *ngFor="let match of matchedChannels" class="search-results-messages-list-item d-flex align-items-center gap-15">
                 <a href="javascript: void(0);" class="avatar avatar-sm">
-                    <img [src]="getChannelRecipientUser(channel).profilePictureUrl" class="avatar-img rounded-circle" alt="profile" />
+                    <img [src]="getChannelRecipientUser(match)?.profilePictureUrl" class="avatar-img rounded-circle" alt="profile" />
                     <span class="avatar-status"></span>
                 </a>
                 <div class="d-flex flex-column gap-2">
-                    <span class="name">{{ getChannelName(channel) | titlecase }}</span>
-                    <span class="matches">{{ channel.matchCount }} matches</span>
+                    <span class="name">{{ getChannelName(match) | titlecase }}</span>
+                    <span class="matches">{{ match.matchCount }} matches</span>
                 </div>
             </div>
         </div>
+    </div>
+    <div *ngIf="!matchedUsers?.length && !matchedChannels?.length" class="search-results-empty d-flex justify-content-center align-items-center">
+        No matches found.
     </div>
 </div>
