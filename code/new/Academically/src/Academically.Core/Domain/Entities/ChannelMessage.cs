@@ -10,6 +10,10 @@ namespace Academically.Domain.Entities
     [Table("ChannelMessages")]
     public class ChannelMessage : FullAuditedEntity<Guid>
     {
+        public ChannelMessage()
+        {
+            ChannelMessageAttachments = new HashSet<ChannelMessageAttachment>();
+        }
         public string Message { get; set; }
 
         public DateTime? IsSeen { get; set; }
@@ -17,6 +21,10 @@ namespace Academically.Domain.Entities
         public Guid? ParentId { get; set; }
 
         public Guid ChannelId { get; set; }
+        
+        public Guid? ServiceId { get; set; }
+
+        public ServicesType? ServiceType { get; set; }
 
         [ForeignKey("CreatorUserId")]
         public virtual User CreatorUser { get; set; }
@@ -26,5 +34,7 @@ namespace Academically.Domain.Entities
 
         [ForeignKey("ChannelId")]
         public virtual Channel Channel { get; set; }
+        
+        public virtual ICollection<ChannelMessageAttachment> ChannelMessageAttachments { get; set; }
     }
 }

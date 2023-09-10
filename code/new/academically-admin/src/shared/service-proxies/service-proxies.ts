@@ -2265,21 +2265,54 @@ export class ChatsServiceProxy {
     }
 
     /**
-     * @param body (optional) 
+     * @param message (optional) 
+     * @param recipientUserId (optional) 
+     * @param channelId (optional) 
+     * @param parentId (optional) 
+     * @param serviceId (optional) 
+     * @param serviceType (optional) 
+     * @param attachments (optional) 
      * @return Success
      */
-    createChannelMessage(body: CreateChannelMessageInputDto | undefined): Observable<ChannelMessageDto> {
+    createChannelMessage(message: string | undefined, recipientUserId: number | undefined, channelId: string | undefined, parentId: string | undefined, serviceId: string | undefined, serviceType: ServicesType | undefined, attachments: FileParameter[] | undefined): Observable<ChannelMessageDto> {
         let url_ = this.baseUrl + "/api/services/app/Chats/CreateChannelMessage";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
+        const content_ = new FormData();
+        if (message === null || message === undefined) {
+            // do nothing
+        } else
+            content_.append("Message", message.toString());
+        if (recipientUserId === null || recipientUserId === undefined) {
+            // do nothing
+        } else
+            content_.append("RecipientUserId", recipientUserId.toString());
+        if (channelId === null || channelId === undefined) {
+            // do nothing
+        } else
+            content_.append("ChannelId", channelId.toString());
+        if (parentId === null || parentId === undefined) {
+            // do nothing
+        } else
+            content_.append("ParentId", parentId.toString());
+        if (serviceId === null || serviceId === undefined) {
+            // do nothing
+        } else
+            content_.append("ServiceId", serviceId.toString());
+        if (serviceType === null || serviceType === undefined) {
+            // do nothing
+        } else
+            content_.append("ServiceType", serviceType.toString());
+        if (attachments === null || attachments === undefined) {
+            // do nothing
+        } else
+            attachments.forEach(item_ => content_.append("Attachments", item_.data, item_.fileName ? item_.fileName : "Attachments") );
 
         let options_ : any = {
             body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Content-Type": "application/json-patch+json",
                 "Accept": "text/plain"
             })
         };
@@ -31486,6 +31519,73 @@ export interface IChannelMemberDto {
     channel: ChannelDto;
 }
 
+export class ChannelMessageAttachmentDto implements IChannelMessageAttachmentDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    channelMessageId: string;
+    documentId: string;
+    document: DocumentDto;
+    documentUrl: string | undefined;
+
+    constructor(data?: IChannelMessageAttachmentDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.channelMessageId = _data["channelMessageId"];
+            this.documentId = _data["documentId"];
+            this.document = _data["document"] ? DocumentDto.fromJS(_data["document"]) : <any>undefined;
+            this.documentUrl = _data["documentUrl"];
+        }
+    }
+
+    static fromJS(data: any): ChannelMessageAttachmentDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ChannelMessageAttachmentDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["channelMessageId"] = this.channelMessageId;
+        data["documentId"] = this.documentId;
+        data["document"] = this.document ? this.document.toJSON() : <any>undefined;
+        data["documentUrl"] = this.documentUrl;
+        return data; 
+    }
+
+    clone(): ChannelMessageAttachmentDto {
+        const json = this.toJSON();
+        let result = new ChannelMessageAttachmentDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IChannelMessageAttachmentDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    channelMessageId: string;
+    documentId: string;
+    document: DocumentDto;
+    documentUrl: string | undefined;
+}
+
 export class ChannelMessageDto implements IChannelMessageDto {
     id: string;
     creationTime: moment.Moment;
@@ -31498,10 +31598,18 @@ export class ChannelMessageDto implements IChannelMessageDto {
     message: string | undefined;
     isSeen: moment.Moment | undefined;
     parentId: string | undefined;
+    serviceId: string | undefined;
+    serviceType: ServicesType;
     channelId: string;
     creatorUser: UserDto;
     parent: ChannelMessageDto;
     channel: ChannelDto;
+    channelMessageAttachments: ChannelMessageAttachmentDto[] | undefined;
+    article: ArticleDto;
+    event: EventDto;
+    course: CourseDto;
+    video: VideoDto;
+    coaching: CoachingDto;
 
     constructor(data?: IChannelMessageDto) {
         if (data) {
@@ -31525,10 +31633,22 @@ export class ChannelMessageDto implements IChannelMessageDto {
             this.message = _data["message"];
             this.isSeen = _data["isSeen"] ? moment(_data["isSeen"].toString()) : <any>undefined;
             this.parentId = _data["parentId"];
+            this.serviceId = _data["serviceId"];
+            this.serviceType = _data["serviceType"];
             this.channelId = _data["channelId"];
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
             this.parent = _data["parent"] ? ChannelMessageDto.fromJS(_data["parent"]) : <any>undefined;
             this.channel = _data["channel"] ? ChannelDto.fromJS(_data["channel"]) : <any>undefined;
+            if (Array.isArray(_data["channelMessageAttachments"])) {
+                this.channelMessageAttachments = [] as any;
+                for (let item of _data["channelMessageAttachments"])
+                    this.channelMessageAttachments.push(ChannelMessageAttachmentDto.fromJS(item));
+            }
+            this.article = _data["article"] ? ArticleDto.fromJS(_data["article"]) : <any>undefined;
+            this.event = _data["event"] ? EventDto.fromJS(_data["event"]) : <any>undefined;
+            this.course = _data["course"] ? CourseDto.fromJS(_data["course"]) : <any>undefined;
+            this.video = _data["video"] ? VideoDto.fromJS(_data["video"]) : <any>undefined;
+            this.coaching = _data["coaching"] ? CoachingDto.fromJS(_data["coaching"]) : <any>undefined;
         }
     }
 
@@ -31552,10 +31672,22 @@ export class ChannelMessageDto implements IChannelMessageDto {
         data["message"] = this.message;
         data["isSeen"] = this.isSeen ? this.isSeen.toISOString() : <any>undefined;
         data["parentId"] = this.parentId;
+        data["serviceId"] = this.serviceId;
+        data["serviceType"] = this.serviceType;
         data["channelId"] = this.channelId;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         data["channel"] = this.channel ? this.channel.toJSON() : <any>undefined;
+        if (Array.isArray(this.channelMessageAttachments)) {
+            data["channelMessageAttachments"] = [];
+            for (let item of this.channelMessageAttachments)
+                data["channelMessageAttachments"].push(item.toJSON());
+        }
+        data["article"] = this.article ? this.article.toJSON() : <any>undefined;
+        data["event"] = this.event ? this.event.toJSON() : <any>undefined;
+        data["course"] = this.course ? this.course.toJSON() : <any>undefined;
+        data["video"] = this.video ? this.video.toJSON() : <any>undefined;
+        data["coaching"] = this.coaching ? this.coaching.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -31579,10 +31711,18 @@ export interface IChannelMessageDto {
     message: string | undefined;
     isSeen: moment.Moment | undefined;
     parentId: string | undefined;
+    serviceId: string | undefined;
+    serviceType: ServicesType;
     channelId: string;
     creatorUser: UserDto;
     parent: ChannelMessageDto;
     channel: ChannelDto;
+    channelMessageAttachments: ChannelMessageAttachmentDto[] | undefined;
+    article: ArticleDto;
+    event: EventDto;
+    course: CourseDto;
+    video: VideoDto;
+    coaching: CoachingDto;
 }
 
 export class ChannelNotificationDto implements IChannelNotificationDto {
@@ -34530,61 +34670,6 @@ export enum CourseType {
     Cohort = 2,
 }
 
-export class CreateChannelMessageInputDto implements ICreateChannelMessageInputDto {
-    message: string | undefined;
-    recipientUserId: number;
-    channelId: string | undefined;
-    parentId: string | undefined;
-
-    constructor(data?: ICreateChannelMessageInputDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.message = _data["message"];
-            this.recipientUserId = _data["recipientUserId"];
-            this.channelId = _data["channelId"];
-            this.parentId = _data["parentId"];
-        }
-    }
-
-    static fromJS(data: any): CreateChannelMessageInputDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateChannelMessageInputDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["message"] = this.message;
-        data["recipientUserId"] = this.recipientUserId;
-        data["channelId"] = this.channelId;
-        data["parentId"] = this.parentId;
-        return data; 
-    }
-
-    clone(): CreateChannelMessageInputDto {
-        const json = this.toJSON();
-        let result = new CreateChannelMessageInputDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface ICreateChannelMessageInputDto {
-    message: string | undefined;
-    recipientUserId: number;
-    channelId: string | undefined;
-    parentId: string | undefined;
-}
-
 export class CreateCoachingDto implements ICreateCoachingDto {
     name: string | undefined;
     type: CoachingType;
@@ -36814,7 +36899,7 @@ export interface IDocumentDto {
     creatorUserId: number;
 }
 
-/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage 13 = CourseAssignment 14 = Video 15 = VideoThumbnail 16 = ArticleThumbnail 17 = CourseSectionImage 18 = EventThumbnail 19 = EventResource 20 = Project 21 = CoachingThumbnail 22 = CoachingResource 23 = WorkshopThumbnail 24 = WorkshopResource 25 = PostAttachment */
+/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage 13 = CourseAssignment 14 = Video 15 = VideoThumbnail 16 = ArticleThumbnail 17 = CourseSectionImage 18 = EventThumbnail 19 = EventResource 20 = Project 21 = CoachingThumbnail 22 = CoachingResource 23 = WorkshopThumbnail 24 = WorkshopResource 25 = PostAttachment 26 = ChannelMessageAttachment */
 export enum DocumentType {
     General = 0,
     ProfilePicture = 1,
@@ -36842,6 +36927,7 @@ export enum DocumentType {
     WorkshopThumbnail = 23,
     WorkshopResource = 24,
     PostAttachment = 25,
+    ChannelMessageAttachment = 26,
 }
 
 export class EditOtherUserSpokenLanguageDto implements IEditOtherUserSpokenLanguageDto {

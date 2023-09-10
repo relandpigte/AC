@@ -27,6 +27,7 @@
         CoachingResource,
         WorkshopThumbnail,
         WorkshopResource,
-        PostAttachment
+        PostAttachment,
+        ChannelMessageAttachment
     }
 }
