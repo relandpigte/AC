@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace Academically.Services.Chats.Dto
 {
-    public class MatchedChannelsDto
+    public class MatchedChannelDto
     {
+        public string Keyword { get; set; }
         public ChannelDto Channel { get; set; }
         public int MatchCount { get; set; }
     }
@@ -17,6 +18,6 @@ namespace Academically.Services.Chats.Dto
     {
         public string Keyword { get; set; }
         public IEnumerable<UserDto> Users { get; set; }
-        public IEnumerable<MatchedChannelsDto> Channels { get; set; }
+        public IEnumerable<MatchedChannelDto> Channels { get; set; }
     }
 }

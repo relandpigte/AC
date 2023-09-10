@@ -14,7 +14,12 @@
     <div *ngIf="matchedChannels?.length" class="search-results-messages d-flex flex-column">
         <div class="search-results-messages-title">{{ 'Messages' | localize }}</div>
         <div class="search-results-messages-list d-flex flex-column">
-            <div *ngFor="let match of matchedChannels" class="search-results-messages-list-item d-flex align-items-center gap-15">
+            <div
+                *ngFor="let match of matchedChannels"
+                class="search-results-messages-list-item d-flex align-items-center gap-15"
+                [class.active]="selectedMatchedChannel?.channel?.id === match.channel.id"
+                (click)="handleOnSelectChannel(match)"
+            >
                 <a href="javascript: void(0);" class="avatar avatar-sm">
                     <img [src]="getChannelRecipientUser(match)?.profilePictureUrl" class="avatar-img rounded-circle" alt="profile" />
                     <span class="avatar-status"></span>

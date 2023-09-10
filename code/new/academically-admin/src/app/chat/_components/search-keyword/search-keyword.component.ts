@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { Utils } from '@shared/helpers/utils';
-import { ChannelDto, ChannelMemberDto, ChatsServiceProxy, MatchedChannelsDto, SearchByKeywordResponseDto, UserDto } from '@shared/service-proxies/service-proxies';
+import { ChannelDto, ChannelMemberDto, ChatsServiceProxy, MatchedChannelDto, SearchByKeywordResponseDto, UserDto } from '@shared/service-proxies/service-proxies';
 import { ChatService } from '@shared/services/chat.service';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { filter, finalize, switchMap, takeUntil } from 'rxjs/operators';
@@ -14,10 +14,12 @@ import { filter, finalize, switchMap, takeUntil } from 'rxjs/operators';
 export class SearchKeywordComponent extends AppComponentBase implements OnInit {
 
     @Output() onSelectUser: EventEmitter<UserDto> = new EventEmitter<UserDto>();
+    @Output() onSelectChannel: EventEmitter<MatchedChannelDto> = new EventEmitter<MatchedChannelDto>();
 
     isLoadingList$ = new BehaviorSubject<boolean>(true);
 
     searchResults: SearchByKeywordResponseDto;
+    selectedMatchedChannel: MatchedChannelDto;
 
     constructor(
         injector: Injector,
@@ -37,18 +39,22 @@ export class SearchKeywordComponent extends AppComponentBase implements OnInit {
         this._chatService.searchKeyword$
             .pipe(takeUntil(this.destroyed$))
             .pipe(filter(keyword => !!keyword))
-            .subscribe(keyword => this.handleOnSearchKeyword(keyword))
+            .subscribe(keyword => this.handleOnSearchKeyword(keyword));
+
+        this._chatService.selectedMatchedChannel$
+            .pipe(takeUntil(this.destroyed$))
+            .subscribe(channel => this.selectedMatchedChannel = channel);
     }
 
-    getChannelRecipient(matched: MatchedChannelsDto): ChannelMemberDto {
+    getChannelRecipient(matched: MatchedChannelDto): ChannelMemberDto {
         return matched?.channel?.members?.find(m => m.userId !== this.appSession.userId);
     }
 
-    getChannelRecipientUser(matched: MatchedChannelsDto): UserDto {
+    getChannelRecipientUser(matched: MatchedChannelDto): UserDto {
         return this.getChannelRecipient(matched)?.user;
     }
 
-    getChannelName(matched: MatchedChannelsDto): string {
+    getChannelName(matched: MatchedChannelDto): string {
         const user = this.getChannelRecipientUser(matched);
         return user?.fullName ?? '';
     }
@@ -63,5 +69,9 @@ export class SearchKeywordComponent extends AppComponentBase implements OnInit {
 
     handleOnSelectUser(user: UserDto): void {
         this.onSelectUser.next(user);
+    }
+
+    handleOnSelectChannel(channel: MatchedChannelDto): void {
+        this.onSelectChannel.next(channel);
     }
 }

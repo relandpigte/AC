@@ -23,6 +23,7 @@ import {
   ChannelMessageDto,
   ChatsServiceProxy,
   DocumentDto,
+  MatchedChannelDto,
   UserDto
 } from '@shared/service-proxies/service-proxies';
 import { ChannelMessagesStateService } from '@shared/services/channel-messages-state.service';
@@ -62,6 +63,9 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
   unSubscribedIds: number[] = [];
 
   attachedService: ServiceCard;
+
+  selectedMatchedChannel: MatchedChannelDto;
+  selectedMatchedCount = 1;
 
   isLoadingMessages$ = new BehaviorSubject<boolean>(true);
 
@@ -107,10 +111,25 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
       .pipe(takeUntil(this.destroyed$))
       .subscribe(user => this.replyingToUser = user);
 
+    this._chatService.selectedMatchedChannel$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(channel => {
+        this.selectedMatchedChannel = channel;
+        this._chatService.selectedMatchedCount$.next(1);
+      });
+
+    this._chatService.selectedMatchedCount$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(count => {
+        this.selectedMatchedCount = count;
+        this.focusOnMatch(this.selectedMatchedCount);
+      });
+
     this.seenMessagesTrigger$
       .pipe(debounceTime(1000))
       .pipe(takeUntil(this.destroyed$))
       .subscribe(() => this.handleSeenMessages());
+
     this._cdr.detectChanges();
   }
 
@@ -120,6 +139,7 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
       await this.channelMessagesStateService.updateServiceParams({ type: undefined, channelId: this.selectedChannelId });
       this.channelMessages = this.channelMessagesStateService.getAllChannelMessages();
       this.totalChannelMessagesCount = this.channelMessagesStateService.totalChannelMessagesCount;
+      if (this.selectedMatchedChannel) this.initSearchResults();
     }
   }
 
@@ -254,4 +274,55 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
   }
 
   protected readonly NotificationType = NotificationType;
+
+  initSearchResults(): void {
+    setTimeout(() => {
+      if (this.selectedMatchedChannel) {
+        let idx = 1;
+        const rgx = new RegExp(`(${this.selectedMatchedChannel.keyword})`, 'ig');
+        this.selectedMatchedChannel?.channel?.messages?.forEach(m => {
+          const message = this._elRef.nativeElement.querySelector(`#msg-${m.id}`);
+          if (message) {
+            const messageContent = message.querySelector('.message-content');
+            if (messageContent) {
+              messageContent.innerHTML = messageContent.innerHTML.replace(rgx, (a, b) => `<span class="match match-${idx++}">${b}</span>`);
+            }
+          }
+        });
+        this._chatService.selectedMatchedCount$.next(1);
+      }
+    }, 1000);
+  }
+
+  focusOnMatch(idx: number): void {
+    setTimeout(() => {
+      this._elRef.nativeElement.querySelectorAll(`.match`).forEach(m => {
+        m.classList.remove('active');
+        if (m.classList.contains(`match-${idx}`)) {
+          m.classList.add('active');
+          m.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'center'
+          });
+        }
+      });
+    });
+  }
+
+  handleOnNextMatch(): void {
+    if (this.selectedMatchedChannel) {
+      this.selectedMatchedCount++;
+      if (this.selectedMatchedCount > this.selectedMatchedChannel.matchCount) this.selectedMatchedCount = 1;
+      this._chatService.selectedMatchedCount$.next(this.selectedMatchedCount);
+    }
+  }
+
+  handleOnPreviousMatch(): void {
+    if (this.selectedMatchedChannel) {
+      this.selectedMatchedCount--;
+      if (this.selectedMatchedCount === 0) this.selectedMatchedCount = this.selectedMatchedChannel.matchCount;
+      this._chatService.selectedMatchedCount$.next(this.selectedMatchedCount);
+    }
+  }
 }

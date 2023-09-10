@@ -7,6 +7,7 @@ import {
   ChannelDto,
   ChannelMessageDto,
   ChatsServiceProxy,
+  MatchedChannelDto,
   UserDto
 } from '@shared/service-proxies/service-proxies';
 import { ChannelsStateService, channelsType } from '@shared/services/channels-state.service';
@@ -107,7 +108,10 @@ export class ChatComponent extends AppComponentBase implements OnInit {
 
     this._chatService.searchKeyword$
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(keyword => this.isSearchingKeyword = !!keyword);
+      .subscribe(keyword => {
+        this.isSearchingKeyword = !!keyword;
+        if (!this.isSearchingKeyword) this._chatService.selectedMatchedChannel$.next(null);
+      });
 
     this._chatService.userTyping$
       .pipe(takeUntil(this.destroyed$))
@@ -242,7 +246,7 @@ export class ChatComponent extends AppComponentBase implements OnInit {
   }
 
   // tslint:disable-next-line: member-ordering
-  handleOnSelectUser(user: UserDto): void {
+  handleOnSelectSearchUser(user: UserDto): void {
     this.searchFilterComponent.clearSearchFilter();
 
     const channel = this.channels.find(c => c.members.some(m => m.userId === user.id));
@@ -250,6 +254,14 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     else {
       this._chatService.selectedChannel$.next(null);
       setTimeout(() => this._chatService.replyingToUser$.next(user));
+    }
+  }
+
+  handleOnSelectSearchChannel(matchedChannel: MatchedChannelDto): void {
+    const channel = this.channels.find(c => c.id === matchedChannel.channel.id);
+    if (channel) {
+      this.handleOnChannelSelect(channel);
+      this._chatService.selectedMatchedChannel$.next(matchedChannel);
     }
   }
 }

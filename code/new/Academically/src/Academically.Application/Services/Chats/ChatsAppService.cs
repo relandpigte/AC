@@ -402,8 +402,9 @@ namespace Academically.Services.Chats
 
             var matchedChannels = (from m in messages
                                   group m by m.Channel.Id into mg
-                                  select new MatchedChannelsDto()
+                                  select new MatchedChannelDto()
                                   {
+                                      Keyword = keyword,
                                       Channel = new ChannelDto()
                                       {
                                           Id = mg.First().Channel.Id,
@@ -422,6 +423,7 @@ namespace Academically.Services.Chats
                                       MatchCount = mg.Sum(m => Regex.Matches(m.Message, @"(" + keyword.ToLower() + ")", RegexOptions.IgnoreCase).Count)
                                   }).ToList();
 
+            searchResults.Keyword = keyword;
             searchResults.Users = users;
             searchResults.Channels = matchedChannels;
 

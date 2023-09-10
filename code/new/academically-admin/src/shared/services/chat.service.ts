@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AvailableServiceDto, ChannelDto, ChannelMessageDto, UserDto } from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, ChannelDto, ChannelMessageDto, MatchedChannelDto, UserDto } from '@shared/service-proxies/service-proxies';
 import { AppSessionService } from '@shared/session/app-session.service';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { SafeUrl } from '@angular/platform-browser';
@@ -43,9 +43,12 @@ export class ChatService {
   archiveChannel$: Subject<ChannelDto> = new Subject();
   userTyping$: Subject<boolean> = new Subject();
 
-  replyingToUser$: BehaviorSubject<UserDto> = new BehaviorSubject<UserDto>(null);
   searchUser$: Subject<string> = new Subject<string>();
+  replyingToUser$: BehaviorSubject<UserDto> = new BehaviorSubject<UserDto>(null);
+
   searchKeyword$: Subject<string> = new Subject<string>();
+  selectedMatchedChannel$: BehaviorSubject<MatchedChannelDto> = new BehaviorSubject<MatchedChannelDto>(null);
+  selectedMatchedCount$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
 
   isSearchingUser$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   selectedChannel$: BehaviorSubject<ChannelDto> = new BehaviorSubject<ChannelDto>(null);

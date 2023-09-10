@@ -24,7 +24,8 @@
             <ng-container>
                 <div [attr.hidden]="isSearchingKeyword ? null : ''">
                     <app-search-keyword
-                        (onSelectUser)="handleOnSelectUser($event)"
+                        (onSelectUser)="handleOnSelectSearchUser($event)"
+                        (onSelectChannel)="handleOnSelectSearchChannel($event)"
                     ></app-search-keyword>
                 </div>
             </ng-container>

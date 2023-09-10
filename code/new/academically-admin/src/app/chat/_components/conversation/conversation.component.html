@@ -16,7 +16,20 @@
                 </p>
             </div>
 
-            <div *ngIf="hasActions" class="conversation-header-actions d-flex align-items-center ml-auto">
+            <div *ngIf="selectedMatchedChannel" class="conversation-header-nav d-flex align-items-center gap-15">
+                {{ selectedMatchedCount }} of {{ selectedMatchedChannel.matchCount }}
+
+                <div class="conversation-header-nav-arrow d-flex gap-10">
+                    <div class="conversation-header-nav-arrow-left d-flex justify-content-center align-items-center w-40-px h-40-px" (click)="handleOnPreviousMatch()">
+                        <img src="/assets/img/chat/arrow-left.svg" class="w-12-px h-12-px">
+                    </div>
+                    <div class="conversation-header-nav-arrow-right d-flex justify-content-center align-items-center w-40-px h-40-px" (click)="handleOnNextMatch()">
+                        <img src="/assets/img/chat/arrow-right.svg" class="w-12-px h-12-px">
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="hasActions" class="conversation-header-actions d-flex align-items-center">
                 <div class="dropdown">
                     <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="fe fe-more-horizontal"></span>

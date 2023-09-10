@@ -40242,11 +40242,12 @@ export interface ILocationSuggestion {
     url: string | undefined;
 }
 
-export class MatchedChannelsDto implements IMatchedChannelsDto {
+export class MatchedChannelDto implements IMatchedChannelDto {
+    keyword: string | undefined;
     channel: ChannelDto;
     matchCount: number;
 
-    constructor(data?: IMatchedChannelsDto) {
+    constructor(data?: IMatchedChannelDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -40257,34 +40258,37 @@ export class MatchedChannelsDto implements IMatchedChannelsDto {
 
     init(_data?: any) {
         if (_data) {
+            this.keyword = _data["keyword"];
             this.channel = _data["channel"] ? ChannelDto.fromJS(_data["channel"]) : <any>undefined;
             this.matchCount = _data["matchCount"];
         }
     }
 
-    static fromJS(data: any): MatchedChannelsDto {
+    static fromJS(data: any): MatchedChannelDto {
         data = typeof data === 'object' ? data : {};
-        let result = new MatchedChannelsDto();
+        let result = new MatchedChannelDto();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["keyword"] = this.keyword;
         data["channel"] = this.channel ? this.channel.toJSON() : <any>undefined;
         data["matchCount"] = this.matchCount;
         return data; 
     }
 
-    clone(): MatchedChannelsDto {
+    clone(): MatchedChannelDto {
         const json = this.toJSON();
-        let result = new MatchedChannelsDto();
+        let result = new MatchedChannelDto();
         result.init(json);
         return result;
     }
 }
 
-export interface IMatchedChannelsDto {
+export interface IMatchedChannelDto {
+    keyword: string | undefined;
     channel: ChannelDto;
     matchCount: number;
 }
@@ -44092,7 +44096,7 @@ export interface IRuntimeTypeHandle {
 export class SearchByKeywordResponseDto implements ISearchByKeywordResponseDto {
     keyword: string | undefined;
     users: UserDto[] | undefined;
-    channels: MatchedChannelsDto[] | undefined;
+    channels: MatchedChannelDto[] | undefined;
 
     constructor(data?: ISearchByKeywordResponseDto) {
         if (data) {
@@ -44114,7 +44118,7 @@ export class SearchByKeywordResponseDto implements ISearchByKeywordResponseDto {
             if (Array.isArray(_data["channels"])) {
                 this.channels = [] as any;
                 for (let item of _data["channels"])
-                    this.channels.push(MatchedChannelsDto.fromJS(item));
+                    this.channels.push(MatchedChannelDto.fromJS(item));
             }
         }
     }
@@ -44153,7 +44157,7 @@ export class SearchByKeywordResponseDto implements ISearchByKeywordResponseDto {
 export interface ISearchByKeywordResponseDto {
     keyword: string | undefined;
     users: UserDto[] | undefined;
-    channels: MatchedChannelsDto[] | undefined;
+    channels: MatchedChannelDto[] | undefined;
 }
 
 export class SearchDisciplineTaxonomyRequestDto implements ISearchDisciplineTaxonomyRequestDto {
