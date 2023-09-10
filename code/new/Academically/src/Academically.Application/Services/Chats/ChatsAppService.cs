@@ -27,6 +27,8 @@ using Academically.Services.Events.Dto;
 using Academically.Services.Videos;
 using Academically.Services.Videos.Dto;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
+using System.IO.Compression;
 
 namespace Academically.Services.Chats
 {
@@ -376,17 +378,52 @@ namespace Academically.Services.Chats
             Regex.Replace(keyword, @"\s+", "");
 
             var users = await this._userRepository.GetAll()
-                    .Where(u => u.Name.ToLower().Contains(keyword.ToLower()) || u.Surname.ToLower().Contains(keyword.ToLower()) || (u.Name + u.Surname).ToLower().Contains(keyword.ToLower()))
-                    .Select(u => ObjectMapper.Map<UserDto>(u))
-                    .ToListAsync();
-            
-            foreach(var user in users)
+                .Where(u => u.Name.ToLower().Contains(keyword.ToLower()) || u.Surname.ToLower().Contains(keyword.ToLower()) || (u.Name + u.Surname).ToLower().Contains(keyword.ToLower()))
+                .Select(u => ObjectMapper.Map<UserDto>(u))
+                .ToListAsync();
+
+            foreach (var user in users)
             {
                 if (user.ProfilePictureDocumentId.HasValue)
                     user.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(user.ProfilePictureDocumentId.Value);
             }
 
+            var messages = await this._channelMessageRepository.GetAll()
+                .Include(m => m.Channel)
+                .Include(m => m.CreatorUser)
+                .Where(m => m.Message.ToLower().Contains(keyword.ToLower()))
+                .Select(u => ObjectMapper.Map<ChannelMessageDto>(u))
+                .ToListAsync();
+
+            foreach (var message in messages)
+            {
+                message.Channel = await this.GetChannel(message.ChannelId);
+            }
+
+            var matchedChannels = (from m in messages
+                                  group m by m.Channel.Id into mg
+                                  select new MatchedChannelsDto()
+                                  {
+                                      Channel = new ChannelDto()
+                                      {
+                                          Id = mg.First().Channel.Id,
+                                          Name = mg.First().Channel.Name,
+                                          IsArchive = mg.First().Channel.IsArchive,
+                                          IsActive = mg.First().Channel.IsActive,
+                                          IsDeleted = mg.First().Channel.IsDeleted,
+                                          CreationTime = mg.First().Channel.CreationTime,
+                                          CreatorUserId = mg.First().Channel.CreatorUserId,
+                                          CreatorUser = mg.First().Channel.CreatorUser,
+                                          LastModificationTime = mg.First().Channel.LastModificationTime,
+                                          LastModifierUserId = mg.First().Channel.LastModifierUserId,
+                                          Messages = mg.ToList(),
+                                          Members = mg.First().Channel.Members
+                                      },
+                                      MatchCount = mg.Sum(m => Regex.Matches(m.Message, @"(" + keyword.ToLower() + ")", RegexOptions.IgnoreCase).Count)
+                                  }).ToList();
+
             searchResults.Users = users;
+            searchResults.Channels = matchedChannels;
 
             return searchResults;
         }
