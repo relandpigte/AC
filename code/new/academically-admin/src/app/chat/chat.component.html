@@ -35,6 +35,7 @@
                         *ngFor="let c of channels"
                         [channel]="c"
                         [isActive]="c.id === selectedChannel?.id"
+                        [mutedUserChannelIds]="mutedUserChannelIds"
                         [blockedByUser]="currentUserBlocker"
                         (click)="handleOnChannelSelect(c)"
                     ></app-recipient>
@@ -46,11 +47,13 @@
             <ng-container *ngIf="!isMessageEmpty || replyingToUser else emptyMessages">
                 <app-composer-conversation
                     [channel]="selectedChannel"
+                    [mutedUserChannelIds]="mutedUserChannelIds"
                     [replyingTo]="replyingTo"
                     [isSearchingUser]="isSearchingUser"
                     [isRecipientTyping]="isRecipientTyping"
                     [blockedByUser]="currentUserBlocker"
                     (onReplyClick)="handleOnReply($event)"
+                    (onProcessNotification)="handleNotification($event)"
                 ></app-composer-conversation>
             </ng-container>
         </div>

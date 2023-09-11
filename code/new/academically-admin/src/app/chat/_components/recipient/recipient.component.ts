@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Injector, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ChannelDto, ChannelMessageDto, UserDto } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
@@ -14,10 +14,11 @@ export enum ChatStatus {
   templateUrl: './recipient.component.html',
   styleUrls: ['./recipient.component.less']
 })
-export class RecipientComponent extends AppComponentBase implements OnInit, OnChanges {
+export class RecipientComponent extends AppComponentBase implements OnChanges {
   @Input() channel: ChannelDto;
   @Input() isActive = false;
   @Input() blockedByUser: number[];
+  @Input() mutedUserChannelIds: string[];
 
   latestMessage: ChannelMessageDto;
   receivedDateStr: string;
@@ -26,27 +27,21 @@ export class RecipientComponent extends AppComponentBase implements OnInit, OnCh
   channelName: string;
 
   constructor(
-    injector: Injector,
-    private _crd: ChangeDetectorRef
+    injector: Injector
   ) {
     super(injector);
   }
 
+  get isMutedChannel() { return this.mutedUserChannelIds?.includes(this.channel?.id); }
   get isRecipientTyping(): boolean {
     return this.channel?.members?.find(m => m.userId !== this.appSession.userId)?.isTyping ?? false;
   }
-
   get recipientUser(): UserDto {
     return this.channel?.members?.find(m => m.userId !== this.appSession.userId)?.user;
   }
-
   get isBlockedByRecipient(): boolean {
     const blockByRecipient = this.channel?.members.find(m => m.userId !== this.appSession.userId);
     return this.blockedByUser?.includes(blockByRecipient?.userId);
-  }
-
-  ngOnInit(): void {
-    this._crd.detectChanges();
   }
 
   ngOnChanges(changes: SimpleChanges): void {

@@ -39,9 +39,9 @@
                         <span class="fe fe-more-horizontal"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <ng-container *ngIf="!isBlockedByRecipient">
-                            <div *ngIf="!isMuteNotifications" class="dropdown-item cursor-pointer" (click)="handleNotification(notificationType.Mute)">Mute Notifications</div>
-                            <div *ngIf="isMuteNotifications" class="dropdown-item cursor-pointer" (click)="handleNotification(notificationType.Unmute)">Unmute Notifications</div>
+                        <ng-container *ngIf="!isBlockedByRecipient && !isUserBlocked">
+                            <div *ngIf="!isMutedChannel" class="dropdown-item cursor-pointer" (click)="handleNotification(notificationType.Mute)">Mute Notifications</div>
+                            <div *ngIf="isMutedChannel" class="dropdown-item cursor-pointer" (click)="handleNotification(notificationType.Unmute)">Unmute Notifications</div>
                         </ng-container>
                         <div class="dropdown-item cursor-pointer" (click)="handleArchiveChannel()">Archive Conversation</div>
                         <div class="dropdown-item cursor-pointer" (click)="handleDeleteChannel()">Delete Conversation</div>

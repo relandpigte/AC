@@ -32,6 +32,7 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
   @Input() hasClose = false;
   @Input() showAttachmentInfo = true;
   @Input() isRecipientTyping = false;
+  @Input() mutedUserChannelIds: string[];
 
   @Input() blockUserIds: number[] = [];
   @Input() isUserBlocked: boolean;
@@ -41,12 +42,12 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
   @Output() onCloseClick: EventEmitter<any> = new EventEmitter();
   @Output() onBlockUser: EventEmitter<any> = new EventEmitter();
   @Output() onUnblockUser: EventEmitter<any> = new EventEmitter();
+  @Output() onProcessNotification: EventEmitter<NotificationType> = new EventEmitter<NotificationType>();
 
   channelMessages: ChannelMessageDto[] = [];
   totalChannelMessagesCount = 0;
   replyingToUser: UserDto;
-  unSubscribedIds: number[] = [];
-
+  notificationType = NotificationType;
   attachedService: ServiceCard;
 
   selectedMatchedChannel: MatchedChannelDto;
@@ -63,8 +64,7 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
     private _hubService: HubService,
     private _chatsService: ChatsServiceProxy,
     private _modalService: BsModalService,
-    private _modalDialogService: ModalDialogService,
-    private _userService: UserServiceProxy
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
   }
@@ -91,8 +91,7 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
   get profileDocument(): DocumentDto { return this.replyingToUser?.profilePictureDocument; }
   get recipientName(): string { return this.replyingToUser?.name; }
   get recipientFullName(): string { return this.replyingToUser?.fullName; }
-  get notificationType() { return NotificationType; }
-  get isMuteNotifications(): boolean { return this.unSubscribedIds?.includes(this.appSession.userId); }
+  get isMutedChannel() { return this.mutedUserChannelIds?.includes(this.channel?.id); }
 
   async ngOnInit(): Promise<void> {
     this._chatService.replyingToUser$
@@ -118,7 +117,6 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
       .pipe(takeUntil(this.destroyed$))
       .subscribe(() => this.handleSeenMessages());
 
-    this.getUnsubscribedIds();
     this._cdr.detectChanges();
   }
 
@@ -140,23 +138,8 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
     this.onUnblockUser.next();
   }
 
-  getUnsubscribedIds(): void {
-    this.unSubscribedIds = this.channel?.channelNotifications?.map(n => n.creatorUserId);
-  }
-
   handleNotification(type: NotificationType): void {
-    const chatNotification = type === NotificationType.Mute ?
-      this._chatsService.createChannelNotification(this.channel?.id) :
-      this._chatsService.deleteChannelNotification(this.channel?.id);
-
-    chatNotification.pipe(takeUntil(this.destroyed$))
-      .subscribe((): void => {
-        if (type === this.notificationType.Mute) {
-          this.unSubscribedIds.push(this.appSession.userId);
-        } else {
-          this.unSubscribedIds = this.unSubscribedIds.filter(s => s !== this.appSession.userId);
-        }
-      });
+    this.onProcessNotification.next(type);
   }
 
   private async initChannelMessagesAppStates() {
@@ -269,8 +252,6 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
       };
       this._modalDialogService.showConfirmDialog(options);
   }
-
-  protected readonly NotificationType = NotificationType;
 
   initSearchResults(): void {
     setTimeout(() => {

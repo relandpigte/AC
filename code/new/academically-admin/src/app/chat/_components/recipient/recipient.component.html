@@ -20,8 +20,11 @@
 
         <div class="recipient-message-details d-flex flex-column ml-auto align-items-end">
             <span class="time">{{ receivedDateStr }}</span>
-            <span class="text-center d-block status" [ngClass]="chatStatusClass">
+            <span *ngIf="!isMutedChannel" class="text-center d-block status" [ngClass]="chatStatusClass">
                 <span>{{ unreadCount }}</span>
+            </span>
+            <span *ngIf="isMutedChannel">
+                 <img src="/assets/img/chat/bell-off.svg" class="w-12-px h-12-px" alt="Muted" />
             </span>
         </div>
     </div>

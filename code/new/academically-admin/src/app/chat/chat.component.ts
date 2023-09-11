@@ -4,7 +4,7 @@ import { SearchUsersComponent } from '@app/chat/_components/search-users/search-
 import { AppComponentBase } from '@shared/app-component-base';
 import { AvailableServiceDto, ChannelDto, ChannelMessageDto, ChatsServiceProxy, UserDto, MatchedChannelDto } from '@shared/service-proxies/service-proxies';
 import { ChannelsStateService, channelsType } from '@shared/services/channels-state.service';
-import { ChatService } from '@shared/services/chat.service';
+import { ChatService, NotificationType } from '@shared/services/chat.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
@@ -12,6 +12,7 @@ import { distinctUntilChanged, skip, switchMap, takeUntil } from 'rxjs/operators
 import { SearchFilterComponent } from './_components/search-filter/search-filter.component';
 import { ComposerConversationComponent } from './_components/composer-conversation/composer-conversation.component';
 import { FileUtils } from '@shared/helpers/file-utils';
+import * as _ from 'lodash';
 
 export interface MessageComposeData {
   parentId?: string;
@@ -42,6 +43,8 @@ export class ChatComponent extends AppComponentBase implements OnInit {
   fileAttachment: File;
   selectedService: AvailableServiceDto;
   currentUserBlocker: number[] = [];
+  mutedUserChannelIds: string[] = [];
+  notificationType = NotificationType;
 
   @ViewChild(SearchUsersComponent) searchUsersComponent: SearchUsersComponent;
   @ViewChild(SearchFilterComponent) searchFilterComponent: SearchFilterComponent;
@@ -146,6 +149,7 @@ export class ChatComponent extends AppComponentBase implements OnInit {
   async ngOnInit() {
     await this.initChannelsAppStates();
     this.getCurrentUserBlockers();
+    this.getAllMutedChannelByUser();
   }
 
   handleOnComposeMessage(): void {
@@ -205,8 +209,6 @@ export class ChatComponent extends AppComponentBase implements OnInit {
   handleOnChannelSelect(channel: ChannelDto) {
     this._chatService.selectedChannel$.next(channel);
     this._chatService.isSearchingUser$.next(false);
-
-    console.log(channel);
   }
 
   // tslint:disable-next-line: member-ordering
@@ -264,11 +266,34 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     }
   }
 
-  private getCurrentUserBlockers(): void {
-      if (!this.selectedChannel) { return; }
+  // tslint:disable-next-line: member-ordering
+  handleNotification(type: NotificationType): void {
+    const channelId = this.selectedChannel?.id;
+    const chatNotification = type === NotificationType.Mute ?
+      this._chatsService.createChannelNotification(channelId) :
+      this._chatsService.deleteChannelNotification(channelId);
 
+    chatNotification.pipe(takeUntil(this.destroyed$))
+      .subscribe((): void => {
+        if (type === this.notificationType.Mute) {
+          this.mutedUserChannelIds.push(channelId);
+        } else {
+          this.mutedUserChannelIds = this.mutedUserChannelIds.filter(mc => mc !== channelId);
+        }
+      });
+  }
+
+  private getCurrentUserBlockers(): void {
+    if (!this.selectedChannel) { return; }
     this.selectedChannel?.blockedByUsers?.map(user => {
       this.currentUserBlocker.push(user.creatorUserId);
+    });
+  }
+
+  private getAllMutedChannelByUser(): void {
+    _.forEach(this.channels ?? [], (channel) => {
+      const notification = channel.channelNotifications?.filter(cn => cn.creatorUserId === this.appSession.userId);
+      this.mutedUserChannelIds = _.union(this.mutedUserChannelIds, notification?.map(n => n.channelId));
     });
   }
 }
