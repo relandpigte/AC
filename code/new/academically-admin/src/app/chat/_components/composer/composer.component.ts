@@ -1,11 +1,11 @@
-import { Component, ElementRef, Injector, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { MessageComposeData } from '@app/chat/chat.component';
 import { AppComponentBase } from '@shared/app-component-base';
-import { AvailableServiceDto, ChannelMessageDto } from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, ChannelDto, ChannelMessageDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { ChatService } from '@shared/services/chat.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
@@ -17,18 +17,23 @@ import { AddServiceComponent } from '@shared/modals/add-service/add-service.comp
   templateUrl: './composer.component.html',
   styleUrls: ['./composer.component.less']
 })
-export class ComposerComponent extends AppComponentBase {
+export class ComposerComponent extends AppComponentBase implements OnInit{
   @ViewChild('messageInput') messageInput: ElementRef<HTMLInputElement>;
   @ViewChild('fileInput') fileInput: ElementRef<HTMLInputElement>;
 
   @Input() replyingTo: ChannelMessageDto;
+  @Input() isUserBlocked: boolean;
+  @Input() isBlockedByRecipient: boolean;
   @Output() onReply: Subject<MessageComposeData> = new Subject();
+  @Output() onUnblock: Subject<any> = new Subject<any>();
 
   typingTimer$: any;
   selectedService: AvailableServiceDto;
   isShowServicePicker = false;
   fileAttachment: File;
   allowedExtensions: string[] = [];
+  selectedChannel: ChannelDto;
+  blockedUserIds: number[] = [];
 
   private maxFileSize = fileUploadConfiguration.maxFileSize;
   private imageExtensions = fileUploadConfiguration.allowedImageExtensions;
@@ -39,6 +44,7 @@ export class ComposerComponent extends AppComponentBase {
     injector: Injector,
     private _chatService: ChatService,
     private _modalService: BsModalService,
+    private _userService: UserServiceProxy
   ) {
     super(injector);
 
@@ -57,12 +63,24 @@ export class ComposerComponent extends AppComponentBase {
     this._chatService.selectedService$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(service => this.selectedService = service);
+
+    this._chatService.selectedChannel$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(channel => this.selectedChannel = channel);
   }
 
   get replyingToRecipient(): string { return this.replyingTo?.creatorUser?.name ?? 'Miyah'; }
   get replyingToMessage(): string { return this.replyingTo?.message ?? 'I can even begin to express how good this final season'; }
   get isShowAddService(): boolean { return this.isTutor; }
   get hasAttachments(): boolean { return !!this.fileAttachment || !!this.selectedService; }
+
+  ngOnInit(): void {
+    this.getBlockedUsersIds();
+  }
+
+  handleUnBlockUser(): void {
+    this.onUnblock.next();
+  }
 
   focusMessageComposer(): void {
     this.messageInput?.nativeElement?.focus();
@@ -156,5 +174,13 @@ export class ComposerComponent extends AppComponentBase {
       clearTimeout(this.typingTimer$);
     }
     this.typingTimer$ = setTimeout(() => this._chatService.userTyping$.next(false), 1000);
+  }
+
+  private getBlockedUsersIds(): void {
+    if (!this.selectedChannel) { return; }
+
+    this.selectedChannel?.blockedUsers?.map(user => {
+      this.blockedUserIds.push(user.blockedUserId);
+    });
   }
 }

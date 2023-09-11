@@ -2,14 +2,7 @@ import { ChangeDetectorRef, Component, Injector, OnInit, ViewChild } from '@angu
 import { HubService } from '@app/_shared/services/hub.service';
 import { SearchUsersComponent } from '@app/chat/_components/search-users/search-users.component';
 import { AppComponentBase } from '@shared/app-component-base';
-import {
-  AvailableServiceDto,
-  ChannelDto,
-  ChannelMessageDto,
-  ChatsServiceProxy,
-  MatchedChannelDto,
-  UserDto
-} from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, ChannelDto, ChannelMessageDto, ChatsServiceProxy, UserDto, MatchedChannelDto } from '@shared/service-proxies/service-proxies';
 import { ChannelsStateService, channelsType } from '@shared/services/channels-state.service';
 import { ChatService } from '@shared/services/chat.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
@@ -48,6 +41,7 @@ export class ChatComponent extends AppComponentBase implements OnInit {
   replyingToUser: UserDto;
   fileAttachment: File;
   selectedService: AvailableServiceDto;
+  currentUserBlocker: number[] = [];
 
   @ViewChild(SearchUsersComponent) searchUsersComponent: SearchUsersComponent;
   @ViewChild(SearchFilterComponent) searchFilterComponent: SearchFilterComponent;
@@ -149,8 +143,14 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     return channel?.members?.find(m => m.userId !== this.appSession.userId)?.isTyping ?? false;
   }
 
+  get isBlockedByRecipient(): boolean {
+    const blockByRecipient = this.selectedChannel?.members.find(m => m.userId !== this.appSession.userId);
+    return this.currentUserBlocker?.includes(blockByRecipient?.userId);
+  }
+
   async ngOnInit() {
     await this.initChannelsAppStates();
+    this.getCurrentUserBlockers();
   }
 
   handleOnComposeMessage(): void {
@@ -228,6 +228,7 @@ export class ChatComponent extends AppComponentBase implements OnInit {
         this._chatService.fileAttachment$.next(null);
         this._chatService.selectedService$.next(null);
         this.selectedChannel = this.channels.find(c => c.id === message.channelId);
+        this._chatService.selectedChannel$.next(this.selectedChannel);
       });
   }
 
@@ -257,11 +258,20 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     }
   }
 
+  // tslint:disable-next-line: member-ordering
   handleOnSelectSearchChannel(matchedChannel: MatchedChannelDto): void {
     const channel = this.channels.find(c => c.id === matchedChannel.channel.id);
     if (channel) {
       this.handleOnChannelSelect(channel);
       this._chatService.selectedMatchedChannel$.next(matchedChannel);
     }
+  }
+
+  private getCurrentUserBlockers(): void {
+      if (!this.selectedChannel) { return; }
+
+    this.selectedChannel?.blockedByUsers?.map(user => {
+      this.currentUserBlocker.push(user.creatorUserId);
+    });
   }
 }

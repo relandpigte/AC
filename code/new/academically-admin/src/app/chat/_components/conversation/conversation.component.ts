@@ -1,31 +1,10 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Injector,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { HubService } from '@app/_shared/services/hub.service';
-import {
-  MessageInfoComponent
-} from '@app/chat/_components/conversation/_components/message-info/message-info.component';
+import { MessageInfoComponent } from '@app/chat/_components/conversation/_components/message-info/message-info.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 import { ServiceCard } from '@shared/models/service-card.model';
-import {
-  ChannelDto,
-  ChannelMessageDto,
-  ChatsServiceProxy,
-  DocumentDto,
-  MatchedChannelDto,
-  UserDto
-} from '@shared/service-proxies/service-proxies';
+import { ChannelDto, ChannelMessageDto, ChatsServiceProxy, DocumentDto, UserDto, UserServiceProxy, MatchedChannelDto } from '@shared/service-proxies/service-proxies';
 import { ChannelMessagesStateService } from '@shared/services/channel-messages-state.service';
 import { ChatService, NotificationType } from '@shared/services/chat.service';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
@@ -35,7 +14,7 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, combineLatest, of, Subject } from 'rxjs';
-import { debounceTime, finalize, switchMap, takeUntil } from 'rxjs/operators';
+import { debounceTime, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-conversation',
@@ -54,8 +33,14 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
   @Input() showAttachmentInfo = true;
   @Input() isRecipientTyping = false;
 
+  @Input() blockUserIds: number[] = [];
+  @Input() isUserBlocked: boolean;
+  @Input() isBlockedByRecipient: boolean;
+
   @Output() onActionClick: EventEmitter<any> = new EventEmitter();
   @Output() onCloseClick: EventEmitter<any> = new EventEmitter();
+  @Output() onBlockUser: EventEmitter<any> = new EventEmitter();
+  @Output() onUnblockUser: EventEmitter<any> = new EventEmitter();
 
   channelMessages: ChannelMessageDto[] = [];
   totalChannelMessagesCount = 0;
@@ -68,7 +53,6 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
   selectedMatchedCount = 1;
 
   isLoadingMessages$ = new BehaviorSubject<boolean>(true);
-
   seenMessagesTrigger$ = new Subject();
 
   constructor(
@@ -79,7 +63,8 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
     private _hubService: HubService,
     private _chatsService: ChatsServiceProxy,
     private _modalService: BsModalService,
-    private _modalDialogService: ModalDialogService
+    private _modalDialogService: ModalDialogService,
+    private _userService: UserServiceProxy
   ) {
     super(injector);
   }
@@ -105,8 +90,6 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
   get isMuteNotifications(): boolean { return this.unSubscribedIds?.includes(this.appSession.userId); }
 
   async ngOnInit(): Promise<void> {
-    this.getUnsubscribedIds();
-
     this._chatService.replyingToUser$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(user => this.replyingToUser = user);
@@ -130,6 +113,7 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
       .pipe(takeUntil(this.destroyed$))
       .subscribe(() => this.handleSeenMessages());
 
+    this.getUnsubscribedIds();
     this._cdr.detectChanges();
   }
 
@@ -141,6 +125,14 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
       this.totalChannelMessagesCount = this.channelMessagesStateService.totalChannelMessagesCount;
       if (this.selectedMatchedChannel) this.initSearchResults();
     }
+  }
+
+  handleBlockUser(): void {
+    this.onBlockUser.next();
+  }
+
+  handleUnblockUser(): void {
+    this.onUnblockUser.next();
   }
 
   getUnsubscribedIds(): void {

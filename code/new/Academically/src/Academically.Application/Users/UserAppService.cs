@@ -43,6 +43,7 @@ namespace Academically.Users
         private readonly ISettingManager _settingManager;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IRepository<UserFollower, Guid> _userFollowersRepository;
+        private readonly IRepository<UserBlocking, Guid> _userBlockingsRepository;
 
         public UserAppService(
             IRepository<User, long> repository,
@@ -55,7 +56,8 @@ namespace Academically.Users
             UrlEncoder urlEncoder,
             ISettingManager settingManager,
             IDocumentsDomainService documentsDomainService,
-            IRepository<UserFollower, Guid> userFollowersRepository
+            IRepository<UserFollower, Guid> userFollowersRepository,
+            IRepository<UserBlocking, Guid> userBlockingsRepository
             )
             : base(repository)
         {
@@ -69,6 +71,7 @@ namespace Academically.Users
             _settingManager = settingManager;
             _documentsDomainService = documentsDomainService;
             _userFollowersRepository = userFollowersRepository;
+            _userBlockingsRepository = userBlockingsRepository;
         }
 
         [AbpAuthorize(PermissionNames.Pages_Users_Create)]
@@ -281,23 +284,42 @@ namespace Academically.Users
             return Tuple.Create(connectedUsers, otherUsers);
         }
 
+        public async Task<UserBlocking> BlockUserById(long userId)
+        {
+            return await _userBlockingsRepository.InsertAsync(new UserBlocking { BlockedUserId = userId });
+        }
+        
+        public async Task<bool> UnblockUserById(long userId)
+        {
+            var currentUserId = _abpSession.UserId.Value;
+            var blockedUser = await _userBlockingsRepository.GetAll()
+                .Where(u => u.BlockedUserId == userId && u.CreatorUserId == currentUserId)
+                .FirstOrDefaultAsync();
+
+            if (blockedUser == null) return false;
+            await _userBlockingsRepository
+                .DeleteAsync(u => u.BlockedUserId == userId && u.CreatorUserId == currentUserId);
+            return true;
+        }
+
         private async Task<List<UserDto>> GetSearchedUsers(PagedUserResultRequestDto input, bool isFollowing = true)
         {
+            var currentUserId = _abpSession.UserId.Value;
             var adminRole = await _roleManager.GetRoleByNameAsync(StaticRoleNames.Tenants.Admin);
             var following = await _userFollowersRepository.GetAll()
-                .Where(x => x.CreatorUserId == AbpSession.UserId.Value)
+                .Where(x => x.CreatorUserId == currentUserId)
                 .Select(x => x.UserId)
                 .ToListAsync();
             
             return await Repository.GetAll()
                 .Include(u => u.ProfilePictureDocument)
-                .Where(u => u.Id != _abpSession.UserId.Value && isFollowing ?
+                .Where(u => u.Id != currentUserId && isFollowing ?
                     following.Contains(u.Id) :
                     !following.Contains(u.Id))
                 .Where(e => e.Roles.Any(r => r.RoleId != adminRole.Id) && !input.Keyword.IsNullOrWhiteSpace())
                 .WhereIf(!input.Keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(input.Keyword) || x.Surname.Contains(input.Keyword))
                 .WhereIf(input.IsActive.HasValue, x => x.IsActive == input.IsActive)
-                .WhereIf(input.ExcludeSelf.HasValue, x => x.Id != _abpSession.UserId.Value)
+                .WhereIf(input.ExcludeSelf.HasValue, x => x.Id != currentUserId)
                 .Select(u => ObjectMapper.Map<UserDto>(u))
                 .ToListAsync();
 

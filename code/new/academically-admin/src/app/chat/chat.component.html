@@ -35,6 +35,7 @@
                         *ngFor="let c of channels"
                         [channel]="c"
                         [isActive]="c.id === selectedChannel?.id"
+                        [isBlockedByRecipient]="isBlockedByRecipient"
                         (click)="handleOnChannelSelect(c)"
                     ></app-recipient>
                 </div>
@@ -48,6 +49,7 @@
                     [replyingTo]="replyingTo"
                     [isSearchingUser]="isSearchingUser"
                     [isRecipientTyping]="isRecipientTyping"
+                    [isBlockedByRecipient]="isBlockedByRecipient"
                     (onReplyClick)="handleOnReply($event)"
                 ></app-composer-conversation>
             </ng-container>

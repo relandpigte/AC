@@ -12,6 +12,7 @@ import { Subject } from 'rxjs';
 })
 export class ChatConversationComponent extends AppComponentBase implements OnInit {
   @Input() data: ChannelMessageDto;
+  @Input() isBlockedByRecipient: boolean;
 
   @Output() onReplyClick: EventEmitter<ChannelMessageDto> = new EventEmitter();
   @Output() onMessageInfoClick: Subject<ChannelMessageDto> = new Subject<ChannelMessageDto>();
