@@ -4,6 +4,7 @@ import { ChannelMessageDto } from '@shared/service-proxies/service-proxies';
 import { ChatService } from '@shared/services/chat.service';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { Subject } from 'rxjs';
+import { FileUtils } from '@shared/helpers/file-utils';
 
 @Component({
   selector: 'app-chat-conversation',
@@ -16,6 +17,8 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
 
   @Output() onReplyClick: EventEmitter<ChannelMessageDto> = new EventEmitter();
   @Output() onMessageInfoClick: Subject<ChannelMessageDto> = new Subject<ChannelMessageDto>();
+
+  fileAttachment: File;
 
   constructor(
     injector: Injector,
@@ -30,7 +33,8 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
   get isSender(): boolean { return this.data?.creatorUserId.toString() === this.appSession.userId.toString(); }
   get isDeleted(): boolean { return this.data?.isDeleted; }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    await this.getFileAttachment();
   }
 
   handleMessageInfoPopup(data: ChannelMessageDto): void {
@@ -59,5 +63,17 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
 
   getAttachedService(message: ChannelMessageDto): any {
     return message?.article ?? message?.coaching ?? message?.course ?? message?.event ?? message?.video;
+  }
+
+  private async getFileAttachment(): Promise<void> {
+    if (this.data.channelMessageAttachments) {
+      const [file] = this.data.channelMessageAttachments;
+      if (file) {
+        const document = file.document;
+        if (document) {
+          this.fileAttachment = await FileUtils.getFileBlob(file.documentUrl, document.name, document.fileType);
+        }
+      }
+    }
   }
 }

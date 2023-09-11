@@ -40,6 +40,7 @@ namespace Academically.Services.Chats
         private readonly IRepository<ChannelMessage, Guid> _channelMessageRepository;
         private readonly IRepository<ChannelMember, Guid> _channelMemberRepository;
         private readonly IRepository<ChannelArchive, Guid> _channelArchiveRepository;
+        private readonly IRepository<ChannelMessageAttachment, Guid> _channelMessageAttachmentRepository;
         private readonly IRepository<User, long> _userRepository;
         private readonly IHubContext<ChannelsHub> _channelsHub;
         private readonly IRepository<ChannelNotification, Guid> _channelNotificationRepository;
@@ -56,6 +57,7 @@ namespace Academically.Services.Chats
             IRepository<ChannelMessage, Guid> channelMessageRepository,
             IRepository<ChannelMember, Guid> channelMemberRepository,
             IRepository<ChannelArchive, Guid> channelArchiveRepository,
+            IRepository<ChannelMessageAttachment, Guid> channelMessageAttachmentRepository,
             IRepository<User, long> userRepository,
             IHubContext<ChannelsHub> channelsHub,
             IRepository<ChannelNotification, Guid> channelNotificationRepository,
@@ -72,6 +74,7 @@ namespace Academically.Services.Chats
             _channelMessageRepository = channelMessageRepository;
             _channelMemberRepository = channelMemberRepository;
             _channelArchiveRepository = channelArchiveRepository;
+            _channelMessageAttachmentRepository = channelMessageAttachmentRepository;
             _userRepository = userRepository;
             _channelsHub = channelsHub;
             _channelNotificationRepository = channelNotificationRepository;
@@ -128,16 +131,29 @@ namespace Academically.Services.Chats
 
             if (input.Attachments == null || !input.Attachments.Any())
                 return result == null ? null : ObjectMapper.Map<ChannelMessageDto>(result);
+
+            if (input.Attachments == null || !input.Attachments.Any())
+                return result == null ? null : ObjectMapper.Map<ChannelMessageDto>(result);
             
-            var fileExtensionList = input.Attachments.Select(a => Path.GetExtension(a.FileName)[1..]).ToList();
-            if (fileExtensionList.Select(f => Enum.IsDefined(typeof(AttachmentType), f.ToLower())).Any(isValidExtension => !isValidExtension))
+            var fileExtensionList = input.Attachments.Select(a => Path.GetExtension(a.FileName).Substring((1))).ToList();
+            foreach (var f in fileExtensionList)
             {
-                throw new InvalidOperationException("Invalid File Extension!");
+                var isValidExtension = Enum.IsDefined(typeof(AttachmentType), f.ToLower());
+                if (!isValidExtension)
+                {
+                    throw new InvalidOperationException("Invalid File Extension!");
+                }
             }
-                
+
+            var userId = AbpSession.UserId.Value;
             foreach (var attachment in input.Attachments)
             {
-                await _documentsDomainService.CreateAsync(currentUser.Id, attachment, DocumentType.ChannelMessageAttachment);
+                var document = await _documentsDomainService.CreateAsync(userId, attachment, DocumentType.PostAttachment);
+                await _channelMessageAttachmentRepository.InsertAsync(new ChannelMessageAttachment
+                {
+                    ChannelMessageId = result.Id,
+                    DocumentId = document.Id,
+                });
             }
 
             return result == null ? null : ObjectMapper.Map<ChannelMessageDto>(result);
@@ -171,6 +187,14 @@ namespace Academically.Services.Chats
                     if (member.User.ProfilePictureDocumentId.HasValue)
                         member.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(member.User.ProfilePictureDocumentId.Value);
                 }
+
+                foreach (var message in channel.Messages)
+                {
+                    foreach (var attachment in message.ChannelMessageAttachments)
+                    {
+                        attachment.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(attachment.DocumentId);
+                    }
+                }
                 await GetBlockedUsers(channel);
             }
 
@@ -201,7 +225,7 @@ namespace Academically.Services.Chats
                         .ThenInclude(m => m.CreatorUser)
                     .Include(c => c.Messages)
                         .ThenInclude(m => m.ChannelMessageAttachments)
-                        .ThenInclude(m => m.Document)
+                            .ThenInclude(a => a.Document)
                     .Where(c => c.Id == channelId)
                     .SelectMany(c => c.Messages)
                     .Select(m => ObjectMapper.Map<ChannelMessageDto>(m))
@@ -212,6 +236,10 @@ namespace Academically.Services.Chats
                 if (message.CreatorUser.ProfilePictureDocumentId.HasValue)
                     message.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(message.CreatorUser.ProfilePictureDocumentId.Value);
 
+                foreach (var attachment in message.ChannelMessageAttachments)
+                {
+                    attachment.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(attachment.DocumentId);
+                }
                 await FillInService(message);
             }
 
@@ -240,6 +268,9 @@ namespace Academically.Services.Chats
                     .Include(c => c.Messages)
                     .Include(c => c.Archives)
                     .Include(c => c.ChannelNotifications)
+                    .Include(c => c.Messages)
+                        .ThenInclude(m => m.ChannelMessageAttachments)
+                            .ThenInclude(a => a.Document)
                     .Where(c => !c.IsDeleted)
                     .Where(c => c.Members.Any(m => m.UserId == userId))
                     .Where(c => !c.Archives.Any(a => a.CreatorUserId == userId))
@@ -257,8 +288,11 @@ namespace Academically.Services.Chats
                 foreach (var message in channel.Messages)
                 {
                     await FillInService(message);
+                    foreach (var attachment in message.ChannelMessageAttachments)
+                    {
+                        attachment.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(attachment.DocumentId);
+                    }
                 }
-
                 await GetBlockedUsers(channel);
             }
 

@@ -59,6 +59,13 @@
                 <img *ngIf="!data?.creatorUser?.profilePictureUrl" class="avatar-img rounded-circle" src="assets/img/anonymous.png" alt="..."/>
             </div>
             <app-service-preview-lite [service]="getAttachedService(data)" [canRemove]="false"></app-service-preview-lite>
+            <app-attachment-preview
+                *ngIf="fileAttachment"
+                [file]="fileAttachment"
+                [height]="'75px'"
+                [width]="'104px'"
+                [hasVideoControls]="false"
+            ></app-attachment-preview>
         </div>
     </div>
 </div>
