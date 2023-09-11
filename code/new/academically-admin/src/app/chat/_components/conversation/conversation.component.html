@@ -9,10 +9,14 @@
 
             <div class="conversation-header-recipient d-flex flex-column flex-grow-1">
                 <h4 class="name">
-                    <a href="#">{{ recipientFullName | titlecase }}</a>
+                    <a *ngIf="!isBlockedByRecipient" href="#">{{ recipientFullName | titlecase }}</a>
+                    <a *ngIf="isBlockedByRecipient" href="#">{{ "User" | titlecase }}</a>
                 </h4>
-                <p class="status">
+                <p *ngIf="!isBlockedByRecipient" class="status">
                     <span class="text-success">●</span> Online
+                </p>
+                <p *ngIf="isBlockedByRecipient" class="status">
+                    {{ 'Unavailable' | titlecase }}
                 </p>
             </div>
 
@@ -35,12 +39,17 @@
                         <span class="fe fe-more-horizontal"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <div *ngIf="!isMuteNotifications" class="dropdown-item cursor-pointer" (click)="handleNotification(notificationType.Mute)">Mute Notifications</div>
-                        <div *ngIf="isMuteNotifications" class="dropdown-item cursor-pointer" (click)="handleNotification(notificationType.Unmute)">Unmute Notifications</div>
+                        <ng-container *ngIf="!isBlockedByRecipient">
+                            <div *ngIf="!isMuteNotifications" class="dropdown-item cursor-pointer" (click)="handleNotification(notificationType.Mute)">Mute Notifications</div>
+                            <div *ngIf="isMuteNotifications" class="dropdown-item cursor-pointer" (click)="handleNotification(notificationType.Unmute)">Unmute Notifications</div>
+                        </ng-container>
                         <div class="dropdown-item cursor-pointer" (click)="handleArchiveChannel()">Archive Conversation</div>
                         <div class="dropdown-item cursor-pointer" (click)="handleDeleteChannel()">Delete Conversation</div>
-                        <div class="dropdown-divider"></div>
-                        <div class="dropdown-item cursor-pointer">Block User</div>
+                        <ng-container *ngIf="!isBlockedByRecipient">
+                            <div class="dropdown-divider"></div>
+                            <div *ngIf="!isUserBlocked" class="dropdown-item cursor-pointer" (click)="handleBlockUser()">Block User</div>
+                            <div *ngIf="isUserBlocked" class="dropdown-item cursor-pointer" (click)="handleUnblockUser()">Unblock User</div>
+                        </ng-container>
                     </div>
                 </div>
             </div>
@@ -66,6 +75,7 @@
                     [attr.id]="'msg-' + message.id"
                     *ngFor="let message of channelMessages"
                     [data]="message"
+                    [isBlockedByRecipient]="isBlockedByRecipient"
                     (onMessageInfoClick)="handleMessageInfoPopup(message)"
                     (onReplyClick)="handleMessageReply(message)"
                 ></app-chat-conversation>

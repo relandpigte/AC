@@ -8,7 +8,7 @@
     </div>
 </div>
 
-<div class="composer d-flex align-items-center align-content-around gap-15" [class.typing]="!!f?.value?.message || hasAttachments">
+<div *ngIf="!isUserBlocked && !isBlockedByRecipient" class="composer d-flex align-items-center align-content-around gap-15" [class.typing]="!!f?.value?.message || hasAttachments">
     <form class="composer-text flex-grow-1" #f="ngForm" (ngSubmit)="handleWriteMessage(f)">
         <label class="sr-only">{{ 'WriteAMessage' | localize }}</label>
         <textarea #messageInput name="message" ngModel (keydown)="onMessageKeydown($event, f)" class="form-control form-control-flush"
@@ -48,6 +48,23 @@
                 <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
         </a>
+    </div>
+</div>
+
+<div *ngIf="isUserBlocked" class="composer-blocked d-flex align-items-center">
+    <div class="d-flex flex-column">
+        <h4>You’ve blocked this user</h4>
+        <p class="m-0 p-0 text-muted">You can’t receive or send messages to this user</p>
+    </div>
+    <div class="ml-auto">
+        <button class="btn btn-outline-primary" (click)="handleUnBlockUser()">Unblock</button>
+    </div>
+</div>
+
+<div *ngIf="isBlockedByRecipient" class="composer-blocked d-flex align-items-center">
+    <div class="d-flex flex-column">
+        <h4>This user is unavailable</h4>
+        <p class="m-0 p-0 text-muted">You can’t receive or send messages to this user</p>
     </div>
 </div>
 

@@ -17,6 +17,7 @@ export enum ChatStatus {
 export class RecipientComponent extends AppComponentBase implements OnInit, OnChanges {
   @Input() channel: ChannelDto;
   @Input() isActive = false;
+  @Input() isBlockedByRecipient: boolean;
 
   latestMessage: ChannelMessageDto;
   receivedDateStr: string;

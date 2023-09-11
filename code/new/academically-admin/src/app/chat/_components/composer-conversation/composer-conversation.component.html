@@ -3,14 +3,21 @@
         [channel]="channel"
         [hasActions]="hasActions"
         [hasClose]="hasClose"
+        [isUserBlocked]="isUserBlocked"
+        [isBlockedByRecipient]="isBlockedByRecipient"
         [showAttachmentInfo]="showAttachmentInfo"
         [isRecipientTyping]="isRecipientTyping"
         (onCloseClick)="handleCloseClick()"
+        (onBlockUser)="handleBlockUser()"
+        (onUnblockUser)="handleUnBlockUser()"
     ></app-conversation>
 </div>
 <div *ngIf="!isSearchingUser" class="chat-conversation-composer border-top mt-auto" [class.has-attachment]="!!replyingTo">
     <app-composer
         [replyingTo]="replyingTo"
         (onReply)="handleReplyClick($event)"
+        [isUserBlocked]="isUserBlocked"
+        [isBlockedByRecipient]="isBlockedByRecipient"
+        (onUnblock)="handleUnBlockUser()"
     ></app-composer>
 </div>

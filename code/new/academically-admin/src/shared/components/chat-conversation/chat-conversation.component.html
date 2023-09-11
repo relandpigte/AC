@@ -24,7 +24,8 @@
             <div *ngIf="chatMessage" class="message position-relative">
                 <div class="message-header d-flex align-items-center gap-10">
                     <div class="user-info d-flex gap-5">
-                        <div class="name font-weight-bold">{{ data?.creatorUser?.fullName | titlecase }}</div>
+                        <div *ngIf="!isBlockedByRecipient" class="name font-weight-bold">{{ data?.creatorUser?.fullName | titlecase }}</div>
+                        <div *ngIf="isBlockedByRecipient" class="name font-weight-bold">{{ 'User' | titlecase }}</div>
                         <span class="time">{{ convertMomentToPostDateAgo(data?.creationTime, false) }}</span>
                     </div>
                     <div class="actions ml-auto">

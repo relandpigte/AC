@@ -29,6 +29,7 @@ using Academically.Services.Videos.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using System.IO.Compression;
+using System.Linq.Dynamic.Core;
 
 namespace Academically.Services.Chats
 {
@@ -47,6 +48,7 @@ namespace Academically.Services.Chats
         private readonly IRepository<Coaching, Guid> _coachingRepository;
         private readonly IRepository<Video, Guid> _videoRepository;
         private readonly IRepository<Event, Guid> _eventRepository;
+        private readonly IRepository<UserBlocking, Guid> _userBlockingRepository;
 
         public ChatsAppService(
             IDocumentsDomainService documentsDomainService,
@@ -61,7 +63,8 @@ namespace Academically.Services.Chats
             IRepository<Course, Guid> coursesRepository,
             IRepository<Coaching, Guid> coachingRepository,
             IRepository<Video, Guid> videoRepository,
-            IRepository<Event, Guid> eventRepository
+            IRepository<Event, Guid> eventRepository,
+            IRepository<UserBlocking, Guid> userBlockingRepository
         )
         {
             _documentsDomainService = documentsDomainService;
@@ -77,6 +80,7 @@ namespace Academically.Services.Chats
             _coachingRepository = coachingRepository;
             _videoRepository = videoRepository;
             _eventRepository = eventRepository;
+            _userBlockingRepository = userBlockingRepository;
         }
 
         public async Task<bool> ArchiveChannel(Guid channelId)
@@ -228,6 +232,7 @@ namespace Academically.Services.Chats
 
         public async Task<List<ChannelDto>> GetAllInboxChannelsForUser(long? userId)
         {
+            var currentUser = await GetCurrentUserAsync();
             var channels = await this._channelRepository.GetAll()
                     .Include(c => c.Members)
                         .ThenInclude(m => m.User)
@@ -252,6 +257,18 @@ namespace Academically.Services.Chats
                 {
                     await FillInService(message);
                 }
+
+                channel.BlockedUsers = await _userBlockingRepository.GetAll()
+                    .Include(u => u.CreatorUser)
+                    .Include(u => u.BlockedUser)
+                    .Where(u => u.CreatorUserId == AbpSession.UserId.Value)
+                    .ToListAsync();
+                
+                channel.BlockedByUsers =  await _userBlockingRepository.GetAll()
+                    .Include(u => u.CreatorUser)
+                    .Include(u => u.BlockedUser)
+                    .Where(u => u.BlockedUserId == AbpSession.UserId.Value)
+                    .ToListAsync();
             }
 
             return channels;
@@ -275,6 +292,18 @@ namespace Academically.Services.Chats
                 if (member.User.ProfilePictureDocumentId.HasValue)
                     member.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(member.User.ProfilePictureDocumentId.Value);
             }
+            
+            channel.BlockedUsers = await _userBlockingRepository.GetAll()
+                .Include(u => u.CreatorUser)
+                .Include(u => u.BlockedUser)
+                .Where(u => u.CreatorUserId == AbpSession.UserId.Value)
+                .ToListAsync();
+                
+            channel.BlockedByUsers =  await _userBlockingRepository.GetAll()
+                .Include(u => u.CreatorUser)
+                .Include(u => u.BlockedUser)
+                .Where(u => u.BlockedUserId == AbpSession.UserId.Value)
+                .ToListAsync();
 
             return channel;
         }
