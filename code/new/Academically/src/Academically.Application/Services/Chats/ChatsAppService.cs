@@ -171,6 +171,7 @@ namespace Academically.Services.Chats
                     if (member.User.ProfilePictureDocumentId.HasValue)
                         member.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(member.User.ProfilePictureDocumentId.Value);
                 }
+                await GetBlockedUsers(channel);
             }
 
             return channels;
@@ -258,17 +259,7 @@ namespace Academically.Services.Chats
                     await FillInService(message);
                 }
 
-                channel.BlockedUsers = await _userBlockingRepository.GetAll()
-                    .Include(u => u.CreatorUser)
-                    .Include(u => u.BlockedUser)
-                    .Where(u => u.CreatorUserId == AbpSession.UserId.Value)
-                    .ToListAsync();
-                
-                channel.BlockedByUsers =  await _userBlockingRepository.GetAll()
-                    .Include(u => u.CreatorUser)
-                    .Include(u => u.BlockedUser)
-                    .Where(u => u.BlockedUserId == AbpSession.UserId.Value)
-                    .ToListAsync();
+                await GetBlockedUsers(channel);
             }
 
             return channels;
@@ -293,18 +284,7 @@ namespace Academically.Services.Chats
                     member.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(member.User.ProfilePictureDocumentId.Value);
             }
             
-            channel.BlockedUsers = await _userBlockingRepository.GetAll()
-                .Include(u => u.CreatorUser)
-                .Include(u => u.BlockedUser)
-                .Where(u => u.CreatorUserId == AbpSession.UserId.Value)
-                .ToListAsync();
-                
-            channel.BlockedByUsers =  await _userBlockingRepository.GetAll()
-                .Include(u => u.CreatorUser)
-                .Include(u => u.BlockedUser)
-                .Where(u => u.BlockedUserId == AbpSession.UserId.Value)
-                .ToListAsync();
-
+            await GetBlockedUsers(channel);
             return channel;
         }
 
@@ -457,6 +437,23 @@ namespace Academically.Services.Chats
             searchResults.Channels = matchedChannels;
 
             return searchResults;
+        }
+
+        private async Task GetBlockedUsers(ChannelDto channel)
+        {
+            if (channel == null) return;
+            
+            channel.BlockedUsers = await _userBlockingRepository.GetAll()
+                .Include(u => u.CreatorUser)
+                .Include(u => u.BlockedUser)
+                .Where(u => u.CreatorUserId == AbpSession.UserId.Value)
+                .ToListAsync();
+                
+            channel.BlockedByUsers =  await _userBlockingRepository.GetAll()
+                .Include(u => u.CreatorUser)
+                .Include(u => u.BlockedUser)
+                .Where(u => u.BlockedUserId == AbpSession.UserId.Value)
+                .ToListAsync();
         }
         
         private async Task FillInService(ChannelMessageDto message)
