@@ -17,7 +17,7 @@ export enum ChatStatus {
 export class RecipientComponent extends AppComponentBase implements OnInit, OnChanges {
   @Input() channel: ChannelDto;
   @Input() isActive = false;
-  @Input() isBlockedByRecipient: boolean;
+  @Input() blockedByUser: number[];
 
   latestMessage: ChannelMessageDto;
   receivedDateStr: string;
@@ -38,6 +38,11 @@ export class RecipientComponent extends AppComponentBase implements OnInit, OnCh
 
   get recipientUser(): UserDto {
     return this.channel?.members?.find(m => m.userId !== this.appSession.userId)?.user;
+  }
+
+  get isBlockedByRecipient(): boolean {
+    const blockByRecipient = this.channel?.members.find(m => m.userId !== this.appSession.userId);
+    return this.blockedByUser?.includes(blockByRecipient?.userId);
   }
 
   ngOnInit(): void {

@@ -4,7 +4,7 @@
         [hasActions]="hasActions"
         [hasClose]="hasClose"
         [isUserBlocked]="isUserBlocked"
-        [isBlockedByRecipient]="isBlockedByRecipient"
+        [blockedByUser]="blockedByUser"
         [showAttachmentInfo]="showAttachmentInfo"
         [isRecipientTyping]="isRecipientTyping"
         (onCloseClick)="handleCloseClick()"
@@ -14,10 +14,11 @@
 </div>
 <div *ngIf="!isSearchingUser" class="chat-conversation-composer border-top mt-auto" [class.has-attachment]="!!replyingTo">
     <app-composer
+        [channel]="channel"
         [replyingTo]="replyingTo"
+        [blockedByUser]="blockedByUser"
         (onReply)="handleReplyClick($event)"
         [isUserBlocked]="isUserBlocked"
-        [isBlockedByRecipient]="isBlockedByRecipient"
         (onUnblock)="handleUnBlockUser()"
     ></app-composer>
 </div>

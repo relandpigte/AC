@@ -23,7 +23,7 @@ export class ComposerComponent extends AppComponentBase implements OnInit{
 
   @Input() replyingTo: ChannelMessageDto;
   @Input() isUserBlocked: boolean;
-  @Input() isBlockedByRecipient: boolean;
+  @Input() blockedByUser: number[];
   @Output() onReply: Subject<MessageComposeData> = new Subject();
   @Output() onUnblock: Subject<any> = new Subject<any>();
 
@@ -73,6 +73,10 @@ export class ComposerComponent extends AppComponentBase implements OnInit{
   get replyingToMessage(): string { return this.replyingTo?.message ?? 'I can even begin to express how good this final season'; }
   get isShowAddService(): boolean { return this.isTutor; }
   get hasAttachments(): boolean { return !!this.fileAttachment || !!this.selectedService; }
+  get isBlockedByRecipient(): boolean {
+    const blockByRecipient = this.selectedChannel?.members.find(m => m.userId !== this.appSession.userId);
+    return this.blockedByUser?.includes(blockByRecipient?.userId);
+  }
 
   ngOnInit(): void {
     this.getBlockedUsersIds();

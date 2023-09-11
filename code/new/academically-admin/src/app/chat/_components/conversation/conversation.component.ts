@@ -35,7 +35,7 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
 
   @Input() blockUserIds: number[] = [];
   @Input() isUserBlocked: boolean;
-  @Input() isBlockedByRecipient: boolean;
+  @Input() blockedByUser: number[];
 
   @Output() onActionClick: EventEmitter<any> = new EventEmitter();
   @Output() onCloseClick: EventEmitter<any> = new EventEmitter();
@@ -80,6 +80,11 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
   get lastMessageInfoStr(): string {
     if (this.lastMessage.isSeen) return 'Seen';
     else return 'Delivered';
+  }
+
+  get isBlockedByRecipient(): boolean {
+    const blockByRecipient = this.channel?.members.find(m => m.userId !== this.appSession.userId);
+    return this.blockedByUser?.includes(blockByRecipient?.userId);
   }
 
   get userId(): number { return this.replyingToUser?.id; }

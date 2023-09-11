@@ -143,11 +143,6 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     return channel?.members?.find(m => m.userId !== this.appSession.userId)?.isTyping ?? false;
   }
 
-  get isBlockedByRecipient(): boolean {
-    const blockByRecipient = this.selectedChannel?.members.find(m => m.userId !== this.appSession.userId);
-    return this.currentUserBlocker?.includes(blockByRecipient?.userId);
-  }
-
   async ngOnInit() {
     await this.initChannelsAppStates();
     this.getCurrentUserBlockers();
@@ -210,6 +205,8 @@ export class ChatComponent extends AppComponentBase implements OnInit {
   handleOnChannelSelect(channel: ChannelDto) {
     this._chatService.selectedChannel$.next(channel);
     this._chatService.isSearchingUser$.next(false);
+
+    console.log(channel);
   }
 
   // tslint:disable-next-line: member-ordering

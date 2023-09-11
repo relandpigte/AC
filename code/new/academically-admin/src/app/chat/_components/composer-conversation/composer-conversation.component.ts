@@ -20,7 +20,7 @@ export class ComposerConversationComponent extends AppComponentBase implements O
     @Input() replyingTo: ChannelMessageDto;
     @Input() isSearchingUser: boolean;
     @Input() isRecipientTyping = false;
-    @Input() isBlockedByRecipient: boolean;
+    @Input() blockedByUser: number[];
 
     @Output() onReplyClick = new EventEmitter();
     @Output() onCloseClick = new EventEmitter();
