@@ -124,7 +124,7 @@ export class CommunityPostComponent extends AppComponentBase implements OnInit, 
 
   private initVisibilityOptions(): void {
     this.visibilityOptions = [
-      { label: 'to everyone', value: null }
+      { label: 'public', value: null }
     ];
     this.visibility = this.visibilityOptions[0];
   }

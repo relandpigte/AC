@@ -1918,12 +1918,12 @@
 	<text name="Community.Topics.NotInterested.Success">{0} topic will no longer be suggested to you.</text>
 	<text name="Community.Topics.Unfollow.Success">You have unfollowed {0} topic.</text>
 	<text name="Community.SharePost">Share as a quick post</text>
-	<text name="Community.QuickPost">Quick post</text>
-	<text name="Community.AddQuestion">Add question</text>
+	<text name="Community.QuickPost">Create post</text>
+	<text name="Community.AddQuestion">Ask question</text>
     <text name="Community.EditQuestion">Edit question</text>
     <text name="Community.EditDiscussion">Edit discussion</text>
     <text name="Community.EditQuickPost">Edit quick post</text>
-	<text name="Community.AddDiscussion">Add discussion</text>
+	<text name="Community.AddDiscussion">Start discussion</text>
 	<text name="Community.AddTopics">Add topics to your post {0}</text>
 	<text name="Community.NoTopicsFoundEnterToCreate">No topics found. Push enter to create a new one.</text>
 	<text name="Community.Posts.Filtering.All">All activity</text>
