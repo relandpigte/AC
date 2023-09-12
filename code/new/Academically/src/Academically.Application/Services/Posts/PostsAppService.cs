@@ -302,7 +302,7 @@ namespace Academically.Services.Posts
                     });
                 } 
             }
-
+            await CreatePostNotification(new CreatePostNotificationDto { PostId = postId, CreatorUserId = AbpSession.UserId.Value });
             await CurrentUnitOfWork.SaveChangesAsync();
 
             // if (topicIds?.Count > 0)
