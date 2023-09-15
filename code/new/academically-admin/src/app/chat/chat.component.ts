@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, Injector, OnInit, ViewChild } from '@angu
 import { HubService } from '@app/_shared/services/hub.service';
 import { SearchUsersComponent } from '@app/chat/_components/search-users/search-users.component';
 import { AppComponentBase } from '@shared/app-component-base';
-import { AvailableServiceDto, ChannelDto, ChannelMessageDto, ChatsServiceProxy, UserDto, MatchedChannelDto } from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, ChannelDto, ChannelMessageDto, ChatsServiceProxy, MatchedChannelDto, UserDto, UserStatusLogDto } from '@shared/service-proxies/service-proxies';
 import { ChannelsStateService, channelsType } from '@shared/services/channels-state.service';
 import { ChatService, NotificationType } from '@shared/services/chat.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
@@ -26,7 +26,6 @@ export interface MessageComposeData {
 })
 export class ChatComponent extends AppComponentBase implements OnInit {
   channelsStateService: ChannelsStateService;
-
   replyingTo: ChannelMessageDto;
 
   channels: ChannelDto[] = [];
@@ -38,7 +37,6 @@ export class ChatComponent extends AppComponentBase implements OnInit {
   isLoadingList$ = new BehaviorSubject<boolean>(true);
 
   isSearchingUser: boolean;
-  isSearchingKeyword: boolean;
   replyingToUser: UserDto;
   fileAttachment: File;
   selectedService: AvailableServiceDto;
@@ -50,12 +48,14 @@ export class ChatComponent extends AppComponentBase implements OnInit {
   @ViewChild(SearchFilterComponent) searchFilterComponent: SearchFilterComponent;
   @ViewChild(ComposerConversationComponent) composerConversationComponent: ComposerConversationComponent;
 
+  private _isSearchingKeyword: boolean;
+
   constructor(
     injector: Injector,
     private _cdr: ChangeDetectorRef,
     private _chatService: ChatService,
     private _hubService: HubService,
-    private _chatsService: ChatsServiceProxy,
+    private _chatsService: ChatsServiceProxy
   ) {
     super(injector);
 
@@ -106,8 +106,8 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     this._chatService.searchKeyword$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(keyword => {
-        this.isSearchingKeyword = !!keyword;
-        if (!this.isSearchingKeyword) this._chatService.selectedMatchedChannel$.next(null);
+        this._isSearchingKeyword = !!keyword;
+        if (!this._isSearchingKeyword) this._chatService.selectedMatchedChannel$.next(null);
       });
 
     this._chatService.userTyping$
@@ -127,6 +127,9 @@ export class ChatComponent extends AppComponentBase implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .subscribe(service => this.selectedService = service);
   }
+
+  get isSearchingKeyword(): boolean { return this._isSearchingKeyword; }
+  set isSearchingKeyword(value: boolean) { this._isSearchingKeyword = value; }
 
   get channelsStateId(): string { return 'chats'; }
 

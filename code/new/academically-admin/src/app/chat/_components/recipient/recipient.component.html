@@ -1,11 +1,5 @@
 <div class="recipient d-flex align-items-center gap-15" [ngClass]="{'active': isActive}">
-    <div class="recipient-avatar position-relative">
-        <a href="javascript:void(0)" class="avatar" [ngClass]="{'avatar-online': !isBlockedByRecipient}">
-            <img *ngIf="recipientUser && !isBlockedByRecipient" [src]="getProfilePicture(recipientUser.profilePictureUrl)" [alt]="recipientUser.fullName" class="avatar-img rounded-circle">
-            <img *ngIf="!recipientUser || isBlockedByRecipient" src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
-        </a>
-    </div>
-
+    <app-user-avatar *ngIf="recipientUser" [data]="recipientUser" [isBlocked]="isBlockedByRecipient"></app-user-avatar>
     <div class="d-flex flex-grow-1">
         <div class="recipient-details d-flex flex-column">
             <div class="recipient-details-name">

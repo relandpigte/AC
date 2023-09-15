@@ -169,6 +169,7 @@ namespace Academically.Web.Host.Startup
                 endpoints.MapHub<ReactionsHub>("/signalr-reactionsHub");
                 endpoints.MapHub<ChannelsHub>("/signalr-channelsHub");
                 endpoints.MapHub<ChannelMessagesHub>("/signalr-channelMessagesHub");
+                endpoints.MapHub<NewUserStatusLogHub>("/signalr-newUserStatusLogHub");
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
             });
