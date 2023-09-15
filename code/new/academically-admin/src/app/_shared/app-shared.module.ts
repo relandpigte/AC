@@ -75,6 +75,7 @@ import { CommentHistoryComponent } from '@shared/modals/comment-history/comment-
 import { ServiceReviewComponent } from '@shared/components/service-review/service-review.component';
 import { ServiceCardDashboardComponent } from '@shared/components/service-card-dashboard/service-card-dashboard.component';
 import { ChatConversationComponent } from '@shared/components/chat-conversation/chat-conversation.component';
+import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
 
 @NgModule({
   declarations: [
@@ -128,7 +129,8 @@ import { ChatConversationComponent } from '@shared/components/chat-conversation/
     NewPostFloaterComponent,
     ServiceReviewComponent,
     ServiceCardDashboardComponent,
-    ChatConversationComponent
+    ChatConversationComponent,
+    UserAvatarComponent
   ],
   imports: [
     CommonModule,
@@ -223,7 +225,8 @@ import { ChatConversationComponent } from '@shared/components/chat-conversation/
     NewPostFloaterComponent,
     ServiceReviewComponent,
     ServiceCardDashboardComponent,
-    ChatConversationComponent
+    ChatConversationComponent,
+    UserAvatarComponent
   ],
 })
 export class AppSharedModule { }

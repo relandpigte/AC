@@ -1,0 +1,11 @@
+<div class="avatar-container position-relative">
+    <a href="javascript:void(0)" class="avatar" [ngClass]="avatarClassStatus" [class]="isUserAway && showStatus ? 'avatar-online away' : null" [style.width.px]="avatarWidth" [style.height.px]="avatarHeight">
+        <img
+            class="avatar-img rounded-circle"
+            [src]="getProfilePicture(isBlocked ? '': userProfilePicture)"
+            [alt]="userFullName"
+            [style.width.px]="avatarWidth"
+            [style.height.px]="avatarHeight"
+        />
+    </a>
+</div>

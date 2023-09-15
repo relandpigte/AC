@@ -26,5 +26,6 @@
         ChannelMemberTyping,
         ChannelArchive,
         ChannelUnarchive,
+        NewUserLoggedIn
     }
 }

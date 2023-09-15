@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using Academically.Users.Dto;
 
 namespace Academically.Hubs
 {
@@ -41,6 +42,8 @@ namespace Academically.Hubs
         Task NotifyUsersForChannelMemberTyping(ChannelDto channel);
         Task NotifyUsersForChannelArchive(ChannelDto channel);
         Task NotifyUsersForChannelUnarchive(ChannelDto channel);
+        Task NotifyUsersForNewUserActivities(UserStatusLogDto statusLog);
+        
     }
 
     public class HubManager : IHubManager
@@ -50,6 +53,7 @@ namespace Academically.Hubs
         private const string UserTopicsGroup = "user-topics-group";
         private const string AllChannels = "ch-all";
         private const string AllMsgChannels = "ch-msg-all";
+        private const string AllUserStatusLogs = "user-status-logs";
 
         private readonly IHubContext<UserTopicsHub> _userTopicsHub;
         private readonly IHubContext<PostsHub> _postsHub;
@@ -58,6 +62,7 @@ namespace Academically.Hubs
         private readonly IHubContext<ReactionsHub> _reactionsHub;
         private readonly IHubContext<ChannelsHub> _channelsHub;
         private readonly IHubContext<ChannelMessagesHub> _channelMessagesHub;
+        private readonly IHubContext<NewUserStatusLogHub> _newUserLoggedInHub;
         private readonly IRepository<Post, Guid> _postRepository;
         private readonly IRepository<Comment, Guid> _commentsRepository;
         private readonly IRepository<Reaction, Guid> _reactionsRepository;
@@ -69,6 +74,7 @@ namespace Academically.Hubs
             IHubContext<ReactionsHub> reactionsHub,
             IHubContext<ChannelsHub> channelsHub,
             IHubContext<ChannelMessagesHub> channelMessagesHub,
+            IHubContext<NewUserStatusLogHub> newUserLoggedInHub,
             IRepository<Post, Guid> postRepository,
             IRepository<Comment, Guid> commentsRepository,
             IRepository<Reaction, Guid> reactionsRepository)
@@ -83,6 +89,7 @@ namespace Academically.Hubs
             _postRepository = postRepository;
             _commentsRepository = commentsRepository;
             _reactionsRepository = reactionsRepository;
+            _newUserLoggedInHub = newUserLoggedInHub;
         }
 
         public async Task NotifyUsersForPostCreated(PostDto post)
@@ -321,6 +328,12 @@ namespace Academically.Hubs
         {
             await _channelsHub.Clients.Group(AllChannels).SendAsync(nameof(HubEvent.ChannelUnarchive), channel);
             await _channelsHub.Clients.Group($"ch-{channel.Id}").SendAsync(nameof(HubEvent.ChannelUnarchive), channel);
+        }
+        
+        public async Task NotifyUsersForNewUserActivities(UserStatusLogDto statusLog)
+        {
+            await _newUserLoggedInHub.Clients.Group(AllUserStatusLogs).SendAsync(nameof(HubEvent.NewUserLoggedIn), statusLog);
+            await _newUserLoggedInHub.Clients.Group($"user-{statusLog.CreatorUserId}").SendAsync(nameof(HubEvent.NewUserLoggedIn), statusLog);
         }
     }
 }

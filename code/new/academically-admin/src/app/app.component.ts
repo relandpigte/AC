@@ -1,19 +1,30 @@
-import { Component, Injector, OnInit, Renderer2 } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { SignalRAspNetCoreHelper } from '@shared/helpers/SignalRAspNetCoreHelper';
 import { LayoutStoreService } from '@shared/layout/layout-store.service';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
-import { PostsServiceProxy, SharedType } from '@shared/service-proxies/service-proxies';
+import { PostsServiceProxy, SharedType, UserStatus } from '@shared/service-proxies/service-proxies';
 import { CommunityPostService, ItemToShare } from '@shared/services/community-post.service';
 import { ModalDialogService } from '@shared/services/modal-dialog.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { NgcCookieConsentService } from 'ngx-cookieconsent';
+import { NavigationEnd, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { UserAvatarService } from '@shared/services/user-avatar.service';
+import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
+import { UserAvatarStateService } from '@shared/services/user-avatar-state.service';
+import { takeUntil } from '@node_modules/rxjs/operators';
+import { StateUpdateType } from '@shared/services/state-base.service';
 
 @Component({
   templateUrl: './app.component.html'
 })
-export class AppComponent extends AppComponentBase implements OnInit {
+export class AppComponent extends AppComponentBase implements OnInit, OnDestroy {
+  timer: any;
   sidebarExpanded: boolean;
+  userAvatarStateService: UserAvatarStateService;
+
+  private navigationSubscription: Subscription;
 
   constructor(
     injector: Injector,
@@ -23,7 +34,9 @@ export class AppComponent extends AppComponentBase implements OnInit {
     private _layoutStore: LayoutStoreService,
     private _communityPostService: CommunityPostService,
     private _postService: PostsServiceProxy,
-    private ccService: NgcCookieConsentService
+    private ccService: NgcCookieConsentService,
+    private _router: Router,
+    private _userAvatarService: UserAvatarService
   ) {
     super(injector);
   }
@@ -57,6 +70,20 @@ export class AppComponent extends AppComponentBase implements OnInit {
     });
 
     this.listenToNewItemsToShare();
+    this.listenAndCreateUserStatus();
+  }
+
+  ngOnDestroy(): void {
+    this.navigationSubscription.unsubscribe();
+  }
+
+  private listenAndCreateUserStatus(): void {
+    this._userAvatarService.createUserStatusReportLog(UserStatus.Online);
+    this.navigationSubscription = this._router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this._userAvatarService.createUserStatusReportLog(UserStatus.Online);
+      }
+    });
   }
 
   private listenToNewItemsToShare(): void {

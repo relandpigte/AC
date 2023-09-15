@@ -4,7 +4,16 @@ import { MessageInfoComponent } from '@app/chat/_components/conversation/_compon
 import { AppComponentBase } from '@shared/app-component-base';
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 import { ServiceCard } from '@shared/models/service-card.model';
-import { ChannelDto, ChannelMessageDto, ChatsServiceProxy, DocumentDto, UserDto, UserServiceProxy, MatchedChannelDto } from '@shared/service-proxies/service-proxies';
+import {
+  ChannelDto,
+  ChannelMessageDto,
+  ChatsServiceProxy,
+  DocumentDto,
+  UserDto,
+  UserServiceProxy,
+  MatchedChannelDto,
+  UserStatus
+} from '@shared/service-proxies/service-proxies';
 import { ChannelMessagesStateService } from '@shared/services/channel-messages-state.service';
 import { ChatService, NotificationType } from '@shared/services/chat.service';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
@@ -15,6 +24,8 @@ import * as moment from 'moment';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, combineLatest, of, Subject } from 'rxjs';
 import { debounceTime, switchMap, takeUntil } from 'rxjs/operators';
+import { UserAvatarService } from '@shared/services/user-avatar.service';
+import { logWarnings } from '@node_modules/protractor/built/driverProviders';
 
 @Component({
   selector: 'app-conversation',
@@ -56,6 +67,9 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
   isLoadingMessages$ = new BehaviorSubject<boolean>(true);
   seenMessagesTrigger$ = new Subject();
 
+  onlineUsers: UserDto[] = [];
+  inactiveUsers: UserDto[] = [];
+
   constructor(
     injector: Injector,
     private _cdr: ChangeDetectorRef,
@@ -64,7 +78,8 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
     private _hubService: HubService,
     private _chatsService: ChatsServiceProxy,
     private _modalService: BsModalService,
-    private _modalDialogService: ModalDialogService
+    private _modalDialogService: ModalDialogService,
+    private _userAvatarService: UserAvatarService
   ) {
     super(injector);
   }
@@ -92,6 +107,10 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
   get recipientName(): string { return this.replyingToUser?.name; }
   get recipientFullName(): string { return this.replyingToUser?.fullName; }
   get isMutedChannel() { return this.mutedUserChannelIds?.includes(this.channel?.id); }
+  get isUserOnline(): boolean { return this.onlineUsers?.some(u => u.id === this.userId); }
+  get isUserAway(): boolean { return this.inactiveUsers?.some(u => u.id === this.userId); }
+  get userTextStatus(): string { return this.isUserOnline ? 'Online' : (this.isUserAway ? 'Away' : 'Offline'); }
+  get avatarClassStatus(): string { return this.isUserOnline ? 'text-success' : (this.isUserAway ? 'text-warning' : 'text-muted'); }
 
   async ngOnInit(): Promise<void> {
     this._chatService.replyingToUser$
@@ -117,6 +136,12 @@ export class ConversationComponent extends AppComponentBase implements OnInit, O
       .pipe(takeUntil(this.destroyed$))
       .subscribe(() => this.handleSeenMessages());
 
+    this._userAvatarService.getUserStatusLog()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(data => {
+        this.onlineUsers = this._userAvatarService.getAllUserLogByStatus(UserStatus.Online, data);
+        this.inactiveUsers = this._userAvatarService.getAllUserLogByStatus(UserStatus.Away, data);
+      });
     this._cdr.detectChanges();
   }
 

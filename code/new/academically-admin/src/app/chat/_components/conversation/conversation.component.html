@@ -2,9 +2,7 @@
     <div class="conversation-header border-bottom">
         <div class="d-flex align-items-center">
             <div class="conversation-header-avatar">
-                <a href="#" class="avatar">
-                    <img [src]="getProfilePicture(replyingToUser.profilePictureUrl)" class="avatar-img rounded-circle" [alt]="recipientFullName" />
-                </a>
+                <app-user-avatar *ngIf="replyingToUser" [data]="replyingToUser" [isBlocked]="isBlockedByRecipient" [showStatus]="false"></app-user-avatar>
             </div>
 
             <div class="conversation-header-recipient d-flex flex-column flex-grow-1">
@@ -13,7 +11,7 @@
                     <a *ngIf="isBlockedByRecipient" href="#">{{ "User" | titlecase }}</a>
                 </h4>
                 <p *ngIf="!isBlockedByRecipient" class="status">
-                    <span class="text-success">●</span> Online
+                    <span [ngClass]="avatarClassStatus">●</span> {{ userTextStatus | titlecase }}
                 </p>
                 <p *ngIf="isBlockedByRecipient" class="status">
                     {{ 'Unavailable' | titlecase }}

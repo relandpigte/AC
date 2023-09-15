@@ -177,4 +177,5 @@
 	<include file="ddml-new/ddml.2023-09-10-01-create-channelMessage-attachment-tables.xml" />
 	<include file="ddml-new/ddml.2023-09-10-01-alter-channelMessage-add-serviceid-field.xml" />
 	<include file="ddml-new/ddml.2023-09-10-01-create-userBlocking-tables.xml" />
+	<include file="ddml-new/ddml.2023-09-15-01-create-userStatusLogs-tables.xml" />
 </databaseChangeLog>

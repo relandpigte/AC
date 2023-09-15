@@ -21,11 +21,12 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Abp.Auditing;
 using Academically.Domain.Entities;
+using Academically.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Academically.Users
@@ -44,6 +45,7 @@ namespace Academically.Users
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IRepository<UserFollower, Guid> _userFollowersRepository;
         private readonly IRepository<UserBlocking, Guid> _userBlockingsRepository;
+        private readonly IRepository<UserStatusLog, long> _userStatusLog;
 
         public UserAppService(
             IRepository<User, long> repository,
@@ -57,7 +59,8 @@ namespace Academically.Users
             ISettingManager settingManager,
             IDocumentsDomainService documentsDomainService,
             IRepository<UserFollower, Guid> userFollowersRepository,
-            IRepository<UserBlocking, Guid> userBlockingsRepository
+            IRepository<UserBlocking, Guid> userBlockingsRepository,
+            IRepository<UserStatusLog, long> userStatusLog
             )
             : base(repository)
         {
@@ -72,6 +75,7 @@ namespace Academically.Users
             _documentsDomainService = documentsDomainService;
             _userFollowersRepository = userFollowersRepository;
             _userBlockingsRepository = userBlockingsRepository;
+            _userStatusLog = userStatusLog;
         }
 
         [AbpAuthorize(PermissionNames.Pages_Users_Create)]
@@ -331,6 +335,38 @@ namespace Academically.Users
             await _userManager.UpdateAsync(user);
         }
         
+        public async Task<List<UserStatusLogDto>> GetAllUserStatusLogs()
+        {
+            var result = new List<UserStatusLogDto>();
+            var statusLogs = await _userStatusLog.GetAll()
+                .Include(us => us.CreatorUser)
+                .OrderByDescending(us => us.CreationTime)
+                .Select(us => ObjectMapper.Map<UserStatusLogDto>(us))
+                .ToListAsync();
+
+            foreach (var logs in statusLogs)
+            {
+                if (result.All(ua => ua.CreatorUserId != logs.CreatorUserId))
+                {
+                    result.Add(logs);
+                }
+            }
+            return result;
+        }
+        
+        public async Task CreateUserStatusLog([FromForm] UserStatus status)
+        {
+            await _userStatusLog.InsertAsync(new UserStatusLog { Status = status});
+        }
+        
+        public async Task<UserStatusLogDto> GetUserStatusLog(long statusLogId)
+        {
+            return await _userStatusLog.GetAll()
+                .Include(us => us.CreatorUser)
+                .Where(us => us.Id == statusLogId)
+                .Select(us => ObjectMapper.Map<UserStatusLogDto>(us))
+                .FirstOrDefaultAsync();
+        }
     }
 }
 
