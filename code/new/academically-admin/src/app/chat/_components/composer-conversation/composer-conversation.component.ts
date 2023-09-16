@@ -66,7 +66,7 @@ export class ComposerConversationComponent extends AppComponentBase implements O
     }
 
     focusMessageComposer(): void {
-        this.composerComponent.focusMessageComposer();
+        this.composerComponent?.focusMessageComposer();
     }
 
     handleReplyClick(messageComposeData: MessageComposeData): void {

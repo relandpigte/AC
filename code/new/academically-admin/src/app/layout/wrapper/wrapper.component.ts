@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { uiEvents } from '@shared/constants/ui-events.constant';
@@ -23,7 +23,13 @@ export class WrapperComponent extends AppComponentBase implements OnInit {
   routerEvent: RouterEvent;
   canScroll: boolean = true;
 
-  constructor(injector: Injector, themeSettingsService: ThemeManagerService, router: Router, private wrapperService: WrapperService) {
+  constructor(
+    injector: Injector,
+    themeSettingsService: ThemeManagerService,
+    router: Router,
+    private wrapperService: WrapperService,
+    private cdr: ChangeDetectorRef
+  ) {
     super(injector);
     this.themeSetting = themeSettingsService.getConfiguration();
     router.events.subscribe(this.routerEvents);
@@ -37,5 +43,6 @@ export class WrapperComponent extends AppComponentBase implements OnInit {
       this.routerEvent = event;
     });
     this.wrapperService.canScroll$.subscribe(canScroll => this.canScroll = canScroll);
+    this.cdr.detectChanges();
   }
 }

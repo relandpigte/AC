@@ -424,7 +424,7 @@ import { AppConsts } from '@shared/AppConsts';
 
     handleCopyLink(event: Event): void {
       event.stopPropagation();
-      const url = `${AppConsts.appBaseUrl}/app/${this.sanitized.type}/about/${this.data?.id}`;
+      const url = `${AppConsts.appBaseUrl}/app/${this.sanitized.type}/${this.data?.id}/about/`;
       this._clipboard.copy(url);
       (<HTMLBodyElement>document.body).click();
       this.notify.success(this.l('LinkCopiedToClipboard'));

@@ -21,7 +21,7 @@ import { switchMap, takeUntil } from 'rxjs/operators';
 export class EventsDiscussionComponent extends AppComponentBase implements OnInit {
   postsStateService: PostsStateService;
 
-  id = '08db81f3-9eaf-4fe9-8ac5-3fe6ce665113';
+  id = '08dbb681-6096-45ce-802f-00483b2a38bc';
 
   children: PostDto[] = Array(3).fill([]).map(() => this.generateRandomPost()) as PostDto[];
   totalChildrenCount: number;

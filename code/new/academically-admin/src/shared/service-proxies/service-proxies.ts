@@ -14307,7 +14307,7 @@ export class PostsServiceProxy {
      * @param attachments (optional) 
      * @return Success
      */
-    create(title: string | undefined, content: string | undefined, spaceId: string | undefined, type: PostType | undefined, parentId: string | undefined, sharedId: string | undefined, sharedType: SharedType | undefined, sharedServiceType: ServicesType | undefined, topics: string[] | undefined, newTopics: string[] | undefined, attachments: FileParameter[] | undefined): Observable<void> {
+    create(title: string | undefined, content: string | undefined, spaceId: string | undefined, type: PostType | undefined, parentId: string | undefined, sharedId: string | undefined, sharedType: SharedType | undefined, sharedServiceType: ServicesType | undefined, topics: string[] | undefined, newTopics: string[] | undefined, attachments: FileParameter[] | undefined): Observable<string> {
         let url_ = this.baseUrl + "/api/services/app/Posts/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -14362,6 +14362,7 @@ export class PostsServiceProxy {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "text/plain"
             })
         };
 
@@ -14372,14 +14373,14 @@ export class PostsServiceProxy {
                 try {
                     return this.processCreate(<any>response_);
                 } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
+                    return <Observable<string>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<void>><any>_observableThrow(response_);
+                return <Observable<string>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCreate(response: HttpResponseBase): Observable<void> {
+    protected processCreate(response: HttpResponseBase): Observable<string> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -14388,14 +14389,17 @@ export class PostsServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(<any>null);
+        return _observableOf<string>(<any>null);
     }
 
     /**
@@ -15253,7 +15257,7 @@ export class PostsServiceProxy {
      * @param id (optional) 
      * @return Success
      */
-    setPostVisibility(postId: string | undefined, isHidden: boolean | undefined, creationTime: moment.Moment | undefined, creatorUserId: number | undefined, id: string | undefined): Observable<void> {
+    setPostVisibility(postId: string | undefined, isHidden: boolean | undefined, creationTime: moment.Moment | undefined, creatorUserId: number | undefined, id: string | undefined): Observable<string> {
         let url_ = this.baseUrl + "/api/services/app/Posts/SetPostVisibility";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -15284,6 +15288,7 @@ export class PostsServiceProxy {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "text/plain"
             })
         };
 
@@ -15294,14 +15299,14 @@ export class PostsServiceProxy {
                 try {
                     return this.processSetPostVisibility(<any>response_);
                 } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
+                    return <Observable<string>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<void>><any>_observableThrow(response_);
+                return <Observable<string>><any>_observableThrow(response_);
         }));
     }
 
-    protected processSetPostVisibility(response: HttpResponseBase): Observable<void> {
+    protected processSetPostVisibility(response: HttpResponseBase): Observable<string> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -15310,14 +15315,17 @@ export class PostsServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(<any>null);
+        return _observableOf<string>(<any>null);
     }
 
     /**
@@ -19812,6 +19820,126 @@ export class SavedServicesServiceProxy {
     }
 
     protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
+export class ServiceDiscussionServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param serviceId (optional) 
+     * @return Success
+     */
+    getServiceDiscussion(serviceId: string | undefined): Observable<ServiceDiscussionDto> {
+        let url_ = this.baseUrl + "/api/services/app/ServiceDiscussion/GetServiceDiscussion?";
+        if (serviceId === null)
+            throw new Error("The parameter 'serviceId' cannot be null.");
+        else if (serviceId !== undefined)
+            url_ += "serviceId=" + encodeURIComponent("" + serviceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetServiceDiscussion(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetServiceDiscussion(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceDiscussionDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceDiscussionDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetServiceDiscussion(response: HttpResponseBase): Observable<ServiceDiscussionDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServiceDiscussionDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceDiscussionDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createServiceDiscussion(body: CreateServiceDiscussionDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/ServiceDiscussion/CreateServiceDiscussion";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateServiceDiscussion(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateServiceDiscussion(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateServiceDiscussion(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -36353,6 +36481,57 @@ export interface ICreateRoleDto {
     grantedPermissions: string[] | undefined;
 }
 
+export class CreateServiceDiscussionDto implements ICreateServiceDiscussionDto {
+    serviceId: string;
+    serviceType: number;
+    postId: string;
+
+    constructor(data?: ICreateServiceDiscussionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.serviceId = _data["serviceId"];
+            this.serviceType = _data["serviceType"];
+            this.postId = _data["postId"];
+        }
+    }
+
+    static fromJS(data: any): CreateServiceDiscussionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateServiceDiscussionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["serviceId"] = this.serviceId;
+        data["serviceType"] = this.serviceType;
+        data["postId"] = this.postId;
+        return data; 
+    }
+
+    clone(): CreateServiceDiscussionDto {
+        const json = this.toJSON();
+        let result = new CreateServiceDiscussionDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateServiceDiscussionDto {
+    serviceId: string;
+    serviceType: number;
+    postId: string;
+}
+
 export class CreateStudentEventDto implements ICreateStudentEventDto {
     eventId: string;
     saveOnly: boolean;
@@ -45002,6 +45181,61 @@ export interface IServiceDisciplineTaxonomyDto {
     parentId: string | undefined;
     parentIdMap: string | undefined;
     isEditable: boolean;
+}
+
+export class ServiceDiscussionDto implements IServiceDiscussionDto {
+    id: number;
+    serviceId: string;
+    serviceType: number;
+    postId: string;
+
+    constructor(data?: IServiceDiscussionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.serviceId = _data["serviceId"];
+            this.serviceType = _data["serviceType"];
+            this.postId = _data["postId"];
+        }
+    }
+
+    static fromJS(data: any): ServiceDiscussionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServiceDiscussionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["serviceId"] = this.serviceId;
+        data["serviceType"] = this.serviceType;
+        data["postId"] = this.postId;
+        return data; 
+    }
+
+    clone(): ServiceDiscussionDto {
+        const json = this.toJSON();
+        let result = new ServiceDiscussionDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IServiceDiscussionDto {
+    id: number;
+    serviceId: string;
+    serviceType: number;
+    postId: string;
 }
 
 export class ServiceDto implements IServiceDto {

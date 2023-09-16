@@ -227,7 +227,7 @@ namespace Academically.Services.Posts
         }
 
         [AbpAuthorize(PermissionNames.Pages_Posts_Create)]
-        public async Task Create([FromForm] CreatePostDto input)
+        public async Task<Guid> Create([FromForm] CreatePostDto input)
         {
             if(input.Type == PostType.Shared && !input.SharedId.HasValue)
                 throw new InvalidOperationException("Post with shared type has no specified post or service.");
@@ -311,6 +311,7 @@ namespace Academically.Services.Posts
             //     post.DisciplineTaxonomyIds = string.Join(",", topicIds);
             //     await _postRepository.UpdateAsync(post);
             // }
+            return postId;
         }
 
         public async Task<List<PostDto>> GetByUser(long userId, PostType? type)
@@ -688,10 +689,10 @@ namespace Academically.Services.Posts
             return query;
         }
 
-        public async Task SetPostVisibility([FromForm] PostVisibilityDto input)
+        public async Task<Guid> SetPostVisibility([FromForm] PostVisibilityDto input)
         {
             input.CreatorUserId = AbpSession.UserId.Value;
-            var mainPost = _postRepository.FirstOrDefault(f => f.Id == input.PostId);
+            var mainPost = await _postRepository.FirstOrDefaultAsync(f => f.Id == input.PostId);
             if (mainPost != null)
             {
                 if (mainPost.CreatorUserId == input.CreatorUserId)
@@ -699,7 +700,7 @@ namespace Academically.Services.Posts
                     mainPost.IsHidden = input.IsHidden;
                     await _postRepository.UpdateAsync(mainPost);
                 }
-                var userBoardPost = _postVisibilityRepository.FirstOrDefault(f => f.PostId == input.PostId && f.CreatorUserId == input.CreatorUserId);
+                var userBoardPost = await _postVisibilityRepository.FirstOrDefaultAsync(f => f.PostId == input.PostId && f.CreatorUserId == input.CreatorUserId);
                 if (userBoardPost != null)
                 {
                     userBoardPost.IsHidden = input.IsHidden;
@@ -710,7 +711,9 @@ namespace Academically.Services.Posts
                     var newPostVisibility = ObjectMapper.Map<PostVisibility>(input);
                     await _postVisibilityRepository.InsertAsync(newPostVisibility);
                 }
+                return mainPost.Id;
             }
+            return input.PostId;
         }
 
         public async Task CreatePostNotification([FromForm] CreatePostNotificationDto input)
