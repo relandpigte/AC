@@ -1,39 +1,38 @@
 <div class="d-flex flex-column justify-content-center align-items-center w-100">
-    <app-community-composer [placeholder]="'Coaching.Composer.Placeholder'" [isLoading]="isLoading$ | async"  [showBottomActions]="false" (onQuickPostClick)="handleAddPost()" class="w-100"></app-community-composer>
+    <app-community-composer [placeholder]="'Coaching.Composer.Placeholder'" [isLoading]="isLoading"  [showBottomActions]="false" (onQuickPostClick)="handleAddPost()" class="w-100"></app-community-composer>
 
-    <div *ngIf="!(isLoading$ | async)" class="discussion-controls d-flex flex-row justify-content-between w-100" [style.marginBottom.px]="10">
+    <div *ngIf="!isLoading" class="discussion-controls d-flex flex-row justify-content-between w-100" [style.marginBottom.px]="10">
         <div class="discussion-controls-left d-flex align-items-end">
             <div class="discussion-controls-left-posts-count">
                 {{ postsCount }} posts
             </div>
         </div>
-        <div class="discussion-controls-right d-flex flex-row align-items-center gap-10">
+        <div class="following-controls-sort d-flex flex-row align-items-center gap-10">
             Sort by:
             <div class="dropdown">
-                <a href="#" class="dropdown-ellipses dropdown-toggle d-flex flex-row align-items-center gap-5" role="button"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a href="#" class="dropdown-ellipses dropdown-toggle d-flex flex-row align-items-center gap-5" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{ selectedSorting | localize }} <span class="fe fe-chevron-down"></span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-left" [style.marginTop.px]="10">
-                    <div class="dropdown-item cursor-pointer d-flex justify-content-between"
-                        [class.selected]="isSelectedSorting(postSortingEnum.Latest)" (click)="handleSortingChange(postSortingEnum.Latest)">
-                        <div>{{ postSortingEnum.Latest | localize }}</div>
+
+                    <div
+                        class="dropdown-item cursor-pointer d-flex justify-content-between"
+                        [class.selected]="isSelectedSorting(postSortingEnum.Activity)"
+                        (click)="handleSortingChange(postSortingEnum.Activity)"
+                    >
+                        <div>{{ postSortingEnum.Activity  | localize }}</div>
+                        <i *ngIf="isSelectedSorting(postSortingEnum.Activity)" class="fe fe-check"></i>
+                    </div>
+
+                    <div
+                        class="dropdown-item cursor-pointer d-flex justify-content-between"
+                        [class.selected]="isSelectedSorting(postSortingEnum.Latest)"
+                        (click)="handleSortingChange(postSortingEnum.Latest)"
+                    >
+                        <div>{{ postSortingEnum.Latest  | localize }}</div>
                         <i *ngIf="isSelectedSorting(postSortingEnum.Latest)" class="fe fe-check"></i>
                     </div>
 
-                    <div class="dropdown-item cursor-pointer d-flex justify-content-between"
-                        [class.selected]="isSelectedSorting(postSortingEnum.Replied)"
-                        (click)="handleSortingChange(postSortingEnum.Replied)">
-                        <div>{{ postSortingEnum.Replied | localize }}</div>
-                        <i *ngIf="isSelectedSorting(postSortingEnum.Replied)" class="fe fe-check"></i>
-                    </div>
-
-                    <div class="dropdown-item cursor-pointer d-flex justify-content-between"
-                        [class.selected]="isSelectedSorting(postSortingEnum.Reacted)"
-                        (click)="handleSortingChange(postSortingEnum.Reacted)">
-                        <div>{{ postSortingEnum.Reacted | localize }}</div>
-                        <i *ngIf="isSelectedSorting(postSortingEnum.Reacted)" class="fe fe-check"></i>
-                    </div>
                 </div>
             </div>
         </div>
@@ -42,7 +41,7 @@
     <div *ngFor="let p of children" class="discussion-content-post w-100">
         <app-community-post-card
             *ngIf="!p.isHidden && !p.isDeleted"
-            [isLoading]="isLoading$ | async"
+            [isLoading]="isLoading"
             [data]="p"
             [reactionGroup]="reactionGroup.Votes"
             [canOverrideOwner]="true"

@@ -1,8 +1,9 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { ChatService } from '@shared/services/chat.service';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
+import { EventDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-organizer-badge',
@@ -10,8 +11,9 @@ import { LandingPagesService } from '@shared/services/landing-pages.service';
   styleUrls: ['./organizer-badge.component.less']
 })
 export class OrganizerBadgeComponent extends AppComponentBase implements OnInit {
-
   shimmerType = ShimmerType;
+
+  @Input() data: EventDto;
 
   constructor(
     injector: Injector,
@@ -24,6 +26,7 @@ export class OrganizerBadgeComponent extends AppComponentBase implements OnInit 
   get profilePictureUrl(): string { return this.appSession.user.profilePictureUrl; }
   get profileFullName(): string { return `${this.appSession.user.name} ${this.appSession.user.surname}`; }
   get isLoading$() { return this._landingPageService.isLoading$; }
+  get organizerName(): string { return this.data?.creatorUser?.fullName; }
 
   ngOnInit(): void {
   }

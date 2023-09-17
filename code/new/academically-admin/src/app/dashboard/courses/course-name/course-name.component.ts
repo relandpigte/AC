@@ -1,8 +1,9 @@
 import { Component, OnInit, Output, EventEmitter, Injector } from '@angular/core';
-import { CourseDto, CoursesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CourseDto, CoursesServiceProxy, ServicesType } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/app-component-base';
 import { Router } from '@angular/router';
+import { ServiceDataService } from '@shared/services/service-data.service';
 
 @Component({
   selector: 'app-course-name',
@@ -22,6 +23,7 @@ export class CourseNameComponent extends AppComponentBase implements OnInit {
     injector: Injector,
     private _router: Router,
     private _coursesService: CoursesServiceProxy,
+    private _serviceData: ServiceDataService
   ) {
     super(injector);
   }
@@ -48,6 +50,7 @@ export class CourseNameComponent extends AppComponentBase implements OnInit {
         })
       )
       .subscribe((response) => {
+        this._serviceData.createServiceDiscussion(response.id, ServicesType.Course);
         this.notify.success(this.l('SavedSuccessfully'));
         this.modalClose.emit();
         this._router.navigate(['/app/courses', response.id]);

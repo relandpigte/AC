@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { Injector } from '@node_modules/@angular/core';
 import { combineLatest, of } from 'rxjs';
-import { UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
+import { EventDto, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
 import { switchMap } from 'rxjs/operators';
 
@@ -15,6 +15,8 @@ export class PresentersBadgeComponent extends AppComponentBase implements OnInit
   isLoading_usersYouMayKnow = true;
   usersYouMayKnowMaxItems = 0;
   usersYouMayKnow: UserDto[] = Array(5).fill([]).map(() => this.generateRandomUser()) as UserDto[];
+
+  @Input() data: EventDto;
 
   constructor(
     injector: Injector,

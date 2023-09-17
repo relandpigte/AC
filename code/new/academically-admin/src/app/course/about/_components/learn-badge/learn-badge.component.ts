@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { Injector } from '@node_modules/@angular/core';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
+import { CourseDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-learn-badge',
@@ -10,8 +11,9 @@ import { LandingPagesService } from '@shared/services/landing-pages.service';
   styleUrls: ['./learn-badge.component.less']
 })
 export class LearnBadgeComponent extends AppComponentBase implements OnInit {
-
   shimmerType = ShimmerType;
+
+  @Input() data: CourseDto;
 
   constructor(
     injector: Injector,

@@ -8,6 +8,9 @@ import { ChatService } from '@shared/services/chat.service';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { takeUntil } from 'rxjs/operators';
+import { ActivatedRoute } from '@node_modules/@angular/router';
+import { ServiceDataService } from '@shared/services/service-data.service';
+import { EventDto, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-events',
@@ -16,28 +19,36 @@ import { takeUntil } from 'rxjs/operators';
   animations: [accountModuleAnimation()]
 })
 export class EventsComponent extends  AppComponentBase implements OnInit {
+  id: string;
+  data: EventDto;
 
   constructor(
     injector: Injector,
     private _router: Router,
     private _landingPageService: LandingPagesService,
     private _chatService: ChatService,
-    private _modalService: BsModalService
+    private _modalService: BsModalService,
+    private _route: ActivatedRoute,
+    private _serviceData: ServiceDataService,
+    private _eventsService: EventsServiceProxy
   ) {
     super(injector);
     this._chatService.openChat$.subscribe(() => this.openMessageModal());
+    this._serviceData.serviceData$.pipe(takeUntil(this.destroyed$)).subscribe(d => this.data = d);
+
   }
 
-  get isAboutTab(): boolean { return this._router.url.includes(['events', 'about'].join('/')); }
-  get isDiscussionTab(): boolean { return this._router.url.includes(['events', 'discussion'].join('/')); }
+  get isAboutTab(): boolean { return this._router.url.includes([`events/${this.id}`, 'about'].join('/')); }
+  get isDiscussionTab(): boolean { return this._router.url.includes([`events/${this.id}`, 'discussion'].join('/')); }
 
   ngOnInit(): void {
     setTimeout(() => this._landingPageService.setIsLoading(false), 2000);
+    this.getServiceId();
   }
 
   private openMessageModal(): void {
     const modalSettings = this.defaultModalSettings as ModalOptions<ComposerConversationComponent>;
-      modalSettings.class = "modal-lg";
+      modalSettings.class = 'modal-lg';
       modalSettings.initialState = {
         hasActions: false,
         hasClose: true,
@@ -47,5 +58,15 @@ export class EventsComponent extends  AppComponentBase implements OnInit {
       modal.content.onCloseClick
         .pipe(takeUntil(this.destroyed$))
         .subscribe(() => modal.hide());
+  }
+
+  private getServiceId(): void {
+    this._route.paramMap.subscribe(async paramMap => {
+      if (paramMap.has('id')) {
+        this.id = paramMap.get('id');
+        this._serviceData.serviceData = await this._eventsService.get(this.id).toPromise();
+        this._serviceData.discussionId = await this._serviceData.getServiceDiscussionId(this.id);
+      }
+    });
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit } from '@angular/core';
 import * as _ from 'lodash';
 import { AppComponentBase } from '@shared/app-component-base';
 import { CourseDto, CoursesServiceProxy, DateGrains } from '@shared/service-proxies/service-proxies';
@@ -13,6 +13,8 @@ import { LandingPagesService } from '@shared/services/landing-pages.service';
   styleUrls: ['./related-courses.component.less']
 })
 export class RelatedCoursesComponent extends AppComponentBase implements OnInit {
+  @Input() data: CourseDto;
+
   relatedCourses: CourseDto[] = Array(4)
     .fill([])
     .map(() => this.generateRandomCourse()) as CourseDto[];

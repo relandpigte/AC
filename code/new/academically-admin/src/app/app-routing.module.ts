@@ -222,21 +222,21 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
               ),
           },
           {
-            path: 'coaching',
+            path: 'coaching/:id',
             loadChildren: () =>
               import('@app/coaching/coaching.module').then(
                 (m) => m.CoachingModule
               ),
           },
           {
-            path: 'events',
+            path: 'events/:id',
             loadChildren: () =>
               import('@app/events/events.module').then(
                 (m) => m.EventsModule
               ),
           },
           {
-            path: 'course',
+            path: 'course/:id',
             loadChildren: () =>
               import('@app/course/course.module').then(
                 (m) => m.CourseModule

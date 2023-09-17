@@ -303,6 +303,15 @@ export abstract class AppComponentBase implements OnDestroy {
     return Math.floor(Math.random() * (max - min + 1) ) + min;
   }
 
+  removeHTMLTags(str: string): string | boolean {
+    if ((str === null) || (str === '') || str === undefined) {
+      return false;
+    } else {
+      str = str.toString();
+    }
+    return str.replace( /(<([^>]+)>)/ig, '');
+  }
+
   protected chunkArrayInGroups(arr, size) {
     var result = [];
     for (var i=0; i<arr.length; i+=size)
