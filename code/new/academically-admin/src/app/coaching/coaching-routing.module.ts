@@ -12,7 +12,6 @@ import { HeaderComponent } from '@app/coaching/_components/header/header.compone
       {
         path: '',
         component: WrapperComponent,
-        data: { permission: 'Pages.Coaching' },
         canActivate: [AppRouteGuard],
         canActivateChild: [AppRouteGuard],
         children: [
