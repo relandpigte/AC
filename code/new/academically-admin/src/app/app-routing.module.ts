@@ -229,7 +229,7 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
               ),
           },
           {
-            path: 'events',
+            path: 'events/:id',
             loadChildren: () =>
               import('@app/events/events.module').then(
                 (m) => m.EventsModule

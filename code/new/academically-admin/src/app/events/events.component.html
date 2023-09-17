@@ -11,15 +11,15 @@
             <div class="row">
                 <div class="col col-sm-12">
                     <ng-container *ngIf="isAboutTab">
-                        <app-organizer-badge></app-organizer-badge>
-                        <app-attendees-badge></app-attendees-badge>
-                        <app-related-events-badge></app-related-events-badge>
+                        <app-organizer-badge [data]="data"></app-organizer-badge>
+                        <app-attendees-badge [data]="data"></app-attendees-badge>
+                        <app-related-events-badge [data]="data"></app-related-events-badge>
                     </ng-container>
                     <ng-container *ngIf="isDiscussionTab">
-                        <app-organizer-badge></app-organizer-badge>
-                        <app-session-badge></app-session-badge>
-                        <app-attendees-badge></app-attendees-badge>
-                        <app-related-events-badge></app-related-events-badge>
+                        <app-organizer-badge [data]="data"></app-organizer-badge>
+                        <app-session-badge [data]="data"></app-session-badge>
+                        <app-attendees-badge [data]="data"></app-attendees-badge>
+                        <app-related-events-badge [data]="data"></app-related-events-badge>
                     </ng-container>
                 </div>
             </div>

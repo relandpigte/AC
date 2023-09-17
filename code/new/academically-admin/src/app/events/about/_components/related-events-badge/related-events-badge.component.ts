@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Injector } from '@node_modules/@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
+import { EventDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-related-events-badge',
@@ -11,8 +12,9 @@ import { LandingPagesService } from '@shared/services/landing-pages.service';
 })
 export class RelatedEventsBadgeComponent extends AppComponentBase implements OnInit {
   relatedEvents: any[] = Array(4).fill([]).map(() => this.generateRandomEvent()) as any[];
-
   shimmerType = ShimmerType;
+
+  @Input() data: EventDto;
 
   constructor(
     injector: Injector,

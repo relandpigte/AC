@@ -4,7 +4,7 @@ import { PostFiltering, PostSorting, SubscribeType } from '@app/community/discus
 import { AppComponentBase } from '@shared/app-component-base';
 import { ReactionGroup } from '@shared/enums/post/reaction-group.enum';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
-import { PostDto, PostType, PostsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { PostDto, PostType, PostsServiceProxy, PostSort } from '@shared/service-proxies/service-proxies';
 import { MAX_POSTS_TO_LOAD, PostsStateService } from '@shared/services/posts-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
@@ -12,6 +12,7 @@ import { WrapperService } from '@shared/services/wrapper.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
+import { ServiceDataService } from '@shared/services/service-data.service';
 
 @Component({
   selector: 'app-discussion',
@@ -21,7 +22,7 @@ import { switchMap, takeUntil } from 'rxjs/operators';
 export class EventsDiscussionComponent extends AppComponentBase implements OnInit {
   postsStateService: PostsStateService;
 
-  id = '08dbb681-6096-45ce-802f-00483b2a38bc';
+  id: string;
 
   children: PostDto[] = Array(3).fill([]).map(() => this.generateRandomPost()) as PostDto[];
   totalChildrenCount: number;
@@ -32,9 +33,22 @@ export class EventsDiscussionComponent extends AppComponentBase implements OnIni
   selectedFiltering: PostFiltering = PostFiltering.All;
 
   reactionGroup = ReactionGroup;
-  postFilteringEnum = PostFiltering;
   postSortingEnum = PostSorting;
-  subscribeType = SubscribeType;
+
+  isLoadingPost = true;
+  isLoadingChildren = true;
+
+  constructor(
+    injector: Injector,
+    private _cdr: ChangeDetectorRef,
+    private _modalService: BsModalService,
+    private _hubService: HubService,
+    private _postsService: PostsServiceProxy,
+    private _wrapperService: WrapperService,
+    private _serviceData: ServiceDataService
+  ) {
+    super(injector);
+  }
 
   get postsStateId(): string { return `posts-${this.id}`; }
   get postsCount(): number { return this.children?.length ?? 0; }
@@ -52,6 +66,15 @@ export class EventsDiscussionComponent extends AppComponentBase implements OnIni
     }
   }
 
+  get postSort(): PostSort {
+    switch(this.selectedSorting) {
+      case PostSorting.Activity:
+        return PostSort.Activity;
+      default:
+        return PostSort.Latest;
+    }
+  }
+
   get isLoading$() {
     return combineLatest(this.loadingSources$).pipe(switchMap((loaders) => of(loaders.some(l => l))));
   }
@@ -62,59 +85,23 @@ export class EventsDiscussionComponent extends AppComponentBase implements OnIni
     ];
   }
 
-  constructor(
-    injector: Injector,
-    private _cdr: ChangeDetectorRef,
-    private _modalService: BsModalService,
-    private _hubService: HubService,
-    private _postsService: PostsServiceProxy,
-    private _wrapperService: WrapperService
-  ) {
-    super(injector);
+  get isLoading(): boolean {
+    return this.isLoadingPost || this.isLoadingChildren;
   }
 
-  async ngOnInit() {
-    this.isLoading$.pipe(takeUntil(this.destroyed$)).subscribe(isLoading => this._wrapperService.toggleCanScroll(!isLoading));
-    await this.initPostsAppStates();
-  }
-
-  private async initPostsAppStates() {
-    const appStateConfig: AppStateConfig = {
-        [this.postsStateId]: {
-            load: [undefined, this.id, undefined, 0, MAX_POSTS_TO_LOAD],
-            update: { postId: this.id }
+  async ngOnInit(): Promise<void> {
+    this.isLoadingPost = true;
+    this._serviceData.discussionId$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(async id => {
+        if (id) {
+          this.id = id;
+          await this.initPostsAppStates();
         }
-    };
-    const appStateServices: AppStateServices = {
-        [this.postsStateId]: {
-            type: PostsStateService,
-            args: [this.appSession, this._hubService, this._postsService]
-        }
-    };
-    await this.pubSubService.start(this, appStateConfig, appStateServices);
-    this.postsStateService = this.pubSubService.getStateService<PostsStateService>(this.postsStateId);
+      });
 
-    this.postsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingChildren$.next(loading));
-
-    this.postsStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
-        if (this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) return;
-        switch(event.type) {
-        case StateUpdateType.Add:
-            this.children = [event.data].concat(this.children);
-            this.totalChildrenCount++;
-            break;
-        case StateUpdateType.Update:
-            this.children = this.children.map(p => p.id === event.data.id ? event.data : p);
-            break;
-        case StateUpdateType.Delete:
-            this.children = this.children.filter(p => p.id != event.data.id);
-            this.totalChildrenCount--;
-            break;
-        }
-        this._cdr.detectChanges();
-    });
-    this.children = this.postsStateService.getAllPosts();
-    this.totalChildrenCount = this.postsStateService.totalPostsCount;
+    this.isLoadingPost = false;
+    this._cdr.detectChanges();
   }
 
   isSelectedSorting(sort: PostSorting): boolean {
@@ -140,4 +127,56 @@ export class EventsDiscussionComponent extends AppComponentBase implements OnIni
         .subscribe(() => {});
   }
 
+  handleChildrenUpdate(post: PostDto): void {
+    this.postsStateService.updateChildrenCount(post);
+  }
+
+  onLoadMore(): void {
+    const lastPostCreationTime = this.children?.[this.children.length - 1]?.creationTime;
+    this._postsService.getAllPostsPaged(undefined, undefined, lastPostCreationTime, this.postSort, 0, MAX_POSTS_TO_LOAD)
+      .subscribe(posts => {
+        this.postsStateService.pushMorePosts(posts.items);
+        this.children = this.postsStateService.getAllPosts();
+        this._cdr.detectChanges();
+      });
+  }
+
+  private async initPostsAppStates() {
+    const appStateConfig: AppStateConfig = {
+      [this.postsStateId]: {
+        load: [undefined, this.id, undefined, this.postSort, 0, MAX_POSTS_TO_LOAD],
+        update: { postId: this.id }
+      }
+    };
+    const appStateServices: AppStateServices = {
+      [this.postsStateId]: {
+        type: PostsStateService,
+        args: [this.appSession, this._hubService, this._postsService]
+      }
+    };
+    await this.pubSubService.start(this, appStateConfig, appStateServices);
+    this.postsStateService = this.pubSubService.getStateService<PostsStateService>(this.postsStateId);
+
+    this.postsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingChildren = loading);
+
+    this.postsStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
+      if (this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) return;
+      switch(event.type) {
+        case StateUpdateType.Add:
+          this.children = [event.data].concat(this.children);
+          this.totalChildrenCount++;
+          break;
+        case StateUpdateType.Update:
+          this.children = this.children.map(p => p.id === event.data.id ? event.data : p);
+          break;
+        case StateUpdateType.Delete:
+          this.children = this.children.filter(p => p.id != event.data.id);
+          this.totalChildrenCount--;
+          break;
+      }
+      this._cdr.detectChanges();
+    });
+    this.children = this.postsStateService.getAllPosts();
+    this.totalChildrenCount = this.postsStateService.totalPostsCount;
+  }
 }

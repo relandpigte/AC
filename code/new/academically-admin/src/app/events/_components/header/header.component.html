@@ -1,11 +1,14 @@
 <div class="header coaching-header position-relative">
+    <div class="container coaching-event-type position-absolute">
+        <span class="event-type badge rounded-pill text-white position-absolute">{{ eventCategoryName }}</span>
+    </div>
+
     <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.LandingHeader" backgroundColor="#f9fbfd"></app-shimmer>
     <img [src]="getCoverPhoto(profileCoverPhotoUrl)" class="header-img-top" [alt]="profileFullName" />
 
     <div [class.container]="themeSettings.navigationPosition === NavigationPosition.Topnav"
          [class.container-fluid]="themeSettings.navigationPosition !== NavigationPosition.Topnav">
         <div class="header-body mt-n5 mt-md-n6 position-relative">
-            <span class="event-type badge rounded-pill text-white position-absolute">Workshop</span>
             <div class="row align-items-end">
                 <div class="col-auto">
                     <div class="avatar avatar-xxl header-avatar-top">
@@ -17,7 +20,7 @@
                 </div>
                 <div class="col mb-3 ml-n3 ml-md-n2">
                     <h6 class="header-pretitle">WORKSHOP</h6>
-                    <h1 class="header-title">User experience learning single workshop</h1>
+                    <h1 class="header-title">{{ eventTitle | titlecase }}</h1>
                 </div>
                 <div class="col-12 col-md-auto mt-2 mt-md-0 mb-md-3">
                     <button class="btn btn-primary d-block d-md-inline-block custom-button-width">

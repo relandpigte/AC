@@ -8,14 +8,14 @@
 </div>
 
 <ng-template #relatedEventsTemplate let-item="item" let-isLoading="isLoading">
-    <div class="d-flex align-items-center position-relative" [style.paddingTop.px]="15" [style.paddingBottom.px]="15">
+    <div class="d-flex align-items-center position-relative" [style.padding-top.px]="15" [style.padding-bottom.px]="15">
         <app-shimmer [show]="isLoading" [shimmerType]="shimmerType.SideCardThumbnail"></app-shimmer>
         <div class="d-flex justify-content-center align-items-center">
             <a href="#" class="avatar avatar-4by3">
                 <img src="https://placehold.co/200" alt="..." class="avatar-img rounded">
             </a>
         </div>
-        <div class="flex-grow-1 d-flex flex-column w-100 ms-n2 pl-0" [style.gap.px]="0">
+        <div class="flex-grow-1 d-flex flex-column w-100 ms-n2 pl-0" [style.margin-left.px]="15">
             <p class="small text-primary mb-0">
                 <time>FROM 18:00-21:00, 23 AUG,2022</time>
             </p>
