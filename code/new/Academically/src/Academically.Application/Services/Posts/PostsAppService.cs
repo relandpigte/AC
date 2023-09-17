@@ -345,6 +345,7 @@ namespace Academically.Services.Posts
             var post = await _postRepository.GetAll()
                         .Include(p => p.CreatorUser)
                             .ThenInclude(u => u.ProfilePictureDocument)
+                        .Include(p => p.Parent)
                         .Include(p => p.Children)
                             .ThenInclude(p => p.CreatorUser)
                         .Include(p => p.PostAttachments)

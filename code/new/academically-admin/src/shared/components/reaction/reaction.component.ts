@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, R
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ReactionColorClass, ReactionFeatherIcons, ReactionGroup, ReactionIcons, ReactionLabels, ReactionTypes } from '@shared/enums/post/reaction-group.enum';
-import { HubEvent, ReactionDto, ReactionType, ReactionsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { HubEvent, NotificationsServiceProxy, ReactionDto, ReactionType, ReactionsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, of, timer } from 'rxjs';
 import { debounce, distinctUntilChanged, filter, takeUntil } from 'rxjs/operators';
@@ -53,7 +53,8 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
         private _renderer: Renderer2,
         private _modalService: BsModalService,
         private _reactionsService: ReactionsServiceProxy,
-        private _hubService: HubService
+        private _hubService: HubService,
+        private _notificationsService: NotificationsServiceProxy
     ) {
         super(injector);
 

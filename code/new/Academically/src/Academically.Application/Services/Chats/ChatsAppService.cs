@@ -420,17 +420,6 @@ namespace Academically.Services.Chats
 
             Regex.Replace(keyword, @"\s+", "");
 
-            var users = await this._userRepository.GetAll()
-                .Where(u => u.Name.ToLower().Contains(keyword.ToLower()) || u.Surname.ToLower().Contains(keyword.ToLower()) || (u.Name + u.Surname).ToLower().Contains(keyword.ToLower()))
-                .Select(u => ObjectMapper.Map<UserDto>(u))
-                .ToListAsync();
-
-            foreach (var user in users)
-            {
-                if (user.ProfilePictureDocumentId.HasValue)
-                    user.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(user.ProfilePictureDocumentId.Value);
-            }
-
             var messages = await this._channelMessageRepository.GetAll()
                 .Include(m => m.Channel)
                 .Include(m => m.CreatorUser)
@@ -467,8 +456,23 @@ namespace Academically.Services.Chats
                                   }).ToList();
 
             searchResults.Keyword = keyword;
-            searchResults.Users = users;
             searchResults.Channels = matchedChannels;
+
+            var channelIds = matchedChannels.Select(c => c.Channel.Id).ToList();
+            var users = await this._channelMemberRepository.GetAll()
+                .Include(m => m.User)
+                .Where(m => channelIds.Contains(m.ChannelId))
+                .Where(m => m.UserId != AbpSession.UserId.Value)
+                .Select(m => ObjectMapper.Map<UserDto>(m.User))
+                .ToListAsync();
+
+            foreach (var user in users)
+            {
+                if (user.ProfilePictureDocumentId.HasValue)
+                    user.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(user.ProfilePictureDocumentId.Value);
+            }
+
+            searchResults.Users = users;
 
             return searchResults;
         }

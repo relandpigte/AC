@@ -65,163 +65,60 @@
     <div class="tab-content">
         <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
             <div class="notification list-group list-group-flush list-group-activity my-n3">
-                <a class="notification-item list-group-item text-reset" href="#!">
-                    <div class="d-flex gap-10">
-                        <div class="notification-avatar avatar avatar-sm flex-grow-1">
-                            <img class="avatar-img rounded-circle" src="/assets/img/avatar-placeholder.png" alt="...">
+                <ng-container *ngIf="notifications?.length">
+                    <a *ngFor="let notification of notifications; let idx = index" class="notification-item list-group-item text-reset" (click)="onNotificationClick(notification)">
+                        <div class="d-flex gap-10">
+                            <div class="notification-avatar avatar avatar-sm flex-grow-1">
+                                <img *ngIf="getDominantUser(notification); else avatarPlaceHolderTemplate" class="avatar-img rounded-circle" [src]="getDominantUser(notification).profilePictureUrl" alt="...">
+                            </div>
+                            <div class="notification-content">
+                                <p [innerHTML]="notification.formattedNotification" class="line-clamp-3"></p>
+                                <span class="time">{{ getNotificationReceivedTime(notification) }}</span>
+                            </div>
+                            <div class="align-self-center" *ngIf="!notification.readTime">
+                                <span class="notification-status text-primary">●</span>
+                            </div>
                         </div>
-                        <div class="notification-content">
-                            <p><span>Jessie Heart</span> and <span>4 others</span> liked <span>Casey Fyfe</span>‘s post: “I can’t even begin to express how good...”</p>
-                            <span class="time">2m ago</span>
-                        </div>
-                        <div class="align-self-center" *ngIf="false">
-                            <span class="notification-status text-primary">●</span>
-                        </div>
-                    </div>
-                </a>
-
-                <a class="notification-item list-group-item text-reset" href="#!">
-                    <div class="d-flex gap-10">
-                        <div class="notification-avatar avatar avatar-sm flex-grow-1">
-                            <img class="avatar-img rounded-circle" src="/assets/img/avatar-placeholder.png" alt="...">
-                        </div>
-                        <div class="notification-content">
-                            <p><span>Jessie Heart</span> and <span>Leah Palermo</span> commented on your post.</p>
-                            <span class="time">2m ago</span>
-                        </div>
-                        <div class="align-self-center">
-                            <span class="notification-status text-primary">●</span>
-                        </div>
-                    </div>
-                </a>
-
-                <a class="notification-item list-group-item text-reset" href="#!">
-                    <div class="d-flex gap-10">
-                        <div class="notification-avatar avatar avatar-sm flex-grow-1">
-                            <img class="avatar-img rounded-circle" src="/assets/img/avatar-placeholder.png" alt="...">
-                        </div>
-                        <div class="notification-content">
-                            <p><span>Jessie Heart</span> commented on your post in <span>Discussion on the new way to process data</span>: “I cant ev...”</p>
-                            <span class="time">2m ago</span>
-                        </div>
-                        <div class="align-self-center">
-                            <span class="notification-status text-primary">●</span>
-                        </div>
-                    </div>
-                </a>
-
-                <a class="notification-item list-group-item text-reset" href="#!">
-                    <div class="d-flex gap-10">
-                        <div class="notification-avatar avatar avatar-sm flex-grow-1">
-                            <img class="avatar-img rounded-circle" src="/assets/img/avatar-placeholder.png" alt="...">
-                        </div>
-                        <div class="notification-content">
-                            <p><span>Jessie Heart</span> and <span>4 others</span> replied to your answer.</p>
-                            <span class="time">2m ago</span>
-                        </div>
-                        <div class="align-self-center">
-                            <span class="notification-status text-primary">●</span>
-                        </div>
-                    </div>
-                </a>
+                    </a>
+                </ng-container>
+                <ng-container *ngIf="!notifications?.length">
+                    <a class="list-group-item text-reset">
+                        <p class="text-center text-muted p-0 m-0">
+                            {{ 'NoRecentNotification' | localize }}
+                        </p>
+                    </a>
+                </ng-container>
             </div>
         </div>
         <div class="tab-pane fade" id="unread" role="tabpanel" aria-labelledby="unread-tab">
             <div class="notification list-group list-group-flush list-group-activity my-n3">
-                <a class="notification-item list-group-item text-reset" href="#!">
-                    <div class="d-flex gap-10">
-                        <div class="notification-avatar avatar avatar-sm flex-grow-1">
-                            <img class="avatar-img rounded-circle" src="/assets/img/avatar-placeholder.png" alt="...">
+                <ng-container *ngIf="notifications?.length">
+                    <a *ngFor="let notification of unreadNotifications; let idx = index" class="notification-item list-group-item text-reset" (click)="onNotificationClick(notification)">
+                        <div class="d-flex gap-10">
+                            <div class="notification-avatar avatar avatar-sm flex-grow-1">
+                                <img *ngIf="getDominantUser(notification); else avatarPlaceHolderTemplate" class="avatar-img rounded-circle" [src]="getDominantUser(notification).profilePictureUrl" alt="...">
+                            </div>
+                            <div class="notification-content">
+                                <p [innerHTML]="notification.formattedNotification" class="line-clamp-3"></p>
+                                <span class="time">{{ getNotificationReceivedTime(notification) }}</span>
+                            </div>
+                            <div class="align-self-center" *ngIf="!notification.readTime">
+                                <span class="notification-status text-primary">●</span>
+                            </div>
                         </div>
-                        <div class="notification-content">
-                            <p><span>Jessie Heart</span> and <span>4 others</span> liked <span>Casey Fyfe</span>‘s post: “I can’t even begin to express how good...”</p>
-                            <span class="time">2m ago</span>
-                        </div>
-                        <div class="align-self-center">
-                            <span class="notification-status text-primary">●</span>
-                        </div>
-                    </div>
-                </a>
-
-                <a class="notification-item list-group-item text-reset" href="#!">
-                    <div class="d-flex gap-10">
-                        <div class="notification-avatar avatar avatar-sm flex-grow-1">
-                            <img class="avatar-img rounded-circle" src="/assets/img/avatar-placeholder.png" alt="...">
-                        </div>
-                        <div class="notification-content">
-                            <p><span>Jessie Heart</span> and <span>Leah Palermo</span> commented on your post.</p>
-                            <span class="time">2m ago</span>
-                        </div>
-                        <div class="align-self-center">
-                            <span class="notification-status text-primary">●</span>
-                        </div>
-                    </div>
-                </a>
-
-                <a class="notification-item list-group-item text-reset" href="#!">
-                    <div class="d-flex gap-10">
-                        <div class="notification-avatar avatar avatar-sm flex-grow-1">
-                            <img class="avatar-img rounded-circle" src="/assets/img/avatar-placeholder.png" alt="...">
-                        </div>
-                        <div class="notification-content">
-                            <p><span>Jessie Heart</span> commented on your post in <span>Discussion on the new way to process data</span>: “I cant ev...”</p>
-                            <span class="time">2m ago</span>
-                        </div>
-                        <div class="align-self-center">
-                            <span class="notification-status text-primary">●</span>
-                        </div>
-                    </div>
-                </a>
-
-                <a class="notification-item list-group-item text-reset" href="#!">
-                    <div class="d-flex gap-10">
-                        <div class="notification-avatar avatar avatar-sm flex-grow-1">
-                            <img class="avatar-img rounded-circle" src="/assets/img/avatar-placeholder.png" alt="...">
-                        </div>
-                        <div class="notification-content">
-                            <p><span>Jessie Heart</span> and <span>4 others</span> replied to your answer.</p>
-                            <span class="time">2m ago</span>
-                        </div>
-                        <div class="align-self-center">
-                            <span class="notification-status text-primary">●</span>
-                        </div>
-                    </div>
-                </a>
+                    </a>
+                </ng-container>
+                <ng-container *ngIf="!unreadNotifications?.length">
+                    <a class="list-group-item text-reset">
+                        <p class="text-center text-muted p-0 m-0">
+                            {{ 'NoRecentNotification' | localize }}
+                        </p>
+                    </a>
+                </ng-container>
             </div>
         </div>
     </div>
-
-    <div class="list-group list-group-flush list-group-activity">
-        <a *ngFor="let notification of notifications"
-           [class.unread-notification]="notification.state === UserNotificationState.Unread"
-           class="list-group-item text-reset notification-item"
-           (click)="$event.preventDefault(); onNotificationClick(notification)" href="#">
-            <div class="row">
-                <div class="col-auto">
-                    <div class="avatar avatar-sm">
-                        <img [src]="getProfilePicture(notification.userProfilePictureUrl)" alt="..."
-                             class="avatar-img rounded-circle">
-                    </div>
-                </div>
-                <div class="col ms-n2">
-                    <div class="small" [innerHTML]="notification.notificationMessage">
-                    </div>
-                    <small class="text-muted">
-                        {{ notification.creationTime }}
-                    </small>
-                </div>
-                <div class="col-auto align-self-center">
-                    <button *ngIf="notification.state === UserNotificationState.Unread"
-                            (click)="onReadNotificationClick($event, notification)"
-                            class="btn btn-sm btn-rounded-circle btn-primary btn-read-notification">&nbsp;
-                    </button>
-                </div>
-            </div>
-        </a>
-<!--        <a *ngIf="!notifications || !notifications.length" class="list-group-item text-reset">-->
-<!--            <p class="text-center text-muted p-0 m-0">-->
-<!--                {{ 'NoRecentNotification' | localize }}-->
-<!--            </p>-->
-<!--        </a>-->
-    </div>
+</ng-template>
+<ng-template #avatarPlaceHolderTemplate>
+    <img class="avatar-img rounded-circle" src="/assets/img/avatar-placeholder.png" alt="...">
 </ng-template>

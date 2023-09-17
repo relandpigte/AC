@@ -13465,8 +13465,8 @@ export class NotificationsServiceProxy {
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAll(searchFilter: string | undefined, stateFilter: UserNotificationState | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserNotificationPagedResultDto> {
-        let url_ = this.baseUrl + "/api/services/app/Notifications/GetAll?";
+    getAllPaged(searchFilter: string | undefined, stateFilter: UserNotificationState | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<UserNotificationPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Notifications/GetAllPaged?";
         if (searchFilter === null)
             throw new Error("The parameter 'searchFilter' cannot be null.");
         else if (searchFilter !== undefined)
@@ -13494,11 +13494,11 @@ export class NotificationsServiceProxy {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetAll(response_);
+            return this.processGetAllPaged(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetAll(<any>response_);
+                    return this.processGetAllPaged(<any>response_);
                 } catch (e) {
                     return <Observable<UserNotificationPagedResultDto>><any>_observableThrow(e);
                 }
@@ -13507,7 +13507,7 @@ export class NotificationsServiceProxy {
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<UserNotificationPagedResultDto> {
+    protected processGetAllPaged(response: HttpResponseBase): Observable<UserNotificationPagedResultDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -13579,6 +13579,351 @@ export class NotificationsServiceProxy {
             }));
         }
         return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param notificationId (optional) 
+     * @return Success
+     */
+    get(notificationId: string | undefined): Observable<NotificationDto> {
+        let url_ = this.baseUrl + "/api/services/app/Notifications/Get?";
+        if (notificationId === null)
+            throw new Error("The parameter 'notificationId' cannot be null.");
+        else if (notificationId !== undefined)
+            url_ += "notificationId=" + encodeURIComponent("" + notificationId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<NotificationDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<NotificationDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<NotificationDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = NotificationDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<NotificationDto>(<any>null);
+    }
+
+    /**
+     * @param take (optional) 
+     * @return Success
+     */
+    getLatest(take: number | undefined): Observable<NotificationDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Notifications/GetLatest?";
+        if (take === null)
+            throw new Error("The parameter 'take' cannot be null.");
+        else if (take !== undefined)
+            url_ += "take=" + encodeURIComponent("" + take) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetLatest(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetLatest(<any>response_);
+                } catch (e) {
+                    return <Observable<NotificationDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<NotificationDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetLatest(response: HttpResponseBase): Observable<NotificationDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(NotificationDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<NotificationDto[]>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getAll(): Observable<NotificationDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Notifications/GetAll";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<NotificationDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<NotificationDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<NotificationDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(NotificationDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<NotificationDto[]>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: CreateNotificationDto | undefined): Observable<NotificationDto> {
+        let url_ = this.baseUrl + "/api/services/app/Notifications/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<NotificationDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<NotificationDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<NotificationDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = NotificationDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<NotificationDto>(<any>null);
+    }
+
+    /**
+     * @param notificationId (optional) 
+     * @return Success
+     */
+    read(notificationId: string | undefined): Observable<NotificationDto> {
+        let url_ = this.baseUrl + "/api/services/app/Notifications/Read?";
+        if (notificationId === null)
+            throw new Error("The parameter 'notificationId' cannot be null.");
+        else if (notificationId !== undefined)
+            url_ += "notificationId=" + encodeURIComponent("" + notificationId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRead(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRead(<any>response_);
+                } catch (e) {
+                    return <Observable<NotificationDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<NotificationDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRead(response: HttpResponseBase): Observable<NotificationDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = NotificationDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<NotificationDto>(<any>null);
+    }
+
+    /**
+     * @param notificationId (optional) 
+     * @return Success
+     */
+    unread(notificationId: string | undefined): Observable<NotificationDto> {
+        let url_ = this.baseUrl + "/api/services/app/Notifications/Unread?";
+        if (notificationId === null)
+            throw new Error("The parameter 'notificationId' cannot be null.");
+        else if (notificationId !== undefined)
+            url_ += "notificationId=" + encodeURIComponent("" + notificationId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUnread(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUnread(<any>response_);
+                } catch (e) {
+                    return <Observable<NotificationDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<NotificationDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUnread(response: HttpResponseBase): Observable<NotificationDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = NotificationDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<NotificationDto>(<any>null);
     }
 }
 
@@ -36284,6 +36629,101 @@ export interface ICreateForumTopicDto {
     topicName: string | undefined;
 }
 
+export class CreateNotificationDto implements ICreateNotificationDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    userId: number;
+    actorId: number;
+    action: NotificationAction;
+    target: NotificationTarget;
+    referenceId: string;
+    url: string | undefined;
+
+    constructor(data?: ICreateNotificationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.lastModificationTime = _data["lastModificationTime"] ? moment(_data["lastModificationTime"].toString()) : <any>undefined;
+            this.lastModifierUserId = _data["lastModifierUserId"];
+            this.isDeleted = _data["isDeleted"];
+            this.deleterUserId = _data["deleterUserId"];
+            this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
+            this.userId = _data["userId"];
+            this.actorId = _data["actorId"];
+            this.action = _data["action"];
+            this.target = _data["target"];
+            this.referenceId = _data["referenceId"];
+            this.url = _data["url"];
+        }
+    }
+
+    static fromJS(data: any): CreateNotificationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateNotificationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : <any>undefined;
+        data["lastModifierUserId"] = this.lastModifierUserId;
+        data["isDeleted"] = this.isDeleted;
+        data["deleterUserId"] = this.deleterUserId;
+        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
+        data["userId"] = this.userId;
+        data["actorId"] = this.actorId;
+        data["action"] = this.action;
+        data["target"] = this.target;
+        data["referenceId"] = this.referenceId;
+        data["url"] = this.url;
+        return data; 
+    }
+
+    clone(): CreateNotificationDto {
+        const json = this.toJSON();
+        let result = new CreateNotificationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateNotificationDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    userId: number;
+    actorId: number;
+    action: NotificationAction;
+    target: NotificationTarget;
+    referenceId: string;
+    url: string | undefined;
+}
+
 export class CreateProjectDto implements ICreateProjectDto {
     name: string | undefined;
     description: string | undefined;
@@ -40687,7 +41127,7 @@ export interface IGroupedPermissionDtoListResultDto {
     items: GroupedPermissionDto[] | undefined;
 }
 
-/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted 18 = ChannelMessageCreated 19 = ChannelMessageUpdated 20 = ChannelMessageDeleted 21 = ChannelMemberTyping 22 = ChannelArchive 23 = ChannelUnarchive 24 = NewUserLoggedIn */
+/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted 18 = ChannelMessageCreated 19 = ChannelMessageUpdated 20 = ChannelMessageDeleted 21 = ChannelMemberTyping 22 = ChannelArchive 23 = ChannelUnarchive 24 = NewUserLoggedIn 25 = NotificationCreated 26 = NotificationUpdated 27 = NotificationDeleted */
 export enum HubEvent {
     PostCreated = 0,
     PostUpdated = 1,
@@ -40714,6 +41154,9 @@ export enum HubEvent {
     ChannelArchive = 22,
     ChannelUnarchive = 23,
     NewUserLoggedIn = 24,
+    NotificationCreated = 25,
+    NotificationUpdated = 26,
+    NotificationDeleted = 27,
 }
 
 export class ICustomAttributeProvider implements IICustomAttributeProvider {
@@ -41795,6 +42238,16 @@ export interface IMyServiceViewDto {
     items: MyServiceItemViewDto[] | undefined;
 }
 
+/** 0 = Like 1 = React 2 = Share 3 = Comment 4 = Reply 5 = Answer */
+export enum NotificationAction {
+    Like = 0,
+    React = 1,
+    Share = 2,
+    Comment = 3,
+    Reply = 4,
+    Answer = 5,
+}
+
 export class NotificationData implements INotificationData {
     readonly type: string | undefined;
     properties: { [key: string]: any; } | undefined;
@@ -41854,6 +42307,125 @@ export interface INotificationData {
     properties: { [key: string]: any; } | undefined;
 }
 
+export class NotificationDto implements INotificationDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    userId: number;
+    action: NotificationAction;
+    target: NotificationTarget;
+    referenceId: string;
+    readTime: moment.Moment | undefined;
+    url: string | undefined;
+    user: UserDto;
+    creatorUser: UserDto;
+    actors: NotificationUserDto[] | undefined;
+    formattedNotification: string | undefined;
+
+    constructor(data?: INotificationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.lastModificationTime = _data["lastModificationTime"] ? moment(_data["lastModificationTime"].toString()) : <any>undefined;
+            this.lastModifierUserId = _data["lastModifierUserId"];
+            this.isDeleted = _data["isDeleted"];
+            this.deleterUserId = _data["deleterUserId"];
+            this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
+            this.userId = _data["userId"];
+            this.action = _data["action"];
+            this.target = _data["target"];
+            this.referenceId = _data["referenceId"];
+            this.readTime = _data["readTime"] ? moment(_data["readTime"].toString()) : <any>undefined;
+            this.url = _data["url"];
+            this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+            if (Array.isArray(_data["actors"])) {
+                this.actors = [] as any;
+                for (let item of _data["actors"])
+                    this.actors.push(NotificationUserDto.fromJS(item));
+            }
+            this.formattedNotification = _data["formattedNotification"];
+        }
+    }
+
+    static fromJS(data: any): NotificationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new NotificationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : <any>undefined;
+        data["lastModifierUserId"] = this.lastModifierUserId;
+        data["isDeleted"] = this.isDeleted;
+        data["deleterUserId"] = this.deleterUserId;
+        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
+        data["userId"] = this.userId;
+        data["action"] = this.action;
+        data["target"] = this.target;
+        data["referenceId"] = this.referenceId;
+        data["readTime"] = this.readTime ? this.readTime.toISOString() : <any>undefined;
+        data["url"] = this.url;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        if (Array.isArray(this.actors)) {
+            data["actors"] = [];
+            for (let item of this.actors)
+                data["actors"].push(item.toJSON());
+        }
+        data["formattedNotification"] = this.formattedNotification;
+        return data; 
+    }
+
+    clone(): NotificationDto {
+        const json = this.toJSON();
+        let result = new NotificationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface INotificationDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    userId: number;
+    action: NotificationAction;
+    target: NotificationTarget;
+    referenceId: string;
+    readTime: moment.Moment | undefined;
+    url: string | undefined;
+    user: UserDto;
+    creatorUser: UserDto;
+    actors: NotificationUserDto[] | undefined;
+    formattedNotification: string | undefined;
+}
+
 /** 0 = Info 1 = Success 2 = Warn 3 = Error 4 = Fatal */
 export enum NotificationSeverity {
     Info = 0,
@@ -41861,6 +42433,101 @@ export enum NotificationSeverity {
     Warn = 2,
     Error = 3,
     Fatal = 4,
+}
+
+/** 0 = Post 1 = Answer 2 = Question 3 = Reply */
+export enum NotificationTarget {
+    Post = 0,
+    Answer = 1,
+    Question = 2,
+    Reply = 3,
+}
+
+export class NotificationUserDto implements INotificationUserDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    notificationId: string;
+    userId: number;
+    notification: NotificationDto;
+    user: UserDto;
+
+    constructor(data?: INotificationUserDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.lastModificationTime = _data["lastModificationTime"] ? moment(_data["lastModificationTime"].toString()) : <any>undefined;
+            this.lastModifierUserId = _data["lastModifierUserId"];
+            this.isDeleted = _data["isDeleted"];
+            this.deleterUserId = _data["deleterUserId"];
+            this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
+            this.notificationId = _data["notificationId"];
+            this.userId = _data["userId"];
+            this.notification = _data["notification"] ? NotificationDto.fromJS(_data["notification"]) : <any>undefined;
+            this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): NotificationUserDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new NotificationUserDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : <any>undefined;
+        data["lastModifierUserId"] = this.lastModifierUserId;
+        data["isDeleted"] = this.isDeleted;
+        data["deleterUserId"] = this.deleterUserId;
+        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
+        data["notificationId"] = this.notificationId;
+        data["userId"] = this.userId;
+        data["notification"] = this.notification ? this.notification.toJSON() : <any>undefined;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): NotificationUserDto {
+        const json = this.toJSON();
+        let result = new NotificationUserDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface INotificationUserDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    notificationId: string;
+    userId: number;
+    notification: NotificationDto;
+    user: UserDto;
 }
 
 /** 0 = None 1 = In 2 = Out 4 = Lcid 8 = Retval 16 = Optional 4096 = HasDefault 8192 = HasFieldMarshal 16384 = Reserved3 32768 = Reserved4 61440 = ReservedMask */
@@ -42242,6 +42909,7 @@ export class PostDto implements IPostDto {
     spaceId: string | undefined;
     type: PostType;
     parentId: string | undefined;
+    parent: PostDto;
     creatorUser: UserDto;
     isHidden: boolean;
     sharedId: string | undefined;
@@ -42289,6 +42957,7 @@ export class PostDto implements IPostDto {
             this.spaceId = _data["spaceId"];
             this.type = _data["type"];
             this.parentId = _data["parentId"];
+            this.parent = _data["parent"] ? PostDto.fromJS(_data["parent"]) : <any>undefined;
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
             this.isHidden = _data["isHidden"];
             this.sharedId = _data["sharedId"];
@@ -42364,6 +43033,7 @@ export class PostDto implements IPostDto {
         data["spaceId"] = this.spaceId;
         data["type"] = this.type;
         data["parentId"] = this.parentId;
+        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         data["isHidden"] = this.isHidden;
         data["sharedId"] = this.sharedId;
@@ -42439,6 +43109,7 @@ export interface IPostDto {
     spaceId: string | undefined;
     type: PostType;
     parentId: string | undefined;
+    parent: PostDto;
     creatorUser: UserDto;
     isHidden: boolean;
     sharedId: string | undefined;

@@ -11,7 +11,14 @@ namespace Academically.Services.Notifications
     public interface INotificationsAppService : IApplicationService
     {
         Task<IEnumerable<UserNotification>> GetRecent();
-        Task<PagedResultDto<UserNotification>> GetAll(PagedNotificationRequestDto input);
+        Task<PagedResultDto<UserNotification>> GetAllPaged(PagedNotificationRequestDto input);
         Task UpdateNotificationReadState(Guid id);
+
+        Task<NotificationDto> Get(string notificationId);
+        Task<IList<NotificationDto>> GetLatest(int take);
+        Task<IList<NotificationDto>> GetAll();
+        Task<NotificationDto> Create(CreateNotificationDto input);
+        Task<NotificationDto> Read(string notificationId);
+        Task<NotificationDto> Unread(string notificationId);
     }
 }
