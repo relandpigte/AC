@@ -8,7 +8,7 @@ import { LandingPagesService } from '@shared/services/landing-pages.service';
 import { ComposerConversationComponent } from '@app/chat/_components/composer-conversation/composer-conversation.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ChatService } from '@shared/services/chat.service';
-import { CoachingsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CoachingDto, CoachingsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { ServiceDataService } from '@shared/services/service-data.service';
 
 @Component({
@@ -19,6 +19,7 @@ import { ServiceDataService } from '@shared/services/service-data.service';
 })
 export class CoachingComponent extends  AppComponentBase implements OnInit {
   id: string;
+  data: CoachingDto;
 
   constructor(
     injector: Injector,
@@ -32,6 +33,7 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
   ) {
     super(injector);
     this._chatService.openChat$.subscribe(() => this.openMessageModal());
+    this._serviceData.serviceData$.pipe(takeUntil(this.destroyed$)).subscribe(d => this.data = d);
   }
 
   get isAboutTab(): boolean { return this._router.url.includes([`coaching/${this.id}`, 'about'].join('/')); }

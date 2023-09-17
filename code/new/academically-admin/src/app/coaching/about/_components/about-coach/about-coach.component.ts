@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { ChatService } from '@shared/services/chat.service';
@@ -13,14 +13,14 @@ import { CoachingDto } from '@shared/service-proxies/service-proxies';
   styleUrls: ['./about-coach.component.less']
 })
 export class AboutCoachComponent extends AppComponentBase implements OnInit {
-  data: CoachingDto;
   shimmerType = ShimmerType;
+
+  @Input() data: CoachingDto;
 
   constructor(
     injector: Injector,
     private _landingPageService: LandingPagesService,
-    private _chatService: ChatService,
-    private _serviceData: ServiceDataService
+    private _chatService: ChatService
   ) {
     super(injector);
   }
@@ -30,11 +30,7 @@ export class AboutCoachComponent extends AppComponentBase implements OnInit {
   get profileAboutText() { return this.removeHTMLTags(this.data?.creatorUser?.about); }
   get isLoading$() { return this._landingPageService.isLoading$; }
 
-  ngOnInit(): void {
-    this._serviceData.serviceData$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(data =>  this.data = data);
-  }
+  ngOnInit(): void {}
 
   onMessageClick(): void {
     this._chatService.openChat$.next();

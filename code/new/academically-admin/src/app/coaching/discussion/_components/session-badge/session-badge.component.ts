@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
@@ -14,14 +14,14 @@ import { CoachingDto } from '@shared/service-proxies/service-proxies';
 export class SessionBadgeComponent extends AppComponentBase implements OnInit {
   readonly showMoreLimit: number = 255;
 
-  data: CoachingDto;
   showMore = false;
   shimmerType = ShimmerType;
 
+  @Input() data: CoachingDto;
+
   constructor(
     injector: Injector,
-    private _landingPageService: LandingPagesService,
-    private _serviceData: ServiceDataService
+    private _landingPageService: LandingPagesService
   ) {
     super(injector);
   }
@@ -32,10 +32,5 @@ export class SessionBadgeComponent extends AppComponentBase implements OnInit {
   get displayShowMore(): boolean { return this.description?.length > this.showMoreLimit; }
   get isLoading$() { return this._landingPageService.isLoading$; }
 
-  ngOnInit(): void {
-    this._serviceData.serviceData$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(d => this.data = d);
-  }
-
+  ngOnInit(): void {}
 }

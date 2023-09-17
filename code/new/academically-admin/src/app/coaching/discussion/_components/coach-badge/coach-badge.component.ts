@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { ChatService } from '@shared/services/chat.service';
@@ -14,14 +14,14 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./coach-badge.component.less']
 })
 export class CoachBadgeComponent extends AppComponentBase implements OnInit {
-  data: CoachingDto;
   shimmerType = ShimmerType;
+
+  @Input() data: CoachingDto;
 
   constructor(
     injector: Injector,
     private _landingPageService: LandingPagesService,
-    private _chatService: ChatService,
-    private _serviceData: ServiceDataService
+    private _chatService: ChatService
   ) {
     super(injector);
   }
@@ -31,11 +31,7 @@ export class CoachBadgeComponent extends AppComponentBase implements OnInit {
   get isLoading$() { return this._landingPageService.isLoading$; }
   get ownerName(): string { return this.data?.creatorUser?.fullName; }
 
-  ngOnInit(): void {
-    this._serviceData.serviceData$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(d => this.data = d);
-  }
+  ngOnInit(): void {}
 
   onMessageClick(): void {
     this._chatService.openChat$.next();
