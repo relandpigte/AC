@@ -69,8 +69,6 @@
     <Folder Include="Services\CourseSectionPages\" />
     <Folder Include="Services\CourseSectionPages\Dto\" />
     <Folder Include="Services\CalendarEvents\Notifications\" />
-    <Folder Include="Services\Notifications\" />
-    <Folder Include="Services\Notifications\Dto\" />
     <Folder Include="Services\StudentCourses\" />
     <Folder Include="Services\StudentCourses\Dto\" />
     <Folder Include="Services\StudentCourseSections\" />

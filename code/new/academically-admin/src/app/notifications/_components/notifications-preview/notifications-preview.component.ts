@@ -1,64 +1,97 @@
-import { Component, OnInit, Injector, ChangeDetectorRef, Output, EventEmitter, Input, ViewChild } from '@angular/core';
-import { AppComponentBase } from '@shared/app-component-base';
-import { NotificationsServiceProxy, DocumentsServiceProxy, UserNotification, UserNotificationState } from '@shared/service-proxies/service-proxies';
-import { takeUntil } from 'rxjs/operators';
-import * as _ from 'lodash';
-import * as moment from 'moment';
-import { ModalDirective } from 'ngx-bootstrap/modal';
+import { TitleCasePipe } from '@angular/common';
+import { ChangeDetectorRef, Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { HubService } from '@app/_shared/services/hub.service';
 import { AppConsts } from '@shared/AppConsts';
-import { uiEvents } from '@shared/constants/ui-events.constant';
-
-class FormattedNotification {
-  id: string;
-  userProfilePictureUrl: string;
-  notificationMessage: string;
-  creationTime: string;
-  link: string;
-  state: UserNotificationState;
-}
+import { AppComponentBase } from '@shared/app-component-base';
+import { CommentsServiceProxy, NotificationDto, NotificationsServiceProxy, PostsServiceProxy, UserDto, UserNotificationState } from '@shared/service-proxies/service-proxies';
+import { NotificationsStateService } from '@shared/services/notifications-state.service';
+import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
+import { StateUpdateType } from '@shared/services/state-base.service';
+import * as _ from 'lodash';
+import { ModalDirective } from 'ngx-bootstrap/modal';
+import { BehaviorSubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-notifications-preview',
   templateUrl: './notifications-preview.component.html',
-  styleUrls: ['./notifications-preview.component.less']
+  styleUrls: ['./notifications-preview.component.less'],
+  providers: [ TitleCasePipe ]
 })
 export class NotificationsPreviewComponent extends AppComponentBase implements OnInit {
+  notificationsStateService: NotificationsStateService;
+
+  isLoadingList$ = new BehaviorSubject<boolean>(true);
+
   @Input() isModal = false;
   @Input() buttonClass = '';
   @ViewChild('notificationsModal') notificationsModal: ModalDirective;
 
-  notifications: FormattedNotification[] = [];
-  unreadCount = 0;
+  notifications: NotificationDto[] = [];
+  totalNotificationsCount = 0;
   UserNotificationState = UserNotificationState;
+
+  get unreadCount(): number { return this.unreadNotifications.length; }
+  get unreadNotifications(): NotificationDto[] { return this.notifications?.filter(n => !n.readTime) ?? []; }
 
   constructor(
     injector: Injector,
-    private _cd: ChangeDetectorRef,
+    private _cdr: ChangeDetectorRef,
     private _router: Router,
+    private _hubService: HubService,
+    private _commentsService: CommentsServiceProxy,
+    private _postsService: PostsServiceProxy,
     private _notificationsService: NotificationsServiceProxy,
-    private _documentsService: DocumentsServiceProxy,
+    private _titleCasePipe: TitleCasePipe
   ) {
     super(injector);
-
-    abp.event.on('abp.notifications.received', (notification) => {
-      console.log(notification);
-      this.formatNotification(notification, true);
-      this.updateUnreadCount();
-      this._cd.detectChanges();
-    });
-
-    abp.event.on(uiEvents.notificationRead, (notificationId: string) => {
-      const notification = this.notifications.find(e => e.id === notificationId);
-      if (notification) {
-        notification.state = UserNotificationState.Read;
-        this.updateUnreadCount();
-      }
-    });
   }
 
-  ngOnInit(): void {
-    this.getUserNotifications();
+  async ngOnInit() {
+    await this.initNotificationAppStates();
+  }
+
+  private async initNotificationAppStates() {
+    const appStateConfig: AppStateConfig = {
+        ['notifs']: {
+            load: [],
+            update: {userId: this.appSession.userId}
+        }
+    };
+    const appStateServices: AppStateServices = {
+        ['notifs']: {
+            type: NotificationsStateService,
+            args: [this._hubService, this._commentsService, this._postsService, this._notificationsService, this._titleCasePipe]
+        }
+    };
+    await this.pubSubService.start(this, appStateConfig, appStateServices);
+    this.notificationsStateService = this.pubSubService.getStateService<NotificationsStateService>('notifs');
+    this.notificationsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingList$.next(loading));
+    this.notificationsStateService.notifications$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
+        switch(event.type) {
+          case StateUpdateType.Add:
+              this.notifications = [event.data].concat(this.notifications);
+              this.totalNotificationsCount++;
+              break;
+          case StateUpdateType.Update:
+              if (event.silent) {
+                this.notifications = this.notifications.map(c => c.id === event.data.id ? event.data : c);
+              } else {
+                const idx = this.notifications.findIndex(c => c.id === event.data.id);
+                this.notifications.splice(idx, 1);
+                this.notifications = [event.data].concat(this.notifications);
+              }
+              break;
+          case StateUpdateType.Delete:
+              this.notifications = this.notifications.filter(c => c.id != event.data.id);
+              this.totalNotificationsCount--;
+              break;
+        }
+        this._cdr.detectChanges();
+    });
+    this.notifications = this.notificationsStateService.getAll();
+    this.totalNotificationsCount = this.notificationsStateService.totalNotificationsCount;
   }
 
   onCloseClick(): void {
@@ -70,9 +103,9 @@ export class NotificationsPreviewComponent extends AppComponentBase implements O
     this.notificationsModal.show();
   }
 
-  onNotificationClick(notification: FormattedNotification): void {
+  onNotificationClick(notification: NotificationDto): void {
     this.setNotificationAsRead(notification);
-    const decodedUrl = decodeURIComponent(notification.link);
+    const decodedUrl = decodeURIComponent(notification.url);
     const urlParts = decodedUrl.split('?');
     const path = urlParts[0].replace(AppConsts.appBaseUrl, '');
     if (urlParts[1]) {
@@ -88,62 +121,23 @@ export class NotificationsPreviewComponent extends AppComponentBase implements O
     }
   }
 
-  onReadNotificationClick(e: Event, notification: FormattedNotification): void {
+  onReadNotificationClick(e: Event, notification: NotificationDto): void {
     e.preventDefault();
     e.stopPropagation();
     this.setNotificationAsRead(notification);
   }
 
-  private getUserNotifications(): void {
-    this._notificationsService.getRecent()
-      .pipe(
-        takeUntil(this.destroyed$),
-      )
-      .subscribe(notifications => {
-        this.notifications = [];
-        _.forEach(notifications, notification => {
-          this.formatNotification(notification);
-        });
-      });
-  }
-
-  private formatNotification(notification: UserNotification, isRecent = false): void {
-    const notificationData = notification.notification.data;
-    if (notification.notification.data.type === 'Abp.Notifications.LocalizableMessageNotificationData') {
-      const formattedNotification = new FormattedNotification();
-      const notificationProperties = _.clone(notificationData.properties);
-      delete notificationProperties.Message;
-      const props = Object.values(notificationProperties);
-      formattedNotification.id = notification.id;
-      formattedNotification.notificationMessage = this.l(notificationData.properties.Message.name, ...props);
-      formattedNotification.creationTime = moment(notification.notification.creationTime).fromNow();
-      formattedNotification.link = notificationProperties.Link;
-      formattedNotification.state = notification.state;
-      this._documentsService.getProfilePictureUrl(notificationProperties.CreatorUserId)
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe(url => {
-          formattedNotification.userProfilePictureUrl = url;
-          this._cd.detectChanges();
-        });
-      if (isRecent) {
-        this.notifications.unshift(formattedNotification);
-      } else {
-        this.notifications.push(formattedNotification);
-      }
-      this.updateUnreadCount();
-      this._cd.detectChanges();
-    }
-  }
-
-  private updateUnreadCount(): void {
-    this.unreadCount = _.filter(this.notifications, e => e.state === UserNotificationState.Unread).length;
-    this._cd.detectChanges();
-  }
-
-  private setNotificationAsRead(notification: FormattedNotification): void {
-    abp.event.trigger(uiEvents.notificationRead, notification.id);
-    this._notificationsService.updateNotificationReadState(notification.id)
+  private setNotificationAsRead(notification: NotificationDto): void {
+    this._notificationsService.read(notification.id)
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(() => { });
+      .subscribe(() => {});
+  }
+
+  getDominantUser(notification: NotificationDto): UserDto {
+    return notification.actors?.[0]?.user;
+  }
+
+  getNotificationReceivedTime(notification: NotificationDto): string {
+    return this.convertMomentToPostDateAgo(notification.creationTime ?? notification.lastModificationTime);
   }
 }

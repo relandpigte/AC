@@ -13,6 +13,7 @@ using System;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using Academically.Users.Dto;
+using Academically.Services.Notifications.Dto;
 
 namespace Academically.Hubs
 {
@@ -43,7 +44,9 @@ namespace Academically.Hubs
         Task NotifyUsersForChannelArchive(ChannelDto channel);
         Task NotifyUsersForChannelUnarchive(ChannelDto channel);
         Task NotifyUsersForNewUserActivities(UserStatusLogDto statusLog);
-        
+        Task NotifyUsersForNewNotification(NotificationDto notification);
+        Task NotifyUsersForUpdatedNotification(NotificationDto notification);
+        Task NotifyUsersForDeletedNotification(NotificationDto notification);
     }
 
     public class HubManager : IHubManager
@@ -54,6 +57,7 @@ namespace Academically.Hubs
         private const string AllChannels = "ch-all";
         private const string AllMsgChannels = "ch-msg-all";
         private const string AllUserStatusLogs = "user-status-logs";
+        private const string AllNotifications = "notif-all";
 
         private readonly IHubContext<UserTopicsHub> _userTopicsHub;
         private readonly IHubContext<PostsHub> _postsHub;
@@ -63,6 +67,7 @@ namespace Academically.Hubs
         private readonly IHubContext<ChannelsHub> _channelsHub;
         private readonly IHubContext<ChannelMessagesHub> _channelMessagesHub;
         private readonly IHubContext<NewUserStatusLogHub> _newUserLoggedInHub;
+        private readonly IHubContext<NotificationsHub> _notificationsHub;
         private readonly IRepository<Post, Guid> _postRepository;
         private readonly IRepository<Comment, Guid> _commentsRepository;
         private readonly IRepository<Reaction, Guid> _reactionsRepository;
@@ -75,6 +80,7 @@ namespace Academically.Hubs
             IHubContext<ChannelsHub> channelsHub,
             IHubContext<ChannelMessagesHub> channelMessagesHub,
             IHubContext<NewUserStatusLogHub> newUserLoggedInHub,
+            IHubContext<NotificationsHub> notificationsHub,
             IRepository<Post, Guid> postRepository,
             IRepository<Comment, Guid> commentsRepository,
             IRepository<Reaction, Guid> reactionsRepository)
@@ -86,6 +92,7 @@ namespace Academically.Hubs
             _reactionsHub = reactionsHub;
             _channelsHub = channelsHub;
             _channelMessagesHub = channelMessagesHub;
+            _notificationsHub = notificationsHub;
             _postRepository = postRepository;
             _commentsRepository = commentsRepository;
             _reactionsRepository = reactionsRepository;
@@ -334,6 +341,21 @@ namespace Academically.Hubs
         {
             await _newUserLoggedInHub.Clients.Group(AllUserStatusLogs).SendAsync(nameof(HubEvent.NewUserLoggedIn), statusLog);
             await _newUserLoggedInHub.Clients.Group($"user-{statusLog.CreatorUserId}").SendAsync(nameof(HubEvent.NewUserLoggedIn), statusLog);
+        }
+
+        public async Task NotifyUsersForNewNotification(NotificationDto notification)
+        {
+            await _notificationsHub.Clients.Group($"notif-{notification.UserId}").SendAsync(nameof(HubEvent.NotificationCreated), notification);
+        }
+
+        public async Task NotifyUsersForUpdatedNotification(NotificationDto notification)
+        {
+            await _notificationsHub.Clients.Group($"notif-{notification.UserId}").SendAsync(nameof(HubEvent.NotificationUpdated), notification);
+        }
+
+        public async Task NotifyUsersForDeletedNotification(NotificationDto notification)
+        {
+            await _notificationsHub.Clients.Group($"notif-{notification.UserId}").SendAsync(nameof(HubEvent.NotificationDeleted), notification);
         }
     }
 }

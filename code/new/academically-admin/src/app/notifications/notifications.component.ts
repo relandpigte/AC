@@ -94,7 +94,7 @@ export class NotificationsComponent extends PagedListingComponentBase<UserNotifi
     request.stateFilter = this.stateFilter;
 
     this._notificationsService
-      .getAll(
+      .getAllPaged(
         request.searchFilter,
         request.stateFilter,
         request.skipCount,

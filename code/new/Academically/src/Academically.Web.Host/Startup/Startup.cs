@@ -163,6 +163,7 @@ namespace Academically.Web.Host.Startup
                 endpoints.MapHub<EventSessionsHub>("/signalr-eventSessionsHub");
                 endpoints.MapHub<QuestionsHub>("/signalr-questionsHub");
                 endpoints.MapHub<PostsHub>("/signalr-postsHub");
+                endpoints.MapHub<NotificationsHub>("/signalr-notificationsHub");
                 endpoints.MapHub<UserTopicsHub>("/signalr-userTopicsHub");
                 endpoints.MapHub<ServicesHub>("/signalr-servicesHub");
                 endpoints.MapHub<CommentsHub>("/signalr-commentsHub");

@@ -19,7 +19,7 @@ export abstract class StateServiceBase {
     actionArgs: { [key in AppStateActionNames]?: any };
 
     abstract loadData(component: any, userId: number): Promise<void>;
-    protected abstract setupSubscriptions(component: any, userId: number): Promise<Subscription | Subscription[]>;
+    protected abstract setupSubscriptions(component: any, userId: number): Promise<Subscription | Subscription[] | null>;
 
     get loadArgs() { return [].concat(!this.actionArgs?.['load'] || typeof this.actionArgs['load'] === 'boolean' ? [] : this.actionArgs['load']); }
     get updateArgs() { return [].concat(!this.actionArgs?.['update'] || typeof this.actionArgs['update'] === 'boolean' ? [] : this.actionArgs['update']); }

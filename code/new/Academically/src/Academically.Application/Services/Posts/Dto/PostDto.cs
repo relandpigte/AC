@@ -23,6 +23,7 @@ namespace Academically.Services.Posts.Dto
         public Guid? SpaceId { get; set; }
         public PostType Type { get; set; }
         public Guid? ParentId { get; set; }
+        public virtual PostDto Parent { get; set; }
         public UserDto CreatorUser { get; set; }
         public bool IsHidden { get; set; }
         public Guid? SharedId { get; set; }

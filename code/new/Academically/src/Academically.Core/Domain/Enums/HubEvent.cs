@@ -26,6 +26,9 @@
         ChannelMemberTyping,
         ChannelArchive,
         ChannelUnarchive,
-        NewUserLoggedIn
+        NewUserLoggedIn,
+        NotificationCreated,
+        NotificationUpdated,
+        NotificationDeleted
     }
 }
