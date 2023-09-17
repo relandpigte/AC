@@ -1,12 +1,14 @@
 import { Component, Injector, OnInit } from '@angular/core';
 
 import { AppComponentBase } from '@shared/app-component-base';
-import { UserDto } from '@shared/service-proxies/service-proxies';
+import { CoachingDto, UserDto } from '@shared/service-proxies/service-proxies';
 import { NavigationPosition } from '@shared/enums/theme-settings/navigation-position.enum';
 import { IThemeSetting } from '@shared/interfaces/theme-setting.interface';
 import { ThemeManagerService } from '@shared/services/theme-manager.service';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
+import { ServiceDataService } from '@shared/services/service-data.service';
+import { takeUntil } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -14,6 +16,7 @@ import { LandingPagesService } from '@shared/services/landing-pages.service';
   styleUrls: ['./header.component.less']
 })
 export class HeaderComponent extends AppComponentBase implements OnInit {
+  data: CoachingDto;
   user: UserDto;
   themeSettings: IThemeSetting;
   NavigationPosition = NavigationPosition;
@@ -23,7 +26,8 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     _themeSettingsService: ThemeManagerService,
-    private _landingPageService: LandingPagesService
+    private _landingPageService: LandingPagesService,
+    private _serviceData: ServiceDataService
   ) {
     super(injector);
     this.themeSettings = _themeSettingsService.getConfiguration();
@@ -32,8 +36,13 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
   get profilePictureUrl(): string { return this.appSession.user.profilePictureUrl; }
   get profileFullName(): string { return `${this.appSession.user.name} ${this.appSession.user.surname}`; }
   get profileCoverPhotoUrl(): string { return this.appSession.user.coverPictureUrl; }
+  get coachingTitle(): string { return this.data?.name; }
 
   get isLoading$() { return this._landingPageService.isLoading$; }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this._serviceData.serviceData$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(data => this.data = data);
+  }
 }

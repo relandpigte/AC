@@ -127,6 +127,10 @@ export class CoachingDiscussionComponent extends AppComponentBase implements OnI
         .subscribe(() => {});
   }
 
+  handleChildrenUpdate(post: PostDto): void {
+    this.postsStateService.updateChildrenCount(post);
+  }
+
   private async initPostsAppStates() {
     const appStateConfig: AppStateConfig = {
       [this.postsStateId]: {

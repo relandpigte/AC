@@ -33,10 +33,7 @@ export class AboutCoachComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
     this._serviceData.serviceData$
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(data => {
-        this.data = data;
-        console.log(data);
-      });
+      .subscribe(data =>  this.data = data);
   }
 
   onMessageClick(): void {

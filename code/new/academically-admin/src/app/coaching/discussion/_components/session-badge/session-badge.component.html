@@ -32,7 +32,7 @@
         <div class="description">
             <span *ngIf="!showMore" [innerHTML]="(description | shorten : showMoreLimit) + ''"></span>
             <span *ngIf="showMore" [innerHTML]="description"></span>
-            <a class="show-more" role="button" (click)="showMore = !showMore"> See {{ showMore ? 'less' : 'more' }}</a>
+            <a *ngIf="displayShowMore" class="show-more" role="button" (click)="showMore = !showMore"> See {{ showMore ? 'less' : 'more' }}</a>
         </div>
 
         <div class="topics d-flex flex-wrap justify-content-start align-items-center gap-10">
