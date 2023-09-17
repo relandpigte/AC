@@ -236,7 +236,7 @@ import { TutorHomeComponent } from './tutor-home/tutor-home.component';
               ),
           },
           {
-            path: 'course',
+            path: 'course/:id',
             loadChildren: () =>
               import('@app/course/course.module').then(
                 (m) => m.CourseModule

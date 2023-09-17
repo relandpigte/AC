@@ -11,11 +11,11 @@
             <div class="row">
                 <div class="col col-sm-12">
                     <ng-container *ngIf="isAboutTab || isDiscussionTab">
-                        <app-instructor-badge></app-instructor-badge>
-                        <app-related-courses></app-related-courses>
+                        <app-instructor-badge [data]="data"></app-instructor-badge>
+                        <app-related-courses [data]="data"></app-related-courses>
                     </ng-container>
                     <ng-container *ngIf="isReviewsTab">
-                        <app-review-stats></app-review-stats>
+                        <app-review-stats [data]="data"></app-review-stats>
                     </ng-container>
                 </div>
             </div>

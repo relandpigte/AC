@@ -27,7 +27,7 @@ export class AboutCoachComponent extends AppComponentBase implements OnInit {
 
   get profilePictureUrl(): string { return this.appSession.user.profilePictureUrl; }
   get profileFullName(): string { return `${this.appSession.user.name} ${this.appSession.user.surname}`; }
-  get profileAboutText(): string | boolean { return this.removeTags(this.data?.creatorUser?.about); }
+  get profileAboutText() { return this.removeHTMLTags(this.data?.creatorUser?.about); }
   get isLoading$() { return this._landingPageService.isLoading$; }
 
   ngOnInit(): void {
@@ -38,14 +38,5 @@ export class AboutCoachComponent extends AppComponentBase implements OnInit {
 
   onMessageClick(): void {
     this._chatService.openChat$.next();
-  }
-
-  private removeTags(str: string): string | boolean {
-    if ((str === null) || (str === '') || str === undefined) {
-      return false;
-    } else {
-      str = str.toString();
-    }
-    return str.replace( /(<([^>]+)>)/ig, '');
   }
 }
