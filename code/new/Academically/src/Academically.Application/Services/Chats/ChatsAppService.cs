@@ -462,6 +462,7 @@ namespace Academically.Services.Chats
             var users = await this._channelMemberRepository.GetAll()
                 .Include(m => m.User)
                 .Where(m => channelIds.Contains(m.ChannelId))
+                .Where(m => m.UserId != AbpSession.UserId.Value)
                 .Select(m => ObjectMapper.Map<UserDto>(m.User))
                 .ToListAsync();
 
