@@ -32,17 +32,17 @@
             <div class="row align-items-center">
                 <div class="col">
                     <ul class="nav nav-tabs nav-overflow header-tabs profile-menu">
-                        <li *ngIf="permission.isGranted('Pages.Coaching.About')" class="nav-item">
+                        <li class="nav-item">
                             <a [routerLink]="['about']" routerLinkActive="active" class="nav-link">
                                 {{ 'About' | localize }}
                             </a>
                         </li>
-                        <li *ngIf="permission.isGranted('Pages.Coaching.Discussion')" class="nav-item">
+                        <li class="nav-item">
                             <a [routerLink]="['discussion']" routerLinkActive="active" class="nav-link">
                                 {{ 'Discussion' | localize }}
                             </a>
                         </li>
-                        <li *ngIf="permission.isGranted('Pages.Coaching.Reviews')" class="nav-item">
+                        <li class="nav-item">
                             <a [routerLink]="['reviews']" routerLinkActive="active" class="nav-link">
                                 {{ 'Reviews' | localize }}
                             </a>
