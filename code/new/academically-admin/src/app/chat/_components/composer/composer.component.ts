@@ -5,7 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { MessageComposeData } from '@app/chat/chat.component';
 import { AppComponentBase } from '@shared/app-component-base';
-import { AvailableServiceDto, ChannelDto, ChannelMessageDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, ChannelDto, ChannelMessageDto } from '@shared/service-proxies/service-proxies';
 import { ChatService } from '@shared/services/chat.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
@@ -21,6 +21,7 @@ export class ComposerComponent extends AppComponentBase implements OnInit{
   @ViewChild('messageInput') messageInput: ElementRef<HTMLInputElement>;
   @ViewChild('fileInput') fileInput: ElementRef<HTMLInputElement>;
 
+  @Input() channel: ChannelDto;
   @Input() replyingTo: ChannelMessageDto;
   @Input() isUserBlocked: boolean;
   @Input() blockedByUser: number[];
@@ -32,7 +33,6 @@ export class ComposerComponent extends AppComponentBase implements OnInit{
   isShowServicePicker = false;
   fileAttachment: File;
   allowedExtensions: string[] = [];
-  selectedChannel: ChannelDto;
   blockedUserIds: number[] = [];
 
   private maxFileSize = fileUploadConfiguration.maxFileSize;
@@ -43,8 +43,7 @@ export class ComposerComponent extends AppComponentBase implements OnInit{
   constructor(
     injector: Injector,
     private _chatService: ChatService,
-    private _modalService: BsModalService,
-    private _userService: UserServiceProxy
+    private _modalService: BsModalService
   ) {
     super(injector);
 
@@ -64,9 +63,6 @@ export class ComposerComponent extends AppComponentBase implements OnInit{
       .pipe(takeUntil(this.destroyed$))
       .subscribe(service => this.selectedService = service);
 
-    this._chatService.selectedChannel$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(channel => this.selectedChannel = channel);
   }
 
   get replyingToRecipient(): string { return this.replyingTo?.creatorUser?.name ?? 'Miyah'; }
@@ -74,7 +70,7 @@ export class ComposerComponent extends AppComponentBase implements OnInit{
   get isShowAddService(): boolean { return this.isTutor; }
   get hasAttachments(): boolean { return !!this.fileAttachment || !!this.selectedService; }
   get isBlockedByRecipient(): boolean {
-    const blockByRecipient = this.selectedChannel?.members.find(m => m.userId !== this.appSession.userId);
+    const blockByRecipient = this.channel?.members.find(m => m.userId !== this.appSession.userId);
     return this.blockedByUser?.includes(blockByRecipient?.userId);
   }
 
@@ -181,9 +177,9 @@ export class ComposerComponent extends AppComponentBase implements OnInit{
   }
 
   private getBlockedUsersIds(): void {
-    if (!this.selectedChannel) { return; }
+    if (!this.channel) { return; }
 
-    this.selectedChannel?.blockedUsers?.map(user => {
+    this.channel?.blockedUsers?.map(user => {
       this.blockedUserIds.push(user.blockedUserId);
     });
   }

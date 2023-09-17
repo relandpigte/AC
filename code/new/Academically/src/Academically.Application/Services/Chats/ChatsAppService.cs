@@ -490,6 +490,20 @@ namespace Academically.Services.Chats
                 .ToListAsync();
         }
         
+        public async Task<ChannelDto> GetChannelByRecipient(long userId)
+        {
+            return await _channelRepository.GetAll()
+                .Include(c => c.Members)
+                .ThenInclude(m => m.User)
+                .Include(c => c.Messages)
+                .Include(c => c.ChannelNotifications)
+                .Where(c => !c.IsDeleted)
+                .Where(c => c.Members.Any(m => m.UserId == userId))
+                .Where(c => c.Members.Any(m => m.UserId == AbpSession.UserId.Value))
+                .Select(c => ObjectMapper.Map<ChannelDto>(c))
+                .FirstOrDefaultAsync();
+        }
+        
         private async Task FillInService(ChannelMessageDto message)
         {
             if (message?.ServiceId == null) return;

@@ -10,7 +10,7 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { takeUntil } from 'rxjs/operators';
 import { ActivatedRoute } from '@node_modules/@angular/router';
 import { ServiceDataService } from '@shared/services/service-data.service';
-import { EventDto, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ChatsServiceProxy, EventDto, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-events',
@@ -30,16 +30,17 @@ export class EventsComponent extends  AppComponentBase implements OnInit {
     private _modalService: BsModalService,
     private _route: ActivatedRoute,
     private _serviceData: ServiceDataService,
-    private _eventsService: EventsServiceProxy
+    private _eventsService: EventsServiceProxy,
+    private _chatsService: ChatsServiceProxy
   ) {
     super(injector);
     this._chatService.openChat$.subscribe(() => this.openMessageModal());
     this._serviceData.serviceData$.pipe(takeUntil(this.destroyed$)).subscribe(d => this.data = d);
-
   }
 
   get isAboutTab(): boolean { return this._router.url.includes([`events/${this.id}`, 'about'].join('/')); }
   get isDiscussionTab(): boolean { return this._router.url.includes([`events/${this.id}`, 'discussion'].join('/')); }
+  get eventOwnerId(): number { return this.data?.creatorUserId; }
 
   ngOnInit(): void {
     setTimeout(() => this._landingPageService.setIsLoading(false), 2000);
@@ -47,17 +48,23 @@ export class EventsComponent extends  AppComponentBase implements OnInit {
   }
 
   private openMessageModal(): void {
-    const modalSettings = this.defaultModalSettings as ModalOptions<ComposerConversationComponent>;
-      modalSettings.class = 'modal-lg';
-      modalSettings.initialState = {
-        hasActions: false,
-        hasClose: true,
-        showAttachmentInfo: false
-      };
-      const modal = this._modalService.show(ComposerConversationComponent, modalSettings);
-      modal.content.onCloseClick
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe(() => modal.hide());
+    this._chatsService.getChannelByRecipient(this.eventOwnerId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(channel => {
+        const modalSettings = this.defaultModalSettings as ModalOptions<ComposerConversationComponent>;
+        modalSettings.class = 'modal-lg';
+        modalSettings.initialState = {
+          hasActions: false,
+          hasClose: true,
+          showAttachmentInfo: false,
+          channel: channel,
+          isSearchingUser: false
+        };
+        const modal = this._modalService.show(ComposerConversationComponent, modalSettings);
+        modal.content.onCloseClick
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(() => modal.hide());
+      });
   }
 
   private getServiceId(): void {

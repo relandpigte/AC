@@ -16,6 +16,7 @@
 </div>
 <div *ngIf="!isSearchingUser" class="chat-conversation-composer border-top mt-auto" [class.has-attachment]="!!replyingTo">
     <app-composer
+        [channel]="channel"
         [replyingTo]="replyingTo"
         [blockedByUser]="blockedByUser"
         (onReply)="handleReplyClick($event)"

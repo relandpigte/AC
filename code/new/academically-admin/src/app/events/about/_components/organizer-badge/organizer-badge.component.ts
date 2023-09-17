@@ -27,6 +27,7 @@ export class OrganizerBadgeComponent extends AppComponentBase implements OnInit 
   get profileFullName(): string { return `${this.appSession.user.name} ${this.appSession.user.surname}`; }
   get isLoading$() { return this._landingPageService.isLoading$; }
   get organizerName(): string { return this.data?.creatorUser?.fullName; }
+  get isOwner(): boolean { return this.data?.creatorUserId === this.appSession.userId; }
 
   ngOnInit(): void {
   }
