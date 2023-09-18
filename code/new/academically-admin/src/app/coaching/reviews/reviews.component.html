@@ -14,7 +14,7 @@
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{ 'Latest' | localize }} <span class="fe fe-chevron-down"></span>
                 </a>
-                <div class="dropdown-menu dropdown-menu-left" [style.marginTop.px]="10">
+                <div class="dropdown-menu dropdown-menu-left" [style.margin-top.px]="10">
                     <div class="dropdown-item cursor-pointer d-flex justify-content-between">
                         <div>{{ 'Latest' | localize }}</div>
                         <i *ngIf="false" class="fe fe-check"></i>
@@ -32,11 +32,7 @@
         </div>
     </div>
 
-    <div class="reviews-content w-100">
-        <app-service-review></app-service-review>
-        <app-service-review></app-service-review>
-        <app-service-review></app-service-review>
-        <app-service-review></app-service-review>
-        <app-service-review></app-service-review>
+    <div *ngIf="tutorRatings" class="reviews-content w-100">
+        <app-service-review *ngFor="let rating of tutorRatings" [rating]="rating"></app-service-review>
     </div>
 </div>

@@ -20,7 +20,7 @@
                         <app-about-related-coaching></app-about-related-coaching>
                     </ng-container>
                     <ng-container *ngIf="isReviewsTab">
-                        <app-review-stats></app-review-stats>
+                        <app-review-stats [data]="data"></app-review-stats>
                     </ng-container>
                 </div>
             </div>
