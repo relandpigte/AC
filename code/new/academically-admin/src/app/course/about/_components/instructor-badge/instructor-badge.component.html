@@ -1,7 +1,7 @@
 <div class="card custom-card-border custom-card-shadow">
     <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.LandingRightAuthor"></app-shimmer>
     <div class="card-body text-center">
-        <img [alt]="profileFullName" class="avatar-img rounded-circle"
+        <img [alt]="ownerName" class="avatar-img rounded-circle"
              [src]="getProfilePicture(profilePictureUrl)" />
         <h5 class="card-title">{{ ownerName }}</h5>
         <p class="card-text">{{ ownerAbout }}</p>

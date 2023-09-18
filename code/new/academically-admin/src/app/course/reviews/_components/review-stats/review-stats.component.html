@@ -3,59 +3,59 @@
 
     <div class="card-body">
         <div class="stat d-flex flex-column">
-            <div class="stat-title">96.9% Positive reviews</div>
+            <div class="stat-title">{{ tutorRatingSummary?.positivePercentage }}% {{ 'PositiveReviews' | localize}}</div>
             <div class="stat-overall-rating d-flex justify-content-start">
-                <app-star-rating [actualRating]="4.2"></app-star-rating>
-                <span class="ml-1">4.2/5.0</span>
+                <app-star-ratings *ngIf="tutorRatingSummary?.totalRatingPercentage" [userRating]="tutorRatingSummary?.totalRatingPercentage"></app-star-ratings>
+                <span class="ml-1">{{ tutorRatingSummary?.totalRatingPercentage }}/5.0</span>
             </div>
-            <div class="stat-overall-review">35 reviews</div>
+            <div class="stat-overall-review">{{ tutorRatingSummary?.totalReviews }} reviews</div>
             <div class="stat-experience d-flex justify-content-start gap-30">
                 <div class="d-flex flex-column">
                     <div class="d-flex align-content-center gap-8">
                         <span class="badge badge-soft-success rounded-circle"><i class="fe fe-plus"></i></span>
-                        <span class="rating">31</span>
+                        <span class="rating">{{ tutorRatingSummary?.totalPositiveReviews }}</span>
                     </div>
                     {{ 'Positive' | localize }}
                 </div>
                 <div class="d-flex flex-column">
                     <div class="d-flex align-content-center gap-8">
-                        <span class="badge badge-soft-secondary rounded-circle"><i class="fas fa-circle neutral-icon-font font-size-sm" ></i></span>
-                        <span class="rating">31</span>
+                        <span class="badge badge-soft-secondary rounded-circle"><i class="fas fa-circle neutral-icon-font" ></i></span>
+                        <span class="rating">{{ tutorRatingSummary?.totalNeutralReviews }}</span>
                     </div>
                     {{ 'Neutral' | localize }}
                 </div>
                 <div class="d-flex flex-column">
                     <div class="d-flex align-content-center gap-8">
                         <span class="badge badge-soft-danger rounded-circle"><i class="fe fe-minus"></i></span>
-                        <span class="rating">31</span>
+                        <span class="rating">{{ tutorRatingSummary?.totalNegativeReviews }}</span>
                     </div>
                     {{ 'Negative' | localize }}
                 </div>
             </div>
             <div class="stat-breakdown">
                 <div class="d-flex justify-content-start gap-10">
-                    <div>5/5</div>
-                    <div><app-star-rating [actualRating]="5"></app-star-rating></div>
+                    <div>3.5/5</div>
+                    <app-star-ratings [userRating]="3.5"></app-star-ratings>
                     <div>Accuracy & recentness</div>
                 </div>
                 <div class="d-flex gap-10">
-                    <div>4/5</div>
-                    <div><app-star-rating [actualRating]="4"></app-star-rating></div>
+                    <div>4.6/5</div>
+                    <app-star-ratings [userRating]="3.6"></app-star-ratings>
                     <div>Value for money</div>
                 </div>
                 <div class="d-flex gap-10">
-                    <div>3/5</div>
-                    <div><app-star-rating [actualRating]="3"></app-star-rating></div>
+                    <div>3.8/5</div>
+                    <app-star-ratings [userRating]="3.8"></app-star-ratings>
                     <div>Interaction & engagement</div>
                 </div>
                 <div class="d-flex gap-10">
-                    <div>2/5</div>
-                    <div><app-star-rating [actualRating]="2"></app-star-rating></div>
+                    <div>2.4/5</div>
+                    <app-star-ratings [userRating]="2.4"></app-star-ratings>
                     <div>Design & structure</div>
                 </div>
                 <div class="d-flex gap-10">
-                    <div>1/5</div>
-                    <div><app-star-rating [actualRating]="1"></app-star-rating></div>
+                    <div>1.8/5</div>
+                    <app-star-ratings [userRating]="1.8"></app-star-ratings>
                     <div>Communication & support</div>
                 </div>
             </div>

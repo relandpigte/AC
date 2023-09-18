@@ -4,12 +4,12 @@
         <div class="review-heading d-flex flex-row flex-nowrap align-items-center">
             <div class="review-heading-avatar">
                 <a href="#" class="avatar avatar-sm">
-                    <img [src]="tempAvatar" class="avatar-img rounded-circle" alt="profile" />
+                    <img [src]="userRatingAvatar" class="avatar-img rounded-circle" alt="profile"/>
                 </a>
             </div>
             <div class="review-heading-owner flex-grow-1 d-flex flex-column flex-nowrap gap-3">
                 <div class="review-heading-owner-name d-flex flex-row align-items-center gap-8">
-                    {{ 'Casey Fyfe' | titlecase }}
+                    {{ userRatingName | titlecase }}
                     <button
                         type="button"
                         class="btn btn-link review-heading-owner-follow d-flex justify-content-center align-items-center">
@@ -19,27 +19,30 @@
                     </button>
                 </div>
                 <div class="review-heading-owner-time" role="button">
-                    <span [tooltip]="'10:45 pm'">10:45 pm</span>
+                    <span [tooltip]="userRatingDate">{{ userRatingDate }}</span>
                 </div>
             </div>
         </div>
-        <div class="review-ratings d-flex align-items-center gap-10">
-            <div class="stars d-flex justify-content-center align-items-center">
-                <div class="icon fas fa-star active"></div>
-                <div class="icon fas fa-star active"></div>
-                <div class="icon fas fa-star active"></div>
-                <div class="icon fas fa-star active"></div>
-                <div class="icon fas fa-star"></div>
+        <div class="review-rating-container d-flex gap-10 align-items-center">
+            <app-star-ratings [userRating]="userRatingValue"></app-star-ratings>
+            <div class="rating-badge d-flex gap-10">
+                <span class="label">{{ userRatingValue }}/5</span>
+                <ng-container [ngSwitch]="rating?.experienceType">
+                    <span *ngSwitchCase="ratingExperienceType.Positive" class="badge badge-soft-success rounded-pill d-flex align-items-center">
+                        <i class="fe fe-plus mr-1"></i>Positive
+                    </span>
+                    <span *ngSwitchCase="ratingExperienceType.Neutral" class="badge badge-soft-secondary rounded-pill d-flex align-items-center">
+                        <i class="fas fa-circle neutral-icon-font mr-1"></i>Neutral
+                    </span>
+                    <span *ngSwitchCase="ratingExperienceType.Negative" class="badge badge-soft-danger rounded-pill d-flex align-items-center">
+                        <i class="fe fe-minus mr-1"></i>Negative
+                    </span>
+                </ng-container>
             </div>
-            <span class="label">4.2/5.0</span>
-            <span class="badge badge-soft-success rounded-pill">
-                <i class="fe fe-plus mr-2"></i>Positive
-            </span>
         </div>
         <div class="review-content d-flex flex-column">
             <div class="review-content-description">
-                I can’t even begin to express how good this final season of The Americans has been.
-                If you haven’t been watching, I implore you to do so.
+                {{ userReviewComment }}
             </div>
         </div>
     </div>

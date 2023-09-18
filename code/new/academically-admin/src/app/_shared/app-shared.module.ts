@@ -76,6 +76,7 @@ import { ServiceReviewComponent } from '@shared/components/service-review/servic
 import { ServiceCardDashboardComponent } from '@shared/components/service-card-dashboard/service-card-dashboard.component';
 import { ChatConversationComponent } from '@shared/components/chat-conversation/chat-conversation.component';
 import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
+import { ServiceRatingsComponent } from '@shared/components/service-ratings/service-ratings.component';
 
 @NgModule({
   declarations: [
@@ -128,6 +129,7 @@ import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.
     CommentHistoryComponent,
     NewPostFloaterComponent,
     ServiceReviewComponent,
+    ServiceRatingsComponent,
     ServiceCardDashboardComponent,
     ChatConversationComponent,
     UserAvatarComponent
@@ -224,6 +226,7 @@ import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.
     CommentHistoryComponent,
     NewPostFloaterComponent,
     ServiceReviewComponent,
+    ServiceRatingsComponent,
     ServiceCardDashboardComponent,
     ChatConversationComponent,
     UserAvatarComponent

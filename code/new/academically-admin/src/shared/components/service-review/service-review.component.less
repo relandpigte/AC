@@ -7,7 +7,6 @@
         .tooltip {
             filter: drop-shadow(0 0.75rem 1.5rem rgba(18, 38, 63, 0.03));
             -o-filter: drop-shadow(0 0.75rem 1.5rem rgba(18, 38, 63, 0.03));
-            -ms-filter: drop-shadow(0 0.75rem 1.5rem rgba(18, 38, 63, 0.03));
             -moz-filter: drop-shadow(0 0.75rem 1.5rem rgba(18, 38, 63, 0.03));
             -webkit-filter: drop-shadow(0 0.75rem 1.5rem rgba(18, 38, 63, 0.03));
 
@@ -101,34 +100,16 @@
         }
     }
 
-    &-ratings {
-        margin: 0.625rem 0;
-
-        .stars {
-            color: #3B516C;
-            font-size: 16px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: normal;
-            letter-spacing: -0.32px;
-
-            .icon {
-                color: #D2DDEC;
-
-                &.active {
-                    &::after {
-                        content: '';
-                        display: none;
-                    }
-
-                    color: #F5D83E;
-                }
-            }
-        }
+    &-rating-container {
+        margin: 5px 0;
 
         .label {
             color: #6E84A3;
             font-size: 15px;
+        }
+
+        .neutral-icon-font {
+            font-size: 10px;
         }
     }
 

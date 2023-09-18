@@ -1,0 +1,15 @@
+<div class="review-ratings d-flex align-items-center" [class.writeable]="!readonly">
+    <div class="stars base d-flex justify-content-center align-items-center gap-1">
+        <div (click)="rate(1)" class="icon fas fa-star"></div>
+        <div (click)="rate(2)" class="icon fas fa-star"></div>
+        <div (click)="rate(3)" class="icon fas fa-star"></div>
+        <div (click)="rate(4)" class="icon fas fa-star"></div>
+        <div (click)="rate(5)" class="icon fas fa-star"></div>
+    </div>
+    <div class="stars rating d-flex justify-content-center align-items-center gap-1">
+        <div *ngFor="let rating of ratings; let i = index" (click)="rate(i + 1)" class="icon fas fa-star"></div>
+        <div *ngIf="fractionRating" class="d-flex align-items-center">
+            <span [ngStyle]="{ 'width': fractionRating + '%' }" class="icon fas fa-star overflow-hidden"></span>
+        </div>
+    </div>
+</div>

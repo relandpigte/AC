@@ -32,11 +32,7 @@
         </div>
     </div>
 
-    <div class="reviews-content w-100">
-        <app-service-review></app-service-review>
-        <app-service-review></app-service-review>
-        <app-service-review></app-service-review>
-        <app-service-review></app-service-review>
-        <app-service-review></app-service-review>
+    <div *ngIf="tutorRatings" class="reviews-content w-100">
+        <app-service-review *ngFor="let rating of tutorRatings" [rating]="rating"></app-service-review>
     </div>
 </div>
