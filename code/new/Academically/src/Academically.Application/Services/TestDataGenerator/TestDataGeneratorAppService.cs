@@ -87,10 +87,10 @@ namespace Academically.Services.TestDataGenerator
 
         public async Task GenerateTestUsers()
         {
-            await GenerateTestUser("Howard", "Wolowitz", "hwolowitz@mailinator.com", "P@ssw0rd", StaticRoleNames.Tenants.Student);
-            await GenerateTestUser("Sheldon", "Cooper", "scooper@mailinator.com", "P@ssw0rd", StaticRoleNames.Tenants.Tutor);
-            await GenerateTestUser("Ken", "Kaneki", "kkaneki@mailinator.com", "P@ssw0rd", StaticRoleNames.Tenants.Student);
-            await GenerateTestUser("Leonard", "Hofstadter", "lhofstadter@mailinator.com", "P@ssw0rd", StaticRoleNames.Tenants.Tutor);
+            await GenerateTestUser("Tutor 1", "Dev", "dev+tutor1@mailinator.com", "P@$$w0rd", StaticRoleNames.Tenants.Tutor);
+            await GenerateTestUser("Student 1", "Dev", "dev+student1@mailinator.com", "P@$$w0rd", StaticRoleNames.Tenants.Student);
+            await GenerateTestUser("Student 2", "Dev", "dev+student2@mailinator.com", "P@$$w0rd", StaticRoleNames.Tenants.Student);
+            await GenerateTestUser("Student 3", "Dev", "dev+student3@mailinator.com", "P@$$w0rd", StaticRoleNames.Tenants.Student);
         }
 
         private async Task GenerateTestRatingAreaForTutor(Guid tutorRatingId, RatingAreaType areaType, RatingExperienceType experienceType)
