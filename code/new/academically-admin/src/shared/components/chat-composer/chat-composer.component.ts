@@ -13,11 +13,11 @@ import { FileUtils } from '@shared/helpers/file-utils';
 import { AddServiceComponent } from '@shared/modals/add-service/add-service.component';
 
 @Component({
-  selector: 'app-composer',
-  templateUrl: './composer.component.html',
-  styleUrls: ['./composer.component.less']
+  selector: 'app-chat-composer',
+  templateUrl: './chat-composer.component.html',
+  styleUrls: ['./chat-composer.component.less']
 })
-export class ComposerComponent extends AppComponentBase implements OnInit{
+export class ChatComposerComponent extends AppComponentBase implements OnInit{
   @ViewChild('messageInput') messageInput: ElementRef<HTMLInputElement>;
   @ViewChild('fileInput') fileInput: ElementRef<HTMLInputElement>;
 
@@ -70,7 +70,7 @@ export class ComposerComponent extends AppComponentBase implements OnInit{
   get isShowAddService(): boolean { return this.isTutor; }
   get hasAttachments(): boolean { return !!this.fileAttachment || !!this.selectedService; }
   get isBlockedByRecipient(): boolean {
-    const blockByRecipient = this.channel?.members.find(m => m.userId !== this.appSession.userId);
+    const blockByRecipient = this.channel?.members?.find(m => m.userId !== this.appSession.userId);
     return this.blockedByUser?.includes(blockByRecipient?.userId);
   }
 

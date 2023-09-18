@@ -129,12 +129,13 @@ export class RecipientComponent extends AppComponentBase implements OnChanges, O
     this.userAvatarStateService.userStatusLog$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
       switch (event.type) {
         case StateUpdateType.Add:
-          if (this.timer) { clearTimeout(this.timer); }
-          if (event.data.status === UserStatus.Online) {
-            this.timer = setTimeout(() => {
-              this.userAvatarStateService.createUserStatusReportLog(UserStatus.Away);
-            }, 15000); // TODO: 15 seconds user status change for testing purposes.
-          }
+          // TODO: We might need this later when Andrew change his mind
+          // if (this.timer) { clearTimeout(this.timer); }
+          // if (event.data.status === UserStatus.Online) {
+          //   this.timer = setTimeout(() => {
+          //     this.userAvatarStateService.createUserStatusReportLog(UserStatus.Away);
+          //   }, 15000); // TODO: 15 seconds user status change for testing purposes.
+          // }
           // TODO: Not sure if we need this
           // if (event.data.status === UserStatus.Away) {
           //   this.timer = setTimeout(() => {

@@ -7,16 +7,16 @@ import {
     ChatsServiceProxy,
     UserServiceProxy
 } from '@shared/service-proxies/service-proxies';
-import { ComposerComponent } from '../composer/composer.component';
 import { takeUntil } from 'rxjs/operators';
 import { ChatService, NotificationType } from '@shared/services/chat.service';
+import { ChatComposerComponent } from '@shared/components/chat-composer/chat-composer.component';
 
 @Component({
-    selector: 'app-composer-conversation',
-    templateUrl: './composer-conversation.component.html',
-    styleUrls: ['./composer-conversation.component.less']
+    selector: 'app-chat-composer-conversation',
+    templateUrl: './chat-composer-conversation.component.html',
+    styleUrls: ['./chat-composer-conversation.component.less']
 })
-export class ComposerConversationComponent extends AppComponentBase implements OnInit, OnChanges, AfterViewInit {
+export class ChatComposerConversationComponent extends AppComponentBase implements OnInit, OnChanges, AfterViewInit {
     @Input() channel: ChannelDto;
     @Input() hasActions = true;
     @Input() hasClose = false;
@@ -32,7 +32,7 @@ export class ComposerConversationComponent extends AppComponentBase implements O
     @Output() onCloseClick = new EventEmitter();
     @Output() onProcessNotification: EventEmitter<NotificationType> = new EventEmitter<NotificationType>();
 
-    @ViewChild(ComposerComponent) composerComponent: ComposerComponent;
+    @ViewChild(ChatComposerComponent) composerComponent: ChatComposerComponent;
 
     blockedUserIds: number[] = [];
 
@@ -45,7 +45,7 @@ export class ComposerConversationComponent extends AppComponentBase implements O
     }
 
     get isUserBlocked(): boolean {
-        const blockUser = this.channel?.members.find(m => m.userId !== this.appSession.userId);
+        const blockUser = this.channel?.members?.find(m => m.userId !== this.appSession.userId);
         return this.blockedUserIds?.includes(blockUser?.userId);
     }
 
@@ -78,7 +78,7 @@ export class ComposerConversationComponent extends AppComponentBase implements O
     }
 
     handleBlockUser(): void {
-        const blockUser = this.channel?.members.find(m => m.userId !== this.appSession.userId);
+        const blockUser = this.channel?.members?.find(m => m.userId !== this.appSession.userId);
         this._userService.blockUserById(blockUser?.userId)
           .pipe(takeUntil(this.destroyed$))
           .subscribe(user => {
@@ -87,7 +87,7 @@ export class ComposerConversationComponent extends AppComponentBase implements O
     }
 
     handleUnBlockUser(): void {
-        const blockUser = this.channel?.members.find(m => m.userId !== this.appSession.userId);
+        const blockUser = this.channel?.members?.find(m => m.userId !== this.appSession.userId);
         this._userService.unblockUserById(blockUser.userId)
           .pipe(takeUntil(this.destroyed$))
           .subscribe(result => {

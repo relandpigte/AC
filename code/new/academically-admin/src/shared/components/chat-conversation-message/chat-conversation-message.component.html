@@ -1,0 +1,71 @@
+<div class="d-flex">
+    <div class="conversation-wrapper d-flex flex-column gap-5" [class.has-reply]="parentMessage" [ngClass]="isSender ? 'sender' : 'recipient'" [class.msg-empty]="!chatMessage">
+        <div class="d-flex gap-10">
+            <div *ngIf="!isSender && parentMessage" [style.width.px]="35" [style.height.px]="35"></div>
+            <div *ngIf="parentMessage" class="parent-message">
+                <div class="parent-message-header d-flex flex-column align-items-start gap-3">
+                    <div class="user-info d-flex gap-5">
+                        <div class="name font-weight-bold">{{ parentMessage?.creatorUser?.fullName | titlecase }}</div>
+                        <span class="time">{{ convertMomentToPostDateAgo(parentMessage?.creationTime, false) }}</span>
+                    </div>
+                    <div class="parent-message-content" [class.message-deleted]="parentMessage.isDeleted">
+                        {{ isDeleted ? ('MessageDeleted' | localize) : parentMessage.message }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex gap-10">
+            <div *ngIf="!isSender && chatMessage" class="avatar flex-grow-1">
+                <img *ngIf="data?.creatorUser?.profilePictureUrl" class="avatar-img rounded-circle" [src]="getProfilePicture(data?.creatorUser?.profilePictureUrl)" [alt]="data?.creatorUser?.fullName"/>
+                <img *ngIf="!data?.creatorUser?.profilePictureUrl" class="avatar-img rounded-circle" src="assets/img/anonymous.png" alt="..."/>
+            </div>
+
+            <div *ngIf="chatMessage" class="message position-relative">
+                <div class="message-header d-flex align-items-center gap-10">
+                    <div class="user-info d-flex gap-5">
+                        <div *ngIf="!isBlockedByRecipient" class="name font-weight-bold">{{ data?.creatorUser?.fullName | titlecase }}</div>
+                        <div *ngIf="isBlockedByRecipient" class="name font-weight-bold">{{ 'User' | titlecase }}</div>
+                        <span class="time">{{ convertMomentToPostDateAgo(data?.creationTime, false) }}</span>
+                    </div>
+                    <div class="actions ml-auto">
+                        <div class="dropdown">
+                            <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false">
+                                <span class="fe fe-more-horizontal"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <div class="dropdown-item cursor-pointer" (click)="handleMessageInfoPopup(data)">Message
+                                    info
+                                </div>
+                                <div class="dropdown-item cursor-pointer" (click)="handleMessageReply()">Reply</div>
+                                <div class="dropdown-item cursor-pointer" (click)="handleMessageDelete(data.id)">Delete
+                                    message
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="message-content" [class.message-deleted]="isDeleted">
+                    {{ isDeleted ? ('MessageDeleted' | localize) : chatMessage }}
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="hasAttachedService(data)" class="message-attachment d-flex position-relative gap-10" [style.margin-top.px]="5">
+            <div *ngIf="!isSender && hasAttachedService(data) && chatMessage" [style.width.px]="35" [style.height.px]="35"></div>
+            <div *ngIf="!isSender && !chatMessage" class="avatar flex-grow-1">
+                <img *ngIf="data?.creatorUser?.profilePictureUrl" class="avatar-img rounded-circle" [src]="getProfilePicture(data?.creatorUser?.profilePictureUrl)" [alt]="data?.creatorUser?.fullName"/>
+                <img *ngIf="!data?.creatorUser?.profilePictureUrl" class="avatar-img rounded-circle" src="assets/img/anonymous.png" alt="..."/>
+            </div>
+            <app-service-preview-lite [service]="getAttachedService(data)" [canRemove]="false"></app-service-preview-lite>
+            <app-attachment-preview
+                *ngIf="fileAttachment"
+                [file]="fileAttachment"
+                [height]="'75px'"
+                [width]="'104px'"
+                [hasVideoControls]="false"
+            ></app-attachment-preview>
+        </div>
+    </div>
+</div>

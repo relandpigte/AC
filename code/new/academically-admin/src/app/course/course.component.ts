@@ -1,6 +1,5 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ComposerConversationComponent } from '@app/chat/_components/composer-conversation/composer-conversation.component';
 import { accountModuleAnimation } from '@shared/animations/routerTransition';
 
 import { AppComponentBase } from '@shared/app-component-base';
@@ -10,6 +9,9 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { takeUntil } from 'rxjs/operators';
 import { ServiceDataService } from '@shared/services/service-data.service';
 import { CourseDto, CoursesServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  ChatComposerConversationComponent
+} from '@shared/components/chat-composer-conversation/chat-composer-conversation.component';
 
 @Component({
   selector: 'app-course',
@@ -46,14 +48,14 @@ export class CourseComponent extends  AppComponentBase implements OnInit {
   }
 
   private openMessageModal(): void {
-    const modalSettings = this.defaultModalSettings as ModalOptions<ComposerConversationComponent>;
+    const modalSettings = this.defaultModalSettings as ModalOptions<ChatComposerConversationComponent>;
       modalSettings.class = 'modal-lg';
       modalSettings.initialState = {
         hasActions: false,
         hasClose: true,
         showAttachmentInfo: false
       };
-      const modal = this._modalService.show(ComposerConversationComponent, modalSettings);
+      const modal = this._modalService.show(ChatComposerConversationComponent, modalSettings);
       modal.content.onCloseClick
         .pipe(takeUntil(this.destroyed$))
         .subscribe(() => modal.hide());

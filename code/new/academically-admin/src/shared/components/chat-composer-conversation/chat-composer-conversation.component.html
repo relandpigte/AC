@@ -1,5 +1,5 @@
 <div *ngIf="!isSearchingUser" class="chat-conversations-wrapper">
-    <app-conversation
+    <app-chat-conversation
         [channel]="channel"
         [hasActions]="hasActions"
         [hasClose]="hasClose"
@@ -12,15 +12,15 @@
         (onBlockUser)="handleBlockUser()"
         (onUnblockUser)="handleUnBlockUser()"
         (onProcessNotification)="handleNotification($event)"
-    ></app-conversation>
+    ></app-chat-conversation>
 </div>
 <div *ngIf="!isSearchingUser" class="chat-conversation-composer border-top mt-auto" [class.has-attachment]="!!replyingTo">
-    <app-composer
+    <app-chat-composer
         [channel]="channel"
         [replyingTo]="replyingTo"
         [blockedByUser]="blockedByUser"
         (onReply)="handleReplyClick($event)"
         [isUserBlocked]="isUserBlocked"
         (onUnblock)="handleUnBlockUser()"
-    ></app-composer>
+    ></app-chat-composer>
 </div>

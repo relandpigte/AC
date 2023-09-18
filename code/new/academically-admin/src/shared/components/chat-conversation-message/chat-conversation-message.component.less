@@ -1,0 +1,183 @@
+:root {
+    display: flex;
+}
+
+.conversation {
+    &-wrapper {
+
+        &.msg-empty {
+            padding-top: 0;
+            margin-top: 0;
+            gap: 0 !important;
+        }
+
+        .message {
+            width: 100%;
+            max-width: 550px;
+            padding: 0.875rem 1rem;
+            border-radius: 0.625rem;
+
+            &-deleted {
+                font-style: italic;
+            }
+        }
+
+        .avatar {
+            width: 35px;
+            height: 35px;
+            img {
+                width: 35px;
+                height: 35px;
+            }
+        }
+
+        &.sender {
+            align-items: end;
+            margin-left: auto;
+
+            .message {
+                background-color: #2C7BE5;
+                color: #FFFFFF;
+
+                &-deleted {
+                    color: #95BDF2;
+                }
+            }
+        }
+
+        &.recipient {
+            align-items: start;
+            gap: 0.625rem;
+
+            .message {
+                background-color: #F9FBFD;
+                color: #12263F;
+
+                &-deleted {
+                    color: #95AAC9;
+                }
+            }
+        }
+
+        &.has-reply {
+            &.sender {
+                .message::before {
+                    content: '';
+                    width: 19px;
+                    height: 19px;
+                    background: url(/assets/img/chat/reply-arrow-pre.svg) no-repeat 0 0 transparent;
+                    background-size: cover;
+                    background-position: center;
+                    display: block;
+                    position: absolute;
+                    left: -20px;
+                    top: 2px;
+                }
+
+                &.msg-empty {
+                    .message-attachment:after {
+                        content: '';
+                        width: 19px;
+                        height: 19px;
+                        background: url(/assets/img/chat/reply-arrow-pre.svg) no-repeat 0 0 transparent;
+                        background-size: cover;
+                        background-position: center;
+                        display: block;
+                        position: absolute;
+                        left: -20px;
+                        top: 2px;
+                    }
+                }
+            }
+
+            &.recipient {
+                .message::after {
+                    content: '';
+                    width: 19px;
+                    height: 19px;
+                    background: url(/assets/img/chat/reply-arrow-post.svg) no-repeat 0 0 transparent;
+                    background-size: cover;
+                    background-position: center;
+                    display: block;
+                    position: absolute;
+                    right: -20px;
+                    top: 2px;
+                }
+
+                &.msg-empty {
+                    .message-attachment:after {
+                        content: '';
+                        width: 19px;
+                        height: 19px;
+                        background: url(/assets/img/chat/reply-arrow-post.svg) no-repeat 0 0 transparent;
+                        background-size: cover;
+                        background-position: center;
+                        display: block;
+                        position: absolute;
+                        right: -20px;
+                        top: 2px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.parent {
+    &-message {
+        max-width: 550px;
+        padding: 14px 16px;
+        border-radius: 12px;
+        border: 1px solid #D2DDEC;
+
+        &-header {
+            .user-info {
+                .name {
+                    color: #6E84A3;
+                    font-size: 13px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: normal;
+                }
+
+                .time {
+                    color: #95AAC9;
+                    font-size: 13px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: normal;
+                }
+            }
+        }
+
+        &-content {
+            color: #95AAC9;
+            font-size: 15px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 140%;
+            letter-spacing: -0.15px;
+        }
+    }
+}
+
+
+::ng-deep {
+    .sender {
+        .message {
+            .match.active {
+                background-color: white !important;
+                color: #12263F !important;
+            }
+        }
+    }
+
+    .recipient {
+        .message {
+            .match.active {
+                background-color: #12263F !important;
+                color: white !important;
+            }
+        }
+    }
+}

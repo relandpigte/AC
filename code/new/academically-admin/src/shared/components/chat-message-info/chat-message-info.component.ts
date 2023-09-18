@@ -4,11 +4,11 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { ChannelMessageDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
-  selector: 'app-message-info',
-  templateUrl: './message-info.component.html',
-  styleUrls: ['./message-info.component.less']
+  selector: 'app-chat-message-info',
+  templateUrl: './chat-message-info.component.html',
+  styleUrls: ['./chat-message-info.component.less']
 })
-export class MessageInfoComponent extends AppComponentBase {
+export class ChatMessageInfoComponent extends AppComponentBase {
   @Input() channelMessage: ChannelMessageDto;
 
   constructor(

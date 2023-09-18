@@ -10,9 +10,11 @@ import { StateUpdateType } from '@shared/services/state-base.service';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { distinctUntilChanged, skip, switchMap, takeUntil } from 'rxjs/operators';
 import { SearchFilterComponent } from './_components/search-filter/search-filter.component';
-import { ComposerConversationComponent } from './_components/composer-conversation/composer-conversation.component';
 import { FileUtils } from '@shared/helpers/file-utils';
 import * as _ from 'lodash';
+import {
+  ChatComposerConversationComponent
+} from '@shared/components/chat-composer-conversation/chat-composer-conversation.component';
 
 export interface MessageComposeData {
   parentId?: string;
@@ -46,7 +48,7 @@ export class ChatComponent extends AppComponentBase implements OnInit {
 
   @ViewChild(SearchUsersComponent) searchUsersComponent: SearchUsersComponent;
   @ViewChild(SearchFilterComponent) searchFilterComponent: SearchFilterComponent;
-  @ViewChild(ComposerConversationComponent) composerConversationComponent: ComposerConversationComponent;
+  @ViewChild(ChatComposerConversationComponent) composerConversationComponent: ChatComposerConversationComponent;
 
   private _isSearchingKeyword: boolean;
 

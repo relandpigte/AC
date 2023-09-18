@@ -5,11 +5,13 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 
 import { accountModuleAnimation } from '@shared/animations/routerTransition';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
-import { ComposerConversationComponent } from '@app/chat/_components/composer-conversation/composer-conversation.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ChatService } from '@shared/services/chat.service';
 import { CoachingDto, CoachingsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { ServiceDataService } from '@shared/services/service-data.service';
+import {
+  ChatComposerConversationComponent
+} from '@shared/components/chat-composer-conversation/chat-composer-conversation.component';
 
 @Component({
   selector: 'app-coaching',
@@ -46,14 +48,14 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
   }
 
   private openMessageModal(): void {
-    const modalSettings = this.defaultModalSettings as ModalOptions<ComposerConversationComponent>;
+    const modalSettings = this.defaultModalSettings as ModalOptions<ChatComposerConversationComponent>;
       modalSettings.class = 'modal-lg';
       modalSettings.initialState = {
         hasActions: false,
         hasClose: true,
         showAttachmentInfo: false
       };
-      const modal = this._modalService.show(ComposerConversationComponent, modalSettings);
+      const modal = this._modalService.show(ChatComposerConversationComponent, modalSettings);
       modal.content.onCloseClick
         .pipe(takeUntil(this.destroyed$))
         .subscribe(() => modal.hide());

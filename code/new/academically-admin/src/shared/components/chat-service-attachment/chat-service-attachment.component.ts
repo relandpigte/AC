@@ -3,11 +3,11 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { ServiceCard, ServiceCardImage, ServiceCardType } from '@shared/models/service-card.model';
 
 @Component({
-  selector: 'app-service-attachment',
-  templateUrl: './service-attachment.component.html',
-  styleUrls: ['./service-attachment.component.less']
+  selector: 'app-chat-service-attachment',
+  templateUrl: './chat-service-attachment.component.html',
+  styleUrls: ['./chat-service-attachment.component.less']
 })
-export class ServiceAttachmentComponent extends AppComponentBase implements OnInit {
+export class ChatServiceAttachmentComponent extends AppComponentBase implements OnInit {
     @Input() data: ServiceCard;
 
     @Output() onViewClick: EventEmitter<string> = new EventEmitter();

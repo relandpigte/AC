@@ -45,7 +45,7 @@
         <div class="chat-content-right d-flex flex-column flex-grow-1">
             <app-search-users *ngIf="isSearchingUser" [channels]="channels"></app-search-users>
             <ng-container *ngIf="!isMessageEmpty || replyingToUser else emptyMessages">
-                <app-composer-conversation
+                <app-chat-composer-conversation
                     [channel]="selectedChannel"
                     [mutedUserChannelIds]="mutedUserChannelIds"
                     [replyingTo]="replyingTo"
@@ -54,7 +54,7 @@
                     [blockedByUser]="currentUserBlocker"
                     (onReplyClick)="handleOnReply($event)"
                     (onProcessNotification)="handleNotification($event)"
-                ></app-composer-conversation>
+                ></app-chat-composer-conversation>
             </ng-container>
         </div>
     </div>

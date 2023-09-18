@@ -1,183 +1,109 @@
-:root {
-    display: flex;
+::ng-deep {
+    .modal-message-info {
+        max-width: 278px;
+
+        .modal-content {
+            border: 0 none !important;
+        }
+    }
 }
 
 .conversation {
-    &-wrapper {
+    &-header {
+        padding: 1.25rem 1.5rem;
 
-        &.msg-empty {
-            padding-top: 0;
-            margin-top: 0;
-            gap: 0 !important;
+        &-avatar {
+            margin-right: 1.125rem;
+
+            .avatar {
+                width: 45px;
+                height: 45px;
+            }
         }
 
-        .message {
-            width: 100%;
-            max-width: 550px;
-            padding: 0.875rem 1rem;
+        &-recipient {
+            margin-right: 1.5rem;
+
+            & > h4 {
+                font-weight: normal;
+                font-size: 0.938rem;
+                margin: 3px 0 2px;
+            }
+
+            & > p {
+                font-size: 0.813rem;
+                margin: 0 0 3px;
+                color: #6E84A3;
+            }
+        }
+
+        &-nav {
+            margin-right: 20px;
+
+            &-arrow {
+                &-left, &-right {
+                    border: 1px solid #E3EBF6;
+                    border-radius: 50%;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    &-content {
+        padding: 1.25rem 1.5rem;
+        max-height: 50vh;
+
+        &.scroll-wrapper {
+            overflow: auto;
+            margin-right: 4px;
+            scroll-behavior: smooth;
+
+            &::-webkit-scrollbar {
+                width: 1.5px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: #D2DDEC;
+                border-radius: 10px;
+            }
+        }
+    }
+
+    &-day-title {
+        .title {
+            padding: 0.25rem 0.75rem;
+            background-color: #F9FBFD;
+            color: #6E84A3;
+            font-size: 12px;
             border-radius: 0.625rem;
-
-            &-deleted {
-                font-style: italic;
-            }
-        }
-
-        .avatar {
-            width: 35px;
-            height: 35px;
-            img {
-                width: 35px;
-                height: 35px;
-            }
-        }
-
-        &.sender {
-            align-items: end;
-            margin-left: auto;
-
-            .message {
-                background-color: #2C7BE5;
-                color: #FFFFFF;
-
-                &-deleted {
-                    color: #95BDF2;
-                }
-            }
-        }
-
-        &.recipient {
-            align-items: start;
-            gap: 0.625rem;
-
-            .message {
-                background-color: #F9FBFD;
-                color: #12263F;
-
-                &-deleted {
-                    color: #95AAC9;
-                }
-            }
-        }
-
-        &.has-reply {
-            &.sender {
-                .message::before {
-                    content: '';
-                    width: 19px;
-                    height: 19px;
-                    background: url(/assets/img/chat/reply-arrow-pre.svg) no-repeat 0 0 transparent;
-                    background-size: cover;
-                    background-position: center;
-                    display: block;
-                    position: absolute;
-                    left: -20px;
-                    top: 2px;
-                }
-
-                &.msg-empty {
-                    .message-attachment:after {
-                        content: '';
-                        width: 19px;
-                        height: 19px;
-                        background: url(/assets/img/chat/reply-arrow-pre.svg) no-repeat 0 0 transparent;
-                        background-size: cover;
-                        background-position: center;
-                        display: block;
-                        position: absolute;
-                        left: -20px;
-                        top: 2px;
-                    }
-                }
-            }
-
-            &.recipient {
-                .message::after {
-                    content: '';
-                    width: 19px;
-                    height: 19px;
-                    background: url(/assets/img/chat/reply-arrow-post.svg) no-repeat 0 0 transparent;
-                    background-size: cover;
-                    background-position: center;
-                    display: block;
-                    position: absolute;
-                    right: -20px;
-                    top: 2px;
-                }
-
-                &.msg-empty {
-                    .message-attachment:after {
-                        content: '';
-                        width: 19px;
-                        height: 19px;
-                        background: url(/assets/img/chat/reply-arrow-post.svg) no-repeat 0 0 transparent;
-                        background-size: cover;
-                        background-position: center;
-                        display: block;
-                        position: absolute;
-                        right: -20px;
-                        top: 2px;
-                    }
-                }
-            }
-        }
-    }
-}
-
-.parent {
-    &-message {
-        max-width: 550px;
-        padding: 14px 16px;
-        border-radius: 12px;
-        border: 1px solid #D2DDEC;
-
-        &-header {
-            .user-info {
-                .name {
-                    color: #6E84A3;
-                    font-size: 13px;
-                    font-style: normal;
-                    font-weight: 600;
-                    line-height: normal;
-                }
-
-                .time {
-                    color: #95AAC9;
-                    font-size: 13px;
-                    font-style: normal;
-                    font-weight: 400;
-                    line-height: normal;
-                }
-            }
-        }
-
-        &-content {
-            color: #95AAC9;
-            font-size: 15px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: 140%;
-            letter-spacing: -0.15px;
-        }
-    }
-}
-
-
-::ng-deep {
-    .sender {
-        .message {
-            .match.active {
-                background-color: white !important;
-                color: #12263F !important;
-            }
         }
     }
 
-    .recipient {
-        .message {
-            .match.active {
-                background-color: #12263F !important;
-                color: white !important;
-            }
+    &-info {
+        margin-top: -0.938rem;
+    }
+
+    &-status {
+        font-size: 12px;
+        color: #6E84A3;
+
+        .away {
+            color: #f6c343;
+        }
+    }
+
+    &-typing {
+        color: #6E84A3;
+        font-size: 13px;
+        font-style: italic;
+        font-weight: 400;
+        letter-spacing: -0.13px;
+
+        &::after {
+            display: inline-block;
+            animation: dotty steps(1,end) 2s infinite;
+            content: '';
         }
     }
 }
