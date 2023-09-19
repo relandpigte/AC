@@ -9,7 +9,7 @@
 </div>
 
 <div *ngIf="!isUserBlocked && !isBlockedByRecipient" class="composer d-flex align-items-center align-content-around gap-15" [class.typing]="!!f?.value?.message || hasAttachments">
-    <form class="composer-text flex-grow-1" #f="ngForm" (ngSubmit)="handleWriteMessage(f)">
+    <form class="composer-text flex-grow-1" #f="ngForm" (ngSubmit)="handleSendChatMessage(f)">
         <label class="sr-only">{{ 'WriteAMessage' | localize }}</label>
         <textarea #messageInput name="message" ngModel (keydown)="onMessageKeydown($event, f)" class="form-control form-control-flush"
                   data-toggle="autosize" rows="1" placeholder="{{ 'WriteAMessage' | localize }}" [maxlength]="500"></textarea>

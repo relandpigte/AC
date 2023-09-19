@@ -24,6 +24,7 @@ import { BehaviorSubject, combineLatest, of, Subject } from 'rxjs';
 import { debounceTime, switchMap, takeUntil } from 'rxjs/operators';
 import { UserAvatarService } from '@shared/services/user-avatar.service';
 import { ChatMessageInfoComponent } from '@shared/components/chat-message-info/chat-message-info.component';
+import { AvatarType } from '@shared/components/user-avatar/user-avatar.component';
 
 @Component({
   selector: 'app-chat-conversation',
@@ -66,6 +67,8 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
 
   onlineUsers: UserDto[] = [];
   inactiveUsers: UserDto[] = [];
+  avatarType = AvatarType;
+  sendToUser: UserDto;
 
   constructor(
     injector: Injector,
@@ -100,14 +103,10 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
   }
 
   get userId(): number { return this.replyingToUser?.id; }
-  get replyingToUser(): UserDto { return this.channel?.members?.find(m => m.userId !== this.appSession.userId)?.user; }
+  get replyingToUser(): UserDto { return this.channel?.members?.find(m => m.userId !== this.appSession.userId)?.user ?? this.sendToUser; }
   get recipientName(): string { return this.replyingToUser?.name; }
-  get recipientFullName(): string { return this.replyingToUser?.fullName; }
   get isMutedChannel() { return this.mutedUserChannelIds?.includes(this.channel?.id); }
-  get isUserOnline(): boolean { return this.onlineUsers?.some(u => u.id === this.userId); }
-  get isUserAway(): boolean { return this.inactiveUsers?.some(u => u.id === this.userId); }
-  get userTextStatus(): string { return this.isUserOnline ? 'Online' : (this.isUserAway ? 'Away' : 'Offline'); }
-  get avatarClassStatus(): string { return this.isUserOnline ? 'text-success' : (this.isUserAway ? 'text-warning' : 'text-muted'); }
+
 
   async ngOnInit(): Promise<void> {
     this._chatService.selectedMatchedChannel$
@@ -135,6 +134,11 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
         this.onlineUsers = this._userAvatarService.getAllUserLogByStatus(UserStatus.Online, data);
         this.inactiveUsers = this._userAvatarService.getAllUserLogByStatus(UserStatus.Away, data);
       });
+
+    this._chatService.replyingToUser$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(user => this.sendToUser = user);
+
     this._cdr.detectChanges();
   }
 

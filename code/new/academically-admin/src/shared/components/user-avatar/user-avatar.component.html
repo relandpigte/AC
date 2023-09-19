@@ -1,11 +1,23 @@
-<div class="avatar-container position-relative">
-    <a href="javascript:void(0)" class="avatar" [ngClass]="avatarClassStatus" [class]="isUserAway && showStatus ? 'avatar-online away' : null" [style.width.px]="avatarWidth" [style.height.px]="avatarHeight">
-        <img
-            class="avatar-img rounded-circle"
-            [src]="getProfilePicture(isBlocked ? '': userProfilePicture)"
-            [alt]="userFullName"
-            [style.width.px]="avatarWidth"
-            [style.height.px]="avatarHeight"
-        />
-    </a>
+<div class="avatar-wrapper d-flex align-items-center gap-15">
+    <div class="avatar-container position-relative">
+        <a href="javascript:void(0)" class="avatar"
+           [class.avatar-offline]="(isBlocked || !isUserOnline) && showStatus"
+           [class.avatar-online]="isUserOnline && showStatus"
+           [style.width.px]="avatarWidth"
+           [style.height.px]="avatarHeight"
+        >
+            <img
+                class="avatar-img rounded-circle"
+                [src]="isBlocked ? 'assets/img/anonymous.png': userProfilePicture"
+                [alt]="userFullName"
+                [style.width.px]="avatarWidth"
+                [style.height.px]="avatarHeight"
+            />
+        </a>
+    </div>
+    <div *ngIf="!isDefaultAvatar" class="avatar-name d-flex flex-column gap-2">
+        <h4 class="m-0"><a href="javascript:void(0);">{{ isBlocked ? ("User" | titlecase) : userFullName }}</a></h4>
+        <p *ngIf="!isBlocked" class="m-0 d-flex gap-5"><span [class]="isUserOnline ? 'text-success' : 'text-muted'">●</span>{{ isUserOnline ? 'Online' : 'Offline' }}</p>
+        <p *ngIf="isBlocked" class="m-0">{{ 'Unavailable' | titlecase }}</p>
+    </div>
 </div>

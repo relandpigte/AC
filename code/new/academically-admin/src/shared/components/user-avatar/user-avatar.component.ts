@@ -1,11 +1,16 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
-import { AppComponentBase } from '@shared/app-component-base';
-import { UserDto, UserStatus } from '@shared/service-proxies/service-proxies';
-import { UserAvatarService } from '@shared/services/user-avatar.service';
 import { takeUntil } from 'rxjs/operators';
+
+import { AppComponentBase } from '@shared/app-component-base';
+import { DocumentDto, UserDto, UserStatus } from '@shared/service-proxies/service-proxies';
+import { UserAvatarService } from '@shared/services/user-avatar.service';
 
 export const DEFAULT_AVATAR_WIDTH = 45;
 export const DEFAULT_AVATAR_HEIGHT = 45;
+export enum AvatarType {
+  Default,
+  NameAndStatus
+}
 
 @Component({
   selector: 'app-user-avatar',
@@ -18,6 +23,7 @@ export class UserAvatarComponent extends AppComponentBase implements OnInit {
   @Input() height: number;
   @Input() showStatus = true;
   @Input() isBlocked: boolean;
+  @Input() type: AvatarType = AvatarType.Default;
 
   onlineUsers: UserDto[] = [];
   inactiveUsers: UserDto[] = [];
@@ -29,13 +35,12 @@ export class UserAvatarComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
+  get isDefaultAvatar(): boolean { return this.type === AvatarType.Default; }
   get userFullName(): string { return this.data?.fullName; }
-  get userProfilePicture(): string { return this.data?.profilePictureUrl; }
+  get userProfilePicture(): string { return this.data?.profilePictureUrl ?? this.getProfilePictureUrl(this.data?.profilePictureDocument); }
   get avatarWidth(): number { return this.width ?? DEFAULT_AVATAR_WIDTH; }
   get avatarHeight(): number { return this.height ?? DEFAULT_AVATAR_HEIGHT; }
-  get avatarClassStatus(): string { return this.showStatus ? (this.isUserOnline ? 'avatar-online' : (this.isUserAway ? 'avatar-away' : 'avatar-offline')) : null; }
   get isUserOnline(): boolean { return this.onlineUsers?.some(u => u.id === this.data?.id); }
-  get isUserAway(): boolean { return this.inactiveUsers?.some(u => u.id === this.data?.id); }
 
   ngOnInit(): void {
     this._userAvatarService.getUserStatusLog()

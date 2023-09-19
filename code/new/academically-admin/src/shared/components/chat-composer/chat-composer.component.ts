@@ -34,6 +34,7 @@ export class ChatComposerComponent extends AppComponentBase implements OnInit{
   fileAttachment: File;
   allowedExtensions: string[] = [];
   blockedUserIds: number[] = [];
+  sendToUser: UserDto;
 
   private maxFileSize = fileUploadConfiguration.maxFileSize;
   private imageExtensions = fileUploadConfiguration.allowedImageExtensions;
@@ -64,6 +65,9 @@ export class ChatComposerComponent extends AppComponentBase implements OnInit{
       .pipe(takeUntil(this.destroyed$))
       .subscribe(service => this.selectedService = service);
 
+    this._chatService.replyingToUser$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(user => this.sendToUser = user);
   }
 
   get replyingToRecipient(): string { return this.replyingTo?.creatorUser?.name ?? 'Miyah'; }
@@ -88,10 +92,10 @@ export class ChatComposerComponent extends AppComponentBase implements OnInit{
     this.messageInput?.nativeElement?.focus();
   }
 
-  handleWriteMessage(f: NgForm): void {
+  handleSendChatMessage(f: NgForm): void {
     this._chatsService.createChannelMessage(
       f.value.message,
-      this.replyingToUser.id,
+      this.replyingToUser?.id ?? this.sendToUser?.id,
       this.channel?.id,
       this.replyingTo?.id,
       this.selectedService?.id,
@@ -102,7 +106,7 @@ export class ChatComposerComponent extends AppComponentBase implements OnInit{
         this._chatService.replyToMessage$.next(null);
         this._chatService.fileAttachment$.next(null);
         this._chatService.selectedService$.next(null);
-        this._chatService.selectedChannel$.next(this.channel);
+        this._chatService.selectedChannelChanged$.next(message.channelId);
       });
 
 

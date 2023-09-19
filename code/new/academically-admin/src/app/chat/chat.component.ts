@@ -109,7 +109,9 @@ export class ChatComponent extends AppComponentBase implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .subscribe(keyword => {
         this._isSearchingKeyword = !!keyword;
-        if (!this._isSearchingKeyword) this._chatService.selectedMatchedChannel$.next(null);
+        if (!this._isSearchingKeyword) {
+          this._chatService.selectedMatchedChannel$.next(null);
+        }
       });
 
     this._chatService.userTyping$
@@ -128,6 +130,13 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     this._chatService.selectedService$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(service => this.selectedService = service);
+
+    this._chatService.selectedChannelChanged$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(channelId => {
+        this.selectedChannel = this.channels.find(c => c.id === channelId);
+        this._chatService.selectedChannel$.next(this.selectedChannel);
+      });
   }
 
   get isSearchingKeyword(): boolean { return this._isSearchingKeyword; }
@@ -142,7 +151,9 @@ export class ChatComponent extends AppComponentBase implements OnInit {
   get isMessageEmpty(): boolean { return  !this.selectedChannel?.messages?.length; }
 
   get listHeader(): string {
-    if (this.selectedChannelType === 1) return 'Archived';
+    if (this.selectedChannelType === 1) {
+      return 'Archived';
+    }
     return null;
   }
 
@@ -162,107 +173,39 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     this.searchUsersComponent?.searchInput.nativeElement.focus();
   }
 
-  private async initChannelsAppStates() {
-    const appStateConfig: AppStateConfig = {
-        [this.channelsStateId]: {
-            load: [this.appSession.userId],
-            update: {}
-        }
-    };
-    const appStateServices: AppStateServices = {
-        [this.channelsStateId]: {
-            type: ChannelsStateService,
-            args: [this._hubService, this._chatsService]
-        }
-    };
-    await this.pubSubService.start(this, appStateConfig, appStateServices);
-    this.channelsStateService = this.pubSubService.getStateService<ChannelsStateService>(this.channelsStateId);
-    this.channelsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingList$.next(loading));
-    this.channelsStateService.channels$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
-        switch(event.type) {
-          case StateUpdateType.Add:
-              this.channels = [event.data].concat(this.channels);
-              this.totalChannelsCount++;
-              break;
-          case StateUpdateType.Update:
-              if (event.silent) {
-                this.channels = this.channels.map(c => c.id === event.data.id ? event.data : c);
-              } else {
-                const idx = this.channels.findIndex(c => c.id === event.data.id);
-                this.channels.splice(idx, 1);
-                this.channels = [event.data].concat(this.channels);
-              }
-              break;
-          case StateUpdateType.Delete:
-              this.channels = this.channels.filter(c => c.id != event.data.id);
-              this.totalChannelsCount--;
-              break;
-        }
-        this._cdr.detectChanges();
-    });
-    this.channels = this.channelsStateService.getAllChannels();
-    this.totalChannelsCount = this.channelsStateService.totalChannelsCount;
-    this._chatService.selectedChannel$.next(this.channels?.[0]);
-  }
-
-  // tslint:disable-next-line: member-ordering
   switchToInbox(): void {
     this._chatService.selectedChannelType$.next(0);
   }
 
-  // tslint:disable-next-line: member-ordering
   handleOnChannelSelect(channel: ChannelDto) {
     this._chatService.selectedChannel$.next(channel);
     this._chatService.isSearchingUser$.next(false);
   }
 
-  // tslint:disable-next-line: member-ordering
-  handleOnReply(messageComposeData: MessageComposeData): void {
-    this._chatsService.createChannelMessage(
-      messageComposeData.message,
-      this.replyingToUser?.id,
-      this.selectedChannel?.id,
-      messageComposeData.parentId,
-      this.selectedService?.id,
-      this.selectedService?.serviceType,
-      [this.fileAttachment].filter(x => x).map(f => FileUtils.getFileParameter(f))
-    )
-      .subscribe((message): void => {
-        this._chatService.replyToMessage$.next(null);
-        this._chatService.fileAttachment$.next(null);
-        this._chatService.selectedService$.next(null);
-        this.selectedChannel = this.channels.find(c => c.id === message.channelId);
-        this._chatService.selectedChannel$.next(this.selectedChannel);
-      });
-  }
-
-  // tslint:disable-next-line: member-ordering
   handleOnArchiveChannel(channel: ChannelDto): void {
     this._chatsService.archiveChannel(channel.id).subscribe(() => {
       this._chatService.selectedChannelType$.next(this.selectedChannelType);
     });
   }
 
-  // tslint:disable-next-line: member-ordering
   handleOnDeleteChannel(channel: ChannelDto): void {
     this._chatsService.deleteChannel(channel.id).subscribe(() => {
       this._chatService.selectedChannelType$.next(this.selectedChannelType);
     });
   }
 
-  // tslint:disable-next-line: member-ordering
   handleOnSelectSearchUser(user: UserDto): void {
     this.searchFilterComponent.clearSearchFilter();
 
     const channel = this.channels.find(c => c.members.some(m => m.userId === user.id));
-    if (channel) this.handleOnChannelSelect(channel);
-    else {
+    if (channel) {
+      this.handleOnChannelSelect(channel);
+    } else {
       this._chatService.selectedChannel$.next(null);
       setTimeout(() => this._chatService.replyingToUser$.next(user));
     }
   }
 
-  // tslint:disable-next-line: member-ordering
   handleOnSelectSearchChannel(matchedChannel: MatchedChannelDto): void {
     const channel = this.channels.find(c => c.id === matchedChannel.channel.id);
     if (channel) {
@@ -271,7 +214,6 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     }
   }
 
-  // tslint:disable-next-line: member-ordering
   handleNotification(type: NotificationType): void {
     const channelId = this.selectedChannel?.id;
     const chatNotification = type === NotificationType.Mute ?
@@ -300,5 +242,48 @@ export class ChatComponent extends AppComponentBase implements OnInit {
       const notification = channel.channelNotifications?.filter(cn => cn.creatorUserId === this.appSession.userId);
       this.mutedUserChannelIds = _.union(this.mutedUserChannelIds, notification?.map(n => n.channelId));
     });
+  }
+
+  private async initChannelsAppStates() {
+    const appStateConfig: AppStateConfig = {
+      [this.channelsStateId]: {
+        load: [this.appSession.userId],
+        update: {}
+      }
+    };
+    const appStateServices: AppStateServices = {
+      [this.channelsStateId]: {
+        type: ChannelsStateService,
+        args: [this._hubService, this._chatsService]
+      }
+    };
+    await this.pubSubService.start(this, appStateConfig, appStateServices);
+    this.channelsStateService = this.pubSubService.getStateService<ChannelsStateService>(this.channelsStateId);
+    this.channelsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingList$.next(loading));
+    this.channelsStateService.channels$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
+      switch(event.type) {
+        case StateUpdateType.Add:
+          this.channels = [event.data].concat(this.channels);
+          this.totalChannelsCount++;
+          break;
+        case StateUpdateType.Update:
+          if (event.silent) {
+            this.channels = this.channels.map(c => c.id === event.data.id ? event.data : c);
+          } else {
+            const idx = this.channels.findIndex(c => c.id === event.data.id);
+            this.channels.splice(idx, 1);
+            this.channels = [event.data].concat(this.channels);
+          }
+          break;
+        case StateUpdateType.Delete:
+          this.channels = this.channels.filter(c => c.id != event.data.id);
+          this.totalChannelsCount--;
+          break;
+      }
+      this._cdr.detectChanges();
+    });
+    this.channels = this.channelsStateService.getAllChannels();
+    this.totalChannelsCount = this.channelsStateService.totalChannelsCount;
+    this._chatService.selectedChannel$.next(this.channels?.[0]);
   }
 }

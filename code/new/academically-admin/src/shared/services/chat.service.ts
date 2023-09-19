@@ -29,6 +29,7 @@ export class ChatService {
 
   isSearchingUser$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   selectedChannel$: BehaviorSubject<ChannelDto> = new BehaviorSubject<ChannelDto>(null);
+  selectedChannelChanged$: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
   fileAttachment$: BehaviorSubject<File> = new BehaviorSubject<File>(null);
   sanitizedAttachmentUrl$: BehaviorSubject<SafeUrl> = new BehaviorSubject<SafeUrl>(null);

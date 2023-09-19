@@ -1,21 +1,8 @@
 <div class="conversation">
     <div class="conversation-header border-bottom">
         <div class="d-flex align-items-center">
-            <div class="conversation-header-avatar">
-                <app-user-avatar *ngIf="replyingToUser" [data]="replyingToUser" [isBlocked]="isBlockedByRecipient" [showStatus]="false"></app-user-avatar>
-            </div>
-
-            <div class="conversation-header-recipient d-flex flex-column flex-grow-1">
-                <h4 class="name">
-                    <a *ngIf="!isBlockedByRecipient" href="#">{{ recipientFullName | titlecase }}</a>
-                    <a *ngIf="isBlockedByRecipient" href="#">{{ "User" | titlecase }}</a>
-                </h4>
-                <p *ngIf="!isBlockedByRecipient" class="status">
-                    <span [ngClass]="avatarClassStatus">●</span> {{ userTextStatus | titlecase }}
-                </p>
-                <p *ngIf="isBlockedByRecipient" class="status">
-                    {{ 'Unavailable' | titlecase }}
-                </p>
+            <div class="conversation-header-avatar flex-grow-1">
+                <app-user-avatar *ngIf="replyingToUser " [data]="replyingToUser" [isBlocked]="isBlockedByRecipient" [showStatus]="false" [type]="avatarType.NameAndStatus"></app-user-avatar>
             </div>
 
             <div *ngIf="selectedMatchedChannel" class="conversation-header-nav d-flex align-items-center gap-15">
@@ -23,10 +10,10 @@
 
                 <div class="conversation-header-nav-arrow d-flex gap-10">
                     <div class="conversation-header-nav-arrow-left d-flex justify-content-center align-items-center w-40-px h-40-px" (click)="handleOnPreviousMatch()">
-                        <img src="/assets/img/chat/arrow-left.svg" class="w-12-px h-12-px">
+                        <img src="/assets/img/chat/arrow-left.svg" class="w-12-px h-12-px" alt="Previous"/>
                     </div>
                     <div class="conversation-header-nav-arrow-right d-flex justify-content-center align-items-center w-40-px h-40-px" (click)="handleOnNextMatch()">
-                        <img src="/assets/img/chat/arrow-right.svg" class="w-12-px h-12-px">
+                        <img src="/assets/img/chat/arrow-right.svg" class="w-12-px h-12-px" alt="Next"/>
                     </div>
                 </div>
             </div>

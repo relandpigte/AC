@@ -16,11 +16,7 @@
         </div>
 
         <div class="d-flex gap-10">
-            <div *ngIf="!isSender && chatMessage" class="avatar flex-grow-1">
-                <img *ngIf="data?.creatorUser?.profilePictureUrl" class="avatar-img rounded-circle" [src]="getProfilePicture(data?.creatorUser?.profilePictureUrl)" [alt]="data?.creatorUser?.fullName"/>
-                <img *ngIf="!data?.creatorUser?.profilePictureUrl" class="avatar-img rounded-circle" src="assets/img/anonymous.png" alt="..."/>
-            </div>
-
+            <app-user-avatar *ngIf="!isSender && chatMessage" [data]="data?.creatorUser" [isBlocked]="isBlockedByRecipient" [showStatus]="false" [width]="35" [height]="35"></app-user-avatar>
             <div *ngIf="chatMessage" class="message position-relative">
                 <div class="message-header d-flex align-items-center gap-10">
                     <div class="user-info d-flex gap-5">
