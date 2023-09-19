@@ -5,7 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { MessageComposeData } from '@app/chat/chat.component';
 import { AppComponentBase } from '@shared/app-component-base';
-import { AvailableServiceDto, ChannelDto, ChannelMessageDto } from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, ChannelDto, ChannelMessageDto, ChatsServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
 import { ChatService } from '@shared/services/chat.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
@@ -43,7 +43,8 @@ export class ChatComposerComponent extends AppComponentBase implements OnInit{
   constructor(
     injector: Injector,
     private _chatService: ChatService,
-    private _modalService: BsModalService
+    private _modalService: BsModalService,
+    private _chatsService: ChatsServiceProxy
   ) {
     super(injector);
 
@@ -69,6 +70,7 @@ export class ChatComposerComponent extends AppComponentBase implements OnInit{
   get replyingToMessage(): string { return this.replyingTo?.message ?? 'I can even begin to express how good this final season'; }
   get isShowAddService(): boolean { return this.isTutor; }
   get hasAttachments(): boolean { return !!this.fileAttachment || !!this.selectedService; }
+  get replyingToUser(): UserDto { return this.channel?.members?.find(m => m.userId !== this.appSession.userId)?.user; }
   get isBlockedByRecipient(): boolean {
     const blockByRecipient = this.channel?.members?.find(m => m.userId !== this.appSession.userId);
     return this.blockedByUser?.includes(blockByRecipient?.userId);
@@ -87,10 +89,23 @@ export class ChatComposerComponent extends AppComponentBase implements OnInit{
   }
 
   handleWriteMessage(f: NgForm): void {
-    this.onReply.next({
-      parentId: this.replyingTo?.id,
-      message: f.value.message
-    });
+    this._chatsService.createChannelMessage(
+      f.value.message,
+      this.replyingToUser.id,
+      this.channel?.id,
+      this.replyingTo?.id,
+      this.selectedService?.id,
+      this.selectedService?.serviceType,
+      [this.fileAttachment].filter(x => x).map(f => FileUtils.getFileParameter(f))
+    )
+      .subscribe((message): void => {
+        this._chatService.replyToMessage$.next(null);
+        this._chatService.fileAttachment$.next(null);
+        this._chatService.selectedService$.next(null);
+        this._chatService.selectedChannel$.next(this.channel);
+      });
+
+
     f.resetForm();
 
     this.selectedService = null;

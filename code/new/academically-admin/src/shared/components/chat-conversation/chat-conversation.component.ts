@@ -55,7 +55,6 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
 
   channelMessages: ChannelMessageDto[] = [];
   totalChannelMessagesCount = 0;
-  replyingToUser: UserDto;
   notificationType = NotificationType;
   attachedService: ServiceCard;
 
@@ -101,7 +100,7 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
   }
 
   get userId(): number { return this.replyingToUser?.id; }
-  get profileDocument(): DocumentDto { return this.replyingToUser?.profilePictureDocument; }
+  get replyingToUser(): UserDto { return this.channel?.members?.find(m => m.userId !== this.appSession.userId)?.user; }
   get recipientName(): string { return this.replyingToUser?.name; }
   get recipientFullName(): string { return this.replyingToUser?.fullName; }
   get isMutedChannel() { return this.mutedUserChannelIds?.includes(this.channel?.id); }
@@ -111,10 +110,6 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
   get avatarClassStatus(): string { return this.isUserOnline ? 'text-success' : (this.isUserAway ? 'text-warning' : 'text-muted'); }
 
   async ngOnInit(): Promise<void> {
-    this._chatService.replyingToUser$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(user => this.replyingToUser = user);
-
     this._chatService.selectedMatchedChannel$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(channel => {
@@ -186,7 +181,7 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
     this.channelMessagesStateService = this.pubSubService.getStateService<ChannelMessagesStateService>(this.channelMessagesStateId);
     this.channelMessagesStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingMessages$.next(loading));
     this.channelMessagesStateService.channelMessages$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
-        switch(event.type) {
+        switch (event.type) {
           case StateUpdateType.Add:
               this.channelMessages = this.channelMessages.concat([event.data]);
               this.totalChannelMessagesCount++;

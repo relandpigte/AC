@@ -1,31 +1,8 @@
 import { Injectable } from '@angular/core';
-import { AvailableServiceDto, ChannelDto, ChannelMessageDto, MatchedChannelDto, UserDto } from '@shared/service-proxies/service-proxies';
-import { AppSessionService } from '@shared/session/app-session.service';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { SafeUrl } from '@angular/platform-browser';
 
-export interface ChannelModel {
-  id: string,
-  creatorUser?: any;
-  latestMessage: string;
-  creationTime?: Date;
-  isArchived?: boolean;
-  isDeleted?: boolean;
-  isSeen?: Date;
-  isActive?: boolean;
-}
-
-export interface ChatModel {
-  id: string;
-  referenceId?: number;
-  message: string;
-  creationTime: Date;
-  creatorUser?: any;
-  creatorUserId: string;
-  isSeen: Date;
-  isDeleted?: boolean;
-  parentMessage?: ChatModel;
-}
+import { AvailableServiceDto, ChannelDto, ChannelMessageDto, MatchedChannelDto, UserDto } from '@shared/service-proxies/service-proxies';
 
 export enum NotificationType {
   Mute = 'Mute',
@@ -58,25 +35,6 @@ export class ChatService {
 
   selectedService$: BehaviorSubject<AvailableServiceDto> = new BehaviorSubject<AvailableServiceDto>(null);
 
-  private data: ChatModel[] = [];
-  private dataSubject = new BehaviorSubject<ChatModel[]>(this.data);
-
-  constructor(private _appSessionService: AppSessionService) {
-  }
-
-  getChatData(): Observable<ChatModel[]> {
-    return this.dataSubject.asObservable();
-  }
-
-  addChatData(newItem: ChatModel): void {
-    this.data.push(newItem);
-    this.dataSubject.next(this.data);
-  }
-
-  removeChatData(chatId: string): void {
-    const chatIndex = this.data.findIndex(c => c.id === chatId);
-    this.data[chatIndex].isDeleted = true;
-
-    this.dataSubject.next((this.data));
+  constructor() {
   }
 }

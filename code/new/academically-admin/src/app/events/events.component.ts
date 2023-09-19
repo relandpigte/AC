@@ -9,7 +9,7 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { takeUntil } from 'rxjs/operators';
 import { ActivatedRoute } from '@node_modules/@angular/router';
 import { ServiceDataService } from '@shared/services/service-data.service';
-import { ChatsServiceProxy, EventDto, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ChannelDto, ChatsServiceProxy, EventDto, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
 import {
   ChatComposerConversationComponent
 } from '@shared/components/chat-composer-conversation/chat-composer-conversation.component';
@@ -52,8 +52,8 @@ export class EventsComponent extends  AppComponentBase implements OnInit {
   private openMessageModal(): void {
     this._chatsService.getChannelByRecipient(this.eventOwnerId)
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(channel => {
-        console.log(channel);
+      .subscribe((channel: ChannelDto): void => {
+        this._chatService.selectedChannel$.next(channel);
         const modalSettings = this.defaultModalSettings as ModalOptions<ChatComposerConversationComponent>;
         modalSettings.class = 'modal-lg';
         modalSettings.initialState = {
@@ -61,7 +61,7 @@ export class EventsComponent extends  AppComponentBase implements OnInit {
           hasClose: true,
           showAttachmentInfo: false,
           channel: channel,
-          isSearchingUser: false,
+          isSearchingUser: false
         };
         const modal = this._modalService.show(ChatComposerConversationComponent, modalSettings);
         modal.content.onCloseClick

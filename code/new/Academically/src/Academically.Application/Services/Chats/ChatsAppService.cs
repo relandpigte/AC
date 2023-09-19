@@ -494,7 +494,7 @@ namespace Academically.Services.Chats
                 .ToListAsync();
         }
         
-        public async Task<ChannelDto> GetChannelByRecipient(long userId)
+        public async Task<ChannelDto> GetChannelByRecipient(long recipientId)
         {
             return await _channelRepository.GetAll()
                 .Include(c => c.Members)
@@ -502,8 +502,7 @@ namespace Academically.Services.Chats
                 .Include(c => c.Messages)
                 .Include(c => c.ChannelNotifications)
                 .Where(c => !c.IsDeleted)
-                .Where(c => c.Members.Any(m => m.UserId == userId))
-                .Where(c => c.Members.Any(m => m.UserId == AbpSession.UserId.Value))
+                .Where(c => c.Members.Any(m => m.UserId == recipientId) && c.Members.Any(m => m.UserId == AbpSession.UserId.Value))
                 .Select(c => ObjectMapper.Map<ChannelDto>(c))
                 .FirstOrDefaultAsync();
         }
