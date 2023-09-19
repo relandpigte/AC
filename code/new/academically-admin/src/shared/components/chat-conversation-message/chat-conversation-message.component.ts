@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ChannelMessageDto } from '@shared/service-proxies/service-proxies';
+import { ChannelMessageDto, ChatsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { ChatService } from '@shared/services/chat.service';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { Subject } from 'rxjs';
@@ -23,7 +23,8 @@ export class ChatConversationMessageComponent extends AppComponentBase implement
   constructor(
     injector: Injector,
     private _chatService: ChatService,
-    private _modalDialogService: ModalDialogService
+    private _modalDialogService: ModalDialogService,
+    private _chatsService: ChatsServiceProxy
     ) {
     super(injector);
   }
@@ -51,7 +52,7 @@ export class ChatConversationMessageComponent extends AppComponentBase implement
       text: this.l('DeleteMessageConfirmation'),
       btnConfirmText: 'Delete',
       confirmCb: (): void => {
-        this._chatService.removeChatData(chatId);
+        // TODO: delete channel message here.
       }
     };
     this._modalDialogService.showConfirmDialog(options);

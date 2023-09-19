@@ -75,16 +75,6 @@ export class EventsDiscussionComponent extends AppComponentBase implements OnIni
     }
   }
 
-  get isLoading$() {
-    return combineLatest(this.loadingSources$).pipe(switchMap((loaders) => of(loaders.some(l => l))));
-  }
-
-  get loadingSources$() {
-    return [
-      this.isLoadingChildren$
-    ];
-  }
-
   get isLoading(): boolean {
     return this.isLoadingPost || this.isLoadingChildren;
   }
