@@ -1,7 +1,7 @@
 import { Component, ElementRef, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 
 import { MessageComposeData } from '@app/chat/chat.component';
 import { AppComponentBase } from '@shared/app-component-base';
@@ -57,14 +57,6 @@ export class ChatComposerComponent extends AppComponentBase implements OnInit{
         this.messageInput.nativeElement.focus();
       });
 
-    this._chatService.fileAttachment$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(file => this.fileAttachment = file);
-
-    this._chatService.selectedService$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(service => this.selectedService = service);
-
     this._chatService.replyingToUser$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(user => this.sendToUser = user);
@@ -100,18 +92,21 @@ export class ChatComposerComponent extends AppComponentBase implements OnInit{
       this.replyingTo?.id,
       this.selectedService?.id,
       this.selectedService?.serviceType,
-      [this.fileAttachment].filter(x => x).map(f => FileUtils.getFileParameter(f))
+      [this.fileAttachment].filter(x => x).map(file => FileUtils.getFileParameter(file))
     )
-      .subscribe((message): void => {
+      .pipe(take(1))
+      .subscribe(async (message): Promise<void> => {
         this._chatService.replyToMessage$.next(null);
-        this._chatService.fileAttachment$.next(null);
-        this._chatService.selectedService$.next(null);
-        this._chatService.selectedChannelChanged$.next(message.channelId);
+        this.fileAttachment = null;
+        this.selectedService = null;
+
+        if (!this.channel?.id) {
+          this.channel = await this._chatsService.getChannel(message.channelId).toPromise();
+        }
+        this._chatService.selectedChannel$.next(this.channel);
       });
 
-
     f.resetForm();
-
     this.selectedService = null;
     this.fileAttachment = null;
   }
@@ -150,20 +145,19 @@ export class ChatComposerComponent extends AppComponentBase implements OnInit{
   onFileChange(e: any): void {
     const file = e.target.files[0] as File;
     if (FileUtils.validateFile(this, [file], this.maxFileSize, 1, this.allowedExtensions)) {
-      this._chatService.fileAttachment$.next(file);
-      this._chatService.sanitizedAttachmentUrl$.next(FileUtils.getSanitizedFileUrl(this, file));
+      this.fileAttachment = file;
     }
     this.fileInput.nativeElement.value = '';
     this.messageInput.nativeElement.focus();
   }
 
   handleRemoveAttachment(): void {
-    this._chatService.fileAttachment$.next(null);
+    this.fileAttachment = null;
     this.fileInput.nativeElement.value = '';
   }
 
   handleRemoveSelectedService(): void {
-    this._chatService.selectedService$.next(null);
+    this.selectedService = null;
   }
 
   toggleServicePicker(e: Event): void {
@@ -182,7 +176,7 @@ export class ChatComposerComponent extends AppComponentBase implements OnInit{
   }
 
   private handleOnAddService(service: AvailableServiceDto): void {
-    this._chatService.selectedService$.next(service);
+    this.selectedService = service;
     this.isShowServicePicker = false;
     this.messageInput.nativeElement.focus();
   }

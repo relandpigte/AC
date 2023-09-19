@@ -123,20 +123,9 @@ export class ChatComponent extends AppComponentBase implements OnInit {
         }
       });
 
-    this._chatService.fileAttachment$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(file => this.fileAttachment = file);
-
     this._chatService.selectedService$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(service => this.selectedService = service);
-
-    this._chatService.selectedChannelChanged$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(channelId => {
-        this.selectedChannel = this.channels.find(c => c.id === channelId);
-        this._chatService.selectedChannel$.next(this.selectedChannel);
-      });
   }
 
   get isSearchingKeyword(): boolean { return this._isSearchingKeyword; }
@@ -261,7 +250,7 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     this.channelsStateService = this.pubSubService.getStateService<ChannelsStateService>(this.channelsStateId);
     this.channelsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingList$.next(loading));
     this.channelsStateService.channels$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
-      switch(event.type) {
+      switch (event.type) {
         case StateUpdateType.Add:
           this.channels = [event.data].concat(this.channels);
           this.totalChannelsCount++;
@@ -285,5 +274,7 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     this.channels = this.channelsStateService.getAllChannels();
     this.totalChannelsCount = this.channelsStateService.totalChannelsCount;
     this._chatService.selectedChannel$.next(this.channels?.[0]);
+
+    console.log(this.channels);
   }
 }

@@ -49,25 +49,26 @@ export class EventsComponent extends  AppComponentBase implements OnInit {
     this.getServiceId();
   }
 
-  private openMessageModal(): void {
-    this._chatsService.getChannelByRecipient(this.eventOwnerId)
+  private async openMessageModal(): Promise<void> {
+    const channel = await this._chatsService.getChannelByRecipient(this.eventOwnerId, this.appSession.userId).toPromise();
+    if (channel) {
+      this._chatService.replyingToUser$.next(this.data?.creatorUser);
+      this._chatService.selectedChannel$.next(channel);
+    }
+
+    const modalSettings = this.defaultModalSettings as ModalOptions<ChatComposerConversationComponent>;
+    modalSettings.class = 'modal-lg';
+    modalSettings.initialState = {
+      hasActions: false,
+      hasClose: true,
+      showAttachmentInfo: false,
+      channel: channel,
+      isSearchingUser: false
+    };
+    const modal = this._modalService.show(ChatComposerConversationComponent, modalSettings);
+    modal.content.onCloseClick
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((channel: ChannelDto): void => {
-        this._chatService.selectedChannel$.next(channel);
-        const modalSettings = this.defaultModalSettings as ModalOptions<ChatComposerConversationComponent>;
-        modalSettings.class = 'modal-lg';
-        modalSettings.initialState = {
-          hasActions: false,
-          hasClose: true,
-          showAttachmentInfo: false,
-          channel: channel,
-          isSearchingUser: false
-        };
-        const modal = this._modalService.show(ChatComposerConversationComponent, modalSettings);
-        modal.content.onCloseClick
-          .pipe(takeUntil(this.destroyed$))
-          .subscribe(() => modal.hide());
-      });
+      .subscribe(() => modal.hide());
   }
 
   private getServiceId(): void {

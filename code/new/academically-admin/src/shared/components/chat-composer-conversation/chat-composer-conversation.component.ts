@@ -1,12 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Injector, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { MessageComposeData } from '@app/chat/chat.component';
 import { AppComponentBase } from '@shared/app-component-base';
-import {
-    ChannelDto,
-    ChannelMessageDto,
-    ChatsServiceProxy,
-    UserServiceProxy
-} from '@shared/service-proxies/service-proxies';
+import { ChannelDto, ChannelMessageDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { takeUntil } from 'rxjs/operators';
 import { ChatService, NotificationType } from '@shared/services/chat.service';
 import { ChatComposerComponent } from '@shared/components/chat-composer/chat-composer.component';
@@ -39,9 +34,10 @@ export class ChatComposerConversationComponent extends AppComponentBase implemen
     constructor(
         injector: Injector,
         private _userService: UserServiceProxy,
-        private _chatsService: ChatsServiceProxy
+        private _chatService: ChatService
     ) {
         super(injector);
+        this._chatService.selectedChannel$.pipe(takeUntil(this.destroyed$)).subscribe(c => this.channel = c);
     }
 
     get isUserBlocked(): boolean {

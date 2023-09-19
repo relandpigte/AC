@@ -102,6 +102,18 @@ namespace Academically.Services.Events
                     .Include(e => e.Children);
             }
         }
+        
+        public override async Task<EventDto> GetAsync(EntityDto<Guid> input)
+        {
+            return await Repository.GetAll()
+                .Where(e => e.Id == input.Id)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.CoverPhotoDocument)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.ProfilePictureDocument)
+                .Select(e => ObjectMapper.Map<EventDto>(e))
+                .FirstOrDefaultAsync();
+        }
 
         public async Task<Dictionary<string, PagedResultDto<EventDto>>> GetByTopicsAsync(PagedExploreGroupByTopicResultRequestDto input)
         {

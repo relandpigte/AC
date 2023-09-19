@@ -137,11 +137,12 @@ export class RecipientComponent extends AppComponentBase implements OnChanges, O
           //   }, 15000); // TODO: 15 seconds user status change for testing purposes.
           // }
           // TODO: Not sure if we need this
-          // if (event.data.status === UserStatus.Away) {
-          //   this.timer = setTimeout(() => {
-          //     this.userAvatarStateService.createUserStatusReportLog(UserStatus.Offline);
-          //   }, 900000);
-          // }
+          if (this.timer) { clearTimeout(this.timer); }
+          if (event.data.status === UserStatus.Online) {
+            this.timer = setTimeout(() => {
+              this.userAvatarStateService.createUserStatusReportLog(UserStatus.Offline);
+            }, 900000);
+          }
           this._userAvatarService.addUserStatusLog(event.data);
           break;
       }

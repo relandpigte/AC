@@ -27,6 +27,6 @@ namespace Academically.Services.Chats
         Task<SearchByKeywordResponseDto> SearchByKeyword(string keyword);
         Task CreateChannelNotification(Guid channelId);
         Task DeleteChannelNotification(Guid channelId);
-        Task<ChannelDto> GetChannelByRecipient(long userId);
+        Task<ChannelDto> GetChannelByRecipient(long recipientId, long senderId);
     }
 }
