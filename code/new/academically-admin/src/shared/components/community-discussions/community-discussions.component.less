@@ -11,6 +11,16 @@
       font-size: 15px;
       line-height: 17px;
       color: #3B516C;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+
+      &::before {
+        content: "";
+        width: 19px;
+        height: 19px;
+        background: url("assets/img/chat/reply-arrow-pre.svg") no-repeat center center transparent;
+      }
     }
 
     &-fold {
