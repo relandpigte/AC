@@ -24,16 +24,54 @@
                             </div>
                         </form>
                     </div>
+                    <div class="search-nav d-flex ml-auto">
+                        <ul class="nav nav-tabs nav-tabs-sm">
+                            <li class="nav-item">
+                                <a href="#all-courses" class="nav-link active" data-toggle="tab" role="tab">
+                                    All <span class="badge badge-pill badge-light">3</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#todo-courses" class="nav-link" data-toggle="tab" role="tab">
+                                    To do <span class="badge badge-pill badge-light">4</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#completed-courses" class="nav-link" data-toggle="tab" role="tab">
+                                    Completed <span class="badge badge-pill badge-light">11</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <app-service-card-dashboard
-            *ngFor="let data of courses"
-            [data]="data"
-            [isLoading]="isLoading"
-            (onDelete)="onDeleteClick(data.id)"
-        ></app-service-card-dashboard>
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="all-courses" role="tabpanel">
+                <app-service-card-dashboard
+                    *ngFor="let data of courses"
+                    [data]="data"
+                    [isLoading]="isLoading"
+                ></app-service-card-dashboard>
+            </div>
+
+            <div class="tab-pane fade" id="todo-courses" role="tabpanel">
+                <app-service-card-dashboard
+                    *ngFor="let data of courses"
+                    [data]="data"
+                    [isLoading]="isLoading"
+                ></app-service-card-dashboard>
+            </div>
+
+            <div class="tab-pane fade" id="completed-courses" role="tabpanel">
+                <app-service-card-dashboard
+                    *ngFor="let data of courses"
+                    [data]="data"
+                    [isLoading]="isLoading"
+                ></app-service-card-dashboard>
+            </div>
+        </div>
 
     </ng-container>
 </ng-container>

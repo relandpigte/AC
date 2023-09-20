@@ -323,5 +323,45 @@ namespace Academically.Services.Courses
                              .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
                              .ToListAsync();
         }
+
+        public async Task<IEnumerable<CourseDto>> GetEnrolledCoursesByUser(long? userId)
+        {
+            var currentUserId = userId ?? AbpSession.GetUserId();
+            
+            var studentCourses = await _studentCourseRepository.GetAll()
+                .Where(x => x.CreatorUserId == currentUserId)
+                .ToListAsync();
+
+            var courses = await Repository.GetAll()
+                .Where(c => c.IsVisible && c.Status == CourseStatus.Published)
+                .Where(c => studentCourses.Select(sc => sc.CourseId).Contains(c.Id))
+                .Include(c => c.CreatorUser)
+                .Select(e => ObjectMapper.Map<CourseDto>(e))
+                .ToListAsync();
+            
+            var courseSections = await _courseSectionRepository.GetAll()
+                .Where(cs => courses.Select(x => x.Id).Contains(cs.CourseId))
+                .ToListAsync();
+
+            foreach (var course in courses)
+            {
+                if (course.ImageDocumentId.HasValue)
+                    course.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(course.ImageDocumentId.Value);
+                if (course.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    course.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(course.CreatorUser.ProfilePictureDocumentId.Value);
+
+                course.Modules = courseSections.Count(x => x.Type == CourseSectionType.Module && course.Id == x.CourseId && x.ParentId == null);
+                course.Lessons = courseSections.Count(x => x.Type == CourseSectionType.Lesson && course.Id == x.CourseId && x.ParentId == null);
+                course.Units = courseSections.Count(x => x.Type == CourseSectionType.Unit && course.Id == x.CourseId && x.ParentId == null);
+
+                if (studentCourses.Any(x => x.CourseId == course.Id))
+                    course.Progress = studentCourses.FirstOrDefault(x => x.CourseId == course.Id)!.Progress;
+
+                var savedService = await _savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == course.Id.ToString());
+                course.IsSaved = savedService != null;
+            }
+
+            return courses;
+        }
     }
 }
