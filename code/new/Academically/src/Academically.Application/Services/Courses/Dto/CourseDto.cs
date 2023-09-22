@@ -58,5 +58,8 @@ namespace Academically.Services.Courses.Dto
         
         [NotMapped]
         public bool IsDoneRating { get; set; }
+        
+        [NotMapped]
+        public IEnumerable<UserDto> Enrolled { get; set; }
     }
 }

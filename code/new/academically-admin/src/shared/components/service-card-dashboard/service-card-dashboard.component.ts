@@ -1,21 +1,40 @@
 import { Component, Injector, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
+import * as _ from 'lodash';
+import * as moment from 'moment';
+import * as humanizeDuration from 'humanize-duration';
+import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import {
   DefaultServiceCardActions,
   DefaultServiceCardOptions,
-  ServiceCard, ServiceCardButton, ServiceCardComposition, ServiceCardDates, ServiceCardImage,
-  ServiceCardOptions, ServiceCardPeople, ServiceCardPerson, ServiceCardStatus, ServiceCardType
+  ServiceCard,
+  ServiceCardButton,
+  ServiceCardComposition,
+  ServiceCardDates,
+  ServiceCardImage,
+  ServiceCardOptions,
+  ServiceCardPeople,
+  ServiceCardPerson,
+  ServiceCardStatus,
+  ServiceCardType
 } from '@shared/models/service-card.model';
 import {
-  ArticleDto, ArticleStatus, ArticleType, CoachingDto, CourseDto, CourseSectionType,
-  EventCategory, EventDto, StudentCourseDto, UserDto, VideoDto
+  ArticleDto,
+  ArticleStatus,
+  ArticleType,
+  CoachingDto,
+  CourseDto,
+  CourseSectionType,
+  CourseStatus,
+  EventCategory,
+  EventDto,
+  StudentCourseDto,
+  UserDto,
+  VideoDto
 } from '@shared/service-proxies/service-proxies';
-import * as _ from 'lodash';
-import * as moment from 'moment';
-import * as humanizeDuration from 'humanize-duration';
-import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
+
 
 @Component({
   selector: 'app-service-card-dashboard',
@@ -56,7 +75,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   get articleType(): number { return this.data?.type; }
   get people(): ServiceCardPeople { return this.sanitized?.people; }
   get status(): ServiceCardStatus { return this.sanitized?.status; }
-  get learners(): number { return 20; }
+  get learners(): number { return this.data?.enrolled?.length; }
   get progress(): number | null {
     if (this.status?.type === 'completed') { return null; }
     return this.sanitized?.progress ?? 0;
@@ -65,9 +84,10 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   get compositionString(): string {
     if (!this.composition) { return null; }
     const composition = [];
-    _.forEach(this.composition, (value, key) => {
-      if (this.cardType === 'tutorial' && key === 'durationInSec') { return; }
-      composition.push(`${value} ${key}`);
+    _.forEach(this.composition, (value, key): void => {
+      if (value > 0 && this.cardType !== 'tutorial' && key !== 'durationInSec') {
+        composition.push(`${value} ${key}`);
+      }
     });
     return composition.join(', ');
   }
@@ -92,6 +112,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   get coachingStudentAvatarSrc(): string { return this.sanitized?.booking?.student?.avatar?.src ?? 'assets/img/anonymous.png'; }
   get coachingDuration(): string { return humanizeDuration(this.sanitized?.booking?.durationInSec ?? 60000); }
 
+  get courseStatus(): CourseStatus { return this.data?.status; }
   get isCourseStarted(): boolean { return this.sanitized?.progress > 0 && this.sanitized?.progress < 100; }
   get isCourseCompleted(): boolean { return this.sanitized?.progress === 100; }
   get isDoneCourseRating(): boolean { return this.data?.isDoneRating; }
@@ -302,29 +323,55 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         break;
       case 'course':
         if (this.isCreator) {
-          this.sanitized.composition = this.sanitized.composition ?? {} as ServiceCardComposition;
-          this.sanitized.composition.units = this.data?.units ?? 4;
-          this.sanitized.composition.modules = this.data?.modules ?? 3;
-          this.sanitized.composition.lessons = this.data?.lessons ?? 5;
-          this.sanitized.people.isShowAvatars = true;
-
-          const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
-          switch (tempStatus) {
-            case 1:
-              this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
-              this.sanitizedOptions.isShowStatus = true;
-              break;
-            case 2:
-              this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
-              this.sanitizedOptions.isShowStatus = true;
-              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
-              this.sanitizedOptions.isShowActions = true;
-              break;
-            case 3:
+          this.sanitizedOptions.isShowDetailsComposition = true;
+          this.sanitizedOptions.isShowEnrolled = true;
+          this.sanitizedOptions.isShowStatus = true;
+          switch (this.courseStatus) {
+            case CourseStatus.Archived:
               this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
-              this.sanitizedOptions.isShowStatus = true;
+              break;
+            case CourseStatus.Published:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
+              break;
+            case CourseStatus.Draft:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
               break;
           }
+
+          this.sanitized.people = <ServiceCardPeople>{};
+          this.sanitized.people.people = this.data?.enrolled?.map((u: UserDto): ServiceCardPerson => ({
+            ...this.sanitized.owner,
+            avatar: {
+              src: u.profilePictureUrl,
+            },
+            fullName: u.fullName
+          }));
+          this.sanitized.people.avatarStackCount = 3;
+          this.sanitized.people.isShowAvatars = true;
+
+          // this.sanitized.composition = this.sanitized.composition ?? {} as ServiceCardComposition;
+          // this.sanitized.composition.units = this.data?.units ?? 4;
+          // this.sanitized.composition.modules = this.data?.modules ?? 3;
+          // this.sanitized.composition.lessons = this.data?.lessons ?? 5;
+          // this.sanitized.people.isShowAvatars = true;
+          //
+          // const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
+          // switch (tempStatus) {
+          //   case 1:
+          //     this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
+          //     this.sanitizedOptions.isShowStatus = true;
+          //     break;
+          //   case 2:
+          //     this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
+          //     this.sanitizedOptions.isShowStatus = true;
+          //     this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
+          //     this.sanitizedOptions.isShowActions = true;
+          //     break;
+          //   case 3:
+          //     this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
+          //     this.sanitizedOptions.isShowStatus = true;
+          //     break;
+          // }
         } else {
           const { progress } = <CourseDto>this.data;
           this.sanitizedOptions.isShowProgress = progress < 100;

@@ -17,8 +17,6 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
   allCourses: CourseDto[] = [];
   todoCourses: CourseDto[] = [];
   completedCourses: CourseDto[] = [];
-
-  isLoading = true;
   shimmerType = ShimmerType;
 
   constructor(
@@ -44,10 +42,12 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
   }
 
   private initCourses(): void {
-    this.isLoading = true;
+    this._dashboardPageService.isLoading$.next(true);
     this._coursesService.getEnrolledCoursesByUser()
       .pipe(takeUntil(this.destroyed$))
-      .pipe(finalize((): boolean => this.isLoading = false))
+      .pipe(finalize((): void => {
+        this._dashboardPageService.isLoading$.next(false);
+      }))
       .subscribe((courses: CourseDto[]): void => {
         this.allCourses = courses;
         this.todoCourses = courses.filter(c => c.progress < 100);

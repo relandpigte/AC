@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
@@ -21,7 +21,8 @@ export class CoursesComponent extends AppComponentBase implements OnInit {
     injector: Injector,
     private _modalService: BsModalService,
     private _dashboardService: DashboardService,
-    private _dashboardPageService: DashboardPagesService
+    private _dashboardPageService: DashboardPagesService,
+    private _cdr: ChangeDetectorRef
   ) {
     super(injector);
   }
@@ -36,11 +37,12 @@ export class CoursesComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
     this._dashboardService.setUserView(DashboardServiceView.learner);
 
-    setTimeout(() => this._dashboardPageService.setIsLoading(false), 3000);
+    setTimeout(() => this._dashboardPageService.setIsLoading(false), 300);
   }
 
   handleSwitchView(): void {
     this._dashboardService.handleSwitchView();
+    this._cdr.detectChanges();
   }
 
   onCreateCourseClick(): void {

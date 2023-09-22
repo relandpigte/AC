@@ -78,7 +78,7 @@
                             <span class="d-flex">{{ status?.label | localize }}</span>
                         </ng-container>
                         <ng-container *ngSwitchCase="'completed'">
-                            <span class="d-flex"><i class="icon completed flex-grow-1"></i> {{ status?.label | localize }}</span>
+                            <span class="d-flex mt-2"><i class="icon completed flex-grow-1"></i> {{ status?.label | localize }}</span>
                         </ng-container>
                         <ng-container *ngSwitchCase="'onprogress'">
                             <span class="d-flex"> {{ status?.label | localize }}</span>
@@ -121,6 +121,9 @@
                                 </ng-container>
                                 <ng-container *ngSwitchCase="'archived'">
                                     <span class="text-primary">{{ status?.label | localize }}</span>
+                                </ng-container>
+                                <ng-container *ngSwitchCase="'draft'">
+                                    <span class="text-danger">{{ status?.label | localize }}</span>
                                 </ng-container>
                             </ng-container>
                         </ng-container>

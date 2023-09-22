@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
@@ -20,6 +21,7 @@ using Academically.Extensions;
 using Academically.Services.Courses.Dto;
 using Academically.Services.Explore.Dto;
 using Academically.Services.Posts.Dto;
+using Academically.Users.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
@@ -97,9 +99,21 @@ namespace Academically.Services.Courses
             foreach (var item in output.Items)
             {
                 if (item.ImageDocumentId.HasValue)
-                {
-                    item.CourseImageUrl = await _documentsDomainService.GetFileUrlAsync(item.ImageDocumentId.Value);
-                }
+                    item.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(item.ImageDocumentId.Value);
+
+                var courseSections = await _courseSectionRepository.GetAll()
+                    .Where(cs => cs.CourseId == item.Id)
+                    .ToListAsync();
+                
+                item.Modules = courseSections.Count(x => x.Type == CourseSectionType.Module && item.Id == x.CourseId && x.ParentId == null);
+                item.Lessons = courseSections.Count(x => x.Type == CourseSectionType.Lesson && item.Id == x.CourseId && x.ParentId == null);
+                item.Units = courseSections.Count(x => x.Type == CourseSectionType.Unit && item.Id == x.CourseId && x.ParentId == null);
+                item.Enrolled = await _studentCourseRepository.GetAll()
+                    .Where(c => c.CourseId == item.Id)
+                    .Select(c => ObjectMapper.Map<UserDto>(c.CreatorUser))
+                    .ToListAsync();
+                
+                foreach (var u in item.Enrolled) if (u.ProfilePictureDocumentId.HasValue) u.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(u.ProfilePictureDocumentId.Value);
             }
             return output;
         }

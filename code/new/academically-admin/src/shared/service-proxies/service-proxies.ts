@@ -7259,6 +7259,8 @@ export class CoursesServiceProxy {
      * @param statusFilter (optional) 0 = Draft
     
     1 = Published
+    
+    2 = Archived
      * @param sorting (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
@@ -35039,6 +35041,7 @@ export class CourseDto implements ICourseDto {
     units: number;
     isSaved: boolean;
     isDoneRating: boolean;
+    enrolled: UserDto[] | undefined;
 
     constructor(data?: ICourseDto) {
         if (data) {
@@ -35089,6 +35092,11 @@ export class CourseDto implements ICourseDto {
             this.units = _data["units"];
             this.isSaved = _data["isSaved"];
             this.isDoneRating = _data["isDoneRating"];
+            if (Array.isArray(_data["enrolled"])) {
+                this.enrolled = [] as any;
+                for (let item of _data["enrolled"])
+                    this.enrolled.push(UserDto.fromJS(item));
+            }
         }
     }
 
@@ -35139,6 +35147,11 @@ export class CourseDto implements ICourseDto {
         data["units"] = this.units;
         data["isSaved"] = this.isSaved;
         data["isDoneRating"] = this.isDoneRating;
+        if (Array.isArray(this.enrolled)) {
+            data["enrolled"] = [];
+            for (let item of this.enrolled)
+                data["enrolled"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -35185,6 +35198,7 @@ export interface ICourseDto {
     units: number;
     isSaved: boolean;
     isDoneRating: boolean;
+    enrolled: UserDto[] | undefined;
 }
 
 export class CourseDtoPagedResultDto implements ICourseDtoPagedResultDto {
@@ -35697,10 +35711,11 @@ export enum CourseSectionType {
     Lesson = 3,
 }
 
-/** 0 = Draft 1 = Published */
+/** 0 = Draft 1 = Published 2 = Archived */
 export enum CourseStatus {
     Draft = 0,
     Published = 1,
+    Archived = 2,
 }
 
 /** 1 = Standard 2 = Cohort */
