@@ -1,9 +1,12 @@
 import { Component, Injector, OnInit } from '@angular/core';
+import { finalize, takeUntil } from 'rxjs/operators';
+
 import { CourseDto, CoursesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { AppConsts } from '@shared/AppConsts';
+
 
 @Component({
   selector: 'app-purchased',
@@ -11,9 +14,11 @@ import { finalize, takeUntil } from 'rxjs/operators';
   styleUrls: ['./purchased.component.less']
 })
 export class PurchasedComponent extends AppComponentBase implements OnInit {
-  courses: CourseDto[] = [];
-  isLoading = true;
+  allCourses: CourseDto[] = [];
+  todoCourses: CourseDto[] = [];
+  completedCourses: CourseDto[] = [];
 
+  isLoading = true;
   shimmerType = ShimmerType;
 
   constructor(
@@ -25,19 +30,28 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
   }
 
   get isLoading$() { return this._dashboardPageService.isLoading$; }
+  get totalCourses(): number { return this.allCourses?.length; }
+  get totalTodoCourses(): number { return this.todoCourses?.length; }
+  get totalCompletedCourses(): number { return this.completedCourses?.length; }
 
   ngOnInit(): void {
     this.initCourses();
   }
 
+  handleRedirectToCourse(courseId: string): void {
+    const url = `${AppConsts.appBaseUrl}/app/student-portal/${courseId}/home`;
+    window.open(url, '_blank');
+  }
+
   private initCourses(): void {
     this.isLoading = true;
-    this._coursesService.getEnrolledCoursesByUser(this.appSession.userId)
+    this._coursesService.getEnrolledCoursesByUser()
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize((): boolean => this.isLoading = false))
-      .subscribe(courses => {
-        this.courses = courses;
-        console.warn(courses);
+      .subscribe((courses: CourseDto[]): void => {
+        this.allCourses = courses;
+        this.todoCourses = courses.filter(c => c.progress < 100);
+        this.completedCourses = courses.filter(c => c.progress === 100);
       });
   }
 }

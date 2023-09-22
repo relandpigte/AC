@@ -7873,15 +7873,10 @@ export class CoursesServiceProxy {
     }
 
     /**
-     * @param userId (optional) 
      * @return Success
      */
-    getEnrolledCoursesByUser(userId: number | undefined): Observable<CourseDto[]> {
-        let url_ = this.baseUrl + "/api/services/app/Courses/GetEnrolledCoursesByUser?";
-        if (userId === null)
-            throw new Error("The parameter 'userId' cannot be null.");
-        else if (userId !== undefined)
-            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+    getEnrolledCoursesByUser(): Observable<CourseDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Courses/GetEnrolledCoursesByUser";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -35043,6 +35038,7 @@ export class CourseDto implements ICourseDto {
     progress: number;
     units: number;
     isSaved: boolean;
+    isDoneRating: boolean;
 
     constructor(data?: ICourseDto) {
         if (data) {
@@ -35092,6 +35088,7 @@ export class CourseDto implements ICourseDto {
             this.progress = _data["progress"];
             this.units = _data["units"];
             this.isSaved = _data["isSaved"];
+            this.isDoneRating = _data["isDoneRating"];
         }
     }
 
@@ -35141,6 +35138,7 @@ export class CourseDto implements ICourseDto {
         data["progress"] = this.progress;
         data["units"] = this.units;
         data["isSaved"] = this.isSaved;
+        data["isDoneRating"] = this.isDoneRating;
         return data; 
     }
 
@@ -35186,6 +35184,7 @@ export interface ICourseDto {
     progress: number;
     units: number;
     isSaved: boolean;
+    isDoneRating: boolean;
 }
 
 export class CourseDtoPagedResultDto implements ICourseDtoPagedResultDto {

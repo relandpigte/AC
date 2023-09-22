@@ -143,32 +143,32 @@
                 <ng-container *ngFor="let action of sanitizedActions">
                     <ng-container [ngSwitch]="action.type">
                         <ng-container *ngSwitchCase="'read'">
-                            <button class="read btn d-flex flex-column text-primary align-items-center gap-5 p-0" (click)="handleClickAction(id)">
+                            <button class="read btn d-flex flex-column text-primary align-items-center gap-5 p-0" (click)="handleClickAction(id, action)">
                                 <span class="block bg-center"></span> {{ action.label | localize}}
                             </button>
                         </ng-container>
                         <ng-container *ngSwitchCase="'review'">
-                            <button class="review btn d-flex flex-column text-primary align-items-center gap-5 p-0" (click)="handleClickAction(id)">
+                            <button class="review btn d-flex flex-column text-primary align-items-center gap-5 p-0" (click)="handleClickAction(id, action)">
                                 <span class="block bg-center"></span> {{ action.label | localize}}
                             </button>
                         </ng-container>
                         <ng-container *ngSwitchCase="'join'">
-                            <button class="join btn d-flex flex-column text-primary align-items-center gap-5 p-0" (click)="handleClickAction(id)">
+                            <button class="join btn d-flex flex-column text-primary align-items-center gap-5 p-0" (click)="handleClickAction(id, action)">
                                 <span class="block bg-center"></span> {{ action.label | localize}}
                             </button>
                         </ng-container>
                         <ng-container *ngSwitchCase="'play'">
-                            <button class="play btn d-flex flex-column text-primary align-items-center gap-5 p-0" (click)="handleClickAction(id)">
+                            <button class="play btn d-flex flex-column text-primary align-items-center gap-5 p-0" (click)="handleClickAction(id, action)">
                                 <span class="block bg-center"></span> {{ action.label | localize}}
                             </button>
                         </ng-container>
                         <ng-container *ngSwitchCase="'book'">
-                            <button class="book btn d-flex flex-column text-primary align-items-center gap-5 p-0" (click)="handleClickAction(id)">
+                            <button class="book btn d-flex flex-column text-primary align-items-center gap-5 p-0" (click)="handleClickAction(id, action)">
                                 <span class="block bg-center"></span> {{ action.label | localize}}
                             </button>
                         </ng-container>
                         <ng-container *ngSwitchCase="'buy'">
-                            <button class="buy btn d-flex justify-content-center align-items-center w-115-px h-35-px" (click)="handleClickAction(id)">
+                            <button class="buy btn d-flex justify-content-center align-items-center w-115-px h-35-px" (click)="handleClickAction(id, action)">
                                 {{ action.label | localize}}
                             </button>
                         </ng-container>

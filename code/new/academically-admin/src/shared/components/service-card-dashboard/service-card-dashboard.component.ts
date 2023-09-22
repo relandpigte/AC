@@ -1,38 +1,28 @@
-import { Component, Injector, Input, OnInit, Output } from '@angular/core';
+import { Component, Injector, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import {
   DefaultServiceCardActions,
   DefaultServiceCardOptions,
-  ServiceCard,
-  ServiceCardButton, ServiceCardComposition, ServiceCardDates, ServiceCardImage,
-  ServiceCardOptions,
-  ServiceCardPeople,
-  ServiceCardPerson, ServiceCardStatus,
-  ServiceCardType, UserServiceCardActions
+  ServiceCard, ServiceCardButton, ServiceCardComposition, ServiceCardDates, ServiceCardImage,
+  ServiceCardOptions, ServiceCardPeople, ServiceCardPerson, ServiceCardStatus, ServiceCardType
 } from '@shared/models/service-card.model';
 import {
-  ArticleDto,
-  ArticleStatus,
-  ArticleType,
-  CoachingDto,
-  CourseDto,
-  EventCategory,
-  EventDto,
-  UserDto,
-  VideoDto
+  ArticleDto, ArticleStatus, ArticleType, CoachingDto, CourseDto, CourseSectionType,
+  EventCategory, EventDto, StudentCourseDto, UserDto, VideoDto
 } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import * as humanizeDuration from 'humanize-duration';
+import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 
 @Component({
   selector: 'app-service-card-dashboard',
   templateUrl: './service-card-dashboard.component.html',
   styleUrls: ['./service-card-dashboard.component.less']
 })
-export class ServiceCardDashboardComponent extends AppComponentBase implements OnInit {
+export class ServiceCardDashboardComponent extends AppComponentBase implements OnInit, OnChanges {
   @Input() data: any;
   @Input() isLoading: boolean;
   @Input() isCreator: boolean;
@@ -45,6 +35,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
 
   @Output() onDelete: Subject<any> = new Subject<any>();
   @Output() onClickAction: Subject<any> = new Subject<any>();
+  @Output() onReviewAction: Subject<any> = new Subject<any>();
 
   sanitized: ServiceCard;
   sanitizedOptions: ServiceCardOptions;
@@ -53,9 +44,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   ArticleStatus = ArticleStatus;
   ArticleType = ArticleType;
 
-  constructor(
-    injector: Injector
-  ) {
+  constructor(injector: Injector) {
     super(injector);
   }
 
@@ -85,10 +74,10 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   get compositionVideoDuration(): string { return this.composition?.durationInSec ? moment.utc(this.composition?.durationInSec * 1000).format(`${this.composition?.durationInSec >= 3600 ? 'HH:' : ''}mm:ss`) : null; }
   get isDraft(): boolean { return this.sanitized?.status?.type === 'draft'; }
   get isArchive(): boolean { return this.sanitized?.status?.type === 'archived'; }
-  get isExpired(): boolean { return this.sanitized.dates.startDate.isBefore(moment()); }
+  get isExpired(): boolean { return this.sanitized?.dates?.startDate?.isBefore(moment()); }
   get hasReviewed(): boolean { return true; }
   get sessionDuration(): string { return humanizeDuration(this.composition.durationInSec * 1000); }
-  get isScheduleNear(): boolean { return this.sanitized?.dates?.startDate.diff(moment(), 'hours') < 1; }
+  get isScheduleNear(): boolean { return this.sanitized?.dates?.startDate?.diff(moment(), 'hours') < 1; }
   get schedule(): string {
     if (this.isDraft || !this.sanitized?.dates?.startDate) return this.l('Unscheduled');
     if (this.sanitized.dates.startDate.diff(moment(), 'minutes') < 1) return this.l('LiveNow');
@@ -103,16 +92,46 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   get coachingStudentAvatarSrc(): string { return this.sanitized?.booking?.student?.avatar?.src ?? 'assets/img/anonymous.png'; }
   get coachingDuration(): string { return humanizeDuration(this.sanitized?.booking?.durationInSec ?? 60000); }
 
+  get isCourseStarted(): boolean { return this.sanitized?.progress > 0 && this.sanitized?.progress < 100; }
+  get isCourseCompleted(): boolean { return this.sanitized?.progress === 100; }
+  get isDoneCourseRating(): boolean { return this.data?.isDoneRating; }
+  get currentLesson(): string {
+    if (this.isCourseCompleted) { return; }
+    const courses = <StudentCourseDto>this.data?.studentCourses?.find((s: StudentCourseDto): boolean => s.progress < 100);
+    let section = courses?.studentCourseSections?.find(s => s.status === 1)?.courseSection;
+    if (courses?.progress === 0) {
+      section = courses?.studentCourseSections[0]?.courseSection;
+    }
+    return `${CourseSectionType[section?.type]} - ${section?.name}`;
+  }
+
   ngOnInit(): void {
-    this.sanitizedData();
+    // this.sanitizedData();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if ('data' in changes && this.data) {
+      const { options, service } = ServiceCardUtils.getSanitizeServiceData(this.data, {}, [], false);
+      this.sanitized = service;
+      this.sanitizedOptions = options;
+
+      this.setValueOverrides();
+    }
   }
 
   handleDelete(id: string): void {
     this.onDelete.next(id);
   }
 
-  handleClickAction(data: any): void {
-    this.onClickAction.next(data);
+  handleClickAction(serviceId: string, action: ServiceCardButton): void {
+    switch (action.type) {
+      case 'join':
+        this.onClickAction.next(serviceId);
+        break;
+      case 'review':
+        this.onReviewAction.next(serviceId);
+        break;
+    }
   }
 
   private sanitizedData(): void {
@@ -155,6 +174,9 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   }
 
   private setValueOverrides(): void {
+    this.sanitizedOptions = _.merge({}, DefaultServiceCardOptions, this.options);
+    this.sanitizedActions = _.merge([], DefaultServiceCardActions, this.actions);
+
     switch (this.cardType) {
       case 'article':
         this.sanitized.people.isShowAvatars = true;
@@ -304,38 +326,58 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
               break;
           }
         } else {
-          this.sanitized.progress = this.data?.progress;
-          const tempStatus = Math.floor(Math.random() * (5 - 1) + 1);
-          switch (tempStatus) {
-            case 1:
-              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Start course' });
-              this.sanitizedOptions.isShowActions = true;
-              this.sanitized.status = <ServiceCardStatus>{ type: 'read', label: 'Lesson 1 - Start your new journey', show: true };
-              this.sanitizedOptions.isShowStatus = true;
-              this.sanitized.progress = 0;
-              break;
-            case 2:
-              this.sanitized.status = <ServiceCardStatus>{ type: 'onprogress', label: 'Tutorial 1 - Start your new journey', show: true };
-              this.sanitizedOptions.isShowStatus = true;
-              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Continue' });
-              this.sanitizedOptions.isShowActions = true;
-              this.sanitized.progress = Math.floor(Math.random() * (100 - 1) + 1);
-              break;
-            case 3:
-              this.sanitized.status = <ServiceCardStatus>{ type: 'completed', label: 'Congratulations! You’ve finished this course', show: true };
-              this.sanitizedOptions.isShowStatus = true;
-              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'review', label: 'Leave review' });
-              this.sanitizedOptions.isShowActions = true;
-              this.sanitized.progress = null;
-              break;
-            case 4:
-              this.sanitized.status = <ServiceCardStatus>{ type: 'completed', label: 'Congratulations! You’ve finished this course', show: true };
-              this.sanitizedOptions.isShowStatus = true;
-              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Start again' });
-              this.sanitizedOptions.isShowActions = true;
-              this.sanitized.progress = null;
-              break;
+          const { progress } = <CourseDto>this.data;
+          this.sanitizedOptions.isShowProgress = progress < 100;
+          this.sanitized.progress = progress;
+
+          this.sanitized.status = progress < 100 ?
+            <ServiceCardStatus>{ type: 'read', label: this.currentLesson, show: true } :
+            <ServiceCardStatus>{ type: 'completed', label: 'Congratulations! You’ve finished this course', show: true };
+
+          this.sanitizedOptions.isShowActions = true;
+          if (this.isCourseStarted) {
+            this.sanitizedActions?.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Continue' });
+          } else if (this.isCourseCompleted) {
+            if (this.isDoneCourseRating) {
+              this.sanitizedActions?.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Start again' });
+            } else {
+              this.sanitizedActions?.splice(0, 0, <ServiceCardButton>{ type: 'review', label: 'Leave review' });
+            }
+          } else {
+            this.sanitizedActions?.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Start course' });
           }
+
+          // const tempStatus = Math.floor(Math.random() * (5 - 1) + 1);
+          // switch (tempStatus) {
+          //   case 1:
+          //     this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Start course' });
+          //     this.sanitizedOptions.isShowActions = true;
+          //     this.sanitized.status = <ServiceCardStatus>{ type: 'read', label: 'Lesson 1 - Start your new journey', show: true };
+          //     this.sanitizedOptions.isShowStatus = true;
+          //     this.sanitized.progress = 0;
+          //     break;
+          //   case 2:
+          //     this.sanitized.status = <ServiceCardStatus>{ type: 'onprogress', label: 'Tutorial 1 - Start your new journey', show: true };
+          //     this.sanitizedOptions.isShowStatus = true;
+          //     this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Continue' });
+          //     this.sanitizedOptions.isShowActions = true;
+          //     this.sanitized.progress = Math.floor(Math.random() * (100 - 1) + 1);
+          //     break;
+          //   case 3:
+          //     this.sanitized.status = <ServiceCardStatus>{ type: 'completed', label: 'Congratulations! You’ve finished this course', show: true };
+          //     this.sanitizedOptions.isShowStatus = true;
+          //     this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'review', label: 'Leave review' });
+          //     this.sanitizedOptions.isShowActions = true;
+          //     this.sanitized.progress = null;
+          //     break;
+          //   case 4:
+          //     this.sanitized.status = <ServiceCardStatus>{ type: 'completed', label: 'Congratulations! You’ve finished this course', show: true };
+          //     this.sanitizedOptions.isShowStatus = true;
+          //     this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Start again' });
+          //     this.sanitizedOptions.isShowActions = true;
+          //     this.sanitized.progress = null;
+          //     break;
+          // }
         }
         break;
       case 'event':
