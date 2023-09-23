@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
@@ -20,7 +20,7 @@ import { VideoService } from '@app/videos/_services/video.service';
   styleUrls: ['./tutorials.component.less'],
   animations: [appModuleAnimation()],
 })
-export class TutorialsComponent extends AppComponentBase implements OnInit {
+export class TutorialsComponent extends AppComponentBase implements OnInit, AfterViewInit {
   shimmerType = ShimmerType;
   constructor(
     injector: Injector,
@@ -45,6 +45,10 @@ export class TutorialsComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
     this._dashboardService.setUserView(DashboardServiceView.learner);
     setTimeout(() => this._dashboardPageService.setIsLoading(false), 3000);
+  }
+
+  ngAfterViewInit(): void {
+    this._cdr.detectChanges();
   }
 
   handleSwitchView(): void {

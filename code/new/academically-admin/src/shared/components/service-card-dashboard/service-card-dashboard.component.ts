@@ -21,7 +21,7 @@ import {
 } from '@shared/models/service-card.model';
 import {
   ArticleStatus,
-  ArticleType,
+  ArticleType, CoachingStatus,
   CourseSectionType,
   CourseStatus,
   StudentCourseDto,
@@ -114,7 +114,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   }
   get scheduleDay(): string { return this.isDraft ? '--' : this.sanitized?.dates?.startDate?.format('DD'); }
   get scheduleMonth(): string { return this.isDraft ? '---' : this.sanitized?.dates?.startDate?.format('MMM'); }
-  get isBooked():boolean { return !!this.sanitized?.booking; }
+  get isBooked(): boolean { return !!this.sanitized?.booking; }
   get coachingTutorFullName(): string { return this.sanitized.owner.fullName ?? 'Casey Fyfe'; }
   get coachingStudentFullName(): string { return this.sanitized?.booking?.student?.fullName ?? 'Casey Fyfe'; }
   get coachingStudentAvatarSrc(): string { return this.sanitized?.booking?.student?.avatar?.src ?? 'assets/img/anonymous.png'; }
@@ -139,8 +139,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
       this.sanitized = service;
       this.sanitizedOptions = options;
 
-      this.setValueOverrides();
-      this.setOptionOverrides();
+      this.setInitValues();
     }
   }
 
@@ -159,22 +158,27 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     }
   }
 
+  private setInitValues(): void {
+    this.sanitized.people = <ServiceCardPeople>{};
+    this.sanitized.people.avatarStackCount = 3;
+    this.sanitized.people.isShowAvatars = true;
+    this.sanitized.people.people = Array(this.randomNonZero(25, 12))
+      .fill({} as ServiceCardPerson).map(i => ({
+        ...this.sanitized.owner, avatar: {
+          src: `https://i.pravatar.cc/50?u=${this.uuidv4()}`
+        }
+      }));
+
+    this.setValueOverrides();
+    this.setOptionOverrides();
+  }
+
   private setValueOverrides(): void {
     this.sanitizedOptions = _.merge({}, DefaultServiceCardOptions, this.options);
     this.sanitizedActions = _.merge([], DefaultServiceCardActions, this.actions);
 
     switch (this.cardType) {
       case 'article':
-        this.sanitized.people = <ServiceCardPeople>{};
-        this.sanitized.people.avatarStackCount = 3;
-        this.sanitized.people.isShowAvatars = true;
-        this.sanitized.people.people = Array(this.randomNonZero(25, 12))
-          .fill({} as ServiceCardPerson).map(i => ({
-            ...this.sanitized.owner, avatar: {
-              src: `https://i.pravatar.cc/50?u=${this.uuidv4()}`
-            }
-          }));
-
         if (this.isCreator) {
           switch (this.serviceStatus) {
             case ArticleStatus.Archived:
@@ -206,15 +210,6 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         }
         break;
       case 'broadcast':
-        this.sanitized.people = <ServiceCardPeople>{};
-        this.sanitized.people.people = Array(this.randomNonZero(45, 12))
-          .fill({} as ServiceCardPerson).map(i => ({
-            ...this.sanitized.owner, avatar: {
-              src: `https://i.pravatar.cc/50?u=${this.uuidv4()}`
-            }
-          }));
-        this.sanitized.people.avatarStackCount = 3;
-        this.sanitized.people.isShowAvatars = true;
         if (this.isCreator) {
           const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
           switch (tempStatus) {
@@ -255,19 +250,17 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
               this.sanitizedOptions.isShowActions = true;
             }
           } else {
-            this.sanitized.people.isShowAvatars = true;
-            const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
-            switch (tempStatus) {
-              case 1:
-                this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
+            switch (this.serviceStatus) {
+              case CoachingStatus.Archived:
+                this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
                 this.sanitizedOptions.isShowStatus = true;
                 break;
-              case 2:
+              case CoachingStatus.Published:
                 this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
                 this.sanitizedOptions.isShowStatus = true;
                 break;
-              case 3:
-                this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
+              case CoachingStatus.Draft:
+                this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
                 this.sanitizedOptions.isShowStatus = true;
                 break;
             }
@@ -345,16 +338,6 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
           this.sanitized.composition.videos = this.getRndInteger(1, 11);
           this.sanitized.composition.durationInSec = Math.floor(Math.random() * (3600 - 20) + 20);
 
-          this.sanitized.people = <ServiceCardPeople>{};
-          this.sanitized.people.avatarStackCount = 3;
-          this.sanitized.people.isShowAvatars = true;
-          this.sanitized.people.people = Array(this.randomNonZero(25, 12))
-            .fill({} as ServiceCardPerson).map(i => ({
-              ...this.sanitized.owner, avatar: {
-                src: `https://i.pravatar.cc/50?u=${this.uuidv4()}`
-              }
-            }));
-
           switch (this.serviceStatus) {
             case ArticleStatus.Archived:
               this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
@@ -405,10 +388,9 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         }
         break;
       case 'workshop':
-        this.sanitized.people.isShowAvatars = true;
         if (this.isCreator) {
           const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
-          switch(tempStatus) {
+          switch (tempStatus) {
             case 1:
               this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
               this.sanitizedOptions.isShowStatus = true;

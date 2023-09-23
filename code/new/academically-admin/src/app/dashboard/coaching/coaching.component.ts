@@ -1,14 +1,11 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import {
   CoachingsServiceProxy,
   CoachingType,
-  CreateCoachingDto, CreateServiceDiscussionDto,
-  PostDto,
-  PostsServiceProxy,
-  PostType, ServiceDiscussionServiceProxy,
+  CreateCoachingDto,
   ServicesType
 } from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
@@ -27,7 +24,7 @@ import { ServiceDataService } from '@shared/services/service-data.service';
   styleUrls: ['./coaching.component.less'],
   animations: [appModuleAnimation()],
 })
-export class CoachingComponent extends AppComponentBase implements OnInit {
+export class CoachingComponent extends AppComponentBase implements OnInit, AfterViewInit {
   shimmerType = ShimmerType;
   constructor(
     injector: Injector,
@@ -36,7 +33,8 @@ export class CoachingComponent extends AppComponentBase implements OnInit {
     private _coachingService: CoachingsServiceProxy,
     public _dashboardService: DashboardService,
     private _dashboardPageService: DashboardPagesService,
-    private _serviceData: ServiceDataService
+    private _serviceData: ServiceDataService,
+    private _cdr: ChangeDetectorRef
   ) {
     super(injector);
   }
@@ -52,6 +50,11 @@ export class CoachingComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
     this._dashboardService.setUserView(DashboardServiceView.learner);
     setTimeout(() => this._dashboardPageService.setIsLoading(false), 3000);
+    this._cdr.detectChanges();
+  }
+
+  ngAfterViewInit(): void {
+    this._cdr.detectChanges();
   }
 
   onNewCoachingClick(): void {
@@ -83,5 +86,7 @@ export class CoachingComponent extends AppComponentBase implements OnInit {
 
   handleSwitchView(): void {
     this._dashboardService.handleSwitchView();
+    this._cdr.detectChanges();
   }
+
 }

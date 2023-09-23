@@ -4778,6 +4778,8 @@ export class CoachingsServiceProxy {
      * @param statusFilter (optional) 0 = Draft
     
     1 = Published
+    
+    2 = Archived
      * @param sorting (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
@@ -33754,10 +33756,11 @@ export enum CoachingResourceType {
     Handout = 2,
 }
 
-/** 0 = Draft 1 = Published */
+/** 0 = Draft 1 = Published 2 = Archived */
 export enum CoachingStatus {
     Draft = 0,
     Published = 1,
+    Archived = 2,
 }
 
 /** 0 = Single 1 = Series */

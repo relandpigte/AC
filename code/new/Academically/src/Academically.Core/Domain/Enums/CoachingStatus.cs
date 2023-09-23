@@ -3,6 +3,7 @@
     public enum CoachingStatus
     {
         Draft = 0,
-		Published = 1,
+		Published,
+        Archived
     }
 }
