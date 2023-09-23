@@ -1,7 +1,9 @@
 import { Component, Injector, OnInit } from '@angular/core';
+import { finalize, takeUntil } from 'rxjs/operators';
+
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
-import { VideoDto } from '@shared/service-proxies/service-proxies';
+import { VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 
 @Component({
@@ -10,20 +12,37 @@ import { DashboardPagesService } from '@shared/services/dashboard-pages.service'
   styleUrls: ['./created.component.less']
 })
 export class CreatedComponent extends AppComponentBase implements OnInit {
-  tutorials: VideoDto[] = Array(Math.floor(Math.random() * (10 - 4) + 4)).fill([]).map(() => this.generateRandomTutorial()) as VideoDto[];
-  isLoading = true;
+  activeVideos: VideoDto[] = [];
+  draftVideos: VideoDto[] = [];
+  archiveVideos: VideoDto[] = [];
   shimmerType = ShimmerType;
 
   constructor(
     injector: Injector,
-    private _dashboardPageService: DashboardPagesService
+    private _dashboardPageService: DashboardPagesService,
+    private _videoService: VideosServiceProxy
   ) {
     super(injector);
   }
 
   get isLoading$() { return this._dashboardPageService.isLoading$; }
+  get totalActiveVideos(): number { return this.activeVideos?.length; }
+  get totalDraftVideos(): number { return this.draftVideos?.length; }
+  get totalArchivedVideos(): number { return this.archiveVideos?.length; }
 
   ngOnInit(): void {
-    console.log(this.tutorials);
+    this.loadVideos();
+  }
+
+  private loadVideos(): void {
+    this._dashboardPageService.isLoading$.next(true);
+    this._videoService.getAll(this.appSession.userId, undefined, undefined, undefined, undefined)
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this._dashboardPageService.isLoading$.next(false)))
+      .subscribe(videos => {
+        this.activeVideos = videos?.items.filter(a => a.status === 1);
+        this.draftVideos = videos?.items.filter(a => a.status === 0);
+        this.archiveVideos = videos?.items.filter(a => a.status === 2);
+      });
   }
 }

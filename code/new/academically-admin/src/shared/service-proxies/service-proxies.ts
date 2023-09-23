@@ -28975,6 +28975,8 @@ export class VideosServiceProxy {
      * @param stausFilter (optional) 0 = Draft
     
     1 = Published
+    
+    2 = Archived
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
@@ -29053,6 +29055,8 @@ export class VideosServiceProxy {
      * @param stausFilter (optional) 0 = Draft
     
     1 = Published
+    
+    2 = Archived
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
@@ -55212,10 +55216,11 @@ export interface IVideoDtoPagedResultDto {
     totalCount: number;
 }
 
-/** 0 = Draft 1 = Published */
+/** 0 = Draft 1 = Published 2 = Archived */
 export enum VideoStatus {
     Draft = 0,
     Published = 1,
+    Archived = 2,
 }
 
 /** 1 = SingleVideo 2 = VideoSeries */

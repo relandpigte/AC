@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, Injector, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import * as _ from 'lodash';
 import * as moment from 'moment';
@@ -12,7 +12,6 @@ import {
   ServiceCard,
   ServiceCardButton,
   ServiceCardComposition,
-  ServiceCardDates,
   ServiceCardImage,
   ServiceCardOptions,
   ServiceCardPeople,
@@ -21,19 +20,14 @@ import {
   ServiceCardType
 } from '@shared/models/service-card.model';
 import {
-  ArticleDto,
   ArticleStatus,
   ArticleType,
-  CoachingDto,
-  CourseDto,
   CourseSectionType,
   CourseStatus,
-  EventCategory,
-  EventDto,
   StudentCourseDto,
-  UserDto,
-  VideoDto
+  UserDto
 } from '@shared/service-proxies/service-proxies';
+import localize = abp.localization.localize;
 
 
 @Component({
@@ -41,7 +35,7 @@ import {
   templateUrl: './service-card-dashboard.component.html',
   styleUrls: ['./service-card-dashboard.component.less']
 })
-export class ServiceCardDashboardComponent extends AppComponentBase implements OnInit, OnChanges {
+export class ServiceCardDashboardComponent extends AppComponentBase implements OnChanges {
   @Input() data: any;
   @Input() isLoading: boolean;
   @Input() isCreator: boolean;
@@ -85,13 +79,17 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     if (!this.composition) { return null; }
     const composition = [];
     _.forEach(this.composition, (value, key): void => {
-      if (value > 0 && this.cardType !== 'tutorial' && key !== 'durationInSec') {
+      if (value > 0 && key !== 'durationInSec') {
         composition.push(`${value} ${key}`);
       }
     });
     return composition.join(', ');
   }
-  get compositionVideoDuration(): string { return this.composition?.durationInSec ? moment.utc(this.composition?.durationInSec * 1000).format(`${this.composition?.durationInSec >= 3600 ? 'HH:' : ''}mm:ss`) : null; }
+  get compositionVideoDuration(): string {
+    return this.composition?.durationInSec ?
+      moment.utc(this.composition?.durationInSec * 1000).format(`${this.composition?.durationInSec >= 3600 ? 'HH:' : ''}mm:ss`) :
+      null;
+  }
   get isDraft(): boolean { return this.sanitized?.status?.type === 'draft'; }
   get isArchive(): boolean { return this.sanitized?.status?.type === 'archived'; }
   get isExpired(): boolean { return this.sanitized?.dates?.startDate?.isBefore(moment()); }
@@ -99,10 +97,20 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   get sessionDuration(): string { return humanizeDuration(this.composition.durationInSec * 1000); }
   get isScheduleNear(): boolean { return this.sanitized?.dates?.startDate?.diff(moment(), 'hours') < 1; }
   get schedule(): string {
-    if (this.isDraft || !this.sanitized?.dates?.startDate) return this.l('Unscheduled');
-    if (this.sanitized.dates.startDate.diff(moment(), 'minutes') < 1) return this.l('LiveNow');
-    else if (this.sanitized.dates.startDate.diff(moment(), 'hours') < 1) return this.l('StartingIn', this.convertMomentToDateAgo(this.sanitized.dates.startDate, true));
-    return this.l('StartingFrom', this.sanitized.dates.startDate.format('dddd, DD MMMM YYYY'), this.sanitized.dates.startDate.format('HH:mm'), this.sanitized.dates.endDate.format('HH:mm'));
+    if (this.isDraft || !this.sanitized?.dates?.startDate) {
+      return this.l('Unscheduled');
+    }
+    if (this.sanitized.dates.startDate.diff(moment(), 'minutes') < 1) {
+      return this.l('LiveNow');
+    } else if (this.sanitized.dates.startDate.diff(moment(), 'hours') < 1) {
+      return this.l('StartingIn', this.convertMomentToDateAgo(this.sanitized.dates.startDate, true));
+    }
+    return this.l(
+      'StartingFrom',
+      this.sanitized.dates.startDate.format('dddd, DD MMMM YYYY'),
+      this.sanitized.dates.startDate.format('HH:mm'),
+      this.sanitized.dates.endDate.format('HH:mm')
+    );
   }
   get scheduleDay(): string { return this.isDraft ? '--' : this.sanitized?.dates?.startDate?.format('DD'); }
   get scheduleMonth(): string { return this.isDraft ? '---' : this.sanitized?.dates?.startDate?.format('MMM'); }
@@ -124,8 +132,6 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     }
     return `${CourseSectionType[section?.type]} - ${section?.name}`;
   }
-
-  ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges) {
     if ('data' in changes && this.data) {
@@ -168,7 +174,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
               src: `https://i.pravatar.cc/50?u=${this.uuidv4()}`
             }
           }));
-        this.sanitized.people.isShowAvatars = true;
+
         if (this.isCreator) {
           switch (this.serviceStatus) {
             case ArticleStatus.Archived:
@@ -334,29 +340,30 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
       case 'space':
         break;
       case 'tutorial':
-        this.sanitized.composition = this.sanitized.composition ?? {} as ServiceCardComposition;
-        this.sanitized.composition.videos = 1;
-        this.sanitized.composition.durationInSec = Math.floor(Math.random() * (3600 - 20) + 20);
-
         if (this.isCreator) {
+          this.sanitized.composition = this.sanitized.composition ?? <ServiceCardComposition>{};
+          this.sanitized.composition.videos = this.getRndInteger(1, 11);
+          this.sanitized.composition.durationInSec = Math.floor(Math.random() * (3600 - 20) + 20);
+
           this.sanitized.people = <ServiceCardPeople>{};
+          this.sanitized.people.avatarStackCount = 3;
           this.sanitized.people.isShowAvatars = true;
-          this.sanitized.composition.videos = 20;
-          const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
-          switch (tempStatus) {
-            case 1:
-              this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
-              this.sanitizedOptions.isShowStatus = true;
-              break;
-            case 2:
-              this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
-              this.sanitizedOptions.isShowStatus = true;
-              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
-              this.sanitizedOptions.isShowActions = true;
-              break;
-            case 3:
+          this.sanitized.people.people = Array(this.randomNonZero(25, 12))
+            .fill({} as ServiceCardPerson).map(i => ({
+              ...this.sanitized.owner, avatar: {
+                src: `https://i.pravatar.cc/50?u=${this.uuidv4()}`
+              }
+            }));
+
+          switch (this.serviceStatus) {
+            case ArticleStatus.Archived:
               this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
-              this.sanitizedOptions.isShowStatus = true;
+              break;
+            case ArticleStatus.Published:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
+              break;
+            case ArticleStatus.Draft:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
               break;
           }
         } else {
@@ -377,14 +384,18 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
               this.sanitized.progress = Math.floor(Math.random() * (100 - 1) + 1);
               break;
             case 3:
-              this.sanitized.status = <ServiceCardStatus>{ type: 'completed', label: 'Congratulations! You\'ve finished this tutorial.', show: true };
+              this.sanitized.status = <ServiceCardStatus>{
+                type: 'completed', label: localize('FinishedTutorial', this.localizationSourceName), show: true
+              };
               this.sanitizedOptions.isShowStatus = true;
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'review', label: 'Leave review' });
               this.sanitizedOptions.isShowActions = true;
               this.sanitized.progress = null;
               break;
             case 4:
-              this.sanitized.status = <ServiceCardStatus>{ type: 'completed', label: 'Congratulations! You\'ve finished this tutorial.', show: true };
+              this.sanitized.status = <ServiceCardStatus>{
+                type: 'completed', label: localize('FinishedTutorial', this.localizationSourceName), show: true
+              };
               this.sanitizedOptions.isShowStatus = true;
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'play', label: 'Play again' });
               this.sanitizedOptions.isShowActions = true;
@@ -428,9 +439,6 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
           if (!this.options || !('isShowActions' in this.options)) { this.sanitizedOptions.isShowActions = true; }
         }
         if (!this.options || !('isShowInfo' in this.options)) { this.sanitizedOptions.isShowInfo = true; }
-        if (!this.options || !('isShowImages' in this.options) && this.serviceStatus === ArticleStatus.Archived) {
-          this.sanitizedOptions.isShowImages = true;
-        }
         break;
       case 'broadcast':
         if (!this.options || !('isShowEnrolled' in this.options)) { this.sanitizedOptions.isShowEnrolled = true; }
@@ -472,10 +480,16 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
       case 'space':
         break;
       case 'tutorial':
-        if (!this.options || !('isShowProgress' in this.options)) { this.sanitizedOptions.isShowProgress = true; }
         if (!this.options || !('isShowQuickPreview' in this.options)) { this.sanitizedOptions.isShowQuickPreview = true; }
-        if (!this.options || !('isSHowPurchased' in this.options)) { this.sanitizedOptions.isSHowPurchased = true; }
-        if (!this.options || !('isShowDetailsComposition' in this.options)) { this.sanitizedOptions.isShowDetailsComposition = true; }
+        if (this.isCreator) {
+          if (!this.options || !('isShowStatus' in this.options)) { this.sanitizedOptions.isShowStatus = true; }
+          if (!this.options || !('isShowDetailsComposition' in this.options)) { this.sanitizedOptions.isShowDetailsComposition = true; }
+          if (!this.options || !('isSHowPurchased' in this.options)) { this.sanitizedOptions.isSHowPurchased = true; }
+          if (!this.options || !('isShowImages' in this.options)) { this.sanitizedOptions.isShowImages = true; }
+        } else {
+          if (!this.options || !('isShowDetails' in this.options)) { this.sanitizedOptions.isShowDetails = false; }
+          if (!this.options || !('isShowProgress' in this.options)) { this.sanitizedOptions.isShowProgress = true; }
+        }
         break;
       case 'workshop':
         if (!this.options || !('headingType' in this.options)) { this.sanitizedOptions.headingType = 'schedule'; }

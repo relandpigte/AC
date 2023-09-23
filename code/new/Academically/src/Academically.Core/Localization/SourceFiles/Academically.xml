@@ -1963,6 +1963,7 @@
     <text name="ServicesCreated">Service Created</text>
     <text name="OverallPositiveReviews">Overalll Positive Reviews</text>
     <text name="MyStudents">My students</text>
+    <text name="FinishedTutorial">Congratulations! You've finished this tutorial.</text>
     
     <!-- Chat -->
     <text name="WriteAMessage">Write a message</text>
@@ -1975,5 +1976,6 @@
     <text name="NoConversations">No conversations</text>
 	<text name="DeleteThisConversation">Delete this conversation?</text>
 	<text name="DeleteConversationConfirmation">If you are sure to delete the conversation, this is an irreversible action</text>
+    
   </texts>
 </localizationDictionary>

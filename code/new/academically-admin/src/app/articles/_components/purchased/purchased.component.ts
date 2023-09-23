@@ -9,7 +9,10 @@ import { DashboardPagesService } from '@shared/services/dashboard-pages.service'
   selector: 'app-purchased', templateUrl: './purchased.component.html', styleUrls: ['./purchased.component.less']
 })
 export class PurchasedComponent extends AppComponentBase implements OnInit {
-  articles: ArticleDto[] = [];
+  allArticles: ArticleDto[] = [];
+  unreadArticles: ArticleDto[] = [];
+  readArticles: ArticleDto[] = [];
+
   isLoading = true;
   shimmerType = ShimmerType;
 
@@ -22,6 +25,9 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
   }
 
   get isLoading$() { return this._dashboardPageService.isLoading$; }
+  get totalArticles(): number { return this.allArticles?.length; }
+  get totalUnreadArticles(): number { return this.unreadArticles?.length; }
+  get totalReadArticles(): number { return this.readArticles?.length; }
 
   ngOnInit(): void {
     this.loadArticles();
@@ -33,7 +39,7 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this._dashboardPageService.isLoading$.next(false)))
       .subscribe(articles => {
-        this.articles = articles?.items;
+        this.allArticles = articles?.items;
       });
   }
 }

@@ -1,36 +1,83 @@
-<ng-container *ngIf="tutorials">
-    <app-shimmer
-        [isBlock]="true"
-        [show]="isLoading$ | async"
-        [shimmerType]="shimmerType.DashboardPurchased"
-        backgroundColor="#f9fbfd"
-    ></app-shimmer>
 
-    <ng-container *ngIf="!(isLoading$ | async)">
-        <div class="card custom-card-border search">
-            <div class="card-header">
-                <div class="row align-items-center">
-                    <div class="col">
-                        <form>
-                            <div class="input-group input-group-flush">
-                                <div class="input-group-prepend">
-                                <span class="input-group-text">
-                                    <i class="fe fe-search"></i>
-                                </span>
-                                </div>
-                                <input class="list-search form-control" type="search" name="Search" placeholder="Search" />
+<app-shimmer
+    [isBlock]="true"
+    [show]="isLoading$ | async"
+    [shimmerType]="shimmerType.DashboardPurchased"
+    backgroundColor="#f9fbfd"
+></app-shimmer>
+
+<ng-container *ngIf="!(isLoading$ | async)">
+    <div class="card custom-card-border search">
+        <div class="card-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <form>
+                        <div class="input-group input-group-flush">
+                            <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="fe fe-search"></i>
+                            </span>
                             </div>
-                        </form>
-                    </div>
+                            <input class="list-search form-control" type="search" name="Search" placeholder="Search" />
+                        </div>
+                    </form>
+                </div>
+                <div class="search-nav d-flex ml-auto">
+                    <ul class="nav nav-tabs nav-tabs-sm">
+                        <li class="nav-item">
+                            <a href="#all-videos" class="nav-link active" data-toggle="tab" role="tab">
+                                All <span class="badge badge-pill badge-light">{{ totalVideos }}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#unwatched-videos" class="nav-link" data-toggle="tab" role="tab">
+                                Unwatched <span class="badge badge-pill badge-light">{{ totalUnwatchedVideos }}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#watched-videos" class="nav-link" data-toggle="tab" role="tab">
+                                Watched <span class="badge badge-pill badge-light">{{ totalWatchedVideos }}</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
+    </div>
 
-        <app-service-card-dashboard
-            *ngFor="let data of tutorials"
-            [data]="data"
-            [isLoading]="isLoading"
-            (onDelete)="onDeleteClick(data.id)"
-        ></app-service-card-dashboard>
-    </ng-container>
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="all-videos" role="tabpanel">
+            <ng-container *ngIf="!!totalVideos else noRecords">
+                <app-service-card-dashboard
+                    *ngFor="let data of allVideos"
+                    [data]="data"
+                    [isLoading]="isLoading$ | async"
+                ></app-service-card-dashboard>
+            </ng-container>
+        </div>
+
+        <div class="tab-pane fade" id="unwatched-videos" role="tabpanel">
+            <ng-container *ngIf="!!totalUnwatchedVideos else noRecords">
+                <app-service-card-dashboard
+                    *ngFor="let data of unwatchedVideos"
+                    [data]="data"
+                    [isLoading]="isLoading$ | async"
+                ></app-service-card-dashboard>
+            </ng-container>
+        </div>
+
+        <div class="tab-pane fade" id="watched-videos" role="tabpanel">
+            <ng-container *ngIf="!!totalWatchedVideos else noRecords">
+                <app-service-card-dashboard
+                    *ngFor="let data of watchedVideos"
+                    [data]="data"
+                    [isLoading]="isLoading$ | async"
+                ></app-service-card-dashboard>
+            </ng-container>
+        </div>
+    </div>
 </ng-container>
+
+<ng-template #noRecords>
+    <div class="text-center font-size-sm text-muted w-100">No records to display</div>
+</ng-template>

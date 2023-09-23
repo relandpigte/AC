@@ -11,7 +11,7 @@
                             <h1 class="header-title">{{ 'Tutorials' | localize }}</h1>
                         </div>
                         <div class="col-auto d-flex gap-10">
-                            <button *ngIf="isTutor" class="btn btn-primary">
+                            <button *ngIf="isTutor" class="btn btn-primary" (click)="handleCreateVideo()">
                                 {{ 'CreateVideo' | localize | titlecase }}
                             </button>
                             <button *ngIf="isTutor" class="btn btn-white custom-card-border d-flex align-items-center gap-10" (click)="handleSwitchView()">
