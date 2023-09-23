@@ -42529,12 +42529,13 @@ export enum NotificationSeverity {
     Fatal = 4,
 }
 
-/** 0 = Post 1 = Answer 2 = Question 3 = Reply */
+/** 0 = Post 1 = Answer 2 = Question 3 = Reply 4 = Comment */
 export enum NotificationTarget {
     Post = 0,
     Answer = 1,
     Question = 2,
     Reply = 3,
+    Comment = 4,
 }
 
 export class NotificationUserDto implements INotificationUserDto {

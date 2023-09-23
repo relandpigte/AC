@@ -289,6 +289,8 @@ namespace Academically.Services.Notifications
                     return "question";
                 case NotificationTarget.Reply:
                     return "reply";
+                case NotificationTarget.Comment:
+                    return "comment";
                 default:
                     return "post";
             }
@@ -300,7 +302,7 @@ namespace Academically.Services.Notifications
             if (notification.Action == NotificationAction.Reply) return false;
             if (notification.Action == NotificationAction.Comment) return false;
             if (notification.Action == NotificationAction.Share) return false;
-            if (notification.Actors.Count > 1) return false;
+            if (notification.Actors.Count > 1 && notification.Action != NotificationAction.Like && notification.Action != NotificationAction.React) return false;
             return true;
         }
 
