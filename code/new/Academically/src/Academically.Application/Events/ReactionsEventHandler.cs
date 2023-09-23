@@ -87,14 +87,14 @@ namespace Academically.Events
             {
                 UserId = userId,
                 ActorId = reaction.CreatorUserId,
-                Action = this.getNotificationActionFromReactionType(reaction.Type),
-                Target = await this.getNotificationTargetFromPostType(post, comment),
+                Action = await this.getNotificationAction(reaction.Type),
+                Target = await this.getNotificationTarget(post, comment),
                 ReferenceId = referenceId,
                 Url = ""
             });
         }
 
-        private NotificationAction getNotificationActionFromReactionType(ReactionType type)
+        private async Task<NotificationAction> getNotificationAction(ReactionType type)
         {
             switch (type)
             {
@@ -105,7 +105,7 @@ namespace Academically.Events
             }
         }
 
-        private async Task<NotificationTarget> getNotificationTargetFromPostType(PostDto post, CommentDto comment)
+        private async Task<NotificationTarget> getNotificationTarget(PostDto post, CommentDto comment)
         {
             if (post != null)
             {

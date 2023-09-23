@@ -257,8 +257,16 @@ namespace Academically.Services.Notifications
             List<string> formatted = new List<String>();
             formatted.Add(await this.FormatActors(notification.Actors.Select(a => a.User).ToList()));
             formatted.Add(await this.FormatVerb(notification.Action));
-            formatted.Add(await this.FormatPronoun());
-            formatted.Add(await this.FormatTarget(notification.Target));
+
+            if (await this.NotificationHasPronoun(notification))
+            {
+                formatted.Add(await this.FormatPronoun());
+            }
+
+            if (await this.NotificationHasTarget(notification))
+            {
+                formatted.Add(await this.FormatTarget(notification.Target));
+            }
 
             if (await this.NotificationHasLocation(notification))
             {
@@ -276,11 +284,13 @@ namespace Academically.Services.Notifications
                 case NotificationAction.Share:
                     return "shared";
                 case NotificationAction.Comment:
-                    return "commented";
+                    return "commented on";
                 case NotificationAction.Reply:
-                    return "replied";
+                    return "replied to";
                 case NotificationAction.Answer:
                     return "answered";
+                case NotificationAction.Post:
+                    return "posted";
                 default:
                     return "reacted";
             }
@@ -303,13 +313,28 @@ namespace Academically.Services.Notifications
             }
         }
 
+        private async Task<bool> NotificationHasTarget(NotificationDto notification)
+        {
+            if (notification.Action == NotificationAction.Post) return false;
+            return true;
+        }
+
+        private async Task<bool> NotificationHasPronoun(NotificationDto notification)
+        {
+            if (notification.Action == NotificationAction.Post) return false;
+            return true;
+        }
+
         private async Task<bool> NotificationHasLocation(NotificationDto notification)
         {
-            if (notification.Action == NotificationAction.Answer) return false;
-            if (notification.Action == NotificationAction.Reply) return false;
-            if (notification.Action == NotificationAction.Comment) return false;
-            if (notification.Action == NotificationAction.Share) return false;
-            if (notification.Actors.Count > 1 && notification.Action != NotificationAction.Like && notification.Action != NotificationAction.React) return false;
+            if (notification.Actors.Count > 1)
+            {
+                if (notification.Action == NotificationAction.Answer) return false;
+                if (notification.Action == NotificationAction.Reply) return false;
+                if (notification.Action == NotificationAction.Comment) return false;
+                if (notification.Action == NotificationAction.Share) return false;
+                if (notification.Action != NotificationAction.Like && notification.Action != NotificationAction.React) return false;
+            }
             return true;
         }
 
@@ -356,7 +381,7 @@ namespace Academically.Services.Notifications
             if (post != null)
             {
                 if (post.Parent != null) location = $"{await this.GetDiscussionTitleFromPostParent(post)} \"{post.Title ?? post.Content}\"";
-                else location = $"\"{post.Title ?? post.Content}\"";
+                else location = $": \"{post.Title ?? post.Content}\"";
             }
             else
             {
@@ -378,7 +403,7 @@ namespace Academically.Services.Notifications
                     }
                     else
                     {
-                        location = $"\"{comment.Body}\"";
+                        location = $": \"{comment.Body}\"";
                     }
 
                 }
