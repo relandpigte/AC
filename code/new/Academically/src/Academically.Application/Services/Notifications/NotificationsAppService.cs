@@ -175,7 +175,13 @@ namespace Academically.Services.Notifications
         public async Task<NotificationDto> Create(CreateNotificationDto input)
         {
             if (input.UserId == input.ActorId) return null;
-            var latestUserNotification = await this._notificationsRepository.GetAll()
+
+            var post = await this._postsRepository.GetAll()
+                .Include(p => p.Parent)
+                .Where(p => p.Id == input.ReferenceId)
+                .FirstOrDefaultAsync();
+
+            var latestUserNotification = this._notificationsRepository.GetAll()
                 .Include(n => n.User)
                 .Include(n => n.Actors)
                     .ThenInclude(a => a.User)
@@ -185,8 +191,8 @@ namespace Academically.Services.Notifications
                 .Where(n => n.ReadTime == null)
                 .Where(n => n.Action == input.Action)
                 .Where(n => n.Target == input.Target)
-                .Where(n => n.ReferenceId == input.ReferenceId)
-                .FirstOrDefaultAsync();
+                .WhereIf(post?.Parent == null || post?.Parent?.Type != PostType.Discussion, n => n.ReferenceId == input.ReferenceId)
+                .FirstOrDefault();
 
             if (latestUserNotification == null)
             {
@@ -335,7 +341,6 @@ namespace Academically.Services.Notifications
                 if (notification.Action == NotificationAction.Reply) return false;
                 if (notification.Action == NotificationAction.Comment) return false;
                 if (notification.Action == NotificationAction.Share) return false;
-                if (notification.Action != NotificationAction.Like && notification.Action != NotificationAction.React) return false;
             }
             return true;
         }
@@ -382,7 +387,7 @@ namespace Academically.Services.Notifications
 
             if (post != null)
             {
-                if (post.Parent != null) location = $"{await this.GetDiscussionTitleFromPostParent(post)} \"{post.Title ?? post.Content}\"";
+                if (post.Parent != null) location = $"{await this.GetDiscussionTitleFromPostParent(post, notification, $"\"{post.Title ?? post.Content}\"")}";
                 else location = $": \"{post.Title ?? post.Content}\"";
             }
             else
@@ -401,7 +406,7 @@ namespace Academically.Services.Notifications
 
                     if (parentPost != null && parentPost.Parent != null)
                     {
-                        location = $"{await this.GetDiscussionTitleFromPostParent(parentPost)} \"{comment.Body}\"";
+                        location = $"{await this.GetDiscussionTitleFromPostParent(parentPost, notification, $"\"{comment.Body}\"")}";
                     }
                     else
                     {
@@ -413,21 +418,30 @@ namespace Academically.Services.Notifications
             return location;
         }
 
-        private async Task<string> GetDiscussionTitleFromPostParent(Post post)
+        private async Task<string> GetDiscussionTitleFromPostParent(Post post, NotificationDto notification, string objectValue)
         {
             var serviceDiscussion = await this._serviceDiscussionRepository.GetAll()
                 .Where(s => s.PostId == post.Id)
                 .FirstOrDefaultAsync();
-            if (serviceDiscussion == null) return $"in <span>{post.Parent.Title ?? post.Parent.Content}:</span>";
+            if (serviceDiscussion == null) return $"in <span>{post.Parent.Title ?? post.Parent.Content}{(await this.LocationHasObject(notification) ? $":</span> {objectValue}" : "")}</span>";
             else
             {
                 var service = await this._postsAppService.GetAvailableService(serviceDiscussion.ServiceId);
-                if (service == null) return $"in <span>{post.Parent.Title ?? post.Parent.Content}:</span>";
+                if (service == null) return $"in <span>{post.Parent.Title ?? post.Parent.Content}{(await this.LocationHasObject(notification) ? $":</span> {objectValue}" : "")}</span>";
                 else
                 {
                     return $"in <span>{service.Name}:</span>";
                 }
             }
+        }
+
+        private async Task<bool> LocationHasObject(NotificationDto notification)
+        {
+            if (notification.Actors.Count > 1)
+            {
+                if (notification.Action == NotificationAction.Post && notification.Target == NotificationTarget.Post) return false;
+            }
+            return true;
         }
     }
 }
