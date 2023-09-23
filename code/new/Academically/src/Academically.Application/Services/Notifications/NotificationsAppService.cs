@@ -15,6 +15,7 @@ using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
 using Academically.Services.Notifications.Dto;
+using Academically.Services.Posts;
 using Academically.Users.Dto;
 using Amazon.SimpleEmail.Model;
 using Microsoft.EntityFrameworkCore;
@@ -31,7 +32,9 @@ namespace Academically.Services.Notifications
         private readonly IRepository<Post, Guid> _postsRepository;
         private readonly IRepository<Comment, Guid> _commentsRepository;
         private readonly IRepository<User, long> _usersRepository;
+        private readonly IRepository<ServiceDiscussion, long> _serviceDiscussionRepository;
         private readonly IUserNotificationManager _userNotificationManager;
+        private readonly IPostsAppService _postsAppService;
 
         public NotificationsAppService
         (
@@ -40,7 +43,9 @@ namespace Academically.Services.Notifications
             IRepository<NotificationUser, Guid> notificationUsersRepository,
             IRepository<Post, Guid> postsRepository,
             IRepository<Comment, Guid> commentsRepository,
-            IRepository<User, long> usersRepository
+            IRepository<User, long> usersRepository,
+            IRepository<ServiceDiscussion, long> serviceDiscussionRepository,
+            IPostsAppService postsAppService
         )
         {
             _documentsDomainService = documentsDomainService;
@@ -49,6 +54,8 @@ namespace Academically.Services.Notifications
             _postsRepository = postsRepository;
             _commentsRepository = commentsRepository;
             _usersRepository = usersRepository;
+            _serviceDiscussionRepository = serviceDiscussionRepository;
+            _postsAppService = postsAppService;
         }
 
         public async Task<IEnumerable<UserNotification>> GetRecent()
@@ -348,7 +355,7 @@ namespace Academically.Services.Notifications
 
             if (post != null)
             {
-                if (post.Parent != null) location = $"in <span>{post.Parent.Title ?? post.Parent.Content}:</span> \"{post.Title ?? post.Content}\"";
+                if (post.Parent != null) location = $"{await this.GetDiscussionTitleFromPostParent(post)} \"{post.Title ?? post.Content}\"";
                 else location = $"\"{post.Title ?? post.Content}\"";
             }
             else
@@ -367,7 +374,7 @@ namespace Academically.Services.Notifications
 
                     if (parentPost != null && parentPost.Parent != null)
                     {
-                        location = $"in <span>{parentPost.Parent.Title ?? parentPost.Parent.Content}:</span> \"{comment.Body}\"";
+                        location = $"{await this.GetDiscussionTitleFromPostParent(parentPost)} \"{comment.Body}\"";
                     }
                     else
                     {
@@ -377,6 +384,23 @@ namespace Academically.Services.Notifications
                 }
             }
             return location;
+        }
+
+        private async Task<string> GetDiscussionTitleFromPostParent(Post post)
+        {
+            var serviceDiscussion = await this._serviceDiscussionRepository.GetAll()
+                .Where(s => s.PostId == post.Id)
+                .FirstOrDefaultAsync();
+            if (serviceDiscussion == null) return $"in <span>{post.Parent.Title ?? post.Parent.Content}:</span>";
+            else
+            {
+                var service = await this._postsAppService.GetAvailableService(serviceDiscussion.ServiceId);
+                if (service == null) return $"in <span>{post.Parent.Title ?? post.Parent.Content}:</span>";
+                else
+                {
+                    return $"in <span>{service.Name}:</span>";
+                }
+            }
         }
     }
 }
