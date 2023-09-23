@@ -430,6 +430,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         if (!this.options || !('isShowGoing' in this.options)) { this.sanitizedOptions.isShowGoing = true; }
         break;
       case 'coaching':
+        this.sanitizedOptions.isShowImages = true;
         if (this.isCreator) {
           if (this.isBooked) {
             if (!this.options || !('isShowHeading' in this.options)) { this.sanitizedOptions.isShowHeading = true; }

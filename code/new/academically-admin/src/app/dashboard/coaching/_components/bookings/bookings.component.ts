@@ -10,7 +10,9 @@ import { DashboardPagesService } from '@shared/services/dashboard-pages.service'
   styleUrls: ['./bookings.component.less']
 })
 export class BookingsComponent extends AppComponentBase implements OnInit {
-  coachings: CoachingDto[] = Array(Math.floor(Math.random() * (10 - 4) + 4)).fill([]).map(() => this.generateRandomCoaching()) as CoachingDto[];
+  coachings: CoachingDto[] = Array(Math.floor(Math.random() * (10 - 4) + 4))
+    .fill([]).map(() => this.generateRandomCoaching()) as CoachingDto[];
+
   isLoading = true;
   shimmerType = ShimmerType;
 
@@ -29,8 +31,7 @@ export class BookingsComponent extends AppComponentBase implements OnInit {
       }
     };
   }
+  get totalCoaching(): number { return this.coachings?.length; }
 
-  ngOnInit(): void {
-    console.log(this.coachings);
-  }
+  ngOnInit(): void {}
 }
