@@ -256,7 +256,7 @@ namespace Academically.Services.Notifications
         {
             List<string> formatted = new List<String>();
             formatted.Add(await this.FormatActors(notification.Actors.Select(a => a.User).ToList()));
-            formatted.Add(await this.FormatVerb(notification.Action));
+            formatted.Add(await this.FormatVerb(notification));
 
             if (await this.NotificationHasPronoun(notification))
             {
@@ -265,7 +265,7 @@ namespace Academically.Services.Notifications
 
             if (await this.NotificationHasTarget(notification))
             {
-                formatted.Add(await this.FormatTarget(notification.Target));
+                formatted.Add(await this.FormatTarget(notification));
             }
 
             if (await this.NotificationHasLocation(notification))
@@ -296,7 +296,7 @@ namespace Academically.Services.Notifications
             }
         }
 
-        private async Task<string> NotificationTargetToText(NotificationTarget target)
+        private async Task<string> NotificationTargetToText(NotificationTarget target, NotificationAction action)
         {
             switch (target)
             {
@@ -305,7 +305,9 @@ namespace Academically.Services.Notifications
                 case NotificationTarget.Question:
                     return "question";
                 case NotificationTarget.Reply:
-                    return "reply";
+                    if (action == NotificationAction.Like || action == NotificationAction.React)
+                        return "reply";
+                    return "comment";
                 case NotificationTarget.Comment:
                     return "comment";
                 default:
@@ -354,9 +356,9 @@ namespace Academically.Services.Notifications
             }
         }
 
-        private async Task<string> FormatVerb(NotificationAction action)
+        private async Task<string> FormatVerb(NotificationDto notification)
         {
-            return await this.NotificationActionToText(action);
+            return await this.NotificationActionToText(notification.Action);
         }
 
         private async Task<string> FormatPronoun()
@@ -364,9 +366,9 @@ namespace Academically.Services.Notifications
             return "your";
         }
 
-        private async Task<string> FormatTarget(NotificationTarget target)
+        private async Task<string> FormatTarget(NotificationDto notification)
         {
-            return await this.NotificationTargetToText(target);
+            return await this.NotificationTargetToText(notification.Target, notification.Action);
         }
 
         private async Task<string> FormatLocation(NotificationDto notification)
