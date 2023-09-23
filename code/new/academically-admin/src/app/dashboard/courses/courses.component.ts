@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
@@ -13,7 +13,7 @@ import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
   styleUrls: ['./courses.component.less'],
   animations: [appModuleAnimation()],
 })
-export class CoursesComponent extends AppComponentBase implements OnInit {
+export class CoursesComponent extends AppComponentBase implements OnInit, AfterViewInit {
 
   shimmerType = ShimmerType;
 
@@ -38,6 +38,10 @@ export class CoursesComponent extends AppComponentBase implements OnInit {
     this._dashboardService.setUserView(DashboardServiceView.learner);
 
     setTimeout(() => this._dashboardPageService.setIsLoading(false), 300);
+  }
+
+  ngAfterViewInit(): void {
+    this._cdr.detectChanges();
   }
 
   handleSwitchView(): void {

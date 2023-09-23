@@ -1,11 +1,9 @@
 import { Component, Injector, OnInit } from '@angular/core';
-import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { finalize, takeUntil } from '@node_modules/rxjs/operators';
-import {
-  ArticleDtoPagedResultDto,
-  ArticlesServiceProxy,
-} from '@shared/service-proxies/service-proxies';
-import { Router } from '@node_modules/@angular/router';
+import { Router } from '@angular/router';
+
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { ArticleDto, ArticlesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
@@ -16,7 +14,10 @@ import { DashboardPagesService } from '@shared/services/dashboard-pages.service'
   styleUrls: ['./created.component.less']
 })
 export class CreatedComponent extends AppComponentBase implements OnInit {
-  articles: ArticleDtoPagedResultDto;
+  activeArticles: ArticleDto[] = [];
+  draftArticles: ArticleDto[] = [];
+  archivedArticles: ArticleDto[] = [];
+
   isLoading = true;
   shimmerType = ShimmerType;
 
@@ -31,6 +32,9 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
   }
 
   get isLoading$() { return this._dashboardPageService.isLoading$; }
+  get totalActiveArticles(): number { return this.activeArticles?.length; }
+  get totalDraftArticles(): number { return this.draftArticles?.length; }
+  get totalArchivedArticles(): number { return this.archivedArticles?.length; }
 
   ngOnInit(): void {
     this.loadArticles();
@@ -56,14 +60,14 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
   }
 
   private loadArticles(): void {
+    this._dashboardPageService.isLoading$.next(true);
     this._articlesService.getAll(this.appSession.userId, undefined, undefined, undefined, undefined, undefined)
-      .pipe(
-        takeUntil(this.destroyed$),
-        finalize(() => this.isLoading = false)
-      )
-      .pipe(finalize(() => this.isLoading = false))
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this._dashboardPageService.isLoading$.next(false)))
       .subscribe(articles => {
-        this.articles = articles;
+        this.activeArticles = articles?.items.filter(a => a.status === 1);
+        this.draftArticles = articles?.items.filter(a => a.status === 0);
+        this.archivedArticles = articles?.items.filter(a => a.status === 2);
       });
   }
 }

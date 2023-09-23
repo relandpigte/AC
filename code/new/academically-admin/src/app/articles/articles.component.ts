@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, OnInit, Injector, ChangeDetectorRef } from '@angular/core';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ArticleService } from './_services/article.service';
 import { ArticlesServiceProxy, ArticleDto, ArticleStatus, ArticleType } from '@shared/service-proxies/service-proxies';
@@ -28,7 +28,8 @@ export class ArticlesComponent extends AppComponentBase implements OnInit {
     private _router: Router,
     private _articlesService: ArticlesServiceProxy,
     private _dashboardService: DashboardService,
-    private _dashboardPageService: DashboardPagesService
+    private _dashboardPageService: DashboardPagesService,
+    private _cdr: ChangeDetectorRef
   ) {
     super(injector);
   }
@@ -47,6 +48,7 @@ export class ArticlesComponent extends AppComponentBase implements OnInit {
 
   handleSwitchView(): void {
     this._dashboardService.handleSwitchView();
+    this._cdr.detectChanges();
   }
 
   onNewArticleClick(): void {

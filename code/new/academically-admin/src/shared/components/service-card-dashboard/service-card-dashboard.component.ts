@@ -75,7 +75,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   get articleType(): number { return this.data?.type; }
   get people(): ServiceCardPeople { return this.sanitized?.people; }
   get status(): ServiceCardStatus { return this.sanitized?.status; }
-  get learners(): number { return this.data?.enrolled?.length; }
+  get learners(): number { return this.data?.enrolled?.length ?? 20; }
   get progress(): number | null {
     if (this.status?.type === 'completed') { return null; }
     return this.sanitized?.progress ?? 0;
@@ -95,7 +95,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   get isDraft(): boolean { return this.sanitized?.status?.type === 'draft'; }
   get isArchive(): boolean { return this.sanitized?.status?.type === 'archived'; }
   get isExpired(): boolean { return this.sanitized?.dates?.startDate?.isBefore(moment()); }
-  get hasReviewed(): boolean { return true; }
+  get hasReviewed(): boolean { return this.data?.isDoneRating; }
   get sessionDuration(): string { return humanizeDuration(this.composition.durationInSec * 1000); }
   get isScheduleNear(): boolean { return this.sanitized?.dates?.startDate?.diff(moment(), 'hours') < 1; }
   get schedule(): string {
@@ -112,10 +112,9 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   get coachingStudentAvatarSrc(): string { return this.sanitized?.booking?.student?.avatar?.src ?? 'assets/img/anonymous.png'; }
   get coachingDuration(): string { return humanizeDuration(this.sanitized?.booking?.durationInSec ?? 60000); }
 
-  get courseStatus(): CourseStatus { return this.data?.status; }
+  get serviceStatus(): number { return this.data?.status; }
   get isCourseStarted(): boolean { return this.sanitized?.progress > 0 && this.sanitized?.progress < 100; }
   get isCourseCompleted(): boolean { return this.sanitized?.progress === 100; }
-  get isDoneCourseRating(): boolean { return this.data?.isDoneRating; }
   get currentLesson(): string {
     if (this.isCourseCompleted) { return; }
     const courses = <StudentCourseDto>this.data?.studentCourses?.find((s: StudentCourseDto): boolean => s.progress < 100);
@@ -126,9 +125,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     return `${CourseSectionType[section?.type]} - ${section?.name}`;
   }
 
-  ngOnInit(): void {
-    // this.sanitizedData();
-  }
+  ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges) {
     if ('data' in changes && this.data) {
@@ -137,6 +134,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
       this.sanitizedOptions = options;
 
       this.setValueOverrides();
+      this.setOptionOverrides();
     }
   }
 
@@ -155,66 +153,32 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     }
   }
 
-  private sanitizedData(): void {
-    this.sanitized = <ServiceCard>{};
-    this.sanitizedOptions = _.merge({}, DefaultServiceCardOptions, this.options);
-    this.sanitizedActions = _.merge([], DefaultServiceCardActions, this.actions);
-
-    this.sanitized.type = this.getCardType();
-    this.sanitized.name = this.data?.name;
-    this.sanitized.info = this.data?.description;
-    this.sanitized.images = [{ src: this.data.thumbnailImageUrl ?? 'assets/img/img-placeholder.png' }];
-
-    this.sanitized.people = <ServiceCardPeople>{};
-    this.sanitized.people.people = Array(this.randomNonZero(45, 12))
-      .fill({} as ServiceCardPerson).map(i => ({
-        ...this.sanitized.owner, avatar: {
-          src: `https://i.pravatar.cc/50?u=${this.uuidv4()}`
-        }
-      }));
-    this.sanitized.people.avatarStackCount = 3;
-
-    const tempDate = moment().add(Math.floor(Math.random() * (2 - 1) + 1), 'days');
-    this.sanitized.dates = {} as ServiceCardDates;
-    this.sanitized.dates.startDate = this.data.eventDateTime ?? tempDate;
-    this.sanitized.dates.endDate = this.data.endDate ?? tempDate.add(Math.floor(Math.random() * (2 - 1) + 1), 'minutes');
-
-    this.sanitized.owner = {} as ServiceCardPerson;
-    this.sanitized.owner.avatar = {} as ServiceCardImage;
-    this.sanitized.owner.avatar.src = this.data?.creatorUser?.profilePictureUrl ?? this.data.profilePictureUrl ?? 'assets/img/anonymous.png';
-    this.sanitized.owner.fullName = this.data?.creatorUser?.fullName?? this.data.fullName ??  'Anonymous';
-    this.sanitized.owner.isShowAvatar = true;
-    this.sanitized.owner.isShowFullName = true;
-
-    this.sanitized.booking = this.data?.booking;
-
-    this.sanitized = { ...this.sanitized, ...this.additionalData };
-
-    this.setValueOverrides();
-    this.setOptionOverrides();
-  }
-
   private setValueOverrides(): void {
     this.sanitizedOptions = _.merge({}, DefaultServiceCardOptions, this.options);
     this.sanitizedActions = _.merge([], DefaultServiceCardActions, this.actions);
 
     switch (this.cardType) {
       case 'article':
+        this.sanitized.people = <ServiceCardPeople>{};
+        this.sanitized.people.avatarStackCount = 3;
+        this.sanitized.people.isShowAvatars = true;
+        this.sanitized.people.people = Array(this.randomNonZero(25, 12))
+          .fill({} as ServiceCardPerson).map(i => ({
+            ...this.sanitized.owner, avatar: {
+              src: `https://i.pravatar.cc/50?u=${this.uuidv4()}`
+            }
+          }));
         this.sanitized.people.isShowAvatars = true;
         if (this.isCreator) {
-          const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
-          switch (tempStatus) {
-            case 1:
-              this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
-              this.sanitizedOptions.isShowStatus = true;
-              break;
-            case 2:
-              this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
-              this.sanitizedOptions.isShowStatus = true;
-              break;
-            case 3:
+          switch (this.serviceStatus) {
+            case ArticleStatus.Archived:
               this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
-              this.sanitizedOptions.isShowStatus = true;
+              break;
+            case ArticleStatus.Published:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
+              break;
+            case ArticleStatus.Draft:
+              this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
               break;
           }
         } else {
@@ -222,25 +186,28 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
           switch (tempStatus) {
             case 1:
               this.sanitized.status = <ServiceCardStatus>{ type: 'unread', label: 'Unread', show: true };
-              this.sanitizedOptions.isShowStatus = true;
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'read', label: 'Read' });
               break;
             case 2:
               this.sanitized.status = <ServiceCardStatus>{ type: 'completed', label: 'You’ve read this.', show: true };
-              this.sanitizedOptions.isShowStatus = true;
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'read', label: 'Read Again' });
-              this.sanitizedOptions.isShowActions = true;
               break;
             case 3:
               this.sanitized.status = <ServiceCardStatus>{ type: 'completed', label: 'You’ve read this', show: true };
-              this.sanitizedOptions.isShowStatus = true;
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'review', label: 'Leave review' });
-              this.sanitizedOptions.isShowActions = true;
               break;
           }
         }
         break;
       case 'broadcast':
+        this.sanitized.people = <ServiceCardPeople>{};
+        this.sanitized.people.people = Array(this.randomNonZero(45, 12))
+          .fill({} as ServiceCardPerson).map(i => ({
+            ...this.sanitized.owner, avatar: {
+              src: `https://i.pravatar.cc/50?u=${this.uuidv4()}`
+            }
+          }));
+        this.sanitized.people.avatarStackCount = 3;
         this.sanitized.people.isShowAvatars = true;
         if (this.isCreator) {
           const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
@@ -323,10 +290,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         break;
       case 'course':
         if (this.isCreator) {
-          this.sanitizedOptions.isShowDetailsComposition = true;
-          this.sanitizedOptions.isShowEnrolled = true;
-          this.sanitizedOptions.isShowStatus = true;
-          switch (this.courseStatus) {
+          switch (this.serviceStatus) {
             case CourseStatus.Archived:
               this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
               break;
@@ -341,51 +305,21 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
           this.sanitized.people = <ServiceCardPeople>{};
           this.sanitized.people.people = this.data?.enrolled?.map((u: UserDto): ServiceCardPerson => ({
             ...this.sanitized.owner,
-            avatar: {
-              src: u.profilePictureUrl,
-            },
+            avatar: { src: u.profilePictureUrl },
             fullName: u.fullName
           }));
           this.sanitized.people.avatarStackCount = 3;
           this.sanitized.people.isShowAvatars = true;
-
-          // this.sanitized.composition = this.sanitized.composition ?? {} as ServiceCardComposition;
-          // this.sanitized.composition.units = this.data?.units ?? 4;
-          // this.sanitized.composition.modules = this.data?.modules ?? 3;
-          // this.sanitized.composition.lessons = this.data?.lessons ?? 5;
-          // this.sanitized.people.isShowAvatars = true;
-          //
-          // const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
-          // switch (tempStatus) {
-          //   case 1:
-          //     this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
-          //     this.sanitizedOptions.isShowStatus = true;
-          //     break;
-          //   case 2:
-          //     this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
-          //     this.sanitizedOptions.isShowStatus = true;
-          //     this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
-          //     this.sanitizedOptions.isShowActions = true;
-          //     break;
-          //   case 3:
-          //     this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
-          //     this.sanitizedOptions.isShowStatus = true;
-          //     break;
-          // }
         } else {
-          const { progress } = <CourseDto>this.data;
-          this.sanitizedOptions.isShowProgress = progress < 100;
-          this.sanitized.progress = progress;
-
-          this.sanitized.status = progress < 100 ?
+          this.sanitized.progress = this.data?.progress;
+          this.sanitized.status = this.data?.progress < 100 ?
             <ServiceCardStatus>{ type: 'read', label: this.currentLesson, show: true } :
             <ServiceCardStatus>{ type: 'completed', label: 'Congratulations! You’ve finished this course', show: true };
 
-          this.sanitizedOptions.isShowActions = true;
           if (this.isCourseStarted) {
             this.sanitizedActions?.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Continue' });
           } else if (this.isCourseCompleted) {
-            if (this.isDoneCourseRating) {
+            if (this.hasReviewed) {
               this.sanitizedActions?.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Start again' });
             } else {
               this.sanitizedActions?.splice(0, 0, <ServiceCardButton>{ type: 'review', label: 'Leave review' });
@@ -393,38 +327,6 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
           } else {
             this.sanitizedActions?.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Start course' });
           }
-
-          // const tempStatus = Math.floor(Math.random() * (5 - 1) + 1);
-          // switch (tempStatus) {
-          //   case 1:
-          //     this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Start course' });
-          //     this.sanitizedOptions.isShowActions = true;
-          //     this.sanitized.status = <ServiceCardStatus>{ type: 'read', label: 'Lesson 1 - Start your new journey', show: true };
-          //     this.sanitizedOptions.isShowStatus = true;
-          //     this.sanitized.progress = 0;
-          //     break;
-          //   case 2:
-          //     this.sanitized.status = <ServiceCardStatus>{ type: 'onprogress', label: 'Tutorial 1 - Start your new journey', show: true };
-          //     this.sanitizedOptions.isShowStatus = true;
-          //     this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Continue' });
-          //     this.sanitizedOptions.isShowActions = true;
-          //     this.sanitized.progress = Math.floor(Math.random() * (100 - 1) + 1);
-          //     break;
-          //   case 3:
-          //     this.sanitized.status = <ServiceCardStatus>{ type: 'completed', label: 'Congratulations! You’ve finished this course', show: true };
-          //     this.sanitizedOptions.isShowStatus = true;
-          //     this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'review', label: 'Leave review' });
-          //     this.sanitizedOptions.isShowActions = true;
-          //     this.sanitized.progress = null;
-          //     break;
-          //   case 4:
-          //     this.sanitized.status = <ServiceCardStatus>{ type: 'completed', label: 'Congratulations! You’ve finished this course', show: true };
-          //     this.sanitizedOptions.isShowStatus = true;
-          //     this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Start again' });
-          //     this.sanitizedOptions.isShowActions = true;
-          //     this.sanitized.progress = null;
-          //     break;
-          // }
         }
         break;
       case 'event':
@@ -437,6 +339,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         this.sanitized.composition.durationInSec = Math.floor(Math.random() * (3600 - 20) + 20);
 
         if (this.isCreator) {
+          this.sanitized.people = <ServiceCardPeople>{};
           this.sanitized.people.isShowAvatars = true;
           this.sanitized.composition.videos = 20;
           const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
@@ -518,11 +421,19 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   private setOptionOverrides(): void {
     switch (this.cardType) {
       case 'article':
+        if (this.isCreator) {
+          if (!this.options || !('isShowStatus' in this.options)) { this.sanitizedOptions.isShowStatus = true; }
+          if (!this.options || !('isSHowPurchased' in this.options)) { this.sanitizedOptions.isSHowPurchased = true; }
+        } else {
+          if (!this.options || !('isShowActions' in this.options)) { this.sanitizedOptions.isShowActions = true; }
+        }
         if (!this.options || !('isShowInfo' in this.options)) { this.sanitizedOptions.isShowInfo = true; }
-        if (!this.options || !('isShowImages' in this.options)) { this.sanitizedOptions.isShowImages = false; }
-        if (!this.options || !('isSHowPurchased' in this.options)) { this.sanitizedOptions.isSHowPurchased = true; }
+        if (!this.options || !('isShowImages' in this.options) && this.serviceStatus === ArticleStatus.Archived) {
+          this.sanitizedOptions.isShowImages = true;
+        }
         break;
       case 'broadcast':
+        if (!this.options || !('isShowEnrolled' in this.options)) { this.sanitizedOptions.isShowEnrolled = true; }
         if (!this.options || !('isShowDate' in this.options)) { this.sanitizedOptions.isShowDate = true; }
         if (!this.options || !('isShowHeading' in this.options)) { this.sanitizedOptions.isShowHeading = true; }
         if (!this.options || !('headingType' in this.options)) { this.sanitizedOptions.headingType = 'schedule'; }
@@ -547,9 +458,14 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
 
         break;
       case 'course':
-        if (!this.options || !('isShowProgress' in this.options)) { this.sanitizedOptions.isShowProgress = true; }
-        if (!this.options || !('isShowDetailsComposition' in this.options)) { this.sanitizedOptions.isShowDetailsComposition = true; }
-        if (!this.options || !('isShowEnrolled' in this.options)) { this.sanitizedOptions.isShowEnrolled = true; }
+        if (this.isCreator) {
+          if (!this.options || !('isShowEnrolled' in this.options)) { this.sanitizedOptions.isShowEnrolled = true; }
+          if (!this.options || !('isShowStatus' in this.options)) { this.sanitizedOptions.isShowStatus = true; }
+          if (!this.options || !('isShowDetailsComposition' in this.options)) { this.sanitizedOptions.isShowDetailsComposition = true; }
+        } else {
+          if (!this.options || !('isShowProgress' in this.options)) { this.sanitizedOptions.isShowProgress = true; }
+          if (!this.options || !('isShowActions' in this.options)) { this.sanitizedOptions.isShowActions = true; }
+        }
         break;
       case 'event':
         break;
@@ -568,23 +484,5 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         if (!this.options || !('isShowGoing' in this.options)) { this.sanitizedOptions.isShowGoing = true; }
         break;
     }
-  }
-
-  private getCardType(): ServiceCardType {
-    switch (this.data?.constructor) {
-      case EventDto: {
-        const { category } = this.data as EventDto;
-        if (category === EventCategory.Broadcast) {
-          return 'broadcast';
-        }
-        return 'workshop';
-      }
-      case ArticleDto: return 'article';
-      case CoachingDto: return 'coaching';
-      case CourseDto: return 'course';
-      case VideoDto: return 'tutorial';
-      case UserDto: return 'user';
-    }
-    return null;
   }
 }

@@ -491,6 +491,8 @@ export class ArticlesServiceProxy {
      * @param statusFilter (optional) 0 = Draft
     
     1 = Published
+    
+    2 = Archived
      * @param sorting (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
@@ -574,6 +576,8 @@ export class ArticlesServiceProxy {
      * @param stausFilter (optional) 0 = Draft
     
     1 = Published
+    
+    2 = Archived
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
@@ -30873,10 +30877,11 @@ export interface IArticleDtoPagedResultDto {
     totalCount: number;
 }
 
-/** 0 = Draft 1 = Published */
+/** 0 = Draft 1 = Published 2 = Archived */
 export enum ArticleStatus {
     Draft = 0,
     Published = 1,
+    Archived = 2,
 }
 
 /** 1 = SingleArticle 2 = ArticleSeries */

@@ -28,14 +28,13 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
   }
 
   private loadArticles(): void {
+    this._dashboardPageService.isLoading$.next(true);
     this._articlesService.getAll(undefined, undefined, undefined, undefined, undefined, undefined)
-      .pipe(
-        takeUntil(this.destroyed$),
-        finalize(() => this.isLoading = false)
-      )
-      .pipe(finalize(() => this.isLoading = false))
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this._dashboardPageService.isLoading$.next(false)))
       .subscribe(articles => {
         this.articles = articles;
+        console.log(articles?.items);
       });
   }
 }

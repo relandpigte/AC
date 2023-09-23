@@ -46,7 +46,7 @@
                 </div>
 
                 <h3 [class]="cardType + '-title title'">{{ name }}</h3>
-                <p *ngIf="sanitizedOptions?.isShowInfo" [class]="cardType + '-info info'"> {{ info | shorten : 110 }} </p>
+                <p *ngIf="sanitizedOptions?.isShowInfo" [class]="cardType + '-info info'"> {{ info | shorten : 90 }} </p>
 
                 <p *ngIf="this.sanitizedOptions?.isShowDetailsComposition && !!compositionString && isCreator" [class]="cardType + '-info info'">
                     {{ compositionString }}
