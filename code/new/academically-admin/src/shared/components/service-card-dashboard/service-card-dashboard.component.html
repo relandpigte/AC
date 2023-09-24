@@ -1,5 +1,5 @@
 
-<div [class]="'card ' + cardType" [ngClass]="{ 'overview-page': isOverview }" [class.archive]="isArchive || isExpired">
+<div [class]="'card ' + cardType" [ngClass]="{ 'overview-page': isOverview }" [class.archive]="isArchive || isExpired || isPast || isCancelled">
     <div class="card-body">
         <div class="d-flex gap-20" [ngSwitch]="cardType">
 
@@ -38,7 +38,7 @@
             </div>
 
             <div class="flex-grow-1 d-flex flex-column">
-                <div *ngIf="this.sanitizedOptions?.isShowHeading" [class]="cardType + '-heading heading'" [class.text-danger]="isScheduleNear && !isExpired">
+                <div *ngIf="this.sanitizedOptions?.isShowHeading" [class]="cardType + '-heading heading'" [class.text-danger]="isScheduleNear && !isExpired" [class.cancelled]="isCancelled">
                     <span *ngIf="this.sanitizedOptions?.headingType === 'unbooked'" class="unbooked"> UNBOOKED </span>
                     <span *ngIf="this.sanitizedOptions?.headingType === 'location' && location" class="location">{{ location }}</span>
                     <span *ngIf="this.sanitizedOptions?.headingType === 'schedule' && schedule" class="schedule">{{ schedule }}</span>

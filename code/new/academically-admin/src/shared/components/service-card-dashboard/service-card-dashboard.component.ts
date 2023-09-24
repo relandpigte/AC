@@ -12,6 +12,7 @@ import {
   ServiceCard,
   ServiceCardButton,
   ServiceCardComposition,
+  ServiceCardDates,
   ServiceCardImage,
   ServiceCardOptions,
   ServiceCardPeople,
@@ -41,6 +42,9 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   @Input() isCreator: boolean;
   @Input() options: ServiceCardOptions;
   @Input() actions: ServiceCardButton[];
+
+  @Input() isPast: boolean;
+  @Input() isCancelled: boolean;
 
   @Input() additionalData: any = {};
 
@@ -101,9 +105,9 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     if (this.isDraft || !this.sanitized?.dates?.startDate) {
       return this.l('Unscheduled');
     }
-    if (moment(this.sanitized?.dates?.startDate)?.diff(moment(), 'minutes') < 1) {
+    if (moment(this.sanitized?.dates?.startDate)?.diff(moment(), 'minutes') < 1 && !this.isExpired) {
       return this.l('LiveNow');
-    } else if (moment(this.sanitized?.dates?.startDate).diff(moment(), 'hours') < 1) {
+    } else if (moment(this.sanitized?.dates?.startDate).diff(moment(), 'hours') < 1 && !this.isExpired) {
       return this.l('StartingIn', this.convertMomentToDateAgo(this.sanitized?.dates?.startDate, true));
     }
     return this.l(
@@ -168,6 +172,20 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
           src: `https://i.pravatar.cc/50?u=${this.uuidv4()}`
         }
       }));
+
+    const tempDate = moment().add(Math.floor(Math.random() * (2 - 1) + 1), 'days');
+    this.sanitized.dates = {} as ServiceCardDates;
+    this.sanitized.dates.startDate = this.data.eventDateTime ?? tempDate;
+    this.sanitized.dates.endDate = this.data.endDate ?? tempDate.add(Math.floor(Math.random() * (2 - 1) + 1), 'minutes');
+
+    this.sanitized.owner = {} as ServiceCardPerson;
+    this.sanitized.owner.avatar = {} as ServiceCardImage;
+    this.sanitized.owner.avatar.src = this.data?.creatorUser?.profilePictureUrl ?? this.data.profilePictureUrl;
+    this.sanitized.owner.fullName = this.data?.creatorUser?.fullName?? this.data.fullName ??  'Anonymous';
+    this.sanitized.owner.isShowAvatar = true;
+    this.sanitized.owner.isShowFullName = true;
+
+    this.sanitized = { ...this.sanitized, ...this.additionalData };
 
     this.setValueOverrides();
     this.setOptionOverrides();
@@ -243,10 +261,13 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
 
         if (this.isCreator) {
           if (this.isBooked) {
-            if (!this.isExpired) {
+            this.sanitizedOptions.isShowActions = true;
+            if (!this.isExpired || this.isPast) {
               this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join session' });
-              this.sanitizedOptions.isShowActions = true;
+            }
+            if (this.isCancelled) {
+              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'buy', label: 'Buy again' });
             }
           } else {
             switch (this.serviceStatus) {
@@ -266,17 +287,18 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
           }
         } else {
           if (this.isBooked) {
+            this.sanitizedOptions.isShowActions = true;
             this.sanitizedOptions.headingType = 'schedule';
-            if (this.isExpired) {
-                this.sanitizedOptions.isShowActions = true;
+            if (this.isExpired || this.isPast) {
               if (this.hasReviewed) {
                 this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'buy', label: 'Buy again' });
               } else {
                 this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'review', label: 'Leave review' });
               }
+            } else if (this.isCancelled) {
+              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'buy', label: 'Buy again' });
             } else {
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
-              this.sanitizedOptions.isShowActions = true;
             }
           } else {
             this.sanitizedOptions.headingType = 'unbooked';

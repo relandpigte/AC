@@ -1,8 +1,11 @@
 import { Component, Injector, OnInit } from '@angular/core';
-import { CoachingDto } from '@shared/service-proxies/service-proxies';
+import { finalize, takeUntil } from 'rxjs/operators';
+
+import { CoachingDto, CoachingsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
+import * as moment from '@node_modules/moment';
 
 @Component({
   selector: 'app-purchased',
@@ -10,19 +13,24 @@ import { DashboardPagesService } from '@shared/services/dashboard-pages.service'
   styleUrls: ['./purchased.component.less']
 })
 export class PurchasedComponent extends AppComponentBase implements OnInit {
-  coachings: CoachingDto[] = Array(4).fill([]).map(() => this.generateRandomCoaching()) as CoachingDto[];
-  isLoading = true;
+  upcomingCoachings: CoachingDto[] = [];
+  pastCoachings: CoachingDto[] = [];
+  cancelledCoachings: CoachingDto[] = [];
 
   shimmerType = ShimmerType;
 
   constructor(
     injector: Injector,
-    private _dashboardPageService: DashboardPagesService
+    private _dashboardPageService: DashboardPagesService,
+    private _coachingService: CoachingsServiceProxy
   ) {
     super(injector);
   }
 
   get isLoading$() { return this._dashboardPageService.isLoading$; }
+  get totalUpcomingCoaching(): number { return this.upcomingCoachings?.length; }
+  get totalPastCoaching(): number { return this.pastCoachings?.length; }
+  get totalCancelledCoaching(): number { return this.cancelledCoachings?.length; }
   get additionalData() {
     return {
       booking: {
@@ -31,5 +39,20 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
     };
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadPurchasedCoaching();
+  }
+
+  private loadPurchasedCoaching(): void {
+    this._dashboardPageService.isLoading$.next(true);
+    this._coachingService.getAll(undefined, undefined, undefined, undefined, undefined, undefined, undefined)
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this._dashboardPageService.isLoading$.next(false)))
+      .subscribe(coachings => {
+        console.log(coachings);
+        this.upcomingCoachings = coachings?.items;
+        this.pastCoachings = coachings?.items;
+        this.cancelledCoachings = coachings?.items;
+      });
+  }
 }
