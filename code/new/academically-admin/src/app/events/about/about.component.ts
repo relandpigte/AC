@@ -22,6 +22,9 @@ export class EventsAboutComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
     this._serviceData.serviceData$
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(data => this.data = data);
+      .subscribe(data => {
+        this.data = data;
+        console.warn(data);
+      });
   }
 }

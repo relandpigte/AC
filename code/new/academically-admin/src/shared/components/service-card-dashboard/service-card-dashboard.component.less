@@ -152,6 +152,10 @@
         letter-spacing: 0.75px;
         text-transform: uppercase;
         margin-bottom: 0.313rem;
+
+        &.cancelled {
+            text-decoration: line-through;
+        }
     }
 
     &-title {
@@ -176,6 +180,13 @@
 
     &-status {
         color: #6E84A3;
+
+        .text-primary {
+            &.broadcast,
+            &.workshop {
+                color: #6E84A3 !important;
+            }
+        }
 
         .icon {
             background-image: url(/assets/img/status/completed.svg);
