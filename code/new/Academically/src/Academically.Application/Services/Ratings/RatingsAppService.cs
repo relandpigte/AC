@@ -20,13 +20,15 @@ namespace Academically.Services.Ratings
         private readonly IRepository<TutorRatingArea, Guid> _tutorRatingAreasRepository;
         private readonly IRepository<CourseRating, Guid> _courseRatingsRepository;
         private readonly IRepository<CourseRatingArea, Guid> _courseRatingAreasRepository;
+        private readonly IRepository<ServiceRating, Guid> _serviceRatingsRepository;
 
         public RatingsAppService(
             IRepository<StudentRating, Guid> studentRatingsRepository,
             IRepository<TutorRating, Guid> tutorRatingsRepository,
             IRepository<TutorRatingArea, Guid> tutorRatingAreasRepository,
             IRepository<CourseRating, Guid> courseRatingsRepository,
-            IRepository<CourseRatingArea, Guid> courseRatingAreasRepository
+            IRepository<CourseRatingArea, Guid> courseRatingAreasRepository,
+            IRepository<ServiceRating, Guid> serviceRatingsRepository
             )
         {
             _studentRatingsRepository = studentRatingsRepository;
@@ -34,6 +36,19 @@ namespace Academically.Services.Ratings
             _tutorRatingAreasRepository = tutorRatingAreasRepository;
             _courseRatingsRepository = courseRatingsRepository;
             _courseRatingAreasRepository = courseRatingAreasRepository;
+            _serviceRatingsRepository = serviceRatingsRepository;
+        }
+
+        public async Task CreateServiceRatings(CreateServiceRatingDto input)
+        {
+            input.CreatorUserId = input.CreatorUserId == 0 ? AbpSession.UserId.Value : input.CreatorUserId;
+
+            var serviceRating = ObjectMapper.Map<ServiceRating>(input);
+            serviceRating.ServiceRatingAreas = input.ServiceRatingAreas
+                .Select(a => ObjectMapper.Map<ServiceRatingArea>(a))
+                .ToList();
+
+            await _serviceRatingsRepository.InsertAsync(serviceRating);
         }
 
         public async Task<StudentRatingSummaryDto> GetStudentRatingSummary(long studentId)

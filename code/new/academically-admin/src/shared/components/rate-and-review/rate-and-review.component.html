@@ -1,0 +1,188 @@
+<form class="modal-card card" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
+  <abp-modal-header [title]="l('WriteAReviewFor') + ' ' + serviceName" (onCloseClick)="onCloseClick()">
+  </abp-modal-header>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-12">
+        <p>
+          {{ 'WriteAReview_Message' | localize }}
+          <a href="javascript:;">{{ 'YourExperience' | localize | lowercase }}</a>
+          {{ 'Of' | localize | lowercase }}
+          {{ serviceName }}?
+        </p>
+      </div>
+      <table class="w-100 mt-3 mb-3">
+        <tbody>
+          <tr>
+            <td class="text-center">
+              <div class="custom-control custom-checkbox mr-n3">
+                <input type="checkbox" class="custom-control-input" id="positiveCheckbox"
+                  name="experience_type_checkbox" [checked]="model.experienceType === RatingExperienceType.Positive"
+                  (click)="onExperienceTypeClick($event, RatingExperienceType.Positive)" />
+                <label class="custom-control-label" for="positiveCheckbox">{{ 'Positive' | localize
+                  }}</label>
+              </div>
+            </td>
+            <td class="text-center">
+              <!-- Checkbox -->
+              <div class="custom-control custom-checkbox mr-n3">
+                <input type="checkbox" class="custom-control-input" id="nuetralCheckbox" name="experience_type_checkbox"
+                  [checked]="model.experienceType === RatingExperienceType.Neutral"
+                  (click)="onExperienceTypeClick($event, RatingExperienceType.Neutral)" />
+                <label class="custom-control-label" for="nuetralCheckbox">{{ 'Neutral' | localize
+                  }}</label>
+              </div>
+            </td>
+            <td class="text-center">
+              <!-- Checkbox -->
+              <div class="custom-control custom-checkbox mr-n3">
+                <input type="checkbox" class="custom-control-input" id="negativeCheckbox"
+                  name="experience_type_checkbox" [checked]="model.experienceType === RatingExperienceType.Negative"
+                  (click)="onExperienceTypeClick($event, RatingExperienceType.Negative)" />
+                <label class="custom-control-label" for="negativeCheckbox">{{ 'Negative' | localize
+                  }}</label>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="col-12 mt-3 mb-3">
+        <table class="w-100">
+          <tr>
+            <td>
+              <p class="mb-3 mb-md-0">
+                {{ 'WriteAReview_RateOption1' | localize }}
+                <a href="javascript:;">{{ 'Accurate' | localize | lowercase }}</a>
+                {{ 'And' | localize | lowercase }}
+                <a href="javascript:;">{{ 'Current' | localize | lowercase }}</a>?
+              </p>
+            </td>
+            <td class="pr-3">{{ getRatingAreaValue(RatingAreaType.Punctuality) }}/5</td>
+            <td>
+              <app-star-rating-review class="text-nowrap" [actualRating]="getRatingAreaValue(RatingAreaType.Punctuality)"
+                [readonly]="false" (ratingUpdated)="onRatingAreaUpdated(RatingAreaType.Punctuality, $event)">
+              </app-star-rating-review>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p class="mb-3 mb-md-0">
+                {{ 'WriteAReview_RateOption2' | localize }}
+                <a href="javascript:;">{{ 'ValueOfMoney' | localize | lowercase }}</a>?
+              </p>
+            </td>
+            <td class="pr-3">{{ getRatingAreaValue(RatingAreaType.ValueForMoney) }}/5</td>
+            <td>
+              <app-star-rating-review class="text-nowrap" [actualRating]="getRatingAreaValue(RatingAreaType.ValueForMoney)"
+                [readonly]="false" (ratingUpdated)="onRatingAreaUpdated(RatingAreaType.ValueForMoney, $event)">
+              </app-star-rating-review>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p class="mb-3 mb-md-0">
+                {{ 'WriteAReview_RateOption3' | localize }}
+                <a href="javascript:;">{{ 'Interactive' | localize | lowercase }}</a>
+                {{ 'And' | localize | lowercase }}
+                <a href="javascript:;">{{ 'Engaging' | localize | lowercase }}</a>?
+              </p>
+            </td>
+            <td class="pr-3">{{ getRatingAreaValue(RatingAreaType.Professionalism) }}/5</td>
+            <td>
+              <app-star-rating-review class="text-nowrap" [actualRating]="getRatingAreaValue(RatingAreaType.Professionalism)"
+                [readonly]="false" (ratingUpdated)="onRatingAreaUpdated(RatingAreaType.Professionalism, $event)">
+              </app-star-rating-review>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p class="mb-3 mb-md-0">
+                {{ 'WriteAReview_RateOption4' | localize }}
+                <a href="javascript:;">{{ 'Design' | localize | lowercase }}</a>
+                {{ 'And' | localize | lowercase }}
+                <a href="javascript:;">{{ 'Structure' | localize | lowercase }}</a>?
+              </p>
+            </td>
+            <td class="pr-3">{{ getRatingAreaValue(RatingAreaType.Knowledge) }}/5</td>
+            <td>
+              <app-star-rating-review class="text-nowrap" [actualRating]="getRatingAreaValue(RatingAreaType.Knowledge)"
+                [readonly]="false" (ratingUpdated)="onRatingAreaUpdated(RatingAreaType.Knowledge, $event)">
+              </app-star-rating-review>
+            </td>
+
+          </tr>
+          <tr>
+            <td>
+              <p class="mb-3 mb-md-0">
+                {{ 'WriteAReview_RateOption4' | localize }}
+                <a href="javascript:;">{{ 'Communication' | localize | lowercase }}</a>
+                {{ 'And' | localize | lowercase }}
+                <a href="javascript:;">{{ 'Support' | localize | lowercase }}</a>?
+              </p>
+            </td>
+            <td class="pr-3">{{ getRatingAreaValue(RatingAreaType.Communication) }}/5</td>
+            <td>
+              <app-star-rating-review class="text-nowrap" [actualRating]="getRatingAreaValue(RatingAreaType.Communication)"
+                [readonly]="false" (ratingUpdated)="onRatingAreaUpdated(RatingAreaType.Communication, $event)">
+              </app-star-rating-review>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="col-12">
+        <hr>
+      </div>
+      <div class="col-12">
+        <div class="row align-items-center">
+          <div class="col-auto">
+            <a href="javascript:;" class="avatar avatar-md">
+              <img [src]="getProfilePicture(this.student.profilePictureUrl, this.student.id)" alt="..."
+                class="avatar-img rounded-circle">
+            </a>
+          </div>
+          <div class="col ml-n2">
+            <h4 class="mb-0">
+              <a href="javascript:;">{{ student.name }} {{ student.surname }}</a>
+            </h4>
+
+            <p class="small text-muted mb-0">{{ serviceName }}</p>
+          </div>
+          <div class="col-auto">
+            <h5 class="text-muted">{{ creationTime | date: 'd MMMM y' }}</h5>
+          </div>
+          <div class="col-12 mt-3">
+            <div class="d-md-flex">
+              <app-star-rating-review class="text-nowrap" [actualRating]="averageRating"></app-star-rating-review>
+              <span class="text-muted small mr-2">{{ averageRating }}/5</span>
+              <span *ngIf="this.model.experienceType === RatingExperienceType.Positive"
+                class="badge badge-soft-success">
+                <i class="fas fa-plus"></i>
+                {{ 'Positive' | localize}}
+              </span>
+              <span *ngIf="this.model.experienceType === RatingExperienceType.Neutral" class="badge badge-soft-info">
+                <i class="fas fa-circle"></i>
+                {{ 'Neutral' | localize}}
+              </span>
+              <span *ngIf="this.model.experienceType === RatingExperienceType.Negative" class="badge badge-soft-danger">
+                <i class="fas fa-minus"></i>
+                {{ 'Negative' | localize}}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 mt-3 mb-3">
+        <textarea [rows]="4" [(ngModel)]="model.comments" #commentsModel="ngModel" #commentsEl class="form-control"
+          id="comments" name="comments" [placeholder]="l('TellUsAboutYourExperienceOf') + ' ' + serviceName">
+                </textarea>
+      </div>
+      <div class="col-12">
+        <div class="d-flex justify-content-end">
+          <button type="submit" class="btn btn-primary pl-5 pr-5" [disabled]="isLoading || !form.form.valid">
+            {{ 'Submit' | localize }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

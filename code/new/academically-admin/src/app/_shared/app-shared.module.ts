@@ -46,6 +46,7 @@ import { CommunityPostCardComponent } from '@shared/components/community-post/co
 import { CommunityDiscussionsComponent } from '@shared/components/community-discussions/community-discussions.component';
 import { CommunityComposerComponent } from '@shared/components/composer/composer.component';
 import { EmojiPickerComponent } from '@shared/components/emoji-picker/emoji-picker.component';
+import { RateAndReviewComponent } from '@shared/components/rate-and-review/rate-and-review.component';
 import { ReactionComponent } from '@shared/components/reaction/reaction.component';
 import { ReactionUsersComponent } from '@shared/components/reaction-users/reaction-users.component';
 import { FeaturedCarouselComponent } from '@shared/components/featured-carousel/featured-carousel.component';
@@ -64,6 +65,7 @@ import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.comp
 import { AddServiceComponent } from '@shared/modals/add-service/add-service.component';
 import { AddTopicsComponent } from '@shared/modals/add-topics/add-topics.component';
 import { ShimmerComponent } from '@shared/components/shimmer/shimmer.component';
+import { StarRatingReviewComponent } from '@shared/components/star-rating-review/star-rating-review.component';
 import { PreviewLinksComponent } from '@shared/components/preview/links/links.component';
 import { PreviewPostsComponent } from '@shared/components/preview/posts/posts.component';
 import { PreviewServicesComponent } from '@shared/components/preview/services/services.component';
@@ -130,9 +132,11 @@ import {
     CommunityDiscussionsComponent,
     CommunitySideCardComponent,
     EmojiPickerComponent,
+    RateAndReviewComponent,
     ReactionComponent,
     ReactionUsersComponent,
     ShimmerComponent,
+    StarRatingReviewComponent,
     PreviewLinksComponent,
     PreviewPostsComponent,
     PreviewServicesComponent,
@@ -232,9 +236,11 @@ import {
     CommunityDiscussionsComponent,
     CommunitySideCardComponent,
     EmojiPickerComponent,
+    RateAndReviewComponent,
     ReactionComponent,
     ReactionUsersComponent,
     ShimmerComponent,
+    StarRatingReviewComponent,
     PreviewLinksComponent,
     PreviewPostsComponent,
     PreviewServicesComponent,

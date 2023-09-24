@@ -130,6 +130,8 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<NotificationUser> NotificationUsers { get; set; }
         public virtual DbSet<ServiceDiscussion> ServiceDiscussion { get; set; }
+        public virtual DbSet<ServiceRating> ServiceRatings { get; set; }
+        public virtual DbSet<ServiceRatingArea> ServiceRatingAreas { get; set; }
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
         {

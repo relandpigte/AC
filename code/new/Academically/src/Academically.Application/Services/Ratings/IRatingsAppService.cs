@@ -8,6 +8,7 @@ namespace Academically.Services.Ratings
 {
     public interface IRatingsAppService : IApplicationService
     {
+        Task CreateServiceRatings(CreateServiceRatingDto input);
         Task<StudentRatingSummaryDto> GetStudentRatingSummary(long studentId);
         Task<TutorRatingSummaryDto> GetTutorRatingSummary(long tutorId);
         Task<CourseRatingSummaryDto> GetCourseRatingSummary(Guid courseId);

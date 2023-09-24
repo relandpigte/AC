@@ -1,9 +1,9 @@
 import { Component, Injector, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { Subject } from 'rxjs';
+import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
+import * as humanizeDuration from 'humanize-duration';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import * as humanizeDuration from 'humanize-duration';
-import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
+import { Subject } from 'rxjs';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import {
@@ -28,6 +28,8 @@ import {
   StudentCourseDto,
   UserDto
 } from '@shared/service-proxies/service-proxies';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { RateAndReviewComponent } from '../rate-and-review/rate-and-review.component';
 import localize = abp.localization.localize;
 
 
@@ -61,7 +63,10 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   ArticleStatus = ArticleStatus;
   ArticleType = ArticleType;
 
-  constructor(injector: Injector) {
+  constructor(
+    injector: Injector,
+    private _modalService: BsModalService
+  ) {
     super(injector);
   }
 
@@ -151,13 +156,24 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     this.onDelete.next(id);
   }
 
+  handleOnReview(serviceId: string): void {
+    if (this.onReviewAction.observers.length > 0) {
+      this.onReviewAction.next(serviceId);
+    } else {
+      const modalSettings = this.defaultModalSettings;
+      modalSettings.class = 'modal-lg';
+      modalSettings.initialState = { serviceId };
+      this._modalService.show(RateAndReviewComponent, modalSettings);
+    }
+  }
+
   handleClickAction(serviceId: string, action: ServiceCardButton): void {
     switch (action.type) {
       case 'join':
         this.onClickAction.next(serviceId);
         break;
       case 'review':
-        this.onReviewAction.next(serviceId);
+        this.handleOnReview(serviceId);
         break;
     }
   }

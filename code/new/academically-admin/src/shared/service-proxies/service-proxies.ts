@@ -15126,6 +15126,62 @@ export class PostsServiceProxy {
      * @param id (optional) 
      * @return Success
      */
+    getService(id: string | undefined): Observable<AvailableServiceDto> {
+        let url_ = this.baseUrl + "/api/services/app/Posts/GetService?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetService(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetService(<any>response_);
+                } catch (e) {
+                    return <Observable<AvailableServiceDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AvailableServiceDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetService(response: HttpResponseBase): Observable<AvailableServiceDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AvailableServiceDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AvailableServiceDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
     getAvailableService(id: string | undefined): Observable<AvailableServiceDto> {
         let url_ = this.baseUrl + "/api/services/app/Posts/GetAvailableService?";
         if (id === null)
@@ -18405,6 +18461,58 @@ export class RatingsServiceProxy {
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createServiceRatings(body: CreateServiceRatingDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Ratings/CreateServiceRatings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateServiceRatings(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateServiceRatings(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateServiceRatings(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
     }
 
     /**
@@ -37122,6 +37230,120 @@ export interface ICreateServiceDiscussionDto {
     postId: string;
 }
 
+export class CreateServiceRatingAreaDto implements ICreateServiceRatingAreaDto {
+    areaType: RatingAreaType;
+    rating: number;
+
+    constructor(data?: ICreateServiceRatingAreaDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.areaType = _data["areaType"];
+            this.rating = _data["rating"];
+        }
+    }
+
+    static fromJS(data: any): CreateServiceRatingAreaDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateServiceRatingAreaDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["areaType"] = this.areaType;
+        data["rating"] = this.rating;
+        return data; 
+    }
+
+    clone(): CreateServiceRatingAreaDto {
+        const json = this.toJSON();
+        let result = new CreateServiceRatingAreaDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateServiceRatingAreaDto {
+    areaType: RatingAreaType;
+    rating: number;
+}
+
+export class CreateServiceRatingDto implements ICreateServiceRatingDto {
+    serviceId: string;
+    experienceType: RatingExperienceType;
+    comments: string | undefined;
+    creatorUserId: number;
+    serviceRatingAreas: CreateServiceRatingAreaDto[] | undefined;
+
+    constructor(data?: ICreateServiceRatingDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.serviceId = _data["serviceId"];
+            this.experienceType = _data["experienceType"];
+            this.comments = _data["comments"];
+            this.creatorUserId = _data["creatorUserId"];
+            if (Array.isArray(_data["serviceRatingAreas"])) {
+                this.serviceRatingAreas = [] as any;
+                for (let item of _data["serviceRatingAreas"])
+                    this.serviceRatingAreas.push(CreateServiceRatingAreaDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateServiceRatingDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateServiceRatingDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["serviceId"] = this.serviceId;
+        data["experienceType"] = this.experienceType;
+        data["comments"] = this.comments;
+        data["creatorUserId"] = this.creatorUserId;
+        if (Array.isArray(this.serviceRatingAreas)) {
+            data["serviceRatingAreas"] = [];
+            for (let item of this.serviceRatingAreas)
+                data["serviceRatingAreas"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): CreateServiceRatingDto {
+        const json = this.toJSON();
+        let result = new CreateServiceRatingDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateServiceRatingDto {
+    serviceId: string;
+    experienceType: RatingExperienceType;
+    comments: string | undefined;
+    creatorUserId: number;
+    serviceRatingAreas: CreateServiceRatingAreaDto[] | undefined;
+}
+
 export class CreateStudentEventDto implements ICreateStudentEventDto {
     eventId: string;
     saveOnly: boolean;
@@ -42332,14 +42554,15 @@ export interface IMyServiceViewDto {
     items: MyServiceItemViewDto[] | undefined;
 }
 
-/** 0 = Like 1 = React 2 = Share 3 = Comment 4 = Reply 5 = Answer */
+/** 0 = Like 1 = React 2 = Share 3 = Comment 4 = Post 5 = Reply 6 = Answer */
 export enum NotificationAction {
     Like = 0,
     React = 1,
     Share = 2,
     Comment = 3,
-    Reply = 4,
-    Answer = 5,
+    Post = 4,
+    Reply = 5,
+    Answer = 6,
 }
 
 export class NotificationData implements INotificationData {

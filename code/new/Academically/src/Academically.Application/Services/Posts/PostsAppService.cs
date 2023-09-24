@@ -476,20 +476,27 @@ namespace Academically.Services.Posts
             await _postRepository.DeleteAsync(id);
         }
 
+        public async Task<AvailableServiceDto> GetService(Guid id)
+        {
+            var currentUser = await GetCurrentUserAsync();
+            var param = new PagedGetAvailableServicesRequestDto() { Keyword = id.ToString() };
+            return this.GetAvailableServices(param).Result.Items.FirstOrDefault();
+        }
+
         public async Task<AvailableServiceDto> GetAvailableService(Guid id)
         {
-            var param = new PagedGetAvailableServicesRequestDto() { Keyword = id.ToString() };
+            var currentUser = await GetCurrentUserAsync();
+            var param = new PagedGetAvailableServicesRequestDto() { Keyword = id.ToString(), CreatorUserId = currentUser.Id };
             return this.GetAvailableServices(param).Result.Items.FirstOrDefault();
         }
 
         public async Task<PagedResultDto<AvailableServiceDto>> GetAvailableServices(PagedGetAvailableServicesRequestDto request)
         {
-            var currentUser = await GetCurrentUserAsync();
-            var articles = await _articlesAppService.GetArticlesByKeyword(request.Keyword, currentUser.Id);
-            var courses = await _coursesAppService.GetCoursesByKeyword(request.Keyword, currentUser.Id);
-            var coaching = await _coachingsAppService.GetCoachingByKeyword(request.Keyword, currentUser.Id);
-            var videos = await _videosAppService.GetVideosByKeyword(request.Keyword, currentUser.Id);
-            var events = await _eventsAppService.GetEventsByKeyword(request.Keyword, currentUser.Id);
+            var articles = await _articlesAppService.GetArticlesByKeyword(request.Keyword, request.CreatorUserId);
+            var courses = await _coursesAppService.GetCoursesByKeyword(request.Keyword, request.CreatorUserId);
+            var coaching = await _coachingsAppService.GetCoachingByKeyword(request.Keyword, request.CreatorUserId);
+            var videos = await _videosAppService.GetVideosByKeyword(request.Keyword, request.CreatorUserId);
+            var events = await _eventsAppService.GetEventsByKeyword(request.Keyword, request.CreatorUserId);
 
             var query = articles.Union(courses)
                                 .Union(coaching)
