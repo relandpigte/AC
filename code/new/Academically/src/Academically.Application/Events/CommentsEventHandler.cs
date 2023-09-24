@@ -14,6 +14,13 @@ using Academically.Services.Videos.Dto;
 using System;
 using System.Threading.Tasks;
 using Academically.Domain.Services.Documents;
+using Academically.Services.Notifications.Dto;
+using Academically.Services.Reactions.Dto;
+using Academically.Services.Comments;
+using Academically.Services.Notifications;
+using Academically.Services.Posts;
+using Academically.Domain.Enums;
+using Academically.Services.Posts.Dto;
 
 namespace Academically.Events
 {
@@ -30,6 +37,9 @@ namespace Academically.Events
         private readonly IRepository<Video, Guid> _videoRepository;
         private readonly IRepository<Event, Guid> _eventRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
+        private readonly IPostsAppService _postsAppService;
+        private readonly ICommentsAppService _commentsAppService;
+        private readonly INotificationsAppService _notificationsAppService;
 
         public CommentsEventHandler(IObjectMapper objectMapper,
             IHubManager hubManager,
@@ -38,7 +48,10 @@ namespace Academically.Events
             IRepository<Coaching, Guid> coachingRepository,
             IRepository<Video, Guid> videoRepository,
             IRepository<Event, Guid> eventRepository,
-            IDocumentsDomainService documentsDomainService)
+            IDocumentsDomainService documentsDomainService,
+            IPostsAppService postsAppService,
+            ICommentsAppService commentsAppService,
+            INotificationsAppService notificationsAppService)
         {
             _objectMapper = objectMapper;
             _hubManager = hubManager;
@@ -48,6 +61,9 @@ namespace Academically.Events
             _videoRepository = videoRepository;
             _eventRepository = eventRepository;
             _documentsDomainService = documentsDomainService;
+            _postsAppService = postsAppService;
+            _commentsAppService = commentsAppService;
+            _notificationsAppService = notificationsAppService;
         }
 
         public async Task HandleEventAsync(EntityCreatedEventData<Comment> eventData)
@@ -55,6 +71,7 @@ namespace Academically.Events
             var comment = _objectMapper.Map<CommentDto>(eventData.Entity);
             await FillInService(comment);
             await _hubManager.NotifyUsersForCommentCreated(comment);
+            await this.SendUserNotifications(comment);
         }
 
         public async Task HandleEventAsync(EntityUpdatedEventData<Comment> eventData)
@@ -62,6 +79,7 @@ namespace Academically.Events
             var comment = _objectMapper.Map<CommentDto>(eventData.Entity);
             await FillInService(comment);
             await _hubManager.NotifyUsersForCommentUpdated(comment);
+            await this.SendUserNotifications(comment);
         }
 
         public async Task HandleEventAsync(EntityDeletedEventData<Comment> eventData)
@@ -111,6 +129,98 @@ namespace Academically.Events
                 default:
                     break;
             }
+        }
+
+        private async Task SendUserNotifications(CommentDto commentEvent)
+        {
+            Guid referenceId = new Guid();
+            long userId = 0;
+
+            var post = await this._postsAppService.GetAsync(new Guid(commentEvent.ReferenceId));
+            var comment = commentEvent.ParentId.HasValue ? await this._commentsAppService.GetAsync(commentEvent.ParentId.Value) : null;
+
+            if (comment != null)
+            {
+                referenceId = comment.Id;
+                userId = comment.CreatorUserId.GetValueOrDefault();
+            }
+            else if (post != null)
+            {
+                referenceId = post.Id;
+                userId = post.CreatorUserId.GetValueOrDefault();
+            }
+
+            await this._notificationsAppService.Create(new CreateNotificationDto()
+            {
+                UserId = userId,
+                ActorId = commentEvent.CreatorUserId.Value,
+                Action = await this.getNotificationAction(post, comment),
+                Target = await this.getNotificationTarget(post, comment),
+                ReferenceId = referenceId,
+                Url = ""
+            });
+        }
+
+        private async Task<NotificationAction> getNotificationAction(PostDto post, CommentDto comment)
+        {
+            if (post != null)
+            {
+                if (comment != null)
+                {
+                    return NotificationAction.Reply;
+                }
+                else
+                {
+                    var type = post.Type;
+                    switch (type)
+                    {
+                        case PostType.Question:
+                            return NotificationAction.Answer;
+                    }
+                }
+            }
+            return NotificationAction.Comment;
+        }
+
+        private async Task<NotificationTarget> getNotificationTarget(PostDto post, CommentDto comment)
+        {
+            if (comment != null)
+            {
+                if (comment.Parent != null)
+                {
+
+                    return NotificationTarget.Reply;
+                }
+                else
+                {
+                    var reference = await this._postsAppService.GetAsync(new Guid(comment.ReferenceId));
+                    if (reference != null)
+                    {
+                        if (reference.Type == PostType.Question) return NotificationTarget.Answer;
+                    }
+                }
+                return NotificationTarget.Comment;
+            }
+            else
+            {
+                var type = post.Type;
+                var parentType = post.Parent?.Type;
+                switch (type)
+                {
+                    case PostType.Question:
+                        return NotificationTarget.Question;
+                    case PostType.QuickPost:
+                        if (parentType != null)
+                        {
+                            if (parentType == PostType.Question)
+                                return NotificationTarget.Answer;
+                        }
+                        return NotificationTarget.Post;
+                    default:
+                        return NotificationTarget.Post;
+                }
+            }
+
         }
     }
 }

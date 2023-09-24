@@ -15,6 +15,7 @@ using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
 using Academically.Services.Notifications.Dto;
+using Academically.Services.Posts;
 using Academically.Users.Dto;
 using Amazon.SimpleEmail.Model;
 using Microsoft.EntityFrameworkCore;
@@ -31,7 +32,9 @@ namespace Academically.Services.Notifications
         private readonly IRepository<Post, Guid> _postsRepository;
         private readonly IRepository<Comment, Guid> _commentsRepository;
         private readonly IRepository<User, long> _usersRepository;
+        private readonly IRepository<ServiceDiscussion, long> _serviceDiscussionRepository;
         private readonly IUserNotificationManager _userNotificationManager;
+        private readonly IPostsAppService _postsAppService;
 
         public NotificationsAppService
         (
@@ -40,7 +43,9 @@ namespace Academically.Services.Notifications
             IRepository<NotificationUser, Guid> notificationUsersRepository,
             IRepository<Post, Guid> postsRepository,
             IRepository<Comment, Guid> commentsRepository,
-            IRepository<User, long> usersRepository
+            IRepository<User, long> usersRepository,
+            IRepository<ServiceDiscussion, long> serviceDiscussionRepository,
+            IPostsAppService postsAppService
         )
         {
             _documentsDomainService = documentsDomainService;
@@ -49,6 +54,8 @@ namespace Academically.Services.Notifications
             _postsRepository = postsRepository;
             _commentsRepository = commentsRepository;
             _usersRepository = usersRepository;
+            _serviceDiscussionRepository = serviceDiscussionRepository;
+            _postsAppService = postsAppService;
         }
 
         public async Task<IEnumerable<UserNotification>> GetRecent()
@@ -168,7 +175,13 @@ namespace Academically.Services.Notifications
         public async Task<NotificationDto> Create(CreateNotificationDto input)
         {
             if (input.UserId == input.ActorId) return null;
-            var latestUserNotification = await this._notificationsRepository.GetAll()
+
+            var post = await this._postsRepository.GetAll()
+                .Include(p => p.Parent)
+                .Where(p => p.Id == input.ReferenceId)
+                .FirstOrDefaultAsync();
+
+            var latestUserNotification = this._notificationsRepository.GetAll()
                 .Include(n => n.User)
                 .Include(n => n.Actors)
                     .ThenInclude(a => a.User)
@@ -178,8 +191,8 @@ namespace Academically.Services.Notifications
                 .Where(n => n.ReadTime == null)
                 .Where(n => n.Action == input.Action)
                 .Where(n => n.Target == input.Target)
-                .Where(n => n.ReferenceId == input.ReferenceId)
-                .FirstOrDefaultAsync();
+                .WhereIf(post?.Parent == null || post?.Parent?.Type != PostType.Discussion, n => n.ReferenceId == input.ReferenceId)
+                .FirstOrDefault();
 
             if (latestUserNotification == null)
             {
@@ -249,9 +262,17 @@ namespace Academically.Services.Notifications
         {
             List<string> formatted = new List<String>();
             formatted.Add(await this.FormatActors(notification.Actors.Select(a => a.User).ToList()));
-            formatted.Add(await this.FormatVerb(notification.Action));
-            formatted.Add(await this.FormatPronoun());
-            formatted.Add(await this.FormatTarget(notification.Target));
+            formatted.Add(await this.FormatVerb(notification));
+
+            if (await this.NotificationHasPronoun(notification))
+            {
+                formatted.Add(await this.FormatPronoun());
+            }
+
+            if (await this.NotificationHasTarget(notification))
+            {
+                formatted.Add(await this.FormatTarget(notification));
+            }
 
             if (await this.NotificationHasLocation(notification))
             {
@@ -269,17 +290,19 @@ namespace Academically.Services.Notifications
                 case NotificationAction.Share:
                     return "shared";
                 case NotificationAction.Comment:
-                    return "commented";
+                    return "commented on";
                 case NotificationAction.Reply:
-                    return "replied";
+                    return "replied to";
                 case NotificationAction.Answer:
                     return "answered";
+                case NotificationAction.Post:
+                    return "posted";
                 default:
                     return "reacted";
             }
         }
 
-        private async Task<string> NotificationTargetToText(NotificationTarget target)
+        private async Task<string> NotificationTargetToText(NotificationTarget target, NotificationAction action)
         {
             switch (target)
             {
@@ -288,19 +311,37 @@ namespace Academically.Services.Notifications
                 case NotificationTarget.Question:
                     return "question";
                 case NotificationTarget.Reply:
-                    return "reply";
+                    if (action == NotificationAction.Like || action == NotificationAction.React)
+                        return "reply";
+                    return "comment";
+                case NotificationTarget.Comment:
+                    return "comment";
                 default:
                     return "post";
             }
         }
 
+        private async Task<bool> NotificationHasTarget(NotificationDto notification)
+        {
+            if (notification.Action == NotificationAction.Post) return false;
+            return true;
+        }
+
+        private async Task<bool> NotificationHasPronoun(NotificationDto notification)
+        {
+            if (notification.Action == NotificationAction.Post) return false;
+            return true;
+        }
+
         private async Task<bool> NotificationHasLocation(NotificationDto notification)
         {
-            if (notification.Action == NotificationAction.Answer) return false;
-            if (notification.Action == NotificationAction.Reply) return false;
-            if (notification.Action == NotificationAction.Comment) return false;
-            if (notification.Action == NotificationAction.Share) return false;
-            if (notification.Actors.Count > 1) return false;
+            if (notification.Actors.Count > 1)
+            {
+                if (notification.Action == NotificationAction.Answer) return false;
+                if (notification.Action == NotificationAction.Reply) return false;
+                if (notification.Action == NotificationAction.Comment) return false;
+                if (notification.Action == NotificationAction.Share) return false;
+            }
             return true;
         }
 
@@ -320,9 +361,9 @@ namespace Academically.Services.Notifications
             }
         }
 
-        private async Task<string> FormatVerb(NotificationAction action)
+        private async Task<string> FormatVerb(NotificationDto notification)
         {
-            return await this.NotificationActionToText(action);
+            return await this.NotificationActionToText(notification.Action);
         }
 
         private async Task<string> FormatPronoun()
@@ -330,9 +371,9 @@ namespace Academically.Services.Notifications
             return "your";
         }
 
-        private async Task<string> FormatTarget(NotificationTarget target)
+        private async Task<string> FormatTarget(NotificationDto notification)
         {
-            return await this.NotificationTargetToText(target);
+            return await this.NotificationTargetToText(notification.Target, notification.Action);
         }
 
         private async Task<string> FormatLocation(NotificationDto notification)
@@ -346,8 +387,8 @@ namespace Academically.Services.Notifications
 
             if (post != null)
             {
-                if (post.Parent != null) location = $"in <span>{post.Parent.Title ?? post.Parent.Content}:</span> \"{post.Title ?? post.Content}\"";
-                else location = $"\"{post.Title ?? post.Content}\"";
+                if (post.Parent != null) location = $"{await this.GetDiscussionTitleFromPostParent(post, notification, $"\"{post.Title ?? post.Content}\"")}";
+                else location = $": \"{post.Title ?? post.Content}\"";
             }
             else
             {
@@ -365,16 +406,42 @@ namespace Academically.Services.Notifications
 
                     if (parentPost != null && parentPost.Parent != null)
                     {
-                        location = $"in <span>{parentPost.Parent.Title ?? parentPost.Parent.Content}:</span> \"{comment.Body}\"";
+                        location = $"{await this.GetDiscussionTitleFromPostParent(parentPost, notification, $"\"{comment.Body}\"")}";
                     }
                     else
                     {
-                        location = $"\"{comment.Body}\"";
+                        location = $": \"{comment.Body}\"";
                     }
 
                 }
             }
             return location;
+        }
+
+        private async Task<string> GetDiscussionTitleFromPostParent(Post post, NotificationDto notification, string objectValue)
+        {
+            var serviceDiscussion = await this._serviceDiscussionRepository.GetAll()
+                .Where(s => s.PostId == post.Id)
+                .FirstOrDefaultAsync();
+            if (serviceDiscussion == null) return $"in <span>{post.Parent.Title ?? post.Parent.Content}{(await this.LocationHasObject(notification) ? $":</span> {objectValue}" : "")}</span>";
+            else
+            {
+                var service = await this._postsAppService.GetAvailableService(serviceDiscussion.ServiceId);
+                if (service == null) return $"in <span>{post.Parent.Title ?? post.Parent.Content}{(await this.LocationHasObject(notification) ? $":</span> {objectValue}" : "")}</span>";
+                else
+                {
+                    return $"in <span>{service.Name}:</span>";
+                }
+            }
+        }
+
+        private async Task<bool> LocationHasObject(NotificationDto notification)
+        {
+            if (notification.Actors.Count > 1)
+            {
+                if (notification.Action == NotificationAction.Post && notification.Target == NotificationTarget.Post) return false;
+            }
+            return true;
         }
     }
 }

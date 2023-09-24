@@ -11,6 +11,7 @@ namespace Academically.Domain.Enums
         Post,
         Answer,
         Question,
-        Reply
+        Reply,
+        Comment
     }
 }

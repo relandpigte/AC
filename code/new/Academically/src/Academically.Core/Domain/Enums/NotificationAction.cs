@@ -12,6 +12,7 @@ namespace Academically.Domain.Enums
         React,
         Share,
         Comment,
+        Post,
         Reply,
         Answer
     }

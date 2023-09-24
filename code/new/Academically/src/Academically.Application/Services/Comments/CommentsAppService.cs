@@ -176,6 +176,7 @@ namespace Academically.Services.Comments
         public async Task<CommentDto> GetAsync(Guid id, bool includeHistory = false)
         {
             var comment = await _commentsRepository.GetAll()
+                .Include(c => c.Parent)
                 .Include(e => e.CreatorUser)
                     .ThenInclude(e => e.ProfilePictureDocument)
                 .Include(e => e.TaggedUser)

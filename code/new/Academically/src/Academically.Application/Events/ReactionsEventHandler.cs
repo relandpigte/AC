@@ -8,6 +8,7 @@ using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Hubs;
 using Academically.Services.Comments;
+using Academically.Services.Comments.Dto;
 using Academically.Services.Notifications;
 using Academically.Services.Notifications.Dto;
 using Academically.Services.Posts;
@@ -69,33 +70,31 @@ namespace Academically.Events
             long userId = 0;
 
             var post = await this._postsAppService.GetAsync(new Guid(reaction.ReferenceId));
+            var comment = await this._commentsAppService.GetAsync(new Guid(reaction.ReferenceId));
+
             if (post != null)
             {
                 referenceId = post.Id;
                 userId = post.CreatorUserId.GetValueOrDefault();
             }
-            else
+            else if (comment != null)
             {
-                var comment = await this._commentsAppService.GetAsync(new Guid(reaction.ReferenceId));
-                if (comment != null)
-                {
-                    referenceId = comment.Id;
-                    userId = comment.CreatorUserId.GetValueOrDefault();
-                }
+                referenceId = comment.Id;
+                userId = comment.CreatorUserId.GetValueOrDefault();
             }
 
             await this._notificationsAppService.Create(new CreateNotificationDto()
             {
                 UserId = userId,
                 ActorId = reaction.CreatorUserId,
-                Action = this.getNotificationActionFromReactionType(reaction.Type),
-                Target = this.getNotificationTargetFromPostType(post?.Type ?? null, post?.Parent?.Type ?? null),
+                Action = await this.getNotificationAction(reaction.Type),
+                Target = await this.getNotificationTarget(post, comment),
                 ReferenceId = referenceId,
                 Url = ""
             });
         }
 
-        private NotificationAction getNotificationActionFromReactionType(ReactionType type)
+        private async Task<NotificationAction> getNotificationAction(ReactionType type)
         {
             switch (type)
             {
@@ -106,21 +105,45 @@ namespace Academically.Events
             }
         }
 
-        private NotificationTarget getNotificationTargetFromPostType(PostType? type, PostType? parentType)
+        private async Task<NotificationTarget> getNotificationTarget(PostDto post, CommentDto comment)
         {
-            switch (type)
+            if (post != null)
             {
-                case PostType.Discussion:
-                    return NotificationTarget.Post;
-                case PostType.Question:
-                    return NotificationTarget.Question;
-                case PostType.QuickPost:
-                    if (parentType != null && parentType == PostType.Question)
-                        return NotificationTarget.Answer;
-                    return NotificationTarget.Post;
-                default:
-                    return NotificationTarget.Reply;
+                var type = post.Type;
+                var parentType = post.Parent?.Type;
+                switch (type)
+                {
+                    case PostType.Question:
+                        return NotificationTarget.Question;
+                    case PostType.QuickPost:
+                        if (parentType != null)
+                        {
+                            if (parentType == PostType.Question)
+                                return NotificationTarget.Answer;
+                        }
+                        return NotificationTarget.Post;
+                    default:
+                        return NotificationTarget.Post;
+                }
             }
+            else
+            {
+                if (comment.Parent != null)
+                {
+                    
+                    return NotificationTarget.Reply;
+                }
+                else
+                {
+                    var reference = await this._postsAppService.GetAsync(new Guid(comment.ReferenceId));
+                    if (reference != null)
+                    {
+                        if (reference.Type == PostType.Question) return NotificationTarget.Answer;
+                    }
+                }
+                return NotificationTarget.Comment;
+            }
+            
         }
     }
 }
