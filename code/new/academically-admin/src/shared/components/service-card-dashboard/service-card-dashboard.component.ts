@@ -180,7 +180,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
 
     this.sanitized.owner = {} as ServiceCardPerson;
     this.sanitized.owner.avatar = {} as ServiceCardImage;
-    this.sanitized.owner.avatar.src = this.data?.creatorUser?.profilePictureUrl ?? this.data.profilePictureUrl;
+    this.sanitized.owner.avatar.src = this.data?.creatorUser?.profilePictureUrl ?? this.data?.profilePictureUrl ?? 'assets/img/anonymous.png';
     this.sanitized.owner.fullName = this.data?.creatorUser?.fullName?? this.data.fullName ??  'Anonymous';
     this.sanitized.owner.isShowAvatar = true;
     this.sanitized.owner.isShowFullName = true;
@@ -262,12 +262,16 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         if (this.isCreator) {
           if (this.isBooked) {
             this.sanitizedOptions.isShowActions = true;
-            if (!this.isExpired || this.isPast) {
-              this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
-              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join session' });
-            }
-            if (this.isCancelled) {
+            if (this.isExpired || this.isPast) {
+              if (this.hasReviewed) {
+                this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'buy', label: 'Buy again' });
+              } else {
+                this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'review', label: 'Leave review' });
+              }
+            } else if (this.isCancelled) {
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'buy', label: 'Buy again' });
+            } else {
+              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join session' });
             }
           } else {
             switch (this.serviceStatus) {

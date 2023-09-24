@@ -49,7 +49,6 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this._dashboardPageService.isLoading$.next(false)))
       .subscribe(coachings => {
-        console.log(coachings);
         this.upcomingCoachings = coachings?.items;
         this.pastCoachings = coachings?.items;
         this.cancelledCoachings = coachings?.items;
