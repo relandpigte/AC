@@ -38,7 +38,7 @@
             </div>
 
             <div class="flex-grow-1 d-flex flex-column">
-                <div *ngIf="this.sanitizedOptions?.isShowHeading" [class]="cardType + '-heading heading'" [class.text-danger]="isScheduleNear">
+                <div *ngIf="this.sanitizedOptions?.isShowHeading" [class]="cardType + '-heading heading'" [class.text-danger]="isScheduleNear && !isExpired">
                     <span *ngIf="this.sanitizedOptions?.headingType === 'unbooked'" class="unbooked"> UNBOOKED </span>
                     <span *ngIf="this.sanitizedOptions?.headingType === 'location' && location" class="location">{{ location }}</span>
                     <span *ngIf="this.sanitizedOptions?.headingType === 'schedule' && schedule" class="schedule">{{ schedule }}</span>
@@ -120,7 +120,7 @@
                                     <span class="text-success">{{ status?.label | localize }}</span>
                                 </ng-container>
                                 <ng-container *ngSwitchCase="'archived'">
-                                    <span class="text-primary">{{ status?.label | localize }}</span>
+                                    <span class="text-primary" [class]="cardType">{{ status?.label | localize }}</span>
                                 </ng-container>
                                 <ng-container *ngSwitchCase="'draft'">
                                     <span class="text-danger">{{ status?.label | localize }}</span>

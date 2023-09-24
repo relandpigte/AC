@@ -23,7 +23,7 @@ import {
   ArticleStatus,
   ArticleType, CoachingStatus,
   CourseSectionType,
-  CourseStatus,
+  CourseStatus, EventStatus,
   StudentCourseDto,
   UserDto
 } from '@shared/service-proxies/service-proxies';
@@ -93,23 +93,24 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   get isDraft(): boolean { return this.sanitized?.status?.type === 'draft'; }
   get isArchive(): boolean { return this.sanitized?.status?.type === 'archived'; }
   get isExpired(): boolean { return this.sanitized?.dates?.startDate?.isBefore(moment()); }
+  get isUpcoming(): boolean { return this.sanitized?.dates?.startDate?.isAfter(moment()); }
   get hasReviewed(): boolean { return this.data?.isDoneRating; }
   get sessionDuration(): string { return humanizeDuration(this.composition.durationInSec * 1000); }
-  get isScheduleNear(): boolean { return this.sanitized?.dates?.startDate?.diff(moment(), 'hours') < 1; }
+  get isScheduleNear(): boolean { return moment(this.sanitized?.dates?.startDate)?.diff(moment(), 'hours') < 1; }
   get schedule(): string {
     if (this.isDraft || !this.sanitized?.dates?.startDate) {
       return this.l('Unscheduled');
     }
-    if (this.sanitized.dates.startDate.diff(moment(), 'minutes') < 1) {
+    if (moment(this.sanitized?.dates?.startDate)?.diff('minutes') < 1) {
       return this.l('LiveNow');
-    } else if (this.sanitized.dates.startDate.diff(moment(), 'hours') < 1) {
-      return this.l('StartingIn', this.convertMomentToDateAgo(this.sanitized.dates.startDate, true));
+    } else if (moment(this.sanitized?.dates?.startDate).diff('hours') < 1) {
+      return this.l('StartingIn', this.convertMomentToDateAgo(this.sanitized?.dates?.startDate, true));
     }
     return this.l(
       'StartingFrom',
-      this.sanitized.dates.startDate.format('dddd, DD MMMM YYYY'),
-      this.sanitized.dates.startDate.format('HH:mm'),
-      this.sanitized.dates.endDate.format('HH:mm')
+      moment(this.sanitized?.dates?.startDate)?.format('dddd, DD MMMM YYYY'),
+      moment(this.sanitized?.dates?.startDate)?.format('HH:mm'),
+      moment(this.sanitized?.dates?.startDate)?.add(this.data?.duration, 'minutes')?.format('HH:mm')
     );
   }
   get scheduleDay(): string { return this.isDraft ? '--' : this.sanitized?.dates?.startDate?.format('DD'); }
@@ -138,7 +139,6 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
       const { options, service } = ServiceCardUtils.getSanitizeServiceData(this.data, {}, [], false);
       this.sanitized = service;
       this.sanitizedOptions = options;
-
       this.setInitValues();
     }
   }
@@ -209,24 +209,22 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
           }
         }
         break;
+      case 'workshop':
       case 'broadcast':
         if (this.isCreator) {
-          const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
-          switch (tempStatus) {
-            case 1:
-              this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
-              this.sanitizedOptions.isShowStatus = true;
-              break;
-            case 2:
-              this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
-              this.sanitizedOptions.isShowStatus = true;
-              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
-              this.sanitizedOptions.isShowActions = true;
-              break;
-            case 3:
-              this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
-              this.sanitizedOptions.isShowStatus = true;
-              break;
+          if (EventStatus.Draft === this.serviceStatus) {
+            this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
+            this.sanitizedOptions.isShowStatus = true;
+          }
+
+          if (this.isExpired) {
+            this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Published', show: true };
+            this.sanitizedOptions.isShowStatus = true;
+          }
+
+          if (this.isUpcoming && EventStatus.Draft !== this.serviceStatus) {
+            this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
+            this.sanitizedOptions.isShowActions = true;
           }
         } else {
           this.sanitizedOptions.isShowActions = true;
@@ -350,7 +348,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
               break;
           }
         } else {
-          const tempStatus = Math.floor(Math.random() * (5 - 1) + 1);
+          const tempStatus = this.getRndInteger(1, 4);
           switch (tempStatus) {
             case 1:
               this.sanitized.status = <ServiceCardStatus>{ type: 'onprogress', label: 'Tutorial 1 - Start your new journey', show: true };
@@ -383,27 +381,6 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'play', label: 'Play again' });
               this.sanitizedOptions.isShowActions = true;
               this.sanitized.progress = null;
-              break;
-          }
-        }
-        break;
-      case 'workshop':
-        if (this.isCreator) {
-          const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
-          switch (tempStatus) {
-            case 1:
-              this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
-              this.sanitizedOptions.isShowStatus = true;
-              break;
-            case 2:
-              this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
-              this.sanitizedOptions.isShowStatus = true;
-              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
-              this.sanitizedOptions.isShowActions = true;
-              break;
-            case 3:
-              this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
-              this.sanitizedOptions.isShowStatus = true;
               break;
           }
         }
@@ -482,4 +459,6 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         break;
     }
   }
+
+  protected readonly moment = moment;
 }

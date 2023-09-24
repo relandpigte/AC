@@ -12,7 +12,7 @@
         <div class="card-body-calendar">
             <i class="fe fe-calendar mr-2"></i>
             <span class="date font-weight-bold text-primary mr-3">FRIDAY, 23 AUG 2022 FROM 18:00-21:00</span>
-            <span class="space text-danger">2 space left</span>
+            <span *ngIf="isWorkShop" class="space text-danger">{{ spaceLeft }} space left</span>
         </div>
         <div class="card-body-duration">
             <span><i class="fe fe-clock mr-2"></i><strong>Duration</strong>: 2 hours</span>

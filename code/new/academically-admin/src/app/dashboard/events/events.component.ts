@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
@@ -29,7 +29,8 @@ export class EventsComponent extends AppComponentBase implements OnInit {
     private _eventsService: EventsServiceProxy,
     private _dashboardService: DashboardService,
     private _dashboardPageService: DashboardPagesService,
-    private _serviceData: ServiceDataService
+    private _serviceData: ServiceDataService,
+    private _cdr: ChangeDetectorRef
   ) {
     super(injector);
   }
@@ -48,6 +49,7 @@ export class EventsComponent extends AppComponentBase implements OnInit {
 
   handleSwitchView(): void {
     this._dashboardService.handleSwitchView();
+    this._cdr.detectChanges();
   }
 
   onNewBroadcastClick(): void {

@@ -10,7 +10,7 @@ import { DashboardPagesService } from '@shared/services/dashboard-pages.service'
   styleUrls: ['./purchased.component.less']
 })
 export class PurchasedComponent extends AppComponentBase implements OnInit {
-  courses: EventDto[] = Array(4).fill([]).map(() => this.generateRandomEvent()) as EventDto[];
+  events: EventDto[] = Array(4).fill([]).map(() => this.generateRandomEvent()) as EventDto[];
   isLoading = true;
 
   shimmerType = ShimmerType;
@@ -23,6 +23,7 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
   }
 
   get isLoading$() { return this._dashboardPageService.isLoading$; }
+  get totalEvents(): number { return this.events?.length; }
 
   ngOnInit(): void {}
 }

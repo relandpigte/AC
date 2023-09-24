@@ -1,7 +1,10 @@
 import { Component, Injector, OnInit } from '@angular/core';
+import { finalize, takeUntil } from 'rxjs/operators';
+import * as moment from 'moment';
+
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
-import { EventDto } from '@shared/service-proxies/service-proxies';
+import { EventDto, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 
 @Component({
@@ -10,20 +13,52 @@ import { DashboardPagesService } from '@shared/services/dashboard-pages.service'
   styleUrls: ['./created.component.less']
 })
 export class CreatedComponent extends AppComponentBase implements OnInit {
-  events: EventDto[] = Array(Math.floor(Math.random() * (10 - 4) + 4)).fill([]).map(() => this.generateRandomEvent()) as EventDto[];
+  upcomingEvents: EventDto[] = [];
+  pastEvents: EventDto[] = [];
+  cancelledEvents: EventDto[] = [];
+  draftEvents: EventDto[] = [];
+
+
   isLoading = true;
   shimmerType = ShimmerType;
 
   constructor(
     injector: Injector,
-    private _dashboardPageService: DashboardPagesService
+    private _dashboardPageService: DashboardPagesService,
+    private _eventsService: EventsServiceProxy
   ) {
     super(injector);
   }
 
   get isLoading$() { return this._dashboardPageService.isLoading$; }
+  get totalUpcomingEvents(): number { return this.upcomingEvents?.length; }
+  get totalPastEvents(): number { return this.pastEvents?.length; }
+  get totalCancelledEvents(): number { return this.cancelledEvents?.length; }
+  get totalDraftEvents(): number { return this.draftEvents?.length; }
 
   ngOnInit(): void {
-    console.log(this.events);
+    this.initEvents();
+  }
+
+  private initEvents(): void {
+    this._dashboardPageService.setIsLoading(true);
+    this._eventsService.getAll(
+      undefined,
+      this.appSession.userId,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    )
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this._dashboardPageService.setIsLoading(false)))
+      .subscribe(events => {
+        this.upcomingEvents = events?.items?.filter(e => moment().isBefore(e.eventDateTime) && e.status !== 0);
+        this.pastEvents = events?.items?.filter(e => moment().isAfter(e.eventDateTime));
+        this.draftEvents = events?.items?.filter(e => e.status === 0);
+      });
   }
 }

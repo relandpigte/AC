@@ -1,5 +1,4 @@
-<ng-container *ngIf="courses">
-
+<ng-container *ngIf="events">
     <app-shimmer
         [isBlock]="true"
         [show]="isLoading$ | async"
@@ -25,15 +24,64 @@
                         </form>
                     </div>
                 </div>
+                <div class="search-nav d-flex ml-auto">
+                    <ul class="nav nav-tabs nav-tabs-sm">
+                        <li class="nav-item">
+                            <a href="#upcoming-events" class="nav-link active" data-toggle="tab" role="tab">
+                                Upcoming <span class="badge badge-pill badge-light">{{ 1 }}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#past-events" class="nav-link" data-toggle="tab" role="tab">
+                                Past <span class="badge badge-pill badge-light">{{ 2 }}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#cancelled-events" class="nav-link" data-toggle="tab" role="tab">
+                                Cancelled <span class="badge badge-pill badge-light">{{ 3 }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
 
-        <app-service-card-dashboard
-            *ngFor="let data of courses"
-            [data]="data"
-            [isLoading]="isLoading"
-            (onDelete)="onDeleteClick(data.id)"
-        ></app-service-card-dashboard>
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="upcoming-events" role="tabpanel">
+                <ng-container *ngIf="!!totalEvents else noRecords">
+                    <app-service-card-dashboard
+                        *ngFor="let data of events"
+                        [data]="data"
+                        [isLoading]="isLoading"
+                        [isCreator]="isTutor"
+                    ></app-service-card-dashboard>
+                </ng-container>
+            </div>
+
+            <div class="tab-pane fade" id="past-events" role="tabpanel">
+                <ng-container *ngIf="!!totalEvents else noRecords">
+                    <app-service-card-dashboard
+                        *ngFor="let data of events"
+                        [data]="data"
+                        [isLoading]="isLoading"
+                    ></app-service-card-dashboard>
+                </ng-container>
+            </div>
+
+            <div class="tab-pane fade" id="cancelled-events" role="tabpanel">
+                <ng-container *ngIf="!!totalEvents else noRecords">
+                    <app-service-card-dashboard
+                        *ngFor="let data of events"
+                        [data]="data"
+                        [isLoading]="isLoading"
+                    ></app-service-card-dashboard>
+                </ng-container>
+            </div>
+        </div>
 
     </ng-container>
 </ng-container>
+
+<ng-template #noRecords>
+    <div class="text-center font-size-sm text-muted w-100">No records to display</div>
+</ng-template>
