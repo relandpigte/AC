@@ -101,9 +101,9 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     if (this.isDraft || !this.sanitized?.dates?.startDate) {
       return this.l('Unscheduled');
     }
-    if (moment(this.sanitized?.dates?.startDate)?.diff('minutes') < 1) {
+    if (moment(this.sanitized?.dates?.startDate)?.diff(moment(), 'minutes') < 1) {
       return this.l('LiveNow');
-    } else if (moment(this.sanitized?.dates?.startDate).diff('hours') < 1) {
+    } else if (moment(this.sanitized?.dates?.startDate).diff(moment(), 'hours') < 1) {
       return this.l('StartingIn', this.convertMomentToDateAgo(this.sanitized?.dates?.startDate, true));
     }
     return this.l(
@@ -192,6 +192,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
               break;
           }
         } else {
+          this.sanitized.people.isShowAvatars = false;
           const tempStatus = Math.floor(Math.random() * (4 - 1) + 1);
           switch (tempStatus) {
             case 1:
@@ -227,12 +228,12 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
             this.sanitizedOptions.isShowActions = true;
           }
         } else {
-          this.sanitizedOptions.isShowActions = true;
           if (this.isExpired) {
             this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'review', label: 'Leave review' });
           } else {
             this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
           }
+          this.sanitizedOptions.isShowActions = true;
         }
         break;
       case 'coaching':
@@ -308,6 +309,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
           this.sanitized.people.avatarStackCount = 3;
           this.sanitized.people.isShowAvatars = true;
         } else {
+          this.sanitized.people.isShowAvatars = false;
           this.sanitized.progress = this.data?.progress;
           this.sanitized.status = this.data?.progress < 100 ?
             <ServiceCardStatus>{ type: 'read', label: this.currentLesson, show: true } :
@@ -348,6 +350,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
               break;
           }
         } else {
+          this.sanitized.people.isShowAvatars = false;
           const tempStatus = this.getRndInteger(1, 4);
           switch (tempStatus) {
             case 1:
@@ -400,6 +403,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         if (!this.options || !('isShowInfo' in this.options)) { this.sanitizedOptions.isShowInfo = true; }
         break;
       case 'broadcast':
+      case 'workshop':
         if (!this.options || !('isShowEnrolled' in this.options)) { this.sanitizedOptions.isShowEnrolled = true; }
         if (!this.options || !('isShowDate' in this.options)) { this.sanitizedOptions.isShowDate = true; }
         if (!this.options || !('isShowHeading' in this.options)) { this.sanitizedOptions.isShowHeading = true; }
@@ -451,14 +455,6 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
           if (!this.options || !('isShowProgress' in this.options)) { this.sanitizedOptions.isShowProgress = true; }
         }
         break;
-      case 'workshop':
-        if (!this.options || !('headingType' in this.options)) { this.sanitizedOptions.headingType = 'schedule'; }
-        if (!this.options || !('isShowDate' in this.options)) { this.sanitizedOptions.isShowDate = true; }
-        if (!this.options || !('isShowHeading' in this.options)) { this.sanitizedOptions.isShowHeading = true; }
-        if (!this.options || !('isShowGoing' in this.options)) { this.sanitizedOptions.isShowGoing = true; }
-        break;
     }
   }
-
-  protected readonly moment = moment;
 }
