@@ -19,6 +19,9 @@ namespace Academically
         {
             Configuration.Auditing.IsEnabledForAnonymousUsers = true;
 
+            // Disable background worker
+            Configuration.BackgroundJobs.IsJobExecutionEnabled = false;
+
             // Declare entity types
             Configuration.Modules.Zero().EntityTypes.Tenant = typeof(Tenant);
             Configuration.Modules.Zero().EntityTypes.Role = typeof(Role);

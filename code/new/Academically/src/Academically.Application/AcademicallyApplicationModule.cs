@@ -18,6 +18,9 @@ namespace Academically
 
             // Enable auditing for the application
             Configuration.Auditing.IsEnabled = true;
+
+            // Disable background worker
+            Configuration.BackgroundJobs.IsJobExecutionEnabled = false;
         }
 
         public override void Initialize()

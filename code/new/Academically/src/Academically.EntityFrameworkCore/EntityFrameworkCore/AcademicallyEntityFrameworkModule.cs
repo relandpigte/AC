@@ -32,6 +32,9 @@ namespace Academically.EntityFrameworkCore
                     }
                 });
             }
+
+            // Disable background worker
+            Configuration.BackgroundJobs.IsJobExecutionEnabled = false;
         }
 
         public override void Initialize()

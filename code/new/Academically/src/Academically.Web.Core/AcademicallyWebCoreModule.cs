@@ -48,6 +48,9 @@ namespace Academically
             // Use database for language management
             Configuration.Modules.Zero().LanguageManagement.EnableDbLocalization();
 
+            // Disable background worker
+            Configuration.BackgroundJobs.IsJobExecutionEnabled = false;
+
             Configuration.Modules.AbpAspNetCore()
                  .CreateControllersForAppServices(
                      typeof(AcademicallyApplicationModule).GetAssembly()
