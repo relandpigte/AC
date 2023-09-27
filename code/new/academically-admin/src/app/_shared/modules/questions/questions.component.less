@@ -1,135 +1,304 @@
-.comments-container {
-  position      : relative;
-  height        : 100%;
-  padding-bottom: 48px;
-  cursor        : pointer;
+.question {
+    &-container {
+        padding-top: 20px;
 
-  &.sidebar {
-    padding-bottom: 0;
-
-    .parent-comments {
-      height: calc(100vh - 100px);
-    }
-  }
-
-  .comment-main-body {
-    border       : 1px solid #e3ebf6;
-    border-radius: 5px;
-    padding      : 3%;
-    box-shadow   : 0 2px 8px 0 rgba(0, 0, 0, 0.05);
-  }
-
-  .comment-vote {
-    border   : 1px solid #e3ebf6;
-    font-size: 13px;
-  }
-
-  .comment-response {
-    text-align: end;
-    font-size : 11px;
-  }
-
-  .comment-fnt {
-    font-size: 12px
-  }
-
-  .icon-pad {
-    padding-left: 5px;
-  }
-
-  .comments {
-    position: relative;
-    padding : 10px;
-    height  : 100%;
-
-    &.parent-comments {
-      overflow-y: auto;
-      overflow-x: hidden;
+        .questions {
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
     }
 
-    &.comments-small {
-      .comment {
-        .comment-container {
-          .comment-body {
-            padding: 10px;
-          }
+    &-item {
+        padding: 0 20px 15px;
+        overflow: hidden;
+    }
+
+    &-body {
+        padding: 14px 16px;
+        border: 1px solid #E4EBF6;
+        border-radius: 10px;
+        display: inline-block;
+        float: right;
+
+        &-text {
+            margin-bottom: 5px;
         }
 
-        .comment-replies {
-          .comment {
-            margin-left: 10px;
-
-            .comment-body {
-              padding: 10px;
+        &-info {
+            .time {
+                font-size: 13px;
+                color: #95AAC9;
             }
-          }
+
+            .poster {
+                &-name {
+                    color: #3B516C;
+                    font-size: 13px;
+                }
+            }
         }
-      }
     }
 
-    .write-comment-container {
-      padding: 0;
-    }
-  }
+    &-actions {
+        color: #6E84A3;
+        font-size: 14px;
+        clear: both;
+        float: right;
+        margin: 7px 0 5px;
 
-  .no-comments-container {
-    min-height     : 60px;
-    display        : flex;
-    justify-content: center;
-    padding-top    : 10px;
-  }
-
-
-  .write-comment-container {
-    padding   : 10px;
-    width     : 100%;
-    border-top: 1px solid #e3ebf6;
-
-    &:not(.reply) {
-      position: absolute;
-      bottom  : 0;
-    }
-
-    .write-comment {
-      border-radius: 25px;
-      margin       : 0;
-
-      .profile-container,
-      .text-container {
-        display        : flex;
-        align-items    : center;
-        justify-content: center;
-      }
-
-      .text-container {
-        padding-right: 0;
-        padding-left : 0;
-      }
-
-      .actions-container {
-
-        .text-muted {
-          height         : 100%;
-          display        : flex;
-          align-items    : center;
-          justify-content: center;
+        &-separator {
+            width: 1px;
+            height: 11px;
+            background-color: #D2DDEC;
         }
-      }
+
+        &-upvote {
+            .reaction-count {
+                &::before {
+                    content: "•";
+                    font-size: 8px;
+                    padding-right: 5px;
+                    padding-left: 5px;
+                }
+            }
+
+            .reaction-icon {
+                width: 16px;
+                height: 16px;
+                margin-left: 4px;
+            }
+        }
     }
-  }
 
-  .dropdown-menu {
-    padding  : 0 !important;
-    min-width: 0 !important;
-  }
+    &-reply {
+        clear: both;
+        float: left;
 
-  .mar-3 {
-    margin-left: 3%
-  }
+        &::before {
+            content: "";
+            width: 19px;
+            height: 19px;
+            background: url("/assets/img/events/reply.svg") no-repeat center center transparent;
+        }
+        &-count {
+            font-size: 15px;
+            color: #95AAC9;
+        }
+    }
 }
 
-.host-pill {
-  margin-left: 10px;
-  padding: 0px 8px;
-  font-size: 9px;
+.write {
+    &-form {
+        padding: 15px 20px;
+        border-top: 1px solid #e3ebf6;
+    }
+
+    &-comment {
+        &.asking {
+            align-items: flex-end !important;
+
+            .write-comment-text {
+                height: 73px;
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: space-between;
+            }
+
+            .write-comment-instruction {
+                display: block;
+            }
+
+            .write-comment-tools {
+                display: flex;
+                width: 100%;
+                align-items: center;
+                margin-bottom: -5px;
+            }
+
+            .write-comment-actions {
+                margin-left: auto;
+            }
+
+            .write-comment-avatar {
+                padding-bottom: 12px;
+            }
+        }
+
+        &-text {
+            border: 1px solid #E4EBF6;
+            border-radius: 10px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+
+            textarea {
+                color: #12263F;
+            }
+        }
+
+        &-avatar {
+            .avatar-xs {
+                width: 30px !important;
+                height: 30px !important;
+            }
+        }
+
+        &-instruction {
+            display: none;
+            font-size: 13px;
+            color: #6E84A3;
+
+            span {
+                color: #2C7BE5;
+            }
+        }
+
+        &-actions {
+            a {
+                color: #B1C2D9;
+
+                &:hover {
+                    color: #2C7BE5;
+                }
+            }
+        }
+    }
 }
+
+.comments-container {
+    position: relative;
+    height: 100%;
+    cursor: pointer;
+
+    &.sidebar {
+        padding-bottom: 0;
+
+        .parent-comments {
+            height: calc(100vh - 100px);
+        }
+    }
+}
+
+//
+//    .comment-main-body {
+//        border: 1px solid #e3ebf6;
+//        border-radius: 5px;
+//        padding: 3%;
+//        box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.05);
+//    }
+//
+//    .comment-vote {
+//        border: 1px solid #e3ebf6;
+//        font-size: 13px;
+//    }
+//
+//    .comment-response {
+//        text-align: end;
+//        font-size: 11px;
+//    }
+//
+//    .comment-fnt {
+//        font-size: 12px
+//    }
+//
+//    .icon-pad {
+//        padding-left: 5px;
+//    }
+//
+//    .comments {
+//        position: relative;
+//        padding: 10px;
+//        height: 100%;
+//
+//        &.parent-comments {
+//            overflow-y: auto;
+//            overflow-x: hidden;
+//        }
+//
+//        &.comments-small {
+//            .comment {
+//                .comment-container {
+//                    .comment-body {
+//                        padding: 10px;
+//                    }
+//                }
+//
+//                .comment-replies {
+//                    .comment {
+//                        margin-left: 10px;
+//
+//                        .comment-body {
+//                            padding: 10px;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        .write-comment-container {
+//            padding: 0;
+//        }
+//    }
+//
+//    .no-comments-container {
+//        min-height: 60px;
+//        display: flex;
+//        justify-content: center;
+//        padding-top: 10px;
+//    }
+//
+//
+//    //.write-comment-container {
+//    //    padding: 10px;
+//    //    width: 100%;
+//    //    border-top: 1px solid #e3ebf6;
+//    //
+//    //    &:not(.reply) {
+//    //        position: absolute;
+//    //        bottom: 0;
+//    //    }
+//    //
+//    //    .write-comment {
+//    //        border-radius: 25px;
+//    //        margin: 0;
+//    //
+//    //        .profile-container,
+//    //        .text-container {
+//    //            display: flex;
+//    //            align-items: center;
+//    //            justify-content: center;
+//    //        }
+//    //
+//    //        .text-container {
+//    //            padding-right: 0;
+//    //            padding-left: 0;
+//    //        }
+//    //
+//    //        .actions-container {
+//    //
+//    //            .text-muted {
+//    //                height: 100%;
+//    //                display: flex;
+//    //                align-items: center;
+//    //                justify-content: center;
+//    //            }
+//    //        }
+//    //    }
+//    //}
+//
+//    .dropdown-menu {
+//        padding: 0 !important;
+//        min-width: 0 !important;
+//    }
+//
+//    .mar-3 {
+//        margin-left: 3%
+//    }
+//}
+//
+//.host-pill {
+//    margin-left: 10px;
+//    padding: 0 8px;
+//    font-size: 9px;
+//}

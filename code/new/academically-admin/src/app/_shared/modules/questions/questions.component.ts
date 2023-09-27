@@ -31,12 +31,10 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
   isReplying: boolean[] = [];
   loadedReplyCount: number[] = [];
 
-  private _maxRepliesToLoad = 3;
-
   questionsHub: HubConnection;
   hubConnected: boolean;
 
-  get userId(): number { return this.appSession.userId; }
+  private _maxRepliesToLoad = 3;
 
   constructor(
     injector: Injector,
@@ -46,12 +44,72 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
     super(injector);
   }
 
-  ngOnInit(): void {
-    this.initHub();
+  get userId(): number { return this.appSession.userId; }
+
+  async ngOnInit(): Promise<void> {
+    await this.initHub();
   }
 
   ngAfterViewInit(): void {
     this.getQuestions();
+  }
+
+  onFormSubmit(): void {
+    this.createQuestion();
+  }
+
+  onReplyFormSubmit(parent: QuestionDto, replyIndex: number): void {
+    this.createReply(parent, replyIndex);
+  }
+
+  onBodyKeydown(e: KeyboardEvent): void {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      this.createQuestion();
+    }
+  }
+
+  onReplyBodyKeydown(e: KeyboardEvent, parent: QuestionDto, replyIndex: number): void {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      this.createReply(parent, replyIndex);
+    }
+  }
+
+  onLoadMoreRepliesClick(parent: QuestionDto): void {
+    this.getReplies(parent);
+  }
+
+  isUserUpvoted(question: QuestionDto): boolean {
+    return question.questionReactions.some(q => q.creatorUserId === this.userId);
+  }
+
+  onLikeClick(question: QuestionDto): void {
+    const reaction = new QuestionReactionDto();
+    reaction.questionId = question.id;
+    reaction.type = ReactionType.Upvote;
+    this._questionsService.createReaction(reaction)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(async response => {
+        question.questionReactions.push(response);
+        await this.sendQuestionSignal(new QuestionSignalData(QuestionAction.Upvoted, question));
+      });
+  }
+
+  onUnlikeClick(question: QuestionDto): void {
+    const index = question.questionReactions.findIndex(e => e.creatorUserId === this.appSession.userId);
+    if (index >= 0) {
+      this._questionsService.deleteReaction(question.questionReactions[index].id)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(async (): Promise<void> => {
+          question.questionReactions.splice(index, 1);
+          await this.sendQuestionSignal(new QuestionSignalData(QuestionAction.Downvoted, question));
+        });
+    }
+  }
+
+  checkIfReacted(question: QuestionDto): boolean {
+    return question.questionReactions.filter(e => e.creatorUserId === this.appSession.userId).length > 0;
   }
 
   private async initHub(): Promise<void> {
@@ -107,60 +165,6 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
         this.forceUpdateQuestion(q.children, question);
       }
     });
-  }
-
-  onFormSubmit(): void {
-    this.createQuestion();
-  }
-
-  onReplyFormSubmit(parent: QuestionDto, replyIndex: number): void {
-    this.createReply(parent, replyIndex);
-  }
-
-  onBodyKeydown(e: KeyboardEvent): void {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      this.createQuestion();
-    }
-  }
-
-  onReplyBodyKeydown(e: KeyboardEvent, parent: QuestionDto, replyIndex: number): void {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      this.createReply(parent, replyIndex);
-    }
-  }
-
-  onLoadMoreRepliesClick(parent: QuestionDto): void {
-    this.getReplies(parent);
-  }
-
-  onLikeClick(question: QuestionDto): void {
-    const reaction = new QuestionReactionDto();
-    reaction.questionId = question.id;
-    reaction.type = ReactionType.Like;
-    this._questionsService.createReaction(reaction)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(response => {
-        question.questionReactions.push(response);
-        this.sendQuestionSignal(new QuestionSignalData(QuestionAction.Upvoted, question));
-      });
-  }
-
-  onUnlikeClick(question: QuestionDto): void {
-    const index = question.questionReactions.findIndex(e => e.creatorUserId === this.appSession.userId);
-    if (index >= 0) {
-      this._questionsService.deleteReaction(question.questionReactions[index].id)
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe(() => {
-          question.questionReactions.splice(index, 1);
-          this.sendQuestionSignal(new QuestionSignalData(QuestionAction.Downvoted, question));
-        });
-    }
-  }
-
-  checkIfReacted(question: QuestionDto): boolean {
-    return question.questionReactions.filter(e => e.creatorUserId === this.appSession.userId).length > 0;
   }
 
   private createQuestion(): void {
@@ -264,5 +268,4 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
     const ids = [this.hostId].concat(this.attendeeIds ?? []).filter(i => i !== this.userId);
     await this.questionsHub.invoke('sendSignal', ids, sSignalData).then(() => { if (callback) callback(); });
   }
-
 }

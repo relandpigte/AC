@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, Input } from '@angular/core';
+import { Component, OnInit, Injector, Input, ChangeDetectorRef } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ActivatedRoute } from '@angular/router';
 
@@ -29,6 +29,7 @@ export class SidebarComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     route: ActivatedRoute,
+    private _cdr: ChangeDetectorRef
   ) {
     super(injector);
     this.menuItems.push(new MenuItem('Separator'));
@@ -58,5 +59,6 @@ export class SidebarComponent extends AppComponentBase implements OnInit {
   onMenuItemClick(menuItem: MenuItem, e: Event): void {
     e.preventDefault();
     this.activeMenuItem = menuItem;
+    this._cdr.detectChanges();
   }
 }
