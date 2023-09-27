@@ -7,7 +7,7 @@
 
 <ng-container *ngIf="!(isLoading$ | async)">
     <div class="card custom-card-border search">
-        <div class="card-header">
+        <div class="card-header border-0">
             <div class="row align-items-center">
                 <div class="col">
                     <form>
@@ -22,7 +22,7 @@
                     </form>
                 </div>
                 <div class="search-nav d-flex ml-auto">
-                    <ul class="nav nav-tabs nav-tabs-sm">
+                    <ul class="nav nav-tabs nav-tabs-sm border-0">
                         <li class="nav-item">
                             <a href="#upcoming-events" class="nav-link active" data-toggle="tab" role="tab">
                                 Upcoming <span class="badge badge-pill badge-light">{{ totalUpcomingEvents }}</span>

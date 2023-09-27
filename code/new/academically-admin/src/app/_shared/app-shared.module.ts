@@ -90,6 +90,7 @@ import { ChatMessageInfoComponent } from '@shared/components/chat-message-info/c
 import {
   ChatServiceAttachmentComponent
 } from '@shared/components/chat-service-attachment/chat-service-attachment.component';
+import { NgPipesModule } from 'ngx-pipes';
 
 @NgModule({
   declarations: [
@@ -177,7 +178,8 @@ import {
     CarouselModule,
     PickerModule,
     EmojiModule,
-    RouterModule
+    RouterModule,
+    NgPipesModule
   ],
   exports: [
     SharedModule,

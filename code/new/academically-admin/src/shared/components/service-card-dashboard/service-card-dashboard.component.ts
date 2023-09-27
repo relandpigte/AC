@@ -247,18 +247,16 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
       case 'workshop':
       case 'broadcast':
         if (this.isCreator) {
+          this.sanitizedOptions.isShowStatus = true;
           if (EventStatus.Draft === this.serviceStatus) {
             this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
-            this.sanitizedOptions.isShowStatus = true;
           }
-
           if (this.isExpired) {
             this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Published', show: true };
-            this.sanitizedOptions.isShowStatus = true;
           }
-
           if (this.isUpcoming && EventStatus.Draft !== this.serviceStatus) {
             this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
+            this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
             this.sanitizedOptions.isShowActions = true;
           }
         } else {
@@ -446,7 +444,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         break;
       case 'broadcast':
       case 'workshop':
-        if (!this.options || !('isShowEnrolled' in this.options)) { this.sanitizedOptions.isShowEnrolled = true; }
+        // if (!this.options || !('isShowEnrolled' in this.options)) { this.sanitizedOptions.isShowEnrolled = true; }
         if (!this.options || !('isShowDate' in this.options)) { this.sanitizedOptions.isShowDate = true; }
         if (!this.options || !('isShowHeading' in this.options)) { this.sanitizedOptions.isShowHeading = true; }
         if (!this.options || !('headingType' in this.options)) { this.sanitizedOptions.headingType = 'schedule'; }
