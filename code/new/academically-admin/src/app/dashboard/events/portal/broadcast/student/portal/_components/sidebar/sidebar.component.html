@@ -1,9 +1,14 @@
 <div [class.content-hidden]="hidden" class="sidebar bg-white">
-  <ul class="sidebar-menu">
+  <ul class="sidebar-menu d-flex flex-column gap-20">
+    <li class="sidebar-logo">
+      <a href="#!" (click)="$event.preventDefault();">
+        <img src="assets/img/ac-logo-light.png" alt="Academically" />
+      </a>
+    </li>
     <ng-container *ngFor="let item of menuItems">
       <li *ngIf="item.name !== 'Separator' else separatorTemplate" [class.active]="activeMenuItem === item">
-        <a href="#!menu" (click)="$event.preventDefault(); onMenuItemClick(item)">
-          <i class="fe {{item.icon}}"></i>
+        <a href="#!menu" (click)="onMenuItemClick(item, $event)">
+          <img [src]="'assets/img/events/' + item.icon" [alt]="item.name" />
         </a>
       </li>
     </ng-container>
@@ -28,13 +33,6 @@
   </div>
 </div>
 
-<ng-template #menuItemTemplate let-item="item" let-icon="icon">
-  <li [class.active]="activeMenuItem === item">
-    <a href="#!menu" (click)="$event.preventDefault(); onMenuItemClick(item)">
-      <i class="fe {{icon}}"></i>
-    </a>
-  </li>
-</ng-template>
 <ng-template #separatorTemplate>
   <li class="separator">
     <hr>
