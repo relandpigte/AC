@@ -1,0 +1,46 @@
+<div class="sidebar-chat d-flex flex-column h-100p">
+    <ul class="chat-nav nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" id="open-tab" data-toggle="tab" href="#public-chat" role="tab"
+               aria-controls="open-container" aria-selected="true">
+                {{ 'Public' | localize }}
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="answered-tab" data-toggle="tab" href="#private-chat" role="tab"
+               aria-controls="answered-container" aria-selected="true">
+                {{ 'Private' | localize }}
+            </a>
+        </li>
+    </ul>
+
+    <div class="chat-tab tab-content flex-grow-1">
+        <div class="tab-pane fade show active" id="public-chat" role="tabpanel">
+            <div class="chat-container d-flex flex-column h-100p">
+                <div class="chat-conversation flex-grow-1" style="height: 0;">
+                    <app-chat-conversation
+                        [isSidebar]="true"
+                        [hasActions]="false"
+                    ></app-chat-conversation>
+                </div>
+                <div class="chat-composer mt-auto">
+                    <app-chat-composer></app-chat-composer>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="private-chat" role="tabpanel">
+            <div class="chat-container d-flex flex-column h-100p">
+                <div class="chat-conversation flex-grow-1" style="height: 0;">
+                    <app-chat-conversation
+                        [isSidebar]="true"
+                        [hasActions]="false"
+                    ></app-chat-conversation>
+                </div>
+                <div class="chat-composer mt-auto">
+                    <app-chat-composer></app-chat-composer>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

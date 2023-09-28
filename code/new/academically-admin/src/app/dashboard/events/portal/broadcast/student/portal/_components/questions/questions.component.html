@@ -1,14 +1,14 @@
 <ng-container [ngSwitch]="isHost">
     <div *ngSwitchCase="true" class="d-flex flex-column h-100">
-        <ul class="nav nav-tabs nav-tabs-sm px-3">
+        <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a href="#" class="nav-link active" id="open-tab" data-toggle="tab" href="#open-container" role="tab"
+                <a class="nav-link active" id="open-tab" data-toggle="tab" href="#open-container" role="tab"
                 aria-controls="open-container" aria-selected="true">
                 {{ 'Open' | localize }}
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link" id="answered-tab" data-toggle="tab" href="#answered-container" role="tab"
+                <a class="nav-link" id="answered-tab" data-toggle="tab" href="#answered-container" role="tab"
                 aria-controls="answered-container" aria-selected="true">
                 {{ 'Answered' | localize }}
                 </a>
@@ -41,13 +41,13 @@
     <div *ngSwitchCase="false" class="d-flex flex-column h-100">
         <ul class="nav nav-tabs nav-tabs-sm px-3">
             <li class="nav-item">
-                <a href="#" class="nav-link active" id="all-tab" data-toggle="tab" href="#all-container" role="tab"
+                <a class="nav-link active" id="all-tab" data-toggle="tab" href="#all-container" role="tab"
                 aria-controls="all-container" aria-selected="true">
                 {{ 'All' | localize }}
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link" id="asked-tab" data-toggle="tab" href="#asked-container" role="tab"
+                <a class="nav-link" id="asked-tab" data-toggle="tab" href="#asked-container" role="tab"
                 aria-controls="asked-container" aria-selected="true">
                 {{ 'Asked' | localize }}
                 </a>

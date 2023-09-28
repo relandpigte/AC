@@ -35,7 +35,7 @@ export class SidebarComponent extends AppComponentBase implements OnInit {
     this.menuItems.push(new MenuItem('Separator'));
     this.menuItems.push(new MenuItem('Overview', 'home.svg'));
     this.menuItems.push(new MenuItem('Attendees', 'users.svg'));
-    this.menuItems.push(new MenuItem('Comments', 'chat.svg'));
+    this.menuItems.push(new MenuItem('Chat', 'chat.svg'));
     this.menuItems.push(new MenuItem('Questions', 'help.svg'));
     this.menuItems.push(new MenuItem('Polls', 'pie-chart.svg'));
     this.menuItems.push(new MenuItem('Handouts', 'folder.svg'));

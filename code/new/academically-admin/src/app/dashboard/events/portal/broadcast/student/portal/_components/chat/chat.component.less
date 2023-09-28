@@ -1,0 +1,50 @@
+.chat {
+    &-nav {
+        padding: 0 20px;
+
+        .nav-item {
+            margin-left: 10px;
+            margin-right: 10px;
+
+            .nav-link {
+                padding: 25px 0;
+            }
+
+            &:first-child {
+                margin-left: 0;
+            }
+
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+
+    &-tab {
+        & > div {
+            height: 100%;
+        }
+    }
+
+    &-conversation {
+        padding: 20px 20px 0;
+        overflow: auto;
+        margin-right: 4px;
+        scroll-behavior: smooth;
+
+        &::-webkit-scrollbar {
+            width: 1.5px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: #D2DDEC;
+            border-radius: 10px;
+        }
+    }
+
+    &-composer {
+        padding: 15px 20px;
+        border-top: 1px solid #E3EBF6;
+    }
+}
+

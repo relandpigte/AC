@@ -1,5 +1,5 @@
 <div class="conversation">
-    <div class="conversation-header border-bottom">
+    <div class="conversation-header border-bottom" *ngIf="!isSidebar">
         <div class="d-flex align-items-center">
             <div class="conversation-header-avatar flex-grow-1">
                 <app-user-avatar *ngIf="replyingToUser " [data]="replyingToUser" [isBlocked]="isBlockedByRecipient" [showStatus]="false" [type]="avatarType.NameAndStatus"></app-user-avatar>
@@ -51,7 +51,7 @@
 
     <div class="conversation-content scroll-wrapper" #scrollWrapper>
         <div class="d-flex flex-column gap-20" #scrollContent>
-            <div class="conversation-day-title text-center">
+            <div class="conversation-day-title text-center" *ngIf="!isSidebar">
                 <span class="title mx-auto">Today</span>
             </div>
 

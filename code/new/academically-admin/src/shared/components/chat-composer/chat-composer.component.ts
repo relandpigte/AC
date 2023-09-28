@@ -3,7 +3,6 @@ import { NgForm } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 
-import { MessageComposeData } from '@app/chat/chat.component';
 import { AppComponentBase } from '@shared/app-component-base';
 import { AvailableServiceDto, ChannelDto, ChannelMessageDto, ChatsServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
 import { ChatService } from '@shared/services/chat.service';
@@ -25,7 +24,6 @@ export class ChatComposerComponent extends AppComponentBase implements OnInit{
   @Input() replyingTo: ChannelMessageDto;
   @Input() isUserBlocked: boolean;
   @Input() blockedByUser: number[];
-  @Output() onReply: Subject<MessageComposeData> = new Subject();
   @Output() onUnblock: Subject<any> = new Subject<any>();
 
   typingTimer$: any;

@@ -37,6 +37,7 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
   @Input() showAttachmentInfo = true;
   @Input() isRecipientTyping = false;
   @Input() mutedUserChannelIds: string[];
+  @Input() isSidebar: boolean;
 
   @Input() blockUserIds: number[] = [];
   @Input() isUserBlocked: boolean;

@@ -38,6 +38,7 @@ import { PollsAttendeeOpenComponent } from './_components/polls/_components/poll
 import { PollsAttendeeClosedComponent } from './_components/polls/_components/polls-attendee-closed/polls-attendee-closed.component';
 import { PollComponent } from './_components/polls/_components/poll/poll.component';
 import { AttendeeOpenDialogComponent } from './_components/polls/_components/attendee-open-dialog/attendee-open-dialog.component';
+import { ChatComponent } from './_components/chat/chat.component';
 
 @NgModule({
   declarations: [
@@ -73,6 +74,7 @@ import { AttendeeOpenDialogComponent } from './_components/polls/_components/att
     PollsAttendeeClosedComponent,
     PollComponent,
     AttendeeOpenDialogComponent,
+    ChatComponent,
   ],
   imports: [
     CommonModule,
