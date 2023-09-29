@@ -26,6 +26,8 @@ namespace Academically.Domain.Entities
 
         public ServicesType? ServiceType { get; set; }
 
+        public Guid? ReferenceId { get; set; }
+
         [ForeignKey("CreatorUserId")]
         public virtual User CreatorUser { get; set; }
 

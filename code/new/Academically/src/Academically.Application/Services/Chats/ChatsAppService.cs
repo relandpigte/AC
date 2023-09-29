@@ -121,6 +121,7 @@ namespace Academically.Services.Chats
                 });
                 await CurrentUnitOfWork.SaveChangesAsync();
                 message.ChannelId = channel.Id;
+                message.ReferenceId = input.ReferenceId;
             }
 
             var senderMember = await this._channelMemberRepository.FirstOrDefaultAsync(m => m.ChannelId == message.ChannelId && m.UserId == currentUser.Id);
@@ -274,7 +275,7 @@ namespace Academically.Services.Chats
                     .ToListAsync();
         }
 
-        public async Task<List<ChannelMessageDto>> GetAllChannelMessages(Guid? channelId, DateTime? minTime)
+        public async Task<List<ChannelMessageDto>> GetAllChannelMessages(Guid? channelId, Guid? referenceId, DateTime? minTime)
         {
             var messages = await this._channelRepository.GetAll()
                     .Include(c => c.Messages)
@@ -287,6 +288,7 @@ namespace Academically.Services.Chats
                         .ThenInclude(m => m.ChannelMessageAttachments)
                             .ThenInclude(a => a.Document)
                     .WhereIf(channelId.HasValue, c => c.Id == channelId.Value)
+                    .WhereIf(referenceId.HasValue, c => c.ReferenceId == referenceId.Value)
                     .WhereIf(minTime.HasValue, c => c.Messages.Any(m => m.CreationTime >= minTime))
                     .SelectMany(c => c.Messages)
                     .WhereIf(minTime.HasValue, m => m.CreationTime >= minTime)

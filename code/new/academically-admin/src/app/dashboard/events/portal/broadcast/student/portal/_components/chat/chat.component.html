@@ -8,14 +8,14 @@
         </li>
         <li class="nav-item">
             <a class="nav-link" id="answered-tab" data-toggle="tab" href="#private-chat" role="tab"
-               aria-controls="answered-container" aria-selected="true" (click)="handleTabClick(0)">
+               aria-controls="answered-container" aria-selected="true" (click)="handleTabClick(1)">
                 {{ 'Private' | localize }}
             </a>
         </li>
     </ul>
 
     <div class="chat-tab tab-content flex-grow-1">
-        <div class="tab-pane fade show active" id="public-chat" role="tabpanel">
+        <div *ngIf="selectedChannelType === 0" class="tab-pane fade show active" id="public-chat" role="tabpanel">
             <div class="chat-container d-flex flex-column h-100p">
                 <div class="chat-conversation flex-grow-1" style="height: 0;">
                     <app-chat-conversation
@@ -34,11 +34,12 @@
             </div>
         </div>
 
-        <div class="tab-pane fade" id="private-chat" role="tabpanel">
+        <div *ngIf="selectedChannelType === 1" class="tab-pane fade" id="private-chat" role="tabpanel">
             <div class="chat-container d-flex flex-column h-100p">
                 <div class="chat-conversation flex-grow-1" style="height: 0;">
                     <ng-container *ngIf="false else noMessages">
                         <app-chat-conversation
+                            [referenceId]="referenceId"
                             [minTime]="referenceServiceCreationTime"
                             [isSidebar]="true"
                             [hasActions]="false"

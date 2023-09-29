@@ -31,8 +31,9 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
   @ViewChild('scrollContent', { static: true }) content?: ElementRef<HTMLDivElement>;
   @ViewChild('scrollWrapper', { static: true }) wrapper?: ElementRef<HTMLDivElement>;
 
-  @Input() minTime: moment.Moment;
   @Input() channel: ChannelDto;
+  @Input() referenceId: string;
+  @Input() minTime: moment.Moment;
   @Input() hasActions = true;
   @Input() hasClose = false;
   @Input() showAttachmentInfo = true;
@@ -147,7 +148,7 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
     if ('channel' in changes && this.channel) {
       await this.initChannelMessagesAppStates();
       await this.initUserAvatarAppState();
-      await this.channelMessagesStateService.updateServiceParams({ type: undefined, args: [this.selectedChannelId, this.minTime] });
+      await this.channelMessagesStateService.updateServiceParams({ type: undefined, args: [this.selectedChannelId, this.referenceId, this.minTime] });
       this.channelMessages = this.channelMessagesStateService.getAllChannelMessages();
       this.totalChannelMessagesCount = this.channelMessagesStateService.totalChannelMessagesCount;
       if (this.selectedMatchedChannel) this.initSearchResults();
@@ -173,7 +174,7 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
 
     const appStateConfig: AppStateConfig = {
         [this.channelMessagesStateId]: {
-            load: [this.selectedChannelId, this.minTime],
+            load: [this.selectedChannelId, this.referenceId, this.minTime],
             update: { channelId: this.selectedChannelId }
         }
     };

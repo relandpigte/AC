@@ -2614,14 +2614,24 @@ export class ChatsServiceProxy {
 
     /**
      * @param channelId (optional) 
+     * @param referenceId (optional) 
+     * @param minTime (optional) 
      * @return Success
      */
-    getAllChannelMessages(channelId: string | undefined): Observable<ChannelMessageDto[]> {
+    getAllChannelMessages(channelId: string | undefined, referenceId: string | undefined, minTime: moment.Moment | undefined): Observable<ChannelMessageDto[]> {
         let url_ = this.baseUrl + "/api/services/app/Chats/GetAllChannelMessages?";
         if (channelId === null)
             throw new Error("The parameter 'channelId' cannot be null.");
         else if (channelId !== undefined)
             url_ += "channelId=" + encodeURIComponent("" + channelId) + "&";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        if (minTime === null)
+            throw new Error("The parameter 'minTime' cannot be null.");
+        else if (minTime !== undefined)
+            url_ += "minTime=" + encodeURIComponent(minTime ? "" + minTime.toJSON() : "") + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -32884,6 +32894,7 @@ export class ChannelMessageDto implements IChannelMessageDto {
     parentId: string | undefined;
     serviceId: string | undefined;
     serviceType: ServicesType;
+    referenceId: string | undefined;
     channelId: string;
     creatorUser: UserDto;
     parent: ChannelMessageDto;
@@ -32919,6 +32930,7 @@ export class ChannelMessageDto implements IChannelMessageDto {
             this.parentId = _data["parentId"];
             this.serviceId = _data["serviceId"];
             this.serviceType = _data["serviceType"];
+            this.referenceId = _data["referenceId"];
             this.channelId = _data["channelId"];
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
             this.parent = _data["parent"] ? ChannelMessageDto.fromJS(_data["parent"]) : <any>undefined;
@@ -32958,6 +32970,7 @@ export class ChannelMessageDto implements IChannelMessageDto {
         data["parentId"] = this.parentId;
         data["serviceId"] = this.serviceId;
         data["serviceType"] = this.serviceType;
+        data["referenceId"] = this.referenceId;
         data["channelId"] = this.channelId;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
@@ -32997,6 +33010,7 @@ export interface IChannelMessageDto {
     parentId: string | undefined;
     serviceId: string | undefined;
     serviceType: ServicesType;
+    referenceId: string | undefined;
     channelId: string;
     creatorUser: UserDto;
     parent: ChannelMessageDto;

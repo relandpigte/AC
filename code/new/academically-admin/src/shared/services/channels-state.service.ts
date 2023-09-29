@@ -4,6 +4,7 @@ import { Utils } from '../helpers/utils';
 import { ChannelDto, ChannelMemberDto, ChannelMessageDto, ChatsServiceProxy, HubEvent } from '../service-proxies/service-proxies';
 import { StateServiceBase, StateUpdate } from './state-base.service';
 import { AppStateFeatures } from './pub-sub.service';
+import { AppSessionService } from '@shared/session/app-session.service';
 
 export enum channelsType {
     all = 'all',
@@ -33,6 +34,7 @@ export class ChannelsStateService extends StateServiceBase {
 
     constructor(
         type: channelsType,
+        private _appSession: AppSessionService,
         private _hubService: HubService,
         private _chatsService: ChatsServiceProxy
     ) {
@@ -85,11 +87,10 @@ export class ChannelsStateService extends StateServiceBase {
 
     canViewChannel = (channel: ChannelDto): boolean => {
         if (!channel) return false;
-        const [userId] = this.loadArgs;
         return !channel.isDeleted &&
             (this.type === channelsType.inbox ? !channel.isArchive : true) &&
             (this.type === channelsType.archived ? channel.isArchive : true) &&
-            channel.members.some(m => m.userId === userId);
+            channel.members.some(m => m.userId === this._appSession.userId);
     };
 
     handleUpsertChannels = async (channelMessage: ChannelMessageDto) => {

@@ -22,6 +22,7 @@ namespace Academically.Services.Chats.Dto
         public Guid? ParentId { get; set; }
         public Guid? ServiceId { get; set; }
         public ServicesType? ServiceType { get; set; }
+        public Guid? ReferenceId { get; set; }
         public Guid ChannelId { get; set; }
         public UserDto CreatorUser { get; set; }
         public ChannelMessageDto Parent { get; set; }

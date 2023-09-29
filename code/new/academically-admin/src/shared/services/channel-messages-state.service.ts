@@ -66,8 +66,11 @@ export class ChannelMessagesStateService extends StateServiceBase {
 
     canViewChannelMessage = (channelMessage: ChannelMessageDto): boolean => {
         if (!channelMessage) return false;
-        const [channelId] = this.loadArgs;
-        return !channelMessage.isDeleted && channelMessage.channelId === channelId;
+        const [channelId, referenceId, minTime] = this.loadArgs;
+        return !channelMessage.isDeleted &&
+            channelMessage.channelId === channelId &&
+            (referenceId ? channelMessage.referenceId === referenceId : true) &&
+            (minTime ? channelMessage.creationTime >= minTime : true);
     };
 
     handleUpsertChannelMessages = async (channelMessage: ChannelMessageDto) => {

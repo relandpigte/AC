@@ -92,7 +92,7 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     const appStateServices: AppStateServices = {
       [this.channelsStateId]: {
         type: ChannelsStateService,
-        args: [channelsType.reference, this._hubService, this._chatsService]
+        args: [channelsType.reference, this.appSession, this._hubService, this._chatsService]
       }
     };
     await this.pubSubService.start(this, appStateConfig, appStateServices, { typing: true });
