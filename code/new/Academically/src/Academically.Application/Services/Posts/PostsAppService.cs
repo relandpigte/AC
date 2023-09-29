@@ -360,6 +360,11 @@ namespace Academically.Services.Posts
 
             var result = ObjectMapper.Map<PostDto>(post);
 
+            if (result.CreatorUser?.ProfilePictureDocument != null)
+            {
+                result.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(result.CreatorUser.ProfilePictureDocumentId.Value);
+            }
+
             if (includeEditHistory)
             {
                 result.PostEditHistories = await GetEditHistory(post);
