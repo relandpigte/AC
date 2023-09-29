@@ -91,6 +91,13 @@ namespace Academically.Services.TestDataGenerator
             await GenerateTestUser("Student 1", "Dev", "dev+student1@mailinator.com", "P@$$w0rd", StaticRoleNames.Tenants.Student);
             await GenerateTestUser("Student 2", "Dev", "dev+student2@mailinator.com", "P@$$w0rd", StaticRoleNames.Tenants.Student);
             await GenerateTestUser("Student 3", "Dev", "dev+student3@mailinator.com", "P@$$w0rd", StaticRoleNames.Tenants.Student);
+            await GenerateTestUser("Student 4", "Dev", "dev+student4@mailinator.com", "P@$$w0rd", StaticRoleNames.Tenants.Student);
+            await GenerateTestUser("Student 5", "Dev", "dev+student5@mailinator.com", "P@$$w0rd", StaticRoleNames.Tenants.Student);
+            await GenerateTestUser("Student 6", "Dev", "dev+student6@mailinator.com", "P@$$w0rd", StaticRoleNames.Tenants.Student);
+            await GenerateTestUser("Student 7", "Dev", "dev+student7@mailinator.com", "P@$$w0rd", StaticRoleNames.Tenants.Student);
+            await GenerateTestUser("Student 8", "Dev", "dev+student8@mailinator.com", "P@$$w0rd", StaticRoleNames.Tenants.Student);
+            await GenerateTestUser("Student 9", "Dev", "dev+student9@mailinator.com", "P@$$w0rd", StaticRoleNames.Tenants.Student);
+            await GenerateTestUser("Student 10", "Dev", "dev+student10@mailinator.com", "P@$$w0rd", StaticRoleNames.Tenants.Student);
         }
 
         private async Task GenerateTestRatingAreaForTutor(Guid tutorRatingId, RatingAreaType areaType, RatingExperienceType experienceType)

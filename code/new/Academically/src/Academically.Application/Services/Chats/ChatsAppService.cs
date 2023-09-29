@@ -30,6 +30,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using System.IO.Compression;
 using System.Linq.Dynamic.Core;
+using Abp.Runtime.Session;
+using Academically.Authorization.Roles;
 
 namespace Academically.Services.Chats
 {
@@ -50,6 +52,8 @@ namespace Academically.Services.Chats
         private readonly IRepository<Video, Guid> _videoRepository;
         private readonly IRepository<Event, Guid> _eventRepository;
         private readonly IRepository<UserBlocking, Guid> _userBlockingRepository;
+        private readonly RoleManager _roleManager;
+        private readonly IRepository<UserFollower, Guid> _userFollowersRepository;
 
         public ChatsAppService(
             IDocumentsDomainService documentsDomainService,
@@ -66,7 +70,9 @@ namespace Academically.Services.Chats
             IRepository<Coaching, Guid> coachingRepository,
             IRepository<Video, Guid> videoRepository,
             IRepository<Event, Guid> eventRepository,
-            IRepository<UserBlocking, Guid> userBlockingRepository
+            IRepository<UserBlocking, Guid> userBlockingRepository,
+            IRepository<UserFollower, Guid> userFollowersRepository,
+            RoleManager roleManager
         )
         {
             _documentsDomainService = documentsDomainService;
@@ -84,6 +90,8 @@ namespace Academically.Services.Chats
             _videoRepository = videoRepository;
             _eventRepository = eventRepository;
             _userBlockingRepository = userBlockingRepository;
+            _roleManager = roleManager;
+            _userFollowersRepository = userFollowersRepository;
         }
 
         public async Task<bool> ArchiveChannel(Guid channelId)
@@ -505,6 +513,37 @@ namespace Academically.Services.Chats
                 .Where(c => c.Members.Any(m => m.UserId == recipientId) && c.Members.Any(m => m.UserId == senderId))
                 .Select(c => ObjectMapper.Map<ChannelDto>(c))
                 .FirstOrDefaultAsync();
+        }
+
+        // TODO: Sample for event users lists
+        public async Task<EventUsersResponseDto> GetEventUsers()
+        {
+            var eventUsers = new EventUsersResponseDto();
+            var adminRole = await _roleManager.GetRoleByNameAsync(StaticRoleNames.Tenants.Admin);
+            var following = await _userFollowersRepository.GetAll()
+                .Where(x => x.CreatorUserId == AbpSession.GetUserId())
+                .Select(x => x.UserId)
+                .ToListAsync();
+            
+            // Followed users [sample for event user joined]
+            eventUsers.Joined = await _userRepository.GetAll()
+                .Include(u => u.ProfilePictureDocument)
+                .Where(u => following.Contains(u.Id))
+                .Where(u => u.Roles.Any(r => r.RoleId != adminRole.Id))
+                .Where(x => x.Id != AbpSession.GetUserId())
+                .Select(u => ObjectMapper.Map<UserDto>(u))
+                .ToListAsync();
+            
+            // Unfollowed users [sample for event user not joined]
+            eventUsers.NotJoined = await _userRepository.GetAll()
+                .Include(u => u.ProfilePictureDocument)
+                .Where(u => !following.Contains(u.Id))
+                .Where(u => u.Roles.Any(r => r.RoleId != adminRole.Id))
+                .Where(x => x.Id != AbpSession.GetUserId())
+                .Select(u => ObjectMapper.Map<UserDto>(u))
+                .ToListAsync();
+
+            return eventUsers;
         }
         
         private async Task FillInService(ChannelMessageDto message)

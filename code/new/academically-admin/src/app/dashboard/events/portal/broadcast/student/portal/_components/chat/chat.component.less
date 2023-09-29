@@ -32,6 +32,13 @@
         margin-right: 4px;
         scroll-behavior: smooth;
 
+        .no-messages {
+            padding-top: 10px;
+            display: block;
+            text-align: center;
+            width: 100%;
+        }
+
         &::-webkit-scrollbar {
             width: 1.5px;
         }
@@ -45,6 +52,92 @@
     &-composer {
         padding: 15px 20px;
         border-top: 1px solid #E3EBF6;
+    }
+
+    &-user-list {
+        border-color: #E3EBF6;
+        border-width: 1px 1px 0;
+        border-radius: 10px 10px 0 0;
+        border-style: solid;
+        width: 333px;
+        margin-left: 2px;
+
+        &.closed {
+            border-radius: 0;
+            margin-left: 1px;
+            width: 335px;
+        }
+
+        .dropup {
+            &-trigger {
+                padding: 20px;
+                height: 65px;
+                cursor: pointer;
+                border-bottom: 1px solid #E3EBF6;
+
+                img {
+                    transition: transform 0.5s ease-in-out;
+                }
+
+                &.closed {
+                    img {
+                        transform: rotate(180deg);
+                    }
+                }
+            }
+
+            &-content {
+                max-height: 425px;
+                overflow: hidden;
+                transition: max-height 0.4s ease-in-out;
+
+                &.closed {
+                    max-height: 0;
+                    transition: max-height 0.3s ease-in-out;
+                }
+
+                &-search {
+                    height: 55px;
+                    padding: 20px;
+                    border-bottom: 1px solid #E3EBF6;
+                }
+
+                &-user {
+                    padding: 15px 20px;
+                    max-height: 380px;
+
+                    overflow: auto;
+                    margin-right: 1px;
+                    scroll-behavior: smooth;
+
+                    &::-webkit-scrollbar {
+                        width: 1.5px;
+                    }
+
+                    &::-webkit-scrollbar-thumb {
+                        background: #D2DDEC;
+                        border-radius: 10px;
+                    }
+
+                    & > div {
+                        margin-bottom: 15px;
+
+                        &:last-child {
+                            margin-bottom: 0;
+
+                            &.not-joined {
+                                display: none;
+                            }
+                        }
+
+                        &.not-joined {
+                            font-weight: 600;
+                            color: #1F2D3D;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

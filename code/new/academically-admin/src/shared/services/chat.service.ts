@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { SafeUrl } from '@angular/platform-browser';
-
 import { AvailableServiceDto, ChannelDto, ChannelMessageDto, MatchedChannelDto, UserDto } from '@shared/service-proxies/service-proxies';
 
 export enum NotificationType {
