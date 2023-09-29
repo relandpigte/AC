@@ -32,6 +32,7 @@ import { AbpModalFooterComponent } from './components/modal/abp-modal-footer.com
 import { TableHeaderSortComponent } from './components/table-header-sort/table-header-sort.component';
 import { PasswordToggleComponent } from './components/password-toggle/password-toggle.component';
 import { ConfirmationDialogComponent } from '@shared/modals/confirmation-dialog/confirmation-dialog.component';
+import { SearchPipe } from './pipes/search.pipe';
 
 @NgModule({
   imports: [
@@ -61,7 +62,8 @@ import { ConfirmationDialogComponent } from '@shared/modals/confirmation-dialog/
     AbpModalFooterComponent,
     TableHeaderSortComponent,
     PasswordToggleComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    SearchPipe
   ],
   exports: [
     BsDatepickerModule,
@@ -83,7 +85,8 @@ import { ConfirmationDialogComponent } from '@shared/modals/confirmation-dialog/
     AbpModalFooterComponent,
     TableHeaderSortComponent,
     PasswordToggleComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    SearchPipe
   ]
 })
 export class SharedModule {
