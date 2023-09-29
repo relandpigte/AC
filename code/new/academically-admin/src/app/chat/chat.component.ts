@@ -74,7 +74,7 @@ export class ChatComponent extends AppComponentBase implements OnInit {
 
         await this.channelsStateService.updateServiceParams({
           type: selectedChannelType === 0 ? channelsType.inbox : channelsType.archived,
-          userId: this.appSession.userId
+          args: [this.appSession.userId]
         });
 
         this.channels = this.channelsStateService.getAllChannels();
@@ -243,10 +243,10 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     const appStateServices: AppStateServices = {
       [this.channelsStateId]: {
         type: ChannelsStateService,
-        args: [this._hubService, this._chatsService]
+        args: [channelsType.inbox, this._hubService, this._chatsService]
       }
     };
-    await this.pubSubService.start(this, appStateConfig, appStateServices);
+    await this.pubSubService.start(this, appStateConfig, appStateServices, { typing: true });
     this.channelsStateService = this.pubSubService.getStateService<ChannelsStateService>(this.channelsStateId);
     this.channelsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingList$.next(loading));
     this.channelsStateService.channels$.pipe(takeUntil(this.destroyed$)).subscribe(event => {

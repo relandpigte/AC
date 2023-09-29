@@ -1,5 +1,5 @@
 import { Subject, Subscription } from 'rxjs';
-import { AppStateActionNames} from './pub-sub.service';
+import { AppStateActionNames, AppStateFeatures} from './pub-sub.service';
 
 export interface StateUpdate<T> {
     data: T;
@@ -17,6 +17,7 @@ export enum StateUpdateType {
 export abstract class StateServiceBase {
     private subscriptions: Subscription[] = [];
     actionArgs: { [key in AppStateActionNames]?: any };
+    features?: AppStateFeatures;
 
     abstract loadData(component: any, userId: number): Promise<void>;
     protected abstract setupSubscriptions(component: any, userId: number): Promise<Subscription | Subscription[] | null>;
@@ -24,8 +25,8 @@ export abstract class StateServiceBase {
     get loadArgs() { return [].concat(!this.actionArgs?.['load'] || typeof this.actionArgs['load'] === 'boolean' ? [] : this.actionArgs['load']); }
     get updateArgs() { return [].concat(!this.actionArgs?.['update'] || typeof this.actionArgs['update'] === 'boolean' ? [] : this.actionArgs['update']); }
 
-    async start(component: any, userId: number, ): Promise<void> {
-        await this.startSubscriptions(component, userId);
+    async start(component: any, userId: number, features?: AppStateFeatures): Promise<void> {
+        await this.startSubscriptions(component, userId, features);
         await this.loadData(component, userId);
     }
 
@@ -33,8 +34,9 @@ export abstract class StateServiceBase {
         await this.stopSubscriptions();
     }
 
-    async startSubscriptions(component: any, userId: number): Promise<void> {
+    async startSubscriptions(component: any, userId: number, features?: AppStateFeatures): Promise<void> {
         await this.stopSubscriptions();
+        this.features = features;
         this.subscriptions = [].concat(await this.setupSubscriptions(component, userId)).filter(s => s);
     }
 

@@ -14,6 +14,7 @@ namespace Academically.Services.Chats.Dto
         public string Name { get; set; }
         public bool IsArchive { get; set; }
         public bool IsActive { get; set; }
+        public Guid? ReferenceId { get; set; }
         public UserDto CreatorUser { get; set; }
         public IEnumerable<ChannelMessageDto> Messages { get; set; }
         public IEnumerable<ChannelMemberDto> Members { get; set; }

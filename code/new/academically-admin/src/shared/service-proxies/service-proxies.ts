@@ -2271,6 +2271,7 @@ export class ChatsServiceProxy {
     /**
      * @param message (optional) 
      * @param recipientUserId (optional) 
+     * @param referenceId (optional) 
      * @param channelId (optional) 
      * @param parentId (optional) 
      * @param serviceId (optional) 
@@ -2278,7 +2279,7 @@ export class ChatsServiceProxy {
      * @param attachments (optional) 
      * @return Success
      */
-    createChannelMessage(message: string | undefined, recipientUserId: number | undefined, channelId: string | undefined, parentId: string | undefined, serviceId: string | undefined, serviceType: ServicesType | undefined, attachments: FileParameter[] | undefined): Observable<ChannelMessageDto> {
+    createChannelMessage(message: string | undefined, recipientUserId: number | undefined, referenceId: string | undefined, channelId: string | undefined, parentId: string | undefined, serviceId: string | undefined, serviceType: ServicesType | undefined, attachments: FileParameter[] | undefined): Observable<ChannelMessageDto> {
         let url_ = this.baseUrl + "/api/services/app/Chats/CreateChannelMessage";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2291,6 +2292,10 @@ export class ChatsServiceProxy {
             // do nothing
         } else
             content_.append("RecipientUserId", recipientUserId.toString());
+        if (referenceId === null || referenceId === undefined) {
+            // do nothing
+        } else
+            content_.append("ReferenceId", referenceId.toString());
         if (channelId === null || channelId === undefined) {
             // do nothing
         } else
@@ -2448,6 +2453,74 @@ export class ChatsServiceProxy {
     }
 
     protected processGetAllArchivedChannelsForUser(response: HttpResponseBase): Observable<ChannelDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(ChannelDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ChannelDto[]>(<any>null);
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @param minTime (optional) 
+     * @return Success
+     */
+    getReferenceChannelsForUser(referenceId: string | undefined, minTime: moment.Moment | undefined): Observable<ChannelDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Chats/GetReferenceChannelsForUser?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        if (minTime === null)
+            throw new Error("The parameter 'minTime' cannot be null.");
+        else if (minTime !== undefined)
+            url_ += "minTime=" + encodeURIComponent(minTime ? "" + minTime.toJSON() : "") + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetReferenceChannelsForUser(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetReferenceChannelsForUser(<any>response_);
+                } catch (e) {
+                    return <Observable<ChannelDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ChannelDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetReferenceChannelsForUser(response: HttpResponseBase): Observable<ChannelDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -32500,6 +32573,7 @@ export class ChannelDto implements IChannelDto {
     name: string | undefined;
     isArchive: boolean;
     isActive: boolean;
+    referenceId: string | undefined;
     creatorUser: UserDto;
     messages: ChannelMessageDto[] | undefined;
     members: ChannelMemberDto[] | undefined;
@@ -32529,6 +32603,7 @@ export class ChannelDto implements IChannelDto {
             this.name = _data["name"];
             this.isArchive = _data["isArchive"];
             this.isActive = _data["isActive"];
+            this.referenceId = _data["referenceId"];
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
             if (Array.isArray(_data["messages"])) {
                 this.messages = [] as any;
@@ -32578,6 +32653,7 @@ export class ChannelDto implements IChannelDto {
         data["name"] = this.name;
         data["isArchive"] = this.isArchive;
         data["isActive"] = this.isActive;
+        data["referenceId"] = this.referenceId;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         if (Array.isArray(this.messages)) {
             data["messages"] = [];
@@ -32627,6 +32703,7 @@ export interface IChannelDto {
     name: string | undefined;
     isArchive: boolean;
     isActive: boolean;
+    referenceId: string | undefined;
     creatorUser: UserDto;
     messages: ChannelMessageDto[] | undefined;
     members: ChannelMemberDto[] | undefined;

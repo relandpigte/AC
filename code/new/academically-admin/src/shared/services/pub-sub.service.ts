@@ -20,6 +20,10 @@ export type AppStateServices = {
     }
 };
 
+export type AppStateFeatures = {
+    [key: string]: boolean
+}
+
 @Injectable({ providedIn: 'root' })
 export class PubSubService {
     private allStateServices: Map<string, StateServiceBase> = new Map();
@@ -34,7 +38,7 @@ export class PubSubService {
         return this.allStateServices.get(key) as T;
     }
 
-    async start(component: any, config: AppStateConfig, services: AppStateServices) {
+    async start(component: any, config: AppStateConfig, services: AppStateServices, features?: AppStateFeatures) {
         this.initializeServices(services, config);
 
         const userId = this._appSessionService.userId;
@@ -43,7 +47,7 @@ export class PubSubService {
         await Promise.all(this.servicesToLoad.map(s => s.loadData(component, userId)));
 
         this.servicesToUpdate = this.getServicesFromConfig(config, a => !!a.update);
-        await Promise.all(this.servicesToUpdate.map(s => s.startSubscriptions(component, userId)));
+        await Promise.all(this.servicesToUpdate.map(s => s.startSubscriptions(component, userId, features)));
     }
 
     private initializeServices(services: AppStateServices, config: AppStateConfig) {

@@ -32,6 +32,8 @@ using System.IO.Compression;
 using System.Linq.Dynamic.Core;
 using Abp.Runtime.Session;
 using Academically.Authorization.Roles;
+using System.Threading.Channels;
+using Abp.Linq.Extensions;
 
 namespace Academically.Services.Chats
 {
@@ -109,27 +111,41 @@ namespace Academically.Services.Chats
             
             if (input.ChannelId.HasValue)
             {
-                var existingChannel = await this._channelRepository.GetAsync(input.ChannelId.Value);
-                message.ChannelId = existingChannel.Id;
+                message.ChannelId = input.ChannelId.Value;
             }
             else
             {
-                var channel = await this._channelRepository.InsertAsync(new Channel());
+                var channel = await this._channelRepository.InsertAsync(new Channel()
+                {
+                    ReferenceId = input.ReferenceId
+                });
                 await CurrentUnitOfWork.SaveChangesAsync();
-                await this._channelMemberRepository.InsertAsync(new ChannelMember
-                {
-                    ChannelId = channel.Id,
-                    UserId = currentUser.Id
-                });
-
-                await this._channelMemberRepository.InsertAsync(new ChannelMember
-                {
-                    ChannelId = channel.Id,
-                    UserId = input.RecipientUserId
-                });
                 message.ChannelId = channel.Id;
             }
-            
+
+            var senderMember = await this._channelMemberRepository.FirstOrDefaultAsync(m => m.ChannelId == message.ChannelId && m.UserId == currentUser.Id);
+            if (senderMember == null)
+            {
+                await this._channelMemberRepository.InsertAsync(new ChannelMember
+                {
+                    ChannelId = message.ChannelId,
+                    UserId = currentUser.Id
+                });
+            }
+
+            if (input.RecipientUserId.HasValue)
+            {
+                var recipientMember = await this._channelMemberRepository.FirstOrDefaultAsync(m => m.ChannelId == message.ChannelId && m.UserId == input.RecipientUserId.Value);
+                if (recipientMember == null)
+                {
+                    await this._channelMemberRepository.InsertAsync(new ChannelMember
+                    {
+                        ChannelId = message.ChannelId,
+                        UserId = input.RecipientUserId.Value
+                    });
+                }
+            }
+
             message.Message = input.Message;
             message.ParentId = input.ParentId;
             message.ServiceId = input.ServiceId;
@@ -209,6 +225,42 @@ namespace Academically.Services.Chats
             return channels;
         }
 
+        public async Task<List<ChannelDto>> GetReferenceChannelsForUser(Guid? referenceId, DateTime? minTime)
+        {
+            var channels = await this._channelRepository.GetAll()
+                    .Include(c => c.Messages)
+                        .ThenInclude(m => m.Parent)
+                    .Include(c => c.Messages)
+                        .ThenInclude(m => m.CreatorUser)
+                    .Include(c => c.Members)
+                        .ThenInclude(m => m.User)
+                    .WhereIf(referenceId.HasValue, c => c.ReferenceId == referenceId.Value)
+                    .WhereIf(minTime.HasValue, c => c.Messages.Any(m => m.CreationTime >= minTime))
+                    .Select(c => ObjectMapper.Map<ChannelDto>(c))
+                    .ToListAsync();
+
+            foreach (var channel in channels)
+            {
+                foreach (var member in channel.Members)
+                {
+                    if (member.User.ProfilePictureDocumentId.HasValue)
+                        member.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(member.User.ProfilePictureDocumentId.Value);
+                }
+
+                foreach (var message in channel.Messages)
+                {
+                    foreach (var attachment in message.ChannelMessageAttachments)
+                    {
+                        attachment.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(attachment.DocumentId);
+                    }
+                }
+
+                await GetBlockedUsers(channel);
+            }
+            
+            return channels;
+        }
+
         public async Task<List<ChannelMemberDto>> GetAllChannelMembers(Guid channelId)
         {
             return await this._channelRepository.GetAll()
@@ -222,7 +274,7 @@ namespace Academically.Services.Chats
                     .ToListAsync();
         }
 
-        public async Task<List<ChannelMessageDto>> GetAllChannelMessages(Guid channelId)
+        public async Task<List<ChannelMessageDto>> GetAllChannelMessages(Guid? channelId, DateTime? minTime)
         {
             var messages = await this._channelRepository.GetAll()
                     .Include(c => c.Messages)
@@ -234,8 +286,10 @@ namespace Academically.Services.Chats
                     .Include(c => c.Messages)
                         .ThenInclude(m => m.ChannelMessageAttachments)
                             .ThenInclude(a => a.Document)
-                    .Where(c => c.Id == channelId)
+                    .WhereIf(channelId.HasValue, c => c.Id == channelId.Value)
+                    .WhereIf(minTime.HasValue, c => c.Messages.Any(m => m.CreationTime >= minTime))
                     .SelectMany(c => c.Messages)
+                    .WhereIf(minTime.HasValue, m => m.CreationTime >= minTime)
                     .Select(m => ObjectMapper.Map<ChannelMessageDto>(m))
                     .ToListAsync();
 

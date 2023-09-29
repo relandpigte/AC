@@ -84,10 +84,10 @@ export class ChannelMessagesStateService extends StateServiceBase {
         this.loading$.next(false);
     }
 
-    async updateServiceParams(params: { type: channelMessagesType | undefined, channelId: string | undefined }) {
+    async updateServiceParams(params: { type: channelMessagesType | undefined, args: any[] | undefined }) {
         this.loading$.next(true);
         this.type = params.type;
-        this.actionArgs['load'] = [params.channelId];
+        this.actionArgs['load'] = params.args;
         try {
           const channelMessages = await this._chatsService[this.fns[this.type ?? channelMessagesType.all]](...this.loadArgs).toPromise();
           this.channelMessages = Utils.toMap(channelMessages);

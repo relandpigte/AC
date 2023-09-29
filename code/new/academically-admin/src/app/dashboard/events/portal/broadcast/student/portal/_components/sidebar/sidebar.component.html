@@ -28,7 +28,7 @@
       <app-offers *ngSwitchCase="'Offers'"></app-offers>
       <app-sidebar-questions *ngSwitchCase="'Questions'"></app-sidebar-questions>
       <app-polls *ngSwitchCase="'Polls'"></app-polls>
-      <app-sidebar-chat *ngSwitchCase="'Chat'"></app-sidebar-chat>
+      <app-sidebar-chat *ngSwitchCase="'Chat'" [referenceId]="eventId"></app-sidebar-chat>
     </div>
   </div>
 </div>

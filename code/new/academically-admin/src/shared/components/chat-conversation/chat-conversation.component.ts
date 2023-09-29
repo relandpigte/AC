@@ -31,10 +31,12 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
   @ViewChild('scrollContent', { static: true }) content?: ElementRef<HTMLDivElement>;
   @ViewChild('scrollWrapper', { static: true }) wrapper?: ElementRef<HTMLDivElement>;
 
+  @Input() minTime: moment.Moment;
   @Input() channel: ChannelDto;
   @Input() hasActions = true;
   @Input() hasClose = false;
   @Input() showAttachmentInfo = true;
+  @Input() showMessageStatus = true;
   @Input() isRecipientTyping = false;
   @Input() mutedUserChannelIds: string[];
   @Input() isSidebar: boolean;
@@ -89,7 +91,7 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
   get channelMessagesStateId(): string { return `chat-messages-${this.selectedChannelId}`; }
 
   get lastMessage(): ChannelMessageDto { return this.channelMessages?.length ? this.channelMessages[this.channelMessages.length - 1] : null; }
-  get isShowLastMessageInfo(): boolean { return this.lastMessage?.creatorUserId === this.appSession.userId; }
+  get isShowLastMessageInfo(): boolean { return this.showMessageStatus && this.lastMessage?.creatorUserId === this.appSession.userId; }
   get lastMessageInfoStr(): string {
     if (this.lastMessage.isSeen) return 'Seen';
     else return 'Delivered';
@@ -145,7 +147,7 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
     if ('channel' in changes && this.channel) {
       await this.initChannelMessagesAppStates();
       await this.initUserAvatarAppState();
-      await this.channelMessagesStateService.updateServiceParams({ type: undefined, channelId: this.selectedChannelId });
+      await this.channelMessagesStateService.updateServiceParams({ type: undefined, args: [this.selectedChannelId, this.minTime] });
       this.channelMessages = this.channelMessagesStateService.getAllChannelMessages();
       this.totalChannelMessagesCount = this.channelMessagesStateService.totalChannelMessagesCount;
       if (this.selectedMatchedChannel) this.initSearchResults();
@@ -171,7 +173,7 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
 
     const appStateConfig: AppStateConfig = {
         [this.channelMessagesStateId]: {
-            load: [this.selectedChannelId],
+            load: [this.selectedChannelId, this.minTime],
             update: { channelId: this.selectedChannelId }
         }
     };

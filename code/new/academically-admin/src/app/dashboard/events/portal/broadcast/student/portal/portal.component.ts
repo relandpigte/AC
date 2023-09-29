@@ -7,6 +7,7 @@ import {
   EventSessionsServiceProxy,
   EventUserType,
   EventPollDto,
+  ProfilesServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -28,6 +29,7 @@ import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-d
 enum SignalAction {
   StartEvent,
   JoinEvent,
+  EndEvent,
   GuestJoined,
   AutoAdmitChange,
   AdmitGuest,
@@ -101,6 +103,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     private _portalService: PortalService,
     private _portalPollService: PortalPollService,
     private _eventSessionsService: EventSessionsServiceProxy,
+    private _profilesService: ProfilesServiceProxy,
     private _modalService: BsModalService,
     private _modalDialogService: ModalDialogService
   ) {
@@ -110,11 +113,11 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
         this.invitationId = paramMap.get('invitation-id');
       }
     });
-    this.pipeDestroy(route.parent.parent.paramMap, (paramMap) => {
+    this.pipeDestroy(route.parent.parent.paramMap, async (paramMap) => {
       if (paramMap.has('event-id')) {
         this.eventId = paramMap.get('event-id');
-        this.getEvent();
-        this.getEventUsers();
+        await this.getEvent();
+        await this.getEventUsers();
       }
     });
     this.pipeDestroy(this._portalService.admitGuest$, async (response) => {
@@ -191,10 +194,9 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     const options: ModalDialogOptions = {
       title: this.l('AreYouSure'),
       text: this.l('EndEventConfirmation'),
-      confirmCb: (): void => {
-        this.eventStarted = false;
-        this.eventJoined = false;
-        // await this.eventSessionsHub.invoke('endEvent', this.attendeeIds, JSON.stringify(this.session));
+      confirmCb: async () => {
+        const userIds = this.allEventUsers.map(e => e.user.id);
+        this.sendSignal(userIds, new SignalData(SignalAction.EndEvent));
       }
     };
     this._modalDialogService.showConfirmDialog(options);
@@ -278,6 +280,12 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
             this._portalService.attendeeJoined = joinedEventUser;
             break;
 
+          case SignalAction.EndEvent:
+            console.log('receieveSignal - EndEvent');
+            this.eventStarted = false;
+            this.eventJoined = false;
+            break;
+
           case SignalAction.GuestJoined:
             console.log('receieveSignal - GuestJoined');
             const guestEventUser = signalData.getDataObject() as EventUserDto;
@@ -304,6 +312,11 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
             console.log('receieveSignal - LobbyEntered');
             const lobbyUser = signalData.getDataObject() as EventUserDto;
             console.log(lobbyUser);
+
+            if (!this.allEventUsers.some(u => u.user.id === lobbyUser.user.id)) {
+              this.allEventUsers.push(lobbyUser);
+            }
+
             if (lobbyUser.user.id !== this.host.user.id) {
               console.log(lobbyUser.user.fullName + ' has entered');
               this._portalService.lobbyUser = lobbyUser;
@@ -398,7 +411,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     await this.room.connect();
   }
 
-  private getEvent(): void {
+  async getEvent() {
     this._eventsService.get(this.eventId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
@@ -411,11 +424,19 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
       });
   }
 
-  private getEventUsers(): void {
+  async getEventUsers() {
     this._eventSessionsService.getUsers(this.eventId)
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(responses => {
+      .subscribe(async responses => {
         this.allEventUsers = responses;
+        if (!this.allEventUsers.some(u => u.user.id === this.appSession.userId)) {
+          try {
+            const user = await this._profilesService.get(this.appSession.userId).toPromise();
+            this.allEventUsers.push(EventUserDto.fromJS({ user, type: EventUserType.Guest }));
+          } catch (err) {
+            console.error(err);
+          }
+        }
         this.host = this.allEventUsers.find(e => e.type === EventUserType.Host);
         this.eventUser = this.allEventUsers.find(e => e.user.id === this.appSession.userId);
         this._portalService.attendees = this.allEventUsers.filter(e => e.type !== EventUserType.Host);

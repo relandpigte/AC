@@ -46,9 +46,9 @@ export class SidebarComponent extends AppComponentBase implements OnInit {
       this.menuItems.push(new MenuItem('Settings', 'sliders.svg'));
     }
     this.activeMenuItem = this.menuItems[1];
-    route.paramMap.subscribe(paramMap => {
-      if (paramMap.has('id')) {
-        this.eventId = paramMap.get('id');
+    route.parent.parent.paramMap.subscribe(paramMap => {
+      if (paramMap.has('event-id')) {
+        this.eventId = paramMap.get('event-id');
       }
     });
   }

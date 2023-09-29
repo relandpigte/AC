@@ -20,6 +20,7 @@ export class ChatComposerComponent extends AppComponentBase implements OnInit{
   @ViewChild('messageInput') messageInput: ElementRef<HTMLInputElement>;
   @ViewChild('fileInput') fileInput: ElementRef<HTMLInputElement>;
 
+  @Input() referenceId: string;
   @Input() channel: ChannelDto;
   @Input() replyingTo: ChannelMessageDto;
   @Input() isUserBlocked: boolean;
@@ -86,6 +87,7 @@ export class ChatComposerComponent extends AppComponentBase implements OnInit{
     this._chatsService.createChannelMessage(
       f.value.message,
       this.replyingToUser?.id ?? this.sendToUser?.id,
+      this.referenceId,
       this.channel?.id,
       this.replyingTo?.id,
       this.selectedService?.id,

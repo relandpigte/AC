@@ -3,11 +3,13 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { Utils } from '../helpers/utils';
 import { ChannelDto, ChannelMemberDto, ChannelMessageDto, ChatsServiceProxy, HubEvent } from '../service-proxies/service-proxies';
 import { StateServiceBase, StateUpdate } from './state-base.service';
+import { AppStateFeatures } from './pub-sub.service';
 
 export enum channelsType {
     all = 'all',
     inbox = 'inbox',
-    archived = 'archived'
+    archived = 'archived',
+    reference = 'reference'
 }
 
 export class ChannelsStateService extends StateServiceBase {
@@ -24,15 +26,18 @@ export class ChannelsStateService extends StateServiceBase {
         [channelsType.all]: 'getAllChannelsForUser',
         [channelsType.inbox]: 'getAllInboxChannelsForUser',
         [channelsType.archived]: 'getAllArchivedChannelsForUser',
+        [channelsType.reference]: 'getReferenceChannelsForUser',
     };
 
     getAllChannels = () => Array.from(this.channels.values());
 
     constructor(
+        type: channelsType,
         private _hubService: HubService,
         private _chatsService: ChatsServiceProxy
     ) {
         super();
+        this.type = type;
     }
 
     async loadData(component: any, userId: number) {
@@ -53,9 +58,11 @@ export class ChannelsStateService extends StateServiceBase {
             this.hub.off(HubEvent[HubEvent.ChannelMessageCreated], this.handleUpsertChannels);
             this.hub.off(HubEvent[HubEvent.ChannelMessageUpdated], this.handleUpsertChannels);
             this.hub.off(HubEvent[HubEvent.ChannelMessageDeleted], this.handleDeleteChannels);
-            this.hub.off(HubEvent[HubEvent.ChannelMemberTyping], this.handleChannelMemberTyping);
             this.hub.off(HubEvent[HubEvent.ChannelArchive], this.handleUpsertChannels);
             this.hub.off(HubEvent[HubEvent.ChannelUnarchive], this.handleUpsertChannels);
+            if (this.features?.typing) {
+                this.hub.off(HubEvent[HubEvent.ChannelMemberTyping], this.handleChannelMemberTyping);
+            }
         }
     }
 
@@ -65,9 +72,11 @@ export class ChannelsStateService extends StateServiceBase {
             this.hub.on(HubEvent[HubEvent.ChannelMessageCreated], this.handleUpsertChannels);
             this.hub.on(HubEvent[HubEvent.ChannelMessageUpdated], this.handleUpsertChannels);
             this.hub.on(HubEvent[HubEvent.ChannelMessageDeleted], this.handleDeleteChannels);
-            this.hub.on(HubEvent[HubEvent.ChannelMemberTyping], this.handleChannelMemberTyping);
             this.hub.on(HubEvent[HubEvent.ChannelArchive], this.handleUpsertChannels);
             this.hub.on(HubEvent[HubEvent.ChannelUnarchive], this.handleUpsertChannels);
+            if (this.features?.typing) {
+                this.hub.on(HubEvent[HubEvent.ChannelMemberTyping], this.handleChannelMemberTyping);
+            }
         } catch (err) {
             console.error(err);
         }
@@ -106,10 +115,10 @@ export class ChannelsStateService extends StateServiceBase {
         this.loading$.next(false);
     };
 
-    async updateServiceParams(params: { type: channelsType | undefined, userId: number | undefined }) {
+    async updateServiceParams(params: { type: channelsType | undefined, args: any[] | undefined }) {
         this.loading$.next(true);
         this.type = params.type;
-        this.actionArgs['load'] = [params.userId];
+        this.actionArgs['load'] = params.args;
         try {
           const channels = await this._chatsService[this.fns[this.type ?? channelsType.all]](...this.loadArgs).toPromise();
           this.channels = Utils.toMap(channels);

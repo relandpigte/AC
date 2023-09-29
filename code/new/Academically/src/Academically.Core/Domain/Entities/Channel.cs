@@ -16,6 +16,8 @@ namespace Academically.Domain.Entities
 
         public bool IsActive { get; set; }
 
+        public Guid? ReferenceId { get; set; }
+
         [ForeignKey("CreatorUserId")]
         public virtual User CreatorUser { get; set; }
 
