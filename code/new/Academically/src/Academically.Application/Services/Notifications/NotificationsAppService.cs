@@ -305,7 +305,7 @@ namespace Academically.Services.Notifications
                 if (!string.IsNullOrEmpty(obj))
                 {
                     formatted.Add(": ");
-                    formatted.Add(obj);
+                    formatted.Add($"\"{obj}\"");
                 }
             }
 
@@ -476,9 +476,9 @@ namespace Academically.Services.Notifications
         {
             string obj = null;
             if (references.Post != null)
-                obj = $"\"{references.Post.Title ?? references.Post.Content}\"";
+                obj = $"{references.Post.Title ?? references.Post.Content}";
             else if (references.Comment != null)
-                obj = $"\"{references.Comment.Body}\"";
+                obj = $"{references.Comment.Body}";
             return obj;
         }
 
