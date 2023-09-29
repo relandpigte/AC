@@ -260,25 +260,93 @@ namespace Academically.Services.Notifications
 
         private async Task<string> FormatNotification(NotificationDto notification)
         {
+            var references = await this.InitialNotificationReferences(notification);
+
             List<string> formatted = new List<String>();
+
             formatted.Add(await this.FormatActors(notification.Actors.Select(a => a.User).ToList()));
+
+            formatted.Add(" ");
             formatted.Add(await this.FormatVerb(notification));
 
             if (await this.NotificationHasPronoun(notification))
             {
-                formatted.Add(await this.FormatPronoun());
+                var pronoun = await this.FormatPronoun();
+                if (!string.IsNullOrEmpty(pronoun))
+                {
+                    formatted.Add(" ");
+                    formatted.Add(pronoun);
+                }
             }
 
             if (await this.NotificationHasTarget(notification))
             {
-                formatted.Add(await this.FormatTarget(notification));
+                var target = await this.FormatTarget(notification);
+                if (!string.IsNullOrEmpty(target))
+                {
+                    formatted.Add(" ");
+                    formatted.Add(target);
+                }
             }
 
             if (await this.NotificationHasLocation(notification))
             {
-                formatted.Add(await this.FormatLocation(notification));
+                var location = await this.FormatLocation(references);
+                if (!string.IsNullOrEmpty(location))
+                {
+                    formatted.Add(" ");
+                    formatted.Add(location);
+                }
             }
-            return $"{ formatted.Where(f => f != null).ToList().JoinAsString(" ")}.";
+
+            if (await this.NotificationHasObject(notification))
+            {
+                var obj = await this.FormatObject(references);
+                if (!string.IsNullOrEmpty(obj))
+                {
+                    formatted.Add(": ");
+                    formatted.Add(obj);
+                }
+            }
+
+            return $"{ formatted.Where(f => f != null).ToList().JoinAsString(string.Empty)}.";
+        }
+
+        private async Task<NotificationReferencesDto> InitialNotificationReferences(NotificationDto notification)
+        {
+            NotificationReferencesDto references = new NotificationReferencesDto();
+
+            references.Post = await this._postsRepository.GetAll()
+                .Include(p => p.Parent)
+                .Where(p => p.Id == notification.ReferenceId)
+                .FirstOrDefaultAsync();
+
+            if (references.Post != null)
+            {
+                references.Discussion = await this._serviceDiscussionRepository.GetAll()
+                    .Where(s => s.PostId == references.Post.Id)
+                    .FirstOrDefaultAsync();
+
+                if (references.Discussion != null)
+                {
+                    references.DiscussionService = await this._postsAppService.GetAvailableService(references.Discussion.ServiceId);
+                }
+            }
+
+            references.Comment = await this._commentsRepository.GetAll()
+                .Include(p => p.Parent)
+                .Where(p => p.Id == notification.ReferenceId)
+                .FirstOrDefaultAsync();
+
+            if (references.Comment != null)
+            {
+                references.ParentPost = await this._postsRepository.GetAll()
+                    .Include(p => p.Parent)
+                    .Where(p => p.Id.ToString() == references.Comment.ReferenceId)
+                    .FirstOrDefaultAsync();
+            }
+
+            return references;
         }
 
         private async Task<string> NotificationActionToText(NotificationAction action)
@@ -345,6 +413,15 @@ namespace Academically.Services.Notifications
             return true;
         }
 
+        private async Task<bool> NotificationHasObject(NotificationDto notification)
+        {
+            if (notification.Actors.Count > 1)
+            {
+                if (notification.Action == NotificationAction.Post && notification.Target == NotificationTarget.Post) return false;
+            }
+            return true;
+        }
+
         private async Task<string> FormatActors(List<UserDto> actors) {
             var textinfo = new CultureInfo("en-US", false).TextInfo;
             if (actors.Count == 1)
@@ -376,72 +453,34 @@ namespace Academically.Services.Notifications
             return await this.NotificationTargetToText(notification.Target, notification.Action);
         }
 
-        private async Task<string> FormatLocation(NotificationDto notification)
+        private async Task<string> FormatLocation(NotificationReferencesDto references)
         {
+            var referencePost = references.ParentPost?.Parent ?? references.Post?.Parent;
             string location = null;
-
-            var post = await this._postsRepository.GetAll()
-                .Include(p => p.Parent)
-                .Where(p => p.Id == notification.ReferenceId)
-                .FirstOrDefaultAsync();
-
-            if (post != null)
+            if (referencePost != null)
             {
-                if (post.Parent != null) location = $"{await this.GetDiscussionTitleFromPostParent(post, notification, $"\"{post.Title ?? post.Content}\"")}";
-                else location = $": \"{post.Title ?? post.Content}\"";
-            }
-            else
-            {
-                var comment = await this._commentsRepository.GetAll()
-                    .Include(p => p.Parent)
-                    .Where(p => p.Id == notification.ReferenceId)
-                    .FirstOrDefaultAsync();
-
-                if (comment != null)
+                if (references.Discussion == null) location = $"in <span>{referencePost.Title ?? referencePost.Content}</span>";
+                else
                 {
-                    var parentPost = await this._postsRepository.GetAll()
-                            .Include(p => p.Parent)
-                            .Where(p => p.Id.ToString() == comment.ReferenceId)
-                            .FirstOrDefaultAsync();
-
-                    if (parentPost != null && parentPost.Parent != null)
-                    {
-                        location = $"{await this.GetDiscussionTitleFromPostParent(parentPost, notification, $"\"{comment.Body}\"")}";
-                    }
+                    if (references.DiscussionService == null) location = $"in <span>{referencePost.Title ?? referencePost.Content}</span>";
                     else
                     {
-                        location = $": \"{comment.Body}\"";
+                        location = $"in <span>{references.DiscussionService.Name}</span>";
                     }
-
                 }
             }
             return location;
         }
 
-        private async Task<string> GetDiscussionTitleFromPostParent(Post post, NotificationDto notification, string objectValue)
+        private async Task<string> FormatObject(NotificationReferencesDto references)
         {
-            var serviceDiscussion = await this._serviceDiscussionRepository.GetAll()
-                .Where(s => s.PostId == post.Id)
-                .FirstOrDefaultAsync();
-            if (serviceDiscussion == null) return $"in <span>{post.Parent.Title ?? post.Parent.Content}{(await this.LocationHasObject(notification) ? $":</span> {objectValue}" : "")}</span>";
-            else
-            {
-                var service = await this._postsAppService.GetAvailableService(serviceDiscussion.ServiceId);
-                if (service == null) return $"in <span>{post.Parent.Title ?? post.Parent.Content}{(await this.LocationHasObject(notification) ? $":</span> {objectValue}" : "")}</span>";
-                else
-                {
-                    return $"in <span>{service.Name}:</span>";
-                }
-            }
+            string obj = null;
+            if (references.Post != null)
+                obj = $"\"{references.Post.Title ?? references.Post.Content}\"";
+            else if (references.Comment != null)
+                obj = $"\"{references.Comment.Body}\"";
+            return obj;
         }
 
-        private async Task<bool> LocationHasObject(NotificationDto notification)
-        {
-            if (notification.Actors.Count > 1)
-            {
-                if (notification.Action == NotificationAction.Post && notification.Target == NotificationTarget.Post) return false;
-            }
-            return true;
-        }
     }
 }

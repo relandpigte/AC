@@ -52,7 +52,7 @@ namespace Academically.Services.Reactions
                 .Select(e => ObjectMapper.Map<ReactionDto>(e))
                 .FirstOrDefaultAsync();
 
-            if (reaction.CreatorUser.ProfilePictureDocumentId.HasValue)
+            if (reaction?.CreatorUser?.ProfilePictureDocumentId.HasValue == true)
                 reaction.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(reaction.CreatorUser.ProfilePictureDocumentId.Value);
 
             return reaction;
