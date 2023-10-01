@@ -95,7 +95,7 @@ export class RecipientComponent extends AppComponentBase implements OnChanges, O
 
   private setChatStatusClass(): void {
     this.chatStatusClass = ChatStatus.seen;
-    if (this.latestMessage.creatorUserId === this.appSession.userId) {
+    if (this.latestMessage?.creatorUserId === this.appSession.userId) {
       if (!this.latestMessage.isSeen) {
         this.chatStatusClass = ChatStatus.unseen;
       }

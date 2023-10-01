@@ -63,6 +63,7 @@
                     [isBlockedByRecipient]="isBlockedByRecipient"
                     (onMessageInfoClick)="handleMessageInfoPopup(message)"
                     (onReplyClick)="handleMessageReply(message)"
+                    (onDeleteMessage)="handleDeleteChannelMessage($event)"
                 ></app-chat-conversation-message>
             </ng-container>
 

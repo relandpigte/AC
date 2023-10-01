@@ -7,7 +7,7 @@
                 <a *ngIf="isBlockedByRecipient" href="javascript:void(0)">{{ 'User' | titlecase }}</a>
             </div>
             <div class="recipient-details-chat-preview w-154-px">
-                <p *ngIf="!isRecipientTyping" class="m-0 wrap-text">{{ latestMessage.message }}</p>
+                <p *ngIf="!isRecipientTyping" class="m-0 wrap-text">{{ latestMessage?.message }}</p>
                 <p *ngIf="isRecipientTyping" class="m-0 wrap-text typing">Typing</p>
             </div>
         </div>

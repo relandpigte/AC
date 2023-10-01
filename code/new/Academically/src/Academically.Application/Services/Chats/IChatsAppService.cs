@@ -29,5 +29,7 @@ namespace Academically.Services.Chats
         Task CreateChannelNotification(Guid channelId);
         Task DeleteChannelNotification(Guid channelId);
         Task<ChannelDto> GetChannelByRecipient(long recipientId, long senderId);
+        Task<EventUsersResponseDto> GetEventUsers();
+        Task<bool> DeleteChannelMessage(Guid channelMessageId);
     }
 }

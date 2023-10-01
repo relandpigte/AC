@@ -601,6 +601,15 @@ namespace Academically.Services.Chats
 
             return eventUsers;
         }
+
+        public async Task<bool> DeleteChannelMessage(Guid channelMessageId)
+        {
+            var message = await _channelMessageRepository.GetAsync(channelMessageId);
+            if (message == null) return false;
+
+            await _channelMessageRepository.DeleteAsync(message.Id);
+            return true;
+        }
         
         private async Task FillInService(ChannelMessageDto message)
         {

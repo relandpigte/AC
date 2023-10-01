@@ -81,7 +81,7 @@ export class ChannelMessagesStateService extends StateServiceBase {
     };
 
     handleDeleteChannelMessages = async (channelMessage: ChannelMessageDto) => {
-        if (!this.canViewChannelMessage(channelMessage)) return;
+        // if (!this.canViewChannelMessage(channelMessage)) return;
         this.loading$.next(true);
         this.updateFromMap(this.channelMessages, { [channelMessage.id]: null }, this.channelMessages$);
         this.loading$.next(false);

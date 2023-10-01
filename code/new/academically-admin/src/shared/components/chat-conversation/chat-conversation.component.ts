@@ -167,6 +167,21 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
     this.onProcessNotification.next(type);
   }
 
+  handleDeleteChannelMessage(channelMessageId: string): void {
+    const options: ModalDialogOptions = {
+      title: this.l('DeleteThisMessage'),
+      text: this.l('DeleteMessageConfirmation'),
+      btnConfirmText: 'Delete',
+      confirmCb: (): void => {
+        // TODO: delete channel message here.
+        this._chatsService.deleteChannelMessage(channelMessageId)
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(x => x);
+      }
+    };
+    this._modalDialogService.showConfirmDialog(options);
+  }
+
   private async initChannelMessagesAppStates() {
     if (this.channelMessagesStateService) {
       await this.channelMessagesStateService.stop();
@@ -197,7 +212,7 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
               this.channelMessages = this.channelMessages.map(m => m.id === event.data.id ? event.data : m);
               break;
           case StateUpdateType.Delete:
-              this.channelMessages = this.channelMessages.filter(m => m.id != event.data.id);
+              this.channelMessages = this.channelMessages.filter(m => m.id !== event.data.id);
               this.totalChannelMessagesCount--;
               break;
         }

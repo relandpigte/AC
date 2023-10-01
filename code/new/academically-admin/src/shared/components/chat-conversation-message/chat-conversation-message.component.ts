@@ -5,6 +5,7 @@ import { ChatService } from '@shared/services/chat.service';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { Subject } from 'rxjs';
 import { FileUtils } from '@shared/helpers/file-utils';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-chat-conversation-message',
@@ -17,6 +18,7 @@ export class ChatConversationMessageComponent extends AppComponentBase implement
 
   @Output() onReplyClick: EventEmitter<ChannelMessageDto> = new EventEmitter();
   @Output() onMessageInfoClick: Subject<ChannelMessageDto> = new Subject<ChannelMessageDto>();
+  @Output() onDeleteMessage: Subject<string> = new Subject<string>();
 
   fileAttachment: File;
 
@@ -46,16 +48,8 @@ export class ChatConversationMessageComponent extends AppComponentBase implement
     this.onReplyClick.emit(this.data);
   }
 
-  handleMessageDelete(chatId: string): void {
-    const options: ModalDialogOptions = {
-      title: this.l('DeleteThisMessage'),
-      text: this.l('DeleteMessageConfirmation'),
-      btnConfirmText: 'Delete',
-      confirmCb: (): void => {
-        // TODO: delete channel message here.
-      }
-    };
-    this._modalDialogService.showConfirmDialog(options);
+  handleMessageDelete(channelMessageId: string): void {
+    this.onDeleteMessage.next(channelMessageId);
   }
 
   hasAttachedService(message: ChannelMessageDto): boolean {
