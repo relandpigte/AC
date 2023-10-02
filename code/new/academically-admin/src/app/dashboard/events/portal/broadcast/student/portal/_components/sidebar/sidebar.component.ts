@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Injector, Input, ChangeDetectorRef, OnChanges, SimpleChanges } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ActivatedRoute } from '@angular/router';
 
@@ -17,7 +17,7 @@ class MenuItem {
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.less']
 })
-export class SidebarComponent extends AppComponentBase implements OnInit {
+export class SidebarComponent extends AppComponentBase implements OnInit, OnChanges {
   @Input() hidden = false;
   @Input() isHost: boolean;
 
@@ -41,10 +41,6 @@ export class SidebarComponent extends AppComponentBase implements OnInit {
     this.menuItems.push(new MenuItem('Handouts', 'folder.svg'));
     this.menuItems.push(new MenuItem('Offers', 'shopping-bag.svg'));
     this.menuItems.push(new MenuItem('Reviews', 'star.svg'));
-    if (!this.isHost) {
-      this.menuItems.push(new MenuItem('Separator'));
-      this.menuItems.push(new MenuItem('Settings', 'sliders.svg'));
-    }
     this.activeMenuItem = this.menuItems[1];
     route.parent.parent.paramMap.subscribe(paramMap => {
       if (paramMap.has('event-id')) {
@@ -54,6 +50,16 @@ export class SidebarComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
+    console.warn(this.isHost);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if ('isHost' in changes) {
+      if (this.isHost) {
+        this.menuItems.push(new MenuItem('Separator'));
+        this.menuItems.push(new MenuItem('Settings', 'sliders.svg'));
+      }
+    }
   }
 
   onMenuItemClick(menuItem: MenuItem, e: Event): void {

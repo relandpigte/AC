@@ -12,6 +12,7 @@ import { CustomAction } from '@app/_shared/modules/questions/_model/questions.mo
 })
 export class QuestionsComponent extends AppComponentBase implements OnInit {
   @Input() referenceId: string;
+  @Input() isHost: boolean;
 
   event: EventDto;
   attendeeIds: number[] = [];
@@ -25,14 +26,6 @@ export class QuestionsComponent extends AppComponentBase implements OnInit {
   ) {
     super(injector);
 
-    this.initCustomActions();
-  }
-
-  get userId(): number { return this.appSession.userId; }
-  get hostId(): number { return this.event?.creatorUserId; }
-  get isHost(): boolean { return this.event?.creatorUserId === this.userId; }
-
-  ngOnInit(): void {
     this._portalService.event$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(event => {
@@ -45,7 +38,14 @@ export class QuestionsComponent extends AppComponentBase implements OnInit {
       .subscribe(attendees => {
         this.attendeeIds = attendees.filter(a => a.user).map(a => a.user.id);
       });
+
+    this.initCustomActions();
   }
+
+  get userId(): number { return this.appSession.userId; }
+  get hostId(): number { return this.event?.creatorUserId; }
+
+  ngOnInit(): void {}
 
   initCustomActions(): void {
     this.customReactionActions = [
