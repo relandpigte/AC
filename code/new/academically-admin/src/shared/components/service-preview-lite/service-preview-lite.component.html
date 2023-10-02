@@ -3,10 +3,10 @@
         <span class="fe fe-x"></span>
     </div>
     <div class="service-preview-image position-relative">
-        <img [src]="thumbnailImageUrl" />
+        <img [src]="thumbnailImageUrl" [alt]="serviceName" />
     </div>
     <div class="service-preview-info d-flex flex-column justify-content-center">
-        <div class="service-preview-info-identity-name wrap-text">{{ serviceName }}</div>
+        <div class="service-preview-info-identity-name">{{ serviceName }}</div>
         <div class="service-preview-info-identity-type d-flex align-items-center">{{ serviceType | titlecase }}</div>
     </div>
 </div>
