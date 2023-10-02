@@ -24,6 +24,8 @@ export class UserAvatarComponent extends AppComponentBase implements OnInit {
   @Input() showStatus = true;
   @Input() isBlocked: boolean;
   @Input() type: AvatarType = AvatarType.Default;
+  @Input() isPrivateChat: boolean;
+  @Input() isMutedChannel: boolean;
 
   onlineUsers: UserDto[] = [];
   inactiveUsers: UserDto[] = [];

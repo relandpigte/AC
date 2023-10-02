@@ -121,7 +121,6 @@ namespace Academically.Services.Chats
                 });
                 await CurrentUnitOfWork.SaveChangesAsync();
                 message.ChannelId = channel.Id;
-                message.ReferenceId = input.ReferenceId;
             }
 
             var senderMember = await this._channelMemberRepository.FirstOrDefaultAsync(m => m.ChannelId == message.ChannelId && m.UserId == currentUser.Id);
@@ -151,6 +150,7 @@ namespace Academically.Services.Chats
             message.ParentId = input.ParentId;
             message.ServiceId = input.ServiceId;
             message.ServiceType = input.ServiceType;
+            message.ReferenceId = input.ReferenceId;
 
             var result = await this._channelMessageRepository.InsertAsync(message);
 
@@ -235,6 +235,7 @@ namespace Academically.Services.Chats
                         .ThenInclude(m => m.CreatorUser)
                     .Include(c => c.Members)
                         .ThenInclude(m => m.User)
+                    .Include(c => c.ChannelNotifications)
                     .WhereIf(referenceId.HasValue, c => c.ReferenceId == referenceId.Value)
                     .WhereIf(minTime.HasValue, c => c.Messages.Any(m => m.CreationTime >= minTime))
                     .Select(c => ObjectMapper.Map<ChannelDto>(c))

@@ -5,7 +5,15 @@
                 <img src="assets/img/events/chat/back.svg" alt="Back">
             </div>
             <div class="conversation-header-avatar flex-grow-1">
-                <app-user-avatar *ngIf="replyingToUser " [data]="replyingToUser" [isBlocked]="isBlockedByRecipient" [showStatus]="false" [type]="avatarType.NameAndStatus"></app-user-avatar>
+                <app-user-avatar
+                    *ngIf="replyingToUser"
+                    [data]="replyingToUser"
+                    [isBlocked]="isBlockedByRecipient"
+                    [showStatus]="false"
+                    [type]="avatarType.NameAndStatus"
+                    [isPrivateChat]="isPrivateChat"
+                    [isMutedChannel]="isMutedChannel"
+                ></app-user-avatar>
             </div>
 
             <div *ngIf="selectedMatchedChannel" class="conversation-header-nav d-flex align-items-center gap-15">

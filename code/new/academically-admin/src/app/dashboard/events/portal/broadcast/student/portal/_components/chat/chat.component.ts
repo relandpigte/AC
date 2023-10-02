@@ -1,15 +1,15 @@
 import { ChangeDetectorRef, Component, Injector, Input, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { MessageComposeData } from '@app/chat/chat.component';
 import { AvailableServiceDto, ChannelDto, ChatsServiceProxy, EventUsersResponseDto, PostsServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
 import { skip, takeUntil } from 'rxjs/operators';
 import { ChannelsStateService, channelsType } from '@shared/services/channels-state.service';
-import { ChatService } from '@shared/services/chat.service';
+import { ChatService, NotificationType } from '@shared/services/chat.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { HubService } from '@app/_shared/services/hub.service';
 import { BehaviorSubject } from 'rxjs';
 import { StateUpdateType } from '@shared/services/state-base.service';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-sidebar-chat',
@@ -34,9 +34,12 @@ export class ChatComponent extends AppComponentBase implements OnInit {
   joinedUsers: UserDto[] = [];
   notJoinedUsers: UserDto[] = [];
   replyingToUser: UserDto;
-
   toggleAttendee = false;
   searchUser: string;
+
+  notificationType = NotificationType;
+  mutedUserChannelIds: string[] = [];
+  blockedUserIds: number[] = [];
 
   constructor(
     injector: Injector,
@@ -85,6 +88,10 @@ export class ChatComponent extends AppComponentBase implements OnInit {
   get channelsStateId(): string { return 'chats'; }
   get referenceServiceCreationTime(): moment.Moment { return this.referenceService?.creationTime; }
   get publicChannel(): ChannelDto { return this.selectedChannelType === 0 ? this.channels?.[0] : null; }
+  get isUserBlocked(): boolean {
+    const blockUser = this.selectedChannel?.members?.find(m => m.userId !== this.appSession.userId);
+    return this.blockedUserIds?.includes(blockUser?.userId);
+  }
 
   async ngOnInit() {
     await this.getReferenceService();
@@ -105,6 +112,7 @@ export class ChatComponent extends AppComponentBase implements OnInit {
 
   handleTabClick(channelType: number): void {
     this._chatService.selectedChannelType$.next(channelType);
+    this.getAllMutedChannelByUser();
   }
 
   handleSelectChannel(channel: ChannelDto): void {
@@ -120,6 +128,29 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     this._chatsService.deleteChannel(channel.id).subscribe(() => {
       this._chatService.selectedChannelType$.next(this.selectedChannelType);
       this.handleBackToChannels();
+    });
+  }
+
+  handleNotification(type: NotificationType): void {
+    const channelId = this.selectedChannel?.id;
+    const chatNotification = type === NotificationType.Mute ?
+      this._chatsService.createChannelNotification(channelId) :
+      this._chatsService.deleteChannelNotification(channelId);
+
+    chatNotification.pipe(takeUntil(this.destroyed$))
+      .subscribe((): void => {
+        if (type === this.notificationType.Mute) {
+          this.mutedUserChannelIds.push(channelId);
+        } else {
+          this.mutedUserChannelIds = this.mutedUserChannelIds.filter(mc => mc !== channelId);
+        }
+      });
+  }
+
+  private getAllMutedChannelByUser(): void {
+    _.forEach(this.channels ?? [], (channel): void => {
+      const notification = channel.channelNotifications?.filter(cn => cn.creatorUserId === this.appSession.userId);
+      this.mutedUserChannelIds = _.union(this.mutedUserChannelIds, notification?.map(n => n.channelId));
     });
   }
 

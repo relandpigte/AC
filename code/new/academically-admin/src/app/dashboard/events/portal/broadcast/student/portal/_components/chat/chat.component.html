@@ -44,6 +44,7 @@
                             <app-chat-recipient
                                 *ngFor="let channel of channels"
                                 [channel]="channel"
+                                [mutedUserChannelIds]="mutedUserChannelIds"
                                 (click)="handleSelectChannel(channel)"
                             ></app-chat-recipient>
                         </ng-container>
@@ -101,7 +102,9 @@
                             [referenceId]="referenceId"
                             [isPrivateChat]="true"
                             [minTime]="referenceServiceCreationTime"
+                            [mutedUserChannelIds]="mutedUserChannelIds"
                             (onBackToChannels)="handleBackToChannels()"
+                            (onProcessNotification)="handleNotification($event)"
                         ></app-chat-conversation>
                     </div>
                     <div class="chat-composer mt-auto">
