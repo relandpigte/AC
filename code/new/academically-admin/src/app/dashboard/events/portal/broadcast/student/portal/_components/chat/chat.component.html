@@ -1,13 +1,13 @@
 <div class="sidebar-chat d-flex flex-column h-100p">
-    <ul class="chat-nav nav nav-tabs">
+    <ul class="chat-nav nav nav-tabs" *ngIf="!selectedChannel && !replyingToUser">
         <li class="nav-item">
-            <a class="nav-link active" id="open-tab" data-toggle="tab" href="#public-chat" role="tab"
+            <a class="nav-link active"  data-toggle="tab" href="#public-chat" role="tab"
                aria-controls="open-container" aria-selected="true" (click)="handleTabClick(0)">
                 {{ 'Public' | localize }}
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="answered-tab" data-toggle="tab" href="#private-chat" role="tab"
+            <a class="nav-link" #privateTab data-toggle="tab" href="#private-chat" role="tab"
                aria-controls="answered-container" aria-selected="true" (click)="handleTabClick(1)">
                 {{ 'Private' | localize }}
             </a>
@@ -24,6 +24,7 @@
                             [isPublicChat]="true"
                             [hasActions]="false"
                             [showMessageStatus]="false"
+                            [isSidebar]="true"
                         ></app-chat-conversation>
                     </ng-container>
                 </div>
@@ -101,6 +102,7 @@
                             [channel]="selectedChannel"
                             [referenceId]="referenceId"
                             [isPrivateChat]="true"
+                            [isSidebar]="true"
                             [minTime]="referenceServiceCreationTime"
                             [mutedUserChannelIds]="mutedUserChannelIds"
                             [isUserBlocked]="isUserBlocked"

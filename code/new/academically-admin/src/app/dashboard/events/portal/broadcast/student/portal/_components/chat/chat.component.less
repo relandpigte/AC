@@ -10,13 +10,14 @@
 .chat {
     &-nav {
         padding: 0 20px;
+        height: 70px;
 
         .nav-item {
             margin-left: 10px;
             margin-right: 10px;
 
             .nav-link {
-                padding: 25px 0;
+                padding: 23px 0;
             }
 
             &:first-child {
@@ -37,7 +38,7 @@
 
     &-recipients,
     &-conversation {
-        padding: 20px 20px 0;
+        padding: 20px;
         overflow: auto;
         scroll-behavior: smooth;
 
@@ -101,7 +102,7 @@
             }
 
             &-content {
-                max-height: 425px;
+                height: 425px;
                 overflow: hidden;
                 transition: max-height 0.4s ease-in-out;
 

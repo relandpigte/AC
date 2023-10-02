@@ -19,7 +19,7 @@
         <h4 class="m-0 d-flex gap-10">
             <a href="javascript:void(0);" [class.font-weight-bold]="isPrivateChat">{{ isBlocked ? ("User" | titlecase) : userFullName }}</a>
             <span *ngIf="isMutedChannel && isPrivateChat">
-                 <img src="/assets/img/chat/bell-off.svg" class="w-12-px h-12-px" alt="Muted" />
+                 <img src="assets/img/events/chat/mute.svg" class="w-16-px h-16-px" alt="Muted" />
             </span>
         </h4>
         <ng-container *ngIf="!isPrivateChat">

@@ -15,6 +15,7 @@ import { takeUntil } from 'rxjs/operators';
 export class ChatConversationMessageComponent extends AppComponentBase implements OnInit {
   @Input() data: ChannelMessageDto;
   @Input() isBlockedByRecipient: boolean;
+  @Input() isSidebar: boolean;
 
   @Output() onReplyClick: EventEmitter<ChannelMessageDto> = new EventEmitter();
   @Output() onMessageInfoClick: Subject<ChannelMessageDto> = new Subject<ChannelMessageDto>();

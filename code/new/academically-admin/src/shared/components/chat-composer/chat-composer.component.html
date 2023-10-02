@@ -84,6 +84,8 @@
     <app-service-preview-lite
         [service]="selectedService"
         [canRemove]="true"
+        [isSidebar]="true"
+        [composerPreview]="true"
         (onRemove)="handleRemoveSelectedService()"
     ></app-service-preview-lite>
 </div>

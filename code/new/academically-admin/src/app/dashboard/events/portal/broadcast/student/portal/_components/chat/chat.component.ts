@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import {
   AvailableServiceDto,
@@ -18,6 +18,7 @@ import { BehaviorSubject } from 'rxjs';
 import { StateUpdateType } from '@shared/services/state-base.service';
 import * as moment from 'moment';
 import * as _ from 'lodash';
+import { ElementRef } from '@node_modules/@angular/core';
 
 @Component({
   selector: 'app-sidebar-chat',
@@ -26,6 +27,8 @@ import * as _ from 'lodash';
 })
 export class ChatComponent extends AppComponentBase implements OnInit {
   @Input() referenceId: string;
+
+  @ViewChild('privateTab', { read: ElementRef }) privateTab: ElementRef<HTMLAnchorElement>;
 
   referenceService: AvailableServiceDto;
   channelsStateService: ChannelsStateService;
@@ -58,7 +61,8 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     private _postsService: PostsServiceProxy,
     private _chatService: ChatService,
     private _chatsService: ChatsServiceProxy,
-    private _userService: UserServiceProxy
+    private _userService: UserServiceProxy,
+    private _renderer: Renderer2
   ) {
     super(injector);
 
@@ -135,6 +139,7 @@ export class ChatComponent extends AppComponentBase implements OnInit {
   }
 
   handleBackToChannels(): void {
+    setTimeout(() => this.privateTab.nativeElement.click());
     this.selectedChannel = null;
     this.replyingToUser = null;
   }

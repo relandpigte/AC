@@ -42,6 +42,7 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
   @Input() mutedUserChannelIds: string[];
   @Input() isPublicChat: boolean;
   @Input() isPrivateChat: boolean;
+  @Input() isSidebar: boolean;
 
   @Input() blockUserIds: number[] = [];
   @Input() isUserBlocked: boolean;

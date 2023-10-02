@@ -8,9 +8,23 @@
     }
 }
 
+.private-conversation {
+
+}
+
 .conversation {
     &-header {
         padding: 1.25rem 1.5rem;
+
+        &.private {
+            height: 70px;
+            display: flex;
+            align-items: center;
+
+            & > div {
+                width: 100%;
+            }
+        }
 
         &-avatar {
             margin-right: 1.125rem;
@@ -71,10 +85,15 @@
 
         .private {
             padding: 20px;
+            gap: 15px !important;
 
             &>div:first-child {
                 display: none;
             }
+        }
+
+        .public {
+            gap: 15px !important;
         }
     }
 

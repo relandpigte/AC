@@ -14,7 +14,9 @@ import * as moment from 'moment';
 })
 export class ServicePreviewLiteComponent extends AppComponentBase implements OnChanges {
     @Input() service: any;
-    @Input() canRemove: boolean = true;
+    @Input() canRemove = true;
+    @Input() isSidebar: boolean;
+    @Input() composerPreview: boolean;
 
     @Output() onClick = new EventEmitter<any>();
     @Output() onRemove = new EventEmitter<any>();
@@ -22,12 +24,17 @@ export class ServicePreviewLiteComponent extends AppComponentBase implements OnC
     sanitized: ServiceCard;
     sanitizedOptions: ServiceCardOptions;
 
-    constructor(
-        injector: Injector
-    ) {
+    constructor(injector: Injector) {
         super(injector);
     }
 
+    get textLimit(): number {
+        if (this.isSidebar && this.composerPreview) {
+            return 40;
+        } else if (this.isSidebar) {
+            return 23;
+        }
+    }
     get thumbnailImageUrl(): string { return this.service?.thumbnailImageUrl ? this.service.thumbnailImageUrl : 'assets/img/img-placeholder.png'; }
     get creatorName(): string { return this.service?.creatorUser?.fullName ? this.service.creatorUser.fullName : 'Anonymous'; }
     get creatorProfilePictureUrl(): string { return this.service?.creatorUser?.profilePictureUrl ? this.service.creatorUser.profilePictureUrl : 'assets/img/anonymous.png'; }

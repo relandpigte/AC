@@ -2,7 +2,7 @@
     <div class="conversation-wrapper d-flex flex-column gap-5" [class.has-reply]="parentMessage" [ngClass]="isSender ? 'sender' : 'recipient'" [class.msg-empty]="!chatMessage">
         <div class="d-flex gap-10">
             <div *ngIf="!isSender && parentMessage" [style.width.px]="35" [style.height.px]="35"></div>
-            <div *ngIf="parentMessage" class="parent-message">
+            <div *ngIf="parentMessage" class="parent-message" [class.sidebar]="isSidebar">
                 <div class="parent-message-header d-flex flex-column align-items-start gap-3">
                     <div class="user-info d-flex gap-5">
                         <div class="name font-weight-bold">{{ parentMessage?.creatorUser?.fullName | titlecase }}</div>
@@ -17,7 +17,7 @@
 
         <div class="d-flex gap-10">
             <app-user-avatar *ngIf="!isSender && chatMessage" [data]="data?.creatorUser" [isBlocked]="isBlockedByRecipient" [showStatus]="false" [width]="35" [height]="35"></app-user-avatar>
-            <div *ngIf="chatMessage" class="message position-relative">
+            <div *ngIf="chatMessage" class="message position-relative" [class.sidebar]="isSidebar">
                 <div class="message-header d-flex align-items-center gap-10">
                     <div class="user-info d-flex align-items-center gap-5">
                         <div *ngIf="!isBlockedByRecipient" class="name font-weight-bold">{{ data?.creatorUser?.fullName | titlecase }}</div>
@@ -54,7 +54,7 @@
                 <img *ngIf="data?.creatorUser?.profilePictureUrl" class="avatar-img rounded-circle" [src]="getProfilePicture(data?.creatorUser?.profilePictureUrl)" [alt]="data?.creatorUser?.fullName"/>
                 <img *ngIf="!data?.creatorUser?.profilePictureUrl" class="avatar-img rounded-circle" src="assets/img/anonymous.png" alt="..."/>
             </div>
-            <app-service-preview-lite [service]="getAttachedService(data)" [canRemove]="false"></app-service-preview-lite>
+            <app-service-preview-lite [service]="getAttachedService(data)" [canRemove]="false" [isSidebar]="isSidebar"></app-service-preview-lite>
             <app-attachment-preview
                 *ngIf="fileAttachment"
                 [file]="fileAttachment"
