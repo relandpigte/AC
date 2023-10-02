@@ -76,6 +76,10 @@ export class ChatComponent extends AppComponentBase implements OnInit {
         this.selectedChannel = channel;
         this._chatService.replyingToUser$.next(channel?.members?.find(m => m.userId !== this.appSession.userId)?.user);
       });
+
+    this._chatService.deleteChannel$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(channel => this.handleOnDeleteChannel(channel));
   }
 
   get channelsStateId(): string { return 'chats'; }
@@ -110,6 +114,13 @@ export class ChatComponent extends AppComponentBase implements OnInit {
   handleBackToChannels(): void {
     this.selectedChannel = null;
     this.replyingToUser = null;
+  }
+
+  handleOnDeleteChannel(channel: ChannelDto): void {
+    this._chatsService.deleteChannel(channel.id).subscribe(() => {
+      this._chatService.selectedChannelType$.next(this.selectedChannelType);
+      this.handleBackToChannels();
+    });
   }
 
   private async getReferenceService() {
