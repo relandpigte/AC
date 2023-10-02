@@ -52,9 +52,12 @@
 </div>
 
 <div *ngIf="isUserBlocked" class="composer-blocked d-flex align-items-center">
-    <div class="d-flex flex-column">
+    <div *ngIf="!isPrivateChat" class="d-flex flex-column">
         <h4>You’ve blocked this user</h4>
         <p class="m-0 p-0 text-muted">You can’t receive or send messages to this user</p>
+    </div>
+    <div *ngIf="isPrivateChat" class="d-flex flex-column">
+        <p class="m-0 p-0 text-muted">You’ve blocked this user</p>
     </div>
     <div class="ml-auto">
         <button class="btn btn-outline-primary" (click)="handleUnBlockUser()">Unblock</button>

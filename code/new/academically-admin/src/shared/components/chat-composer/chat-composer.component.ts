@@ -25,6 +25,7 @@ export class ChatComposerComponent extends AppComponentBase implements OnInit{
   @Input() replyingTo: ChannelMessageDto;
   @Input() isUserBlocked: boolean;
   @Input() blockedByUser: number[];
+  @Input() isPrivateChat: boolean;
   @Output() onUnblock: Subject<any> = new Subject<any>();
 
   typingTimer$: any;

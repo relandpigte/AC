@@ -45,6 +45,7 @@
                                 *ngFor="let channel of channels"
                                 [channel]="channel"
                                 [mutedUserChannelIds]="mutedUserChannelIds"
+                                [blockedByUser]="currentUserBlocker"
                                 (click)="handleSelectChannel(channel)"
                             ></app-chat-recipient>
                         </ng-container>
@@ -94,7 +95,6 @@
                     </div>
                 </ng-container>
 
-
                 <ng-container *ngIf="selectedChannel || replyingToUser" >
                     <div class="chat-conversation flex-grow-1 p-0" style="height: 0">
                         <app-chat-conversation
@@ -103,18 +103,25 @@
                             [isPrivateChat]="true"
                             [minTime]="referenceServiceCreationTime"
                             [mutedUserChannelIds]="mutedUserChannelIds"
+                            [isUserBlocked]="isUserBlocked"
+                            [blockedByUser]="currentUserBlocker"
                             (onBackToChannels)="handleBackToChannels()"
                             (onProcessNotification)="handleNotification($event)"
+                            (onBlockUser)="handleBlockUser()"
+                            (onUnblockUser)="handleUnBlockUser()"
                         ></app-chat-conversation>
                     </div>
                     <div class="chat-composer mt-auto">
                         <app-chat-composer
                             [channel]="selectedChannel"
                             [referenceId]="referenceId"
+                            [blockedByUser]="currentUserBlocker"
+                            [isUserBlocked]="isUserBlocked"
+                            [isPrivateChat]="true"
+                            (onUnblock)="handleUnBlockUser()"
                         ></app-chat-composer>
                     </div>
                 </ng-container>
-
             </div>
         </div>
     </div>
