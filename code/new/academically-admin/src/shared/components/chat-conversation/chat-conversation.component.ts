@@ -40,7 +40,8 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
   @Input() showMessageStatus = true;
   @Input() isRecipientTyping = false;
   @Input() mutedUserChannelIds: string[];
-  @Input() isSidebar: boolean;
+  @Input() isPublicChat: boolean;
+  @Input() isPrivateChat: boolean;
 
   @Input() blockUserIds: number[] = [];
   @Input() isUserBlocked: boolean;
@@ -50,6 +51,7 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
   @Output() onCloseClick: EventEmitter<any> = new EventEmitter();
   @Output() onBlockUser: EventEmitter<any> = new EventEmitter();
   @Output() onUnblockUser: EventEmitter<any> = new EventEmitter();
+  @Output() onBackToChannels: EventEmitter<any> = new EventEmitter();
   @Output() onProcessNotification: EventEmitter<NotificationType> = new EventEmitter<NotificationType>();
 
   channelMessages: ChannelMessageDto[] = [];
@@ -153,6 +155,10 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
       this.totalChannelMessagesCount = this.channelMessagesStateService.totalChannelMessagesCount;
       if (this.selectedMatchedChannel) this.initSearchResults();
     }
+  }
+
+  handleBackToChannelsList(): void {
+    this.onBackToChannels.emit();
   }
 
   handleBlockUser(): void {

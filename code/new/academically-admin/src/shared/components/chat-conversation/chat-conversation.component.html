@@ -1,6 +1,9 @@
 <div class="conversation">
-    <div class="conversation-header border-bottom" *ngIf="!isSidebar">
+    <div class="conversation-header border-bottom" *ngIf="!isPublicChat">
         <div class="d-flex align-items-center">
+            <div *ngIf="isPrivateChat" class="conversation-back cursor-pointer" (click)="handleBackToChannelsList()">
+                <img src="assets/img/events/chat/back.svg" alt="Back">
+            </div>
             <div class="conversation-header-avatar flex-grow-1">
                 <app-user-avatar *ngIf="replyingToUser " [data]="replyingToUser" [isBlocked]="isBlockedByRecipient" [showStatus]="false" [type]="avatarType.NameAndStatus"></app-user-avatar>
             </div>
@@ -51,7 +54,7 @@
 
     <div class="conversation-content scroll-wrapper" #scrollWrapper>
         <div class="d-flex flex-column gap-20" #scrollContent>
-            <div class="conversation-day-title text-center" *ngIf="!isSidebar">
+            <div class="conversation-day-title text-center" *ngIf="!isPublicChat">
                 <span class="title mx-auto">Today</span>
             </div>
 

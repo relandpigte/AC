@@ -20,10 +20,10 @@ export class ChatComponent extends AppComponentBase implements OnInit {
   @Input() referenceId: string;
 
   referenceService: AvailableServiceDto;
-
   channelsStateService: ChannelsStateService;
 
   channels: ChannelDto[] = [];
+  privateChannels: ChannelDto[] = [];
   totalChannelsCount = 0;
 
   selectedChannelType = 0;
@@ -33,6 +33,7 @@ export class ChatComponent extends AppComponentBase implements OnInit {
 
   joinedUsers: UserDto[] = [];
   notJoinedUsers: UserDto[] = [];
+  replyingToUser: UserDto;
 
   toggleAttendee = false;
   searchUser: string;
@@ -60,7 +61,20 @@ export class ChatComponent extends AppComponentBase implements OnInit {
 
         this.channels = this.channelsStateService.getAllChannels();
         this.totalChannelsCount = this.channelsStateService.totalChannelsCount;
-        this._chatService.selectedChannel$.next(this.channels?.[0]);
+        this.privateChannels = this.channels?.filter(c => c.referenceId === null);
+      });
+
+    this._chatService.replyingToUser$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(user => {
+        this.replyingToUser = user;
+      });
+
+    this._chatService.selectedChannel$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(channel => {
+        this.selectedChannel = channel;
+        this._chatService.replyingToUser$.next(channel?.members?.find(m => m.userId !== this.appSession.userId)?.user);
       });
   }
 
@@ -72,6 +86,30 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     await this.getReferenceService();
     await this.initChannelsAppStates();
     this.getEventUsers();
+  }
+
+  handleAddRecipient(user: UserDto): void {
+    const existingChannel = this.channels.find(c => c.members.some(e => e.userId === user.id));
+    if (existingChannel) {
+      this._chatService.selectedChannel$.next(existingChannel);
+    } else {
+      this._chatService.selectedChannel$.next(null);
+      this._chatService.replyingToUser$.next(user);
+    }
+    this.toggleAttendee = false;
+  }
+
+  handleTabClick(channelType: number): void {
+    this._chatService.selectedChannelType$.next(channelType);
+  }
+
+  handleSelectChannel(channel: ChannelDto): void {
+    this.selectedChannel = channel;
+  }
+
+  handleBackToChannels(): void {
+    this.selectedChannel = null;
+    this.replyingToUser = null;
   }
 
   private async getReferenceService() {
@@ -122,9 +160,6 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     });
     this.channels = this.channelsStateService.getAllChannels();
     this.totalChannelsCount = this.channelsStateService.totalChannelsCount;
-    this._chatService.selectedChannel$.next(this.channels?.[0]);
-
-    console.log(this.channels);
   }
 
   private getEventUsers(): void {
@@ -134,9 +169,5 @@ export class ChatComponent extends AppComponentBase implements OnInit {
         this.joinedUsers = users.joined;
         this.notJoinedUsers = users.notJoined;
       });
-  }
-
-  handleTabClick(channelType: number): void {
-    this._chatService.selectedChannelType$.next(channelType);
   }
 }

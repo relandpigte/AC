@@ -31,14 +31,14 @@
             </ng-container>
             <ng-container *ngIf="!isConversationEmpty else emptyConversations">
                 <div class="chat-content-left-recipients" [attr.hidden]="isSearchingKeyword ? '' : null">
-                    <app-recipient
+                    <app-chat-recipient
                         *ngFor="let c of channels"
                         [channel]="c"
                         [isActive]="c.id === selectedChannel?.id"
                         [mutedUserChannelIds]="mutedUserChannelIds"
                         [blockedByUser]="currentUserBlocker"
                         (click)="handleOnChannelSelect(c)"
-                    ></app-recipient>
+                    ></app-chat-recipient>
                 </div>
             </ng-container>
         </div>

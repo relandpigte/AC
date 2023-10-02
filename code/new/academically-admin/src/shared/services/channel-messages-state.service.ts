@@ -74,7 +74,7 @@ export class ChannelMessagesStateService extends StateServiceBase {
     };
 
     handleUpsertChannelMessages = async (channelMessage: ChannelMessageDto) => {
-        if (!this.canViewChannelMessage(channelMessage)) return;
+        // if (!this.canViewChannelMessage(channelMessage)) return;
         this.loading$.next(true);
         this.updateFromMap(this.channelMessages, Utils.toObjectMap([channelMessage], (c) => c.id, (p) => p), this.channelMessages$);
         this.loading$.next(false);

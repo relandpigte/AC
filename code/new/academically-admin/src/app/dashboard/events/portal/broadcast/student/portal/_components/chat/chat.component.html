@@ -18,12 +18,14 @@
         <div *ngIf="selectedChannelType === 0" class="tab-pane fade show active" id="public-chat" role="tabpanel">
             <div class="chat-container d-flex flex-column h-100p">
                 <div class="chat-conversation flex-grow-1" style="height: 0;">
-                    <app-chat-conversation
-                        [channel]="publicChannel"
-                        [isSidebar]="true"
-                        [hasActions]="false"
-                        [showMessageStatus]="false"
-                    ></app-chat-conversation>
+                    <ng-container *ngIf="publicChannel else noMessages">
+                        <app-chat-conversation
+                            [channel]="publicChannel"
+                            [isPublicChat]="true"
+                            [hasActions]="false"
+                            [showMessageStatus]="false"
+                        ></app-chat-conversation>
+                    </ng-container>
                 </div>
                 <div class="chat-composer mt-auto">
                     <app-chat-composer
@@ -36,65 +38,91 @@
 
         <div *ngIf="selectedChannelType === 1" class="tab-pane fade" id="private-chat" role="tabpanel">
             <div class="chat-container d-flex flex-column h-100p">
-                <div class="chat-conversation flex-grow-1" style="height: 0;">
-                    <ng-container *ngIf="false else noMessages">
-                        <app-chat-conversation
-                            [referenceId]="referenceId"
-                            [minTime]="referenceServiceCreationTime"
-                            [isSidebar]="true"
-                            [hasActions]="false"
-                        ></app-chat-conversation>
-                    </ng-container>
-                </div>
-                <div class="chat-composer mt-auto hidden">
-                    <app-chat-composer></app-chat-composer>
-                </div>
-                <div class="chat-user-list" [ngClass]="{ 'closed': !toggleAttendee }">
-                    <div [ngClass]="{ 'closed': !toggleAttendee }"
-                         class="dropup-trigger d-flex align-items-center justify-content-between"
-                         (click)="toggleAttendee = !toggleAttendee">
-                        <span>Attendees</span>
-                        <span><img src="assets/img/events/chat/down.svg" alt="Attendees"/></span>
+                <ng-container *ngIf="!selectedChannel && !replyingToUser">
+                    <div class="chat-recipients flex-grow-1 p-0" style="height: 0">
+                        <ng-container *ngIf="!!channels?.length else noConversations">
+                            <app-chat-recipient
+                                *ngFor="let channel of channels"
+                                [channel]="channel"
+                                (click)="handleSelectChannel(channel)"
+                            ></app-chat-recipient>
+                        </ng-container>
                     </div>
-                    <div class="dropup-content" [ngClass]="{ 'closed': !toggleAttendee }">
-                        <div class="dropup-content-search d-flex align-items-center">
-                            <form>
-                                <div class="input-group input-group-flush">
-                                    <div class="input-group-prepend">
+                    <div class="chat-user-list" [ngClass]="{ 'closed': !toggleAttendee }">
+                        <div [ngClass]="{ 'closed': !toggleAttendee }"
+                             class="dropup-trigger d-flex align-items-center justify-content-between"
+                             (click)="toggleAttendee = !toggleAttendee">
+                            <span>Attendees</span>
+                            <span><img src="assets/img/events/chat/down.svg" alt="Attendees"/></span>
+                        </div>
+                        <div class="dropup-content" [ngClass]="{ 'closed': !toggleAttendee }">
+                            <div class="dropup-content-search d-flex align-items-center">
+                                <form>
+                                    <div class="input-group input-group-flush">
+                                        <div class="input-group-prepend">
                                         <span class="input-group-text">
                                             <i class="fe fe-search"></i>
                                         </span>
+                                        </div>
+                                        <input [(ngModel)]="searchUser" class="list-search form-control" type="search"
+                                               name="Search" placeholder="Search"/>
                                     </div>
-                                    <input [(ngModel)]="searchUser" class="list-search form-control" type="search" name="Search" placeholder="Search"/>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="dropup-content-user">
-                            <div *ngFor="let user of joinedUsers | search: searchUser"
-                                 class="user-list d-flex align-items-center cursor-pointer gap-10">
-                                <a class="avatar avatar-sm" href="javascript: void(0)">
-                                    <img [src]="getProfilePictureUrl(user.profilePictureDocument)" [alt]="user.fullName"
-                                         class="avatar-img rounded-circle">
-                                </a>
-                                <span>{{ user.fullName }}</span>
+                                </form>
                             </div>
-                            <div *ngIf="!!notJoinedUsers?.length" class="not-joined">{{ 'NotJoined' | localize }}</div>
-                            <div *ngFor="let user of notJoinedUsers | search: searchUser"
-                                 class="user-list d-flex align-items-center cursor-pointer gap-10">
-                                <a class="avatar avatar-sm" href="javascript: void(0)">
-                                    <img [src]="getProfilePictureUrl(user.profilePictureDocument)" [alt]="user.fullName"
-                                         class="avatar-img rounded-circle">
-                                </a>
-                                <span>{{ user.fullName }}</span>
+                            <div class="dropup-content-user">
+                                <div
+                                    *ngFor="let user of joinedUsers | search: searchUser" (click)="handleAddRecipient(user)"
+                                     class="user-list d-flex align-items-center cursor-pointer gap-10">
+                                    <a class="avatar avatar-sm" href="javascript: void(0)">
+                                        <img [src]="getProfilePictureUrl(user.profilePictureDocument)" [alt]="user.fullName"
+                                             class="avatar-img rounded-circle">
+                                    </a>
+                                    <span>{{ user.fullName }}</span>
+                                </div>
+                                <div *ngIf="!!notJoinedUsers?.length" class="not-joined">{{ 'NotJoined' | localize }}</div>
+                                <div *ngFor="let user of notJoinedUsers | search: searchUser" (click)="handleAddRecipient(user)"
+                                     class="user-list d-flex align-items-center cursor-pointer gap-10">
+                                    <a class="avatar avatar-sm" href="javascript: void(0)">
+                                        <img [src]="getProfilePictureUrl(user.profilePictureDocument)" [alt]="user.fullName"
+                                             class="avatar-img rounded-circle">
+                                    </a>
+                                    <span>{{ user.fullName }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </ng-container>
+
+
+                <ng-container *ngIf="selectedChannel || replyingToUser" >
+                    <div class="chat-conversation flex-grow-1 p-0" style="height: 0">
+                        <app-chat-conversation
+                            [channel]="selectedChannel"
+                            [referenceId]="referenceId"
+                            [isPrivateChat]="true"
+                            [minTime]="referenceServiceCreationTime"
+                            (onBackToChannels)="handleBackToChannels()"
+                        ></app-chat-conversation>
+                    </div>
+                    <div class="chat-composer mt-auto">
+                        <app-chat-composer
+                            [channel]="selectedChannel"
+                            [referenceId]="referenceId"
+                        ></app-chat-composer>
+                    </div>
+                </ng-container>
+
             </div>
         </div>
     </div>
 </div>
 
 <ng-template #noMessages>
-    <span class="no-messages text-muted">{{ 'NoMessages' | localize }}</span>
+    <div class="chat-recipients flex-grow-1 p-0">
+        <span class="no-messages text-muted">{{ 'NoMessages' | localize }}</span>
+    </div>
+</ng-template>
+
+<ng-template #noConversations>
+    <span class="no-conversations text-muted">{{ 'NoConversations' | localize }}</span>
 </ng-template>

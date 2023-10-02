@@ -8,7 +8,6 @@ import { AppSharedModule } from '../_shared/app-shared.module';
 import { SearchFilterComponent } from './_components/search-filter/search-filter.component';
 import { SearchUsersComponent } from './_components/search-users/search-users.component';
 import { SearchKeywordComponent } from './_components/search-keyword/search-keyword.component';
-import { RecipientComponent } from '@app/chat/_components/recipient/recipient.component';
 
 
 @NgModule({
@@ -16,8 +15,7 @@ import { RecipientComponent } from '@app/chat/_components/recipient/recipient.co
     ChatComponent,
     SearchFilterComponent,
     SearchUsersComponent,
-    SearchKeywordComponent,
-    RecipientComponent
+    SearchKeywordComponent
   ],
   imports: [
     CommonModule,

@@ -16,11 +16,11 @@ export enum ChatStatus {
 }
 
 @Component({
-  selector: 'app-recipient',
-  templateUrl: './recipient.component.html',
-  styleUrls: ['./recipient.component.less']
+  selector: 'app-chat-recipient',
+  templateUrl: './chat-recipient.component.html',
+  styleUrls: ['./chat-recipient.component.less']
 })
-export class RecipientComponent extends AppComponentBase implements OnChanges, OnInit, OnDestroy {
+export class ChatRecipientComponent extends AppComponentBase implements OnChanges, OnInit, OnDestroy {
   @Input() channel: ChannelDto;
   @Input() isActive = false;
   @Input() blockedByUser: number[];

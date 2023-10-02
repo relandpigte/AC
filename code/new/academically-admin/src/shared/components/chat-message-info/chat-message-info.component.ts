@@ -17,8 +17,8 @@ export class ChatMessageInfoComponent extends AppComponentBase {
     super(injector);
   }
 
-  get channelMessageDelivered(): string { return this.convertMomentToDateAgo(this.channelMessage?.creationTime); }
+  get channelMessageDelivered(): string { return this.convertMomentToChatDateFormat(this.channelMessage?.creationTime); }
   get channelMessageSeen(): string {
-    return this.channelMessage.isSeen ? this.convertMomentToDateAgo(this.channelMessage.isSeen) : '–';
+    return this.channelMessage.isSeen ? this.convertMomentToChatDateFormat(this.channelMessage.isSeen) : '–';
   }
 }
