@@ -221,6 +221,7 @@ namespace Academically.Services.Chats
                     }
                 }
                 await GetBlockedUsers(channel);
+                channel.IsArchive = await _channelArchiveRepository.CountAsync(c => c.ChannelId == channel.Id) > 0;
             }
 
             return channels;
@@ -359,6 +360,8 @@ namespace Academically.Services.Chats
                     }
                 }
                 await GetBlockedUsers(channel);
+
+                channel.IsArchive = await _channelArchiveRepository.CountAsync(c => c.ChannelId == channel.Id) > 0;
             }
 
             return channels;

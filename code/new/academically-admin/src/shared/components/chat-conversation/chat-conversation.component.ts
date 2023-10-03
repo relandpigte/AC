@@ -88,6 +88,7 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
     super(injector);
   }
 
+  get isArchive(): boolean { return this.channel?.isArchive; }
   get isLoading$() { return combineLatest(this.loadingSources$).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
   get loadingSources$() { return [ this.isLoadingMessages$ ]; }
 
@@ -187,6 +188,10 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
       }
     };
     this._modalDialogService.showConfirmDialog(options);
+  }
+
+  handleUnArchiveChannel(): void {
+    this._chatService.unArchiveChannel$.next(this.channel);
   }
 
   private async initChannelMessagesAppStates() {

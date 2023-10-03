@@ -14,7 +14,7 @@
         (onProcessNotification)="handleNotification($event)"
     ></app-chat-conversation>
 </div>
-<div *ngIf="!isSearchingUser" class="chat-conversation-composer border-top mt-auto" [class.has-attachment]="!!replyingTo">
+<div *ngIf="!isSearchingUser" class="chat-conversation-composer border-top mt-auto" [class.has-attachment]="hasAttachment">
     <app-chat-composer
         [channel]="channel"
         [replyingTo]="replyingTo"

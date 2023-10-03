@@ -16,6 +16,7 @@ export class ChatService {
   replyToMessage$: Subject<ChannelMessageDto> = new Subject();
   deleteChannel$: Subject<ChannelDto> = new Subject();
   archiveChannel$: Subject<ChannelDto> = new Subject();
+  unArchiveChannel$: Subject<ChannelDto> = new Subject();
   userTyping$: Subject<boolean> = new Subject();
 
   searchUser$: Subject<string> = new Subject<string>();

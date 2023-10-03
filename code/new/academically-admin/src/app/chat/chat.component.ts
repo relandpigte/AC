@@ -10,7 +10,6 @@ import { StateUpdateType } from '@shared/services/state-base.service';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { distinctUntilChanged, skip, switchMap, takeUntil } from 'rxjs/operators';
 import { SearchFilterComponent } from './_components/search-filter/search-filter.component';
-import { FileUtils } from '@shared/helpers/file-utils';
 import * as _ from 'lodash';
 import {
   ChatComposerConversationComponent
@@ -85,6 +84,10 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     this._chatService.archiveChannel$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(channel => this.handleOnArchiveChannel(channel));
+
+    this._chatService.unArchiveChannel$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(channel => this.handleOnUnArchiveChannel(channel));
 
     this._chatService.deleteChannel$
       .pipe(takeUntil(this.destroyed$))
@@ -169,10 +172,17 @@ export class ChatComponent extends AppComponentBase implements OnInit {
   handleOnChannelSelect(channel: ChannelDto) {
     this._chatService.selectedChannel$.next(channel);
     this._chatService.isSearchingUser$.next(false);
+    this._chatService.replyToMessage$.next(null);
   }
 
   handleOnArchiveChannel(channel: ChannelDto): void {
     this._chatsService.archiveChannel(channel.id).subscribe(() => {
+      this._chatService.selectedChannelType$.next(this.selectedChannelType);
+    });
+  }
+
+  handleOnUnArchiveChannel(channel: ChannelDto): void {
+    this._chatsService.unarchiveChannel(channel.id).subscribe((): void => {
       this._chatService.selectedChannelType$.next(this.selectedChannelType);
     });
   }
@@ -274,7 +284,5 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     this.channels = this.channelsStateService.getAllChannels();
     this.totalChannelsCount = this.channelsStateService.totalChannelsCount;
     this._chatService.selectedChannel$.next(this.channels?.[0]);
-
-    console.log(this.channels);
   }
 }

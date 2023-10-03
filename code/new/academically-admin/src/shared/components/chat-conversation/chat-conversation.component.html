@@ -39,7 +39,8 @@
                             <div *ngIf="!isMutedChannel" class="dropdown-item cursor-pointer" (click)="handleNotification(notificationType.Mute)">Mute Notifications</div>
                             <div *ngIf="isMutedChannel" class="dropdown-item cursor-pointer" (click)="handleNotification(notificationType.Unmute)">Unmute Notifications</div>
                         </ng-container>
-                        <div *ngIf="!isPrivateChat" class="dropdown-item cursor-pointer" (click)="handleArchiveChannel()">Archive Conversation</div>
+                        <div *ngIf="!isPrivateChat && !isArchive" class="dropdown-item cursor-pointer" (click)="handleArchiveChannel()">Archive Conversation</div>
+                        <div *ngIf="!isPrivateChat && isArchive" class="dropdown-item cursor-pointer" (click)="handleUnArchiveChannel()">Unarchive Conversation</div>
                         <div class="dropdown-item cursor-pointer" (click)="handleDeleteChannel()">Delete Conversation</div>
                         <ng-container *ngIf="!isBlockedByRecipient">
                             <div class="dropdown-divider"></div>

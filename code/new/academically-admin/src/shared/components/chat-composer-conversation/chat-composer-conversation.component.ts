@@ -5,6 +5,7 @@ import { ChannelDto, ChannelMessageDto, UserServiceProxy } from '@shared/service
 import { takeUntil } from 'rxjs/operators';
 import { ChatService, NotificationType } from '@shared/services/chat.service';
 import { ChatComposerComponent } from '@shared/components/chat-composer/chat-composer.component';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-chat-composer-conversation',
@@ -38,12 +39,14 @@ export class ChatComposerConversationComponent extends AppComponentBase implemen
     ) {
         super(injector);
         this._chatService.selectedChannel$.pipe(takeUntil(this.destroyed$)).subscribe(c => this.channel = c);
+        this._chatService.replyToMessage$.pipe(takeUntil(this.destroyed$)).subscribe(r => this.replyingTo = r);
     }
 
     get isUserBlocked(): boolean {
         const blockUser = this.channel?.members?.find(m => m.userId !== this.appSession.userId);
         return this.blockedUserIds?.includes(blockUser?.userId);
     }
+    get hasAttachment(): boolean { return !_.isEmpty(this.replyingTo); }
 
     ngOnInit(): void {
         this.getBlockedUsersIds();
