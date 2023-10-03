@@ -274,6 +274,11 @@ export abstract class AppComponentBase implements OnDestroy {
     return moment.utc(date).local().format('D MMM[,] hh:mm a');
   }
 
+  convertMomentToShorterChatDateFormat(date: Moment): string {
+    return moment.utc(date).local().format('hh:mm a');
+
+  }
+
   convertMomentToQuestionDateFormat(date: Moment): string {
     if (moment().diff(date, 'days') < 1) return moment.utc(date).local().format('hh:mm');
     return moment.utc(date).local().format('D MMM[,] hh:mm a');

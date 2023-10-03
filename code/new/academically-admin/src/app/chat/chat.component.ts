@@ -162,7 +162,7 @@ export class ChatComponent extends AppComponentBase implements OnInit {
 
   handleOnComposeMessage(): void {
     this._chatService.isSearchingUser$.next(true);
-    this.searchUsersComponent?.searchInput.nativeElement.focus();
+    setTimeout(() => this.searchUsersComponent?.searchInput.nativeElement.focus());
   }
 
   switchToInbox(): void {

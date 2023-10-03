@@ -89,7 +89,7 @@ export class ChatRecipientComponent extends AppComponentBase implements OnChange
 
   private setReceivedDateStr(): void {
     if (this.latestMessage) {
-      this.receivedDateStr = this.convertMomentToShorterDateFormat(this.latestMessage.creationTime);
+      this.receivedDateStr = this.convertMomentToShorterChatDateFormat(this.latestMessage.creationTime);
     }
   }
 
