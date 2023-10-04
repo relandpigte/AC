@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Injector, ViewChild } from '@angular/core';
 import * as moment from 'moment';
 import { Calendar, CalendarOptions, FullCalendarComponent } from '@fullcalendar/angular';
 import { DateClickArg } from '@fullcalendar/interaction';
@@ -11,8 +11,8 @@ import { DashboardPagesService } from '@shared/services/dashboard-pages.service'
   templateUrl: './tutor-calendar.component.html',
   styleUrls: ['./tutor-calendar.component.less']
 })
-export class TutorCalendarComponent extends AppComponentBase implements OnInit, AfterViewInit {
-  @ViewChild('calendar', { static: true }) calendarComponent: FullCalendarComponent;
+export class TutorCalendarComponent extends AppComponentBase implements OnInit {
+  @ViewChild('calendar') calendarComponent: FullCalendarComponent;
 
   calendar: Calendar;
   calendarOptions: CalendarOptions = {
@@ -39,20 +39,16 @@ export class TutorCalendarComponent extends AppComponentBase implements OnInit, 
   ngOnInit(): void {
   }
 
-  ngAfterViewInit(): void {
-    this.calendar = this.calendarComponent.getApi();
-  }
-
   handleNextMonth(): void {
-    this.calendar.next();
+    this.calendarComponent.getApi().next();
   }
 
   handlePrevMonth(): void {
-    this.calendar.prev();
+    this.calendarComponent.getApi().prev();
   }
 
   handleGotoCurrentMonth(): void {
-    this.calendar.today();
+    this.calendarComponent.getApi().today();
   }
 
   private handleDateClick(arg: DateClickArg): void {

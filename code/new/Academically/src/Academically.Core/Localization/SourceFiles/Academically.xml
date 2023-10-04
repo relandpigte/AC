@@ -1959,6 +1959,7 @@
 
     <!-- Dashboard -->
     <text name="CurrentLearning">Current learning</text>
+    <text name="RecentlyCreated">Recently created</text>
     <text name="TotalRevenue">Total Revenue</text>
     <text name="ServicesCreated">Service Created</text>
     <text name="OverallPositiveReviews">Overalll Positive Reviews</text>

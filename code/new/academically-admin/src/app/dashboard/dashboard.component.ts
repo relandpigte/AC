@@ -1,13 +1,14 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, OnInit, Injector, ChangeDetectorRef } from '@angular/core';
+import { environment } from 'environments/environment';
+import { takeUntil, finalize } from 'rxjs/operators';
+import { appModuleAnimation } from '@shared/animations/routerTransition';
+import { Router, ActivatedRoute } from '@angular/router';
+
 import { AppComponentBase } from '@shared/app-component-base';
 import { UserLoginInfoDto, PaymentsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Router, ActivatedRoute } from '@angular/router';
-import { takeUntil, finalize } from 'rxjs/operators';
 import { CourseWizardComponent } from '@app/dashboard/courses/course-wizard/course-wizard.component';
-import { environment } from 'environments/environment';
 import { AppConsts } from '@shared/AppConsts';
-import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { DashboardService, DashboardServiceView } from '@app/dashboard/_services/dashboard.service';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
@@ -35,6 +36,7 @@ export class DashboardComponent extends AppComponentBase implements OnInit {
     private _modalDialogService: ModalDialogService,
     private _dashboardService: DashboardService,
     private _dashboardPageService: DashboardPagesService,
+    private _cdr: ChangeDetectorRef
   ) {
     super(injector);
     this.user = this.appSession.user;
@@ -51,6 +53,7 @@ export class DashboardComponent extends AppComponentBase implements OnInit {
 
   handleSwitchView(): void {
     this._dashboardService.handleSwitchView();
+    this._cdr.detectChanges();
   }
 
   ngOnInit(): void {
