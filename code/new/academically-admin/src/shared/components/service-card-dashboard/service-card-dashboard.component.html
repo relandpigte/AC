@@ -1,14 +1,14 @@
 
 <div [class]="'card ' + cardType" [ngClass]="{ 'overview-page': isOverview }" [class.archive]="isArchive || isExpired || isPast || isCancelled">
     <div class="card-body">
-        <div class="d-flex gap-20" [ngSwitch]="cardType">
+        <div class="d-flex" [ngSwitch]="cardType">
 
-            <div *ngIf="sanitizedOptions?.isShowDate" [class]="cardType + '-date'" class="position-relative d-flex flex-column justify-content-center align-items-center">
+            <div *ngIf="sanitizedOptions?.isShowDate" [class]="cardType + '-date'" class="position-relative d-flex flex-column justify-content-center align-items-center" [style.margin-right.px]="20">
                 <div class="day">{{ scheduleDay }}</div>
                 <div class="month">{{ scheduleMonth }}</div>
             </div>
 
-            <div *ngIf="isBooked && sanitizedOptions?.isShowMajorParticipants" [class]="cardType + '-major-participants'" [class.is-creator]="isCreator" class="position-relative d-flex flex-column justify-content-center align-items-center">
+            <div *ngIf="isBooked && sanitizedOptions?.isShowMajorParticipants" [style.margin-right.px]="20" [class]="cardType + '-major-participants'" [class.is-creator]="isCreator" class="position-relative d-flex flex-column justify-content-center align-items-center">
                 <a *ngIf="sanitized.owner.avatar.src" href="#" class="avatar avatar-xs tutor">
                     <img [src]="sanitized.owner.avatar.src" class="avatar-img rounded-circle" alt="...">
                 </a>
@@ -17,7 +17,7 @@
                 </a>
             </div>
 
-            <div *ngIf="sanitizedOptions?.isShowImages" [class]="cardType + '-thumbnail-wrapper'" class="position-relative">
+            <div *ngIf="sanitizedOptions?.isShowImages" [class]="cardType + '-thumbnail-wrapper'" class="position-relative" [style.margin-right.px]="20">
                 <a href="javascript:void(0)" class="avatar avatar-lg avatar-4by3">
                     <img [src]="images[0].src" alt="..." class="avatar-img rounded">
                 </a>
@@ -37,7 +37,7 @@
                 </div>
             </div>
 
-            <div class="flex-grow-1 d-flex flex-column">
+            <div class="flex-grow-1 d-flex flex-column" [style.margin-right.px]="40">
                 <div *ngIf="this.sanitizedOptions?.isShowHeading" [class]="cardType + '-heading heading'" [class.text-danger]="isScheduleNear && !isExpired" [class.cancelled]="isCancelled">
                     <span *ngIf="this.sanitizedOptions?.headingType === 'unbooked'" class="unbooked"> UNBOOKED </span>
                     <span *ngIf="this.sanitizedOptions?.headingType === 'location' && location" class="location">{{ location }}</span>
@@ -178,7 +178,7 @@
                     </ng-container>
                 </ng-container>
             </div>
-            <div *ngIf="isCreator" class="d-flex align-self-center">
+            <div class="d-flex align-self-center">
                 <div class="dropdown">
                     <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">

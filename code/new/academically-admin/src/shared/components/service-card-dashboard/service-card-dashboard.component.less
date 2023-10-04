@@ -129,7 +129,6 @@
     }
 
     &-progress {
-        width: 97%;
         margin-bottom: 0.313rem;
     }
 
@@ -227,7 +226,18 @@
     &-actions {
         min-width: 23.2112%;
         max-width: 100%;
-        border-left: 1px solid #D2DDEC;
+        position: relative;
+
+        &:before {
+            content: '';
+            background-color: #D2DDEC;
+            width: 1px;
+            height: 62px;
+            position: absolute;
+            left: 0;
+            bottom: auto;
+            top: auto;
+        }
 
         .btn {
             &:focus,
