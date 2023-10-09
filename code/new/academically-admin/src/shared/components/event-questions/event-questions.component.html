@@ -1,0 +1,82 @@
+<div class="question-item" [class.answer]="isAnswer">
+    <div class="question-body">
+        <div class="question-body-text">{{ body }}</div>
+        <div class="question-body-info d-flex align-items-center gap-10">
+            <div class="time">{{ convertMomentToQuestionDateFormat(time) }}</div>
+            <div class="poster d-flex align-items-center gap-10 ml-auto">
+                <div class="poster-name">{{ fullName }}</div>
+                <div class="poster-avatar">
+                    <a class="avatar avatar-xs" href="#!" (click)="$event.preventDefault();">
+                        <img [src]="getProfilePictureUrl(profilePicture)" [alt]="fullName" class="avatar-img rounded-circle"/>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-container *ngIf="!isAnswer">
+        <div class="question-actions d-flex gap-10 align-items-center" [class.mb-0]="showAnswers || isReplying">
+            <div class="question-actions-reply cursor-pointer" (click)="handleReply(question)">Reply</div>
+            <div class="question-actions-separator"></div>
+            <ng-container
+                [ngTemplateOutlet]="isHost ? host : notHost"
+                [ngTemplateOutletContext]="{question: question}"
+            ></ng-container>
+        </div>
+
+        <div *ngIf="!showAnswers && !isReplying" class="question-reply d-flex align-items-center gap-3">
+            <span *ngIf="!!replyCount" class="question-reply-count" (click)="handleShowAnswers()">{{ replyCount }} {{ 'Reply' | localize }}</span>
+            <span *ngIf="!!!replyCount" class="question-reply-count">{{ replyCount }} {{ 'Replies' | localize }}</span>
+        </div>
+    </ng-container>
+
+    <div *ngIf="!!answers && showAnswers" class="question-answers-container">
+        <app-event-questions
+            *ngFor="let answer of answers"
+            [question]="answer"
+            [showComposer]="false"
+            [isHost]="isHost"
+            [isAnswer]="true"
+        ></app-event-questions>
+    </div>
+
+    <div *ngIf="replyingToQuestion?.id === question?.id" class="question-reply-composer">
+        <app-event-questions-composer
+            (onCreateQuestion)="handleCreateQuestion($event)"
+            (onEscapeQuestion)="handleOnEscapeQuestion()"
+            [isReplying]="isReplying"
+        ></app-event-questions-composer>
+    </div>
+</div>
+
+<ng-template #notHost let-question="question">
+    <div class="question-actions-upvote d-flex align-items-center">
+        <div class="reaction cursor-pointer" [class.text-primary]="!!totalReactions"
+             (click)="handleVote(question)">
+            {{ !!totalReactions ? 'Upvoted' : 'Upvote'}}
+        </div>
+        <ng-container *ngIf="!!totalReactions">
+            <div class="reaction-count d-flex align-items-center">{{ totalReactions }}</div>
+            <div class="reaction-icon d-flex">
+                <img src="assets/img/emoticons/comment/upvote.svg" alt="Upvote"/>
+            </div>
+        </ng-container>
+    </div>
+</ng-template>
+
+<ng-template #host let-question="question">
+    <div class="question-actions-answer cursor-pointer" [class.text-primary]="!!replyCount">
+        {{ !!replyCount ? 'Answered' : 'Answer live'}}
+    </div>
+    <ng-container *ngIf="!!totalReactions">
+        <div class="question-actions-answer d-flex align-items-center gap-10">
+            <div class="question-actions-separator"></div>
+            <div class="reaction-container d-flex align-items-center">
+                <div class="reaction-count d-flex align-items-center">{{ totalReactions }}</div>
+                <div class="reaction-icon d-flex">
+                    <img src="assets/img/emoticons/comment/upvote.svg" alt="Upvote"/>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>

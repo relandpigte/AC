@@ -29,6 +29,12 @@
         NewUserLoggedIn,
         NotificationCreated,
         NotificationUpdated,
-        NotificationDeleted
+        NotificationDeleted,
+        QuestionCreated,
+        QuestionUpdated,
+        QuestionDeleted,
+        QuestionReactionCreated,
+        QuestionReactionUpdated,
+        QuestionReactionDeleted
     }
 }

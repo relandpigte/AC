@@ -1,0 +1,103 @@
+.write {
+    &-form {
+        padding: 15px 20px;
+        border-top: 1px solid #e3ebf6;
+
+        textarea {
+            overflow: hidden;
+            overflow-wrap: break-word;
+            height: 40px;
+        }
+
+        &.replying {
+            float: left;
+            padding: 15px 0 0;
+            border: 0 none;
+            width: 100%;
+
+            .write-comment-text {
+                background-color: #EDF2F9;
+                border: 1px solid #D2DDEC;
+            }
+
+            .write-comment-avatar {
+                .avatar-xs {
+                    width: 26px !important;
+                    height: 26px !important;
+                }
+            }
+        }
+    }
+
+    &-comment {
+        &.asking {
+            align-items: flex-end !important;
+
+            .write-comment-text {
+                height: 73px;
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: space-between;
+            }
+
+            .write-comment-instruction {
+                display: block;
+            }
+
+            .write-comment-tools {
+                display: flex;
+                width: 100%;
+                align-items: center;
+                margin-bottom: -5px;
+            }
+
+            .write-comment-actions {
+                margin-left: auto;
+            }
+
+            .write-comment-avatar {
+                padding-bottom: 12px;
+            }
+        }
+
+        &-text {
+            border: 1px solid #E4EBF6;
+            border-radius: 10px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+
+            textarea {
+                color: #12263F;
+            }
+        }
+
+        &-avatar {
+            .avatar-xs {
+                width: 30px !important;
+                height: 30px !important;
+            }
+        }
+
+        &-instruction {
+            display: none;
+            font-size: 13px;
+            color: #6E84A3;
+
+            span {
+                color: #2C7BE5;
+            }
+        }
+
+        &-actions {
+            a {
+                color: #B1C2D9;
+
+                &:hover {
+                    color: #2C7BE5;
+                }
+            }
+        }
+    }
+}

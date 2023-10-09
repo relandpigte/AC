@@ -11,6 +11,7 @@ namespace Academically.Services.Questions.Dto
     {
         public ReactionType Type { get; set; }
         public Guid QuestionId { get; set; }
+        public Guid ReferenceId { get; set; }
         public long CreatorUserId { get; set; }
     }
 }

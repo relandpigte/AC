@@ -1,0 +1,35 @@
+<form class="write-form" autocomplete="off" #form="ngForm" (ngSubmit)="handleCreateQuestion(form)" [class.replying]="isReplying">
+    <div class="write-comment d-flex align-items-center gap-10" [class.asking]="!!newQuestion.body?.length">
+        <div class="write-comment-text d-flex align-items-center flex-grow-1">
+                <textarea
+                    #textBody
+                    [(ngModel)]="newQuestion.body"
+                    name="question" class="form-control form-control-flush"
+                    data-toggle="autosize" rows="1" placeholder="{{ (isReplying ? 'TypeAReply'  : 'AskQuestion') | localize }}..."
+                    (keydown)="onMessageKeydown($event, form)"
+                ></textarea>
+            <div class="write-comment-tools">
+                <div class="write-comment-instruction">Press enter to <span>post</span></div>
+                <div class="write-comment-actions">
+                    <a href="#" data-bs-toggle="tooltip" aria-label="Add reactions"
+                       data-bs-original-title="Add reactions">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="feather feather-smile">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                            <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                            <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="write-comment-avatar ml-auto">
+            <div class="avatar avatar-xs">
+                <img [src]="userProfile" [alt]="userName" class="avatar-img rounded-circle"/>
+            </div>
+        </div>
+    </div>
+</form>
