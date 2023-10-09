@@ -4,12 +4,13 @@ import {
   AvailableServiceDto,
   ChannelDto,
   ChatsServiceProxy,
+  CreateChannelInputDto,
   EventUsersResponseDto,
   PostsServiceProxy,
   UserDto,
   UserServiceProxy
 } from '@shared/service-proxies/service-proxies';
-import { skip, takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, skip, takeUntil } from 'rxjs/operators';
 import { ChannelsStateService, channelsType } from '@shared/services/channels-state.service';
 import { ChatService, NotificationType } from '@shared/services/chat.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
@@ -74,7 +75,7 @@ export class ChatComponent extends AppComponentBase implements OnInit {
 
         await this.channelsStateService.updateServiceParams({
           type: channelsType.reference,
-          args: selectedChannelType === 0 ? [this.referenceId] : [this.referenceId, this.referenceServiceCreationTime]
+          args: selectedChannelType === 0 ? [this.referenceId] : [this.referenceId, true]
         });
 
         this.channels = this.channelsStateService.getAllChannels();
@@ -90,6 +91,7 @@ export class ChatComponent extends AppComponentBase implements OnInit {
 
     this._chatService.selectedChannel$
       .pipe(takeUntil(this.destroyed$))
+      .pipe(skip(1))
       .subscribe(channel => {
         this.selectedChannel = channel;
         this._chatService.replyingToUser$.next(channel?.members?.find(m => m.userId !== this.appSession.userId)?.user);
@@ -98,18 +100,32 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     this._chatService.deleteChannel$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(channel => this.handleOnDeleteChannel(channel));
+
+    this._chatService.userTyping$
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(distinctUntilChanged())
+      .subscribe(isTyping => {
+        if (this.selectedChannel) {
+          this._chatsService.setChannelMemberTyping(this.selectedChannel.id, isTyping).pipe(takeUntil(this.destroyed$)).subscribe();
+        }
+      });
   }
 
   get channelsStateId(): string { return 'chats'; }
-  get referenceServiceCreationTime(): moment.Moment { return this.referenceService?.creationTime; }
   get publicChannel(): ChannelDto { return this.selectedChannelType === 0 ? this.channels?.[0] : null; }
   get isUserBlocked(): boolean {
     const blockUser = this.selectedChannel?.members?.find(m => m.userId !== this.appSession.userId);
     return this.blockedUserIds?.includes(blockUser?.userId);
   }
 
+  get isRecipientTyping(): boolean {
+    const channel = this.channels.find(c => c.id === this.selectedChannel?.id);
+    return channel?.members?.find(m => m.userId !== this.appSession.userId)?.isTyping ?? false;
+  }
+
   async ngOnInit() {
     await this.getReferenceService();
+    await this.initPublicChannel();
     await this.initChannelsAppStates();
     this.getEventUsers();
     this.getBlockedUsersIds();
@@ -128,6 +144,7 @@ export class ChatComponent extends AppComponentBase implements OnInit {
   }
 
   handleTabClick(channelType: number): void {
+    this._chatService.selectedChannel$.next(null);
     this._chatService.selectedChannelType$.next(channelType);
     this.getAllMutedChannelByUser();
   }
@@ -212,6 +229,14 @@ export class ChatComponent extends AppComponentBase implements OnInit {
   private async getReferenceService() {
     try {
       this.referenceService = await this._postsService.getService(this.referenceId).toPromise();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  private async initPublicChannel() {
+    try {
+      await this._chatsService.createChannel(CreateChannelInputDto.fromJS({ referenceId: this.referenceId })).toPromise();
     } catch (err) {
       console.error(err);
     }

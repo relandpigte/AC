@@ -66,22 +66,21 @@ export class ChannelMessagesStateService extends StateServiceBase {
 
     canViewChannelMessage = (channelMessage: ChannelMessageDto): boolean => {
         if (!channelMessage) return false;
-        const [channelId, referenceId, minTime] = this.loadArgs;
+        const [channelId, referenceId] = this.loadArgs;
         return !channelMessage.isDeleted &&
             channelMessage.channelId === channelId &&
-            (referenceId ? channelMessage.referenceId === referenceId : true) &&
-            (minTime ? channelMessage.creationTime >= minTime : true);
+            (referenceId ? channelMessage.referenceId === referenceId : true);
     };
 
     handleUpsertChannelMessages = async (channelMessage: ChannelMessageDto) => {
-        // if (!this.canViewChannelMessage(channelMessage)) return;
+        if (!this.canViewChannelMessage(channelMessage)) return;
         this.loading$.next(true);
         this.updateFromMap(this.channelMessages, Utils.toObjectMap([channelMessage], (c) => c.id, (p) => p), this.channelMessages$);
         this.loading$.next(false);
     };
 
     handleDeleteChannelMessages = async (channelMessage: ChannelMessageDto) => {
-        // if (!this.canViewChannelMessage(channelMessage)) return;
+        if (!this.canViewChannelMessage(channelMessage)) return;
         this.loading$.next(true);
         this.updateFromMap(this.channelMessages, { [channelMessage.id]: null }, this.channelMessages$);
         this.loading$.next(false);
