@@ -49,9 +49,7 @@ export class SidebarComponent extends AppComponentBase implements OnInit, OnChan
     });
   }
 
-  ngOnInit(): void {
-    console.warn(this.isHost);
-  }
+  ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges) {
     if ('isHost' in changes) {

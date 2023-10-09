@@ -177,6 +177,7 @@
     <text name="WithAnyone">With anyone</text>
     <text name="WithAdminOnly">With admin only</text>
     <text name="AskQuestions">Ask questions</text>
+    <text name="TypeAReply">Type a reply</text>
     <text name="AllowAudienceToUpvote">Allow audience to upvote</text>
     <text name="AllowAudienceToRespond">Allow audience to respond</text>
     <text name="PrivateQuestionsWithAdmins">Private questions with admins</text>

@@ -14,6 +14,7 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using Academically.Users.Dto;
 using Academically.Services.Notifications.Dto;
+using Academically.Services.Questions.Dto;
 
 namespace Academically.Hubs
 {
@@ -47,6 +48,12 @@ namespace Academically.Hubs
         Task NotifyUsersForNewNotification(NotificationDto notification);
         Task NotifyUsersForUpdatedNotification(NotificationDto notification);
         Task NotifyUsersForDeletedNotification(NotificationDto notification);
+        Task NotifyUsersForQuestionCreated(QuestionDto question);
+        Task NotifyUsersForQuestionUpdated(QuestionDto question);
+        Task NotifyUsersForQuestionDeleted(QuestionDto question);
+        Task NotifyUsersForQuestionReactionCreated(QuestionReactionDto reaction);
+        Task NotifyUsersForQuestionReactionUpdated(QuestionReactionDto reaction);
+        Task NotifyUsersForQuestionReactionDeleted(QuestionReactionDto reaction);
     }
 
     public class HubManager : IHubManager
@@ -58,6 +65,7 @@ namespace Academically.Hubs
         private const string AllMsgChannels = "ch-msg-all";
         private const string AllUserStatusLogs = "user-status-logs";
         private const string AllNotifications = "notif-all";
+        private const string QuestionsReactionsGroup = "questions-reactions-group";
 
         private readonly IHubContext<UserTopicsHub> _userTopicsHub;
         private readonly IHubContext<PostsHub> _postsHub;
@@ -71,6 +79,8 @@ namespace Academically.Hubs
         private readonly IRepository<Post, Guid> _postRepository;
         private readonly IRepository<Comment, Guid> _commentsRepository;
         private readonly IRepository<Reaction, Guid> _reactionsRepository;
+        private readonly IHubContext<QuestionsHub> _questionHub;
+        private readonly IHubContext<QuestionsReactionsHub> _questionsReactionsHub;
 
         public HubManager(IHubContext<UserTopicsHub> userTopicsHub,
             IHubContext<PostsHub> postsHub,
@@ -83,7 +93,10 @@ namespace Academically.Hubs
             IHubContext<NotificationsHub> notificationsHub,
             IRepository<Post, Guid> postRepository,
             IRepository<Comment, Guid> commentsRepository,
-            IRepository<Reaction, Guid> reactionsRepository)
+            IRepository<Reaction, Guid> reactionsRepository,
+            IRepository<Question, Guid> questionRepository,
+            IHubContext<QuestionsHub> questionHub,
+            IHubContext<QuestionsReactionsHub> questionsReactionsHub)
         {
             _userTopicsHub = userTopicsHub;
             _postsHub = postsHub;
@@ -97,6 +110,8 @@ namespace Academically.Hubs
             _commentsRepository = commentsRepository;
             _reactionsRepository = reactionsRepository;
             _newUserLoggedInHub = newUserLoggedInHub;
+            _questionHub = questionHub;
+            _questionsReactionsHub = questionsReactionsHub;
         }
 
         public async Task NotifyUsersForPostCreated(PostDto post)
@@ -356,6 +371,42 @@ namespace Academically.Hubs
         public async Task NotifyUsersForDeletedNotification(NotificationDto notification)
         {
             await _notificationsHub.Clients.Group($"notif-{notification.UserId}").SendAsync(nameof(HubEvent.NotificationDeleted), notification);
+        }
+
+        public async Task NotifyUsersForQuestionCreated(QuestionDto question)
+        {
+            await _questionHub.Clients.Group(QuestionsReactionsGroup).SendAsync(nameof(HubEvent.QuestionUpdated), question);
+            await _questionHub.Clients.Group(question.ReferenceId).SendAsync(nameof(HubEvent.QuestionCreated), question);
+        }
+        
+        public async Task NotifyUsersForQuestionUpdated(QuestionDto question)
+        {
+            await _questionHub.Clients.Group(QuestionsReactionsGroup).SendAsync(nameof(HubEvent.QuestionUpdated), question);
+            await _questionHub.Clients.Group(question.ReferenceId).SendAsync(nameof(HubEvent.QuestionUpdated), question);
+        }
+        
+        public async Task NotifyUsersForQuestionDeleted(QuestionDto question)
+        {
+            await _questionHub.Clients.Group(QuestionsReactionsGroup).SendAsync(nameof(HubEvent.QuestionDeleted), question);
+            await _questionHub.Clients.Group(question.ReferenceId).SendAsync(nameof(HubEvent.QuestionDeleted), question);
+        }
+        
+        public async Task NotifyUsersForQuestionReactionCreated(QuestionReactionDto reaction)
+        {
+            await _questionsReactionsHub.Clients.Group(QuestionsReactionsGroup).SendAsync(nameof(HubEvent.QuestionReactionCreated), reaction);
+            await _questionsReactionsHub.Clients.Group($"{reaction.ReferenceId}").SendAsync(nameof(HubEvent.QuestionReactionCreated), reaction);
+        }
+
+        public async Task NotifyUsersForQuestionReactionUpdated(QuestionReactionDto reaction)
+        {
+            await _questionsReactionsHub.Clients.Group(QuestionsReactionsGroup).SendAsync(nameof(HubEvent.QuestionReactionUpdated), reaction);
+            await _questionsReactionsHub.Clients.Group($"{reaction.ReferenceId}").SendAsync(nameof(HubEvent.QuestionReactionUpdated), reaction);
+        }
+        
+        public async Task NotifyUsersForQuestionReactionDeleted(QuestionReactionDto reaction)
+        {
+            await _questionsReactionsHub.Clients.Group(QuestionsReactionsGroup).SendAsync(nameof(HubEvent.QuestionReactionDeleted), reaction);
+            await _questionsReactionsHub.Clients.Group($"{reaction.ReferenceId}").SendAsync(nameof(HubEvent.QuestionReactionDeleted), reaction);
         }
     }
 }

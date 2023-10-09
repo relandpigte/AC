@@ -48,6 +48,9 @@ namespace Academically.Services.Questions
                 .Include(e => e.CreatorUser)
                     .ThenInclude(e => e.ProfilePictureDocument)
                 .Include(e => e.QuestionReactions)
+                .Include(e => e.Children)
+                    .ThenInclude(q => q.CreatorUser)
+                        .ThenInclude(e => e.ProfilePictureDocument)
                 .OrderByDescending(e => e.CreationTime)
                 .Select(e => new
                 {
@@ -55,14 +58,33 @@ namespace Academically.Services.Questions
                     ChildCount = e.Children.Count(),
                 })
                 .ToListAsync();
+            
 
             return questionsWithReplyCount.Select(e =>
             {
                 var question = ObjectMapper.Map<QuestionDto>(e.Question);
                 question.ReplyCount = e.ChildCount;
+                question.Children = question.Children.OrderByDescending(c => c.CreationTime).ToList();
                 return question;
             });
         }
+
+        public async Task<QuestionDto> GetAsync(Guid questionId)
+        {
+            var question = await _questionsRepository
+                .GetAll()
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.QuestionReactions)
+                .Include(e => e.Children)
+                    .ThenInclude(q => q.CreatorUser)
+                        .ThenInclude(e => e.ProfilePictureDocument)
+                .SingleOrDefaultAsync(q => q.Id == questionId);
+            
+            question.Children = question.Children.OrderByDescending(c => c.CreationTime).ToList();
+            return ObjectMapper.Map<QuestionDto>(question);
+        }
+
 
         public async Task<PagedResultDto<QuestionDto>> GetAllRepliesAsync(PagedQuestionResultRequestDto input)
         {
@@ -104,6 +126,14 @@ namespace Academically.Services.Questions
         public async Task DeleteReactionAsync(Guid id)
         {
             await _questionsReactionsRepository.DeleteAsync(id);
+        }
+
+        public async Task<IEnumerable<QuestionReactionDto>> GetReactionByReferenceAsync(Guid referenceId)
+        {
+            return await _questionsReactionsRepository.GetAll()
+                .Where(r => r.ReferenceId == referenceId)
+                .Select(r => ObjectMapper.Map<QuestionReactionDto>(r))
+                .ToListAsync();
         }
     }
 }
