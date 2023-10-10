@@ -7,8 +7,13 @@ import { Subject } from 'rxjs';
 })
 export class ServiceOffersService {
     public newServiceOffer$ = new Subject<ServiceOfferDto>();
+    public selectedServiceOffer$ = new Subject<ServiceOfferDto>();
 
     public hasNewServiceOffer(offer: ServiceOfferDto): void {
         this.newServiceOffer$.next(offer);
+    }
+
+    public selectServiceOffer(offer: ServiceOfferDto): void {
+        this.selectedServiceOffer$.next(offer);
     }
 }

@@ -1,20 +1,20 @@
-<div class="card custom-card-shadow custom-card-border cursor-pointer m-0">
+<div class="card custom-card-shadow custom-card-border cursor-pointer m-0" (click)="onSelectServiceOffer()">
   <div class="card-body p-0">
     <div class="d-flex flex-column justify-content-center align-items-start w-100">
-      <div class="offer-service-name wrap-text" [style.marginBottom.px]="5">{{ serviceName }}</div>
+      <div class="offer-service-name wrap-text" [style.marginBottom.px]="5">{{ model.serviceName }}</div>
       <div class="d-flex justify-content-center align-items-start w-100">
         <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-start">
-          <div class="offer-service-type">{{ serviceType }}</div>
+          <div class="offer-service-type">{{ model.serviceType }}</div>
           <div class="offer-service-price d-flex justify-content-start align-items-center" [style.gap.px]="2">
-            <div class="offer-service-price-original">{{ servicePriceOriginal | currency: 'GBP' }}</div>
-            <div class="offer-service-price-offer">{{ servicePriceOffer | currency: 'GBP' }}</div>
+            <div class="offer-service-price-original">{{ model.servicePriceOriginal | currency: 'GBP' }}</div>
+            <div class="offer-service-price-offer">{{ model.servicePriceOffer | currency: 'GBP' }}</div>
           </div>
         </div>
-        <div class="offer-service-thumbnail bg-center" [ngStyle]="{ 'background-image': 'url(\'' + serviceThumbnail + '\')' }"></div>
+        <div class="offer-service-thumbnail bg-center" [ngStyle]="{ 'background-image': 'url(\'' + model.serviceThumbnail + '\')' }"></div>
       </div>
       <div class="d-flex flex-column justify-content-center align-items-start w-100">
-        <div class="offer-service-units">{{ offerUnits }} units available</div>
-        <div class="offer-service-duration">Available for {{ offerDuration }}</div>
+        <div class="offer-service-units">{{ model.offerUnits }} units available</div>
+        <div class="offer-service-duration">Available for {{ model.offerDuration }}</div>
       </div>
     </div>
   </div>

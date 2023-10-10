@@ -1,0 +1,38 @@
+<div class="d-flex flex-column justify-content-center align-items-center w-100 h-100">
+    <div class="back d-flex justify-content-start align-items-center border-bottom w-100 h-70-px cursor-pointer" [style.padding.px]="20" (click)="onBackClick()">
+        <img src="assets/img/events/chat/back.svg" alt="Back">
+        {{ 'Back to offers' | localize }}
+    </div>
+    <div class="flex-grow-1 d-flex flex-column justify-content-start align-items-start w-100"  [style.padding.px]="20">
+        <div class="offer-service-thumbnail align-self-center bg-center w-295-px h-113-px" [ngStyle]="{ 'background-image': 'url(\'' + model.serviceThumbnail + '\')' }" [style.marginBottom.px]="20"></div>
+        <div class="offer-service-name line-clamp-2" [style.marginBottom.px]="20">{{ model.serviceName }}</div>
+        <div class="offer-service-type d-flex justify-content-start align-items-end gap-14 w-100" [style.marginBottom.px]="20">
+            <div class="offer-service-type-icon"><img src="/assets/img/service-offers/case.svg" class="w-20-px h-20-px"></div>
+            <div class="offer-service-type-value">{{ model.serviceType | titlecase }}</div>
+        </div>
+        <div class="offer-service-schedule d-flex justify-content-start align-items-end gap-14 w-100" [style.marginBottom.px]="20">
+            <div class="offer-service-schedule-icon"><img src="/assets/img/service-offers/calendar.svg" class="w-20-px h-20-px"></div>
+            <div class="offer-service-schedule-value">{{ model.serviceSchedule }}</div>
+        </div>
+        <div class="offer-service-price d-flex justify-content-start align-items-end gap-14 w-100" [style.marginBottom.px]="20">
+            <div class="offer-service-price-icon"><img src="/assets/img/service-offers/percent.svg" class="w-20-px h-20-px"></div>
+            <div class="offer-service-price-value d-flex justify-content-start align-items-end gap-5">
+                <div class="offer-service-price-value-original">{{ model.servicePriceOriginal | currency: 'GBP' }}</div>
+                <div class="offer-service-price-value-discount">{{ model.servicePriceDiscount | currency: 'GBP' }}</div>
+            </div>
+        </div>
+        <div *ngIf="model.serviceDescription" class="offer-service-description d-flex flex-column justify-content-center align-items-start w-100" [style.marginBottom.px]="20">
+            <div class="offer-service-description-value" [class.line-clamp-4]="!isDescriptionExpanded">{{ model.serviceDescription }}</div>
+            <div class="offer-service-description-action cursor-pointer" (click)="isDescriptionExpanded=!isDescriptionExpanded">
+                <ng-container *ngIf="isDescriptionExpanded">{{ 'See less' | localize }}</ng-container>
+                <ng-container *ngIf="!isDescriptionExpanded">{{ 'See more' | localize }}</ng-container>
+            </div>
+        </div>
+        <div class="offer-units">{{ model.offerUnits }} units available</div>
+        <div class="offer-duration">Available for {{ model.offerDuration }}</div>
+    </div>
+    <div class="d-flex flex-column justify-content-center align-items-center w-100 gap-15" [style.padding.px]="20">
+        <div class="offer-action-edit cursor-pointer d-flex justify-content-center align-items-center">{{ 'Edit offer' | localize }}</div>
+        <div class="offer-action-launch cursor-pointer d-flex justify-content-center align-items-center">{{ 'Launch offer' | localize }}</div>
+    </div>
+</div>

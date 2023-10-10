@@ -17,6 +17,7 @@ import { RegistrantsComponent } from './_components/attendees/_components/regist
 import { SpeakRequestsComponent } from './_components/attendees/_components/speak-requests/speak-requests.component';
 import { OffersComponent } from './_components/offers/offers.component';
 import { OfferCardComponent } from './_components/offers/_components/offer-card/offer-card.component';
+import { OfferDetailsComponent } from './_components/offers/_components/offer-details/offer-details.component';
 import { ClosedComponent } from './_components/offers/_components/closed/closed.component';
 import { InfoBannerComponent } from './_components/offers/_components/info-banner/info-banner.component';
 import { OpenComponent } from './_components/offers/_components/open/open.component';
@@ -55,6 +56,7 @@ import { CommentsComponent } from './_components/comments/comments.component';
     SpeakRequestsComponent,
     OffersComponent,
     OfferCardComponent,
+    OfferDetailsComponent,
     ClosedComponent,
     InfoBannerComponent,
     OpenComponent,

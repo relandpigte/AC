@@ -250,6 +250,12 @@ export abstract class AppComponentBase implements OnDestroy {
     return moment(date).fromNow(true);
   }
 
+  convertScheduleToDisplayFormat(start: Moment, end: Moment): string {
+    const startStr = moment(start).format('HH:mm');
+    const endStr = moment(end).format('HH:mm[,] DD MMM[,] YYYY');
+    return `${startStr}-${endStr}`;
+  }
+
   convertMomentToPostDateFormat(date: Moment): string {
     return moment(date).format('dddd, DD MMMM YYYY [at] hh:mm');
   }

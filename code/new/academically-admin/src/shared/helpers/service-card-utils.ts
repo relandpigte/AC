@@ -3,6 +3,7 @@ import { ArticleDto, CoachingDto, CourseDto, EventCategory, EventDto, ServicesTy
 
 import * as _ from 'lodash';
 import { Utils } from './utils';
+import * as moment from 'moment';
 
 export class ServiceCardUtils {
 
@@ -289,5 +290,21 @@ export class ServiceCardUtils {
         case ServicesType.Workshop:
           return 'Workshop';
       }
+    }
+
+    static getServiceSchedule(data: any) {
+      const start = data.eventDateTime;
+      const end = data.endDate;
+      const duration = data.duration;
+      const sessionTimes = data.sessionTimes;
+      if (end) {
+        const times = sessionTimes.match(/([\d][\d][:][\d][\d][ ](AM|PM))/gi);
+        if (times.length) {
+          const st = moment(`${times[0]} ${moment(end).format('DD MMM[,] YYYY')}`, `hh:mm A DD MMM[,] YYYY`).format('HH:mm');
+          const et = moment(`${times[times.length-1]} ${moment(end).format('DD MMM[,] YYYY')}`, `hh:mm A DD MMM[,] YYYY`).add(duration, 'minutes').format('HH:mm[,] DD MMM[,] YYYY');
+          return `${st}-${et}`;
+        }
+      }
+      return `${moment(start).format('HH:mm')}-${moment(start).add(duration, 'minutes').format('HH:mm[,] DD MMM[,] YYYY')}`;
     }
 }
