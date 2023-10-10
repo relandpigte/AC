@@ -21404,14 +21404,23 @@ export class ServicesServiceProxy {
 
     /**
      * @param referenceId (optional) 
+     * @param status (optional) 1 = Queued
+    
+    2 = Open
+    
+    3 = Closed
      * @return Success
      */
-    getServiceOffers(referenceId: string | undefined): Observable<ServiceOfferDto[]> {
+    getServiceOffers(referenceId: string | undefined, status: ServiceOfferStatus | undefined): Observable<ServiceOfferDto[]> {
         let url_ = this.baseUrl + "/api/services/app/Services/GetServiceOffers?";
         if (referenceId === null)
             throw new Error("The parameter 'referenceId' cannot be null.");
         else if (referenceId !== undefined)
             url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        if (status === null)
+            throw new Error("The parameter 'status' cannot be null.");
+        else if (status !== undefined)
+            url_ += "status=" + encodeURIComponent("" + status) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services;
+using Academically.Domain.Enums;
 using Academically.Services.Services.Dto;
 using Academically.Services.UserServices.Dto;
 using System;
@@ -22,7 +23,7 @@ namespace Academically.Services.Services
         // service offers
 
         Task<ServiceOfferDto> UpsertServiceOffer(CreateServiceOfferDto input);
-        Task<IEnumerable<ServiceOfferDto>> GetServiceOffers(Guid referenceId);
+        Task<IEnumerable<ServiceOfferDto>> GetServiceOffers(Guid referenceId, ServiceOfferStatus? status);
         Task<ServiceOfferDto> GetServiceOffer(Guid Id);
     }
 }

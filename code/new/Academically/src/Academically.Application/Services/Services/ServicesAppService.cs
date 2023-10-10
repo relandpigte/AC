@@ -1,4 +1,5 @@
-﻿using Abp.Domain.Repositories;
+﻿using Abp.Collections.Extensions;
+using Abp.Domain.Repositories;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Services.Posts;
@@ -194,12 +195,13 @@ namespace Academically.Services.Services
             return upserted;
         }
 
-        public async Task<IEnumerable<ServiceOfferDto>> GetServiceOffers(Guid referenceId)
+        public async Task<IEnumerable<ServiceOfferDto>> GetServiceOffers(Guid referenceId, ServiceOfferStatus? status)
         {
-            var offers = await this._serviceOffersRepository.GetAll()
+            var offers = this._serviceOffersRepository.GetAll()
                 .Where(o => o.ReferenceId == referenceId)
+                .WhereIf(status.HasValue, o => o.Status == status.Value)
                 .Select(o => ObjectMapper.Map<ServiceOfferDto>(o))
-                .ToListAsync();
+                .ToList();
 
             foreach (var o in offers)
                 o.Service = await this._postsAppService.GetAvailableService(o.ServiceId);

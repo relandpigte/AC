@@ -4,12 +4,13 @@
     <table class="table table-sm mb-0">
       <tbody>
         <tr>
-          <td class="p-0 border-0">
-            <div *ngFor="let offer of offers" class="row m-0">
-              <div class="col flex-center p-0">
-                <app-offer-card [offer]="offer"></app-offer-card>
-              </div>
-            </div>
+          <td class="p-0 border-0 d-flex flex-column justify-content-start align-items-center" [style.margin.px]="20" [style.gap.px]="20">
+            <ng-container *ngIf="offers?.length > 0; else noOffers" >
+              <app-offer-card *ngFor="let offer of offers" [offer]="offer"></app-offer-card>
+            </ng-container>
+            <ng-template #noOffers>
+              <div class="col no-offers text-center">{{ 'No offers' | localize }} </div>
+            </ng-template>
           </td>
         </tr>
       </tbody>
