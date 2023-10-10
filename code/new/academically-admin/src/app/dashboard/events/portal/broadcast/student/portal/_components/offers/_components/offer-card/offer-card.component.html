@@ -1,26 +1,20 @@
-<div class="card mb-3">
-  <a href="#!visit" (click)="$event.preventDefault();">
-    <img [src]="ThumbnailSrc" alt="..." class="card-img-top">
-  </a>
-  <div class="card-body">
-    <div class="row align-items-center">
-      <div class="col">
-        <h4 class="mb-2 name">
-          <a href="#!visit" (click)="$event.preventDefault();">
-            {{ Name }}
-          </a>
-        </h4>
-        <p class="card-text small text-muted mb-0">
-          {{ OfferSize | number }}{{ OfferSizeUnit }} {{ OfferType | uppercase }}
-        </p>
-        <p class="card-text small text-muted mb-0">
-          {{ 'Shared at' }} {{ SharedAt }}
-        </p>
+<div class="card custom-card-shadow custom-card-border cursor-pointer m-0">
+  <div class="card-body p-0">
+    <div class="d-flex flex-column justify-content-center align-items-start w-100">
+      <div class="offer-service-name wrap-text" [style.marginBottom.px]="5">{{ serviceName }}</div>
+      <div class="d-flex justify-content-center align-items-start w-100">
+        <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-start">
+          <div class="offer-service-type">{{ serviceType }}</div>
+          <div class="offer-service-price d-flex justify-content-start align-items-center" [style.gap.px]="2">
+            <div class="offer-service-price-original">{{ servicePriceOriginal | currency: 'GBP' }}</div>
+            <div class="offer-service-price-offer">{{ servicePriceOffer | currency: 'GBP' }}</div>
+          </div>
+        </div>
+        <div class="offer-service-thumbnail bg-center" [ngStyle]="{ 'background-image': 'url(\'' + serviceThumbnail + '\')' }"></div>
       </div>
-      <div *ngIf="selection" class="col-auto">
-        <button class="btn btn-outline-primary btn-sm mr-2">
-          {{ 'Select' | localize }}
-        </button>
+      <div class="d-flex flex-column justify-content-center align-items-start w-100">
+        <div class="offer-service-units">{{ offerUnits }} units available</div>
+        <div class="offer-service-duration">Available for {{ offerDuration }}</div>
       </div>
     </div>
   </div>

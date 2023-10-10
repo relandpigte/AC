@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Entities.Auditing;
+using Academically.Domain.Enums;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,6 +10,7 @@ namespace Academically.Domain.Entities
     {
         public Guid ReferenceId { get; set; }
         public Guid ServiceId { get; set; }
+        public ServiceOfferStatus Status { get; set; } = ServiceOfferStatus.Queued;
         public double? PercentageDiscount { get; set; }
         public decimal? DiscountAmount { get; set; }
         public bool IsOfferDurationLimited { get; set; } = false;

@@ -14,6 +14,7 @@ namespace Academically.Services.Services.Dto
         public Guid? Id { get; set; }
         public Guid ReferenceId { get; set; }
         public Guid ServiceId { get; set; }
+        public ServiceOfferStatus Status { get; set; } = ServiceOfferStatus.Queued;
         public double? PercentageDiscount { get; set; }
         public decimal? DiscountAmount { get; set; }
         public bool IsOfferDurationLimited { get; set; } = false;

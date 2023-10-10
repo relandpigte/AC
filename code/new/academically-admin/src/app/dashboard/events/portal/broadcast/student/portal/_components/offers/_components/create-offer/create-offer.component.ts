@@ -88,7 +88,11 @@ export class CreateOfferComponent extends AppComponentBase implements OnInit {
             this.model = new CreateServiceOfferDto();
             this.selectedService = undefined;
             this.serviceOfferForm.resetForm();
-            setTimeout(() => this.isCreateAnotherOffer = true);
+            setTimeout(() => {
+                this.model.discountAmount = 0;
+                this.model.percentageDiscount = undefined;
+                this.isCreateAnotherOffer = true;
+            });
         } else {
             this._modal.hide();
         }

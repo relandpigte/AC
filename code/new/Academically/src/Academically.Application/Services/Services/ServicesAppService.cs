@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Repositories;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Services.Posts;
 using Academically.Services.Services.Dto;
 using Academically.Services.UserServices.Dto;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,7 @@ namespace Academically.Services.Services
         private readonly IRepository<ServiceMapping, Guid> _serviceMappingsRepository;
         private readonly IRepository<Service2, Guid> _service2sRepository;
         private readonly IRepository<ServiceOffer, Guid> _serviceOffersRepository;
+        private readonly IPostsAppService _postsAppService;
 
         private readonly List<Service2Dto> StaticServiceLevels = new List<Service2Dto>
             {
@@ -75,13 +77,15 @@ namespace Academically.Services.Services
             IRepository<Service, Guid> servicesRepository,
             IRepository<ServiceMapping, Guid> serviceMappingsRepository,
             IRepository<Service2, Guid> service2sRepository,
-            IRepository<ServiceOffer, Guid> serviceOffersRepository
+            IRepository<ServiceOffer, Guid> serviceOffersRepository,
+            IPostsAppService postsAppService
             )
         {
             _servicesRepository = servicesRepository;
             _serviceMappingsRepository = serviceMappingsRepository;
             _service2sRepository = service2sRepository;
             _serviceOffersRepository = serviceOffersRepository;
+            _postsAppService = postsAppService;
         }
 
         public async Task<IEnumerable<ServiceDto>> GetCategories()
@@ -185,25 +189,34 @@ namespace Academically.Services.Services
                     return ObjectMapper.Map<ServiceOfferDto>(existing);
                 }
             }
-            var newOffer = ObjectMapper.Map<ServiceOffer>(input);
-            var created = await this._serviceOffersRepository.InsertAsync(newOffer);
-            return ObjectMapper.Map<ServiceOfferDto>(created);
+            var upserted = ObjectMapper.Map<ServiceOfferDto>(await this._serviceOffersRepository.InsertAsync(ObjectMapper.Map<ServiceOffer>(input)));
+            upserted.Service = await this._postsAppService.GetAvailableService(upserted.ServiceId);
+            return upserted;
         }
 
         public async Task<IEnumerable<ServiceOfferDto>> GetServiceOffers(Guid referenceId)
         {
-            return await this._serviceOffersRepository.GetAll()
+            var offers = await this._serviceOffersRepository.GetAll()
                 .Where(o => o.ReferenceId == referenceId)
                 .Select(o => ObjectMapper.Map<ServiceOfferDto>(o))
                 .ToListAsync();
+
+            foreach (var o in offers)
+                o.Service = await this._postsAppService.GetAvailableService(o.ServiceId);
+
+            return offers;
         }
 
         public async Task<ServiceOfferDto> GetServiceOffer(Guid Id)
         {
-            return await this._serviceOffersRepository.GetAll()
+            var offer = await this._serviceOffersRepository.GetAll()
                 .Where(o => o.Id == Id)
                 .Select(o => ObjectMapper.Map<ServiceOfferDto>(o))
                 .FirstOrDefaultAsync();
+
+            offer.Service = await this._postsAppService.GetAvailableService(offer.ServiceId);
+
+            return offer;
         }
     }
 }

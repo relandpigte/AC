@@ -12,6 +12,9 @@
             <column name="ServiceId" type="CHAR(36)">
                 <constraints nullable="false"/>
             </column>
+            <column name="Status" type="INT">
+                <constraints nullable="false"/>
+            </column>
             <column name="PercentageDiscount" type="DOUBLE">
                 <constraints nullable="true"/>
             </column>
@@ -21,7 +24,7 @@
             <column name="IsOfferDurationLimited" type="BIT(1)">
                 <constraints nullable="false"/>
             </column>
-             <column name="OfferLimitDays" type="INT">
+            <column name="OfferLimitDays" type="INT">
                 <constraints nullable="true"/>
             </column>
             <column name="OfferLimitHours" type="INT">

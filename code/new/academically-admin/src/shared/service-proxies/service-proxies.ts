@@ -37866,6 +37866,7 @@ export class CreateServiceOfferDto implements ICreateServiceOfferDto {
     id: string | undefined;
     referenceId: string;
     serviceId: string;
+    status: ServiceOfferStatus;
     percentageDiscount: number | undefined;
     discountAmount: number | undefined;
     isOfferDurationLimited: boolean;
@@ -37889,6 +37890,7 @@ export class CreateServiceOfferDto implements ICreateServiceOfferDto {
             this.id = _data["id"];
             this.referenceId = _data["referenceId"];
             this.serviceId = _data["serviceId"];
+            this.status = _data["status"];
             this.percentageDiscount = _data["percentageDiscount"];
             this.discountAmount = _data["discountAmount"];
             this.isOfferDurationLimited = _data["isOfferDurationLimited"];
@@ -37912,6 +37914,7 @@ export class CreateServiceOfferDto implements ICreateServiceOfferDto {
         data["id"] = this.id;
         data["referenceId"] = this.referenceId;
         data["serviceId"] = this.serviceId;
+        data["status"] = this.status;
         data["percentageDiscount"] = this.percentageDiscount;
         data["discountAmount"] = this.discountAmount;
         data["isOfferDurationLimited"] = this.isOfferDurationLimited;
@@ -37935,6 +37938,7 @@ export interface ICreateServiceOfferDto {
     id: string | undefined;
     referenceId: string;
     serviceId: string;
+    status: ServiceOfferStatus;
     percentageDiscount: number | undefined;
     discountAmount: number | undefined;
     isOfferDurationLimited: boolean;
@@ -47270,6 +47274,7 @@ export class ServiceOfferDto implements IServiceOfferDto {
     deletionTime: moment.Moment | undefined;
     referenceId: string;
     serviceId: string;
+    status: ServiceOfferStatus;
     percentageDiscount: number | undefined;
     discountAmount: number | undefined;
     isOfferDurationLimited: boolean;
@@ -47278,6 +47283,7 @@ export class ServiceOfferDto implements IServiceOfferDto {
     offerLimitMinutes: number | undefined;
     isNumberOfUnitsLimited: boolean;
     unitLimit: number | undefined;
+    service: AvailableServiceDto;
 
     constructor(data?: IServiceOfferDto) {
         if (data) {
@@ -47300,6 +47306,7 @@ export class ServiceOfferDto implements IServiceOfferDto {
             this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
             this.referenceId = _data["referenceId"];
             this.serviceId = _data["serviceId"];
+            this.status = _data["status"];
             this.percentageDiscount = _data["percentageDiscount"];
             this.discountAmount = _data["discountAmount"];
             this.isOfferDurationLimited = _data["isOfferDurationLimited"];
@@ -47308,6 +47315,7 @@ export class ServiceOfferDto implements IServiceOfferDto {
             this.offerLimitMinutes = _data["offerLimitMinutes"];
             this.isNumberOfUnitsLimited = _data["isNumberOfUnitsLimited"];
             this.unitLimit = _data["unitLimit"];
+            this.service = _data["service"] ? AvailableServiceDto.fromJS(_data["service"]) : <any>undefined;
         }
     }
 
@@ -47330,6 +47338,7 @@ export class ServiceOfferDto implements IServiceOfferDto {
         data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
         data["referenceId"] = this.referenceId;
         data["serviceId"] = this.serviceId;
+        data["status"] = this.status;
         data["percentageDiscount"] = this.percentageDiscount;
         data["discountAmount"] = this.discountAmount;
         data["isOfferDurationLimited"] = this.isOfferDurationLimited;
@@ -47338,6 +47347,7 @@ export class ServiceOfferDto implements IServiceOfferDto {
         data["offerLimitMinutes"] = this.offerLimitMinutes;
         data["isNumberOfUnitsLimited"] = this.isNumberOfUnitsLimited;
         data["unitLimit"] = this.unitLimit;
+        data["service"] = this.service ? this.service.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -47360,6 +47370,7 @@ export interface IServiceOfferDto {
     deletionTime: moment.Moment | undefined;
     referenceId: string;
     serviceId: string;
+    status: ServiceOfferStatus;
     percentageDiscount: number | undefined;
     discountAmount: number | undefined;
     isOfferDurationLimited: boolean;
@@ -47368,6 +47379,14 @@ export interface IServiceOfferDto {
     offerLimitMinutes: number | undefined;
     isNumberOfUnitsLimited: boolean;
     unitLimit: number | undefined;
+    service: AvailableServiceDto;
+}
+
+/** 1 = Queued 2 = Open 3 = Closed */
+export enum ServiceOfferStatus {
+    Queued = 1,
+    Open = 2,
+    Closed = 3,
 }
 
 /** 0 = CalendarEvents 1 = ProjectOffers 2 = Projects 3 = CourseSections 4 = Courses */
