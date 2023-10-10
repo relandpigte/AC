@@ -4,11 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 
 class MenuItem {
   name: string;
-  icon: string;
+  className: string;
 
-  constructor(name: string, icon?: string) {
+  constructor(name: string, className?: string) {
     this.name = name;
-    this.icon = icon;
+    this.className = className;
   }
 }
 
@@ -33,14 +33,15 @@ export class SidebarComponent extends AppComponentBase implements OnInit, OnChan
   ) {
     super(injector);
     this.menuItems.push(new MenuItem('Separator'));
-    this.menuItems.push(new MenuItem('Overview', 'home.svg'));
-    this.menuItems.push(new MenuItem('Attendees', 'users.svg'));
-    this.menuItems.push(new MenuItem('Chat', 'chat.svg'));
-    this.menuItems.push(new MenuItem('Questions', 'help.svg'));
-    this.menuItems.push(new MenuItem('Polls', 'pie-chart.svg'));
-    this.menuItems.push(new MenuItem('Handouts', 'folder.svg'));
-    this.menuItems.push(new MenuItem('Offers', 'shopping-bag.svg'));
-    this.menuItems.push(new MenuItem('Reviews', 'star.svg'));
+    this.menuItems.push(new MenuItem('Overview', 'home'));
+    this.menuItems.push(new MenuItem('Attendees', 'users'));
+    this.menuItems.push(new MenuItem('Chat', 'chat'));
+    this.menuItems.push(new MenuItem('Comments', 'comments'));
+    this.menuItems.push(new MenuItem('Questions', 'help'));
+    this.menuItems.push(new MenuItem('Polls', 'pie-chart'));
+    this.menuItems.push(new MenuItem('Handouts', 'folder'));
+    this.menuItems.push(new MenuItem('Offers', 'shopping-bag'));
+    this.menuItems.push(new MenuItem('Reviews', 'star'));
     this.activeMenuItem = this.menuItems[1];
     route.parent.parent.paramMap.subscribe(paramMap => {
       if (paramMap.has('event-id')) {
@@ -55,7 +56,7 @@ export class SidebarComponent extends AppComponentBase implements OnInit, OnChan
     if ('isHost' in changes) {
       if (this.isHost) {
         this.menuItems.push(new MenuItem('Separator'));
-        this.menuItems.push(new MenuItem('Settings', 'sliders.svg'));
+        this.menuItems.push(new MenuItem('Settings', 'sliders'));
       }
     }
   }

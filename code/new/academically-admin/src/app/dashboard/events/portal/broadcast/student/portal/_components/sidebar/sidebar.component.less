@@ -4,7 +4,7 @@
     position: fixed;
     right: 0;
     top: 0;
-    border-width: 0 0 0 1px;
+    border-width: center center 0 1px;
     border-color: #e3ebf6;
     border-style: solid;
     z-index: 1;
@@ -64,6 +64,18 @@
                 }
                 a {
                     color: #12263f;
+                    .icon {
+                        &.home { background-image: url("assets/img/events/home-hover.svg"); }
+                        &.users { background-image: url("assets/img/events/users-hover.svg"); }
+                        &.chat { background-image: url("assets/img/events/chat-hover.svg"); }
+                        &.comments { background-image: url("assets/img/events/comment-hover.svg"); }
+                        &.help { background-image: url("assets/img/events/help-hover.svg"); }
+                        &.pie-chart { background-image: url("assets/img/events/pie-chart-hover.svg"); }
+                        &.folder { background-image: url("assets/img/events/folder-hover.svg"); }
+                        &.shopping-bag { background-image: url("assets/img/events/shopping-bag-hover.svg"); }
+                        &.star { background-image: url("assets/img/events/star-hover.svg"); }
+                        &.sliders { background-image: url("assets/img/events/sliders-hover.svg"); }
+                    }
                 }
             }
 
@@ -71,6 +83,62 @@
                 position: relative;
                 line-height: 1;
                 color: #6e84a3;
+
+                .icon {
+                    display: inline-block;
+                    width: 20px;
+                    height: 20px;
+
+                    &.home {
+                        background: url("assets/img/events/home.svg") no-repeat center center transparent;
+                        &:hover { background-image: url("assets/img/events/home-hover.svg"); }
+                    }
+
+                    &.users {
+                        background: url("assets/img/events/users.svg") no-repeat center center transparent;
+                        &:hover { background-image: url("assets/img/events/users-hover.svg"); }
+                    }
+
+                    &.chat {
+                        background: url("assets/img/events/chat.svg") no-repeat center center transparent;
+                        &:hover { background-image: url("assets/img/events/chat-hover.svg"); }
+                    }
+
+                    &.comments {
+                        background: url("assets/img/events/comment.svg") no-repeat center center transparent;
+                        &:hover { background-image: url("assets/img/events/comment-hover.svg"); }
+                    }
+
+                    &.help {
+                        background: url("assets/img/events/help.svg") no-repeat center center transparent;
+                        &:hover { background-image: url("assets/img/events/help-hover.svg"); }
+                    }
+
+                    &.pie-chart {
+                        background: url("assets/img/events/pie-chart.svg") no-repeat center center transparent;
+                        &:hover { background-image: url("assets/img/events/pie-chart-hover.svg"); }
+                    }
+
+                    &.folder {
+                        background: url("assets/img/events/folder.svg") no-repeat center center transparent;
+                        &:hover { background-image: url("assets/img/events/folder-hover.svg"); }
+                    }
+
+                    &.shopping-bag {
+                        background: url("assets/img/events/shopping-bag.svg") no-repeat center center transparent;
+                        &:hover { background-image: url("assets/img/events/shopping-bag-hover.svg"); }
+                    }
+
+                    &.star {
+                        background: url("assets/img/events/star.svg") no-repeat center center transparent;
+                        &:hover { background-image: url("assets/img/events/star-hover.svg"); }
+                    }
+
+                    &.sliders {
+                        background: url("assets/img/events/sliders.svg") no-repeat center center transparent;
+                        &:hover { background-image: url("assets/img/events/sliders-hover.svg"); }
+                    }
+                }
             }
         }
     }
