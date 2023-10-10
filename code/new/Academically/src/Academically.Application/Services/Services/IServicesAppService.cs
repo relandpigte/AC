@@ -18,5 +18,11 @@ namespace Academically.Services.Services
         Task<IEnumerable<Service2Dto>> GetAllCategories();
         IEnumerable<Service2Dto> GetStaticServiceLevels();
         IEnumerable<Service2Dto> GetStaticServices();
+
+        // service offers
+
+        Task<ServiceOfferDto> UpsertServiceOffer(CreateServiceOfferDto input);
+        Task<IEnumerable<ServiceOfferDto>> GetServiceOffers(Guid referenceId);
+        Task<ServiceOfferDto> GetServiceOffer(Guid Id);
     }
 }

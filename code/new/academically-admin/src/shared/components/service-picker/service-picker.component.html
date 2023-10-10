@@ -1,18 +1,18 @@
-<div class="card service-picker h-100">
+<div class="card service-picker mb-0" [class.h-450-px]="isStandalone" [class.h-100]="!isStandalone">
     <div class="card-header">
         <div class="service-picker-header d-flex flex-row align-items-center gap-20">
             <span *ngIf="isShowBack" class="fe fe-chevron-left service-picker-header-back cursor-pointer" (click)="handleOnBack()"></span>
-            <div class="service-picker-header-title flex-grow-1">Add to your post</div>
+            <div class="service-picker-header-title flex-grow-1">{{ title }}</div>
             <span class="fe fe-x service-picker-header-close cursor-pointer" (click)="handleOnClose()"></span>
         </div>
     </div>
-    <div class="card-body service-picker-body d-flex p-0 h-0 slick-scroll">
+    <div class="card-body service-picker-body d-flex p-0 h-0 overflow-auto slick-scroll">
         <div class="flex-grow-1">
             <app-search
                 [data]="availableServices"
                 [options]="{
                     maxItems: 10,
-                    placeholder: 'Search the service you would like to share',
+                    placeholder: searchPlaceholder,
                     hasDivider: false
                 }"
                 [itemTemplate]="serviceItemTemplate"
@@ -27,7 +27,7 @@
             {{ 'Back' | localize }}
         </button>
         <button type="button" class="btn btn-primary" (click)="handleOnAdd()" [disabled]="!selectedService">
-            {{ 'Add' | localize }}
+            {{ addLabel | localize }}
         </button>
     </div>
 </div>

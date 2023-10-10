@@ -80,6 +80,7 @@
             [selectedService]="selectedService"
             [isShown]="isShowServicePicker"
             [class.show]="isShowServicePicker"
+            searchPlaceholder="Search the service you would like to share"
             (onClose)="isShowServicePicker = false"
             (onBack)="isShowServicePicker = false"
             (onAdd)="handleOnAddService($event)"

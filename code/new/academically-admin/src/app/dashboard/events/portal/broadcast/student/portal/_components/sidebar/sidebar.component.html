@@ -25,7 +25,7 @@
       <app-overview *ngSwitchCase="'Overview'"></app-overview>
       <app-attendees *ngSwitchCase="'Attendees'"></app-attendees>
       <app-settings *ngSwitchCase="'Settings'"></app-settings>
-      <app-offers *ngSwitchCase="'Offers'"></app-offers>
+      <app-offers *ngSwitchCase="'Offers'" [referenceId]="eventId"></app-offers>
       <app-sidebar-questions *ngSwitchCase="'Questions'"></app-sidebar-questions>
       <app-polls *ngSwitchCase="'Polls'"></app-polls>
       <app-sidebar-chat *ngSwitchCase="'Chat'" [referenceId]="eventId"></app-sidebar-chat>

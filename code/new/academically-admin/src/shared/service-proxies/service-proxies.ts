@@ -21226,6 +21226,181 @@ export class ServicesServiceProxy {
         }
         return _observableOf<Service2Dto[]>(<any>null);
     }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    upsertServiceOffer(body: CreateServiceOfferDto | undefined): Observable<ServiceOfferDto> {
+        let url_ = this.baseUrl + "/api/services/app/Services/UpsertServiceOffer";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpsertServiceOffer(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpsertServiceOffer(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceOfferDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceOfferDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpsertServiceOffer(response: HttpResponseBase): Observable<ServiceOfferDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServiceOfferDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceOfferDto>(<any>null);
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @return Success
+     */
+    getServiceOffers(referenceId: string | undefined): Observable<ServiceOfferDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetServiceOffers?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetServiceOffers(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetServiceOffers(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceOfferDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceOfferDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetServiceOffers(response: HttpResponseBase): Observable<ServiceOfferDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(ServiceOfferDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceOfferDto[]>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getServiceOffer(id: string | undefined): Observable<ServiceOfferDto> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetServiceOffer?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetServiceOffer(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetServiceOffer(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceOfferDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceOfferDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetServiceOffer(response: HttpResponseBase): Observable<ServiceOfferDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServiceOfferDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceOfferDto>(<any>null);
+    }
 }
 
 @Injectable()
@@ -37568,6 +37743,89 @@ export interface ICreateServiceDiscussionDto {
     postId: string;
 }
 
+export class CreateServiceOfferDto implements ICreateServiceOfferDto {
+    id: string | undefined;
+    referenceId: string;
+    serviceId: string;
+    percentageDiscount: number | undefined;
+    discountAmount: number | undefined;
+    isOfferDurationLimited: boolean;
+    offerLimitDays: number | undefined;
+    offerLimitHours: number | undefined;
+    offerLimitMinutes: number | undefined;
+    isNumberOfUnitsLimited: boolean;
+    unitLimit: number | undefined;
+
+    constructor(data?: ICreateServiceOfferDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.referenceId = _data["referenceId"];
+            this.serviceId = _data["serviceId"];
+            this.percentageDiscount = _data["percentageDiscount"];
+            this.discountAmount = _data["discountAmount"];
+            this.isOfferDurationLimited = _data["isOfferDurationLimited"];
+            this.offerLimitDays = _data["offerLimitDays"];
+            this.offerLimitHours = _data["offerLimitHours"];
+            this.offerLimitMinutes = _data["offerLimitMinutes"];
+            this.isNumberOfUnitsLimited = _data["isNumberOfUnitsLimited"];
+            this.unitLimit = _data["unitLimit"];
+        }
+    }
+
+    static fromJS(data: any): CreateServiceOfferDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateServiceOfferDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["referenceId"] = this.referenceId;
+        data["serviceId"] = this.serviceId;
+        data["percentageDiscount"] = this.percentageDiscount;
+        data["discountAmount"] = this.discountAmount;
+        data["isOfferDurationLimited"] = this.isOfferDurationLimited;
+        data["offerLimitDays"] = this.offerLimitDays;
+        data["offerLimitHours"] = this.offerLimitHours;
+        data["offerLimitMinutes"] = this.offerLimitMinutes;
+        data["isNumberOfUnitsLimited"] = this.isNumberOfUnitsLimited;
+        data["unitLimit"] = this.unitLimit;
+        return data; 
+    }
+
+    clone(): CreateServiceOfferDto {
+        const json = this.toJSON();
+        let result = new CreateServiceOfferDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateServiceOfferDto {
+    id: string | undefined;
+    referenceId: string;
+    serviceId: string;
+    percentageDiscount: number | undefined;
+    discountAmount: number | undefined;
+    isOfferDurationLimited: boolean;
+    offerLimitDays: number | undefined;
+    offerLimitHours: number | undefined;
+    offerLimitMinutes: number | undefined;
+    isNumberOfUnitsLimited: boolean;
+    unitLimit: number | undefined;
+}
+
 export class CreateServiceRatingAreaDto implements ICreateServiceRatingAreaDto {
     areaType: RatingAreaType;
     rating: number;
@@ -46870,6 +47128,117 @@ export interface IServiceMappingDto {
     node1Id: string | undefined;
     node2Id: string | undefined;
     node3Id: string | undefined;
+}
+
+export class ServiceOfferDto implements IServiceOfferDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    referenceId: string;
+    serviceId: string;
+    percentageDiscount: number | undefined;
+    discountAmount: number | undefined;
+    isOfferDurationLimited: boolean;
+    offerLimitDays: number | undefined;
+    offerLimitHours: number | undefined;
+    offerLimitMinutes: number | undefined;
+    isNumberOfUnitsLimited: boolean;
+    unitLimit: number | undefined;
+
+    constructor(data?: IServiceOfferDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.lastModificationTime = _data["lastModificationTime"] ? moment(_data["lastModificationTime"].toString()) : <any>undefined;
+            this.lastModifierUserId = _data["lastModifierUserId"];
+            this.isDeleted = _data["isDeleted"];
+            this.deleterUserId = _data["deleterUserId"];
+            this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
+            this.referenceId = _data["referenceId"];
+            this.serviceId = _data["serviceId"];
+            this.percentageDiscount = _data["percentageDiscount"];
+            this.discountAmount = _data["discountAmount"];
+            this.isOfferDurationLimited = _data["isOfferDurationLimited"];
+            this.offerLimitDays = _data["offerLimitDays"];
+            this.offerLimitHours = _data["offerLimitHours"];
+            this.offerLimitMinutes = _data["offerLimitMinutes"];
+            this.isNumberOfUnitsLimited = _data["isNumberOfUnitsLimited"];
+            this.unitLimit = _data["unitLimit"];
+        }
+    }
+
+    static fromJS(data: any): ServiceOfferDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServiceOfferDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : <any>undefined;
+        data["lastModifierUserId"] = this.lastModifierUserId;
+        data["isDeleted"] = this.isDeleted;
+        data["deleterUserId"] = this.deleterUserId;
+        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
+        data["referenceId"] = this.referenceId;
+        data["serviceId"] = this.serviceId;
+        data["percentageDiscount"] = this.percentageDiscount;
+        data["discountAmount"] = this.discountAmount;
+        data["isOfferDurationLimited"] = this.isOfferDurationLimited;
+        data["offerLimitDays"] = this.offerLimitDays;
+        data["offerLimitHours"] = this.offerLimitHours;
+        data["offerLimitMinutes"] = this.offerLimitMinutes;
+        data["isNumberOfUnitsLimited"] = this.isNumberOfUnitsLimited;
+        data["unitLimit"] = this.unitLimit;
+        return data; 
+    }
+
+    clone(): ServiceOfferDto {
+        const json = this.toJSON();
+        let result = new ServiceOfferDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IServiceOfferDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    referenceId: string;
+    serviceId: string;
+    percentageDiscount: number | undefined;
+    discountAmount: number | undefined;
+    isOfferDurationLimited: boolean;
+    offerLimitDays: number | undefined;
+    offerLimitHours: number | undefined;
+    offerLimitMinutes: number | undefined;
+    isNumberOfUnitsLimited: boolean;
+    unitLimit: number | undefined;
 }
 
 /** 0 = CalendarEvents 1 = ProjectOffers 2 = Projects 3 = CourseSections 4 = Courses */

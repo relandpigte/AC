@@ -1585,3 +1585,23 @@ each(range(1px, 30px, 1), {
 .custom-card-border {
   border: 1px solid #e3ebf6 !important;
 }
+
+.custom-control.custom-switch.no-label {
+  .custom-control-label {
+    font: 0/0 a;
+    color: transparent;
+    text-shadow: none;
+    background-color: transparent;
+    border: 0;
+
+    &::before, &::after {
+      transform: translateX(0.5rem);
+    }
+  }
+
+  .custom-control-input:checked~.custom-control-label {
+    &::after {
+      transform: translateX(2rem);
+    }
+  }
+}

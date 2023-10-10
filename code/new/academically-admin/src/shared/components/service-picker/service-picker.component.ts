@@ -14,9 +14,13 @@ import { finalize, takeUntil } from 'rxjs/operators';
     animations: [appModuleAnimation()]
 })
 export class ServicePickerComponent extends AppComponentBase implements OnChanges {
+    @Input() title: string = 'Add to your post';
+    @Input() searchPlaceholder: string;
     @Input() selectedService: AvailableServiceDto;
     @Input() isShown = false;
     @Input() isShowBack = true;
+    @Input() addLabel: string = 'Add';
+    @Input() isStandalone = false;
 
     @Output() onBack = new EventEmitter<any>();
     @Output() onClose = new EventEmitter<any>();

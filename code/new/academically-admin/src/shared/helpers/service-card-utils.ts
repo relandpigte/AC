@@ -273,4 +273,21 @@ export class ServiceCardUtils {
           return null;
       }
     }
+
+    static getServiceTypeName(serviceType: ServicesType) {
+      switch (serviceType) {
+        case ServicesType.Article:
+          return 'Article';
+        case ServicesType.Event:
+          return 'Broadcast';
+        case ServicesType.Coaching:
+          return 'Coaching';
+        case ServicesType.Course:
+          return 'Course';
+        case ServicesType.Tutorial:
+          return 'Tutorial';
+        case ServicesType.Workshop:
+          return 'Workshop';
+      }
+    }
 }

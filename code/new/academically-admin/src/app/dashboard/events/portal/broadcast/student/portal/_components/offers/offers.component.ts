@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, OnInit, Injector, Input } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { PortalService } from '../../_services/portal.service';
 import { takeUntil } from 'rxjs/operators';
@@ -9,6 +9,8 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./offers.component.less']
 })
 export class OffersComponent extends AppComponentBase implements OnInit {
+  @Input() referenceId: string;
+
   isHost = false;
 
   constructor(

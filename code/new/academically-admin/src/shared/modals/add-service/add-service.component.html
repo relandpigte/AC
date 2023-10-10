@@ -2,6 +2,7 @@
     <div class="card-body p-0">
         <app-service-picker
             [selectedService]="selectedService"
+            searchPlaceholder="Search the service you would like to share"
             [isShown]="true"
             [class.show]="true"
             (onClose)="onCloseClick()"

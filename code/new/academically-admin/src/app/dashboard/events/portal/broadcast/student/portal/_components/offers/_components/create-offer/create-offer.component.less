@@ -1,0 +1,222 @@
+::ng-deep {
+    .card {
+        &-header {
+            button.close {
+                font-size: 40px;
+                font-weight: lighter;
+            }
+        }
+    }
+}
+
+.card {
+    &-body {
+        padding: 20px 25px 0;
+
+        input {
+            &::-webkit-outer-spin-button,
+            &::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            &[type=number] {
+                -moz-appearance: textfield;
+            }
+
+            &:disabled {
+                opacity: 0.7;
+            }
+        }
+
+        .disabled {
+            opacity: 0.7;
+        }
+
+        .offer {
+            &-reference {
+                height: 90px;
+                padding: 20px 28px 20px;
+                border-radius: 10px;
+                border: 1px solid #E4EBF6;
+                background: #FFF;
+
+                &-no-selected {
+                    color: #95AAC9;
+                    font-size: 13px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: normal;
+                    letter-spacing: -0.13px;
+                }
+
+                &-details {
+                    &-img {
+                        width: 65px;
+                        height: 48px;
+                        border-radius: 4px;
+                    }
+
+                    &-info {
+                        &-title {
+                            color: #1F2D3D;
+                            font-size: 15px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: normal;
+                            letter-spacing: -0.15px;
+                        }
+
+                        &-type {
+                            color: #6E84A3;
+                            font-family: Cerebri Sans;
+                            font-size: 13px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: normal;
+                            letter-spacing: -0.13px;
+                        }
+
+                        &-price {
+                            color: #6E84A3;
+                            font-family: Cerebri Sans;
+                            font-size: 13px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: normal;
+                            letter-spacing: -0.13px;
+                        }
+                    }
+                }
+
+                &-actions {
+                    &-add {
+                        width: 59px;
+                        height: 23px;
+                        border-radius: 4px;
+                        border: 1px solid #2C7BE5;
+                        background: white;
+                        color: #2C7BE5;
+                        text-align: center;
+                        font-size: 11px;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 165.103%;
+                        letter-spacing: -0.11px;
+                    }
+
+                    &-change {
+                        width: 59px;
+                        height: 23px;
+                        border-radius: 4px;
+                        border: 1px solid #2C7BE5;
+                        background: white;
+                        color: #2C7BE5;
+                        text-align: center;
+                        font-size: 11px;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 165.103%;
+                        letter-spacing: -0.11px;
+                    }
+                }
+            }
+
+            &-price {
+                &-label {
+                    &-value {
+                        color: #12263F;
+                        font-size: 15px;
+                        font-style: normal;
+                        font-weight: 400;
+                        letter-spacing: -0.15px;
+                    }
+                }
+
+                &-value {
+                    &-btn {
+                        &-input {
+                            width: 73px;
+                            height: 40px;
+                            border-radius: 4px;
+                            border: 1px solid #E4EBF6;
+                            background: #FFF;
+                            color: #B1C2D9;
+                            text-align: center;
+                            font-size: 13px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: normal;
+                            letter-spacing: -0.13px;
+
+                            &.active {
+                                color: #2C7BE5;
+                                border: 1px solid #2C7BE5;
+                                background: #F9FBFD;
+                            }
+                        }
+
+                        &-discount {
+                            width: 78px;
+                            height: 40px;
+                            border-radius: 4px;
+                            border: 1px solid #E4EBF6;
+                            background: #FFF;
+                            color: #B1C2D9;
+                            text-align: center;
+                            font-size: 13px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: normal;
+                            letter-spacing: -0.13px;
+
+                            &.active {
+                                color: #2C7BE5;
+                                border: 1px solid #2C7BE5;
+                                background: #F9FBFD;
+                            }
+                        }
+                    }
+                }
+            }
+
+            &-end {
+                &-label {
+                    &-value {
+                        color: #12263F;
+                        font-size: 15px;
+                        font-style: normal;
+                        font-weight: 400;
+                        letter-spacing: -0.15px;
+                    }
+                }
+            }
+
+            &-units {
+                &-label {
+                    &-value {
+                        color: #12263F;
+                        font-size: 15px;
+                        font-style: normal;
+                        font-weight: 400;
+                        letter-spacing: -0.15px;
+                    }
+                }
+            }
+        }
+    }
+
+    &-footer {
+        .btn {
+            &-done {
+                height: 32px;
+                width: 114px;
+                color: white;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+            }
+        }
+    }
+}

@@ -16,6 +16,7 @@ namespace Academically.Services.Services
         private readonly IRepository<Service, Guid> _servicesRepository;
         private readonly IRepository<ServiceMapping, Guid> _serviceMappingsRepository;
         private readonly IRepository<Service2, Guid> _service2sRepository;
+        private readonly IRepository<ServiceOffer, Guid> _serviceOffersRepository;
 
         private readonly List<Service2Dto> StaticServiceLevels = new List<Service2Dto>
             {
@@ -73,12 +74,14 @@ namespace Academically.Services.Services
         public ServicesAppService(
             IRepository<Service, Guid> servicesRepository,
             IRepository<ServiceMapping, Guid> serviceMappingsRepository,
-            IRepository<Service2, Guid> service2sRepository
+            IRepository<Service2, Guid> service2sRepository,
+            IRepository<ServiceOffer, Guid> serviceOffersRepository
             )
         {
             _servicesRepository = servicesRepository;
             _serviceMappingsRepository = serviceMappingsRepository;
             _service2sRepository = service2sRepository;
+            _serviceOffersRepository = serviceOffersRepository;
         }
 
         public async Task<IEnumerable<ServiceDto>> GetCategories()
@@ -161,6 +164,46 @@ namespace Academically.Services.Services
         public IEnumerable<Service2Dto> GetStaticServices()
         {
             return StaticServices;
+        }
+
+        public async Task<ServiceOfferDto> UpsertServiceOffer(CreateServiceOfferDto input)
+        {
+            if (input.Id.HasValue)
+            {
+                var existing = await this._serviceOffersRepository.GetAsync(input.Id.Value);
+                if (existing != null)
+                {
+                    existing.ServiceId = input.ServiceId;
+                    existing.PercentageDiscount = input.PercentageDiscount;
+                    existing.DiscountAmount = input.DiscountAmount;
+                    existing.IsOfferDurationLimited = input.IsOfferDurationLimited;
+                    existing.OfferLimitDays = input.OfferLimitDays;
+                    existing.OfferLimitHours = input.OfferLimitHours;
+                    existing.OfferLimitMinutes = input.OfferLimitMinutes;
+                    existing.IsNumberOfUnitsLimited = input.IsNumberOfUnitsLimited;
+                    existing.UnitLimit = input.UnitLimit;
+                    return ObjectMapper.Map<ServiceOfferDto>(existing);
+                }
+            }
+            var newOffer = ObjectMapper.Map<ServiceOffer>(input);
+            var created = await this._serviceOffersRepository.InsertAsync(newOffer);
+            return ObjectMapper.Map<ServiceOfferDto>(created);
+        }
+
+        public async Task<IEnumerable<ServiceOfferDto>> GetServiceOffers(Guid referenceId)
+        {
+            return await this._serviceOffersRepository.GetAll()
+                .Where(o => o.ReferenceId == referenceId)
+                .Select(o => ObjectMapper.Map<ServiceOfferDto>(o))
+                .ToListAsync();
+        }
+
+        public async Task<ServiceOfferDto> GetServiceOffer(Guid Id)
+        {
+            return await this._serviceOffersRepository.GetAll()
+                .Where(o => o.Id == Id)
+                .Select(o => ObjectMapper.Map<ServiceOfferDto>(o))
+                .FirstOrDefaultAsync();
         }
     }
 }

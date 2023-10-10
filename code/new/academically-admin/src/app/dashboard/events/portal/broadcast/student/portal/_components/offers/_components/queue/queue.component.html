@@ -1,20 +1,25 @@
-<div class="flex-column">
-  <div class="flex-grow-1 scroll-y h-0 p-3">
+<div class="flex-column w-100">
+  <div class="flex-grow-1 scroll-y h-0">
     <table class="table table-sm mb-0">
       <tbody>
         <tr>
           <td class="p-0 border-0">
-            <div *ngFor="let offer of offers" class="row m-0">
-              <div class="col flex-center p-0">
-                <app-offer-card [offer]="offer" [selection]="true"></app-offer-card>
+            <ng-container *ngIf="offers?.length > 0; else noOffers">
+              <div *ngFor="let offer of offers" class="row m-0">
+                <div class="col flex-center p-0">
+                  <app-offer-card [offer]="offer" [selection]="true"></app-offer-card>
+                </div>
               </div>
-            </div>
+            </ng-container>
+            <ng-template #noOffers>
+              <div class="col no-offers text-center">{{ 'No offers' | localize }} </div>
+            </ng-template>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
   <div class="actions p-3">
-    <button class="btn btn-primary btn-block">{{ 'AddOffer' | localize }}</button>
+    <button class="btn btn-primary btn-block" (click)="onNewOfferClick()">{{ 'New offer' | localize }}</button>
   </div>
 </div>

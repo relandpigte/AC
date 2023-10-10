@@ -1,6 +1,8 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
+import { ServiceOfferDto, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-open',
@@ -8,26 +10,35 @@ import * as moment from 'moment';
   styleUrls: ['./open.component.less']
 })
 export class OpenComponent extends AppComponentBase implements OnInit {
-  offers: any[] = [
-    {
-      name: 'Open Offer',
-      size: 232.42,
-      sizeUnit: 'Kb',
-      type: 'PNG',
-      shared: moment()
-    }
-  ];
+  @Input() referenceId: string;
+
+  offers: ServiceOfferDto[];
 
   launched: boolean = false;
 
+  isLoadingList$ = new BehaviorSubject<boolean>(true);
+
   constructor(
-    injector: Injector
+    injector: Injector,
+    private _servicesService: ServicesServiceProxy
   ) {
     super(injector);
   }
 
-  ngOnInit(): void {
+  get loadingSources$() { return [ this.isLoadingList$ ]; }
 
+  async ngOnInit() {
+    await this.getAllServiceOffers();
+  }
+
+  private async getAllServiceOffers() {
+    this.isLoadingList$.next(true);
+    try {
+      this.offers = await this._servicesService.getServiceOffers(this.referenceId).toPromise();
+    } catch (err) {
+      console.error(err);
+    }
+    this.isLoadingList$.next(false);
   }
 
 }

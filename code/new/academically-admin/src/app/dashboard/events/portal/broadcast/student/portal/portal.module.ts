@@ -20,6 +20,7 @@ import { OfferCardComponent } from './_components/offers/_components/offer-card/
 import { ClosedComponent } from './_components/offers/_components/closed/closed.component';
 import { InfoBannerComponent } from './_components/offers/_components/info-banner/info-banner.component';
 import { OpenComponent } from './_components/offers/_components/open/open.component';
+import { CreateOfferComponent } from './_components/offers/_components/create-offer/create-offer.component';
 import { QueueComponent } from './_components/offers/_components/queue/queue.component';
 import { UpcomingComponent } from './_components/overview/upcoming/upcoming.component';
 import { RelatedComponent } from './_components/overview/related/related.component';
@@ -56,6 +57,7 @@ import { ChatComponent } from './_components/chat/chat.component';
     ClosedComponent,
     InfoBannerComponent,
     OpenComponent,
+    CreateOfferComponent,
     QueueComponent,
     UpcomingComponent,
     RelatedComponent,
