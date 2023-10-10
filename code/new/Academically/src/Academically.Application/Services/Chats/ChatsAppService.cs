@@ -34,6 +34,9 @@ using Abp.Runtime.Session;
 using Academically.Authorization.Roles;
 using System.Threading.Channels;
 using Abp.Linq.Extensions;
+using Abp.Domain.Uow;
+using Abp.Auditing;
+using Abp.Collections.Extensions;
 
 namespace Academically.Services.Chats
 {
@@ -104,6 +107,19 @@ namespace Academically.Services.Chats
             return true;
         }
 
+        public async Task<ChannelDto> CreateChannel(CreateChannelInputDto input)
+        {
+            var channel = await this._channelRepository.FirstOrDefaultAsync(c => c.ReferenceId == input.ReferenceId);
+            if (channel == null)
+            {
+                channel = await this._channelRepository.InsertAsync(new Channel()
+                {
+                    ReferenceId = input.ReferenceId
+                });
+            }
+            return ObjectMapper.Map<ChannelDto>(channel);
+        }
+
         public async Task<ChannelMessageDto> CreateChannelMessage([FromForm] CreateChannelMessageInputDto input)
         {
             var message = new ChannelMessage();
@@ -115,12 +131,32 @@ namespace Academically.Services.Chats
             }
             else
             {
-                var channel = await this._channelRepository.InsertAsync(new Channel()
+                var targetMembers = new long[] { input.RecipientUserId, currentUser.Id };
+                var existingChannel = input.ReferenceId.HasValue ? await this._channelRepository.GetAll()
+                    .Include(c => c.Messages)
+                    .Include(c => c.Members)
+                    .WhereIf(input.IsPrivate.HasValue && input.IsPrivate.Value, c =>
+                        c.ReferenceId == null &&
+                        c.Members.Count == 2 &&
+                        c.Members.All(m => targetMembers.Any(r => r == m.UserId))
+                    )
+                    .WhereIf(!input.IsPrivate.HasValue || !input.IsPrivate.Value, c => c.ReferenceId == input.ReferenceId)
+                    .FirstOrDefaultAsync() : null;
+
+                if (existingChannel == null)
                 {
-                    ReferenceId = input.ReferenceId
-                });
-                await CurrentUnitOfWork.SaveChangesAsync();
-                message.ChannelId = channel.Id;
+                    var channel = await this._channelRepository.InsertAsync(new Channel()
+                    {
+                        ReferenceId = input.ReferenceId
+                    });
+                    await CurrentUnitOfWork.SaveChangesAsync();
+                    message.ChannelId = channel.Id;
+                    message.ReferenceId = input.ReferenceId;
+                }
+                else
+                {
+                    message.ChannelId = existingChannel.Id;
+                }
             }
 
             var senderMember = await this._channelMemberRepository.FirstOrDefaultAsync(m => m.ChannelId == message.ChannelId && m.UserId == currentUser.Id);
@@ -133,17 +169,14 @@ namespace Academically.Services.Chats
                 });
             }
 
-            if (input.RecipientUserId.HasValue)
+            var recipientMember = await this._channelMemberRepository.FirstOrDefaultAsync(m => m.ChannelId == message.ChannelId && m.UserId == input.RecipientUserId);
+            if (recipientMember == null)
             {
-                var recipientMember = await this._channelMemberRepository.FirstOrDefaultAsync(m => m.ChannelId == message.ChannelId && m.UserId == input.RecipientUserId.Value);
-                if (recipientMember == null)
+                await this._channelMemberRepository.InsertAsync(new ChannelMember
                 {
-                    await this._channelMemberRepository.InsertAsync(new ChannelMember
-                    {
-                        ChannelId = message.ChannelId,
-                        UserId = input.RecipientUserId.Value
-                    });
-                }
+                    ChannelId = message.ChannelId,
+                    UserId = input.RecipientUserId
+                });
             }
 
             message.Message = input.Message;
@@ -200,6 +233,7 @@ namespace Academically.Services.Chats
                     .Include(c => c.Messages)
                     .Include(c => c.Archives)
                     .Where(c => !c.IsDeleted)
+                    .Where(c => c.ReferenceId == null)
                     .Where(c => c.Members.Any(m => m.UserId == userId))
                     .Where(c => c.Archives.Any(a => a.CreatorUserId == userId))
                     .Select(c => ObjectMapper.Map<ChannelDto>(c))
@@ -227,8 +261,9 @@ namespace Academically.Services.Chats
             return channels;
         }
 
-        public async Task<List<ChannelDto>> GetReferenceChannelsForUser(Guid? referenceId, DateTime? minTime)
+        public async Task<List<ChannelDto>> GetReferenceChannelsForUser(Guid referenceId, bool isPrivate = false)
         {
+            var currentUserId = AbpSession.UserId.Value;
             var channels = await this._channelRepository.GetAll()
                     .Include(c => c.Messages)
                         .ThenInclude(m => m.Parent)
@@ -237,8 +272,12 @@ namespace Academically.Services.Chats
                     .Include(c => c.Members)
                         .ThenInclude(m => m.User)
                     .Include(c => c.ChannelNotifications)
-                    .WhereIf(referenceId.HasValue, c => c.ReferenceId == referenceId.Value)
-                    .WhereIf(minTime.HasValue, c => c.Messages.Any(m => m.CreationTime >= minTime))
+                    .WhereIf(!isPrivate, c => c.ReferenceId == referenceId)
+                    .WhereIf(isPrivate, c =>
+                        c.ReferenceId == null &&
+                        c.Members.Any(m => m.UserId == currentUserId) &&
+                        c.Messages.Any(m => m.ReferenceId == referenceId)
+                    )
                     .Select(c => ObjectMapper.Map<ChannelDto>(c))
                     .ToListAsync();
 
@@ -249,6 +288,8 @@ namespace Academically.Services.Chats
                     if (member.User.ProfilePictureDocumentId.HasValue)
                         member.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(member.User.ProfilePictureDocumentId.Value);
                 }
+
+                channel.Messages = channel.Messages.Where(m => m.ReferenceId == referenceId).ToList();
 
                 foreach (var message in channel.Messages)
                 {
@@ -277,8 +318,9 @@ namespace Academically.Services.Chats
                     .ToListAsync();
         }
 
-        public async Task<List<ChannelMessageDto>> GetAllChannelMessages(Guid? channelId, Guid? referenceId, DateTime? minTime)
+        public async Task<List<ChannelMessageDto>> GetAllChannelMessages(Guid? channelId, Guid? referenceId, bool isPrivate = false)
         {
+            var currentUserId = AbpSession.UserId.Value;
             var messages = await this._channelRepository.GetAll()
                     .Include(c => c.Messages)
                         .ThenInclude(m => m.Channel)
@@ -290,10 +332,14 @@ namespace Academically.Services.Chats
                         .ThenInclude(m => m.ChannelMessageAttachments)
                             .ThenInclude(a => a.Document)
                     .WhereIf(channelId.HasValue, c => c.Id == channelId.Value)
-                    .WhereIf(referenceId.HasValue, c => c.ReferenceId == referenceId.Value)
-                    .WhereIf(minTime.HasValue, c => c.Messages.Any(m => m.CreationTime >= minTime))
+                    .WhereIf(referenceId.HasValue && !isPrivate, c => c.ReferenceId == referenceId.Value)
+                    .WhereIf(referenceId.HasValue && isPrivate, c =>
+                        c.ReferenceId == null &&
+                        c.Members.Any(m => m.UserId == currentUserId) &&
+                        c.Messages.Any(m => m.ReferenceId == referenceId.Value)
+                    )
                     .SelectMany(c => c.Messages)
-                    .WhereIf(minTime.HasValue, m => m.CreationTime >= minTime)
+                    .WhereIf(referenceId.HasValue, m => m.ReferenceId == referenceId.Value)
                     .Select(m => ObjectMapper.Map<ChannelMessageDto>(m))
                     .ToListAsync();
 
@@ -320,6 +366,7 @@ namespace Academically.Services.Chats
                     .Include(c => c.Messages)
                     .Include(c => c.ChannelNotifications)
                     .Where(c => !c.IsDeleted)
+                    .Where(c => c.ReferenceId == null)
                     .Where(c => c.Members.Any(m => m.UserId == userId))
                     .Select(c => ObjectMapper.Map<ChannelDto>(c))
                     .ToListAsync();
@@ -338,6 +385,7 @@ namespace Academically.Services.Chats
                         .ThenInclude(m => m.ChannelMessageAttachments)
                             .ThenInclude(a => a.Document)
                     .Where(c => !c.IsDeleted)
+                    .Where(c => c.ReferenceId == null)
                     .Where(c => c.Members.Any(m => m.UserId == userId))
                     .Where(c => !c.Archives.Any(a => a.CreatorUserId == userId))
                     .Select(c => ObjectMapper.Map<ChannelDto>(c))

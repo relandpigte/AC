@@ -88,6 +88,7 @@ export class ChatComposerComponent extends AppComponentBase implements OnInit{
     this._chatsService.createChannelMessage(
       f.value.message,
       this.replyingToUser?.id ?? this.sendToUser?.id,
+      this.isPrivateChat,
       this.referenceId,
       this.channel?.id,
       this.replyingTo?.id,

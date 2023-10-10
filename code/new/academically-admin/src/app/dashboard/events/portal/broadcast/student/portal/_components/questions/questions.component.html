@@ -3,52 +3,83 @@
         <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link active" id="open-tab" data-toggle="tab" href="#open-container" role="tab"
-                aria-controls="open-container" aria-selected="true">
-                {{ 'Open' | localize }}
+                aria-controls="open-container" aria-selected="true" (click)="handleTabClick(0)">
+                {{ 'All' | localize }}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="unanswered-tab" data-toggle="tab" href="#unanswered-container" role="tab"
+                   aria-controls="answered-container" aria-selected="true" (click)="handleTabClick(2)">
+                    {{ 'Unanswered' | localize }}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="answered-tab" data-toggle="tab" href="#answered-container" role="tab"
-                aria-controls="answered-container" aria-selected="true">
-                {{ 'Answered' | localize }}
+                   aria-controls="answered-container" aria-selected="true" (click)="handleTabClick(3)">
+                    {{ 'Answered' | localize }}
                 </a>
             </li>
         </ul>
 
         <div class="tab-content flex-grow-1">
             <div class="tab-pane h-100 fade show active" id="open-container" role="tabpanel" aria-labelledby="open-tab">
-                <app-questions
-                    [referenceId]="referenceId"
-                    [isSidebar]="false"
-                    [answered]="false"
-                    [hostId]="hostId"
-                    [attendeeIds]="attendeeIds"
-                    [customActions]="customActions"
-                ></app-questions>
+                <div class="question-container comments-container d-flex flex-column flex-nowrap">
+                    <div *ngIf="!!questions?.length; else noQuestionsContainer" class="questions flex-grow-1" style="height: 0">
+                        <app-event-questions
+                            *ngFor="let question of questions"
+                            [question]="question"
+                            [showComposer]="false"
+                            [isHost]="isHost"
+                            [selectedQuestionType]="selectedQuestionType"
+                            (onCreateQuestion)="handleCreateQuestion($event)"
+                            (onVote)="handleVote($event)"
+                        ></app-event-questions>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane h-100 fade" id="unanswered-container" role="tabpanel" aria-labelledby="unanswered-tab">
+                <div class="question-container comments-container d-flex flex-column flex-nowrap">
+                    <div *ngIf="!!questions?.length; else noQuestionsContainer" class="questions flex-grow-1" style="height: 0">
+                        <app-event-questions
+                            *ngFor="let question of questions"
+                            [question]="question"
+                            [showComposer]="false"
+                            [isHost]="isHost"
+                            [selectedQuestionType]="selectedQuestionType"
+                            (onCreateQuestion)="handleCreateQuestion($event)"
+                            (onVote)="handleVote($event)"
+                        ></app-event-questions>
+                    </div>
+                </div>
             </div>
             <div class="tab-pane h-100 fade" id="answered-container" role="tabpanel" aria-labelledby="answered-tab">
-                <app-questions
-                    [referenceId]="referenceId"
-                    [isSidebar]="false"
-                    [answered]="true"
-                    [hostId]="hostId"
-                    [attendeeIds]="attendeeIds"
-                    [customActions]="customActions"
-                ></app-questions>
+                <div class="question-container comments-container d-flex flex-column flex-nowrap">
+                    <div *ngIf="!!questions?.length; else noQuestionsContainer" class="questions flex-grow-1" style="height: 0">
+                        <app-event-questions
+                            *ngFor="let question of questions"
+                            [question]="question"
+                            [showComposer]="false"
+                            [isHost]="isHost"
+                            [selectedQuestionType]="selectedQuestionType"
+                            (onCreateQuestion)="handleCreateQuestion($event)"
+                            (onVote)="handleVote($event)"
+                        ></app-event-questions>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div *ngSwitchCase="false" class="d-flex flex-column h-100">
-        <ul class="nav nav-tabs nav-tabs-sm px-3">
+        <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link active" id="all-tab" data-toggle="tab" href="#all-container" role="tab"
-                aria-controls="all-container" aria-selected="true">
+                aria-controls="all-container" aria-selected="true" (click)="handleTabClick(0)">
                 {{ 'All' | localize }}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="asked-tab" data-toggle="tab" href="#asked-container" role="tab"
-                aria-controls="asked-container" aria-selected="true">
+                aria-controls="asked-container" aria-selected="true" (click)="handleTabClick(1)">
                 {{ 'Asked' | localize }}
                 </a>
             </li>
@@ -56,24 +87,45 @@
 
         <div class="tab-content flex-grow-1">
             <div class="tab-pane h-100 fade show active" id="all-container" role="tabpanel" aria-labelledby="all-tab">
-                <app-questions
-                    [referenceId]="referenceId"
-                    [isSidebar]="false"
-                    [hostId]="hostId"
-                    [attendeeIds]="attendeeIds"
-                    [customActions]="customActions"
-                ></app-questions>
+                <div class="question-container comments-container d-flex flex-column flex-nowrap">
+                    <div *ngIf="!!questions?.length; else noQuestionsContainer" class="questions flex-grow-1" style="height: 0">
+                        <app-event-questions
+                            *ngFor="let question of questions"
+                            [question]="question"
+                            [selectedQuestionType]="selectedQuestionType"
+                            (onCreateQuestion)="handleCreateQuestion($event)"
+                            (onVote)="handleVote($event)"
+                        ></app-event-questions>
+                    </div>
+                    <app-event-questions-composer
+                        (onCreateQuestion)="handleCreateQuestion($event)"
+                    ></app-event-questions-composer>
+                </div>
             </div>
             <div class="tab-pane h-100 fade" id="asked-container" role="tabpanel" aria-labelledby="asked-tab">
-                <app-questions
-                    [referenceId]="referenceId"
-                    [isSidebar]="false"
-                    [creatorId]="userId"
-                    [hostId]="hostId"
-                    [attendeeIds]="attendeeIds"
-                    [customActions]="customActions"
-                ></app-questions>
+                <div class="question-container comments-container d-flex flex-column flex-nowrap">
+                    <div *ngIf="!!questions?.length; else noQuestionsContainer" class="questions flex-grow-1" style="height: 0">
+                        <app-event-questions
+                            *ngFor="let question of questions"
+                            [question]="question"
+                            [selectedQuestionType]="selectedQuestionType"
+                            (onCreateQuestion)="handleCreateQuestion($event)"
+                            (onVote)="handleVote($event)"
+                        ></app-event-questions>
+                    </div>
+                    <app-event-questions-composer
+                        (onCreateQuestion)="handleCreateQuestion($event)"
+                    ></app-event-questions-composer>
+                </div>
             </div>
         </div>
     </div>
 </ng-container>
+
+<ng-template #noQuestionsContainer>
+    <div class="no-comments-container flex-grow-1">
+        <p class="text-muted p-0 m-0 text-center">
+            {{ 'NoQuestionsFound' | localize }}
+        </p>
+    </div>
+</ng-template>

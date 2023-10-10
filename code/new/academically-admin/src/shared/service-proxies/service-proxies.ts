@@ -2269,8 +2269,65 @@ export class ChatsServiceProxy {
     }
 
     /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createChannel(body: CreateChannelInputDto | undefined): Observable<ChannelDto> {
+        let url_ = this.baseUrl + "/api/services/app/Chats/CreateChannel";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateChannel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateChannel(<any>response_);
+                } catch (e) {
+                    return <Observable<ChannelDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ChannelDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateChannel(response: HttpResponseBase): Observable<ChannelDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ChannelDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ChannelDto>(<any>null);
+    }
+
+    /**
      * @param message (optional) 
      * @param recipientUserId (optional) 
+     * @param isPrivate (optional) 
      * @param referenceId (optional) 
      * @param channelId (optional) 
      * @param parentId (optional) 
@@ -2279,7 +2336,7 @@ export class ChatsServiceProxy {
      * @param attachments (optional) 
      * @return Success
      */
-    createChannelMessage(message: string | undefined, recipientUserId: number | undefined, referenceId: string | undefined, channelId: string | undefined, parentId: string | undefined, serviceId: string | undefined, serviceType: ServicesType | undefined, attachments: FileParameter[] | undefined): Observable<ChannelMessageDto> {
+    createChannelMessage(message: string | undefined, recipientUserId: number | undefined, isPrivate: boolean | undefined, referenceId: string | undefined, channelId: string | undefined, parentId: string | undefined, serviceId: string | undefined, serviceType: ServicesType | undefined, attachments: FileParameter[] | undefined): Observable<ChannelMessageDto> {
         let url_ = this.baseUrl + "/api/services/app/Chats/CreateChannelMessage";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2292,6 +2349,10 @@ export class ChatsServiceProxy {
             // do nothing
         } else
             content_.append("RecipientUserId", recipientUserId.toString());
+        if (isPrivate === null || isPrivate === undefined) {
+            // do nothing
+        } else
+            content_.append("IsPrivate", isPrivate.toString());
         if (referenceId === null || referenceId === undefined) {
             // do nothing
         } else
@@ -2483,19 +2544,19 @@ export class ChatsServiceProxy {
 
     /**
      * @param referenceId (optional) 
-     * @param minTime (optional) 
+     * @param isPrivate (optional) 
      * @return Success
      */
-    getReferenceChannelsForUser(referenceId: string | undefined, minTime: moment.Moment | undefined): Observable<ChannelDto[]> {
+    getReferenceChannelsForUser(referenceId: string | undefined, isPrivate: boolean | undefined): Observable<ChannelDto[]> {
         let url_ = this.baseUrl + "/api/services/app/Chats/GetReferenceChannelsForUser?";
         if (referenceId === null)
             throw new Error("The parameter 'referenceId' cannot be null.");
         else if (referenceId !== undefined)
             url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
-        if (minTime === null)
-            throw new Error("The parameter 'minTime' cannot be null.");
-        else if (minTime !== undefined)
-            url_ += "minTime=" + encodeURIComponent(minTime ? "" + minTime.toJSON() : "") + "&";
+        if (isPrivate === null)
+            throw new Error("The parameter 'isPrivate' cannot be null.");
+        else if (isPrivate !== undefined)
+            url_ += "isPrivate=" + encodeURIComponent("" + isPrivate) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -2615,10 +2676,10 @@ export class ChatsServiceProxy {
     /**
      * @param channelId (optional) 
      * @param referenceId (optional) 
-     * @param minTime (optional) 
+     * @param isPrivate (optional) 
      * @return Success
      */
-    getAllChannelMessages(channelId: string | undefined, referenceId: string | undefined, minTime: moment.Moment | undefined): Observable<ChannelMessageDto[]> {
+    getAllChannelMessages(channelId: string | undefined, referenceId: string | undefined, isPrivate: boolean | undefined): Observable<ChannelMessageDto[]> {
         let url_ = this.baseUrl + "/api/services/app/Chats/GetAllChannelMessages?";
         if (channelId === null)
             throw new Error("The parameter 'channelId' cannot be null.");
@@ -2628,10 +2689,10 @@ export class ChatsServiceProxy {
             throw new Error("The parameter 'referenceId' cannot be null.");
         else if (referenceId !== undefined)
             url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
-        if (minTime === null)
-            throw new Error("The parameter 'minTime' cannot be null.");
-        else if (minTime !== undefined)
-            url_ += "minTime=" + encodeURIComponent(minTime ? "" + minTime.toJSON() : "") + "&";
+        if (isPrivate === null)
+            throw new Error("The parameter 'isPrivate' cannot be null.");
+        else if (isPrivate !== undefined)
+            url_ += "isPrivate=" + encodeURIComponent("" + isPrivate) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -18412,6 +18473,62 @@ export class QuestionsServiceProxy {
     }
 
     /**
+     * @param questionId (optional) 
+     * @return Success
+     */
+    get(questionId: string | undefined): Observable<QuestionDto> {
+        let url_ = this.baseUrl + "/api/services/app/Questions/Get?";
+        if (questionId === null)
+            throw new Error("The parameter 'questionId' cannot be null.");
+        else if (questionId !== undefined)
+            url_ += "questionId=" + encodeURIComponent("" + questionId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<QuestionDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<QuestionDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<QuestionDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = QuestionDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<QuestionDto>(<any>null);
+    }
+
+    /**
      * @param parentIdFilter (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
@@ -18639,6 +18756,69 @@ export class QuestionsServiceProxy {
             }));
         }
         return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @return Success
+     */
+    getReactionByReference(referenceId: string | undefined): Observable<QuestionReactionDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Questions/GetReactionByReference?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetReactionByReference(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetReactionByReference(<any>response_);
+                } catch (e) {
+                    return <Observable<QuestionReactionDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<QuestionReactionDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetReactionByReference(response: HttpResponseBase): Observable<QuestionReactionDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(QuestionReactionDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<QuestionReactionDto[]>(<any>null);
     }
 }
 
@@ -36042,6 +36222,85 @@ export enum CourseType {
     Cohort = 2,
 }
 
+export class CreateChannelInputDto implements ICreateChannelInputDto {
+    message: string | undefined;
+    recipientUserId: number | undefined;
+    referenceId: string | undefined;
+    channelId: string | undefined;
+    parentId: string | undefined;
+    serviceId: string | undefined;
+    serviceType: ServicesType;
+    attachments: string[] | undefined;
+
+    constructor(data?: ICreateChannelInputDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.message = _data["message"];
+            this.recipientUserId = _data["recipientUserId"];
+            this.referenceId = _data["referenceId"];
+            this.channelId = _data["channelId"];
+            this.parentId = _data["parentId"];
+            this.serviceId = _data["serviceId"];
+            this.serviceType = _data["serviceType"];
+            if (Array.isArray(_data["attachments"])) {
+                this.attachments = [] as any;
+                for (let item of _data["attachments"])
+                    this.attachments.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateChannelInputDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateChannelInputDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["message"] = this.message;
+        data["recipientUserId"] = this.recipientUserId;
+        data["referenceId"] = this.referenceId;
+        data["channelId"] = this.channelId;
+        data["parentId"] = this.parentId;
+        data["serviceId"] = this.serviceId;
+        data["serviceType"] = this.serviceType;
+        if (Array.isArray(this.attachments)) {
+            data["attachments"] = [];
+            for (let item of this.attachments)
+                data["attachments"].push(item);
+        }
+        return data; 
+    }
+
+    clone(): CreateChannelInputDto {
+        const json = this.toJSON();
+        let result = new CreateChannelInputDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateChannelInputDto {
+    message: string | undefined;
+    recipientUserId: number | undefined;
+    referenceId: string | undefined;
+    channelId: string | undefined;
+    parentId: string | undefined;
+    serviceId: string | undefined;
+    serviceType: ServicesType;
+    attachments: string[] | undefined;
+}
+
 export class CreateCoachingDto implements ICreateCoachingDto {
     name: string | undefined;
     type: CoachingType;
@@ -41704,7 +41963,7 @@ export interface IGroupedPermissionDtoListResultDto {
     items: GroupedPermissionDto[] | undefined;
 }
 
-/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted 18 = ChannelMessageCreated 19 = ChannelMessageUpdated 20 = ChannelMessageDeleted 21 = ChannelMemberTyping 22 = ChannelArchive 23 = ChannelUnarchive 24 = NewUserLoggedIn 25 = NotificationCreated 26 = NotificationUpdated 27 = NotificationDeleted */
+/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted 18 = ChannelMessageCreated 19 = ChannelMessageUpdated 20 = ChannelMessageDeleted 21 = ChannelMemberTyping 22 = ChannelArchive 23 = ChannelUnarchive 24 = NewUserLoggedIn 25 = NotificationCreated 26 = NotificationUpdated 27 = NotificationDeleted 28 = QuestionCreated 29 = QuestionUpdated 30 = QuestionDeleted 31 = QuestionReactionCreated 32 = QuestionReactionUpdated 33 = QuestionReactionDeleted */
 export enum HubEvent {
     PostCreated = 0,
     PostUpdated = 1,
@@ -41734,6 +41993,12 @@ export enum HubEvent {
     NotificationCreated = 25,
     NotificationUpdated = 26,
     NotificationDeleted = 27,
+    QuestionCreated = 28,
+    QuestionUpdated = 29,
+    QuestionDeleted = 30,
+    QuestionReactionCreated = 31,
+    QuestionReactionUpdated = 32,
+    QuestionReactionDeleted = 33,
 }
 
 export class ICustomAttributeProvider implements IICustomAttributeProvider {
@@ -44933,6 +45198,7 @@ export class QuestionReactionDto implements IQuestionReactionDto {
     id: string | undefined;
     type: ReactionType;
     questionId: string;
+    referenceId: string;
     creatorUserId: number;
 
     constructor(data?: IQuestionReactionDto) {
@@ -44949,6 +45215,7 @@ export class QuestionReactionDto implements IQuestionReactionDto {
             this.id = _data["id"];
             this.type = _data["type"];
             this.questionId = _data["questionId"];
+            this.referenceId = _data["referenceId"];
             this.creatorUserId = _data["creatorUserId"];
         }
     }
@@ -44965,6 +45232,7 @@ export class QuestionReactionDto implements IQuestionReactionDto {
         data["id"] = this.id;
         data["type"] = this.type;
         data["questionId"] = this.questionId;
+        data["referenceId"] = this.referenceId;
         data["creatorUserId"] = this.creatorUserId;
         return data; 
     }
@@ -44981,6 +45249,7 @@ export interface IQuestionReactionDto {
     id: string | undefined;
     type: ReactionType;
     questionId: string;
+    referenceId: string;
     creatorUserId: number;
 }
 

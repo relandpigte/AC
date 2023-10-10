@@ -15,5 +15,7 @@ namespace Academically.Services.Questions
         Task<QuestionDto> CreateAsync(QuestionDto input);
         Task<QuestionReactionDto> CreateReactionAsync(QuestionReactionDto input);
         Task DeleteReactionAsync(Guid id);
+        Task<QuestionDto> GetAsync(Guid questionId);
+        Task<IEnumerable<QuestionReactionDto>> GetReactionByReferenceAsync(Guid referenceId);
     }
 }

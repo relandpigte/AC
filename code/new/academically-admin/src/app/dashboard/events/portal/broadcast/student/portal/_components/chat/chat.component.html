@@ -1,5 +1,5 @@
 <div class="sidebar-chat d-flex flex-column h-100p">
-    <ul class="chat-nav nav nav-tabs" *ngIf="!selectedChannel && !replyingToUser">
+    <ul class="chat-nav nav nav-tabs">
         <li class="nav-item">
             <a class="nav-link active"  data-toggle="tab" href="#public-chat" role="tab"
                aria-controls="open-container" aria-selected="true" (click)="handleTabClick(0)">
@@ -103,9 +103,9 @@
                             [referenceId]="referenceId"
                             [isPrivateChat]="true"
                             [isSidebar]="true"
-                            [minTime]="referenceServiceCreationTime"
                             [mutedUserChannelIds]="mutedUserChannelIds"
                             [isUserBlocked]="isUserBlocked"
+                            [isRecipientTyping]="isRecipientTyping"
                             [blockedByUser]="currentUserBlocker"
                             (onBackToChannels)="handleBackToChannels()"
                             (onProcessNotification)="handleNotification($event)"

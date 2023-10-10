@@ -1,0 +1,12 @@
+<div class="comments-wrapper position-relative d-flex flex-column h-100p">
+    <app-community-discussions
+        [show]="true"
+        [isSidebar]="true"
+        [showAddComment]="true"
+        [referenceId]="'08dbc87d-4d78-4cc3-8e7c-b1636f80937b'"
+        [postType]="0"
+        [postCreatorId]="3"
+        (onUpdateEmit)="handleCommentUpdates()"
+        (onDeleteComment)="doToggleComments()"
+    ></app-community-discussions>
+</div>

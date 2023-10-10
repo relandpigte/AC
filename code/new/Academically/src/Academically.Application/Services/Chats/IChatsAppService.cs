@@ -14,9 +14,10 @@ namespace Academically.Services.Chats
         Task<List<ChannelDto>> GetAllChannelsForUser(long? userId);
         Task<List<ChannelDto>> GetAllInboxChannelsForUser(long? userId);
         Task<List<ChannelDto>> GetAllArchivedChannelsForUser(long? userId);
-        Task<List<ChannelDto>> GetReferenceChannelsForUser(Guid? referenceId, DateTime? minTime);
-        Task<List<ChannelMessageDto>> GetAllChannelMessages(Guid? channelId, Guid? referenceId, DateTime? minTime);
+        Task<List<ChannelDto>> GetReferenceChannelsForUser(Guid referenceId, bool isPrivate);
+        Task<List<ChannelMessageDto>> GetAllChannelMessages(Guid? channelId, Guid? referenceId, bool isPrivate);
         Task<List<ChannelMemberDto>> GetAllChannelMembers(Guid channelId);
+        Task<ChannelDto> CreateChannel(CreateChannelInputDto input);
         Task<ChannelMessageDto> CreateChannelMessage(CreateChannelMessageInputDto input);
         Task<ChannelMessageDto> UpdateChannelMessage(UpdateChannelMessageInputDto input);
         Task<bool> SeenChannelMessages(Guid channelId, DateTime targetMessagesDateTime);

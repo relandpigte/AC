@@ -1,0 +1,70 @@
+app-community-discussions {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    &::ng-deep {
+        &>.discussions {
+            &-separator {
+                display: none;
+            }
+
+            &-composer {
+                padding: 15px 20px;
+                border-top: 1px solid #E3EBF6;
+            }
+
+            &-container {
+                height: 0;
+                flex-grow: 1;
+                overflow-x: hidden;
+                overflow-y: auto;
+                scroll-behavior: smooth;
+                padding: 10px 20px 15px;
+
+                &::-webkit-scrollbar {
+                    width: 1.5px;
+                }
+
+                &::-webkit-scrollbar-thumb {
+                    background: #D2DDEC;
+                    border-radius: 10px;
+                }
+
+                .sorting-section {
+                    margin-bottom: 15px;
+                }
+            }
+        }
+
+        .tier-1-comment,
+        .tier-2-comment,
+        .tier-3-comment {
+            .avatar {
+                width: 30px !important;
+                height: 30px !important;
+            }
+
+            .discussions-composer {
+                display: none;
+            }
+
+            & > div {
+                gap: 10px !important;
+            }
+
+            .comment-actions {
+                margin-top: 7px;
+            }
+        }
+
+        .tier-1-comment {
+            & > div > div:first-child {
+                .avatar {
+                    width: 40px !important;
+                    height: 40px !important;
+                }
+            }
+        }
+    }
+}

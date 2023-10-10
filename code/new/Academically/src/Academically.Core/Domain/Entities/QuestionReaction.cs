@@ -11,6 +11,7 @@ namespace Academically.Domain.Entities
     {
         public ReactionType Type { get; set; }
         public Guid QuestionId { get; set; }
+        public Guid ReferenceId { get; set; }
 
         [ForeignKey("QuestionId")]
         public Question Question { get; set; }
