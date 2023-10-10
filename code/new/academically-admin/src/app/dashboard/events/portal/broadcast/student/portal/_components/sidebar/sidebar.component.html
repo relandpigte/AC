@@ -7,8 +7,8 @@
     </li>
     <ng-container *ngFor="let item of menuItems">
       <li *ngIf="item.name !== 'Separator' else separatorTemplate" [class.active]="activeMenuItem === item">
-        <a href="#!menu" (click)="onMenuItemClick(item, $event)">
-          <img [src]="'assets/img/events/' + item.icon" [alt]="item.name" />
+        <a href="#" (click)="onMenuItemClick(item, $event)">
+          <span class="icon" [class]="item.className"></span>
         </a>
       </li>
     </ng-container>
@@ -26,6 +26,7 @@
       <app-attendees *ngSwitchCase="'Attendees'"></app-attendees>
       <app-settings *ngSwitchCase="'Settings'"></app-settings>
       <app-offers *ngSwitchCase="'Offers'" [referenceId]="eventId"></app-offers>
+      <app-comments *ngSwitchCase="'Comments'"></app-comments>
       <app-sidebar-questions *ngSwitchCase="'Questions'"></app-sidebar-questions>
       <app-polls *ngSwitchCase="'Polls'"></app-polls>
       <app-sidebar-chat *ngSwitchCase="'Chat'" [referenceId]="eventId"></app-sidebar-chat>

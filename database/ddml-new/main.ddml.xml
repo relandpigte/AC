@@ -118,7 +118,7 @@
 	<include file="ddml-new/ddml.2022-03-08-01-create-eventresources-table.xml"/>
 	<include file="ddml-new/ddml.2022-03-09-01-create-questions-table.xml"/>
 	<include file="ddml-new/ddml.2022-03-09-01-create-eventpolls-tables.xml"/>
-	<include file="ddml-new/ddml.2022-03-09-02-create-questionreactions-table.xml"/>
+	<include file="ddml-new/ddml.2022-03-09-03-create-questionreactions-table.xml"/>
 	<include file="ddml-new/ddml.2022-03-21-01-alter-events-add-delay-fields.xml"/>
 	<include file="ddml-new/ddml.2022-03-22-01-create-forums-tables.xml"/>
 	<include file="ddml-new/ddml.2022-03-24-01-create-topics-tables.xml"/>
@@ -185,5 +185,6 @@
 	<include file="ddml-new/ddml.2023-09-23-01-create-service-rating-areas-table.xml" />
 	<include file="ddml-new/ddml.2023-09-27-99-alter-channels-table.xml" />
 	<include file="ddml-new/ddml.2023-09-27-99-alter-channel-messages-table.xml" />
+	<include file="ddml-new/ddml.2023-09-27-01-alter-questionsReactions-table.xml" />
 	<include file="ddml-new/ddml.2023-10-09-98-create-service-offers-table.xml" />
 </databaseChangeLog>

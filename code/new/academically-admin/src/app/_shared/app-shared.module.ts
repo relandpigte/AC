@@ -92,6 +92,8 @@ import {
 } from '@shared/components/chat-service-attachment/chat-service-attachment.component';
 import { NgPipesModule } from 'ngx-pipes';
 import { ChatRecipientComponent } from '@shared/components/chat-recipient/chat-recipient.component';
+import { EventQuestionsComponent } from '@shared/components/event-questions/event-questions.component';
+import { EventQuestionsComposerComponent } from '@shared/components/event-questions-composer/event-questions-composer.component';
 
 @NgModule({
   declarations: [
@@ -155,7 +157,9 @@ import { ChatRecipientComponent } from '@shared/components/chat-recipient/chat-r
     ChatComposerConversationComponent,
     ChatMessageInfoComponent,
     ChatServiceAttachmentComponent,
-    ChatRecipientComponent
+    ChatRecipientComponent,
+    EventQuestionsComponent,
+    EventQuestionsComposerComponent
   ],
   imports: [
     CommonModule,
@@ -261,7 +265,9 @@ import { ChatRecipientComponent } from '@shared/components/chat-recipient/chat-r
     ChatComposerConversationComponent,
     ChatMessageInfoComponent,
     ChatServiceAttachmentComponent,
-    ChatRecipientComponent
+    ChatRecipientComponent,
+    EventQuestionsComponent,
+    EventQuestionsComposerComponent
   ],
 })
 export class AppSharedModule { }
