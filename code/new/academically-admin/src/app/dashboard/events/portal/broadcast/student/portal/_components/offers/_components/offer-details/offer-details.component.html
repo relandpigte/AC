@@ -32,7 +32,13 @@
         <div class="offer-duration">Available for {{ model.offerDuration }}</div>
     </div>
     <div class="d-flex flex-column justify-content-center align-items-center w-100 gap-15" [style.padding.px]="20">
-        <div class="offer-action-edit cursor-pointer d-flex justify-content-center align-items-center">{{ 'Edit offer' | localize }}</div>
-        <div class="offer-action-launch cursor-pointer d-flex justify-content-center align-items-center">{{ 'Launch offer' | localize }}</div>
+        <ng-container *ngIf="isTutor">
+            <div *ngIf="canEdit" class="offer-action-edit cursor-pointer d-flex justify-content-center align-items-center" (click)="onEditClick()">{{ 'Edit offer' | localize }}</div>
+            <div class="offer-action-launch cursor-pointer d-flex justify-content-center align-items-center">{{ 'Launch offer' | localize }}</div>
+        </ng-container>
+        <ng-container *ngIf="!isTutor">
+            <div class="offer-action-learn cursor-pointer d-flex justify-content-center align-items-center">{{ 'Learn more' | localize }}</div>
+            <div class="offer-action-purchase cursor-pointer d-flex justify-content-center align-items-center">{{ 'Purchase' | localize }}</div>
+        </ng-container>
     </div>
 </div>

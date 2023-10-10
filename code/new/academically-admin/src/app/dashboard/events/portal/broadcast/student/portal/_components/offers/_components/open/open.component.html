@@ -16,32 +16,8 @@
       </tbody>
     </table>
   </div>
-  <div class="actions p-3">
-    <button class="btn btn-outline-secondary btn-block">{{ 'EditOffer' | localize }}</button>
-    <ng-container [ngSwitch]="launched">
-      <button *ngSwitchCase="false" class="btn btn-primary btn-block" (click)="launched=true">{{ 'LaunchOffer' | localize }}</button>
-      <ng-container *ngSwitchCase="true">
-        <button [popover]="endOfferPopTemplate" class="btn btn-danger btn-block" #endOfferPopElement="bs-popover">{{ 'EndOffer' | localize }}</button>
-        <ng-template #endOfferPopTemplate>
-          <h5 class="text-body">
-            {{ 'UnshareVideoWarningMessage' | localize }}
-          </h5>
-          <hr>
-          <div class="row">
-            <div class="col-6 text-center">
-              <button class="btn btn-sm btn-danger" (click)="launched=false">
-                {{ 'StopVideo' | localize }}
-              </button>
-            </div>
-            <div class="col-6 text-center">
-              <button class="btn btn-sm btn-success" (click)="endOfferPopElement.hide()">
-                {{ 'KeepPlaying' | localize }}
-              </button>
-            </div>
-          </div>
-        </ng-template>
-      </ng-container>
-    </ng-container>
+  <div class="actions" [style.padding.px]="20">
+    <div class="actions-new d-flex justify-content-center align-items-center" (click)="onNewOfferClick()">{{ 'New offer' | localize }}</div>
   </div>
 </div>
 

@@ -19,6 +19,7 @@ import { OffersComponent } from './_components/offers/offers.component';
 import { OfferCardComponent } from './_components/offers/_components/offer-card/offer-card.component';
 import { OfferDetailsComponent } from './_components/offers/_components/offer-details/offer-details.component';
 import { ClosedComponent } from './_components/offers/_components/closed/closed.component';
+import { PurchasedComponent } from './_components/offers/_components/purchased/purchased.component';
 import { InfoBannerComponent } from './_components/offers/_components/info-banner/info-banner.component';
 import { OpenComponent } from './_components/offers/_components/open/open.component';
 import { CreateOfferComponent } from './_components/offers/_components/create-offer/create-offer.component';
@@ -58,6 +59,7 @@ import { CommentsComponent } from './_components/comments/comments.component';
     OfferCardComponent,
     OfferDetailsComponent,
     ClosedComponent,
+    PurchasedComponent,
     InfoBannerComponent,
     OpenComponent,
     CreateOfferComponent,

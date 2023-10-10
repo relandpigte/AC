@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ServicePickerComponent } from '@shared/components/service-picker/service-picker.component';
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
@@ -39,6 +39,8 @@ export class CreateOfferComponent extends AppComponentBase implements OnInit {
     isSubmitting$ = new BehaviorSubject<boolean>(false);
 
     @ViewChild(NgForm) serviceOfferForm: NgForm;
+
+    @Output() onSave = new EventEmitter<void>();
 
     constructor(
         injector: Injector,
@@ -96,6 +98,8 @@ export class CreateOfferComponent extends AppComponentBase implements OnInit {
         } else {
             this._modal.hide();
         }
+
+        this.onSave.emit();
     }
 
     onSelectServiceClick(): void {

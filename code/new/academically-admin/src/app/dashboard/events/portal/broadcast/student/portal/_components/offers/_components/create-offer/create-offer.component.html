@@ -68,6 +68,7 @@
                                 [hideSearchBox]="true"
                                 (select2ValueChange)="model.percentageDiscount = $event"
                                 [(ngModel)]="model.percentageDiscount"
+                                [defaultValue]="model.percentageDiscount"
                                 id="percentage"
                                 [placeholder]="'At least lower than 100%' | localize"
                                 name="percentage"

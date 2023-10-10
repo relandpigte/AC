@@ -1,7 +1,10 @@
 import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
-import { ServiceOfferDto } from '@shared/service-proxies/service-proxies';
+import { CreateServiceOfferDto, ServiceOfferDto, ServiceOfferStatus } from '@shared/service-proxies/service-proxies';
+import { ServiceOffersService } from '@shared/services/service-offers.service';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { CreateOfferComponent } from '../create-offer/create-offer.component';
 
 @Component({
     selector: 'app-offer-details',
@@ -16,13 +19,27 @@ export class OfferDetailsComponent extends AppComponentBase implements OnInit {
 
     model: any = {};
 
-    constructor(injector: Injector) {
+    constructor(
+        injector: Injector,
+        private _serviceOffersService: ServiceOffersService,
+        private _modalService: BsModalService
+    ) {
         super(injector);
+
+        this._serviceOffersService.newServiceOffer$
+            .subscribe(offer => {
+                if (offer.id === this.offer.id) {
+                    this.offer = offer;
+                    this.initValues();
+                }
+            })
     }
 
     ngOnInit(): void {
         this.initValues();
     }
+
+    get canEdit(): boolean { return this.offer?.status === ServiceOfferStatus.Queued; }
 
     private initValues(): void {
         const getDuration = () => {
@@ -48,6 +65,22 @@ export class OfferDetailsComponent extends AppComponentBase implements OnInit {
         this.model['serviceDescription'] = this.offer?.service?.description;
         this.model['offerUnits'] = this.offer?.unitLimit ?? 0;
         this.model['offerDuration'] = getDuration();
+    }
+
+    onEditClick(): void {
+        const modalSettings = this.defaultModalSettings as ModalOptions<CreateOfferComponent>;
+        modalSettings.class = 'modal-lg modal-dialog-centered';
+        modalSettings.initialState = {
+            model: CreateServiceOfferDto.fromJS({
+                ...this.offer,
+                unitLimit: this.offer.unitLimit === null ? undefined : this.offer.unitLimit,
+                percentageDiscount: this.offer.percentageDiscount === null ? undefined : this.offer.percentageDiscount,
+            }),
+            referenceId: this.offer.referenceId,
+            selectedService: this.offer.service
+        };
+        const modal = this._modalService.show(CreateOfferComponent, modalSettings);
+        modal.content.onSave.subscribe(() => this.onBack.next());
     }
 
     onBackClick(): void {

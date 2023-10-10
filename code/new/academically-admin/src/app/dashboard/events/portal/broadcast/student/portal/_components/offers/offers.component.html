@@ -1,6 +1,6 @@
 <div class="flex-column h-100p">
   <ul *ngIf="isHost" class="nav nav-tabs nav-tabs-sm px-3">
-    <li class="nav-item">
+    <li *ngIf="isTutor" class="nav-item">
       <a href="#" class="nav-link active" id="queue-tab" data-toggle="tab" href="#queue-container" role="tab"
         aria-controls="queue-container" aria-selected="true">
         {{ 'Queue' | localize }}
@@ -12,24 +12,33 @@
         {{ 'Open' | localize }}
       </a>
     </li>
-    <li class="nav-item">
+    <li *ngIf="isTutor" class="nav-item">
       <a href="#" class="nav-link" id="closed-tab" data-toggle="tab" href="#closed-container" role="tab"
         aria-controls="closed-container" aria-selected="true">
         {{ 'Closed' | localize }}
+      </a>
+    </li>
+    <li *ngIf="!isTutor" class="nav-item">
+      <a href="#" class="nav-link" id="purchased-tab" data-toggle="tab" href="#purchased-container" role="tab"
+        aria-controls="purchased-container" aria-selected="true">
+        {{ 'Purchased' | localize }}
       </a>
     </li>
   </ul>
   <div *ngIf="isHost" class="tab-content flex-grow-1 flex-column overflow-hidden">
     <app-offer-details *ngIf="selectedOffer" [offer]="selectedOffer" (onBack)="selectedOffer=false"></app-offer-details>
     <ng-container *ngIf="!selectedOffer">
-      <div class="tab-pane fade show active flex-grow-1" id="queue-container" role="tabpanel" aria-labelledby="queue-tab">
+      <div *ngIf="isTutor" class="tab-pane fade show active flex-grow-1" id="queue-container" role="tabpanel" aria-labelledby="queue-tab">
         <app-queue [referenceId]="referenceId"></app-queue>
       </div>
       <div class="tab-pane fade flex-grow-1" id="open-container" role="tabpanel" aria-labelledby="open-tab">
         <app-open [referenceId]="referenceId"></app-open>
       </div>
-      <div class="tab-pane fade flex-grow-1" id="closed-container" role="tabpanel" aria-labelledby="closed-tab">
+      <div *ngIf="isTutor" class="tab-pane fade flex-grow-1" id="closed-container" role="tabpanel" aria-labelledby="closed-tab">
         <app-closed></app-closed>
+      </div>
+      <div *ngIf="!isTutor" class="tab-pane fade flex-grow-1" id="purchased-container" role="tabpanel" aria-labelledby="purchased-tab">
+        <app-purchased></app-purchased>
       </div>
     </ng-container>
   </div>

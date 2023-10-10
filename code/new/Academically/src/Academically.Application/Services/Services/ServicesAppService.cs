@@ -187,7 +187,11 @@ namespace Academically.Services.Services
                     existing.OfferLimitMinutes = input.OfferLimitMinutes;
                     existing.IsNumberOfUnitsLimited = input.IsNumberOfUnitsLimited;
                     existing.UnitLimit = input.UnitLimit;
-                    return ObjectMapper.Map<ServiceOfferDto>(existing);
+
+
+                    var existingDto = ObjectMapper.Map<ServiceOfferDto>(existing);
+                    existingDto.Service = await this._postsAppService.GetAvailableService(existingDto.ServiceId);
+                    return existingDto;
                 }
             }
             var upserted = ObjectMapper.Map<ServiceOfferDto>(await this._serviceOffersRepository.InsertAsync(ObjectMapper.Map<ServiceOffer>(input)));
