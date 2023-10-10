@@ -35,6 +35,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   @Input() postType: PostType;
   @Input() ctrlEnterToSubmit = false;
   @Input() postCreatorId: number;
+  @Input() isSidebar = false;
 
   @Input() foldSubject$ = new Subject();
 
