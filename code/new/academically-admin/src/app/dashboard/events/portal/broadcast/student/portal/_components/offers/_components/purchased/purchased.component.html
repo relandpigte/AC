@@ -7,7 +7,7 @@
           <td class="p-0 border-0">
             <div *ngFor="let offer of offers" class="row m-0">
               <div class="col flex-center p-0">
-                <app-offer-card [offer]="offer"></app-offer-card>
+                <app-offer-card [offer]="offer" (onClick)="onOfferClick($event)"></app-offer-card>
               </div>
             </div>
           </td>

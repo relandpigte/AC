@@ -26,7 +26,7 @@
     </li>
   </ul>
   <div class="tab-content flex-grow-1 flex-column overflow-hidden">
-    <app-offer-details *ngIf="selectedOffer" [offer]="selectedOffer" (onBack)="selectedOffer=false"></app-offer-details>
+    <app-offer-details *ngIf="selectedOffer" [offer]="selectedOffer" [isHost]="isHost" (onBack)="selectedOffer=false"></app-offer-details>
     <ng-container *ngIf="!selectedOffer">
       <div *ngIf="isTutor" class="tab-pane fade flex-grow-1" [ngClass]="{ 'show active': isTutor }" id="queue-container" role="tabpanel" aria-labelledby="queue-tab">
         <app-queue [referenceId]="referenceId"></app-queue>

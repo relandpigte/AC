@@ -15,6 +15,7 @@ import { switchMap } from 'rxjs/operators';
 })
 export class OfferDetailsComponent extends AppComponentBase implements OnInit {
     @Input() offer: ServiceOfferDto;
+    @Input() isHost = false;
     @Output() onBack = new EventEmitter<void>();
 
     isDescriptionExpanded = false;

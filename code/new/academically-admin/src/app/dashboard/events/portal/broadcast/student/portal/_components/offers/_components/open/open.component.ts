@@ -10,6 +10,7 @@ import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.servi
 import { HubService } from '@app/_shared/services/hub.service';
 import { takeUntil } from 'rxjs/operators';
 import { StateUpdateType } from '@shared/services/state-base.service';
+import { ServiceOffersService } from '@shared/services/service-offers.service';
 
 @Component({
   selector: 'app-open',
@@ -30,7 +31,8 @@ export class OpenComponent extends AppComponentBase implements OnInit {
     private _cdr: ChangeDetectorRef,
     private _hubService: HubService,
     private _modalService: BsModalService,
-    private _servicesService: ServicesServiceProxy
+    private _servicesService: ServicesServiceProxy,
+    private _serviceOffersService: ServiceOffersService
   ) {
     super(injector);
   }
@@ -82,6 +84,10 @@ export class OpenComponent extends AppComponentBase implements OnInit {
     });
     this.offers = this.offersStateService.getAllOffers();
     this.totalOffersCount = this.offersStateService.totalOffersCount;
+  }
+
+  onOfferClick(offer: ServiceOfferDto): void {
+    this._serviceOffersService.selectServiceOffer(offer);
   }
 
   onNewOfferClick(): void {

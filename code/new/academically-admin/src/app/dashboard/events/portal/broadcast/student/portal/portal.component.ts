@@ -8,6 +8,9 @@ import {
   EventUserType,
   EventPollDto,
   ProfilesServiceProxy,
+  ServiceOfferStatus,
+  ServicesServiceProxy,
+  ServiceOfferDto,
 } from '@shared/service-proxies/service-proxies';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -25,6 +28,9 @@ import { PortalPollService } from './_components/polls/_services/portal-poll.ser
 import { BsModalService, ModalOptions, BsModalRef } from 'ngx-bootstrap/modal';
 import { AttendeeOpenDialogComponent } from './_components/polls/_components/attendee-open-dialog/attendee-open-dialog.component';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { ServiceOffersStateService, offersType } from '@shared/services/service-offers-state.service';
+import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
+import { ServiceOffersService } from '@shared/services/service-offers.service';
 
 enum SignalAction {
   StartEvent,
@@ -67,6 +73,8 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
   @ViewChild('presenterVideoEl') presenterVideoEl: ElementRef;
 
   eventSessionsHub: HubConnection;
+  offersStateService: ServiceOffersStateService;
+  selectedOffer: ServiceOfferDto;
 
   model = new EventDto;
   room: rtc.Room;
@@ -105,7 +113,9 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     private _eventSessionsService: EventSessionsServiceProxy,
     private _profilesService: ProfilesServiceProxy,
     private _modalService: BsModalService,
-    private _modalDialogService: ModalDialogService
+    private _modalDialogService: ModalDialogService,
+    private _servicesService: ServicesServiceProxy,
+    private _serviceOffersService: ServiceOffersService
   ) {
     super(injector);
     this.pipeDestroy(route.paramMap, (paramMap) => {
@@ -130,6 +140,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     });
   }
 
+  get offersStateId(): string { return 'offers-event'; }
   get isHost(): boolean {
     return this.model.creatorUserId === this.appSession.userId;
   }
@@ -143,14 +154,45 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.initHub();
+    await this.initOffersAppStates();
   }
 
   ngOnDestroy(): void {
     console.log('exit event');
     // this.disconnectTrack(this.presenterStream);
     // this.disconnectTrack(this.attendeeStream);
+  }
+
+  private async initOffersAppStates() {
+    const appStateConfig: AppStateConfig = {
+      [this.offersStateId]: {
+        update: { referenceId: this.eventId }
+      }
+    };
+    const appStateServices: AppStateServices = {
+      [this.offersStateId]: {
+        type: ServiceOffersStateService,
+        args: [offersType.opened, this.appSession, this._hubService, this._servicesService]
+      }
+    };
+    await this.pubSubService.start(this, appStateConfig, appStateServices);
+    this.offersStateService = this.pubSubService.getStateService<ServiceOffersStateService>(this.offersStateId);
+    this.offersStateService.offers$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
+      switch (event.type) {
+        case 'launched':
+          this.selectedOffer = event.data;
+          break;
+        case 'closed':
+          this.selectedOffer = null
+          break;
+      }
+    });
+  }
+
+  onOfferClick(offer: ServiceOfferDto): void {
+    this._serviceOffersService.selectServiceOffer(offer);
   }
 
   onExitClick(): void {

@@ -2,6 +2,7 @@
 using Abp.Domain.Repositories;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Hubs;
 using Academically.Services.Posts;
 using Academically.Services.Services.Dto;
 using Academically.Services.UserServices.Dto;
@@ -20,6 +21,7 @@ namespace Academically.Services.Services
         private readonly IRepository<Service2, Guid> _service2sRepository;
         private readonly IRepository<ServiceOffer, Guid> _serviceOffersRepository;
         private readonly IPostsAppService _postsAppService;
+        private readonly IHubManager _hubManager;
 
         private readonly List<Service2Dto> StaticServiceLevels = new List<Service2Dto>
             {
@@ -79,7 +81,8 @@ namespace Academically.Services.Services
             IRepository<ServiceMapping, Guid> serviceMappingsRepository,
             IRepository<Service2, Guid> service2sRepository,
             IRepository<ServiceOffer, Guid> serviceOffersRepository,
-            IPostsAppService postsAppService
+            IPostsAppService postsAppService,
+            IHubManager hubManager
             )
         {
             _servicesRepository = servicesRepository;
@@ -87,6 +90,7 @@ namespace Academically.Services.Services
             _service2sRepository = service2sRepository;
             _serviceOffersRepository = serviceOffersRepository;
             _postsAppService = postsAppService;
+            _hubManager = hubManager;
         }
 
         public async Task<IEnumerable<ServiceDto>> GetCategories()
@@ -235,6 +239,7 @@ namespace Academically.Services.Services
             {
                 offer.Status = ServiceOfferStatus.Open;
                 offer.LaunchedTime = DateTime.Now;
+                await this._hubManager.NotifyUsersForServiceOfferLaunched(ObjectMapper.Map<ServiceOfferDto>(offer));
             }
         }
 
@@ -248,6 +253,7 @@ namespace Academically.Services.Services
             {
                 offer.Status = ServiceOfferStatus.Closed;
                 offer.EndedTime = DateTime.Now;
+                await this._hubManager.NotifyUsersForServiceOfferClosed(ObjectMapper.Map<ServiceOfferDto>(offer));
             }
         }
     }

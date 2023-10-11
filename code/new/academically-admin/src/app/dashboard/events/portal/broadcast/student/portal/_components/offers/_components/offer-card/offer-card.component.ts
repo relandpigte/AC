@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 import { ServiceOfferDto, ServiceOfferStatus } from '@shared/service-proxies/service-proxies';
@@ -12,7 +12,10 @@ import * as moment from 'moment';
 })
 export class OfferCardComponent extends AppComponentBase implements OnInit {
   @Input() offer: ServiceOfferDto;
-  @Input() isTimerActive = false;
+  @Input() canClose = false;
+
+  @Output() onClick = new EventEmitter<ServiceOfferDto>();
+  @Output() onClose = new EventEmitter();
 
   isViewingInfo = false;
 
@@ -21,8 +24,7 @@ export class OfferCardComponent extends AppComponentBase implements OnInit {
   ServiceOfferStatus = ServiceOfferStatus;
 
   constructor(
-    injector: Injector,
-    private _serviceOffersService: ServiceOffersService
+    injector: Injector
   ) {
     super(injector);
   }
@@ -63,7 +65,7 @@ export class OfferCardComponent extends AppComponentBase implements OnInit {
   }
 
   onSelectServiceOffer(): void {
-    this._serviceOffersService.selectServiceOffer(this.offer);
+    this.onClick.emit(this.offer);
   }
 
   getRemainingTime(): void {
@@ -75,6 +77,10 @@ export class OfferCardComponent extends AppComponentBase implements OnInit {
     this.model['offerRemainingTime'] = `${hours}:${minutes}:${seconds}`;
 
     setTimeout(() => this.getRemainingTime(), 1000);
+  }
+
+  onCloseClick(): void {
+    this.onClose.emit();
   }
 
 }

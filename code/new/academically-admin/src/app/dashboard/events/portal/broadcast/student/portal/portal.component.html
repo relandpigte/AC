@@ -1,7 +1,7 @@
 <app-device-settings *ngIf="showDeviceSettings" (joinRoom)="showDeviceSettings = false; onLobbyEntered($event)">
 </app-device-settings>
 
-<div class="h-100" [@routerTransition]>
+<div class="position-relative h-100" [@routerTransition]>
   <div [class.sidebar-hidden]="!showSidebar" class="main-content h-100">
     <nav class="navbar navbar-expand-lg navbar-light" id="topnav">
       <div class="mx-3 w-100 d-flex justify-content-between align-items-center">
@@ -139,6 +139,9 @@
     </div>
   </div>
 
+  <div *ngIf="!isHost && selectedOffer" class="event-floater">
+    <app-offer-card [offer]="selectedOffer" [canClose]="true" (onClose)="selectedOffer=null"  (onClick)="onOfferClick($event)"></app-offer-card>
+  </div>
 
   <app-sidebar [hidden]="!showSidebar" [isHost]="isHost"></app-sidebar>
 </div>

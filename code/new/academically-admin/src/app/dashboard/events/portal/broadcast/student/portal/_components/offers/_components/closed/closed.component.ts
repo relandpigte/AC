@@ -5,6 +5,7 @@ import * as moment from 'moment';
 import { BehaviorSubject } from 'rxjs';
 import { CreateOfferComponent } from '../create-offer/create-offer.component';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { ServiceOffersService } from '@shared/services/service-offers.service';
 
 @Component({
   selector: 'app-closed',
@@ -19,7 +20,8 @@ export class ClosedComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _modalService: BsModalService,
-    private _servicesService: ServicesServiceProxy
+    private _servicesService: ServicesServiceProxy,
+    private _serviceOffersService: ServiceOffersService
   ) {
     super(injector);
   }
@@ -38,6 +40,10 @@ export class ClosedComponent extends AppComponentBase implements OnInit {
       console.error(err);
     }
     this.isLoadingList$.next(false);
+  }
+
+  onOfferClick(offer: ServiceOfferDto): void {
+    this._serviceOffersService.selectServiceOffer(offer);
   }
 
   onNewOfferClick(): void {

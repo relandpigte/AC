@@ -32,7 +32,7 @@
         <div class="offer-duration">Available for {{ model.offerDuration }}</div>
     </div>
     <div class="d-flex flex-column justify-content-center align-items-center w-100 gap-15" [style.padding.px]="20">
-        <ng-container *ngIf="isTutor">
+        <ng-container *ngIf="isHost">
             <ng-container [ngSwitch]="offerStatus">
                 <ng-container *ngSwitchCase="ServiceOfferStatus.Queued">
                     <div *ngIf="canEdit" class="offer-action-edit cursor-pointer d-flex justify-content-center align-items-center" (click)="onEditClick()">{{ 'Edit offer' | localize }}</div>
@@ -46,7 +46,7 @@
                 </ng-container>
             </ng-container>
         </ng-container>
-        <ng-container *ngIf="!isTutor">
+        <ng-container *ngIf="!isHost">
             <ng-container *ngIf="offerStatus === ServiceOfferStatus.Open">
                 <div class="offer-action-learn cursor-pointer d-flex justify-content-center align-items-center">{{ 'Learn more' | localize }}</div>
                 <div class="offer-action-purchase cursor-pointer d-flex justify-content-center align-items-center">{{ 'Purchase' | localize }}</div>

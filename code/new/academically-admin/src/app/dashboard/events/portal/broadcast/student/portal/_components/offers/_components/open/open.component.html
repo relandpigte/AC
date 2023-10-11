@@ -5,7 +5,7 @@
         <tr>
           <td class="p-0 border-0 d-flex flex-column justify-content-start align-items-center" [style.margin.px]="20" [style.gap.px]="20">
             <ng-container *ngIf="offers?.length > 0; else noOffers" >
-              <app-offer-card *ngFor="let offer of offers" [offer]="offer"></app-offer-card>
+              <app-offer-card *ngFor="let offer of offers" [offer]="offer" (onClick)="onOfferClick($event)"></app-offer-card>
             </ng-container>
             <ng-template #noOffers>
               <div class="col no-offers text-center">{{ 'No offers' | localize }} </div>

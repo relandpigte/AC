@@ -113,7 +113,7 @@ export class ServiceOffersStateService extends StateServiceBase {
         try {
             const launched = await this._servicesService.getServiceOffer(offer.id).toPromise();
             this.updateFromMap(this.offers, Utils.toObjectMap([launched], (o) => o.id, (p) => p), this.offers$);
-            this.offers$.next({ data: offer, type: 'launched', silent: false });
+            this.offers$.next({ data: launched, type: 'launched', silent: false });
         } catch (err) {
             console.error(err);
         }
@@ -126,7 +126,7 @@ export class ServiceOffersStateService extends StateServiceBase {
         try {
             const closed = await this._servicesService.getServiceOffer(offer.id).toPromise();
             this.updateFromMap(this.offers, Utils.toObjectMap([closed], (o) => o.id, (p) => p), this.offers$);
-            this.offers$.next({ data: offer, type: 'closed', silent: false });
+            this.offers$.next({ data: closed, type: 'closed', silent: false });
         } catch (err) {
             console.error(err);
         }

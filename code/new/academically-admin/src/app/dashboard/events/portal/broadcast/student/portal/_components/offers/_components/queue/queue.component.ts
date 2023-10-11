@@ -9,6 +9,7 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CreateOfferComponent } from '../create-offer/create-offer.component';
+import { ServiceOffersService } from '@shared/services/service-offers.service';
 
 @Component({
   selector: 'app-queue',
@@ -28,7 +29,8 @@ export class QueueComponent extends AppComponentBase implements OnInit {
     private _cdr: ChangeDetectorRef,
     private _hubService: HubService,
     private _bsModalService: BsModalService,
-    private _servicesService: ServicesServiceProxy
+    private _servicesService: ServicesServiceProxy,
+    private _serviceOffersService: ServiceOffersService
   ) {
     super(injector);
   }
@@ -80,6 +82,10 @@ export class QueueComponent extends AppComponentBase implements OnInit {
     });
     this.offers = this.offersStateService.getAllOffers();
     this.totalOffersCount = this.offersStateService.totalOffersCount;
+  }
+
+  onOfferClick(offer: ServiceOfferDto): void {
+    this._serviceOffersService.selectServiceOffer(offer);
   }
 
   onNewOfferClick(): void {

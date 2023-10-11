@@ -1,4 +1,8 @@
-<div class="card custom-card-shadow custom-card-border cursor-pointer m-0" (click)="onSelectServiceOffer()">
+<div class="card custom-card-shadow custom-card-border cursor-pointer position-relative m-0" (click)="onSelectServiceOffer()">
+  <button *ngIf="canClose" (click)="onCloseClick()" type="button" class="close" data-dismiss="alert"
+    aria-label="Close">
+    <span aria-hidden="true">×</span>
+  </button>
   <div class="card-body p-0">
     <div class="d-flex flex-column justify-content-center align-items-start w-100">
       <div class="offer-service-name wrap-text" [style.marginBottom.px]="5">{{ model.serviceName }}</div>
