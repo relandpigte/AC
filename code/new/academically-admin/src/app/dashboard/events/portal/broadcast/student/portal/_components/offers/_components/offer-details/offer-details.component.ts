@@ -1,10 +1,12 @@
 import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
-import { CreateServiceOfferDto, ServiceOfferDto, ServiceOfferStatus } from '@shared/service-proxies/service-proxies';
+import { CreateServiceOfferDto, ServiceOfferDto, ServiceOfferStatus, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { ServiceOffersService } from '@shared/services/service-offers.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { CreateOfferComponent } from '../create-offer/create-offer.component';
+import { BehaviorSubject, combineLatest, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-offer-details',
@@ -16,11 +18,15 @@ export class OfferDetailsComponent extends AppComponentBase implements OnInit {
     @Output() onBack = new EventEmitter<void>();
 
     isDescriptionExpanded = false;
+    isSubmitting$ = new BehaviorSubject<boolean>(false);
 
     model: any = {};
 
+    ServiceOfferStatus = ServiceOfferStatus;
+
     constructor(
         injector: Injector,
+        private _servicesService: ServicesServiceProxy,
         private _serviceOffersService: ServiceOffersService,
         private _modalService: BsModalService
     ) {
@@ -39,7 +45,9 @@ export class OfferDetailsComponent extends AppComponentBase implements OnInit {
         this.initValues();
     }
 
+    get offerStatus(): ServiceOfferStatus { return this.offer?.status;}
     get canEdit(): boolean { return this.offer?.status === ServiceOfferStatus.Queued; }
+    get isLoading$() { return combineLatest([this.isSubmitting$]).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
 
     private initValues(): void {
         const getDuration = () => {
@@ -81,6 +89,20 @@ export class OfferDetailsComponent extends AppComponentBase implements OnInit {
         };
         const modal = this._modalService.show(CreateOfferComponent, modalSettings);
         modal.content.onSave.subscribe(() => this.onBack.next());
+    }
+
+    async onLaunchClick() {
+        this.isSubmitting$.next(true);
+        await this._servicesService.launchOffer(this.offer.id).toPromise();
+        this.isSubmitting$.next(false);
+        this.onBack.next();
+    }
+
+    async onCloseClick() {
+        this.isSubmitting$.next(true);
+        await this._servicesService.closeOffer(this.offer.id).toPromise();
+        this.isSubmitting$.next(false);
+        this.onBack.next();
     }
 
     onBackClick(): void {

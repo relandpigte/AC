@@ -1,4 +1,4 @@
-<div class="d-flex flex-column justify-content-center align-items-center w-100 h-100">
+<div class="d-flex flex-column justify-content-center align-items-center w-100 h-100" [loader]="isLoading$ | async">
     <div class="back d-flex justify-content-start align-items-center border-bottom w-100 h-70-px cursor-pointer" [style.padding.px]="20" (click)="onBackClick()">
         <img src="assets/img/events/chat/back.svg" alt="Back">
         {{ 'Back to offers' | localize }}
@@ -33,12 +33,24 @@
     </div>
     <div class="d-flex flex-column justify-content-center align-items-center w-100 gap-15" [style.padding.px]="20">
         <ng-container *ngIf="isTutor">
-            <div *ngIf="canEdit" class="offer-action-edit cursor-pointer d-flex justify-content-center align-items-center" (click)="onEditClick()">{{ 'Edit offer' | localize }}</div>
-            <div class="offer-action-launch cursor-pointer d-flex justify-content-center align-items-center">{{ 'Launch offer' | localize }}</div>
+            <ng-container [ngSwitch]="offerStatus">
+                <ng-container *ngSwitchCase="ServiceOfferStatus.Queued">
+                    <div *ngIf="canEdit" class="offer-action-edit cursor-pointer d-flex justify-content-center align-items-center" (click)="onEditClick()">{{ 'Edit offer' | localize }}</div>
+                    <div class="offer-action-launch cursor-pointer d-flex justify-content-center align-items-center" (click)="onLaunchClick()">{{ 'Launch offer' | localize }}</div>
+                </ng-container>
+                <ng-container *ngSwitchCase="ServiceOfferStatus.Open">
+                    <div class="offer-action-close cursor-pointer d-flex justify-content-center align-items-center" (click)="onCloseClick()">{{ 'Close offer' | localize }}</div>
+                </ng-container>
+                <ng-container *ngSwitchCase="ServiceOfferStatus.Closed">
+                    <div class="offer-action-relaunch cursor-pointer d-flex justify-content-center align-items-center" (click)="onLaunchClick()">{{ 'Launch again' | localize }}</div>
+                </ng-container>
+            </ng-container>
         </ng-container>
         <ng-container *ngIf="!isTutor">
-            <div class="offer-action-learn cursor-pointer d-flex justify-content-center align-items-center">{{ 'Learn more' | localize }}</div>
-            <div class="offer-action-purchase cursor-pointer d-flex justify-content-center align-items-center">{{ 'Purchase' | localize }}</div>
+            <ng-container *ngIf="offerStatus === ServiceOfferStatus.Queued">
+                <div class="offer-action-learn cursor-pointer d-flex justify-content-center align-items-center">{{ 'Learn more' | localize }}</div>
+                <div class="offer-action-purchase cursor-pointer d-flex justify-content-center align-items-center">{{ 'Purchase' | localize }}</div>
+            </ng-container>
         </ng-container>
     </div>
 </div>

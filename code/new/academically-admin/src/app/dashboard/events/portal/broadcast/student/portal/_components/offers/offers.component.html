@@ -35,7 +35,7 @@
         <app-open [referenceId]="referenceId"></app-open>
       </div>
       <div *ngIf="isTutor" class="tab-pane fade flex-grow-1" id="closed-container" role="tabpanel" aria-labelledby="closed-tab">
-        <app-closed></app-closed>
+        <app-closed [referenceId]="referenceId"></app-closed>
       </div>
       <div *ngIf="!isTutor" class="tab-pane fade flex-grow-1" id="purchased-container" role="tabpanel" aria-labelledby="purchased-tab">
         <app-purchased></app-purchased>

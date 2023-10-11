@@ -224,5 +224,35 @@ namespace Academically.Services.Services
 
             return offer;
         }
+
+        public async Task<ServiceOfferDto> LaunchOffer(Guid Id)
+        {
+            var offer = await this._serviceOffersRepository.GetAll()
+               .Where(o => o.Id == Id)
+               .FirstOrDefaultAsync();
+
+            if (offer != null)
+            {
+                offer.Status = ServiceOfferStatus.Open;
+                offer.LaunchedTime = DateTime.Now;
+                return ObjectMapper.Map<ServiceOfferDto>(offer);
+            }
+            return null;
+        }
+
+        public async Task<ServiceOfferDto> CloseOffer(Guid Id)
+        {
+            var offer = await this._serviceOffersRepository.GetAll()
+               .Where(o => o.Id == Id)
+               .FirstOrDefaultAsync();
+
+            if (offer != null)
+            {
+                offer.Status = ServiceOfferStatus.Closed;
+                offer.EndedTime = DateTime.Now;
+                return ObjectMapper.Map<ServiceOfferDto>(offer);
+            }
+            return null;
+        }
     }
 }

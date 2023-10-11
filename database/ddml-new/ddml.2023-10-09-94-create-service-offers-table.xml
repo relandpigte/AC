@@ -39,6 +39,15 @@
             <column name="UnitLimit" type="INT">
                 <constraints nullable="true"/>
             </column>
+            <column name="SoldCount" type="INT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="LaunchedTime" type="DATETIME">
+                <constraints nullable="true"/>
+            </column>
+            <column name="EndedTime" type="DATETIME">
+                <constraints nullable="true"/>
+            </column>
             <column name="CreatorUserId" type="BIGINT">
                 <constraints nullable="false"/>
             </column>

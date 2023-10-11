@@ -25,5 +25,7 @@ namespace Academically.Services.Services
         Task<ServiceOfferDto> UpsertServiceOffer(CreateServiceOfferDto input);
         Task<IEnumerable<ServiceOfferDto>> GetServiceOffers(Guid referenceId, ServiceOfferStatus? status);
         Task<ServiceOfferDto> GetServiceOffer(Guid Id);
+        Task<ServiceOfferDto> LaunchOffer(Guid Id);
+        Task<ServiceOfferDto> CloseOffer(Guid Id);
     }
 }

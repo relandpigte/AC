@@ -24,6 +24,9 @@ namespace Academically.Services.Services.Dto
         public int? OfferLimitMinutes { get; set; }
         public bool IsNumberOfUnitsLimited { get; set; } = false;
         public int? UnitLimit { get; set; }
+        public int SoldCount { get; set; } = 0;
+        public DateTime? LaunchedTime { get; set; }
+        public DateTime? EndedTime { get; set; }
 
         [NotMapped]
         public AvailableServiceDto Service { get; set; }

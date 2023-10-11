@@ -16,8 +16,6 @@ export class OpenComponent extends AppComponentBase implements OnInit {
 
   offers: ServiceOfferDto[];
 
-  launched: boolean = false;
-
   isLoadingList$ = new BehaviorSubject<boolean>(true);
 
   constructor(
