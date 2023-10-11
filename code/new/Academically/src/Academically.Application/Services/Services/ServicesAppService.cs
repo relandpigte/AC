@@ -190,12 +190,12 @@ namespace Academically.Services.Services
 
 
                     var existingDto = ObjectMapper.Map<ServiceOfferDto>(existing);
-                    existingDto.Service = await this._postsAppService.GetAvailableService(existingDto.ServiceId);
+                    existingDto.Service = await this._postsAppService.GetService(existingDto.ServiceId);
                     return existingDto;
                 }
             }
             var upserted = ObjectMapper.Map<ServiceOfferDto>(await this._serviceOffersRepository.InsertAsync(ObjectMapper.Map<ServiceOffer>(input)));
-            upserted.Service = await this._postsAppService.GetAvailableService(upserted.ServiceId);
+            upserted.Service = await this._postsAppService.GetService(upserted.ServiceId);
             return upserted;
         }
 
@@ -208,7 +208,7 @@ namespace Academically.Services.Services
                 .ToList();
 
             foreach (var o in offers)
-                o.Service = await this._postsAppService.GetAvailableService(o.ServiceId);
+                o.Service = await this._postsAppService.GetService(o.ServiceId);
 
             return offers;
         }
@@ -220,12 +220,12 @@ namespace Academically.Services.Services
                 .Select(o => ObjectMapper.Map<ServiceOfferDto>(o))
                 .FirstOrDefaultAsync();
 
-            offer.Service = await this._postsAppService.GetAvailableService(offer.ServiceId);
+            offer.Service = await this._postsAppService.GetService(offer.ServiceId);
 
             return offer;
         }
 
-        public async Task<ServiceOfferDto> LaunchOffer(Guid Id)
+        public async Task LaunchOffer(Guid Id)
         {
             var offer = await this._serviceOffersRepository.GetAll()
                .Where(o => o.Id == Id)
@@ -235,12 +235,10 @@ namespace Academically.Services.Services
             {
                 offer.Status = ServiceOfferStatus.Open;
                 offer.LaunchedTime = DateTime.Now;
-                return ObjectMapper.Map<ServiceOfferDto>(offer);
             }
-            return null;
         }
 
-        public async Task<ServiceOfferDto> CloseOffer(Guid Id)
+        public async Task CloseOffer(Guid Id)
         {
             var offer = await this._serviceOffersRepository.GetAll()
                .Where(o => o.Id == Id)
@@ -250,9 +248,7 @@ namespace Academically.Services.Services
             {
                 offer.Status = ServiceOfferStatus.Closed;
                 offer.EndedTime = DateTime.Now;
-                return ObjectMapper.Map<ServiceOfferDto>(offer);
             }
-            return null;
         }
     }
 }

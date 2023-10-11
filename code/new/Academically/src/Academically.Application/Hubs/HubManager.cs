@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Academically.Users.Dto;
 using Academically.Services.Notifications.Dto;
 using Academically.Services.Questions.Dto;
+using Academically.Services.Services.Dto;
 
 namespace Academically.Hubs
 {
@@ -54,6 +55,11 @@ namespace Academically.Hubs
         Task NotifyUsersForQuestionReactionCreated(QuestionReactionDto reaction);
         Task NotifyUsersForQuestionReactionUpdated(QuestionReactionDto reaction);
         Task NotifyUsersForQuestionReactionDeleted(QuestionReactionDto reaction);
+        Task NotifyUsersForServiceOfferCreated(ServiceOfferDto offer);
+        Task NotifyUsersForServiceOfferUpdated(ServiceOfferDto offer);
+        Task NotifyUsersForServiceOfferDeleted(ServiceOfferDto offer);
+        Task NotifyUsersForServiceOfferLaunched(ServiceOfferDto offer);
+        Task NotifyUsersForServiceOfferClosed(ServiceOfferDto offer);
     }
 
     public class HubManager : IHubManager
@@ -81,6 +87,7 @@ namespace Academically.Hubs
         private readonly IRepository<Reaction, Guid> _reactionsRepository;
         private readonly IHubContext<QuestionsHub> _questionHub;
         private readonly IHubContext<QuestionsReactionsHub> _questionsReactionsHub;
+        private readonly IHubContext<ServiceOffersHub> _serviceOffersHub;
 
         public HubManager(IHubContext<UserTopicsHub> userTopicsHub,
             IHubContext<PostsHub> postsHub,
@@ -96,7 +103,8 @@ namespace Academically.Hubs
             IRepository<Reaction, Guid> reactionsRepository,
             IRepository<Question, Guid> questionRepository,
             IHubContext<QuestionsHub> questionHub,
-            IHubContext<QuestionsReactionsHub> questionsReactionsHub)
+            IHubContext<QuestionsReactionsHub> questionsReactionsHub,
+            IHubContext<ServiceOffersHub> serviceOffersHub)
         {
             _userTopicsHub = userTopicsHub;
             _postsHub = postsHub;
@@ -112,6 +120,7 @@ namespace Academically.Hubs
             _newUserLoggedInHub = newUserLoggedInHub;
             _questionHub = questionHub;
             _questionsReactionsHub = questionsReactionsHub;
+            _serviceOffersHub = serviceOffersHub;
         }
 
         public async Task NotifyUsersForPostCreated(PostDto post)
@@ -407,6 +416,31 @@ namespace Academically.Hubs
         {
             await _questionsReactionsHub.Clients.Group(QuestionsReactionsGroup).SendAsync(nameof(HubEvent.QuestionReactionDeleted), reaction);
             await _questionsReactionsHub.Clients.Group($"{reaction.ReferenceId}").SendAsync(nameof(HubEvent.QuestionReactionDeleted), reaction);
+        }
+
+        public async Task NotifyUsersForServiceOfferCreated(ServiceOfferDto offer)
+        {
+            await _serviceOffersHub.Clients.Group($"{offer.ReferenceId}").SendAsync(nameof(HubEvent.ServiceOfferCreated), offer);
+        }
+
+        public async Task NotifyUsersForServiceOfferUpdated(ServiceOfferDto offer)
+        {
+            await _serviceOffersHub.Clients.Group($"{offer.ReferenceId}").SendAsync(nameof(HubEvent.ServiceOfferUpdated), offer);
+        }
+
+        public async Task NotifyUsersForServiceOfferDeleted(ServiceOfferDto offer)
+        {
+            await _serviceOffersHub.Clients.Group($"{offer.ReferenceId}").SendAsync(nameof(HubEvent.ServiceOfferDeleted), offer);
+        }
+
+        public async Task NotifyUsersForServiceOfferLaunched(ServiceOfferDto offer)
+        {
+            await _serviceOffersHub.Clients.Group($"{offer.ReferenceId}").SendAsync(nameof(HubEvent.ServiceOfferLaunched), offer);
+        }
+
+        public async Task NotifyUsersForServiceOfferClosed(ServiceOfferDto offer)
+        {
+            await _serviceOffersHub.Clients.Group($"{offer.ReferenceId}").SendAsync(nameof(HubEvent.ServiceOfferClosed), offer);
         }
     }
 }

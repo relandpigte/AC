@@ -35,6 +35,11 @@
         QuestionDeleted,
         QuestionReactionCreated,
         QuestionReactionUpdated,
-        QuestionReactionDeleted
+        QuestionReactionDeleted,
+        ServiceOfferCreated,
+        ServiceOfferUpdated,
+        ServiceOfferDeleted,
+        ServiceOfferLaunched,
+        ServiceOfferClosed
     }
 }

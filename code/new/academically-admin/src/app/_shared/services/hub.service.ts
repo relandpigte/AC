@@ -65,6 +65,10 @@ export class HubService {
     return await this.getHub(`notifications`, Utils.generateUrlParams(params));
   }
 
+  public async getServiceOffersHub(params?: Record<string, any>): Promise<any> {
+    return await this.getHub(`serviceOffers`, Utils.generateUrlParams(params));
+  }
+
   public getCommentsHubWithParam(referenceId?: string, parentId?: string): Promise<any> {
     let queryParam = null;
     if(referenceId){

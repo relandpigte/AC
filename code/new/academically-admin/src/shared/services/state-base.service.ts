@@ -3,7 +3,7 @@ import { AppStateActionNames, AppStateFeatures} from './pub-sub.service';
 
 export interface StateUpdate<T> {
     data: T;
-    type: StateUpdateType;
+    type: StateUpdateType | string;
     silent?: boolean;
 }
 

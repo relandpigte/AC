@@ -21534,7 +21534,7 @@ export class ServicesServiceProxy {
      * @param id (optional) 
      * @return Success
      */
-    launchOffer(id: string | undefined): Observable<ServiceOfferDto> {
+    launchOffer(id: string | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/Services/LaunchOffer?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
@@ -21546,7 +21546,6 @@ export class ServicesServiceProxy {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Accept": "text/plain"
             })
         };
 
@@ -21557,14 +21556,14 @@ export class ServicesServiceProxy {
                 try {
                     return this.processLaunchOffer(<any>response_);
                 } catch (e) {
-                    return <Observable<ServiceOfferDto>><any>_observableThrow(e);
+                    return <Observable<void>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<ServiceOfferDto>><any>_observableThrow(response_);
+                return <Observable<void>><any>_observableThrow(response_);
         }));
     }
 
-    protected processLaunchOffer(response: HttpResponseBase): Observable<ServiceOfferDto> {
+    protected processLaunchOffer(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -21573,24 +21572,21 @@ export class ServicesServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ServiceOfferDto.fromJS(resultData200);
-            return _observableOf(result200);
+            return _observableOf<void>(<any>null);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ServiceOfferDto>(<any>null);
+        return _observableOf<void>(<any>null);
     }
 
     /**
      * @param id (optional) 
      * @return Success
      */
-    closeOffer(id: string | undefined): Observable<ServiceOfferDto> {
+    closeOffer(id: string | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/Services/CloseOffer?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
@@ -21602,7 +21598,6 @@ export class ServicesServiceProxy {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Accept": "text/plain"
             })
         };
 
@@ -21613,14 +21608,14 @@ export class ServicesServiceProxy {
                 try {
                     return this.processCloseOffer(<any>response_);
                 } catch (e) {
-                    return <Observable<ServiceOfferDto>><any>_observableThrow(e);
+                    return <Observable<void>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<ServiceOfferDto>><any>_observableThrow(response_);
+                return <Observable<void>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCloseOffer(response: HttpResponseBase): Observable<ServiceOfferDto> {
+    protected processCloseOffer(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -21629,17 +21624,14 @@ export class ServicesServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ServiceOfferDto.fromJS(resultData200);
-            return _observableOf(result200);
+            return _observableOf<void>(<any>null);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ServiceOfferDto>(<any>null);
+        return _observableOf<void>(<any>null);
     }
 }
 
@@ -42358,7 +42350,7 @@ export interface IGroupedPermissionDtoListResultDto {
     items: GroupedPermissionDto[] | undefined;
 }
 
-/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted 18 = ChannelMessageCreated 19 = ChannelMessageUpdated 20 = ChannelMessageDeleted 21 = ChannelMemberTyping 22 = ChannelArchive 23 = ChannelUnarchive 24 = NewUserLoggedIn 25 = NotificationCreated 26 = NotificationUpdated 27 = NotificationDeleted 28 = QuestionCreated 29 = QuestionUpdated 30 = QuestionDeleted 31 = QuestionReactionCreated 32 = QuestionReactionUpdated 33 = QuestionReactionDeleted */
+/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted 18 = ChannelMessageCreated 19 = ChannelMessageUpdated 20 = ChannelMessageDeleted 21 = ChannelMemberTyping 22 = ChannelArchive 23 = ChannelUnarchive 24 = NewUserLoggedIn 25 = NotificationCreated 26 = NotificationUpdated 27 = NotificationDeleted 28 = QuestionCreated 29 = QuestionUpdated 30 = QuestionDeleted 31 = QuestionReactionCreated 32 = QuestionReactionUpdated 33 = QuestionReactionDeleted 34 = ServiceOfferCreated 35 = ServiceOfferUpdated 36 = ServiceOfferDeleted 37 = ServiceOfferLaunched 38 = ServiceOfferClosed */
 export enum HubEvent {
     PostCreated = 0,
     PostUpdated = 1,
@@ -42394,6 +42386,11 @@ export enum HubEvent {
     QuestionReactionCreated = 31,
     QuestionReactionUpdated = 32,
     QuestionReactionDeleted = 33,
+    ServiceOfferCreated = 34,
+    ServiceOfferUpdated = 35,
+    ServiceOfferDeleted = 36,
+    ServiceOfferLaunched = 37,
+    ServiceOfferClosed = 38,
 }
 
 export class ICustomAttributeProvider implements IICustomAttributeProvider {
