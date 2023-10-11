@@ -8,6 +8,7 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { CreateOfferComponent } from '../create-offer/create-offer.component';
+import { PurchaseComponent } from '../purchase/purchase.component';
 
 @Component({
     selector: 'app-offer-details',
@@ -114,5 +115,12 @@ export class OfferDetailsComponent extends AppComponentBase implements OnInit {
     onLearnClick(): void {
         const url = `${AppConsts.appBaseUrl}/app/events/${this.offer.serviceId}/about`;
         window.open(url, '_blank');
+    }
+
+    onPurchaseClick(): void {
+        const modalSettings = this.defaultModalSettings as ModalOptions<PurchaseComponent>;
+        modalSettings.class = 'modal-lg modal-dialog-centered';
+        modalSettings.initialState = { offer: this.offer };
+        this._modalService.show(PurchaseComponent, modalSettings);
     }
 }

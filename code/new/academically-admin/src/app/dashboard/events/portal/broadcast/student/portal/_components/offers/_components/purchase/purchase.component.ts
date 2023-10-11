@@ -1,0 +1,86 @@
+import { Component, Injector, Input, OnInit } from '@angular/core';
+import { AppComponentBase } from '@shared/app-component-base';
+import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
+import { ServiceOfferDto } from '@shared/service-proxies/service-proxies';
+import * as moment from 'moment';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BehaviorSubject, combineLatest, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+
+@Component({
+    selector: 'app-purchase',
+    templateUrl: './purchase.component.html',
+    styleUrls: ['./purchase.component.less']
+})
+export class PurchaseComponent extends AppComponentBase implements OnInit {
+    @Input() offer: ServiceOfferDto;
+
+    isSubmitting$ = new BehaviorSubject<boolean>(false);
+
+    model: any = {};
+
+    constructor(
+        injector: Injector,
+        private _modal: BsModalRef
+    ) {
+        super(injector);
+    }
+
+    ngOnInit(): void {
+        this.initValues();
+    }
+
+    get isLoading$() { return combineLatest([this.isSubmitting$]).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
+
+    private initValues(): void {
+        const getDuration = () => {
+          let duration = [];
+          if (this.offer?.offerLimitDays) {
+            duration.push(`${this.offer.offerLimitDays} days`);
+          }
+          if (this.offer?.offerLimitHours) {
+            duration.push(`${this.offer.offerLimitHours} hours`);
+          }
+          if (this.offer?.offerLimitMinutes) {
+            duration.push(`${this.offer.offerLimitMinutes} minutes`);
+          }
+          return duration.join(' ');
+        }
+
+        this.model['serviceName'] = this.offer?.service?.name;
+        this.model['serviceType'] = ServiceCardUtils.getServiceTypeName(this.offer?.service?.serviceType);
+        this.model['servicePriceOriginal'] = this.offer?.service?.price ?? 0;
+        this.model['servicePriceOffer'] = this.offer?.discountAmount ?? this.model.servicePriceOriginal - (this.model.servicePriceOriginal * ((this.offer?.percentageDiscount ?? 0) / 100));
+        this.model['serviceThumbnail'] = this.offer?.service?.thumbnailImageUrl ? this.offer.service.thumbnailImageUrl : 'assets/img/img-placeholder.png';
+        this.model['offerSoldCount'] = this.offer?.soldCount ?? 0;
+        this.model['offerUnits'] = this.offer?.unitLimit ?? 0;
+        this.model['offerDuration'] = getDuration();
+        this.model['offerAvailableUnits'] = this.offer?.unitLimit - this.offer?.soldCount;
+        this.model['offerLaunched'] = this.convertMomentToShorterDateFormat(this.offer?.launchedTime);
+        this.model['offerEnded'] = this.convertMomentToShorterDateFormat(this.offer?.endedTime);
+        this.getRemainingTime();
+      }
+
+    getRemainingTime(): void {
+        const endTime = moment(this.offer.launchedTime).add(this.offer.offerLimitDays, 'days').add(this.offer.offerLimitHours, 'hours').add(this.offer.offerLimitMinutes, 'minutes');
+        const duration = moment.duration(endTime.diff(moment()));
+        const hours = duration.hours().toLocaleString('en-US', { minimumIntegerDigits:2, useGrouping:false });
+        const minutes = duration.minutes().toLocaleString('en-US', { minimumIntegerDigits:2, useGrouping:false });
+        const seconds = duration.seconds().toLocaleString('en-US', { minimumIntegerDigits:2, useGrouping:false });
+        this.model['offerRemainingTime'] = `${hours}:${minutes}:${seconds}`;
+
+        setTimeout(() => this.getRemainingTime(), 1000);
+    }
+
+    onCancelClick(): void {
+        this._modal.hide();
+    }
+
+    onCloseClick(): void {
+        this._modal.hide();
+    }
+
+    onPayClick(): void {
+        this._modal.hide();
+    }
+}
