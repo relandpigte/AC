@@ -27,6 +27,27 @@
                         }
                     }
                 }
+
+                &.future-events {
+                    background-color: transparent !important;
+
+                    .fc-daygrid-day-top {
+                        background-color: #EAF2FC;
+
+                        a {
+                            color: #2C7BE5;
+                        }
+                    }
+                }
+
+                &.past-events {
+                    background-color: transparent !important;
+
+                    .fc-daygrid-day-top {
+                        border: 1px solid #E4EBF6;
+                    }
+                }
+
                 &-events {
                     display: none;
                 }
@@ -103,7 +124,7 @@
                     .people,
                     .role,
                     .organizer {
-                        font-weight: bold;
+                        color: #1F2D3D;
                     }
                 }
             }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Injector, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { environment } from 'environments/environment';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
@@ -20,7 +20,7 @@ import { DashboardPagesService } from '@shared/services/dashboard-pages.service'
   styleUrls: ['./dashboard.component.less'],
   animations: [appModuleAnimation()],
 })
-export class DashboardComponent extends AppComponentBase implements OnInit {
+export class DashboardComponent extends AppComponentBase implements OnInit, AfterViewInit {
   user: UserLoginInfoDto = new UserLoginInfoDto();
   greetings: string;
   isOnboarding = false;
@@ -81,6 +81,10 @@ export class DashboardComponent extends AppComponentBase implements OnInit {
     });
 
     setTimeout(() => this._dashboardPageService.setIsLoading(false), 3000);
+  }
+
+  ngAfterViewInit(): void {
+    this._cdr.detectChanges();
   }
 
   getGreetings(): string {

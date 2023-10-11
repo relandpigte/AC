@@ -14,6 +14,7 @@ namespace Academically.Services.UserFollowers
 		Task DeleteAsync(Guid id);
 		Task<IEnumerable<UserDto>> GetUsersToFollow();
 		Task<IEnumerable<UserFollowerDto>> GetFollowing();
+		Task<IEnumerable<UserFollowerDto>> GetFollowers();
     }
 }
 

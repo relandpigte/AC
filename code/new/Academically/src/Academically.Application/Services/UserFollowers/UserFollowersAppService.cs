@@ -71,6 +71,15 @@ namespace Academically.Services.UserFollowers
 
             return ObjectMapper.Map<List<UserFollowerDto>>(following);
         }
+        
+        public async Task<IEnumerable<UserFollowerDto>> GetFollowers()
+        {
+            var following = await _userFollowersRepository.GetAll()
+                .Where(x => x.UserId == AbpSession.UserId.Value)
+                .ToListAsync();
+
+            return ObjectMapper.Map<List<UserFollowerDto>>(following);
+        }
     }
 }
 
