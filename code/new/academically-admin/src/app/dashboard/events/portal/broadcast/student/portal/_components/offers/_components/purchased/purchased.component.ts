@@ -10,15 +10,7 @@ import * as moment from 'moment';
   styleUrls: ['./purchased.component.less']
 })
 export class PurchasedComponent extends AppComponentBase implements OnInit {
-  offers: any[] = [
-    {
-      name: 'Closed Offer',
-      size: 521.42,
-      sizeUnit: 'MB',
-      type: 'WAV',
-      shared: moment()
-    }
-  ];
+  offers: ServiceOfferDto[];
 
   constructor(
     injector: Injector,

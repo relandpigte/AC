@@ -48,7 +48,7 @@
         </ng-container>
         <ng-container *ngIf="!isHost">
             <ng-container *ngIf="offerStatus === ServiceOfferStatus.Open">
-                <div class="offer-action-learn cursor-pointer d-flex justify-content-center align-items-center">{{ 'Learn more' | localize }}</div>
+                <div class="offer-action-learn cursor-pointer d-flex justify-content-center align-items-center" (click)="onLearnClick()">{{ 'Learn more' | localize }}</div>
                 <div class="offer-action-purchase cursor-pointer d-flex justify-content-center align-items-center">{{ 'Purchase' | localize }}</div>
             </ng-container>
         </ng-container>
