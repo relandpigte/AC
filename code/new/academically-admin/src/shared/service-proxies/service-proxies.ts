@@ -17158,6 +17158,57 @@ export class ProfilesServiceProxy {
         }
         return _observableOf<void>(<any>null);
     }
+
+    /**
+     * @return Success
+     */
+    getLearnerMetrics(): Observable<LearnerProfileMetricDto> {
+        let url_ = this.baseUrl + "/api/services/app/Profiles/GetLearnerMetrics";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetLearnerMetrics(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetLearnerMetrics(<any>response_);
+                } catch (e) {
+                    return <Observable<LearnerProfileMetricDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<LearnerProfileMetricDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetLearnerMetrics(response: HttpResponseBase): Observable<LearnerProfileMetricDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = LearnerProfileMetricDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<LearnerProfileMetricDto>(<any>null);
+    }
 }
 
 @Injectable()
@@ -27735,6 +27786,64 @@ export class UserFollowersServiceProxy {
     }
 
     protected processGetFollowing(response: HttpResponseBase): Observable<UserFollowerDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(UserFollowerDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserFollowerDto[]>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getFollowers(): Observable<UserFollowerDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/UserFollowers/GetFollowers";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetFollowers(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetFollowers(<any>response_);
+                } catch (e) {
+                    return <Observable<UserFollowerDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserFollowerDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetFollowers(response: HttpResponseBase): Observable<UserFollowerDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -42569,6 +42678,57 @@ export enum LayoutKind {
     Sequential = 0,
     Explicit = 2,
     Auto = 3,
+}
+
+export class LearnerProfileMetricDto implements ILearnerProfileMetricDto {
+    servicePurchased: number;
+    serviceCompleted: number;
+    totalFollowers: number;
+
+    constructor(data?: ILearnerProfileMetricDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.servicePurchased = _data["servicePurchased"];
+            this.serviceCompleted = _data["serviceCompleted"];
+            this.totalFollowers = _data["totalFollowers"];
+        }
+    }
+
+    static fromJS(data: any): LearnerProfileMetricDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new LearnerProfileMetricDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["servicePurchased"] = this.servicePurchased;
+        data["serviceCompleted"] = this.serviceCompleted;
+        data["totalFollowers"] = this.totalFollowers;
+        return data; 
+    }
+
+    clone(): LearnerProfileMetricDto {
+        const json = this.toJSON();
+        let result = new LearnerProfileMetricDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ILearnerProfileMetricDto {
+    servicePurchased: number;
+    serviceCompleted: number;
+    totalFollowers: number;
 }
 
 export class LocationDetail implements ILocationDetail {

@@ -93,7 +93,7 @@
                     </ng-container>
 
                     <ng-template #notDraft>
-                        <span *ngIf="people && people?.isShowAvatars && people?.people && people?.avatarStackCount > 0" class="avatar-group avatar-showing d-none d-md-inline-flex">
+                        <span *ngIf="people?.isShowAvatars && !!people?.people?.length && people?.avatarStackCount > 0" class="avatar-group avatar-showing d-none d-md-inline-flex">
                             <ng-container *ngFor="let p of people?.people?.slice(0, people?.avatarStackCount)">
                                 <a *ngIf="p.avatar" href="#" class="avatar avatar-xs" [style.width.px]="20" [style.height.px]="20">
                                     <img [src]="p.avatar.src" class="avatar-img rounded-circle" alt="...">
