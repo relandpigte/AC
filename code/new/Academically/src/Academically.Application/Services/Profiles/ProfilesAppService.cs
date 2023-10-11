@@ -21,6 +21,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Academically.Services.Courses;
+using Academically.Services.UserFollowers;
 
 namespace Academically.Services.Profiles
 {
@@ -36,6 +38,8 @@ namespace Academically.Services.Profiles
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly ILocationsService _locationsService;
         private readonly ISettingManager _settingManager;
+        private readonly IUserFollowersAppService _userFollowersAppService;
+        private readonly ICoursesAppService _coursesAppService;
 
         public ProfilesAppService(
             UserManager userManager,
@@ -46,7 +50,9 @@ namespace Academically.Services.Profiles
             IRepository<PassportVerification, Guid> passportVerifications,
             IDocumentsDomainService documentsDomainService,
             ILocationsService locationsService,
-            ISettingManager settingManager
+            ISettingManager settingManager,
+            IUserFollowersAppService userFollowersAppService,
+            ICoursesAppService coursesAppService
             )
         {
             _userManager = userManager;
@@ -58,6 +64,8 @@ namespace Academically.Services.Profiles
             _documentsDomainService = documentsDomainService;
             _locationsService = locationsService;
             _settingManager = settingManager;
+            _userFollowersAppService = userFollowersAppService;
+            _coursesAppService = coursesAppService;
         }
 
         public async Task<UserDto> Get(long id)
@@ -332,6 +340,24 @@ namespace Academically.Services.Profiles
             user.DeleteDate = Clock.Now.AddDays(7);
             await _usersRepository.UpdateAsync(user);
             await _usersRepository.DeleteAsync(AbpSession.UserId.Value);
+        }
+
+        public Task<LearnerProfileMetricDto> GetLearnerMetrics()
+        {
+            // TODO: Service course is only available for now.
+            var coursesEnrolled = _coursesAppService.GetEnrolledCoursesByUser().Result.Count();
+            var coursesCompleted = _coursesAppService.GetEnrolledCoursesByUser().Result.Count(c => c.Progress == 100);
+            
+            var servicePurchased = coursesEnrolled;
+            var serviceCompleted = coursesCompleted;
+            var totalFollowers = _userFollowersAppService.GetFollowers().Result.Count();
+            
+            return Task.FromResult(new LearnerProfileMetricDto
+            {
+                ServiceCompleted = serviceCompleted,
+                ServicePurchased = servicePurchased,
+                TotalFollowers = totalFollowers
+            });
         }
     }
 }

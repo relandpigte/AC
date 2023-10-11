@@ -8,6 +8,6 @@ export class ShortenPipe implements PipeTransform {
     if (completeWords && value?.length > limit) {
       limit = value.substring(0, limit).lastIndexOf(' ');
     }
-    return value?.length > limit ? value.substring(0, limit) + ellipsis : value;
+    return value?.length > limit ? value.substring(0, limit).trim() + ellipsis : value;
   }
 }
