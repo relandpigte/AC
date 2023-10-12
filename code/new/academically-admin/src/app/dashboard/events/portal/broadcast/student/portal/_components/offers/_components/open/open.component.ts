@@ -20,6 +20,7 @@ import { ServiceOffersService } from '@shared/services/service-offers.service';
 export class OpenComponent extends AppComponentBase implements OnInit {
   offersStateService: ServiceOffersStateService;
   @Input() referenceId: string;
+  @Input() isHost = false;
 
   offers: ServiceOfferDto[];
   totalOffersCount = 0;

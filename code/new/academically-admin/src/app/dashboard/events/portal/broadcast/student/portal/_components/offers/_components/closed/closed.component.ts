@@ -14,6 +14,8 @@ import { ServiceOffersService } from '@shared/services/service-offers.service';
 })
 export class ClosedComponent extends AppComponentBase implements OnInit {
   @Input() referenceId: string;
+  @Input() isHost = false;
+
   offers: ServiceOfferDto[];
   isLoadingList$ = new BehaviorSubject<boolean>(true);
 

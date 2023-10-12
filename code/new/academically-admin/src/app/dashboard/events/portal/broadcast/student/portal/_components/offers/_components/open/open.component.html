@@ -1,4 +1,4 @@
-<div class="flex-column">
+<div class="flex-column w-100">
   <div class="flex-grow-1 scroll-y h-0">
     <table class="table table-sm mb-0">
       <tbody>
@@ -15,7 +15,7 @@
       </tbody>
     </table>
   </div>
-  <div class="actions" [style.padding.px]="20">
+  <div *ngIf="!isHost" class="actions" [style.padding.px]="20">
     <div class="actions-new d-flex justify-content-center align-items-center" (click)="onNewOfferClick()">{{ 'New offer' | localize }}</div>
   </div>
 </div>

@@ -62,7 +62,7 @@ export class CreateOfferComponent extends AppComponentBase implements OnInit {
     get serviceTitle() { return this.selectedService.name; }
     get serviceType() { return ServiceCardUtils.getServiceTypeName(this.selectedService.serviceType); }
     get servicePrice() { return this.selectedService?.price ?? 0; }
-    get validMaxDiscountPrice() { return this.servicePrice > 0 ? this.servicePrice - 1 : 0; }
+    get validMaxDiscountPrice() { return this.servicePrice ?? 0; }
 
     async ngOnInit() {
     }

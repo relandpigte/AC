@@ -5,6 +5,8 @@ import { takeUntil } from 'rxjs/operators';
 import { ServiceOfferDto } from '@shared/service-proxies/service-proxies';
 import { ServiceOffersService } from '@shared/services/service-offers.service';
 
+export enum OffersTabs { Queued, Open, Closed, Purchased }
+
 @Component({
   selector: 'app-offers',
   templateUrl: './offers.component.html',
@@ -16,6 +18,9 @@ export class OffersComponent extends AppComponentBase implements OnInit {
   isHost = false;
 
   selectedOffer: ServiceOfferDto;
+  activeTab: OffersTabs;
+
+  OffersTabs = OffersTabs;
 
   constructor(
     injector: Injector,
@@ -27,6 +32,7 @@ export class OffersComponent extends AppComponentBase implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         this.isHost = response.creatorUserId === this.appSession.userId;
+        this.activeTab = this.isHost ? OffersTabs.Queued : OffersTabs.Open;
       });
 
     this._serviceOffersService.selectedServiceOffer$
