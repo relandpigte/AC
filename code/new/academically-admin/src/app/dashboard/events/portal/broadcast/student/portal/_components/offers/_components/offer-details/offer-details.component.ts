@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AppConsts } from '@shared/AppConsts';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
@@ -9,23 +9,27 @@ import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { CreateOfferComponent } from '../create-offer/create-offer.component';
 import { PurchaseComponent } from '../purchase/purchase.component';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-offer-details',
     templateUrl: './offer-details.component.html',
     styleUrls: ['./offer-details.component.less']
 })
-export class OfferDetailsComponent extends AppComponentBase implements OnInit {
+export class OfferDetailsComponent extends AppComponentBase implements OnInit, AfterViewInit {
     @Input() offer: ServiceOfferDto;
     @Input() isHost = false;
     @Output() onBack = new EventEmitter<void>();
 
     isDescriptionExpanded = false;
+    isDescriptionOverflows = false;
     isSubmitting$ = new BehaviorSubject<boolean>(false);
 
     model: any = {};
 
     ServiceOfferStatus = ServiceOfferStatus;
+
+    @ViewChild('descriptionEl') descriptionEl: any;
 
     constructor(
         injector: Injector,
@@ -46,6 +50,12 @@ export class OfferDetailsComponent extends AppComponentBase implements OnInit {
 
     ngOnInit(): void {
         this.initValues();
+    }
+
+    ngAfterViewInit(): void {
+        setTimeout(() => {
+            this.isDescriptionOverflows = this.descriptionEl?.nativeElement?.offsetHeight > 100;
+        });
     }
 
     get offerStatus(): ServiceOfferStatus { return this.offer?.status;}
@@ -74,9 +84,25 @@ export class OfferDetailsComponent extends AppComponentBase implements OnInit {
         this.model['servicePriceDiscount'] = this.offer?.discountAmount ?? this.model.servicePriceOriginal - (this.model.servicePriceOriginal * ((this.offer?.percentageDiscount ?? 0) / 100));
         this.model['serviceThumbnail'] = this.offer?.service?.thumbnailImageUrl ? this.offer.service.thumbnailImageUrl : 'assets/img/img-placeholder.png';
         this.model['serviceDescription'] = this.offer?.service?.description;
+        this.model['offerSoldCount'] = this.offer?.soldCount ?? 0;
         this.model['offerUnits'] = this.offer?.unitLimit ?? 0;
         this.model['offerDuration'] = getDuration();
+        this.model['offerAvailableUnits'] = this.offer?.unitLimit - this.offer?.soldCount;
+        this.model['offerLaunched'] = this.convertMomentToShorterDateFormat(this.offer?.launchedTime);
+        this.model['offerEnded'] = this.convertMomentToShorterDateFormat(this.offer?.endedTime);
+        this.getRemainingTime();
     }
+
+    getRemainingTime(): void {
+        const endTime = moment(this.offer.launchedTime).add(this.offer.offerLimitDays, 'days').add(this.offer.offerLimitHours, 'hours').add(this.offer.offerLimitMinutes, 'minutes');
+        const duration = moment.duration(endTime.diff(moment()));
+        const hours = duration.hours().toLocaleString('en-US', { minimumIntegerDigits:2, useGrouping:false });
+        const minutes = duration.minutes().toLocaleString('en-US', { minimumIntegerDigits:2, useGrouping:false });
+        const seconds = duration.seconds().toLocaleString('en-US', { minimumIntegerDigits:2, useGrouping:false });
+        this.model['offerRemainingTime'] = `${hours}:${minutes}:${seconds}`;
+
+        setTimeout(() => this.getRemainingTime(), 1000);
+      }
 
     onEditClick(): void {
         const modalSettings = this.defaultModalSettings as ModalOptions<CreateOfferComponent>;

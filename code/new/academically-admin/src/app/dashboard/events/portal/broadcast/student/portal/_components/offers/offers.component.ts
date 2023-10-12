@@ -42,6 +42,11 @@ export class OffersComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
   }
 
+  onTabChange(tab: OffersTabs): void {
+    this._serviceOffersService.selectServiceOffer(null);
+    this.activeTab = tab;
+  }
+
   onClearSelectedOffer(): void {
     this._serviceOffersService.selectServiceOffer(null);
   }

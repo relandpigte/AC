@@ -22,14 +22,27 @@
             </div>
         </div>
         <div *ngIf="model.serviceDescription" class="offer-service-description d-flex flex-column justify-content-center align-items-start w-100" [style.marginBottom.px]="20">
-            <div class="offer-service-description-value" [class.line-clamp-4]="!isDescriptionExpanded">{{ model.serviceDescription }}</div>
-            <div class="offer-service-description-action cursor-pointer" (click)="isDescriptionExpanded=!isDescriptionExpanded">
+            <div #descriptionEl class="offer-service-description-value" [class.line-clamp-4]="!isDescriptionExpanded && isDescriptionOverflows">{{ model.serviceDescription }}</div>
+            <div *ngIf="isDescriptionOverflows" class="offer-service-description-action cursor-pointer" (click)="isDescriptionExpanded=!isDescriptionExpanded">
                 <ng-container *ngIf="isDescriptionExpanded">{{ 'See less' | localize }}</ng-container>
                 <ng-container *ngIf="!isDescriptionExpanded">{{ 'See more' | localize }}</ng-container>
             </div>
         </div>
-        <div class="offer-units">{{ model.offerUnits }} units available</div>
-        <div class="offer-duration">Available for {{ model.offerDuration }}</div>
+        <ng-container [ngSwitch]="offerStatus">
+            <ng-container *ngSwitchCase="ServiceOfferStatus.Queued">
+              <div class="offer-units">{{ model.offerUnits }} units available</div>
+              <div class="offer-duration">Available for {{ model.offerDuration }}</div>
+            </ng-container>
+            <ng-container *ngSwitchCase="ServiceOfferStatus.Open">
+              <div class="offer-units">{{ model.offerAvailableUnits }} of {{ model.offerUnits }} available</div>
+              <div class="offer-duration red">Ends in {{ model.offerRemainingTime }}</div>
+            </ng-container>
+            <ng-container *ngSwitchCase="ServiceOfferStatus.Closed">
+              <div class="offer-units">{{ model.offerSoldCount }} units sold</div>
+              <div class="offer-duration">Ended at {{ model.offerEnded }}</div>
+            </ng-container>
+          </ng-container>
+
     </div>
     <div class="d-flex flex-column justify-content-center align-items-center w-100 gap-15" [style.padding.px]="20">
         <ng-container *ngIf="isHost">

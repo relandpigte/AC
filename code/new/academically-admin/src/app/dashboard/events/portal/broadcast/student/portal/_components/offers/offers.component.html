@@ -2,25 +2,25 @@
   <ul class="nav nav-tabs nav-tabs-sm px-3">
     <li *ngIf="isTutor" class="nav-item">
       <a href="#" class="nav-link" [class.active]="activeTab === OffersTabs.Queued" id="queue-tab" data-toggle="tab" href="#queue-container" role="tab"
-        aria-controls="queue-container" aria-selected="true" (click)="activeTab = OffersTabs.Queued">
+        aria-controls="queue-container" aria-selected="true" (click)="onTabChange(OffersTabs.Queued)">
         {{ 'Queue' | localize }}
       </a>
     </li>
     <li class="nav-item">
       <a href="#" class="nav-link" [class.active]="activeTab === OffersTabs.Open" id="open-tab" data-toggle="tab" href="#open-container" role="tab"
-        aria-controls="open-container" aria-selected="true" (click)="activeTab = OffersTabs.Open">
+        aria-controls="open-container" aria-selected="true" (click)="onTabChange(OffersTabs.Open)">
         {{ 'Open' | localize }}
       </a>
     </li>
     <li *ngIf="isTutor" class="nav-item">
       <a href="#" class="nav-link" [class.active]="activeTab === OffersTabs.Closed" id="closed-tab" data-toggle="tab" href="#closed-container" role="tab"
-        aria-controls="closed-container" aria-selected="true" (click)="activeTab = OffersTabs.Closed">
+        aria-controls="closed-container" aria-selected="true" (click)="onTabChange(OffersTabs.Closed)">
         {{ 'Closed' | localize }}
       </a>
     </li>
     <li *ngIf="!isTutor" class="nav-item">
       <a href="#" class="nav-link" [class.active]="activeTab === OffersTabs.Purchased" id="purchased-tab" data-toggle="tab" href="#purchased-container" role="tab"
-        aria-controls="purchased-container" aria-selected="true" (click)="activeTab = OffersTabs.Purchased">
+        aria-controls="purchased-container" aria-selected="true" (click)="onTabChange(OffersTabs.Purchased)">
         {{ 'Purchased' | localize }}
       </a>
     </li>
