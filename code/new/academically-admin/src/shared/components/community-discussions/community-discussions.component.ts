@@ -241,7 +241,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   private async initCommentsAppStates() {
     const appStateConfig: AppStateConfig = {
       [this.commentsStateId]: {
-        load: [this.referenceId, this.parentId, 0, 1],
+        load: [this.referenceId, this.parentId, 0, this.isSidebar ? 5 : 1],
         update: { referenceId: this.referenceId, parentId: this.parentId }
       }
     };

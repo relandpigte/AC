@@ -1,9 +1,9 @@
-<ng-container *ngIf="show && (showAddComment || totalCommentsCount)">
+<ng-container *ngIf="(show && (showAddComment || totalCommentsCount)) || isSidebar">
   <div *ngIf="!isChild" class="discussions-separator" [ngClass]="{'expanded': totalCommentsCount || hasChildren}"></div>
   <div class="discussions-container" [class.p-0]="isChild">
     <div *ngIf="!isChild" class="discussions-top">
       <div class="discussion">
-        <ng-container *ngIf="!isSidebar">aaa
+        <ng-container *ngIf="!isSidebar">
           <div *ngIf="showAddComment" class="discussions-composer row gap-15 m-0">
             <div class="col-auto p-0 d-flex align-items-start">
               <!-- Avatar | START -->
@@ -83,7 +83,7 @@
         <div *ngIf="comments?.length" class="row sorting-section">
           <!-- Sorter | START -->
           <div class="col-auto align-self-center">
-            Sort by:
+            <ng-container *ngIf="!isSidebar">Sort by:</ng-container>
             <div class="btn-group" dropdown>
               <button id="button-basic" dropdownToggle type="button" class="btn btn-link btn-sm dropdown-toggle font-weight-bold text-gray-800"
                       aria-controls="dropdown-basic">
@@ -345,11 +345,15 @@
         <ng-container *ngIf="!isExpanded && hiddenCommentsCount">
           <div class="discussions-expander cursor-pointer" (click)="onFoldClick()">
             <div class="discussions-expander-fold">
-              <span>View {{ hiddenCommentsCount }} more {{ typeName }}</span>
+              <span *ngIf="!isSidebar">View {{ hiddenCommentsCount }} more {{ typeName }}</span>
+              <div *ngIf="isSidebar" class="d-flex align-content-between w-100p">
+                <span>View more {{ typeName }}</span>
+                <span class="ml-auto">{{ hiddenCommentsCount }} of {{ totalCommentsCount }}</span>
+              </div>
             </div>
           </div>
         </ng-container>
-        <ng-container *ngIf="isExpanded">
+        <ng-container *ngIf="isExpanded && !isSidebar">
           <div class="discussions-expander cursor-pointer" (click)="onFoldClick()">
             <div class="discussions-expander-fold">
               <span>Fold {{ typeName }}</span>

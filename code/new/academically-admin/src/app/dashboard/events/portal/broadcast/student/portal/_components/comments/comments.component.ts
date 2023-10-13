@@ -16,6 +16,7 @@ export class CommentsComponent extends AppComponentBase implements OnInit {
 
   showComments = true;
   showAddComment = true;
+  referenceId = '08dbca3f-8f89-40c6-8a2a-b9c3d0e4d7fd';
 
   constructor(injector: Injector) {
     super(injector);
