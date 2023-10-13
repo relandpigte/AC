@@ -3,7 +3,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { ServicePickerComponent } from '@shared/components/service-picker/service-picker.component';
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 import { ServiceOffersService } from '@shared/services/service-offers.service';
-import { AvailableServiceDto, CreateServiceOfferDto, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, CreateServiceOfferDto, ServiceOfferDto, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
@@ -40,7 +40,7 @@ export class CreateOfferComponent extends AppComponentBase implements OnInit {
 
     @ViewChild(NgForm) serviceOfferForm: NgForm;
 
-    @Output() onSave = new EventEmitter<void>();
+    @Output() onSave = new EventEmitter<ServiceOfferDto>();
 
     constructor(
         injector: Injector,
@@ -72,15 +72,16 @@ export class CreateOfferComponent extends AppComponentBase implements OnInit {
     }
 
     async onFormSubmit() {
+        let upserted: ServiceOfferDto = null;
         this.isSubmitting$.next(true);
         try {
-            const created = await this._servicesService.upsertServiceOffer(CreateServiceOfferDto.fromJS({
+            upserted = await this._servicesService.upsertServiceOffer(CreateServiceOfferDto.fromJS({
                 ...this.model,
                 referenceId: this.referenceId,
                 serviceId: this.selectedService.id,
             })).toPromise();
 
-            this._serviceOffersService.hasNewServiceOffer(created);
+            this._serviceOffersService.hasNewServiceOffer(upserted);
         } catch (err) {
             console.error(err);
         }
@@ -99,7 +100,7 @@ export class CreateOfferComponent extends AppComponentBase implements OnInit {
             this._modal.hide();
         }
 
-        this.onSave.emit();
+        this.onSave.emit(upserted);
     }
 
     onSelectServiceClick(): void {

@@ -1,4 +1,4 @@
-<div class="card custom-card-shadow custom-card-border cursor-pointer position-relative m-0" (click)="onSelectServiceOffer()">
+<div class="card custom-card-shadow custom-card-border cursor-pointer position-relative m-0" (click)="onSelectServiceOffer()" [loader]="isLoading$ | async">
   <button *ngIf="canClose" (click)="onCloseClick()" type="button" class="close" data-dismiss="alert"
     aria-label="Close">
     <span aria-hidden="true">×</span>
@@ -17,18 +17,23 @@
         <div class="offer-service-thumbnail bg-center" [ngStyle]="{ 'background-image': 'url(\'' + model.serviceThumbnail + '\')' }"></div>
       </div>
       <div class="d-flex flex-column justify-content-center align-items-start w-100">
-        <ng-container [ngSwitch]="offerStatus">
-          <ng-container *ngSwitchCase="ServiceOfferStatus.Queued">
-            <div class="offer-service-units">{{ model.offerUnits }} units available</div>
-            <div class="offer-service-duration">Available for {{ model.offerDuration }}</div>
-          </ng-container>
-          <ng-container *ngSwitchCase="ServiceOfferStatus.Open">
-            <div class="offer-service-units">{{ model.offerAvailableUnits }} of {{ model.offerUnits }} available</div>
-            <div class="offer-service-duration red">Ends in {{ model.offerRemainingTime }}</div>
-          </ng-container>
-          <ng-container *ngSwitchCase="ServiceOfferStatus.Closed">
-            <div class="offer-service-units">{{ model.offerSoldCount }} units sold</div>
-            <div class="offer-service-duration">Ended at {{ model.offerEnded }}</div>
+        <ng-container *ngIf="isPurchased">
+          <div class="offer-service-units">You purchased this on {{ model.offerPurchasedDate }}</div>
+        </ng-container>
+        <ng-container *ngIf="!isPurchased">
+          <ng-container [ngSwitch]="offerStatus">
+            <ng-container *ngSwitchCase="ServiceOfferStatus.Queued">
+              <div class="offer-service-units">{{ model.offerUnits }} units available</div>
+              <div class="offer-service-duration">Available for {{ model.offerDuration }}</div>
+            </ng-container>
+            <ng-container *ngSwitchCase="ServiceOfferStatus.Open">
+              <div class="offer-service-units">{{ model.offerAvailableUnits }} of {{ model.offerUnits }} available</div>
+              <div class="offer-service-duration red">Ends in {{ model.offerRemainingTime }}</div>
+            </ng-container>
+            <ng-container *ngSwitchCase="ServiceOfferStatus.Closed">
+              <div class="offer-service-units">{{ model.offerSoldCount }} units sold</div>
+              <div class="offer-service-duration">Ended at {{ model.offerEnded }}</div>
+            </ng-container>
           </ng-container>
         </ng-container>
       </div>

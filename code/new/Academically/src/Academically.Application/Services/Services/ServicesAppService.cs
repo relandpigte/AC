@@ -229,7 +229,7 @@ namespace Academically.Services.Services
             return offer;
         }
 
-        public async Task LaunchOffer(Guid Id)
+        public async Task<ServiceOfferDto> LaunchOffer(Guid Id)
         {
             var offer = await this._serviceOffersRepository.GetAll()
                .Where(o => o.Id == Id)
@@ -240,10 +240,12 @@ namespace Academically.Services.Services
                 offer.Status = ServiceOfferStatus.Open;
                 offer.LaunchedTime = DateTime.Now;
                 await this._hubManager.NotifyUsersForServiceOfferLaunched(ObjectMapper.Map<ServiceOfferDto>(offer));
+                return ObjectMapper.Map<ServiceOfferDto>(offer);
             }
+            return null;
         }
 
-        public async Task CloseOffer(Guid Id)
+        public async Task<ServiceOfferDto> CloseOffer(Guid Id)
         {
             var offer = await this._serviceOffersRepository.GetAll()
                .Where(o => o.Id == Id)
@@ -254,7 +256,9 @@ namespace Academically.Services.Services
                 offer.Status = ServiceOfferStatus.Closed;
                 offer.EndedTime = DateTime.Now;
                 await this._hubManager.NotifyUsersForServiceOfferClosed(ObjectMapper.Map<ServiceOfferDto>(offer));
+                return ObjectMapper.Map<ServiceOfferDto>(offer);
             }
+            return null;
         }
     }
 }

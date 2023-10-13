@@ -21585,7 +21585,7 @@ export class ServicesServiceProxy {
      * @param id (optional) 
      * @return Success
      */
-    launchOffer(id: string | undefined): Observable<void> {
+    launchOffer(id: string | undefined): Observable<ServiceOfferDto> {
         let url_ = this.baseUrl + "/api/services/app/Services/LaunchOffer?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
@@ -21597,6 +21597,7 @@ export class ServicesServiceProxy {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "text/plain"
             })
         };
 
@@ -21607,14 +21608,14 @@ export class ServicesServiceProxy {
                 try {
                     return this.processLaunchOffer(<any>response_);
                 } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
+                    return <Observable<ServiceOfferDto>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<void>><any>_observableThrow(response_);
+                return <Observable<ServiceOfferDto>><any>_observableThrow(response_);
         }));
     }
 
-    protected processLaunchOffer(response: HttpResponseBase): Observable<void> {
+    protected processLaunchOffer(response: HttpResponseBase): Observable<ServiceOfferDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -21623,21 +21624,24 @@ export class ServicesServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServiceOfferDto.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(<any>null);
+        return _observableOf<ServiceOfferDto>(<any>null);
     }
 
     /**
      * @param id (optional) 
      * @return Success
      */
-    closeOffer(id: string | undefined): Observable<void> {
+    closeOffer(id: string | undefined): Observable<ServiceOfferDto> {
         let url_ = this.baseUrl + "/api/services/app/Services/CloseOffer?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
@@ -21649,6 +21653,7 @@ export class ServicesServiceProxy {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "text/plain"
             })
         };
 
@@ -21659,14 +21664,14 @@ export class ServicesServiceProxy {
                 try {
                     return this.processCloseOffer(<any>response_);
                 } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
+                    return <Observable<ServiceOfferDto>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<void>><any>_observableThrow(response_);
+                return <Observable<ServiceOfferDto>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCloseOffer(response: HttpResponseBase): Observable<void> {
+    protected processCloseOffer(response: HttpResponseBase): Observable<ServiceOfferDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -21675,14 +21680,17 @@ export class ServicesServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServiceOfferDto.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(<any>null);
+        return _observableOf<ServiceOfferDto>(<any>null);
     }
 }
 
