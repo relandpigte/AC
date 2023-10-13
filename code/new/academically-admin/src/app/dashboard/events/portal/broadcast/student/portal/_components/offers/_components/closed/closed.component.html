@@ -15,7 +15,7 @@
       </tbody>
     </table>
   </div>
-  <div *ngIf="!isHost" class="actions" [style.padding.px]="20">
+  <div *ngIf="isHost" class="actions" [style.padding.px]="20">
     <div class="actions-new d-flex justify-content-center align-items-center" (click)="onNewOfferClick()">{{ 'New offer' | localize }}</div>
   </div>
 </div>
