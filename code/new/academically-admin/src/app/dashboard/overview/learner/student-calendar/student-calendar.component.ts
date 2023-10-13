@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injector, OnInit, ViewChild } from '@angular/core';
 import { CalendarOptions, FullCalendarComponent } from '@fullcalendar/angular';
 import { DateClickArg } from '@fullcalendar/interaction';
 import * as moment from 'moment';
@@ -9,6 +9,7 @@ import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { EventDto, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/app-component-base';
+import log = abp.log.log;
 
 @Component({
   selector: 'app-student-calendar',
@@ -22,10 +23,15 @@ export class StudentCalendarComponent extends AppComponentBase implements OnInit
     initialView: 'dayGridMonth',
     height: 'auto',
     themeSystem: 'bootstrap',
-    headerToolbar: false,
+    headerToolbar: {
+      left:   'title',
+      center: '',
+      right:  'prev,next'
+    },
     dateClick: this.handleDateClick.bind(this),
     dayCellClassNames: this.dayCellClassNamesCallback.bind(this),
-    timeZone: 'UTC'
+    timeZone: 'UTC',
+    showNonCurrentDates: false
   };
 
   shimmerType = ShimmerType;
@@ -37,7 +43,8 @@ export class StudentCalendarComponent extends AppComponentBase implements OnInit
   constructor(
     injector: Injector,
     private _dashboardPageService: DashboardPagesService,
-    private _eventsService: EventsServiceProxy
+    private _eventsService: EventsServiceProxy,
+    private _elRef: ElementRef
   ) {
     super(injector);
     this.initPurchasedEvents();
@@ -54,20 +61,7 @@ export class StudentCalendarComponent extends AppComponentBase implements OnInit
   ngOnInit(): void {
   }
 
-  handleNextMonth(): void {
-    this.calendarComponent.getApi().next();
-  }
-
-  handlePrevMonth(): void {
-    this.calendarComponent.getApi().prev();
-  }
-
-  handleGotoCurrentMonth(): void {
-    this.calendarComponent.getApi().today();
-  }
-
   getEventSchedule(data: EventDto): string {
-    // 18:00-21:00, 23 AUG,2022
     if (moment(data.eventDateTime).diff(moment(), 'minutes') < 1 && moment(data.eventDateTime).isAfter()) {
       return this.l('LiveNow');
     } else if (moment(data.eventDateTime).diff(moment(), 'hours') < 1 && moment(data.eventDateTime).isAfter()) {
@@ -81,9 +75,15 @@ export class StudentCalendarComponent extends AppComponentBase implements OnInit
     );
   }
 
-  private handleDateClick(date: DateClickArg): void {
-    this.selectedEvents = this.events?.filter(e => moment(e.eventDateTime).isSame(moment(date.date), 'day'));
-    this.dateNow = moment(date.date).format('dddd, DD MMMM YYYY').toString();
+  private handleDateClick(info: DateClickArg): void {
+    this.selectedEvents = this.events?.filter(e => moment(e.eventDateTime).isSame(moment(info.date), 'day'));
+    this.dateNow = moment(info.date).format('dddd, DD MMMM YYYY').toString();
+
+    const dayGrid = this._elRef.nativeElement.querySelectorAll('.fc-daygrid-day');
+    _.each(dayGrid, (day: HTMLDivElement): void => {
+      day.classList.remove('active');
+    });
+    info.dayEl.classList.add('active');
   }
 
   private initPurchasedEvents(): void {
@@ -108,18 +108,14 @@ export class StudentCalendarComponent extends AppComponentBase implements OnInit
   }
 
   private dayCellClassNamesCallback(date: any): string {
-    const classNames = [];
     if (!this.eventDate.includes(moment(date.date).format('YYYY-MM-DD'))) {
       return;
     }
 
     const currentDate = moment(date.date).format('YYYY-MM-DD');
     if (moment(currentDate).isAfter()) {
-      classNames.push('future-events');
+      return 'future-events';
     }
-    if (moment(currentDate).isBefore()) {
-      classNames.push('past-events');
-    }
-    return classNames.join(' ');
+    return;
   }
 }
