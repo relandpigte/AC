@@ -20,6 +20,7 @@ export class EventQuestionsComponent extends AppComponentBase implements OnInit 
 
   @Output() onCreateQuestion: Subject<QuestionDto> = new Subject<QuestionDto>();
   @Output() onVote: Subject<QuestionDto> = new Subject<QuestionDto>();
+  @Output() onAnswerLive: Subject<QuestionDto> = new Subject<QuestionDto>();
 
   @ViewChild(EventQuestionsComposerComponent) composer: EventQuestionsComposerComponent;
 

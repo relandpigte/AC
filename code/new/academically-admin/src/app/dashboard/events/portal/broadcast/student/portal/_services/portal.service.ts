@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { EventDto, EventPresenterDto, StudentEventDto, EventUserDto } from '@shared/service-proxies/service-proxies';
+import {
+  EventDto,
+  EventPresenterDto,
+  StudentEventDto,
+  EventUserDto,
+  QuestionDto
+} from '@shared/service-proxies/service-proxies';
 import { HubConnection } from '@aspnet/signalr';
 
 @Injectable({
@@ -18,6 +24,7 @@ export class PortalService {
   public declineRequestToSpeak$: Observable<EventUserDto>;
   public grantedRequestToSpeak$: Observable<boolean>;
   public hub$: Observable<HubConnection>;
+  public liveQuestion$: Observable<QuestionDto>;
 
   private _eventSubject: BehaviorSubject<EventDto>;
   private _attendeesSubject: BehaviorSubject<EventUserDto[]>;
@@ -30,6 +37,7 @@ export class PortalService {
   private _declineRequestToSpeakSubject: BehaviorSubject<EventUserDto>;
   private _grantedRequestToSpeakSubject: BehaviorSubject<boolean>;
   private _hubSubject: BehaviorSubject<HubConnection>;
+  private _liveQuestion: BehaviorSubject<QuestionDto>;
 
   constructor() {
     this._eventSubject = new BehaviorSubject<EventDto>(undefined);
@@ -64,6 +72,9 @@ export class PortalService {
 
     this._hubSubject = new BehaviorSubject<HubConnection>(undefined);
     this.hub$ = this._hubSubject.asObservable();
+
+    this._liveQuestion = new BehaviorSubject<QuestionDto>(undefined);
+    this.liveQuestion$ = this._liveQuestion.asObservable();
   }
 
   public set event(value: EventDto) {
@@ -108,5 +119,9 @@ export class PortalService {
 
   public set hub(value: HubConnection) {
     this._hubSubject.next(value);
+  }
+
+  public set liveQuestion(value: QuestionDto) {
+    this._liveQuestion.next(value);
   }
 }

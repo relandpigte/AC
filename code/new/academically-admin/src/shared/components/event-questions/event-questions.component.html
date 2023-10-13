@@ -66,7 +66,7 @@
 
 <ng-template #host let-question="question">
     <div class="question-actions-answer cursor-pointer" [class.text-primary]="!!replyCount">
-        {{ !!replyCount ? 'Answered' : 'Answer live'}}
+        <div (click)="!!!replyCount ? onAnswerLive.next(question) : $event.preventDefault()">{{ !!replyCount ? 'Answered' : 'Answer live'}}</div>
     </div>
     <ng-container *ngIf="!!totalReactions">
         <div class="question-actions-answer d-flex align-items-center gap-10">

@@ -141,6 +141,16 @@
     <div *ngIf="!isHost && selectedOffer" class="event-floater">
       <app-offer-card [offer]="selectedOffer" [canClose]="true" (onClose)="selectedOffer=null"  (onClick)="onOfferClick($event)"></app-offer-card>
     </div>
+
+    <div *ngIf="!!liveQuestion" class="live-question-floater">
+      <app-live-question-card
+          [question]="liveQuestion"
+          [isHost]="isHost"
+          [referenceId]="this.eventId"
+          (onStartAnswering)="handleLiveAnswering($event)"
+          (onEndAnswering)="handleEndLiveAnswering($event)"
+      ></app-live-question-card>
+    </div>
   </div>
   <app-sidebar [hidden]="!showSidebar" [isHost]="isHost"></app-sidebar>
 </div>

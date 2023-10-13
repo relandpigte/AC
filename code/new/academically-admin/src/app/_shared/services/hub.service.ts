@@ -25,6 +25,10 @@ export class HubService {
     return this.getHub('questions', Utils.generateUrlParams(params));
   }
 
+  public getAnsweringLiveQuestionHub(): Promise<any> {
+    return this.getHub('answeringLiveQuestion');
+  }
+
   public async getQuestionsReactionsHub(params?: Record<string, any>): Promise<any> {
     return await this.getHub(`questionsReactions`, Utils.generateUrlParams(params));
   }

@@ -1,0 +1,59 @@
+:host {
+    width: 100%;
+}
+
+.question {
+    width: 305px;
+    padding: 15px 20px;
+
+    &-info {
+        font-size: 13px;
+        margin-bottom: 5px;
+
+        &-time {
+            color: #95AAC9;
+        }
+
+        &-owner {
+            color: #3B516C;
+
+            .avatar-xs {
+                width: 26px;
+                height: 26px;
+            }
+        }
+    }
+
+    &-body {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+
+    &-actions {
+        & > button {
+            height: 34px;
+            font-size: 15px;
+            line-height: 15px;
+        }
+
+        .cancel {
+            border: 1px solid #E4EBF6;
+            color: #12263F;
+            width: 108px;
+        }
+
+        .start {
+            background-color: #2C7BE5;
+            border: 1px solid #2C7BE5;
+            color: white;
+            flex-grow: 1;
+        }
+
+        .finished {
+            background-color: #E63757;
+            border: 1px solid #E63757;
+            color: white;
+            flex-grow: 1;
+        }
+    }
+}

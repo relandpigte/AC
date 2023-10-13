@@ -40,6 +40,8 @@
         ServiceOfferUpdated,
         ServiceOfferDeleted,
         ServiceOfferLaunched,
-        ServiceOfferClosed
+        ServiceOfferClosed,
+        AnsweringLiveQuestion,
+        EndAnsweringLiveQuestion
     }
 }
