@@ -1,6 +1,8 @@
 ﻿using Abp.Domain.Entities.Auditing;
 using Academically.Domain.Enums;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Academically.Domain.Entities
@@ -22,6 +24,8 @@ namespace Academically.Domain.Entities
         public int SoldCount { get; set; } = 0;
         public DateTime? LaunchedTime { get; set; }
         public DateTime? EndedTime { get; set; }
+
+        public virtual ICollection<ServicePurchase> Purchases { get; set; }
 
     }
 }

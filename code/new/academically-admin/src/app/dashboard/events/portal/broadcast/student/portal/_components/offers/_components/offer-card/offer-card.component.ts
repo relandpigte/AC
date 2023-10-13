@@ -14,7 +14,6 @@ import { switchMap } from 'rxjs/operators';
 })
 export class OfferCardComponent extends AppComponentBase implements OnInit {
   @Input() offer: ServiceOfferDto;
-  @Input() purchases: any[];
   @Input() canClose = false;
 
   @Output() onClick = new EventEmitter<ServiceOfferDto>();
@@ -28,9 +27,17 @@ export class OfferCardComponent extends AppComponentBase implements OnInit {
   ServiceOfferStatus = ServiceOfferStatus;
 
   constructor(
-    injector: Injector
+    injector: Injector,
+    private _serviceOffersService: ServiceOffersService
   ) {
     super(injector);
+
+    this._serviceOffersService.purchasedServiceOffer$
+      .subscribe(offer => {
+        if (this.offer.id === offer.id) {
+          this.offer = offer;
+        }
+      });
   }
 
   ngOnInit(): void {
@@ -38,7 +45,7 @@ export class OfferCardComponent extends AppComponentBase implements OnInit {
   }
 
   get offerStatus(): ServiceOfferStatus { return this.offer?.status; }
-  get isPurchased(): boolean { return this.purchases !== undefined; }
+  get isPurchased(): boolean { return this.offer?.purchases?.some(p => p.creatorUserId === this.appSession.userId); }
   get isLoading$() { return combineLatest([this.isLoadingInitialData$]).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
 
   private initValues(): void {
@@ -62,7 +69,7 @@ export class OfferCardComponent extends AppComponentBase implements OnInit {
     this.model['servicePriceOriginal'] = this.offer?.service?.price ?? 0;
     this.model['servicePriceOffer'] = this.offer?.discountAmount ?? this.model.servicePriceOriginal - (this.model.servicePriceOriginal * ((this.offer?.percentageDiscount ?? 0) / 100));
     this.model['serviceThumbnail'] = this.offer?.service?.thumbnailImageUrl ? this.offer.service.thumbnailImageUrl : 'assets/img/img-placeholder.png';
-    this.model['offerSoldCount'] = this.offer?.soldCount ?? 0;
+    this.model['offerSoldCount'] = this.offer?.purchases?.length ?? 0;
     this.model['offerUnits'] = this.offer?.unitLimit ?? 0;
     this.model['offerDuration'] = getDuration();
     this.model['offerAvailableUnits'] = this.offer?.unitLimit - this.offer?.soldCount;
@@ -70,7 +77,7 @@ export class OfferCardComponent extends AppComponentBase implements OnInit {
     this.model['offerEnded'] = this.convertMomentToShorterDateFormat(this.offer?.endedTime);
     this.getRemainingTime();
 
-    const purchase = this.purchases?.find(p => p.userId === this.appSession.userId);
+    const purchase = this.offer?.purchases?.find(p => p.creatorUserId === this.appSession.userId);
     this.model['offerPurchasedDate'] = this.convertMomentToShorterDateFormat(purchase?.creationTime);
     this.isLoadingInitialData$.next(false);
   }

@@ -21398,6 +21398,186 @@ export class ServicesServiceProxy {
     }
 
     /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getPurchase(id: string | undefined): Observable<ServicePurchaseDto> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetPurchase?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPurchase(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPurchase(<any>response_);
+                } catch (e) {
+                    return <Observable<ServicePurchaseDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServicePurchaseDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetPurchase(response: HttpResponseBase): Observable<ServicePurchaseDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServicePurchaseDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServicePurchaseDto>(<any>null);
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @param userId (optional) 
+     * @return Success
+     */
+    getAllPurchases(referenceId: string | undefined, userId: number | undefined): Observable<ServicePurchaseDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetAllPurchases?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllPurchases(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllPurchases(<any>response_);
+                } catch (e) {
+                    return <Observable<ServicePurchaseDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServicePurchaseDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllPurchases(response: HttpResponseBase): Observable<ServicePurchaseDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(ServicePurchaseDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServicePurchaseDto[]>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    savePurchase(body: CreateServicePurchaseDto | undefined): Observable<ServicePurchaseDto> {
+        let url_ = this.baseUrl + "/api/services/app/Services/SavePurchase";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSavePurchase(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSavePurchase(<any>response_);
+                } catch (e) {
+                    return <Observable<ServicePurchaseDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServicePurchaseDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSavePurchase(response: HttpResponseBase): Observable<ServicePurchaseDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServicePurchaseDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServicePurchaseDto>(<any>null);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
@@ -21460,9 +21640,10 @@ export class ServicesServiceProxy {
     2 = Open
     
     3 = Closed
+     * @param isPurchased (optional) 
      * @return Success
      */
-    getServiceOffers(referenceId: string | undefined, status: ServiceOfferStatus | undefined): Observable<ServiceOfferDto[]> {
+    getServiceOffers(referenceId: string | undefined, status: ServiceOfferStatus | undefined, isPurchased: boolean | undefined): Observable<ServiceOfferDto[]> {
         let url_ = this.baseUrl + "/api/services/app/Services/GetServiceOffers?";
         if (referenceId === null)
             throw new Error("The parameter 'referenceId' cannot be null.");
@@ -21472,6 +21653,10 @@ export class ServicesServiceProxy {
             throw new Error("The parameter 'status' cannot be null.");
         else if (status !== undefined)
             url_ += "status=" + encodeURIComponent("" + status) + "&";
+        if (isPurchased === null)
+            throw new Error("The parameter 'isPurchased' cannot be null.");
+        else if (isPurchased !== undefined)
+            url_ += "isPurchased=" + encodeURIComponent("" + isPurchased) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -38191,6 +38376,65 @@ export interface ICreateServiceOfferDto {
     endedTime: moment.Moment | undefined;
 }
 
+export class CreateServicePurchaseDto implements ICreateServicePurchaseDto {
+    id: string | undefined;
+    referenceId: string | undefined;
+    serviceOfferId: string;
+    creatorUserId: number;
+    creationTime: moment.Moment;
+
+    constructor(data?: ICreateServicePurchaseDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.referenceId = _data["referenceId"];
+            this.serviceOfferId = _data["serviceOfferId"];
+            this.creatorUserId = _data["creatorUserId"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CreateServicePurchaseDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateServicePurchaseDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["referenceId"] = this.referenceId;
+        data["serviceOfferId"] = this.serviceOfferId;
+        data["creatorUserId"] = this.creatorUserId;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        return data; 
+    }
+
+    clone(): CreateServicePurchaseDto {
+        const json = this.toJSON();
+        let result = new CreateServicePurchaseDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateServicePurchaseDto {
+    id: string | undefined;
+    referenceId: string | undefined;
+    serviceOfferId: string;
+    creatorUserId: number;
+    creationTime: moment.Moment;
+}
+
 export class CreateServiceRatingAreaDto implements ICreateServiceRatingAreaDto {
     areaType: RatingAreaType;
     rating: number;
@@ -47585,6 +47829,7 @@ export class ServiceOfferDto implements IServiceOfferDto {
     launchedTime: moment.Moment | undefined;
     endedTime: moment.Moment | undefined;
     service: AvailableServiceDto;
+    purchases: ServicePurchaseDto[] | undefined;
 
     constructor(data?: IServiceOfferDto) {
         if (data) {
@@ -47620,6 +47865,11 @@ export class ServiceOfferDto implements IServiceOfferDto {
             this.launchedTime = _data["launchedTime"] ? moment(_data["launchedTime"].toString()) : <any>undefined;
             this.endedTime = _data["endedTime"] ? moment(_data["endedTime"].toString()) : <any>undefined;
             this.service = _data["service"] ? AvailableServiceDto.fromJS(_data["service"]) : <any>undefined;
+            if (Array.isArray(_data["purchases"])) {
+                this.purchases = [] as any;
+                for (let item of _data["purchases"])
+                    this.purchases.push(ServicePurchaseDto.fromJS(item));
+            }
         }
     }
 
@@ -47655,6 +47905,11 @@ export class ServiceOfferDto implements IServiceOfferDto {
         data["launchedTime"] = this.launchedTime ? this.launchedTime.toISOString() : <any>undefined;
         data["endedTime"] = this.endedTime ? this.endedTime.toISOString() : <any>undefined;
         data["service"] = this.service ? this.service.toJSON() : <any>undefined;
+        if (Array.isArray(this.purchases)) {
+            data["purchases"] = [];
+            for (let item of this.purchases)
+                data["purchases"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -47690,6 +47945,7 @@ export interface IServiceOfferDto {
     launchedTime: moment.Moment | undefined;
     endedTime: moment.Moment | undefined;
     service: AvailableServiceDto;
+    purchases: ServicePurchaseDto[] | undefined;
 }
 
 /** 1 = Queued 2 = Open 3 = Closed */
@@ -47697,6 +47953,69 @@ export enum ServiceOfferStatus {
     Queued = 1,
     Open = 2,
     Closed = 3,
+}
+
+export class ServicePurchaseDto implements IServicePurchaseDto {
+    id: string;
+    referenceId: string | undefined;
+    serviceOfferId: string;
+    creatorUserId: number;
+    creationTime: moment.Moment;
+    creatorUser: UserDto;
+
+    constructor(data?: IServicePurchaseDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.referenceId = _data["referenceId"];
+            this.serviceOfferId = _data["serviceOfferId"];
+            this.creatorUserId = _data["creatorUserId"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ServicePurchaseDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServicePurchaseDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["referenceId"] = this.referenceId;
+        data["serviceOfferId"] = this.serviceOfferId;
+        data["creatorUserId"] = this.creatorUserId;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): ServicePurchaseDto {
+        const json = this.toJSON();
+        let result = new ServicePurchaseDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IServicePurchaseDto {
+    id: string;
+    referenceId: string | undefined;
+    serviceOfferId: string;
+    creatorUserId: number;
+    creationTime: moment.Moment;
+    creatorUser: UserDto;
 }
 
 /** 0 = CalendarEvents 1 = ProjectOffers 2 = Projects 3 = CourseSections 4 = Courses */

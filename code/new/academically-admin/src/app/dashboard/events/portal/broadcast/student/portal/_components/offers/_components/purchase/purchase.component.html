@@ -11,7 +11,7 @@
             class="btn btn-cancel btn-white d-flex justify-content-center align-items-center" (click)="onCancelClick()">
             {{ 'Cancel' | localize }}
         </button>
-        <button [disabled]="(isLoading$ | async)" type="button"
+        <button [disabled]="(isLoading$ | async) || isOfferInvalid" type="button"
             class="btn btn-pay btn-primary d-flex justify-content-center align-items-center" (click)="onPayClick()">
             {{ 'Pay' | localize }}
         </button>

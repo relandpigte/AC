@@ -3,12 +3,12 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { ServiceOfferDto, ServiceOfferStatus, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { CreateOfferComponent } from '../create-offer/create-offer.component';
 import { ServiceOffersStateService, offersType } from '@shared/services/service-offers-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { HubService } from '@app/_shared/services/hub.service';
-import { takeUntil } from 'rxjs/operators';
+import { switchMap, takeUntil } from 'rxjs/operators';
 import { StateUpdateType } from '@shared/services/state-base.service';
 import { ServiceOffersService } from '@shared/services/service-offers.service';
 
@@ -39,7 +39,7 @@ export class OpenComponent extends AppComponentBase implements OnInit {
   }
 
   get offersStateId(): string { return 'offers-opened'; }
-  get loadingSources$() { return [ this.isLoadingList$ ]; }
+  get isLoading$() { return combineLatest([this.isLoadingList$]).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
 
   async ngOnInit() {
     await this.initOffersAppStates();
@@ -48,7 +48,7 @@ export class OpenComponent extends AppComponentBase implements OnInit {
   private async initOffersAppStates() {
     const appStateConfig: AppStateConfig = {
       [this.offersStateId]: {
-        load: [this.referenceId, ServiceOfferStatus.Open],
+        load: [this.referenceId, ServiceOfferStatus.Open, this.isHost ? undefined : false],
         update: { referenceId: this.referenceId }
       }
     };

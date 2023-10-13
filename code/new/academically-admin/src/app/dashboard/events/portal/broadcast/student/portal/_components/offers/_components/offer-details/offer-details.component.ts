@@ -18,7 +18,6 @@ import * as moment from 'moment';
 })
 export class OfferDetailsComponent extends AppComponentBase implements OnInit, AfterViewInit {
     @Input() offer: ServiceOfferDto;
-    @Input() purchases: any[];
     @Input() isHost = false;
     @Output() onBack = new EventEmitter<void>();
 
@@ -48,7 +47,20 @@ export class OfferDetailsComponent extends AppComponentBase implements OnInit, A
                     this.offer = offer;
                     this.initValues();
                 }
-            })
+            });
+
+        this._serviceOffersService.purchasedServiceOffer$
+            .subscribe(offer => {
+              if (this.offer.id === offer.id) {
+                this.offer = offer;
+              }
+            });
+
+        this._serviceOffersService.selectedServiceOffer$
+            .subscribe(offer => {
+                this.offer = offer;
+                this.initValues();
+            });
     }
 
     ngOnInit(): void {
@@ -64,7 +76,7 @@ export class OfferDetailsComponent extends AppComponentBase implements OnInit, A
     get offerStatus(): ServiceOfferStatus { return this.offer?.status;}
     get canEdit(): boolean { return this.offer?.status === ServiceOfferStatus.Queued; }
     get isLoading$() { return combineLatest([this.isLoadingInitialData$, this.isSubmitting$]).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
-    get isPurchased(): boolean { return this.purchases !== undefined; }
+    get isPurchased(): boolean { return this.offer?.purchases?.some(p => p.creatorUserId === this.appSession.userId); }
 
     private initValues(): void {
         this.isLoadingInitialData$.next(true);
@@ -89,7 +101,7 @@ export class OfferDetailsComponent extends AppComponentBase implements OnInit, A
         this.model['servicePriceDiscount'] = this.offer?.discountAmount ?? this.model.servicePriceOriginal - (this.model.servicePriceOriginal * ((this.offer?.percentageDiscount ?? 0) / 100));
         this.model['serviceThumbnail'] = this.offer?.service?.thumbnailImageUrl ? this.offer.service.thumbnailImageUrl : 'assets/img/img-placeholder.png';
         this.model['serviceDescription'] = this.offer?.service?.description;
-        this.model['offerSoldCount'] = this.offer?.soldCount ?? 0;
+        this.model['offerSoldCount'] = this.offer?.purchases?.length ?? 0;
         this.model['offerUnits'] = this.offer?.unitLimit ?? 0;
         this.model['offerDuration'] = getDuration();
         this.model['offerAvailableUnits'] = this.offer?.unitLimit - this.offer?.soldCount;
@@ -97,7 +109,7 @@ export class OfferDetailsComponent extends AppComponentBase implements OnInit, A
         this.model['offerEnded'] = this.convertMomentToShorterDateFormat(this.offer?.endedTime);
         this.getRemainingTime();
 
-        const purchase = this.purchases?.find(p => p.userId === this.appSession.userId);
+        const purchase = this.offer?.purchases?.find(p => p.creatorUserId === this.appSession.userId);
         this.model['offerPurchasedDate'] = this.convertMomentToShorterDateFormat(purchase?.creationTime);
         this.isLoadingInitialData$.next(false);
     }
@@ -174,6 +186,7 @@ export class OfferDetailsComponent extends AppComponentBase implements OnInit, A
         const modalSettings = this.defaultModalSettings as ModalOptions<PurchaseComponent>;
         modalSettings.class = 'modal-lg modal-dialog-centered';
         modalSettings.initialState = { offer: this.offer };
-        this._modalService.show(PurchaseComponent, modalSettings);
+        const modal = this._modalService.show(PurchaseComponent, modalSettings);
+        modal.content.onPaid.subscribe(() => this.onBack.next());
     }
 }

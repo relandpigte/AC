@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
+using Abp.Timing;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Services.Posts.Dto;
@@ -30,5 +31,7 @@ namespace Academically.Services.Services.Dto
 
         [NotMapped]
         public AvailableServiceDto Service { get; set; }
+        [NotMapped]
+        public ICollection<ServicePurchaseDto> Purchases { get; set; }
     }
 }
