@@ -10,7 +10,7 @@ import {
   ProfilesServiceProxy,
   ServiceOfferStatus,
   ServicesServiceProxy,
-  ServiceOfferDto,
+  ServiceOfferDto, QuestionDto, HubEvent, QuestionsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -76,6 +76,9 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
   offersStateService: ServiceOffersStateService;
   selectedOffer: ServiceOfferDto;
 
+  liveQuestion: QuestionDto;
+  answeringLiveQuestion: HubConnection;
+
   model = new EventDto;
   room: rtc.Room;
   allEventUsers: EventUserDto[] = [];
@@ -115,7 +118,8 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     private _modalService: BsModalService,
     private _modalDialogService: ModalDialogService,
     private _servicesService: ServicesServiceProxy,
-    private _serviceOffersService: ServiceOffersService
+    private _serviceOffersService: ServiceOffersService,
+    private _questionsService: QuestionsServiceProxy
   ) {
     super(injector);
     this.pipeDestroy(route.paramMap, (paramMap) => {
@@ -138,6 +142,12 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
         await this.sendSignal(userIds, new SignalData(SignalAction.AdmitGuest, response));
       }
     });
+
+    this._portalService.liveQuestion$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(question => {
+        this.liveQuestion = question;
+      });
   }
 
   get offersStateId(): string { return 'offers-event'; }
@@ -155,14 +165,23 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
   }
 
   async ngOnInit() {
-    this.initHub();
+    await this.initHub();
     await this.initOffersAppStates();
+    await this.initLiveAnsweringQuestion();
   }
 
   ngOnDestroy(): void {
     console.log('exit event');
     // this.disconnectTrack(this.presenterStream);
     // this.disconnectTrack(this.attendeeStream);
+  }
+
+  async handleLiveAnswering(question: QuestionDto): Promise<void> {
+    await this.answeringLiveQuestion.invoke('answerLiveQuestion', question);
+  }
+
+  async handleEndLiveAnswering(question: QuestionDto): Promise<void> {
+    await this.answeringLiveQuestion.invoke('endAnswerLiveQuestion', question);
   }
 
   private async initOffersAppStates() {
@@ -517,5 +536,24 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
         }, 500);
       });
     }
+  }
+
+  private async initLiveAnsweringQuestion(): Promise<void> {
+    this.answeringLiveQuestion = await this._hubService.getAnsweringLiveQuestionHub();
+    this.answeringLiveQuestion.on(HubEvent[HubEvent.AnsweringLiveQuestion], (question: QuestionDto) => {
+      this.liveQuestion = question;
+    });
+
+    this.answeringLiveQuestion.on(HubEvent[HubEvent.EndAnsweringLiveQuestion], (question: QuestionDto) => {
+      this.liveQuestion = null;
+      // const q = new QuestionDto();
+      // q['body'] = 'Answered at';
+      // q['referenceId'] = question.referenceId;
+      // q['parentId'] = question.id;
+      //
+      // this._questionsService.create(question)
+      //   .pipe(takeUntil(this.destroyed$))
+      //   .subscribe(x => x);
+    });
   }
 }

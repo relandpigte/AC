@@ -2,20 +2,14 @@ import { ChangeDetectorRef, Component, Injector, Input, OnInit } from '@angular/
 import { skip, takeUntil } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/app-component-base';
 import { PortalService } from '../../_services/portal.service';
-import {
-  EventDto,
-  HubEvent,
-  QuestionDto,
-  QuestionReactionDto,
-  QuestionsServiceProxy,
-  ReactionType
-} from '@shared/service-proxies/service-proxies';
+import { EventDto, HubEvent, QuestionDto, QuestionReactionDto, QuestionsServiceProxy, ReactionType } from '@shared/service-proxies/service-proxies';
 import { CustomAction } from '@app/_shared/modules/questions/_model/questions.model';
 import { QuestionService } from '@shared/services/question.service';
 import { EventQuestionsStateService, questionType } from '@shared/services/event-questions-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
 import { HubService } from '@app/_shared/services/hub.service';
+import { HubConnection } from '@aspnet/signalr';
 
 @Component({
   selector: 'app-sidebar-questions',
@@ -36,6 +30,8 @@ export class QuestionsComponent extends AppComponentBase implements OnInit {
   selectedQuestionType = 0;
   isLoadingQuestions = true;
   eventQuestionStateService: EventQuestionsStateService;
+
+  liveQuestion: QuestionDto;
 
   constructor(
     injector: Injector,
@@ -90,6 +86,10 @@ export class QuestionsComponent extends AppComponentBase implements OnInit {
         .pipe(takeUntil(this.destroyed$))
         .subscribe(x => x);
     }
+  }
+
+  handleAnswerLive(question: QuestionDto): void {
+    this._portalService.liveQuestion = question;
   }
 
   private initQuestionsVar(): void {

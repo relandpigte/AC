@@ -42459,7 +42459,7 @@ export interface IGroupedPermissionDtoListResultDto {
     items: GroupedPermissionDto[] | undefined;
 }
 
-/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted 18 = ChannelMessageCreated 19 = ChannelMessageUpdated 20 = ChannelMessageDeleted 21 = ChannelMemberTyping 22 = ChannelArchive 23 = ChannelUnarchive 24 = NewUserLoggedIn 25 = NotificationCreated 26 = NotificationUpdated 27 = NotificationDeleted 28 = QuestionCreated 29 = QuestionUpdated 30 = QuestionDeleted 31 = QuestionReactionCreated 32 = QuestionReactionUpdated 33 = QuestionReactionDeleted 34 = ServiceOfferCreated 35 = ServiceOfferUpdated 36 = ServiceOfferDeleted 37 = ServiceOfferLaunched 38 = ServiceOfferClosed */
+/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted 18 = ChannelMessageCreated 19 = ChannelMessageUpdated 20 = ChannelMessageDeleted 21 = ChannelMemberTyping 22 = ChannelArchive 23 = ChannelUnarchive 24 = NewUserLoggedIn 25 = NotificationCreated 26 = NotificationUpdated 27 = NotificationDeleted 28 = QuestionCreated 29 = QuestionUpdated 30 = QuestionDeleted 31 = QuestionReactionCreated 32 = QuestionReactionUpdated 33 = QuestionReactionDeleted 34 = ServiceOfferCreated 35 = ServiceOfferUpdated 36 = ServiceOfferDeleted 37 = ServiceOfferLaunched 38 = ServiceOfferClosed 39 = AnsweringLiveQuestion 40 = EndAnsweringLiveQuestion */
 export enum HubEvent {
     PostCreated = 0,
     PostUpdated = 1,
@@ -42500,6 +42500,8 @@ export enum HubEvent {
     ServiceOfferDeleted = 36,
     ServiceOfferLaunched = 37,
     ServiceOfferClosed = 38,
+    AnsweringLiveQuestion = 39,
+    EndAnsweringLiveQuestion = 40,
 }
 
 export class ICustomAttributeProvider implements IICustomAttributeProvider {

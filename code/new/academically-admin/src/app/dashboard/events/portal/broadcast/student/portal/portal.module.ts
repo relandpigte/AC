@@ -44,6 +44,7 @@ import { PollComponent } from './_components/polls/_components/poll/poll.compone
 import { AttendeeOpenDialogComponent } from './_components/polls/_components/attendee-open-dialog/attendee-open-dialog.component';
 import { ChatComponent } from './_components/chat/chat.component';
 import { CommentsComponent } from './_components/comments/comments.component';
+import { LiveQuestionCardComponent } from './_components/questions/components/live-question-card/live-question-card.component';
 
 @NgModule({
   declarations: [
@@ -85,6 +86,7 @@ import { CommentsComponent } from './_components/comments/comments.component';
     AttendeeOpenDialogComponent,
     ChatComponent,
     CommentsComponent,
+    LiveQuestionCardComponent,
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,37 @@
+<div class="card question custom-card-shadow custom-card-border cursor-pointer" *ngIf="isEventReferenced">
+    <div class="card-body p-0" [ngSwitch]="isHost">
+        <ng-container *ngSwitchCase="true">
+            <div class="question-info d-flex align-items-center">
+                <span class="question-info-time">12:30</span>
+                <div class="question-info-owner d-flex align-items-center ml-auto gap-10">
+                    <span class="name">Casey Fyfe</span>
+                    <a class="avatar avatar-xs" href="#!" (click)="$event.preventDefault();">
+                        <img [src]="getProfilePictureUrl(profilePicture)" [alt]="profileName" class="avatar-img rounded-circle"/>
+                    </a>
+                </div>
+            </div>
+            <div class="question-body">
+                {{ body }}
+            </div>
+            <div class="question-actions d-flex align-items-center gap-10">
+                <button class="btn cancel" (click)="handleCancelAnswer()">Cancel</button>
+                <button *ngIf="!isAnswering" class="btn start" (click)="handleAnswerQuestion(question)">Start Answering</button>
+                <button *ngIf="isAnswering" class="btn finished" (click)="handleEndAnswering(question)">Finish Answering</button>
+            </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="false">
+            <div class="question-body" [style.margin-bottom.px]="5">
+                {{ body }}
+            </div>
+            <div class="question-info d-flex align-items-center">
+                <span class="question-info-time">12:30</span>
+                <div class="question-info-owner d-flex align-items-center ml-auto gap-10">
+                    <span class="name">Casey Fyfe</span>
+                    <a class="avatar avatar-xs" href="#!" (click)="$event.preventDefault();">
+                        <img [src]="getProfilePictureUrl(profilePicture)" [alt]="profileName" class="avatar-img rounded-circle"/>
+                    </a>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>
