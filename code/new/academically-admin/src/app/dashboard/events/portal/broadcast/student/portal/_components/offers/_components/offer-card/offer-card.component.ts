@@ -4,6 +4,8 @@ import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 import { ServiceOfferDto, ServiceOfferStatus } from '@shared/service-proxies/service-proxies';
 import { ServiceOffersService } from '@shared/services/service-offers.service';
 import * as moment from 'moment';
+import { BehaviorSubject, combineLatest, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-offer-card',
@@ -12,12 +14,14 @@ import * as moment from 'moment';
 })
 export class OfferCardComponent extends AppComponentBase implements OnInit {
   @Input() offer: ServiceOfferDto;
+  @Input() purchases: any[];
   @Input() canClose = false;
 
   @Output() onClick = new EventEmitter<ServiceOfferDto>();
   @Output() onClose = new EventEmitter();
 
   isViewingInfo = false;
+  isLoadingInitialData$ = new BehaviorSubject<boolean>(false);
 
   model: any = {};
 
@@ -33,9 +37,12 @@ export class OfferCardComponent extends AppComponentBase implements OnInit {
     this.initValues();
   }
 
-  get offerStatus(): ServiceOfferStatus { return this.offer?.status;}
+  get offerStatus(): ServiceOfferStatus { return this.offer?.status; }
+  get isPurchased(): boolean { return this.purchases !== undefined; }
+  get isLoading$() { return combineLatest([this.isLoadingInitialData$]).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
 
   private initValues(): void {
+    this.isLoadingInitialData$.next(true);
     const getDuration = () => {
       let duration = [];
       if (this.offer?.offerLimitDays) {
@@ -62,6 +69,10 @@ export class OfferCardComponent extends AppComponentBase implements OnInit {
     this.model['offerLaunched'] = this.convertMomentToShorterDateFormat(this.offer?.launchedTime);
     this.model['offerEnded'] = this.convertMomentToShorterDateFormat(this.offer?.endedTime);
     this.getRemainingTime();
+
+    const purchase = this.purchases?.find(p => p.userId === this.appSession.userId);
+    this.model['offerPurchasedDate'] = this.convertMomentToShorterDateFormat(purchase?.creationTime);
+    this.isLoadingInitialData$.next(false);
   }
 
   onSelectServiceOffer(): void {

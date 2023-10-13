@@ -29,10 +29,10 @@
 
                 <ng-container *ngIf="isPriceInput">
                     <div class="d-flex flex-grow-1 justify-content-center align-items-center w-100" [style.gap.px]="18">
-                        <div class="d-flex flex-grow-1 justify-content-center align-items-center">
+                        <div class="d-flex flex-grow-1 justify-content-center align-items-center input-group input-group-merge">
                             <input
-                                type="text"
-                                class="form-control h-40-px"
+                                type="number"
+                                class="form-control form-control-appended h-40-px"
                                 name="amount"
                                 id="amount"
                                 [placeholder]="'At least lower than ' + (validMaxDiscountPrice | currency:'GBP') | localize"
@@ -41,6 +41,11 @@
                                 #amountModel="ngModel"
                                 #amountEl
                             />
+                            <div class="input-group-append d-flex justify-content-end align-items-center h-40-px">
+                                <div class="input-group-text h-40-px">
+                                    {{ '£' | localize }}
+                                </div>
+                            </div>
                         </div>
                         <div class="d-flex justify-content-center align-items-center" [style.gap.px]="10">
                             <div
@@ -61,24 +66,23 @@
                 </ng-container>
                 <ng-container *ngIf="isPriceDiscount">
                     <div class="d-flex flex-grow-1 justify-content-center align-items-center w-100" [style.gap.px]="18">
-                        <div class="d-flex flex-grow-1 justify-content-center align-items-center">
-                            <select
-                                class="custom-select h-40-px"
-                                select2
-                                [hideSearchBox]="true"
-                                (select2ValueChange)="model.percentageDiscount = $event"
-                                [(ngModel)]="model.percentageDiscount"
-                                [defaultValue]="model.percentageDiscount"
+                        <div class="d-flex flex-grow-1 justify-content-center align-items-center input-group input-group-merge">
+                            <input
+                                type="number"
+                                class="form-control form-control-appended h-40-px"
+                                name="percentage"
                                 id="percentage"
                                 [placeholder]="'At least lower than 100%' | localize"
-                                name="percentage"
+                                required
+                                [(ngModel)]="model.percentageDiscount"
                                 #percentageModel="ngModel"
                                 #percentageEl
-                            >
-                                <option *ngFor="let percentage of percentageOptions" [value]="percentage.value">
-                                    {{ percentage.label | localize }}
-                                </option>
-                            </select>
+                            />
+                            <div class="input-group-append d-flex justify-content-end align-items-center h-40-px">
+                                <div class="input-group-text h-40-px">
+                                    {{ '%' | localize }}
+                                </div>
+                            </div>
                         </div>
                         <div class="d-flex justify-content-center align-items-center" [style.gap.px]="10">
                             <div

@@ -18,11 +18,14 @@ import * as moment from 'moment';
 })
 export class OfferDetailsComponent extends AppComponentBase implements OnInit, AfterViewInit {
     @Input() offer: ServiceOfferDto;
+    @Input() purchases: any[];
     @Input() isHost = false;
     @Output() onBack = new EventEmitter<void>();
 
     isDescriptionExpanded = false;
     isDescriptionOverflows = false;
+
+    isLoadingInitialData$ = new BehaviorSubject<boolean>(false);
     isSubmitting$ = new BehaviorSubject<boolean>(false);
 
     model: any = {};
@@ -60,9 +63,11 @@ export class OfferDetailsComponent extends AppComponentBase implements OnInit, A
 
     get offerStatus(): ServiceOfferStatus { return this.offer?.status;}
     get canEdit(): boolean { return this.offer?.status === ServiceOfferStatus.Queued; }
-    get isLoading$() { return combineLatest([this.isSubmitting$]).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
+    get isLoading$() { return combineLatest([this.isLoadingInitialData$, this.isSubmitting$]).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
+    get isPurchased(): boolean { return this.purchases !== undefined; }
 
     private initValues(): void {
+        this.isLoadingInitialData$.next(true);
         const getDuration = () => {
             let duration = [];
             if (this.offer?.offerLimitDays) {
@@ -91,6 +96,10 @@ export class OfferDetailsComponent extends AppComponentBase implements OnInit, A
         this.model['offerLaunched'] = this.convertMomentToShorterDateFormat(this.offer?.launchedTime);
         this.model['offerEnded'] = this.convertMomentToShorterDateFormat(this.offer?.endedTime);
         this.getRemainingTime();
+
+        const purchase = this.purchases?.find(p => p.userId === this.appSession.userId);
+        this.model['offerPurchasedDate'] = this.convertMomentToShorterDateFormat(purchase?.creationTime);
+        this.isLoadingInitialData$.next(false);
     }
 
     getRemainingTime(): void {
@@ -120,11 +129,29 @@ export class OfferDetailsComponent extends AppComponentBase implements OnInit, A
         modal.content.onSave.subscribe(() => this.onBack.next());
     }
 
-    async onLaunchClick() {
+    async onLaunchClick(id?: string) {
         this.isSubmitting$.next(true);
-        await this._servicesService.launchOffer(this.offer.id).toPromise();
+        await this._servicesService.launchOffer(id ?? this.offer.id).toPromise();
         this.isSubmitting$.next(false);
         this.onBack.next();
+    }
+
+    async onRelaunchClick() {
+        const modalSettings = this.defaultModalSettings as ModalOptions<CreateOfferComponent>;
+        modalSettings.class = 'modal-lg modal-dialog-centered';
+        modalSettings.initialState = {
+            model: CreateServiceOfferDto.fromJS({
+                ...this.offer,
+                id: null,
+                status: ServiceOfferStatus.Queued,
+                unitLimit: this.offer.unitLimit === null ? undefined : this.offer.unitLimit,
+                percentageDiscount: this.offer.percentageDiscount === null ? undefined : this.offer.percentageDiscount,
+            }),
+            referenceId: this.offer.referenceId,
+            selectedService: this.offer.service
+        };
+        const modal = this._modalService.show(CreateOfferComponent, modalSettings);
+        modal.content.onSave.subscribe(async (offer) => this.onLaunchClick(offer.id));
     }
 
     async onCloseClick() {
