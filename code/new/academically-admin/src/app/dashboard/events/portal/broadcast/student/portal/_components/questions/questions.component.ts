@@ -140,7 +140,7 @@ export class QuestionsComponent extends AppComponentBase implements OnInit {
         case StateUpdateType.Add:
           if (event.data.parentId !== null) {
             const index = this.questions.findIndex(q => q.id === event.data.parentId);
-            this.questions[index].children.unshift(event.data);
+            this.questions[index].children.push(event.data);
             this.questions[index].replyCount += 1;
           } else {
             this.questions = [event.data].concat(this.questions);

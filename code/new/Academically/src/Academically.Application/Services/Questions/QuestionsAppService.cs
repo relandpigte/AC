@@ -64,7 +64,7 @@ namespace Academically.Services.Questions
             {
                 var question = ObjectMapper.Map<QuestionDto>(e.Question);
                 question.ReplyCount = e.ChildCount;
-                question.Children = question.Children.OrderByDescending(c => c.CreationTime).ToList();
+                question.Children = question.Children.OrderBy(c => c.CreationTime).ToList();
                 return question;
             });
         }
@@ -81,7 +81,7 @@ namespace Academically.Services.Questions
                         .ThenInclude(e => e.ProfilePictureDocument)
                 .SingleOrDefaultAsync(q => q.Id == questionId);
             
-            question.Children = question.Children.OrderByDescending(c => c.CreationTime).ToList();
+            question.Children = question.Children.OrderBy(c => c.CreationTime).ToList();
             return ObjectMapper.Map<QuestionDto>(question);
         }
 
