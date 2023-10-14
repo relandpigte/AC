@@ -9,11 +9,19 @@ import { ThemeManagerService } from '@shared/services/theme-manager.service';
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { WrapperService } from '@shared/services/wrapper.service';
+import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
+import { NotificationsStateService } from '@shared/services/notifications-state.service';
+import { takeUntil } from '@node_modules/rxjs/operators';
+import { StateUpdateType } from '@shared/services/state-base.service';
+import { CommentsServiceProxy, NotificationDto, NotificationsServiceProxy, PostsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { TitleCasePipe } from '@node_modules/@angular/common';
+import { HubService } from '@app/_shared/services/hub.service';
 
 @Component({
   selector: 'app-wrapper',
   templateUrl: './wrapper.component.html',
-  styleUrls: ['./wrapper.component.less']
+  styleUrls: ['./wrapper.component.less'],
+  providers: [ TitleCasePipe ]
 })
 export class WrapperComponent extends AppComponentBase implements OnInit {
   NavigationPosition = NavigationPosition;
@@ -23,12 +31,22 @@ export class WrapperComponent extends AppComponentBase implements OnInit {
   routerEvent: RouterEvent;
   canScroll: boolean = true;
 
+  notificationsStateService: NotificationsStateService;
+  notification: NotificationDto;
+  isLoadingList$ = new BehaviorSubject<boolean>(true);
+  timer: any;
+
   constructor(
     injector: Injector,
     themeSettingsService: ThemeManagerService,
     router: Router,
     private wrapperService: WrapperService,
-    private cdr: ChangeDetectorRef
+    private _notificationsService: NotificationsServiceProxy,
+    private _titleCasePipe: TitleCasePipe,
+    private _hubService: HubService,
+    private _commentsService: CommentsServiceProxy,
+    private _postsService: PostsServiceProxy,
+    private _cdr: ChangeDetectorRef
   ) {
     super(injector);
     this.themeSetting = themeSettingsService.getConfiguration();
@@ -38,11 +56,41 @@ export class WrapperComponent extends AppComponentBase implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    await this.initNotificationAppStates();
     this.routerEvents.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
       this.routerEvent = event;
     });
     this.wrapperService.canScroll$.subscribe(canScroll => this.canScroll = canScroll);
-    this.cdr.detectChanges();
+    this._cdr.detectChanges();
+  }
+
+  private async initNotificationAppStates(): Promise<void> {
+    const appStateConfig: AppStateConfig = {
+      ['notification']: {
+        load: [],
+        update: { userId: this.appSession.userId}
+      }
+    };
+    const appStateServices: AppStateServices = {
+      ['notification']: {
+        type: NotificationsStateService,
+        args: [this._hubService, this._commentsService, this._postsService, this._notificationsService, this._titleCasePipe]
+      }
+    };
+    await this.pubSubService.start(this, appStateConfig, appStateServices);
+    this.notificationsStateService = this.pubSubService.getStateService<NotificationsStateService>('notifs');
+    this.notificationsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingList$.next(loading));
+    this.notificationsStateService.notifications$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
+      switch (event.type) {
+        case StateUpdateType.Update:
+          this.notification = event.data;
+          if (this.timer) { clearTimeout(this.timer); }
+          this.notification = event.data;
+          this.timer = setTimeout(() => this.notification = null, 10000);
+          break;
+      }
+      this._cdr.detectChanges();
+    });
   }
 }

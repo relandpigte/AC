@@ -1,0 +1,50 @@
+.notification {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    max-width: 330px;
+    width: 100%;
+    margin: 0 0 15px;
+    z-index: 999;
+
+    &-body {
+        padding: 15px 20px;
+    }
+
+    &-avatar {
+        width: 45px;
+        height: 45px;
+        max-width: 45px;
+
+        img {
+            width: 45px;
+            height: 45px;
+        }
+    }
+
+    &-content {
+        p {
+            margin: 0;
+            font-size: 15px;
+            color: #3B516C;
+        }
+
+        .time {
+            font-size: 15px;
+            color: #95AAC9;
+        }
+    }
+}
+
+::ng-deep {
+    .notification {
+        &-content {
+            p {
+                span {
+                    font-weight: 600;
+                    color: #12263F;
+                }
+            }
+        }
+    }
+}

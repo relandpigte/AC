@@ -83,17 +83,14 @@ import {
 } from '@shared/components/chat-conversation-message/chat-conversation-message.component';
 import { ChatComposerComponent } from '@shared/components/chat-composer/chat-composer.component';
 import { ChatConversationComponent } from '@shared/components/chat-conversation/chat-conversation.component';
-import {
-  ChatComposerConversationComponent
-} from '@shared/components/chat-composer-conversation/chat-composer-conversation.component';
+import { ChatComposerConversationComponent } from '@shared/components/chat-composer-conversation/chat-composer-conversation.component';
 import { ChatMessageInfoComponent } from '@shared/components/chat-message-info/chat-message-info.component';
-import {
-  ChatServiceAttachmentComponent
-} from '@shared/components/chat-service-attachment/chat-service-attachment.component';
+import { ChatServiceAttachmentComponent } from '@shared/components/chat-service-attachment/chat-service-attachment.component';
 import { NgPipesModule } from 'ngx-pipes';
 import { ChatRecipientComponent } from '@shared/components/chat-recipient/chat-recipient.component';
 import { EventQuestionsComponent } from '@shared/components/event-questions/event-questions.component';
 import { EventQuestionsComposerComponent } from '@shared/components/event-questions-composer/event-questions-composer.component';
+import { NotificationCardComponent } from '@shared/components/notification-card/notification-card.component';
 
 @NgModule({
   declarations: [
@@ -159,7 +156,8 @@ import { EventQuestionsComposerComponent } from '@shared/components/event-questi
     ChatServiceAttachmentComponent,
     ChatRecipientComponent,
     EventQuestionsComponent,
-    EventQuestionsComposerComponent
+    EventQuestionsComposerComponent,
+    NotificationCardComponent
   ],
   imports: [
     CommonModule,
@@ -267,7 +265,8 @@ import { EventQuestionsComposerComponent } from '@shared/components/event-questi
     ChatServiceAttachmentComponent,
     ChatRecipientComponent,
     EventQuestionsComponent,
-    EventQuestionsComposerComponent
+    EventQuestionsComposerComponent,
+    NotificationCardComponent
   ],
 })
 export class AppSharedModule { }

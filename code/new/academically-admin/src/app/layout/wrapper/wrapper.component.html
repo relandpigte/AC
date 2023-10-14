@@ -18,8 +18,9 @@
 
 <!-- MAIN CONTENT
 ================================================== -->
-<div class="main-content flex-grow-1" [class.can-scroll]="canScroll">
+<div class="main-content flex-grow-1 position-relative" [class.can-scroll]="canScroll">
   <topbar *ngIf="themeSetting.navigationPosition === NavigationPosition.Combo"></topbar>
+  <app-notification-card [notification]="notification"></app-notification-card>
   <ng-container *ngIf="themeSetting.navigationPosition === NavigationPosition.Topnav">
     <router-outlet name="header"></router-outlet>
     <div class="container p-0">

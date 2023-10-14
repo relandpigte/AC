@@ -1979,6 +1979,8 @@
     <text name="NoConversations">No conversations</text>
 	<text name="DeleteThisConversation">Delete this conversation?</text>
 	<text name="DeleteConversationConfirmation">If you are sure to delete the conversation, this is an irreversible action</text>
-    
+
+    <!-- Notification -->
+    <text name="NewNotification">New notification</text>
   </texts>
 </localizationDictionary>

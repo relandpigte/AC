@@ -1,0 +1,24 @@
+<div *ngIf="!!notification" class="card notification custom-card-border custom-card-shadow">
+    <div class="card-header">
+        <h4 class="card-header-title">
+            {{ 'NewNotification' | localize }}
+        </h4>
+        <button type="button" class="close" aria-label="Close" (click)="handleCloseNotification()">
+            <span aria-hidden="true"><img src="assets/img/x.svg" alt="Close"></span>
+        </button>
+    </div>
+    <div class="card-body notification-body d-flex gap-10">
+        <div class="notification-avatar avatar avatar-sm">
+            <img *ngIf="getDominantUser(notification); else avatarPlaceHolderTemplate" class="avatar-img rounded-circle"
+                 [src]="getDominantUser(notification).profilePictureUrl" alt="...">
+        </div>
+        <div class="notification-content">
+            <p [innerHTML]="notification.formattedNotification"></p>
+            <span class="time">{{ getNotificationReceivedTime(notification) }}</span>
+        </div>
+    </div>
+</div>
+
+<ng-template #avatarPlaceHolderTemplate>
+    <img class="avatar-img rounded-circle" src="/assets/img/avatar-placeholder.png" alt="...">
+</ng-template>
