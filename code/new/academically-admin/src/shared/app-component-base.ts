@@ -204,6 +204,80 @@ export abstract class AppComponentBase implements OnDestroy {
     return moment(date).fromNow(removeSuffix);
   }
 
+  convertMomentToChatChannelTime(date: Moment): string {
+    const time = moment(date).format('hh:mm a');
+    const days = moment(date).format('ddd');
+    const months = moment(date).format('D MMM');
+    const years = moment(date).format('DD/MM/YY');
+
+    moment.relativeTimeThreshold('s', 60);
+    moment.relativeTimeThreshold('h', 24);
+    moment.relativeTimeThreshold('d', 31);
+    moment.updateLocale('en', {
+      relativeTime : {
+        s: 'Just now',
+        m: time,
+        mm: time,
+        h: time,
+        hh: time,
+        d: days,
+        dd: (n): string => {
+          if (n <= 7) {
+            return days;
+          }
+          return months;
+        },
+        M:  months,
+        MM: months,
+        y:  (): string => {
+          const daysDiff = moment().diff(moment(date), 'days');
+          if (daysDiff < 365) {
+            return months;
+          }
+          return years;
+        },
+        yy: years
+      }
+    });
+    return moment(date).fromNow(true);
+  }
+
+  convertMomentToChatMessageTime(date: Moment): string {
+    const weeks = Math.abs(moment(date).diff(moment(), 'weeks'));
+    const years = Math.abs(moment(date).diff(moment(), 'years'));
+
+    moment.relativeTimeThreshold('s', 60);
+    moment.relativeTimeThreshold('h', 24);
+    moment.relativeTimeThreshold('d', 31);
+    moment.updateLocale('en', {
+      relativeTime : {
+        s: '1m',
+        m: '%dm',
+        mm: '%dm',
+        h: '%dh',
+        hh: '%dh',
+        d: '%dd',
+        dd: (n): string => {
+          if (n <= 6) {
+            return `${n}d`;
+          }
+          return `${weeks}w`;
+        },
+        M:  `${weeks}w`,
+        MM: `${weeks}w`,
+        y:  (): string => {
+          const daysDiff = moment().diff(moment(date), 'days');
+          if (daysDiff < 365) {
+            return `${weeks}w`;
+          }
+          return `${years}y`;
+        },
+        yy: `${years}y`
+      }
+    });
+    return moment(date).fromNow(true);
+  }
+
   convertMomentToPostDateAgo(date: Moment, withAgoSuffix = true): string {
     const time = moment(date).format('hh:mm');
     const month = moment(date).format('D MMMM');

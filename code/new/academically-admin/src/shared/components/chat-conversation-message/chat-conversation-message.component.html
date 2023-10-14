@@ -22,7 +22,7 @@
                     <div class="user-info d-flex align-items-center gap-5">
                         <div *ngIf="!isBlockedByRecipient" class="name font-weight-bold">{{ data?.creatorUser?.fullName | titlecase }}</div>
                         <div *ngIf="isBlockedByRecipient" class="name font-weight-bold">{{ 'User' | titlecase }}</div>
-                        <span class="time">{{ convertMomentToShorterChatDateFormat(data?.creationTime) }}</span>
+                        <span class="time">{{ convertMomentToChatMessageTime(data?.creationTime) }}</span>
                     </div>
                     <div class="actions ml-auto">
                         <div class="dropdown">

@@ -8,6 +8,8 @@ import { takeUntil } from '@node_modules/rxjs/operators';
 import { StateUpdateType } from '@shared/services/state-base.service';
 import { UserAvatarService } from '@shared/services/user-avatar.service';
 import { HubService } from '@app/_shared/services/hub.service';
+import * as moment from 'moment';
+import { Moment } from '@node_modules/moment';
 
 export enum ChatStatus {
   unread = 'unread',
@@ -89,7 +91,7 @@ export class ChatRecipientComponent extends AppComponentBase implements OnChange
 
   private setReceivedDateStr(): void {
     if (this.latestMessage) {
-      this.receivedDateStr = this.convertMomentToShorterChatDateFormat(this.latestMessage.creationTime);
+      this.receivedDateStr = this.convertMomentToChatChannelTime(this.latestMessage.creationTime);
     }
   }
 
