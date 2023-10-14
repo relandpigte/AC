@@ -29,6 +29,7 @@ import { AppConsts } from '@shared/AppConsts';
 
     @Output() onShareClick = new EventEmitter<any>();
     @Output() onClick = new EventEmitter<any>();
+    @Output() onActionClick = new EventEmitter<{ action: string, data: any }>();
 
     shimmerType: number = 0;
 
@@ -431,10 +432,15 @@ import { AppConsts } from '@shared/AppConsts';
       this.notify.success(this.l('LinkCopiedToClipboard'));
     }
 
+    handleActionClick(action: string): void {
+      this.onActionClick.emit({ action, data: this.data });
+    }
+
     handleClick(event: Event): void {
       const element = (event.target as HTMLElement).tagName.toLowerCase();
       switch (element) {
-        case 'span' :
+        case 'button':
+        case 'span':
           break;
         default:
           this.onClick.emit(this.data);

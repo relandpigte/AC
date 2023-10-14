@@ -1,0 +1,20 @@
+<div class="modal-card card" [loader]="isLoading$ | async">
+    <abp-modal-header [title]="'Payment' | localize" (onCloseClick)="onCloseClick()"></abp-modal-header>
+    <div class="card-body d-flex flex-column justify-content-start align-items-start w-100">
+        <ng-container *ngIf="templateRef">
+            <ng-container *ngTemplateOutlet="templateRef; context: { data: data, isLoading: (isLoading$ | async) }"></ng-container>
+        </ng-container>
+        <ng-container *ngIf="!templateRef">
+        </ng-container>
+    </div>
+    <div class="card-footer d-flex justify-content-end align-items-center border-top-0 gap-20">
+        <button [disabled]="(isLoading$ | async)" type="button"
+            class="btn btn-cancel btn-white d-flex justify-content-center align-items-center" (click)="onCancelClick()">
+            {{ 'Cancel' | localize }}
+        </button>
+        <button [disabled]="(isLoading$ | async)" type="button"
+            class="btn btn-pay btn-primary d-flex justify-content-center align-items-center" (click)="onPayClick()">
+            {{ 'Pay' | localize }}
+        </button>
+    </div>
+</div>

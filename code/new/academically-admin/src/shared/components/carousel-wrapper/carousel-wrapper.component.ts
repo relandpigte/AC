@@ -35,6 +35,7 @@ export class CarouselWrapperComponent extends AppComponentBase implements AfterV
 
   @Output() onRequestNewData: EventEmitter<any> = new EventEmitter();
   @Output() onServiceCardShareClick: EventEmitter<any> = new EventEmitter();
+  @Output() onServiceCardActionClick: EventEmitter<any> = new EventEmitter();
   @Output() onServiceCardClick: EventEmitter<any> = new EventEmitter();
 
   allowLoader = true;
@@ -131,6 +132,10 @@ export class CarouselWrapperComponent extends AppComponentBase implements AfterV
 
   handleServiceCardShareClick(data: any): void {
     this.onServiceCardShareClick.emit(data);
+  }
+
+  handleServiceCardActionClick(data: any): void {
+    this.onServiceCardActionClick.emit(data);
   }
 
   handleServiceCardClick(data: any): void {

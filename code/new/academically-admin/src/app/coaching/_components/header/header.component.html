@@ -17,9 +17,8 @@
                     <h1 class="header-title">{{ coachingTitle }}</h1>
                 </div>
                 <div class="col-12 col-md-auto mt-2 mt-md-0 mb-md-3">
-                    <button class="btn btn-primary d-block d-md-inline-block custom-button-width">
-                        <span>&#163;</span>
-                        8.00
+                    <button class="btn btn-primary d-block d-md-inline-block custom-button-width" (click)="onPurchaseClick()" [disabled]="isPurchased">
+                        {{ price | currency: 'GBP' }}
                     </button>
                     <button class="btn btn-light d-block d-md-inline-block custom-button-width">
                         {{ 'Save' | localize }}

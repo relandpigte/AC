@@ -9,6 +9,7 @@
         [isFeatured]="isFeatured"
         customClass="custom-card-border custom-card-shadow"
         (onShareClick)="handleServiceCardShareClick($event)"
+        (onActionClick)="handleServiceCardActionClick($event)"
         (onClick)="handleServiceCardClick($event)"
       ></app-service-card>
 

@@ -39,6 +39,7 @@
             [isLoading]="isLoading_upcomingBroadcasts"
             (onRequestNewData)="handleUpcomingBroadcastsRequestData($event)"
             (onServiceCardShareClick)="handleServiceCardShareClick($event)"
+            (onServiceCardActionClick)="handleServiceCardActionClick($event)"
             (onServiceCardClick)="handleBroadcastServiceCardClick($event)">
           </app-carousel>
         </ng-container>
@@ -60,6 +61,7 @@
             [isLoading]="isLoading_upcomingWorkshops"
             (onRequestNewData)="handleUpcomingWorkshopsRequestData($event)"
             (onServiceCardShareClick)="handleServiceCardShareClick($event)"
+            (onServiceCardActionClick)="handleServiceCardActionClick($event)"
             (onServiceCardClick)="handleWorkshopServiceCardClick($event)">
           </app-carousel>
         </ng-container>
@@ -81,6 +83,7 @@
             [isLoading]="isLoading_recommendedCourses"
             (onRequestNewData)="handleRecommendedCoursesRequestData($event)"
             (onServiceCardShareClick)="handleServiceCardShareClick($event)"
+            (onServiceCardActionClick)="handleServiceCardActionClick($event)"
             (onServiceCardClick)="handleCourseServiceCardClick($event)">
           </app-carousel>
         </ng-container>
@@ -102,6 +105,7 @@
             [isLoading]="isLoading_newArticles"
             (onRequestNewData)="handleNewArticlesRequestData($event)"
             (onServiceCardShareClick)="handleServiceCardShareClick($event)"
+            (onServiceCardActionClick)="handleServiceCardActionClick($event)"
             (onServiceCardClick)="handleArticleServiceCardClick($event)">
           </app-carousel>
         </ng-container>
@@ -123,6 +127,7 @@
             [isLoading]="isLoading_recommendedTutorials"
             (onRequestNewData)="handleRecommendedTutorialsRequestData($event)"
             (onServiceCardShareClick)="handleServiceCardShareClick($event)"
+            (onServiceCardActionClick)="handleServiceCardActionClick($event)"
             (onServiceCardClick)="handleTutorialServiceCardClick($event)">
           </app-carousel>
         </ng-container>
@@ -144,6 +149,7 @@
             [isLoading]="isLoading_newCoachings"
             (onRequestNewData)="handleNewCoachingsRequestData($event)"
             (onServiceCardShareClick)="handleServiceCardShareClick($event)"
+            (onServiceCardActionClick)="handleServiceCardActionClick($event)"
             (onServiceCardClick)="handleNewCoachingServiceCardClick($event)">
           </app-carousel>
         </ng-container>

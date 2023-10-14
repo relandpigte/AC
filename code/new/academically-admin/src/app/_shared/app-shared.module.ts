@@ -46,6 +46,7 @@ import { CommunityPostCardComponent } from '@shared/components/community-post/co
 import { CommunityDiscussionsComponent } from '@shared/components/community-discussions/community-discussions.component';
 import { CommunityComposerComponent } from '@shared/components/composer/composer.component';
 import { EmojiPickerComponent } from '@shared/components/emoji-picker/emoji-picker.component';
+import { PurchaseServiceComponent } from '@shared/components/purchase-service/purchase-service.component';
 import { RateAndReviewComponent } from '@shared/components/rate-and-review/rate-and-review.component';
 import { ReactionComponent } from '@shared/components/reaction/reaction.component';
 import { ReactionUsersComponent } from '@shared/components/reaction-users/reaction-users.component';
@@ -133,6 +134,7 @@ import { NotificationCardComponent } from '@shared/components/notification-card/
     CommunityDiscussionsComponent,
     CommunitySideCardComponent,
     EmojiPickerComponent,
+    PurchaseServiceComponent,
     RateAndReviewComponent,
     ReactionComponent,
     ReactionUsersComponent,
@@ -242,6 +244,7 @@ import { NotificationCardComponent } from '@shared/components/notification-card/
     CommunityDiscussionsComponent,
     CommunitySideCardComponent,
     EmojiPickerComponent,
+    PurchaseServiceComponent,
     RateAndReviewComponent,
     ReactionComponent,
     ReactionUsersComponent,

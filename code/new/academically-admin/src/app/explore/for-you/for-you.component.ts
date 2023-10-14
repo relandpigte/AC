@@ -5,8 +5,9 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ArticleDto, ArticlesServiceProxy, CoachingDto, CoachingsServiceProxy, CourseDto, CoursesServiceProxy, DateGrains, EventCategory, EventDto, EventsServiceProxy, PostsServiceProxy, SharedType, UserDto, UserServiceProxy, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, ArticlesServiceProxy, CoachingDto, CoachingsServiceProxy, CourseDto, CoursesServiceProxy, DateGrains, EventCategory, EventDto, EventsServiceProxy, PostsServiceProxy, ServicesServiceProxy, SharedType, UserDto, UserServiceProxy, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
+import { PurchaseServiceComponent } from '@shared/components/purchase-service/purchase-service.component';
 
 @Component({
   selector: 'app-explore-for-you',
@@ -51,7 +52,8 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
     private _articlesService: ArticlesServiceProxy,
     private _videoService: VideosServiceProxy,
     private _coachingsService: CoachingsServiceProxy,
-    private _postsService: PostsServiceProxy
+    private _postsService: PostsServiceProxy,
+    private _servicesService: ServicesServiceProxy
   ) {
     super(injector);
   }
@@ -146,6 +148,46 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
         };
         this._modalService.show(UpsertPostComponent, modalSettings).content;
       });
+  }
+
+  async handleServiceCardActionClick(event: any) {
+    try {
+      const { action, data } = event;
+      switch(action) {
+        case 'purchase':
+          await this.onPurchaseClick(data);
+          break;
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
+  private async onPurchaseClick(service: any) {
+    if (!service) return;
+
+    const purchase = await this._servicesService.getAllPurchases(service.id, this.appSession.userId).toPromise();
+    if (purchase?.length) {
+      this.redirectToServiceLandingPage(service)
+    } else {
+      const modalSettings = this.defaultModalSettings as ModalOptions<PurchaseServiceComponent>;
+      modalSettings.class = 'modal-lg modal-dialog-centered';
+      modalSettings.initialState = { serviceId: service.id };
+      const modal = this._modalService.show(PurchaseServiceComponent, modalSettings);
+      modal.content.onPaid.subscribe(() => this.redirectToServiceLandingPage(service));
+    }
+  }
+
+  private redirectToServiceLandingPage(service: any) {
+    if (service instanceof EventDto) {
+      const d = service as EventDto;
+      if (d.category === EventCategory.Broadcast) this.handleBroadcastServiceCardClick(service);
+      this.handleWorkshopServiceCardClick(service);
+    }
+    else if (service instanceof ArticleDto) this.handleArticleServiceCardClick(service);
+    else if (service instanceof CoachingDto) this.handleNewCoachingServiceCardClick(service);
+    else if (service instanceof CourseDto) this.handleCourseServiceCardClick(service);
+    else if (service instanceof VideoDto) this.handleTutorialServiceCardClick(service);
   }
 
 }

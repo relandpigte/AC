@@ -220,7 +220,7 @@
                 </ng-container>
 
                 <ng-container *ngSwitchDefault>
-                    <button type="button" class="btn text-center flex-grow-1 d-flex flex-row justify-content-center align-items-center w-127-px" [ngClass]="[action.class ? action.class : 'btn-light']" style="gap: 5px">
+                    <button type="button" class="btn text-center flex-grow-1 d-flex flex-row justify-content-center align-items-center w-127-px" [ngClass]="[action.class ? action.class : 'btn-light']" style="gap: 5px" (click)="handleActionClick(action.action)">
                         <span *ngIf="action.label">{{ action.label | localize}}</span>
                         <i *ngIf="action.icon" [class]="action.icon"></i>
                     </button>
