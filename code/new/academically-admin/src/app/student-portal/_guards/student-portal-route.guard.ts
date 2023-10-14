@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, CanActivateChild, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { StudentCoursesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot } from '@angular/router';
+import { ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { AppSessionService } from '@shared/session/app-session.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StudentPortalRouteGuard implements CanActivate, CanActivateChild {
   constructor(
-    private _studentCoursesService: StudentCoursesServiceProxy,
+    private _appSession: AppSessionService,
+    private _servicesService: ServicesServiceProxy,
     private _router: Router,
   ) {
   }
@@ -17,18 +18,18 @@ export class StudentPortalRouteGuard implements CanActivate, CanActivateChild {
     abp.ui.setBusy();
     return new Promise((resolve) => {
       const courseId: string = route.params['course-id'];
-      this._studentCoursesService.getByCourse(courseId)
-        .subscribe(studentCourse => {
+      this._servicesService.getAllPurchases(courseId, this._appSession.userId)
+        .subscribe(([purchase]) => {
           if (state.url.includes('landing-page')) {
             abp.ui.clearBusy();
-            if (studentCourse && studentCourse.id) {
+            if (purchase?.id) {
               this._router.navigate([`/app/student-portal/${courseId}/home`]);
             } else {
               return resolve(true);
             }
           } else {
             abp.ui.clearBusy();
-            if (!studentCourse || !studentCourse.id) {
+            if (!purchase?.id) {
               this._router.navigate([`/app/student-portal/${courseId}/landing-page`]);
             } else {
               return resolve(true);

@@ -11,7 +11,7 @@ namespace Academically.Domain.Entities
     public class ServicePurchase : Entity<Guid>
     {
         public Guid? ReferenceId { get; set; }
-        public Guid ServiceOfferId { get; set; }
+        public Guid? ServiceOfferId { get; set; }
         public long CreatorUserId { get; set; }
         public DateTime CreationTime { get; set; }
 

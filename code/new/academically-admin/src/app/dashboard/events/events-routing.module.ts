@@ -85,7 +85,9 @@ import { EventsComponent } from './events.component';
           import('@app/dashboard/events/session/broadcast/broadcast-session.module').then(
             (m) => m.BroadcastSessionModule
           ),
-      }
+      },
+      { path: 'portal/workshop/tutor', redirectTo: 'portal/broadcast/tutor' },
+      { path: 'portal/workshop/student', redirectTo: 'portal/broadcast/student' },
     ]),
   ],
   exports: [

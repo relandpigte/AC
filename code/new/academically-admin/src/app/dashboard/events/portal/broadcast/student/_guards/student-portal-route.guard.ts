@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, CanActivateChild, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { PricingType, EventsServiceProxy, EventType } from '@shared/service-proxies/service-proxies';
+import { PricingType, EventsServiceProxy, EventType, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AppSessionService } from '@shared/session/app-session.service';
 import * as _ from 'lodash';
 
@@ -10,6 +10,7 @@ import * as _ from 'lodash';
 export class StudentPortalRouteGuard implements CanActivate, CanActivateChild {
   constructor(
     private _eventsService: EventsServiceProxy,
+    private _servicesService: ServicesServiceProxy,
     private _router: Router,
     private _appSession: AppSessionService,
   ) {
@@ -42,18 +43,18 @@ export class StudentPortalRouteGuard implements CanActivate, CanActivateChild {
             return resolve(true);
           }
           if (response.pricingType !== PricingType.Free && !eventPresenterId) {
-            this._eventsService.getPurchased(eventId)
-              .subscribe(studentEvent => {
+            this._servicesService.getAllPurchases(eventId, this._appSession.userId)
+              .subscribe(([purchase]) => {
                 if (state.url.includes('landing-page')) {
                   abp.ui.clearBusy();
-                  if (studentEvent && studentEvent.id) {
+                  if (purchase?.id) {
                     this._router.navigate([`/app/dashboard/events/portal/broadcast/student/${eventId}/portal`]);
                   } else {
                     return resolve(true);
                   }
                 } else {
                   abp.ui.clearBusy();
-                  if (!studentEvent || !studentEvent.id) {
+                  if (!purchase?.id) {
                     this._router.navigate([`/app/dashboard/events/portal/broadcast/student/${eventId}/landing-page`]);
                   } else {
                     return resolve(true);

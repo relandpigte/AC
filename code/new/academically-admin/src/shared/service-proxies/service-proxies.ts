@@ -38379,7 +38379,7 @@ export interface ICreateServiceOfferDto {
 export class CreateServicePurchaseDto implements ICreateServicePurchaseDto {
     id: string | undefined;
     referenceId: string | undefined;
-    serviceOfferId: string;
+    serviceOfferId: string | undefined;
     creatorUserId: number;
     creationTime: moment.Moment;
 
@@ -38430,7 +38430,7 @@ export class CreateServicePurchaseDto implements ICreateServicePurchaseDto {
 export interface ICreateServicePurchaseDto {
     id: string | undefined;
     referenceId: string | undefined;
-    serviceOfferId: string;
+    serviceOfferId: string | undefined;
     creatorUserId: number;
     creationTime: moment.Moment;
 }
@@ -47960,7 +47960,7 @@ export enum ServiceOfferStatus {
 export class ServicePurchaseDto implements IServicePurchaseDto {
     id: string;
     referenceId: string | undefined;
-    serviceOfferId: string;
+    serviceOfferId: string | undefined;
     creatorUserId: number;
     creationTime: moment.Moment;
     creatorUser: UserDto;
@@ -48014,7 +48014,7 @@ export class ServicePurchaseDto implements IServicePurchaseDto {
 export interface IServicePurchaseDto {
     id: string;
     referenceId: string | undefined;
-    serviceOfferId: string;
+    serviceOfferId: string | undefined;
     creatorUserId: number;
     creationTime: moment.Moment;
     creatorUser: UserDto;

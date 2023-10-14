@@ -219,7 +219,7 @@ export class ExploreCoursesComponent extends AppComponentBase implements OnInit 
   }
 
   handleServiceCardClick(course: CourseDto): void {
-    this._router.navigate(['app/student-portal' , course.id]);
+    this._router.navigate(['app/course' , course.id, 'about']);
   }
 
   handleServiceCardShareClick(service: any): void {

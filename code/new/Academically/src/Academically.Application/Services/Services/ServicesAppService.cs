@@ -204,30 +204,38 @@ namespace Academically.Services.Services
         
         public async Task<ServicePurchaseDto> SavePurchase(CreateServicePurchaseDto input)
         {
-            var offer = await this._serviceOffersRepository.GetAsync(input.ServiceOfferId);
-            if (this.IsOfferActive(offer))
+            ServiceOffer offer = null;
+
+            if (input.ServiceOfferId.HasValue)
             {
-                if (input.Id.HasValue)
-                {
-                    var existing = await this._servicePurchasesRepository.GetAsync(input.Id.Value);
-                    if (existing != null)
-                    {
-                        existing.ReferenceId = input.ReferenceId;
-                        existing.ServiceOfferId = input.ServiceOfferId;
-                        existing.CreatorUserId = input.CreatorUserId;
-                        existing.CreationTime = Clock.Now;
-
-                        return await this.GetPurchase(existing.Id);
-                    }
-                }
-
-                input.CreationTime = Clock.Now;
-
-                var created = ObjectMapper.Map<ServicePurchaseDto>(await this._servicePurchasesRepository.InsertAsync(ObjectMapper.Map<ServicePurchase>(input)));
-                offer.SoldCount = offer.SoldCount + 1;
-                return await this.GetPurchase(created.Id);
+                offer = await this._serviceOffersRepository.GetAsync(input.ServiceOfferId.Value);
+                if (!this.IsOfferActive(offer)) return null;
             }
-            return null;
+            
+            if (input.Id.HasValue)
+            {
+                var existing = await this._servicePurchasesRepository.GetAsync(input.Id.Value);
+                if (existing != null)
+                {
+                    existing.ReferenceId = input.ReferenceId;
+                    existing.ServiceOfferId = input.ServiceOfferId;
+                    existing.CreatorUserId = input.CreatorUserId;
+                    existing.CreationTime = Clock.Now;
+
+                    return await this.GetPurchase(existing.Id);
+                }
+            }
+
+            input.CreationTime = Clock.Now;
+
+            var created = ObjectMapper.Map<ServicePurchaseDto>(await this._servicePurchasesRepository.InsertAsync(ObjectMapper.Map<ServicePurchase>(input)));
+
+            if (offer != null)
+            {
+                offer.SoldCount = offer.SoldCount + 1;
+            }
+
+            return await this.GetPurchase(created.Id);
         }
 
         private bool IsOfferActive(ServiceOffer offer)

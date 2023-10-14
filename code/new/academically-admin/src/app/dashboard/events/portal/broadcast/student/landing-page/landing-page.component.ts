@@ -1,8 +1,9 @@
-import { Component, OnInit, Injector } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { EventsServiceProxy, CreateStudentEventDto } from '@shared/service-proxies/service-proxies';
+import { Component, Injector, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
-import { takeUntil, finalize } from 'rxjs/operators';
+import { CreateServicePurchaseDto, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
+import * as moment from 'moment';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-landing-page',
@@ -17,7 +18,7 @@ export class LandingPageComponent extends AppComponentBase implements OnInit {
     injector: Injector,
     route: ActivatedRoute,
     private _router: Router,
-    private _eventsService: EventsServiceProxy,
+    private _servicesService: ServicesServiceProxy,
   ) {
     super(injector);
     route.parent.parent.parent.paramMap.subscribe(paramMap => {
@@ -32,10 +33,11 @@ export class LandingPageComponent extends AppComponentBase implements OnInit {
 
   onBuyNowClick(): void {
     this.loading = true;
-    const studentEvent = new CreateStudentEventDto();
-    studentEvent.eventId = this.id;
-    studentEvent.saveOnly = false;
-    this._eventsService.purchase(studentEvent)
+    this._servicesService.savePurchase(CreateServicePurchaseDto.fromJS({
+      referenceId: this.id,
+      creatorUserId: this.appSession.userId,
+      creationTime: moment()
+    }))
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {

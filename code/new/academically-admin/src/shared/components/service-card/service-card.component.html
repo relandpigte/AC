@@ -66,7 +66,7 @@
 
         <div class="service-card-body-name line-clamp-2" [style.marginTop.px]="owner?.isBannerAvatar && owner?.avatar ? 15 : 5" [class.centered]="type === 'user'">{{ name }}</div>
 
-        <div *ngIf="this.sanitizedOptions?.isShowInfo" class="service-card-body-info">{{ info }}</div>
+        <div *ngIf="this.sanitizedOptions?.isShowInfo" class="service-card-body-info line-clamp-3">{{ info }}</div>
 
         <div *ngIf="this.sanitizedOptions?.isShowProgress" class="service-card-body-progress">
             <div class="service-card-body-progress-label">{{ 'Progress' | localize }}</div>
@@ -118,7 +118,7 @@
             </ng-container>
         </div>
 
-        <div *ngIf="this.sanitizedOptions?.isShowDescription" class="service-card-body-description">{{ description }}</div>
+        <div *ngIf="this.sanitizedOptions?.isShowDescription" class="service-card-body-description line-clamp-2">{{ description }}</div>
 
         <div class="service-card-body-spacer flex-grow-1"></div>
 

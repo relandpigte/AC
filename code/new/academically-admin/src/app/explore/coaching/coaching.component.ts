@@ -7,6 +7,7 @@ import { finalize, takeUntil } from 'rxjs/operators';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import * as moment from 'moment';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-explore-coachings',
@@ -50,6 +51,7 @@ export class ExploreCoachingComponent extends AppComponentBase implements OnInit
 
   constructor(
     injector: Injector,
+    private _router: Router,
     private _modalService: BsModalService,
     private _coachingsService: CoachingsServiceProxy,
     private _postsService: PostsServiceProxy
@@ -202,6 +204,10 @@ export class ExploreCoachingComponent extends AppComponentBase implements OnInit
   onShowMoreTopicButtonClick(topic: string): void {
     console.log('SHOW MORE TOPIC BUTTON CLICKED');
     this.loadGroupedByTopics(this.topicGroups[topic].items.length, topic);
+  }
+
+  handleServiceCardClick(coaching: CoachingDto): void {
+    this._router.navigate(['app/course' , coaching.id, 'about']);
   }
 
   handleServiceCardShareClick(service: any): void {

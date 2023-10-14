@@ -1,8 +1,9 @@
-import { Component, OnInit, Injector } from '@angular/core';
-import { AppComponentBase } from '@shared/app-component-base';
+import { Component, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StudentArticlesServiceProxy, StudentArticleDto } from '@shared/service-proxies/service-proxies';
-import { takeUntil, finalize } from 'rxjs/operators';
+import { AppComponentBase } from '@shared/app-component-base';
+import { CreateServicePurchaseDto, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
+import * as moment from 'moment';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-landing-page',
@@ -17,7 +18,7 @@ export class LandingPageComponent extends AppComponentBase implements OnInit {
     injector: Injector,
     private _route: ActivatedRoute,
     private _router: Router,
-    private _studentArticlesService: StudentArticlesServiceProxy,
+    private _servicesService: ServicesServiceProxy,
   ) {
     super(injector);
     this._route.parent.parent.parent.paramMap.subscribe(paramMap => {
@@ -31,10 +32,11 @@ export class LandingPageComponent extends AppComponentBase implements OnInit {
   }
 
   onBuyNowClick(): void {
-    const studentArticle = new StudentArticleDto();
-    studentArticle.articleId = this.id;
-    studentArticle.saveOnly = false;
-    this._studentArticlesService.create(studentArticle)
+    this._servicesService.savePurchase(CreateServicePurchaseDto.fromJS({
+      referenceId: this.id,
+      creatorUserId: this.appSession.userId,
+      creationTime: moment()
+    }))
       .pipe(
         takeUntil(this.destroyed$),
         finalize(() => {

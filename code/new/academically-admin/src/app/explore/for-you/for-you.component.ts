@@ -101,15 +101,15 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
   }
 
   handleBroadcastServiceCardClick(event: EventDto): void {
-    this._router.navigate(['/app/dashboard/events/portal/broadcast/student', event.id, 'portal']);
+    this._router.navigate(['app/events' , event.id, 'about']);
   }
 
   handleWorkshopServiceCardClick(event: EventDto): void {
-    this._router.navigate(['/app/dashboard/events/portal/workshop/student', event.id, 'portal']);
+    this._router.navigate(['app/events' , event.id, 'about']);
   }
 
   handleCourseServiceCardClick(course: CourseDto): void {
-    this._router.navigate(['app/student-portal' , course.id]);
+    this._router.navigate(['app/course' , course.id, 'about']);
   }
 
   handleArticleServiceCardClick(article: ArticleDto): void {
@@ -121,7 +121,7 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
   }
 
   handleNewCoachingServiceCardClick(coaching: CoachingDto): void {
-    this._router.navigate(['app/coachings/student-portal' , coaching.id]);
+    this._router.navigate(['app/coaching' , coaching.id, 'about']);
   }
 
   handleServiceCardShareClick(service: any): void {

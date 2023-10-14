@@ -32,6 +32,7 @@
                   *ngFor="let d of topicGroups[t]?.items; trackBy:d?.id;"
                   [data]="d"
                   [isLoading]="isLoading"
+                  (onClick)="handleServiceCardClick($event)"
                   (onShareClick)="handleServiceCardShareClick($event)"
                 ></app-service-card>
                 <ng-container *ngIf="showTopicShowMoreButton(t)">
@@ -56,6 +57,7 @@
                   *ngFor="let d of popular?.items; trackBy:d?.id"
                   [data]="d"
                   [isLoading]="isPopularLoading"
+                  (onClick)="handleServiceCardClick($event)"
                   (onShareClick)="handleServiceCardShareClick($event)"
                 ></app-service-card>
                 <ng-container *ngIf="showPopularShowMoreButton">
@@ -78,6 +80,7 @@
                   *ngFor="let d of latest?.items; trackBy:d?.id"
                   [data]="d"
                   [isLoading]="isLoading"
+                  (onClick)="handleServiceCardClick($event)"
                   (onShareClick)="handleServiceCardShareClick($event)"
                 ></app-service-card>
                 <ng-container *ngIf="showLastestShowMore">
@@ -100,6 +103,7 @@
                   *ngFor="let d of lastMonth?.items; trackBy:d?.id"
                   [data]="d"
                   [isLoading]="isLoading"
+                  (onClick)="handleServiceCardClick($event)"
                   (onShareClick)="handleServiceCardShareClick($event)"
                 ></app-service-card>
                 <ng-container *ngIf="showLastMonthShowMoreButton">
