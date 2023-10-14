@@ -20,10 +20,15 @@ namespace Academically.Services.Services
         IEnumerable<Service2Dto> GetStaticServiceLevels();
         IEnumerable<Service2Dto> GetStaticServices();
 
-        // service offers
+        // services
+        Task<ServicePurchaseDto> GetPurchase(Guid id);
+        Task<IEnumerable<ServicePurchaseDto>> GetAllPurchases(Guid referenceId, long? userId);
+        Task<ServicePurchaseDto> SavePurchase(CreateServicePurchaseDto input);
 
+
+        // service offers
         Task<ServiceOfferDto> UpsertServiceOffer(CreateServiceOfferDto input);
-        Task<IEnumerable<ServiceOfferDto>> GetServiceOffers(Guid referenceId, ServiceOfferStatus? status);
+        Task<IEnumerable<ServiceOfferDto>> GetServiceOffers(Guid referenceId, ServiceOfferStatus? status, bool? isPurchased);
         Task<ServiceOfferDto> GetServiceOffer(Guid Id);
         Task<ServiceOfferDto> LaunchOffer(Guid Id);
         Task<ServiceOfferDto> CloseOffer(Guid Id);

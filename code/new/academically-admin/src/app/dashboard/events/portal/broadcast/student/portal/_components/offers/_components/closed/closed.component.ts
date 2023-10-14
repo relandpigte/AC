@@ -37,7 +37,7 @@ export class ClosedComponent extends AppComponentBase implements OnInit {
   private async getAllServiceOffers() {
     this.isLoadingList$.next(true);
     try {
-      this.offers = await this._servicesService.getServiceOffers(this.referenceId, ServiceOfferStatus.Closed).toPromise();
+      this.offers = await this._servicesService.getServiceOffers(this.referenceId, ServiceOfferStatus.Closed, undefined).toPromise();
     } catch (err) {
       console.error(err);
     }

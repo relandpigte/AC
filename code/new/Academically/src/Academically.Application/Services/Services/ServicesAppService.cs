@@ -1,5 +1,6 @@
 ﻿using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
+using Abp.Timing;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Hubs;
@@ -19,6 +20,7 @@ namespace Academically.Services.Services
         private readonly IRepository<Service, Guid> _servicesRepository;
         private readonly IRepository<ServiceMapping, Guid> _serviceMappingsRepository;
         private readonly IRepository<Service2, Guid> _service2sRepository;
+        private readonly IRepository<ServicePurchase, Guid> _servicePurchasesRepository;
         private readonly IRepository<ServiceOffer, Guid> _serviceOffersRepository;
         private readonly IPostsAppService _postsAppService;
         private readonly IHubManager _hubManager;
@@ -80,6 +82,7 @@ namespace Academically.Services.Services
             IRepository<Service, Guid> servicesRepository,
             IRepository<ServiceMapping, Guid> serviceMappingsRepository,
             IRepository<Service2, Guid> service2sRepository,
+            IRepository<ServicePurchase, Guid> servicePurchasesRepository,
             IRepository<ServiceOffer, Guid> serviceOffersRepository,
             IPostsAppService postsAppService,
             IHubManager hubManager
@@ -88,6 +91,7 @@ namespace Academically.Services.Services
             _servicesRepository = servicesRepository;
             _serviceMappingsRepository = serviceMappingsRepository;
             _service2sRepository = service2sRepository;
+            _servicePurchasesRepository = servicePurchasesRepository;
             _serviceOffersRepository = serviceOffersRepository;
             _postsAppService = postsAppService;
             _hubManager = hubManager;
@@ -175,6 +179,74 @@ namespace Academically.Services.Services
             return StaticServices;
         }
 
+        public async Task<ServicePurchaseDto> GetPurchase(Guid id)
+        {
+            var purchase = await this._servicePurchasesRepository.GetAll()
+                .Include(p => p.CreatorUser)
+                .FirstOrDefaultAsync(p => p.Id == id);
+            if (purchase != null)
+            {
+                return ObjectMapper.Map<ServicePurchaseDto>(purchase);
+            }
+            return null;
+        }
+
+        public async Task<IEnumerable<ServicePurchaseDto>> GetAllPurchases(Guid referenceId, long? userId)
+        {
+            var purchases = this._servicePurchasesRepository.GetAll()
+                .Include(p => p.CreatorUser)
+                .Where(p => p.ReferenceId == referenceId)
+                .WhereIf(userId.HasValue, p => p.CreatorUserId == userId.Value)
+                .Select(p => ObjectMapper.Map<ServicePurchaseDto>(p))
+                .ToList();
+            return purchases;
+        }
+        
+        public async Task<ServicePurchaseDto> SavePurchase(CreateServicePurchaseDto input)
+        {
+            var offer = await this._serviceOffersRepository.GetAsync(input.ServiceOfferId);
+            if (this.IsOfferActive(offer))
+            {
+                if (input.Id.HasValue)
+                {
+                    var existing = await this._servicePurchasesRepository.GetAsync(input.Id.Value);
+                    if (existing != null)
+                    {
+                        existing.ReferenceId = input.ReferenceId;
+                        existing.ServiceOfferId = input.ServiceOfferId;
+                        existing.CreatorUserId = input.CreatorUserId;
+                        existing.CreationTime = Clock.Now;
+
+                        return await this.GetPurchase(existing.Id);
+                    }
+                }
+
+                input.CreationTime = Clock.Now;
+
+                var created = ObjectMapper.Map<ServicePurchaseDto>(await this._servicePurchasesRepository.InsertAsync(ObjectMapper.Map<ServicePurchase>(input)));
+                offer.SoldCount = offer.SoldCount + 1;
+                return await this.GetPurchase(created.Id);
+            }
+            return null;
+        }
+
+        private bool IsOfferActive(ServiceOffer offer)
+        {
+            if (offer == null) return false;
+            if (offer.Status != ServiceOfferStatus.Open) return false;
+            if (offer.LaunchedTime == null) return false;
+            if (offer.IsNumberOfUnitsLimited)
+            {
+                if ((offer.Purchases?.Count ?? 0) >= offer.UnitLimit) return false;
+            }
+            if (offer.IsOfferDurationLimited)
+            {
+                var endTime = offer.LaunchedTime.Value.AddDays((double)offer.OfferLimitDays).AddHours((double)offer.OfferLimitHours).AddMinutes((double)offer.OfferLimitMinutes);
+                if (endTime < Clock.Now) return false;
+            }
+            return true;
+        }
+
         public async Task<ServiceOfferDto> UpsertServiceOffer(CreateServiceOfferDto input)
         {
             if (input.Id.HasValue)
@@ -192,7 +264,6 @@ namespace Academically.Services.Services
                     existing.IsNumberOfUnitsLimited = input.IsNumberOfUnitsLimited;
                     existing.UnitLimit = input.UnitLimit;
 
-
                     var existingDto = ObjectMapper.Map<ServiceOfferDto>(existing);
                     existingDto.Service = await this._postsAppService.GetService(existingDto.ServiceId);
                     return existingDto;
@@ -203,11 +274,16 @@ namespace Academically.Services.Services
             return upserted;
         }
 
-        public async Task<IEnumerable<ServiceOfferDto>> GetServiceOffers(Guid referenceId, ServiceOfferStatus? status)
+        public async Task<IEnumerable<ServiceOfferDto>> GetServiceOffers(Guid referenceId, ServiceOfferStatus? status, bool? isPurchased)
         {
+            var currentUserId = this.AbpSession.UserId;
             var offers = this._serviceOffersRepository.GetAll()
+                .Include(o => o.Purchases)
+                    .ThenInclude(p => p.CreatorUser)
                 .Where(o => o.ReferenceId == referenceId)
                 .WhereIf(status.HasValue, o => o.Status == status.Value)
+                .WhereIf(isPurchased.HasValue && isPurchased == true, o => o.Purchases.Any(p => p.CreatorUserId == currentUserId))
+                .WhereIf(isPurchased.HasValue && isPurchased == false, o => !o.Purchases.Any(p => p.CreatorUserId == currentUserId))
                 .Select(o => ObjectMapper.Map<ServiceOfferDto>(o))
                 .ToList();
 
@@ -220,18 +296,24 @@ namespace Academically.Services.Services
         public async Task<ServiceOfferDto> GetServiceOffer(Guid Id)
         {
             var offer = await this._serviceOffersRepository.GetAll()
+                .Include(o => o.Purchases)
+                    .ThenInclude(p => p.CreatorUser)
                 .Where(o => o.Id == Id)
                 .Select(o => ObjectMapper.Map<ServiceOfferDto>(o))
                 .FirstOrDefaultAsync();
-
-            offer.Service = await this._postsAppService.GetService(offer.ServiceId);
-
-            return offer;
+            if (offer != null)
+            {
+                offer.Service = await this._postsAppService.GetService(offer.ServiceId);
+                return offer;
+            }
+            return null;
         }
 
         public async Task<ServiceOfferDto> LaunchOffer(Guid Id)
         {
             var offer = await this._serviceOffersRepository.GetAll()
+                .Include(o => o.Purchases)
+                    .ThenInclude(p => p.CreatorUser)
                .Where(o => o.Id == Id)
                .FirstOrDefaultAsync();
 
@@ -248,6 +330,8 @@ namespace Academically.Services.Services
         public async Task<ServiceOfferDto> CloseOffer(Guid Id)
         {
             var offer = await this._serviceOffersRepository.GetAll()
+                .Include(o => o.Purchases)
+                    .ThenInclude(p => p.CreatorUser)
                .Where(o => o.Id == Id)
                .FirstOrDefaultAsync();
 

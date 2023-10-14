@@ -80,23 +80,35 @@ export class ServiceOffersStateService extends StateServiceBase {
 
     canViewOffer = (offer: ServiceOfferDto): boolean => {
         if (!offer) return false;
+        const isPurchased = this.loadArgs?.[2];
         return !offer.isDeleted &&
             (this.type === offersType.queued ? offer.status === ServiceOfferStatus.Queued : true) &&
             (this.type === offersType.opened ? offer.status === ServiceOfferStatus.Open : true) &&
-            (this.type === offersType.closed ? offer.status === ServiceOfferStatus.Closed : true);
+            (this.type === offersType.closed ? offer.status === ServiceOfferStatus.Closed : true) &&
+            (
+                isPurchased !== undefined && isPurchased !== null ?
+                    (
+                        isPurchased === true ?
+                            offer.purchases?.some(p => p.creatorUserId === this._appSession.userId)
+                        :
+                            !offer.purchases?.some(p => p.creatorUserId === this._appSession.userId)
+                    )
+                :
+                    true
+            );
     };
 
     handleUpsertOffers = async (offer: ServiceOfferDto) => {
         this.loading$.next(true);
-        if (this.canViewOffer(offer)) {
-            try {
-                const updated = await this._servicesService.getServiceOffer(offer.id).toPromise();
+        try {
+            const updated = await this._servicesService.getServiceOffer(offer.id).toPromise();
+            if (this.canViewOffer(updated)) {
                 this.updateFromMap(this.offers, Utils.toObjectMap([updated], (o) => o.id, (p) => p), this.offers$);
-            } catch (err) {
-                console.error(err);
+            } else {
+                this.handleDeleteOffers(offer);
             }
-        } else {
-            this.handleDeleteOffers(offer);
+        } catch (err) {
+            console.error(err);
         }
         this.loading$.next(false);
     };

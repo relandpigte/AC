@@ -38,7 +38,7 @@
         <app-closed [referenceId]="referenceId" [isHost]="isHost"></app-closed>
       </div>
       <div *ngIf="!isTutor" class="tab-pane fade flex-grow-1" [ngClass]="{ 'show active': activeTab === OffersTabs.Purchased }" id="purchased-container" role="tabpanel" aria-labelledby="purchased-tab">
-        <app-purchased [isHost]="isHost"></app-purchased>
+        <app-purchased [referenceId]="referenceId" [isHost]="isHost"></app-purchased>
       </div>
     </ng-container>
   </div>

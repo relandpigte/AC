@@ -133,6 +133,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<ServiceRating> ServiceRatings { get; set; }
         public virtual DbSet<ServiceRatingArea> ServiceRatingAreas { get; set; }
         public virtual DbSet<ServiceOffer> ServiceOffers { get; set; }
+        public virtual DbSet<ServicePurchase> ServicePurchases { get; set; }
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
         {
