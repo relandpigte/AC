@@ -4,6 +4,7 @@
         [isLoading]="isLoading$ | async"
         [items]="relatedCourses"
         [template]="relatedCoursesTemplate"
+        (onClickItem)="handleItemClick($event, 'courses')"
     ></app-community-side-card>
 </div>
 

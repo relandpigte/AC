@@ -6,6 +6,7 @@ import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-related-courses',
@@ -22,6 +23,7 @@ export class RelatedCoursesComponent extends AppComponentBase implements OnInit 
 
   constructor(
     injector: Injector,
+    private _router: Router,
     private _coursesService: CoursesServiceProxy,
     private _landingPageService: LandingPagesService
   ) {
@@ -77,5 +79,14 @@ export class RelatedCoursesComponent extends AppComponentBase implements OnInit 
           });
         }
       });
+  }
+
+  handleItemClick(item: any, type: string): void {
+    switch (type) {
+      case 'courses':
+        this._router.navigate(['app/course', item.id, 'about']);
+        break;
+      default:
+    }
   }
 }

@@ -4,6 +4,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
 import { EventDto } from '@shared/service-proxies/service-proxies';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-related-events-badge',
@@ -18,6 +19,7 @@ export class RelatedEventsBadgeComponent extends AppComponentBase implements OnI
 
   constructor(
     injector: Injector,
+    private _router: Router,
     private _landingPageService: LandingPagesService
   ) {
     super(injector);
@@ -26,6 +28,15 @@ export class RelatedEventsBadgeComponent extends AppComponentBase implements OnI
   get isLoading$() { return this._landingPageService.isLoading$; }
 
   ngOnInit(): void {
+  }
+
+  handleItemClick(item: any, type: string): void {
+    switch (type) {
+      case 'events':
+        this._router.navigate(['app/events', item.id, 'about']);
+        break;
+      default:
+    }
   }
 
 }

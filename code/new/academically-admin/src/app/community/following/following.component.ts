@@ -13,6 +13,7 @@ import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.comp
 import { CommunityService } from '../community.service';
 import { SharedType, PostSort } from '@shared/service-proxies/service-proxies';
 import { of } from 'rxjs';
+import { Router } from '@angular/router';
 
 enum PostFiltering {
   All = 'Community.Posts.Filtering.All',
@@ -59,6 +60,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
 
   constructor(
     injector: Injector,
+    private _router: Router,
     private _cdr: ChangeDetectorRef,
     private _hubService: HubService,
     private _usersService: UserServiceProxy,
@@ -84,7 +86,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     }
   }
   get hiddenPostsCount(): number { return this.totalPostsCount - this.posts.length; }
-  get isLoading$() { return of(this.isLoadingPosts || this.commentContainer?.isLoadingComments || this.isLoading_usersYouMayKnow || this.isLoading_recommendedCourses); }
+  get isLoading$() { return of(this.isLoadingPosts || !!this.commentContainer?.isLoadingComments || this.isLoading_usersYouMayKnow || this.isLoading_recommendedCourses);}
   get postSort(): PostSort {
     switch(this.selectedSorting) {
       case PostSorting.Activity:
@@ -166,6 +168,10 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
   handleRecommendedCoursesRequestData(skipCount: number): void {
     const lastItem = this.recommendedCourses.slice(-1)[0];
     this.loadInfiniteData(this._coursesService, 'getByDates', [this.appSession.userId, undefined, lastItem.creationTime, undefined, DateGrains.Aged30, skipCount, 4], 'recommendedCourses');
+  }
+
+  handleCourseServiceCardClick(course: CourseDto): void {
+    this._router.navigate(['app/course' , course.id, 'about']);
   }
 
   isSelectedFiltering(filter: PostFiltering): boolean {

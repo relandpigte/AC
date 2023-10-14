@@ -19,6 +19,7 @@ export abstract class BaseMenu extends AppComponentBase {
   }
 
   @Input() set routerEvent(event: RouterEvent) {
+    if (!event) return;
     const currentUrl = event.url !== '/' ? event.url : this.homeRoute;
     const primaryUrlSegmentGroup = this._router.parseUrl(currentUrl).root.children[PRIMARY_OUTLET];
     if (primaryUrlSegmentGroup) {

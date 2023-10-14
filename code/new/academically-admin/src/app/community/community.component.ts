@@ -193,21 +193,27 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
     }
   }
 
-  handleItemClick(type: string, item: any): void {
+  handleItemClick(item: any, type: string): void {
+    debugger;
     switch (type) {
       case "topics":
         break;
       case "users":
         break;
       case "courses":
+        this._router.navigate(['app/course' , item.id, 'about']);
         break;
       case "coachings":
+        this._router.navigate(['app/coaching' , item.id, 'about']);
         break;
       case "articles":
+        this._router.navigate(['/app/articles/student-portal', item.id]);
         break;
       case "events":
+        this._router.navigate(['app/events' , item.id, 'about']);
         break;
       case "tutorials":
+        this._router.navigate(['app/videos/student-portal' , item.id]);
         break;
     }
   }
