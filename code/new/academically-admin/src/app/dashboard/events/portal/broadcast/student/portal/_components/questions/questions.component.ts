@@ -52,7 +52,6 @@ export class QuestionsComponent extends AppComponentBase implements OnInit {
   get questionsStateId(): string { return 'questions'; }
 
   async ngOnInit(): Promise<void> {
-    this.initCustomActions();
     await this.initQuestionsAppStates();
     await this.questionsReactionsSubscriptions();
   }
@@ -195,21 +194,5 @@ export class QuestionsComponent extends AppComponentBase implements OnInit {
       .subscribe(attendees => {
         this.attendeeIds = attendees.filter(a => a.user).map(a => a.user.id);
       });
-  }
-
-  private initCustomActions(): void {
-    this.customReactionActions = [
-      {
-        label: 'Upvote',
-        icon: 'fe fe-arrow-up-circle',
-        class: 'btn-outline-secondary',
-        prefix: (question) => `${question.questionReactions.length}`,
-        action: (question) => { console.log(question); }
-      }
-    ];
-
-    this.customActions = [
-      { label: 'AnswerLive', class: 'btn-primary', action: (question) => { console.log(question); } }
-    ];
   }
 }

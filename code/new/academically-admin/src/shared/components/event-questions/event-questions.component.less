@@ -1,3 +1,16 @@
+:host ::ng-deep .video-answered {
+    color: #2C7BE5;
+
+    &::after {
+        content: "";
+        width: 10px;
+        height: 10px;
+        background: url("assets/img/events/question/play.svg") no-repeat center center transparent;
+        display: inline-block;
+        margin-left: 5px;
+    }
+}
+
 .question {
     &-answers-container {
         float: right;

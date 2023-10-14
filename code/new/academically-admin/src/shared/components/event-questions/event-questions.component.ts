@@ -9,7 +9,7 @@ import { Moment } from 'moment';
 @Component({
   selector: 'app-event-questions',
   templateUrl: './event-questions.component.html',
-  styleUrls: ['./event-questions.component.less']
+  styleUrls: ['./event-questions.component.less'],
 })
 export class EventQuestionsComponent extends AppComponentBase implements OnInit {
   @Input() question: QuestionDto;

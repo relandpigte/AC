@@ -546,14 +546,20 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
 
     this.answeringLiveQuestion.on(HubEvent[HubEvent.EndAnsweringLiveQuestion], (question: QuestionDto) => {
       this.liveQuestion = null;
-      // const q = new QuestionDto();
-      // q['body'] = 'Answered at';
-      // q['referenceId'] = question.referenceId;
-      // q['parentId'] = question.id;
-      //
-      // this._questionsService.create(question)
-      //   .pipe(takeUntil(this.destroyed$))
-      //   .subscribe(x => x);
+      this.createQuestion(question);
     });
+  }
+
+  private createQuestion(question: QuestionDto): void {
+    if (!this.isHost) { return; }
+
+    const q = new QuestionDto();
+    q.body = 'Answered at <a href="!#" class="video-answered">12:00</a>';
+    q.referenceId = question.referenceId;
+    q.parentId = question.id;
+
+    this._questionsService.create(q)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(x => x);
   }
 }

@@ -1,6 +1,6 @@
 <div class="question-item" [class.answer]="isAnswer">
     <div class="question-body">
-        <div class="question-body-text">{{ body }}</div>
+        <div class="question-body-text" [innerHTML]="body"></div>
         <div class="question-body-info d-flex align-items-center gap-10">
             <div class="time">{{ convertMomentToQuestionDateFormat(time) }}</div>
             <div class="poster d-flex align-items-center gap-10 ml-auto">
