@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ProfileMetricDto, ProfilesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ProfileMetricDto, ProfilesServiceProxy, TutorProfileMetricDto } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from '@node_modules/rxjs/operators';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
@@ -11,7 +11,7 @@ import { DashboardPagesService } from '@shared/services/dashboard-pages.service'
   styleUrls: ['./tutor-metrics.component.less']
 })
 export class TutorMetricsComponent extends AppComponentBase implements OnInit {
-  profileMetric: ProfileMetricDto = new ProfileMetricDto();
+  profileMetric: TutorProfileMetricDto
   isLoading = false;
 
   shimmerType = ShimmerType;
@@ -25,6 +25,10 @@ export class TutorMetricsComponent extends AppComponentBase implements OnInit {
   }
 
   get isLoading$() { return this._dashboardPageService.isLoading$; }
+  get serviceCreated(): number { return this.profileMetric?.serviceCreated; }
+  get followers(): number { return this.profileMetric?.followers; }
+  get positiveReviews(): number { return this.profileMetric?.positiveReviews; }
+  get totalReviews(): number { return this.profileMetric?.totalReviews; }
 
   ngOnInit(): void {
     this.getMetrics();
@@ -32,13 +36,9 @@ export class TutorMetricsComponent extends AppComponentBase implements OnInit {
 
   private getMetrics(): void {
     this.isLoading = true;
-    this._profilesServiceProxy.getMetrics(this.appSession.userId)
-      .pipe(
-        takeUntil(this.destroyed$),
-        finalize(() => this.isLoading = false),
-      )
-      .subscribe((profileMetric) => {
-        this.profileMetric = profileMetric;
-      });
+    this._profilesServiceProxy.getTutorMetrics(this.appSession.userId)
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe(metric => this.profileMetric = metric);
   }
 }

@@ -1,7 +1,12 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CreateServicePurchaseDto, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  CreateServicePurchaseDto,
+  EventDto,
+  EventsServiceProxy,
+  ServicesServiceProxy, ServicesType
+} from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 import { finalize, takeUntil } from 'rxjs/operators';
 
@@ -13,12 +18,14 @@ import { finalize, takeUntil } from 'rxjs/operators';
 export class LandingPageComponent extends AppComponentBase implements OnInit {
   loading = false;
   id: string;
+  event: EventDto;
 
   constructor(
     injector: Injector,
     route: ActivatedRoute,
     private _router: Router,
     private _servicesService: ServicesServiceProxy,
+    private _eventsService: EventsServiceProxy
   ) {
     super(injector);
     route.parent.parent.parent.paramMap.subscribe(paramMap => {
@@ -29,6 +36,7 @@ export class LandingPageComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initEvent();
   }
 
   onBuyNowClick(): void {
@@ -36,7 +44,9 @@ export class LandingPageComponent extends AppComponentBase implements OnInit {
     this._servicesService.savePurchase(CreateServicePurchaseDto.fromJS({
       referenceId: this.id,
       creatorUserId: this.appSession.userId,
-      creationTime: moment()
+      creationTime: moment(),
+      ownerId: this.event?.creatorUser?.id,
+      type: ServicesType.Event
     }))
       .pipe(
         takeUntil(this.destroyed$),
@@ -47,5 +57,11 @@ export class LandingPageComponent extends AppComponentBase implements OnInit {
       .subscribe(() => {
         this._router.navigate([`/app/dashboard/events/portal/broadcast/student/${this.id}/portal`]);
       });
+  }
+
+  private initEvent(): void {
+    this._eventsService.get(this.id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(e => this.event = e);
   }
 }

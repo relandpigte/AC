@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CreateServicePurchaseDto, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CreateServicePurchaseDto, ServicesServiceProxy, ServicesType, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 import { finalize, takeUntil } from 'rxjs/operators';
 
@@ -13,12 +13,14 @@ import { finalize, takeUntil } from 'rxjs/operators';
 export class LandingPageComponent extends AppComponentBase implements OnInit {
   id: string;
   isLoading = false;
+  video: VideoDto;
 
   constructor(
     injector: Injector,
     private _route: ActivatedRoute,
     private _router: Router,
     private _servicesService: ServicesServiceProxy,
+    private _videosService: VideosServiceProxy
   ) {
     super(injector);
     this._route.parent.parent.parent.paramMap.subscribe(paramMap => {
@@ -29,13 +31,16 @@ export class LandingPageComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initVideo();
   }
 
   onBuyNowClick(): void {
     this._servicesService.savePurchase(CreateServicePurchaseDto.fromJS({
       referenceId: this.id,
       creatorUserId: this.appSession.userId,
-      creationTime: moment()
+      creationTime: moment(),
+      ownerId: this.video?.creatorUser?.id,
+      type: ServicesType.Tutorial
     }))
       .pipe(
         takeUntil(this.destroyed$),
@@ -46,5 +51,11 @@ export class LandingPageComponent extends AppComponentBase implements OnInit {
       .subscribe(() => {
         this._router.navigate([`/app/videos/student-portal/${this.id}/portal`]);
       });
+  }
+
+  private initVideo(): void {
+    this._videosService.get(this.id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(v => this.video = v);
   }
 }

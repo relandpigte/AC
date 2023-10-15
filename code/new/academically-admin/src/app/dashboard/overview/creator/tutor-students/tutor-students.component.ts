@@ -1,6 +1,8 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { AppComponentBase } from '@shared/app-component-base';
+import { ProfilesServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tutor-students',
@@ -10,14 +12,21 @@ import { AppComponentBase } from '@shared/app-component-base';
 export class TutorStudentsComponent extends AppComponentBase implements OnInit {
   @Input() isModal: boolean;
 
+  students: UserDto[] = [];
+
   constructor(
     injector: Injector,
-    private _modalService: BsModalService
+    private _modalService: BsModalService,
+    private _profilesService: ProfilesServiceProxy
   ) {
     super(injector);
   }
 
+  get userId(): number { return this.appSession.userId; }
+  get totalStudent(): number { return this.students.length; }
+
   ngOnInit(): void {
+    this.initStudents();
   }
 
   handleViewAllStudents(event: Event): void {
@@ -35,5 +44,13 @@ export class TutorStudentsComponent extends AppComponentBase implements OnInit {
 
   onCloseStudentsPopup(): void {
     this._modalService.hide();
+  }
+
+  private initStudents(): void {
+    this._profilesService.getAllStudentsByOwnerId(this.userId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(students => {
+        this.students = students;
+      });
   }
 }

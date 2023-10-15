@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CreateServicePurchaseDto, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CourseDto, CoursesServiceProxy, CreateServicePurchaseDto, ServicesServiceProxy, ServicesType } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 import { finalize, takeUntil } from 'rxjs/operators';
 
@@ -13,12 +13,14 @@ import { finalize, takeUntil } from 'rxjs/operators';
 export class LandingPageComponent extends AppComponentBase implements OnInit {
   id: string;
   isLoading = false;
+  course: CourseDto;
 
   constructor(
     injector: Injector,
     private _route: ActivatedRoute,
     private _router: Router,
     private _servicesService: ServicesServiceProxy,
+    private _coursesService: CoursesServiceProxy
   ) {
     super(injector);
     this._route.parent.parent.parent.paramMap.subscribe(paramMap => {
@@ -29,6 +31,7 @@ export class LandingPageComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initCourse();
   }
 
   onBuyNowClick(): void {
@@ -36,7 +39,9 @@ export class LandingPageComponent extends AppComponentBase implements OnInit {
     this._servicesService.savePurchase(CreateServicePurchaseDto.fromJS({
       referenceId: this.id,
       creatorUserId: this.appSession.userId,
-      creationTime: moment()
+      creationTime: moment(),
+      ownerId: this.course?.creatorUser?.id,
+      type: ServicesType.Course
     }))
       .pipe(
         takeUntil(this.destroyed$),
@@ -47,5 +52,11 @@ export class LandingPageComponent extends AppComponentBase implements OnInit {
       .subscribe(() => {
         this._router.navigate([`/app/student-portal/${this.id}/home`]);
       });
+  }
+
+  private initCourse(): void {
+    this._coursesService.get(this.id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(c => this.course = c);
   }
 }

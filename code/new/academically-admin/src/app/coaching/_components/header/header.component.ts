@@ -69,7 +69,7 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
   public onPurchaseClick() {
     const modalSettings = this.defaultModalSettings as ModalOptions<PurchaseServiceComponent>;
     modalSettings.class = 'modal-lg modal-dialog-centered';
-    modalSettings.initialState = { serviceId: this.data.id };
+    modalSettings.initialState = { serviceId: this.data.id, data: this.data };
     const modal = this._modalService.show(PurchaseServiceComponent, modalSettings);
     modal.content.onPaid.subscribe(async () => this.getInitialData());
   }

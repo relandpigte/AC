@@ -172,7 +172,7 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
     } else {
       const modalSettings = this.defaultModalSettings as ModalOptions<PurchaseServiceComponent>;
       modalSettings.class = 'modal-lg modal-dialog-centered';
-      modalSettings.initialState = { serviceId: service.id };
+      modalSettings.initialState = { serviceId: service.id, data: service};
       const modal = this._modalService.show(PurchaseServiceComponent, modalSettings);
       modal.content.onPaid.subscribe(() => this.redirectToServiceLandingPage(service));
     }
