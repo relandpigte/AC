@@ -618,6 +618,7 @@ namespace Academically.Services.Chats
                 .Include(c => c.Messages)
                 .Include(c => c.ChannelNotifications)
                 .Where(c => !c.IsDeleted)
+                .Where(c => c.ReferenceId == null)
                 .Where(c => c.Members.Any(m => m.UserId == recipientId) && c.Members.Any(m => m.UserId == senderId))
                 .Select(c => ObjectMapper.Map<ChannelDto>(c))
                 .FirstOrDefaultAsync();

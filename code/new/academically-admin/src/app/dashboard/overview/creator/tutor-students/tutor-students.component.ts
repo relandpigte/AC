@@ -3,6 +3,7 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ProfilesServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
 import { takeUntil } from 'rxjs/operators';
+import { ChatService } from '@shared/services/chat.service';
 
 @Component({
   selector: 'app-tutor-students',
@@ -13,17 +14,20 @@ export class TutorStudentsComponent extends AppComponentBase implements OnInit {
   @Input() isModal: boolean;
 
   students: UserDto[] = [];
+  graduated: UserDto[] = [];
 
   constructor(
     injector: Injector,
     private _modalService: BsModalService,
-    private _profilesService: ProfilesServiceProxy
+    private _profilesService: ProfilesServiceProxy,
+    private _chatService: ChatService
   ) {
     super(injector);
   }
 
   get userId(): number { return this.appSession.userId; }
   get totalStudent(): number { return this.students.length; }
+  get totalGraduated(): number { return this.graduated.length; }
 
   ngOnInit(): void {
     this.initStudents();
@@ -44,6 +48,11 @@ export class TutorStudentsComponent extends AppComponentBase implements OnInit {
 
   onCloseStudentsPopup(): void {
     this._modalService.hide();
+  }
+
+  onMessageClick(student: UserDto, e: Event): void {
+    e.preventDefault();
+    this._chatService.openChat$.next(student);
   }
 
   private initStudents(): void {

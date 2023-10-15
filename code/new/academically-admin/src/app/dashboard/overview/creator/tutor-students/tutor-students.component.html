@@ -17,7 +17,7 @@
         <li class="nav-item">
             <a [href]="isModal ? '#modal-graduated' : '#graduated'" class="nav-link" data-toggle="tab" role="tab">
                 {{ 'Graduated' | localize | titlecase }}
-                <small class="badge">{{ totalStudent }}</small>
+                <small class="badge">{{ totalGraduated }}</small>
             </a>
         </li>
     </ul>
@@ -39,15 +39,15 @@
                                 </small>
                             </div>
                             <div class="item-action ml-auto">
-                                <a href="#!" class="btn btn-sm btn-outline-primary">Message</a>
+                                <a href="#!" class="btn btn-sm btn-outline-primary" (click)="onMessageClick(student, $event)">Message</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="tab-pane fade" [id]="isModal ? 'modal-graduated' : 'graduated'" role="tabpanel" aria-labelledby="graduated-tab">
-                <div *ngIf="!!students.length" class="list-group list-group-flush my-n3">
-                    <div class="list-group-item" *ngFor="let student of students">
+                <div *ngIf="!!graduated.length else noStudent" class="list-group list-group-flush my-n3">
+                    <div class="list-group-item" *ngFor="let student of graduated">
                         <div class="d-flex align-items-center gap-15">
                             <div class="item-avatar">
                                 <div class="avatar avatar-sm">
@@ -61,7 +61,7 @@
                                 </small>
                             </div>
                             <div class="item-action ml-auto">
-                                <a href="#!" class="btn btn-sm btn-outline-primary">Message</a>
+                                <a href="#!" class="btn btn-sm btn-outline-primary" (click)="onMessageClick(student, $event)">Message</a>
                             </div>
                         </div>
                     </div>
@@ -70,3 +70,9 @@
         </div>
     </div>
 </div>
+
+<ng-template #noStudent>
+    <div class="item-content">
+        <span class="text-muted w-100p text-center d-block mt-2">No Students</span>
+    </div>
+</ng-template>

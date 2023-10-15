@@ -413,7 +413,7 @@ namespace Academically.Services.Profiles
         {
             var currentUserId = userId ?? AbpSession.GetUserId();
             var studentPurchased = await _servicePurchasesRepository.GetAll()
-                .Where(s => s.OwnerId == currentUserId)
+                .Where(s => s.OwnerId == currentUserId && s.CreatorUserId != currentUserId)
                 .Select(s => s.CreatorUserId)
                 .Distinct()
                 .ToListAsync();
