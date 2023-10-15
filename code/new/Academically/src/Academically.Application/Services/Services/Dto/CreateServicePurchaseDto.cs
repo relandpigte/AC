@@ -3,6 +3,7 @@ using Abp.AutoMapper;
 using Academically.Domain.Entities;
 using Academically.Users.Dto;
 using System;
+using Academically.Domain.Enums;
 
 namespace Academically.Services.Services.Dto
 {
@@ -14,5 +15,7 @@ namespace Academically.Services.Services.Dto
         public Guid? ServiceOfferId { get; set; }
         public long CreatorUserId { get; set; }
         public DateTime CreationTime { get; set; }
+        public long? OwnerId { get; set; }
+        public ServicesType? Type { get; set; }
     }
 }

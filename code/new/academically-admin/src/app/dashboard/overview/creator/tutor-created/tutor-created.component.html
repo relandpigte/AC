@@ -10,7 +10,7 @@
             <h4 class="card-header-title">{{ 'RecentlyCreated' | localize }}</h4>
         </div>
         <div class="card-body py-0">
-            <ng-container *ngIf="courses?.length">
+            <ng-container *ngIf="!!courses?.length">
                 <div class="service-card" *ngFor="let data of courses">
                     <app-service-card-dashboard
                         [data]="data"
@@ -20,8 +20,42 @@
                     ></app-service-card-dashboard>
                 </div>
             </ng-container>
-            <ng-container *ngIf="articles?.length">
+
+            <ng-container *ngIf="!!articles?.length">
                 <div class="service-card" *ngFor="let data of articles">
+                    <app-service-card-dashboard
+                        [data]="data"
+                        [isLoading]="isLoading"
+                        [isOverview]="true"
+                        [isCreator]="isTutor"
+                    ></app-service-card-dashboard>
+                </div>
+            </ng-container>
+
+            <ng-container *ngIf="!!coaching?.length">
+                <div class="service-card" *ngFor="let data of coaching">
+                    <app-service-card-dashboard
+                        [data]="data"
+                        [isLoading]="isLoading"
+                        [isOverview]="true"
+                        [isCreator]="isTutor"
+                    ></app-service-card-dashboard>
+                </div>
+            </ng-container>
+
+            <ng-container *ngIf="!!events?.length">
+                <div class="service-card" *ngFor="let data of events">
+                    <app-service-card-dashboard
+                        [data]="data"
+                        [isLoading]="isLoading"
+                        [isOverview]="true"
+                        [isCreator]="isTutor"
+                    ></app-service-card-dashboard>
+                </div>
+            </ng-container>
+
+            <ng-container *ngIf="!!videos?.length">
+                <div class="service-card" *ngFor="let data of videos">
                     <app-service-card-dashboard
                         [data]="data"
                         [isLoading]="isLoading"

@@ -24,7 +24,7 @@
                 <div class="row align-items-center">
                     <div class="col">
                         <h6 class="text-uppercase text-muted mb-2">{{ 'ServicesCreated' | localize }}</h6>
-                        <span class="h2 mb-0 align-middle">12</span>
+                        <span class="h2 mb-0 align-middle">{{ serviceCreated }}</span>
                     </div>
                     <div class="col-auto">
                         <span class="h2 fe fe-plus text-muted mb-0"></span>
@@ -41,7 +41,7 @@
                 <div class="row align-items-center">
                     <div class="col">
                         <h6 class="text-uppercase text-muted mb-2">{{ 'Followers' | localize }}</h6>
-                        <span class="h2 mb-0 align-middle">32</span>
+                        <span class="h2 mb-0 align-middle">{{ followers }}</span>
                         <span class="badge badge-soft-success ml-2">+3.5%</span>
                     </div>
                     <div class="col-auto">
@@ -59,8 +59,8 @@
                 <div class="row align-items-center">
                     <div class="col">
                         <h6 class="text-uppercase text-muted mb-2">{{ 'OverallPositiveReviews' | localize }}</h6>
-                        <span class="h2 mb-0 align-middle">{{ profileMetric.positiveReviewsPercentage }}%</span>
-                        <span class="badge badge-soft-success ml-2">{{ profileMetric.totalReviews }} {{ 'Reviews' | localize }}</span>
+                        <span class="h2 mb-0 align-middle">{{ positiveReviews  }}%</span>
+                        <span class="badge badge-soft-success ml-2">{{ totalReviews }} {{ 'Reviews' | localize }}</span>
                     </div>
                     <div class="col-auto">
                         <span class="h2 fe fe-star text-muted mb-0"></span>

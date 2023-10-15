@@ -25,6 +25,23 @@ export class ServiceCardUtils {
       }
     }
 
+  static getServiceType(data: any): string {
+    switch (data.constructor) {
+      case EventDto:
+        return 'Event';
+      case ArticleDto:
+        return 'Article';
+      case CoachingDto:
+        return 'Coaching';
+      case CourseDto:
+        return 'Course';
+      case VideoDto:
+        return 'Tutorial';
+      default:
+        return 'User';
+    }
+  }
+
     static getSanitizeServiceData(data: any, options: ServiceCardOptions, actions: ServiceCardButton[], isFeatured = false):
         { options: ServiceCardOptions, service: ServiceCard, actions: ServiceCardButton[] } {
         let sanitizedOptions = _.merge({}, DefaultServiceCardOptions, options);

@@ -9,7 +9,6 @@ import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { EventDto, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/app-component-base';
-import log = abp.log.log;
 
 @Component({
   selector: 'app-student-calendar',
@@ -50,10 +49,9 @@ export class StudentCalendarComponent extends AppComponentBase implements OnInit
     this.initPurchasedEvents();
   }
 
-  get dateTitle(): string { return moment().format('MMMM, YYYY'); }
   get isLoading$() { return this._dashboardPageService.isLoading$; }
   get events(): EventDto[] { return this.purchasedEvents; }
-  get eventDate(): string[] { return this.events?.map(e => e.eventDateTime)?.map(d => moment(d).format('YYYY-MM-DD')); }
+  get eventDates(): string[] { return this.events?.map(e => e.eventDateTime)?.map(d => moment(d).format('YYYY-MM-DD')); }
 
   get dateNow() { return this._dateClicked; }
   set dateNow(date) { this._dateClicked = date; }
@@ -108,7 +106,7 @@ export class StudentCalendarComponent extends AppComponentBase implements OnInit
   }
 
   private dayCellClassNamesCallback(date: any): string {
-    if (!this.eventDate.includes(moment(date.date).format('YYYY-MM-DD'))) {
+    if (!this.eventDates.includes(moment(date.date).format('YYYY-MM-DD'))) {
       return;
     }
 

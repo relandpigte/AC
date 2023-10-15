@@ -14,6 +14,8 @@ namespace Academically.Domain.Entities
         public Guid? ServiceOfferId { get; set; }
         public long CreatorUserId { get; set; }
         public DateTime CreationTime { get; set; }
+        public long? OwnerId { get; set; }
+        public ServicesType? Type { get; set; }
 
         [ForeignKey("CreatorUserId")]
         public virtual User CreatorUser { get; set; }

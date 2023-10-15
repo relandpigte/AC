@@ -20,8 +20,12 @@ using SourceCloud.Core.Services.Locations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Abp.Runtime.Session;
 using Academically.Services.Courses;
+using Academically.Services.Ratings;
+using Academically.Services.TutorApplications;
 using Academically.Services.UserFollowers;
 
 namespace Academically.Services.Profiles
@@ -41,6 +45,15 @@ namespace Academically.Services.Profiles
         private readonly IUserFollowersAppService _userFollowersAppService;
         private readonly ICoursesAppService _coursesAppService;
 
+        private readonly IRatingsAppService _ratingsAppService;
+        private readonly IRepository<ServicePurchase, Guid> _servicePurchasesRepository;
+        
+        private readonly IRepository<Coaching, Guid> _coachingRepository;
+        private readonly IRepository<Course, Guid> _courseRepository;
+        private readonly IRepository<Article, Guid> _articleRepository;
+        private readonly IRepository<Event, Guid> _eventRepository;
+        private readonly IRepository<Video, Guid> _videoRepository;
+
         public ProfilesAppService(
             UserManager userManager,
             IRepository<User, long> usersRepository,
@@ -52,8 +65,15 @@ namespace Academically.Services.Profiles
             ILocationsService locationsService,
             ISettingManager settingManager,
             IUserFollowersAppService userFollowersAppService,
-            ICoursesAppService coursesAppService
-            )
+            ICoursesAppService coursesAppService,
+            IRepository<ServicePurchase, Guid> servicePurchasesRepository,
+            IRatingsAppService ratingsAppService,
+            
+            IRepository<Coaching, Guid> coachingRepository,
+            IRepository<Course, Guid> courseRepository,
+            IRepository<Article, Guid> articleRepository,
+            IRepository<Event, Guid> eventRepository,
+            IRepository<Video, Guid> videoRepository)
         {
             _userManager = userManager;
             _usersRepository = usersRepository;
@@ -66,6 +86,14 @@ namespace Academically.Services.Profiles
             _settingManager = settingManager;
             _userFollowersAppService = userFollowersAppService;
             _coursesAppService = coursesAppService;
+            _servicePurchasesRepository = servicePurchasesRepository;
+            _ratingsAppService = ratingsAppService;
+
+            _coachingRepository = coachingRepository;
+            _courseRepository = courseRepository;
+            _articleRepository = articleRepository;
+            _eventRepository = eventRepository;
+            _videoRepository = videoRepository;
         }
 
         public async Task<UserDto> Get(long id)
@@ -342,22 +370,59 @@ namespace Academically.Services.Profiles
             await _usersRepository.DeleteAsync(AbpSession.UserId.Value);
         }
 
-        public Task<LearnerProfileMetricDto> GetLearnerMetrics()
+        public async Task<LearnerProfileMetricDto> GetLearnerMetrics()
         {
             // TODO: Service course is only available for now.
             var coursesEnrolled = _coursesAppService.GetEnrolledCoursesByUser().Result.Count();
             var coursesCompleted = _coursesAppService.GetEnrolledCoursesByUser().Result.Count(c => c.Progress == 100);
             
-            var servicePurchased = coursesEnrolled;
+            var servicePurchased = await _servicePurchasesRepository.CountAsync(s => s.CreatorUserId == AbpSession.GetUserId());
             var serviceCompleted = coursesCompleted;
             var totalFollowers = _userFollowersAppService.GetFollowers().Result.Count();
-            
-            return Task.FromResult(new LearnerProfileMetricDto
+
+            return new LearnerProfileMetricDto
             {
                 ServiceCompleted = serviceCompleted,
                 ServicePurchased = servicePurchased,
                 TotalFollowers = totalFollowers
-            });
+            };
+        }
+
+        public async Task<TutorProfileMetricDto> GetTutorMetrics(long? userId)
+        {
+            var currentUserId = userId ?? AbpSession.GetUserId();
+            var tutorRatings = await _ratingsAppService.GetTutorRatingSummary(currentUserId);
+            
+            var coachings = await _coachingRepository.CountAsync(x => x.CreatorUserId == currentUserId);
+            var courses = await _courseRepository.CountAsync(x => x.CreatorUserId == currentUserId);
+            var articles = await _articleRepository.CountAsync(x => x.CreatorUserId == currentUserId);
+            var events = await _eventRepository.CountAsync(x => x.CreatorUserId == currentUserId);
+            var videos = await _videoRepository.CountAsync(x => x.CreatorUserId == currentUserId);
+            
+            return new TutorProfileMetricDto
+            {
+                Followers = _userFollowersAppService.GetFollowers().Result.Count(),
+                ServiceCreated = coachings + courses + articles + events + videos,
+                PositiveReviews = tutorRatings.PositivePercentage,
+                TotalReviews = tutorRatings.TotalReviews,
+                TotalRevenue = 0
+            };
+        }
+
+        public async Task<IEnumerable<UserDto>> GetAllStudentsByOwnerId(long? userId)
+        {
+            var currentUserId = userId ?? AbpSession.GetUserId();
+            var studentPurchased = await _servicePurchasesRepository.GetAll()
+                .Where(s => s.OwnerId == currentUserId)
+                .Select(s => s.CreatorUserId)
+                .Distinct()
+                .ToListAsync();
+
+            return await _usersRepository.GetAll()
+                .Include(u => u.ProfilePictureDocument)
+                .Where(u => studentPurchased.Contains(u.Id))
+                .Select(u => ObjectMapper.Map<UserDto>(u))
+                .ToListAsync();
         }
     }
 }

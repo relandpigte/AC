@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CreateServicePurchaseDto, ServicePurchaseDto, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CreateServicePurchaseDto, ServicePurchaseDto, ServicesServiceProxy, ServicesType } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 
 @Component({
   selector: 'app-purchase-service',
@@ -50,6 +51,8 @@ export class PurchaseServiceComponent extends AppComponentBase implements OnInit
         referenceId: this.serviceId,
         serviceOfferId: this.offerId,
         creatorUserId: this.appSession.userId,
+        ownerId: this.data?.creatorUser?.id,
+        type: ServicesType[ServiceCardUtils.getServiceType(this.data)]
       })).toPromise();
       this.onPaid.emit(purchase);
       this._modal.hide();

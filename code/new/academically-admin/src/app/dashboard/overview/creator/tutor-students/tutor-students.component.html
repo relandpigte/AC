@@ -9,85 +9,31 @@
     </div>
     <ul class="card-nav nav nav-tabs">
         <li class="nav-item">
-            <a [href]="isModal ? '#modal-all' : '#all'" class="nav-link active" data-toggle="tab" role="tab">
+            <a [href]="isModal ? '#modal-all' : '#all-students'" class="nav-link active" data-toggle="tab" role="tab">
                 {{ 'All' | localize | titlecase }}
-                <small class="badge">823</small>
+                <small class="badge">{{ totalStudent }}</small>
             </a>
         </li>
         <li class="nav-item">
             <a [href]="isModal ? '#modal-graduated' : '#graduated'" class="nav-link" data-toggle="tab" role="tab">
                 {{ 'Graduated' | localize | titlecase }}
-                <small class="badge">84</small>
+                <small class="badge">{{ totalStudent }}</small>
             </a>
         </li>
     </ul>
     <div class="card-body">
-        <div class="tab-content">
-            <div class="tab-pane fade show active" [id]="isModal ? 'modal-all' : 'all'" role="tabpanel" aria-labelledby="all-tab">
-                <div class="list-group list-group-flush my-n3">
-                    <div class="list-group-item">
+        <div class="tab-content d-flex flex-column">
+            <div class="tab-pane fade show active" [id]="isModal ? 'modal-all' : 'all-students'" role="tabpanel" aria-labelledby="all-tab">
+                <div *ngIf="!!students.length" class="list-group list-group-flush my-n3">
+                    <div class="list-group-item" *ngFor="let student of students">
                         <div class="d-flex align-items-center gap-15">
                             <div class="item-avatar">
                                 <div class="avatar avatar-sm">
-                                    <img src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
+                                    <img [src]="getProfilePictureUrl(student.profilePictureDocument)" alt="..." class="avatar-img rounded-circle">
                                 </div>
                             </div>
                             <div class="item-content">
-                                <h4 class="title mb-1"><a href="!#">Casey Fyfe</a></h4>
-                                <small class="text-muted">
-                                    UI/UX Course
-                                </small>
-                            </div>
-                            <div class="item-action ml-auto">
-                                <a href="#!" class="btn btn-sm btn-outline-primary">Message</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="list-group-item">
-                        <div class="d-flex align-items-center gap-15">
-                            <div class="item-avatar">
-                                <div class="avatar avatar-sm">
-                                    <img src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
-                                </div>
-                            </div>
-                            <div class="item-content">
-                                <h4 class="title mb-1"><a href="!#">Casey Fyfe</a></h4>
-                                <small class="text-muted">
-                                    UI/UX Course
-                                </small>
-                            </div>
-                            <div class="item-action ml-auto">
-                                <a href="#!" class="btn btn-sm btn-outline-primary">Message</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="list-group-item">
-                        <div class="d-flex align-items-center gap-15">
-                            <div class="item-avatar">
-                                <div class="avatar avatar-sm">
-                                    <img src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
-                                </div>
-                            </div>
-                            <div class="item-content">
-                                <h4 class="title mb-1"><a href="!#">Casey Fyfe</a></h4>
-                                <small class="text-muted">
-                                    UI/UX Course
-                                </small>
-                            </div>
-                            <div class="item-action ml-auto">
-                                <a href="#!" class="btn btn-sm btn-outline-primary">Message</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="list-group-item">
-                        <div class="d-flex align-items-center gap-15">
-                            <div class="item-avatar">
-                                <div class="avatar avatar-sm">
-                                    <img src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
-                                </div>
-                            </div>
-                            <div class="item-content">
-                                <h4 class="title mb-1"><a href="!#">Casey Fyfe</a></h4>
+                                <h4 class="title mb-1"><a href="!#">{{ student.fullName }}</a></h4>
                                 <small class="text-muted">
                                     UI/UX Course
                                 </small>
@@ -100,70 +46,16 @@
                 </div>
             </div>
             <div class="tab-pane fade" [id]="isModal ? 'modal-graduated' : 'graduated'" role="tabpanel" aria-labelledby="graduated-tab">
-                <div class="list-group list-group-flush my-n3">
-                    <div class="list-group-item">
+                <div *ngIf="!!students.length" class="list-group list-group-flush my-n3">
+                    <div class="list-group-item" *ngFor="let student of students">
                         <div class="d-flex align-items-center gap-15">
                             <div class="item-avatar">
                                 <div class="avatar avatar-sm">
-                                    <img src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
+                                    <img [src]="getProfilePictureUrl(student.profilePictureDocument)" alt="..." class="avatar-img rounded-circle">
                                 </div>
                             </div>
                             <div class="item-content">
-                                <h4 class="title mb-1"><a href="!#">Steve Fyfe</a></h4>
-                                <small class="text-muted">
-                                    UI/UX Course
-                                </small>
-                            </div>
-                            <div class="item-action ml-auto">
-                                <a href="#!" class="btn btn-sm btn-outline-primary">Message</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="list-group-item">
-                        <div class="d-flex align-items-center gap-15">
-                            <div class="item-avatar">
-                                <div class="avatar avatar-sm">
-                                    <img src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
-                                </div>
-                            </div>
-                            <div class="item-content">
-                                <h4 class="title mb-1"><a href="!#">Jason Fyfe</a></h4>
-                                <small class="text-muted">
-                                    UI/UX Course
-                                </small>
-                            </div>
-                            <div class="item-action ml-auto">
-                                <a href="#!" class="btn btn-sm btn-outline-primary">Message</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="list-group-item">
-                        <div class="d-flex align-items-center gap-15">
-                            <div class="item-avatar">
-                                <div class="avatar avatar-sm">
-                                    <img src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
-                                </div>
-                            </div>
-                            <div class="item-content">
-                                <h4 class="title mb-1"><a href="!#">Joseph Fyfe</a></h4>
-                                <small class="text-muted">
-                                    UI/UX Course
-                                </small>
-                            </div>
-                            <div class="item-action ml-auto">
-                                <a href="#!" class="btn btn-sm btn-outline-primary">Message</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="list-group-item">
-                        <div class="d-flex align-items-center gap-15">
-                            <div class="item-avatar">
-                                <div class="avatar avatar-sm">
-                                    <img src="assets/img/anonymous.png" alt="..." class="avatar-img rounded-circle">
-                                </div>
-                            </div>
-                            <div class="item-content">
-                                <h4 class="title mb-1"><a href="!#">Marry Fyfe</a></h4>
+                                <h4 class="title mb-1"><a href="!#">{{ student.fullName }}</a></h4>
                                 <small class="text-muted">
                                     UI/UX Course
                                 </small>

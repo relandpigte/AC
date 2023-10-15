@@ -26,5 +26,7 @@ namespace Academically.Services.Profiles
         Task DeleteIntroVideo();
         Task DeleteAccount();
         Task<LearnerProfileMetricDto> GetLearnerMetrics();
+        Task<TutorProfileMetricDto> GetTutorMetrics(long? userId);
+        Task<IEnumerable<UserDto>> GetAllStudentsByOwnerId(long? userId);
     }
 }

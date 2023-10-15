@@ -26,7 +26,28 @@
     }
 
     &-body {
-        padding: 1.25rem;
+        padding: 0;
+
+        .tab-content {
+            height: 377px;
+
+            .tab-pane {
+                height: 0;
+                flex-grow: 1;
+                overflow: auto;
+                scroll-behavior: smooth;
+                padding: 15px 20px;
+
+                &::-webkit-scrollbar {
+                    width: 1.5px;
+                }
+
+                &::-webkit-scrollbar-thumb {
+                    background: #D2DDEC;
+                    border-radius: 10px;
+                }
+            }
+        }
     }
 
     &.popup-view-card {

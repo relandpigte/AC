@@ -17209,6 +17209,125 @@ export class ProfilesServiceProxy {
         }
         return _observableOf<LearnerProfileMetricDto>(<any>null);
     }
+
+    /**
+     * @param userId (optional) 
+     * @return Success
+     */
+    getTutorMetrics(userId: number | undefined): Observable<TutorProfileMetricDto> {
+        let url_ = this.baseUrl + "/api/services/app/Profiles/GetTutorMetrics?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTutorMetrics(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTutorMetrics(<any>response_);
+                } catch (e) {
+                    return <Observable<TutorProfileMetricDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TutorProfileMetricDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetTutorMetrics(response: HttpResponseBase): Observable<TutorProfileMetricDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TutorProfileMetricDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TutorProfileMetricDto>(<any>null);
+    }
+
+    /**
+     * @param userId (optional) 
+     * @return Success
+     */
+    getAllStudentsByOwnerId(userId: number | undefined): Observable<UserDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Profiles/GetAllStudentsByOwnerId?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllStudentsByOwnerId(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllStudentsByOwnerId(<any>response_);
+                } catch (e) {
+                    return <Observable<UserDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllStudentsByOwnerId(response: HttpResponseBase): Observable<UserDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(UserDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserDto[]>(<any>null);
+    }
 }
 
 @Injectable()
@@ -38382,6 +38501,8 @@ export class CreateServicePurchaseDto implements ICreateServicePurchaseDto {
     serviceOfferId: string | undefined;
     creatorUserId: number;
     creationTime: moment.Moment;
+    ownerId: number | undefined;
+    type: ServicesType;
 
     constructor(data?: ICreateServicePurchaseDto) {
         if (data) {
@@ -38399,6 +38520,8 @@ export class CreateServicePurchaseDto implements ICreateServicePurchaseDto {
             this.serviceOfferId = _data["serviceOfferId"];
             this.creatorUserId = _data["creatorUserId"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.ownerId = _data["ownerId"];
+            this.type = _data["type"];
         }
     }
 
@@ -38416,6 +38539,8 @@ export class CreateServicePurchaseDto implements ICreateServicePurchaseDto {
         data["serviceOfferId"] = this.serviceOfferId;
         data["creatorUserId"] = this.creatorUserId;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["ownerId"] = this.ownerId;
+        data["type"] = this.type;
         return data; 
     }
 
@@ -38433,6 +38558,8 @@ export interface ICreateServicePurchaseDto {
     serviceOfferId: string | undefined;
     creatorUserId: number;
     creationTime: moment.Moment;
+    ownerId: number | undefined;
+    type: ServicesType;
 }
 
 export class CreateServiceRatingAreaDto implements ICreateServiceRatingAreaDto {
@@ -47964,6 +48091,8 @@ export class ServicePurchaseDto implements IServicePurchaseDto {
     creatorUserId: number;
     creationTime: moment.Moment;
     creatorUser: UserDto;
+    ownerId: number | undefined;
+    type: ServicesType;
 
     constructor(data?: IServicePurchaseDto) {
         if (data) {
@@ -47982,6 +48111,8 @@ export class ServicePurchaseDto implements IServicePurchaseDto {
             this.creatorUserId = _data["creatorUserId"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+            this.ownerId = _data["ownerId"];
+            this.type = _data["type"];
         }
     }
 
@@ -48000,6 +48131,8 @@ export class ServicePurchaseDto implements IServicePurchaseDto {
         data["creatorUserId"] = this.creatorUserId;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        data["ownerId"] = this.ownerId;
+        data["type"] = this.type;
         return data; 
     }
 
@@ -48018,6 +48151,8 @@ export interface IServicePurchaseDto {
     creatorUserId: number;
     creationTime: moment.Moment;
     creatorUser: UserDto;
+    ownerId: number | undefined;
+    type: ServicesType;
 }
 
 /** 0 = CalendarEvents 1 = ProjectOffers 2 = Projects 3 = CourseSections 4 = Courses */
@@ -50052,6 +50187,65 @@ export class TurnServerConfigDto implements ITurnServerConfigDto {
 export interface ITurnServerConfigDto {
     username: string | undefined;
     password: string | undefined;
+}
+
+export class TutorProfileMetricDto implements ITutorProfileMetricDto {
+    totalRevenue: number;
+    serviceCreated: number;
+    followers: number;
+    positiveReviews: number;
+    totalReviews: number;
+
+    constructor(data?: ITutorProfileMetricDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalRevenue = _data["totalRevenue"];
+            this.serviceCreated = _data["serviceCreated"];
+            this.followers = _data["followers"];
+            this.positiveReviews = _data["positiveReviews"];
+            this.totalReviews = _data["totalReviews"];
+        }
+    }
+
+    static fromJS(data: any): TutorProfileMetricDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TutorProfileMetricDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalRevenue"] = this.totalRevenue;
+        data["serviceCreated"] = this.serviceCreated;
+        data["followers"] = this.followers;
+        data["positiveReviews"] = this.positiveReviews;
+        data["totalReviews"] = this.totalReviews;
+        return data; 
+    }
+
+    clone(): TutorProfileMetricDto {
+        const json = this.toJSON();
+        let result = new TutorProfileMetricDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ITutorProfileMetricDto {
+    totalRevenue: number;
+    serviceCreated: number;
+    followers: number;
+    positiveReviews: number;
+    totalReviews: number;
 }
 
 export class TutorRatingDto implements ITutorRatingDto {
