@@ -26,6 +26,7 @@ using Academically.Services.Explore.Dto;
 using Academically.Services.Posts.Dto;
 using Academically.Users.Dto;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
@@ -255,6 +256,20 @@ namespace Academically.Services.Events
                              .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Categories.Contains(keyword)
                                       || x.Id.ToString().Equals(keyword))
                              .WhereIf(creatorUserId.HasValue, x => x.CreatorUserId == creatorUserId)
+                             .Include(e => e.CreatorUser)
+                             .AsNoTracking()
+                             .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                             .ToListAsync();
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IEnumerable<AvailableServiceDto>> GetEventsSchedule(long? creatorUserId, ScheduledServiceType? type)
+        {
+            return await Repository.GetAll()
+                             .WhereIf(creatorUserId.HasValue, x => x.CreatorUserId == creatorUserId)
+                             .WhereIf(type.HasValue && type == ScheduledServiceType.Upcoming, e => e.EventDateTime >= Clock.Now)
+                             .WhereIf(type.HasValue && type == ScheduledServiceType.Past, e => e.EventDateTime < Clock.Now)
+                             .WhereIf(type.HasValue && type == ScheduledServiceType.Cancelled, e => e.EventDateTime < Clock.Now)
                              .Include(e => e.CreatorUser)
                              .AsNoTracking()
                              .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))

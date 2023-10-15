@@ -14,6 +14,7 @@ namespace Academically.Services.Events
     {
         Task<IEnumerable<AvailableServiceDto>> GetAllEvents();
         Task<IEnumerable<AvailableServiceDto>> GetEventsByKeyword(string keyword, long? creatorUserId);
+        Task<IEnumerable<AvailableServiceDto>> GetEventsSchedule(long? creatorUserId, ScheduledServiceType? type);
         Task<PagedResultDto<EventDto>> GetEventSchedules(PagedEventScheduleResultRequestDto input);
         Task<PagedResultDto<StudentEventDto>> GetAllPurchasedAsync(PagedStudentEventResultRequestDto input);
         Task<PagedResultDto<UserDto>> GetPresentersForInvite(PagedPresentersForInviteResultRequestDto input);

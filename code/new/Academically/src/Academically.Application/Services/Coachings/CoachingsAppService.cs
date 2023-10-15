@@ -294,5 +294,19 @@ namespace Academically.Services.Coachings
                                   .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
                                   .ToListAsync();
         }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IEnumerable<AvailableServiceDto>> GetCoachingSchedule(long? creatorUserId, ScheduledServiceType? type)
+        {
+            return await Repository.GetAll().Where(w => w.ParentId == null && w.Visible.Value && w.Status == CoachingStatus.Published)
+                                  .WhereIf(creatorUserId.HasValue, x => x.CreatorUserId == creatorUserId)
+                                  .WhereIf(type.HasValue && type == ScheduledServiceType.Upcoming, c => true)
+                                  .WhereIf(type.HasValue && type == ScheduledServiceType.Past, c => true)
+                                  .WhereIf(type.HasValue && type == ScheduledServiceType.Cancelled, c => true)
+                                  .Include(c => c.CreatorUser)
+                                  .AsNoTracking()
+                                  .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                                  .ToListAsync();
+        }
     }
 }

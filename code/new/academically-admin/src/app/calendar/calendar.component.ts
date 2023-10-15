@@ -30,6 +30,11 @@ export enum CalendarEventSessionType {
   Past = 'past',
 }
 
+export enum CalendarView {
+  List = 'list',
+  Calendar = 'calendar',
+}
+
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
@@ -58,6 +63,9 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
   calendarEventsTemp: CalendarEventDto[] = [];
   userAvailabilities: UserAvailabilityDto[] = [];
   isTutorCalendarUser = false;
+
+  CalendarView = CalendarView;
+  activeView: CalendarView = CalendarView.Calendar;
 
   calendarOptions: CalendarOptions = {
     initialView: 'timeGridWeek',
@@ -100,6 +108,9 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
   ) {
     super(injector);
   }
+
+  get isListView(): boolean { return this.activeView === CalendarView.List; }
+  get isCalendarView(): boolean { return this.activeView === CalendarView.Calendar; }
 
   ngOnInit(): void {
     this.calendar = this.calendarComponent.getApi();

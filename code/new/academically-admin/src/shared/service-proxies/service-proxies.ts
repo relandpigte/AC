@@ -15567,6 +15567,81 @@ export class PostsServiceProxy {
     }
 
     /**
+     * @param creatorUserId (optional) 
+     * @param scheduleType (optional) 0 = Upcoming
+    
+    1 = Past
+    
+    2 = Cancelled
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getScheduledServices(creatorUserId: number | undefined, scheduleType: ScheduledServiceType | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<AvailableServiceDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Posts/GetScheduledServices?";
+        if (creatorUserId === null)
+            throw new Error("The parameter 'creatorUserId' cannot be null.");
+        else if (creatorUserId !== undefined)
+            url_ += "CreatorUserId=" + encodeURIComponent("" + creatorUserId) + "&";
+        if (scheduleType === null)
+            throw new Error("The parameter 'scheduleType' cannot be null.");
+        else if (scheduleType !== undefined)
+            url_ += "ScheduleType=" + encodeURIComponent("" + scheduleType) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetScheduledServices(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetScheduledServices(<any>response_);
+                } catch (e) {
+                    return <Observable<AvailableServiceDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AvailableServiceDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetScheduledServices(response: HttpResponseBase): Observable<AvailableServiceDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AvailableServiceDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AvailableServiceDtoPagedResultDto>(<any>null);
+    }
+
+    /**
      * @param referenceId (optional) 
      * @param parentId (optional) 
      * @param body (optional) 
@@ -47317,6 +47392,13 @@ export class RuntimeTypeHandle implements IRuntimeTypeHandle {
 
 export interface IRuntimeTypeHandle {
     value: IntPtr;
+}
+
+/** 0 = Upcoming 1 = Past 2 = Cancelled */
+export enum ScheduledServiceType {
+    Upcoming = 0,
+    Past = 1,
+    Cancelled = 2,
 }
 
 export class SearchByKeywordResponseDto implements ISearchByKeywordResponseDto {

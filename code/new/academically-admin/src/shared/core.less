@@ -1485,6 +1485,14 @@ each(range(1px, 30px, 1), {
 .hidden {
   visibility: hidden;
   opacity: 0;
+  width: 0;
+  height: 0;
+
+  &.outside-screen {
+    position: absolute;
+    top: -9999px;
+    right: -9999px;
+  }
 }
 
 .show {
@@ -1611,5 +1619,12 @@ each(range(1px, 30px, 1), {
     &::after {
       transform: translateX(2rem);
     }
+  }
+}
+
+.no-focus {
+  &:focus {
+    outline: none !important;
+    box-shadow: none !important;
   }
 }

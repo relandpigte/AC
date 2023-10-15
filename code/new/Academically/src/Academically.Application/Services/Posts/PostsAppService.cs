@@ -546,6 +546,42 @@ namespace Academically.Services.Posts
             }; 
         }
 
+        public async Task<PagedResultDto<AvailableServiceDto>> GetScheduledServices(PagedGetScheduledServicesRequestDto request)
+        {
+            var coaching = await _coachingsAppService.GetCoachingSchedule(request.CreatorUserId, request.ScheduleType);
+            var events = await _eventsAppService.GetEventsSchedule(request.CreatorUserId, request.ScheduleType);
+            var query = coaching.Union(events).OrderBy(x => x.EventDateTime).AsQueryable();
+            var totalCount = query.Count();
+
+            query = query.PageBy(request);
+
+            var availableServices = query.Select(x => ObjectMapper.Map<AvailableServiceDto>(x)).ToList();
+            foreach (var item in availableServices)
+            {
+                //ImageDocumentId: thumbnail for courses
+                var docId = item.ImageDocumentId.HasValue ? item.ImageDocumentId.Value : item.ThumbnailDocumentId.GetValueOrDefault();
+                if (docId != null)
+                {
+                    try
+                    {
+                        item.ThumbnailImageUrl = _documentsDomainService.GetFileUrlAsync(docId).Result;
+                    }
+                    catch (Exception)
+                    {
+                        item.ThumbnailImageUrl = string.Empty;
+                    }
+                }
+
+                if (item.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    item.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(item.CreatorUser.ProfilePictureDocumentId.Value);
+            }
+            return new PagedResultDto<AvailableServiceDto>()
+            {
+                TotalCount = totalCount,
+                Items = availableServices
+            };
+        }
+
         public async Task<CommentDto> CreateCommentAsync([FromForm] CreateCommentDto input)
         {
             var comment = ObjectMapper.Map<Comment>(input);

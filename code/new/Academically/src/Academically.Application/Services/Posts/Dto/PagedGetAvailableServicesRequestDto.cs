@@ -1,11 +1,12 @@
 ﻿using Abp.Application.Services.Dto;
+using Academically.Domain.Enums;
+using System;
 
 namespace Academically.Services.Posts.Dto
 {
-    public class PagedGetAvailableServicesRequestDto : PagedAndSortedResultRequestDto
+    public class PagedGetScheduledServicesRequestDto : PagedResultRequestDto
     {
-        public string Keyword { get; set; }
-        public int? Take { get; set; }
         public long? CreatorUserId { get; set; }
+        public ScheduledServiceType? ScheduleType { get; set; }
     }
 }

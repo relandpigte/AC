@@ -1,0 +1,108 @@
+<div class="card custom-card-border search">
+    <div class="card-header border-0">
+        <div class="row align-items-center">
+
+            <div class="search-nav d-flex">
+                <ul class="nav nav-tabs nav-tabs-sm border-0">
+                    <li class="nav-item">
+                        <a href="#upcoming-schedule" class="nav-link" [class.active]="activeTab === ScheduleListTabs.Upcoming" data-toggle="tab" role="tab" (click)="changeActiveTab(ScheduleListTabs.Upcoming)">Upcoming</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#past-schedule" class="nav-link" [class.active]="activeTab === ScheduleListTabs.Past" data-toggle="tab" role="tab" (click)="changeActiveTab(ScheduleListTabs.Past)">Past</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#cancelled-schedule" class="nav-link" [class.active]="activeTab === ScheduleListTabs.Cancelled" data-toggle="tab" role="tab" (click)="changeActiveTab(ScheduleListTabs.Cancelled)">Cancelled</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-auto ml-auto">
+                <form>
+                    <select [(ngModel)]="pageNumber" select2 [defaultValue]="pageSize" (select2ValueChange)="pageSizeChange($event)"
+                        name="PageNumber" class="custom-select custom-select-sm form-control-flush" data-toggle="select">
+                        <option *ngFor="let pageSizeSelection of pageSizeSelections" [value]="pageSizeSelection">
+                            {{ pageSizeSelection }} {{ 'PerPage' | localize }}
+                        </option>
+                    </select>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="tab-content" [loader]="isLoading$ | async">
+    <div class="tab-pane fade" [ngClass]="{'active show': activeTab === ScheduleListTabs.Upcoming}" id="upcoming-schedule" role="tabpanel">
+        <ng-container *ngIf="hasServices else noRecords">
+            <ng-container *ngFor="let dt of serviceMap | keyvalue">
+                <div class="d-flex flex-column justify-content-start align-items-start w-100">
+                    <div class="date-header w-100">{{ dt.key }}</div>
+                    <div class="service-list w-100">
+                        <app-service-card-dashboard
+                            *ngFor="let data of dt.value"
+                            [data]="data"
+                            [isLoading]="isLoading$ | async"
+                            [isCreator]="isTutor"
+                        ></app-service-card-dashboard>
+                    </div>
+                </div>
+            </ng-container>
+
+        </ng-container>
+    </div>
+
+    <div class="tab-pane fade" [ngClass]="{'active show': activeTab === ScheduleListTabs.Past}" id="past-schedule" role="tabpanel">
+        <ng-container *ngIf="hasServices else noRecords">
+            <ng-container *ngFor="let dt of serviceMap | keyvalue">
+                <div class="d-flex flex-column justify-content-start align-items-start w-100">
+                    <div class="date-header w-100">{{ dt.key }}</div>
+                    <div class="service-list w-100">
+                        <app-service-card-dashboard
+                            *ngFor="let data of dt.value"
+                            [data]="data"
+                            [isLoading]="isLoading$ | async"
+                            [isCreator]="isTutor"
+                        ></app-service-card-dashboard>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+    </div>
+
+    <div class="tab-pane fade" [ngClass]="{'active show': activeTab === ScheduleListTabs.Cancelled}" id="cancelled-schedule" role="tabpanel">
+        <ng-container *ngIf="hasServices else noRecords">
+            <ng-container *ngFor="let dt of serviceMap | keyvalue">
+                <div class="d-flex flex-column justify-content-start align-items-start w-100">
+                    <div class="date-header w-100">{{ dt.key }}</div>
+                    <div class="service-list w-100">
+                        <app-service-card-dashboard
+                            *ngFor="let data of dt.value"
+                            [data]="data"
+                            [isLoading]="isLoading$ | async"
+                            [isCreator]="isTutor"
+                        ></app-service-card-dashboard>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+    </div>
+</div>
+
+<ng-template #noRecords>
+    <div class="no-records d-flex flex-column justify-content-center align-items-center gap-9 w-100">
+        <div class="no-records-img">
+            <img src="assets/img/schedule/illustration.svg" alt="No Records" />
+        </div>
+        <div class="no-records-header">{{ 'Your schedule is clear' | localize }}</div>
+        <div class="no-records-subtitle">
+            <ng-container [ngSwitch]="activeTab">
+                <ng-container *ngSwitchCase="ScheduleListTabs.Upcoming">{{ 'You have no upcoming events or coaching sessions.' | localize }}</ng-container>
+                <ng-container *ngSwitchCase="ScheduleListTabs.Past">{{ 'You have no past events or coaching sessions.' | localize }}</ng-container>
+                <ng-container *ngSwitchCase="ScheduleListTabs.Cancelled">{{ 'You have no cancelled events or coaching sessions.' | localize }}</ng-container>
+            </ng-container>
+        </div>
+        <div class="no-records-action">
+            <button class="btn btn-outline-primary no-focus">{{ 'Explore' | localize }}</button>
+        </div>
+    </div>
+</ng-template>

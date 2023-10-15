@@ -21,5 +21,6 @@ namespace Academically.Services.Coachings
         Task<CoachingDto> UpdateSettingsAsync(UpdateCoachingSettingsDto input);
         Task<IEnumerable<AvailableServiceDto>> GetAllCoaching();
         Task<IEnumerable<AvailableServiceDto>> GetCoachingByKeyword(string keyword, long? creatorUserId);
+        Task<IEnumerable<AvailableServiceDto>> GetCoachingSchedule(long? creatorUserId, ScheduledServiceType? type);
     }
 }
