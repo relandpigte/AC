@@ -2,8 +2,9 @@ import { Component, Injector, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
+import { PurchaseServiceComponent } from '@shared/components/purchase-service/purchase-service.component';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
-import { DateGrains, PostsServiceProxy, VideoDto, VideoDtoPagedResultDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
+import { DateGrains, PostsServiceProxy, ServicesServiceProxy, VideoDto, VideoDtoPagedResultDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
@@ -54,7 +55,8 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
     private _router: Router,
     private _modalService: BsModalService,
     private _videoService: VideosServiceProxy,
-    private _postsService: PostsServiceProxy
+    private _postsService: PostsServiceProxy,
+    private _servicesService: ServicesServiceProxy
   ) {
     super(injector);
   }
@@ -233,5 +235,33 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
         };
         this._modalService.show(UpsertPostComponent, modalSettings).content;
       });
+  }
+
+  async handleServiceCardActionClick(event: any) {
+    try {
+      const { action, data } = event;
+      switch(action) {
+        case 'purchase':
+          await this.onPurchaseClick(data);
+          break;
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
+  private async onPurchaseClick(service: any) {
+    if (!service) return;
+
+    const purchase = await this._servicesService.getAllPurchases(service.id, this.appSession.userId).toPromise();
+    if (purchase?.length) {
+      this._router.navigate(['app/videos/student-portal' , service.id]);
+    } else {
+      const modalSettings = this.defaultModalSettings as ModalOptions<PurchaseServiceComponent>;
+      modalSettings.class = 'modal-lg modal-dialog-centered';
+      modalSettings.initialState = { serviceId: service.id, data: service};
+      const modal = this._modalService.show(PurchaseServiceComponent, modalSettings);
+      modal.content.onPaid.subscribe(() => this._router.navigate(['app/videos/student-portal' , service.id]));
+    }
   }
 }

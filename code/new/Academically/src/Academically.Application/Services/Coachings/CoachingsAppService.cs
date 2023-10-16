@@ -36,6 +36,7 @@ namespace Academically.Services.Coachings
         private readonly IRepository<User, long> _usersRepository;
         private readonly IRepository<CoachingPresenter, Guid> _coachingPresentersRepository;
         private readonly IRepository<SavedService, Guid> _savedServiceRepository;
+        private readonly IRepository<ServicePurchase, Guid> _servicePurchasesRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IExploreRepository _exploreRepository;
 
@@ -45,6 +46,7 @@ namespace Academically.Services.Coachings
             IRepository<CoachingPresenter, Guid> coachingPresentersRepository,
             IRepository<Coaching, Guid> repository,
             IRepository<SavedService, Guid> savedServiceRepository,
+            IRepository<ServicePurchase, Guid> servicePurchasesRepository,
             IDocumentsDomainService documentsDomainService,
             IExploreRepository exploreRepository
             ) : base(repository)
@@ -55,6 +57,7 @@ namespace Academically.Services.Coachings
             _usersRepository = usersRepository;
             _coachingPresentersRepository = coachingPresentersRepository;
             _savedServiceRepository = savedServiceRepository;
+            _servicePurchasesRepository = servicePurchasesRepository;
             _documentsDomainService = documentsDomainService;
             _exploreRepository = exploreRepository;
         }
@@ -298,8 +301,15 @@ namespace Academically.Services.Coachings
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IEnumerable<AvailableServiceDto>> GetCoachingSchedule(long? creatorUserId, ScheduledServiceType? type)
         {
+            var purchases = await this._servicePurchasesRepository.GetAll()
+                .WhereIf(creatorUserId.HasValue, p => false)
+                .WhereIf(!creatorUserId.HasValue, p => p.CreatorUserId == this.AbpSession.UserId)
+                .Select(p => p.ReferenceId)
+                .ToListAsync();
+
             return await Repository.GetAll().Where(w => w.ParentId == null && w.Visible.Value && w.Status == CoachingStatus.Published)
                                   .WhereIf(creatorUserId.HasValue, x => x.CreatorUserId == creatorUserId)
+                                  .WhereIf(purchases.Count > 0, x => purchases.Contains(x.Id))
                                   .WhereIf(type.HasValue && type == ScheduledServiceType.Upcoming, c => true)
                                   .WhereIf(type.HasValue && type == ScheduledServiceType.Past, c => true)
                                   .WhereIf(type.HasValue && type == ScheduledServiceType.Cancelled, c => true)

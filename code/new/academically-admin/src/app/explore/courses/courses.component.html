@@ -33,6 +33,7 @@
                   [data]="d"
                   [isLoading]="isLoading"
                   (onClick)="handleServiceCardClick($event)"
+                  (onActionClick)="handleServiceCardActionClick($event)"
                   (onShareClick)="handleServiceCardShareClick($event)"
                 ></app-service-card>
                 <ng-container *ngIf="showTopicShowMoreButton(t)">
@@ -58,6 +59,7 @@
                   [data]="d"
                   [isLoading]="isPopularLoading"
                   (onClick)="handleServiceCardClick($event)"
+                  (onActionClick)="handleServiceCardActionClick($event)"
                   (onShareClick)="handleServiceCardShareClick($event)"
                 ></app-service-card>
                 <ng-container *ngIf="showPopularShowMoreButton">
@@ -81,6 +83,7 @@
                   [data]="d"
                   [isLoading]="isLoading"
                   (onClick)="handleServiceCardClick($event)"
+                  (onActionClick)="handleServiceCardActionClick($event)"
                   (onShareClick)="handleServiceCardShareClick($event)"
                 ></app-service-card>
                 <ng-container *ngIf="showLastestShowMore">
@@ -104,6 +107,7 @@
                   [data]="d"
                   [isLoading]="isLoading"
                   (onClick)="handleServiceCardClick($event)"
+                  (onActionClick)="handleServiceCardActionClick($event)"
                   (onShareClick)="handleServiceCardShareClick($event)"
                 ></app-service-card>
                 <ng-container *ngIf="showLastMonthShowMoreButton">

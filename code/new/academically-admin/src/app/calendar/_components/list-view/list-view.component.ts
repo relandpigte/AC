@@ -56,7 +56,7 @@ export class ScheduleListViewComponent extends PagedListingComponentBase<Availab
         this.isLoadingList$.next(true);
         this._postsService
             .getScheduledServices(
-                this.appSession.userId,
+                this.isTutor ? this.appSession.userId : undefined,
                 this.scheduleType,
                 request.skipCount,
                 request.maxResultCount

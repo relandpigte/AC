@@ -1,13 +1,14 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ArticleDto, ArticleDtoPagedResultDto, ArticlesServiceProxy, DateGrains, PostsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, ArticleDtoPagedResultDto, ArticlesServiceProxy, DateGrains, PostsServiceProxy, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 
 import { Router } from '@angular/router';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import * as moment from 'moment';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { PurchaseServiceComponent } from '@shared/components/purchase-service/purchase-service.component';
 
 @Component({
   selector: 'app-explore-articles',
@@ -52,7 +53,8 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
     private _router: Router,
     private _modalService: BsModalService,
     private _articleService: ArticlesServiceProxy,
-    private _postsService: PostsServiceProxy
+    private _postsService: PostsServiceProxy,
+    private _servicesService: ServicesServiceProxy
   ) {
     super(injector);
   }
@@ -240,4 +242,31 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
       });
   }
 
+  async handleServiceCardActionClick(event: any) {
+    try {
+      const { action, data } = event;
+      switch(action) {
+        case 'purchase':
+          await this.onPurchaseClick(data);
+          break;
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
+  private async onPurchaseClick(service: any) {
+    if (!service) return;
+
+    const purchase = await this._servicesService.getAllPurchases(service.id, this.appSession.userId).toPromise();
+    if (purchase?.length) {
+      this._router.navigate(['/app/articles/student-portal', service.id]);
+    } else {
+      const modalSettings = this.defaultModalSettings as ModalOptions<PurchaseServiceComponent>;
+      modalSettings.class = 'modal-lg modal-dialog-centered';
+      modalSettings.initialState = { serviceId: service.id, data: service};
+      const modal = this._modalService.show(PurchaseServiceComponent, modalSettings);
+      modal.content.onPaid.subscribe(() => this._router.navigate(['/app/articles/student-portal', service.id]));
+    }
+  }
 }
