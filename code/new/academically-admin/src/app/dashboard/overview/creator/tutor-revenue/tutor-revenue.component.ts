@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { VideoDto } from '@shared/service-proxies/service-proxies';
+import { ProfilesServiceProxy, VideoDto } from '@shared/service-proxies/service-proxies';
 import * as moment from '@node_modules/moment';
 import { TutorPortalService } from '@app/videos/tutor-portal/_services/tutor-portal.service';
 
@@ -22,24 +22,39 @@ export class TutorRevenueComponent extends AppComponentBase implements OnInit {
   RangeType = RangeType;
   currentRangeType = RangeType.Week;
   currentYAxis = 'yAxisMoney';
+  data: number[] = [];
 
   constructor(
     injector: Injector,
-    private _tutorPortalService: TutorPortalService
+    private _tutorPortalService: TutorPortalService,
+    private _profilesService: ProfilesServiceProxy
   ) {
     super(injector);
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    await this.initData();
     this.setChartSettings();
     this._tutorPortalService.video$.subscribe(response => {
       this.model = response;
     });
   }
 
-  onRangeTypeChange(type: RangeType): void {
+  async onRangeTypeChange(type: RangeType): Promise<void> {
     this.currentRangeType = type;
-    this.setChartSettings();
+    switch (type) {
+      case RangeType.Year:
+        this.data = await this._profilesService.getAnnualRevenue().toPromise();
+        break;
+      case RangeType.Month:
+        this.data = await this._profilesService.getMonthlyRevenue().toPromise();
+        break;
+      default:
+        this.data = await this._profilesService.getWeeklyRevenue().toPromise();
+        break;
+    }
+
+    setTimeout(() => this.setChartSettings());
   }
 
   private setChartSettings(): void {
@@ -65,9 +80,9 @@ export class TutorRevenueComponent extends AppComponentBase implements OnInit {
             type: 'linear',
             display: 'auto',
             ticks: {
-              min: 3000,
-              max: 6000,
-              stepSize: 1000,
+              min: 0,
+              max: 1000,
+              stepSize: 200,
               callback: (num: number): string => {
                 return `£${Math.abs(num) > 999 ?
                   Math.sign(num) * ((Math.abs(num) / 1000)) + 'k' :
@@ -121,8 +136,12 @@ export class TutorRevenueComponent extends AppComponentBase implements OnInit {
       {
         label: moment().get('year'),
         yAxisID: this.currentYAxis,
-        data: [3000, 3500, 6000, 5000, 5500, 5600, 4500, 4000, 3600, 4500, 5000, 6000],
+        data: this.data,
       },
     ];
+  }
+
+  private async initData(): Promise<void> {
+    this.data = await this._profilesService.getWeeklyRevenue().toPromise();
   }
 }
