@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using Abp.Runtime.Session;
 using Academically.Services.Courses;
 using Academically.Services.Ratings;
+using Academically.Services.Services.Dto;
 using Academically.Services.TutorApplications;
 using Academically.Services.UserFollowers;
 
@@ -393,19 +394,30 @@ namespace Academically.Services.Profiles
             var currentUserId = userId ?? AbpSession.GetUserId();
             var tutorRatings = await _ratingsAppService.GetTutorRatingSummary(currentUserId);
             
-            var coachings = await _coachingRepository.CountAsync(x => x.CreatorUserId == currentUserId);
-            var courses = await _courseRepository.CountAsync(x => x.CreatorUserId == currentUserId);
-            var articles = await _articleRepository.CountAsync(x => x.CreatorUserId == currentUserId);
-            var events = await _eventRepository.CountAsync(x => x.CreatorUserId == currentUserId);
-            var videos = await _videoRepository.CountAsync(x => x.CreatorUserId == currentUserId);
-            
+            var coachings = await _coachingRepository.GetAllListAsync(x => x.CreatorUserId == currentUserId);
+            var courses = await _courseRepository.GetAllListAsync(x => x.CreatorUserId == currentUserId);
+            var articles = await _articleRepository.GetAllListAsync(x => x.CreatorUserId == currentUserId);
+            var events = await _eventRepository.GetAllListAsync(x => x.CreatorUserId == currentUserId);
+            var videos = await _videoRepository.GetAllListAsync(x => x.CreatorUserId == currentUserId);
+
+            var servicePurchasedByUsers = await _servicePurchasesRepository.GetAll()
+                .Where(s => s.OwnerId == currentUserId)
+                .Select(s => ObjectMapper.Map<ServicePurchaseDto>(s))
+                .ToListAsync();
+
+            decimal totalRevenue = 0;
+            foreach (var service in servicePurchasedByUsers)
+            {
+                totalRevenue += await GetTotalRevenue(service);
+            }
+
             return new TutorProfileMetricDto
             {
                 Followers = _userFollowersAppService.GetFollowers().Result.Count(),
-                ServiceCreated = coachings + courses + articles + events + videos,
+                ServiceCreated = coachings.Count + courses.Count + articles.Count + events.Count + videos.Count,
                 PositiveReviews = tutorRatings.PositivePercentage,
                 TotalReviews = tutorRatings.TotalReviews,
-                TotalRevenue = 0
+                TotalRevenue = Math.Round(totalRevenue, 1)
             };
         }
 
@@ -423,6 +435,47 @@ namespace Academically.Services.Profiles
                 .Where(u => studentPurchased.Contains(u.Id))
                 .Select(u => ObjectMapper.Map<UserDto>(u))
                 .ToListAsync();
+        }
+
+        private async Task<decimal> GetTotalRevenue(ServicePurchaseDto input)
+        {
+            decimal price = 0;
+            switch (input.Type)
+            {
+                case ServicesType.Article:
+                    var articles = await _articleRepository.FirstOrDefaultAsync(x => input.ReferenceId == x.Id);
+                    price += articles.Price;
+                    break;
+                case ServicesType.Coaching:
+                    var coachings = await _coachingRepository.FirstOrDefaultAsync(x => input.ReferenceId == x.Id);
+                    if (coachings.Price.HasValue)
+                    {
+                        price += coachings.Price.Value;
+                    }
+                    break;
+                case ServicesType.Course:
+                    var courses = await _courseRepository.FirstOrDefaultAsync(x => input.ReferenceId == x.Id);
+                    price += courses.Price;
+                    break;
+                case ServicesType.Event:
+                    var events = await _eventRepository.FirstOrDefaultAsync(x => input.ReferenceId == x.Id);
+                    if (events.Price.HasValue)
+                    {
+                        price += events.Price.Value;
+                    }
+                    break;
+                case ServicesType.Tutorial:
+                    var tutorials = await _videoRepository.FirstOrDefaultAsync(x => input.ReferenceId == x.Id);
+                    if (tutorials.Price.HasValue)
+                    {
+                        price += tutorials.Price.Value;
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return price;
         }
     }
 }

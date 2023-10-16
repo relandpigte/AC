@@ -29,6 +29,7 @@ export class TutorMetricsComponent extends AppComponentBase implements OnInit {
   get followers(): number { return this.profileMetric?.followers; }
   get positiveReviews(): number { return this.profileMetric?.positiveReviews; }
   get totalReviews(): number { return this.profileMetric?.totalReviews; }
+  get totalRevenue(): string { return this.profileMetric?.totalRevenue?.toLocaleString(); }
 
   ngOnInit(): void {
     this.getMetrics();
