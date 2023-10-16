@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.Auditing;
@@ -13,6 +14,7 @@ using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Timing;
 using Abp.Events.Bus.Entities;
+using Abp.Runtime.Session;
 using Academically.Authorization;
 using Academically.Authorization.Users;
 using Academically.Domain.Entities;
@@ -170,7 +172,7 @@ namespace Academically.Services.Posts
                                    .Where(p => !userHiddenPost.Contains(p.Id))
                                    .WhereIf(request.Type.HasValue, p => p.Type == request.Type)
                                    .WhereIf(request.ParentId.HasValue, p => p.ParentId == request.ParentId)
-                                   .WhereIf(!request.ParentId.HasValue, p => p.ParentId == null)
+                                   .WhereIf(!request.ParentId.HasValue, p => p.ParentId == null || (p.IsPublic && p.Parent.CreatorUserId == AbpSession.GetUserId()))
                                    .WhereIf(request.CreationTime.HasValue, p => p.CreationTime < request.CreationTime);
 
             var totalCount = await query.CountAsync();
@@ -240,6 +242,26 @@ namespace Academically.Services.Posts
             }
 
             var post = ObjectMapper.Map<Post>(input);
+            if (input.ParentId.HasValue)
+            {
+                // TODO: User creating post should not be the owner
+                var parentPost = await _postRepository.GetAsync(input.ParentId.Value);
+                if (parentPost != null && parentPost.CreatorUserId != AbpSession.GetUserId())
+                {
+                    // TODO: check if the owner of discussion turned on the notification
+                    var notification = await _postNotificationRepository.GetAll()
+                        .Where(n => n.CreatorUserId == parentPost.CreatorUserId)
+                        .Where(n => n.PostId == parentPost.Id)
+                        .CountAsync();
+
+                    if (notification > 0)
+                    {
+                        // TODO: save and add flag IsPublic = true
+                        post.IsPublic = true;
+                    }
+                }
+            }
+            
             var postId = await _postRepository.InsertAndGetIdAsync(post);
 
             var topicIds = input.Topics?.Count() > 0 ? input.Topics.ToList() : new List<Guid>();
@@ -302,7 +324,7 @@ namespace Academically.Services.Posts
                     });
                 } 
             }
-            await CreatePostNotification(new CreatePostNotificationDto { PostId = postId, CreatorUserId = AbpSession.UserId.Value });
+            await CreatePostNotification(new CreatePostNotificationDto { PostId = postId, CreatorUserId = AbpSession.GetUserId() });
             await CurrentUnitOfWork.SaveChangesAsync();
 
             // if (topicIds?.Count > 0)

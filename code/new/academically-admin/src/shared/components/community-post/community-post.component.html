@@ -8,19 +8,14 @@
                 </a>
             </div>
             <div class="post-heading-owner flex-grow-1 d-flex flex-column flex-nowrap gap-3">
-                <div class="post-heading-owner-name d-flex flex-row align-items-center gap-15">
-                    {{ posterName | titlecase }}
-                    <button
-                        *ngIf="isShowOwnerTag"
-                        type="button"
-                        class="btn btn-link post-heading-owner-follow d-flex justify-content-center align-items-center"
-                        [class.activated]="isOwner || isUserFollowing(data?.creatorUser)"
-                        (click)="isOwner ? '' : handleUserFollow(data?.creatorUser)"
-                        [disabled]="isUserLoading(data?.creatorUserId)">
-                        <span class="text">
-                            {{ isOwner ? 'You' : (isUserFollowing(data?.creatorUser) ? 'Following' : 'Follow')  }}
-                        </span>
-                    </button>
+                <div class="post-heading-owner-name d-flex flex-row align-items-center gap-5">
+                    <ng-container *ngIf="isCommunity && isPublic else defaultHeading">
+                        <div class="d-flex gap-2 align-items-center">
+                            <span>{{ posterName | titlecase }}</span>
+                            <img src="assets/img/community/chevron.svg" alt="...">
+                            <span class="cursor-pointer" (click)="goToDiscussionFromPublic()">{{ discussionTitle | titlecase }}</span>
+                        </div>
+                    </ng-container>
                 </div>
                 <div class="post-heading-owner-time" role="button">
                     <span [tooltip]="data?.lastModificationTime ?  convertMomentToPostDateFormat(data.lastModificationTime) : data?.creationTime  ? convertMomentToPostDateFormat(data.creationTime) : ''">{{ postDate }}</span>
@@ -188,3 +183,19 @@
         </div>
     </div>
 </div>
+
+<ng-template #defaultHeading>
+    {{ posterName | titlecase }}
+    <button
+        *ngIf="isShowOwnerTag"
+        type="button"
+        class="btn btn-link post-heading-owner-follow d-flex justify-content-center align-items-center"
+        [class.activated]="isOwner || isUserFollowing(data?.creatorUser)"
+        (click)="isOwner ? '' : handleUserFollow(data?.creatorUser)"
+        [disabled]="isUserLoading(data?.creatorUserId)"
+    >
+        <span class="text">
+            {{ isOwner ? 'You' : (isUserFollowing(data?.creatorUser) ? 'Following' : 'Follow')  }}
+        </span>
+    </button>
+</ng-template>

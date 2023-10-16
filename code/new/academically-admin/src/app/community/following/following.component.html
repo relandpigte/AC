@@ -81,6 +81,7 @@
         <app-community-post-card
           [isLoading]="isLoading$ | async"
           [data]="p"
+          [isCommunity]="true"
           (onChildrenUpdate)="handleChildrenUpdate(p)"
           (onSharePost)="handleSharePost($event)"
         ></app-community-post-card>

@@ -30,6 +30,7 @@ namespace Academically.Domain.Entities
 		public Guid? SharedId { get; set; }
 		public SharedType? SharedType { get; set; }
 		public ServicesType? SharedServiceType { get; set; }
+		public bool IsPublic { get; set; }
 
         // Comma-separated string of foreign keys to DiscipleTaxonomy, a copy of 
 		// DiscipleTaxonodyId save in PostTopic table. This is only intended for 

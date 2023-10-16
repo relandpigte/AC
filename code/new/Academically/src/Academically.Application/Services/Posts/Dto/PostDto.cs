@@ -29,6 +29,7 @@ namespace Academically.Services.Posts.Dto
         public Guid? SharedId { get; set; }
         public SharedType? SharedType { get; set; }
         public ServicesType? SharedServiceType { get; set; }
+        public bool IsPublic { get; set; }
 
         [NotMapped]
         public int CommentsCount { get; set; }

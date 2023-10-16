@@ -35,6 +35,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     @Input() hideEdited: boolean;
     @Input() canOverrideOwner: boolean;
     @Input() reactionGroup: ReactionGroup = ReactionGroup.Emotions;
+    @Input() isCommunity: boolean;
 
     @Output() refresh = new EventEmitter();
     @Output() onUpdate = new EventEmitter();
@@ -47,6 +48,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     serviceAttachment: AvailableServiceDto;
     userTopics: DisciplineTaxonomyDto[];
     isHidden = false;
+    isPublic = false;
     isHiding = false;
     hideTimer: any;
     showComments = true;
@@ -86,6 +88,8 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     get isQuickPost(): boolean { return this.data?.type === PostType.QuickPost; }
     get isQuestion(): boolean { return this.data?.type === PostType.Question; }
     get isDiscussion(): boolean { return this.data?.type === PostType.Discussion; }
+    get discussionTitle(): string { return this.data?.parent?.title; }
+    get discussionParentId(): string { return this.data?.parent?.id; }
 
     get typeName(): string {
         switch (this.data?.type) {
@@ -113,7 +117,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
         UserFollowingService.userFollowedChanged$.pipe(takeUntil(this.destroyed$))
             .subscribe((change) => {
                 if (change > 0) this.showUnfollow = true;
-            })
+            });
     }
 
     async ngOnChanges(changes: SimpleChanges) {
@@ -121,10 +125,12 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
             this.userTopics = this.data?.postTopics?.map?.(t => t.disciplineTaxonomy);
             this.isHidden = this.data?.isHidden;
             this.isHiding = this.data?.isHidden;
+            this.isPublic = this.data?.isPublic;
 
             await this.getFileAttachment();
             await this.getServiceAttachment();
             await this.getSubscriberIds();
+
         }
     }
 
@@ -147,6 +153,13 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     goToDiscussion(): void {
         if (this.data?.id) {
             const url = `${AppConsts.appBaseUrl}/app/community/discussion/${this.data?.id}`;
+            window.open(url, '_blank');
+        }
+    }
+
+    goToDiscussionFromPublic(): void {
+        if (!!this.discussionParentId) {
+            const url = `${AppConsts.appBaseUrl}/app/community/discussion/${this.discussionParentId}`;
             window.open(url, '_blank');
         }
     }

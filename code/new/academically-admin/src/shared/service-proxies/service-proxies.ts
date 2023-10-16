@@ -44767,6 +44767,7 @@ export class PostDto implements IPostDto {
     sharedId: string | undefined;
     sharedType: SharedType;
     sharedServiceType: ServicesType;
+    isPublic: boolean;
     commentsCount: number;
     sharesCount: number;
     reactionsCount: number;
@@ -44815,6 +44816,7 @@ export class PostDto implements IPostDto {
             this.sharedId = _data["sharedId"];
             this.sharedType = _data["sharedType"];
             this.sharedServiceType = _data["sharedServiceType"];
+            this.isPublic = _data["isPublic"];
             this.commentsCount = _data["commentsCount"];
             this.sharesCount = _data["sharesCount"];
             this.reactionsCount = _data["reactionsCount"];
@@ -44891,6 +44893,7 @@ export class PostDto implements IPostDto {
         data["sharedId"] = this.sharedId;
         data["sharedType"] = this.sharedType;
         data["sharedServiceType"] = this.sharedServiceType;
+        data["isPublic"] = this.isPublic;
         data["commentsCount"] = this.commentsCount;
         data["sharesCount"] = this.sharesCount;
         data["reactionsCount"] = this.reactionsCount;
@@ -44967,6 +44970,7 @@ export interface IPostDto {
     sharedId: string | undefined;
     sharedType: SharedType;
     sharedServiceType: ServicesType;
+    isPublic: boolean;
     commentsCount: number;
     sharesCount: number;
     reactionsCount: number;
