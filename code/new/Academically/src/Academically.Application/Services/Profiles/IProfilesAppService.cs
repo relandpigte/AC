@@ -28,5 +28,8 @@ namespace Academically.Services.Profiles
         Task<LearnerProfileMetricDto> GetLearnerMetrics();
         Task<TutorProfileMetricDto> GetTutorMetrics(long? userId);
         Task<IEnumerable<UserDto>> GetAllStudentsByOwnerId(long? userId);
+        Task<List<decimal>> GetWeeklyRevenue();
+        Task<List<decimal>> GetMonthlyRevenue();
+        Task<List<decimal>> GetAnnualRevenue();
     }
 }

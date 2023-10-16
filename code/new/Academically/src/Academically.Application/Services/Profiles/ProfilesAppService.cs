@@ -28,6 +28,7 @@ using Academically.Services.Ratings;
 using Academically.Services.Services.Dto;
 using Academically.Services.TutorApplications;
 using Academically.Services.UserFollowers;
+using Microsoft.VisualBasic;
 
 namespace Academically.Services.Profiles
 {
@@ -476,6 +477,95 @@ namespace Academically.Services.Profiles
             }
 
             return price;
+        }
+
+        public async Task<List<decimal>> GetWeeklyRevenue()
+        {
+            var result = new List<decimal>();
+            var startDate = DateTime.Today.AddDays(-1 * (int)DateTime.Today.DayOfWeek);
+            foreach (var day in EachDay(startDate, startDate.AddDays(6)))
+            {
+                var servicePurchasedByUsers = await _servicePurchasesRepository.GetAll()
+                    .Where(s => s.OwnerId == AbpSession.GetUserId())
+                    .Where(s => s.CreationTime.Date == day.Date)
+                    .Select(s => ObjectMapper.Map<ServicePurchaseDto>(s))
+                    .ToListAsync();
+                
+                decimal totalRevenue = 0;
+                foreach (var service in servicePurchasedByUsers)
+                {
+                    totalRevenue += await GetTotalRevenue(service);
+                }
+
+                result.Add(totalRevenue);
+            }
+
+            return result;
+        }
+
+        public async Task<List<decimal>> GetMonthlyRevenue()
+        {
+            var result = new List<decimal>();
+        
+            var startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            var endDate = startDate.AddMonths(1).AddDays(-1);
+            foreach (var day in EachDay(startDate, endDate))
+            {
+                var servicePurchasedByUsers = await _servicePurchasesRepository.GetAll()
+                    .Where(s => s.OwnerId == AbpSession.GetUserId())
+                    .Where(s => s.CreationTime.Day == day.Day)
+                    .Select(s => ObjectMapper.Map<ServicePurchaseDto>(s))
+                    .ToListAsync();
+
+                decimal totalRevenue = 0;
+                foreach (var service in servicePurchasedByUsers)
+                {
+                    totalRevenue += await GetTotalRevenue(service);
+                }
+                
+                result.Add(totalRevenue);
+            }
+
+            var final = new List<decimal>();
+            for (var i = 0; i <= result.Count; i++)
+            {
+                if (i % 3 == 0)
+                {
+                    final.Add(result[i]);
+                }
+            }
+            return final;
+        }
+        
+        public async Task<List<decimal>> GetAnnualRevenue()
+        {
+            var result = new List<decimal>();
+            var currentYear = DateTime.Now.Year;
+
+            for (var month = 1; month <= 12; month++)
+            {
+                var currentDate = new DateTime(currentYear, month, 1);
+                var servicePurchasedByUsers = await _servicePurchasesRepository.GetAll()
+                    .Where(s => s.OwnerId == AbpSession.GetUserId())
+                    .Where(s => s.CreationTime.Month == currentDate.Month)
+                    .Select(s => ObjectMapper.Map<ServicePurchaseDto>(s))
+                    .ToListAsync();
+
+                decimal totalRevenue = 0;
+                foreach (var service in servicePurchasedByUsers)
+                {
+                    totalRevenue += await GetTotalRevenue(service);
+                }
+                
+                result.Add(totalRevenue);
+            }
+            return result;
+        }
+        
+        private static IEnumerable<DateTime> EachDay(DateTime from, DateTime thru)
+        {
+            for(var day = from.Date; day.Date <= thru.Date; day = day.AddDays(1))
+                yield return day;
         }
     }
 }

@@ -651,20 +651,20 @@ export class ArticlesServiceProxy {
     }
 
     /**
-     * @param maxResultCount (optional) 
      * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
-    getAllForHome(maxResultCount: number | undefined, skipCount: number | undefined): Observable<ArticleDtoPagedResultDto> {
+    getAllForHome(skipCount: number | undefined, maxResultCount: number | undefined): Observable<ArticleDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Articles/GetAllForHome?";
-        if (maxResultCount === null)
-            throw new Error("The parameter 'maxResultCount' cannot be null.");
-        else if (maxResultCount !== undefined)
-            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
             url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -17403,6 +17403,180 @@ export class ProfilesServiceProxy {
         }
         return _observableOf<UserDto[]>(<any>null);
     }
+
+    /**
+     * @return Success
+     */
+    getWeeklyRevenue(): Observable<number[]> {
+        let url_ = this.baseUrl + "/api/services/app/Profiles/GetWeeklyRevenue";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetWeeklyRevenue(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetWeeklyRevenue(<any>response_);
+                } catch (e) {
+                    return <Observable<number[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetWeeklyRevenue(response: HttpResponseBase): Observable<number[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(item);
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number[]>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getMonthlyRevenue(): Observable<number[]> {
+        let url_ = this.baseUrl + "/api/services/app/Profiles/GetMonthlyRevenue";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetMonthlyRevenue(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetMonthlyRevenue(<any>response_);
+                } catch (e) {
+                    return <Observable<number[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetMonthlyRevenue(response: HttpResponseBase): Observable<number[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(item);
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number[]>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getAnnualRevenue(): Observable<number[]> {
+        let url_ = this.baseUrl + "/api/services/app/Profiles/GetAnnualRevenue";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAnnualRevenue(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAnnualRevenue(<any>response_);
+                } catch (e) {
+                    return <Observable<number[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAnnualRevenue(response: HttpResponseBase): Observable<number[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(item);
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number[]>(<any>null);
+    }
 }
 
 @Injectable()
@@ -17736,20 +17910,20 @@ export class ProjectsServiceProxy {
     }
 
     /**
-     * @param maxResultCount (optional) 
      * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
-    getAllFormHome(maxResultCount: number | undefined, skipCount: number | undefined): Observable<ProjectDtoPagedResultDto> {
+    getAllFormHome(skipCount: number | undefined, maxResultCount: number | undefined): Observable<ProjectDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Projects/GetAllFormHome?";
-        if (maxResultCount === null)
-            throw new Error("The parameter 'maxResultCount' cannot be null.");
-        else if (maxResultCount !== undefined)
-            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
             url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -30457,20 +30631,20 @@ export class VideosServiceProxy {
     }
 
     /**
-     * @param maxResultCount (optional) 
      * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
-    getAllForHome(maxResultCount: number | undefined, skipCount: number | undefined): Observable<VideoDtoPagedResultDto> {
+    getAllForHome(skipCount: number | undefined, maxResultCount: number | undefined): Observable<VideoDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Videos/GetAllForHome?";
-        if (maxResultCount === null)
-            throw new Error("The parameter 'maxResultCount' cannot be null.");
-        else if (maxResultCount !== undefined)
-            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
             url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
