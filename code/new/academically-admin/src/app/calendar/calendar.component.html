@@ -17,8 +17,8 @@
               </button>
             </div>
             <div *ngIf="isTutorCalendarUser && isGranted('Pages.Calendar.Schedules')" class="col-auto mr-n3">
-              <button [disabled]="isUserAvailabilitiesLoading" (click)="onScheduleClick()" class="btn btn-primary">
-                {{ 'Schedules' | localize }}
+              <button [disabled]="isUserAvailabilitiesLoading" (click)="onScheduleClick()" class="btn btn-primary d-flex justify-content-center align-items-center gap-7">
+                <img [src]="'/assets/img/schedule/sliders.svg'">{{ 'Availability' | localize }}
               </button>
             </div>
             <div class="col-auto">
