@@ -2,6 +2,7 @@ import { Component, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { DocumentDto, QuestionDto } from '@shared/service-proxies/service-proxies';
 import { Subject } from 'rxjs';
+import { Moment } from '@node_modules/moment';
 
 @Component({
   selector: 'app-live-question-card',
@@ -27,6 +28,7 @@ export class LiveQuestionCardComponent extends AppComponentBase implements OnIni
   get profileName(): string { return this.question?.creatorUser?.fullName; }
   get body(): string { return this.question.body; }
   get isEventReferenced(): boolean { return this.question?.referenceId === this.referenceId; }
+  get time(): Moment { return this.question?.creationTime; }
 
   ngOnInit(): void {
   }
