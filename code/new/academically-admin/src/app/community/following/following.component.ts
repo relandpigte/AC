@@ -36,6 +36,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
   @ViewChildren(CommunityDiscussionsComponent) commentContainer: CommunityDiscussionsComponent;
 
   postsStateService: PostsStateService;
+  postsDiscussionsStateServiceMap: PostsStateService[] = [];
 
   posts: PostDto[] = Array(10).fill([]).map(() => this.generateRandomPost()) as PostDto[];
   totalPostsCount: number;
@@ -145,7 +146,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
 
     this.postsStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
       if (this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) return;
-      switch(event.type) {
+      switch (event.type) {
         case StateUpdateType.Add:
           this.posts = [event.data].concat(this.posts);
           this.totalPostsCount++;
@@ -163,6 +164,39 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
 
     this.posts = this.postsStateService.getAllPosts();
     this.totalPostsCount = this.postsStateService.totalPostsCount;
+
+    const postIds = new Set([...this.posts.map(p => p.parentId).filter(x => x)]);
+    for (const postId of postIds) {
+      await this.initDiscussionAppState(postId);
+    }
+  }
+
+  private async initDiscussionAppState(discussionId: string): Promise<void> {
+    const appStateConfig: AppStateConfig = {
+      [`posts-${discussionId}`]: {
+        update: { postId: discussionId }
+      }
+    };
+    const appStateServices: AppStateServices = {
+      [`posts-${discussionId}`]: {
+        type: PostsStateService,
+        args: [this.appSession, this._hubService, this._postsService]
+      }
+    };
+
+    await this.pubSubService.start(this, appStateConfig, appStateServices);
+    this.postsDiscussionsStateServiceMap[discussionId] = this.pubSubService.getStateService<PostsStateService>(`posts-${discussionId}`);
+    this.postsDiscussionsStateServiceMap[discussionId].newPosts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
+      if (this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) {
+        return;
+      }
+      switch (event.type) {
+        case StateUpdateType.Add:
+          this.postsStateService.handleNewPosts(event.data);
+          break;
+      }
+      this._cdr.detectChanges();
+    });
   }
 
   handleRecommendedCoursesRequestData(skipCount: number): void {
