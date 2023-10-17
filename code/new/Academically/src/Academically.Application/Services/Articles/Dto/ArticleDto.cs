@@ -49,6 +49,9 @@ namespace Academically.Services.Articles.Dto
         [NotMapped]
         public bool IsSaved { get; set; }
 
+        [NotMapped]
+        public bool IsPurchased { get; set; }
+
         public ArticleDto()
 		{
 		}

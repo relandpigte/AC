@@ -43,6 +43,7 @@ namespace Academically.Services.Events
         private readonly IRepository<EventPoll, Guid> _eventPollRepository;
         private readonly IRepository<EventResource, Guid> _eventResourceRepository;
         private readonly IRepository<SavedService, Guid> _savedServiceRepository;
+        private readonly IRepository<ServicePurchase, Guid> _servicePurchasesRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IExploreRepository _exploreRepository;
 
@@ -57,6 +58,7 @@ namespace Academically.Services.Events
             IRepository<EventPoll, Guid> eventPollRepository,
             IRepository<EventResource, Guid> eventResourceRepository,
             IRepository<SavedService, Guid> savedServiceRepository,
+            IRepository<ServicePurchase, Guid> servicePurchasesRepository,
             IDocumentsDomainService documentsDomainService,
             IExploreRepository exploreRepository
             ) : base(repository)
@@ -72,6 +74,7 @@ namespace Academically.Services.Events
             _eventPollRepository = eventPollRepository;
             _eventResourceRepository = eventResourceRepository;
             _savedServiceRepository = savedServiceRepository;
+            _servicePurchasesRepository = servicePurchasesRepository;
             _documentsDomainService = documentsDomainService;
             _exploreRepository = exploreRepository;
         }
@@ -223,6 +226,9 @@ namespace Academically.Services.Events
 
                 var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == vid.Id.ToString());
                 vid.IsSaved = savedService != null;
+
+                var purchasedService = await this._servicePurchasesRepository.FirstOrDefaultAsync(p => p.ReferenceId.ToString() == vid.Id.ToString() && p.CreatorUserId == this.AbpSession.UserId);
+                vid.IsPurchased = purchasedService != null;
             }
             return popularEvents;
         }

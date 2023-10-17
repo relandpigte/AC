@@ -39,6 +39,7 @@ namespace Academically.Services.Courses
         private readonly IRepository<CourseConversation, Guid> _courseConversationRepository;
         private readonly IRepository<CourseConversationReaction, Guid> _courseConversationReactionRepository;
         private readonly IRepository<SavedService, Guid> _savedServiceRepository;
+        private readonly IRepository<ServicePurchase, Guid> _servicePurchasesRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IExploreRepository _exploreRepository;
 
@@ -52,6 +53,7 @@ namespace Academically.Services.Courses
             IRepository<CourseConversation, Guid> courseConversationRepository,
             IRepository<CourseConversationReaction, Guid> courseConversationReactionRepository,
             IRepository<SavedService, Guid> savedServiceRepository,
+            IRepository<ServicePurchase, Guid> servicePurchasesRepository,
             IDocumentsDomainService documentsDomainService,
             IExploreRepository exploreRepository
             ) : base(coursesRepository)
@@ -66,6 +68,7 @@ namespace Academically.Services.Courses
             _courseConversationRepository = courseConversationRepository;
             _courseConversationReactionRepository = courseConversationReactionRepository;
             _savedServiceRepository = savedServiceRepository;
+            _servicePurchasesRepository = servicePurchasesRepository;
         }
 
         public override async Task<CourseDto> GetAsync(EntityDto<Guid> input)
@@ -238,6 +241,9 @@ namespace Academically.Services.Courses
 
                 var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == course.Id.ToString());
                 course.IsSaved = savedService != null;
+
+                var purchasedService = await this._servicePurchasesRepository.FirstOrDefaultAsync(p => p.ReferenceId.ToString() == course.Id.ToString() && p.CreatorUserId == this.AbpSession.UserId);
+                course.IsPurchased = purchasedService != null;
             }
 
             return popularCourses;

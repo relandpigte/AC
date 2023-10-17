@@ -19,6 +19,7 @@ using Academically.Services.Posts.Dto;
 using Academically.Services.Videos.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 
 namespace Academically.Services.Videos
 {
@@ -28,6 +29,7 @@ namespace Academically.Services.Videos
         private readonly IRepository<Reaction, Guid> _reactionsRepository;
         private readonly IRepository<StudentVideo, Guid> _studentVideoRepository;
         private readonly IRepository<SavedService, Guid> _savedServiceRepository;
+        private readonly IRepository<ServicePurchase, Guid> _servicePurchasesRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IExploreRepository _exploreRepository;
 
@@ -36,6 +38,7 @@ namespace Academically.Services.Videos
             IRepository<Reaction, Guid> reactionsRepository,
             IRepository<StudentVideo, Guid> studentVideoRepository,
             IRepository<SavedService, Guid> savedServiceRepository,
+            IRepository<ServicePurchase, Guid> servicePurchasesRepository,
             IDocumentsDomainService documentsDomainService,
             IExploreRepository exploreRepository
             )
@@ -44,6 +47,7 @@ namespace Academically.Services.Videos
             _reactionsRepository = reactionsRepository;
             _studentVideoRepository = studentVideoRepository;
             _savedServiceRepository = savedServiceRepository;
+            _servicePurchasesRepository = servicePurchasesRepository;
             _documentsDomainService = documentsDomainService;
             _exploreRepository = exploreRepository;
         }
@@ -377,6 +381,9 @@ namespace Academically.Services.Videos
 
                 var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == vid.Id.ToString());
                 vid.IsSaved = savedService != null;
+
+                var purchasedService = await this._servicePurchasesRepository.FirstOrDefaultAsync(p => p.ReferenceId.ToString() == vid.Id.ToString() && p.CreatorUserId == this.AbpSession.UserId);
+                vid.IsPurchased = purchasedService != null;
             }
 
             return topVideos;

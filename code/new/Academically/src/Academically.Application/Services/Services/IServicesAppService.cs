@@ -22,7 +22,7 @@ namespace Academically.Services.Services
 
         // services
         Task<ServicePurchaseDto> GetPurchase(Guid id);
-        Task<IEnumerable<ServicePurchaseDto>> GetAllPurchases(Guid referenceId, long? userId);
+        Task<IEnumerable<ServicePurchaseDto>> GetAllPurchases(Guid? referenceId, long? userId);
         Task<ServicePurchaseDto> SavePurchase(CreateServicePurchaseDto input);
 
 

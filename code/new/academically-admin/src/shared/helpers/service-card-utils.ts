@@ -90,16 +90,16 @@ export class ServiceCardUtils {
               service.composition.articles = data?.articlesCount;
             // }
 
-            actions.splice(0, 0, { type: 'submit', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
+            actions.splice(0, 0, { type: 'purchase', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
             break;
 
           case 'broadcast':
-            actions.splice(0, 0, { type: 'submit', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
+            actions.splice(0, 0, { type: 'purchase', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
             break;
 
           case 'coaching':
             service.owner.isBannerAvatar = true;
-            actions.splice(0, 0, { type: 'submit', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
+            actions.splice(0, 0, { type: 'purchase', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
             break;
 
           case 'course':
@@ -118,11 +118,11 @@ export class ServiceCardUtils {
             service.people.isShowAvatars = true;
             service.people.isShowCount = true;
 
-            actions.splice(0, 0, { type: 'submit', action: 'enroll', label: 'Enroll', class: 'btn-primary' } as ServiceCardButton);
+            actions.splice(0, 0, { type: 'purchase', action: 'purchase', label: 'Enroll', class: 'btn-primary' } as ServiceCardButton);
             break;
 
           case 'event':
-            actions.splice(0, 0, { type: 'submit', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
+            actions.splice(0, 0, { type: 'purchase', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
             break;
 
           case 'space':
@@ -132,7 +132,7 @@ export class ServiceCardUtils {
             service.people.isShowAvatars = true;
             service.people.isShowCount = true;
 
-            actions.splice(0, 0, { type: 'submit', action: 'subscribe', label: 'Subscribe', class: 'btn-primary' } as ServiceCardButton);
+            actions.splice(0, 0, { type: 'purchase', action: 'purchase', label: 'Subscribe', class: 'btn-primary' } as ServiceCardButton);
             break;
 
           case 'tutorial':
@@ -140,7 +140,7 @@ export class ServiceCardUtils {
             service.composition.videos = data?.videoCount;
             service.composition.durationInSec = data?.videoLength;
 
-            actions.splice(0, 0, { type: 'submit', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
+            actions.splice(0, 0, { type: 'purchase', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
             break;
 
           case 'user':

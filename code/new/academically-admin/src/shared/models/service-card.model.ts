@@ -10,6 +10,7 @@ export interface ServiceCard {
     location?: string;
     status?: ServiceCardStatus;
     isSaved?: boolean;
+    isPurchased?: boolean;
 
     owner: ServiceCardPerson;
     people?: ServiceCardPeople;
@@ -93,7 +94,7 @@ export const UserServiceCardActions: ServiceCardButton[] = [
 ];
 
 export type ServiceCardType = 'course' | 'tutorial' | 'article' | 'event' | 'broadcast' | 'coaching' | 'workshop' | 'user' | 'space' | 'feature';
-export type ServiceCardButtonType = 'submit' | 'save' | 'group' | 'share' | 'follow' | 'read' | 'join' | 'review' | 'play' | 'continue' | 'book' | 'buy';
+export type ServiceCardButtonType = 'submit' | 'save' | 'group' | 'share' | 'follow' | 'read' | 'join' | 'review' | 'play' | 'continue' | 'book' | 'buy' | 'purchase';
 export type HeadingType = 'location' | 'schedule' | 'unbooked';
 export type ServiceCardStatusType = 'read' | 'unread' | 'archived' | 'published' | 'completed' | 'draft' | 'onprogress';
 

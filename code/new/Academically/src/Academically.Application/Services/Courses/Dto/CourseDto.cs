@@ -55,7 +55,10 @@ namespace Academically.Services.Courses.Dto
 
         [NotMapped]
         public bool IsSaved { get; set; }
-        
+
+        [NotMapped]
+        public bool IsPurchased { get; set; }
+
         [NotMapped]
         public bool IsDoneRating { get; set; }
         

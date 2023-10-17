@@ -253,6 +253,7 @@
     <text name="NoArticleFound">No article found</text>
     <text name="Questions">Questions</text>
     <text name="Purchase">Purchase</text>
+    <text name="Purchase_past">Purchased</text>
     <text name="MoreInSeries">More in series</text>
     <text name="PreviewSeries">Preview series</text>
     <text name="NoRelatedVideo">No related video</text>
@@ -417,6 +418,8 @@
     <text name="FixedFeeDescription">Charge students a one time fee to access content</text>
     <text name="PaymentPlan">Payment plan</text>
     <text name="PaymentPlanDescription">Split the total course price over several payments</text>
+    <text name="Subscribe">Subscribe</text>
+    <text name="Subscribe_past">Subscribed</text>
     <text name="Subscription">Subscription</text>
     <text name="SubscriptionDescription">Charge student a reoccurring monthly fee to access content</text>
     <text name="VideoName">Video name</text>
@@ -490,6 +493,8 @@
     <text name="DateUploaded">Date uploaded</text>
     <text name="CourseProgress">Course progress</text>
     <text name="Enrolled">Enrolled</text>
+    <text name="Enroll">Enroll</text>
+    <text name="Enroll_past">Enrolled</text>
     <text name="UploadedBy">Uploaded by</text>
     <text name="UploadAssignment">Upload assignment</text>
     <text name="AllowUpload">Allow upload</text>

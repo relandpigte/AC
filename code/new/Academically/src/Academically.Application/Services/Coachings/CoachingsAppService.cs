@@ -210,6 +210,9 @@ namespace Academically.Services.Coachings
 
                     var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == coaching.Id.ToString());
                     coaching.IsSaved = savedService != null;
+
+                    var purchasedService = await this._servicePurchasesRepository.FirstOrDefaultAsync(p => p.ReferenceId.ToString() == coaching.Id.ToString() && p.CreatorUserId == this.AbpSession.UserId);
+                    coaching.IsPurchased = purchasedService != null;
                 }
 
                 result.Add(topic, new PagedResultDto<CoachingDto>(totalCount, coachings));
@@ -242,6 +245,9 @@ namespace Academically.Services.Coachings
 
                 var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == coaching.Id.ToString());
                 coaching.IsSaved = savedService != null;
+
+                var purchasedService = await this._servicePurchasesRepository.FirstOrDefaultAsync(p => p.ReferenceId.ToString() == coaching.Id.ToString() && p.CreatorUserId == this.AbpSession.UserId);
+                coaching.IsPurchased = purchasedService != null;
             }
 
             return coachings.GroupByDateRangePagedExt(input.Grain.Value, input.MaxResultCount);
@@ -271,6 +277,9 @@ namespace Academically.Services.Coachings
 
                 var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == popular.Id.ToString());
                 popular.IsSaved = savedService != null;
+
+                var purchasedService = await this._servicePurchasesRepository.FirstOrDefaultAsync(p => p.ReferenceId.ToString() == popular.Id.ToString() && p.CreatorUserId == this.AbpSession.UserId);
+                popular.IsPurchased = purchasedService != null;
             }
 
             return popularCoachings.GroupByPopularityPagedExt(input.MaxResultCount);

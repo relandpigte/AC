@@ -191,11 +191,11 @@ namespace Academically.Services.Services
             return null;
         }
 
-        public async Task<IEnumerable<ServicePurchaseDto>> GetAllPurchases(Guid referenceId, long? userId)
+        public async Task<IEnumerable<ServicePurchaseDto>> GetAllPurchases(Guid? referenceId, long? userId)
         {
             var purchases = this._servicePurchasesRepository.GetAll()
                 .Include(p => p.CreatorUser)
-                .Where(p => p.ReferenceId == referenceId)
+                .WhereIf(referenceId.HasValue, p => p.ReferenceId == referenceId.Value)
                 .WhereIf(userId.HasValue, p => p.CreatorUserId == userId.Value)
                 .Select(p => ObjectMapper.Map<ServicePurchaseDto>(p))
                 .ToList();

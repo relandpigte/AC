@@ -123,6 +123,7 @@ import { AppConsts } from '@shared/AppConsts';
     get owner(): ServiceCardPerson { return this.sanitized?.owner; }
     get people(): ServiceCardPeople { return this.sanitized?.people; }
     get isSaved(): boolean { return this.sanitized?.isSaved; }
+    get isPurchased(): boolean { return this.sanitized?.isPurchased; }
 
     private getCardType(): ServiceCardType {
       if (this.data instanceof EventDto) {
@@ -168,6 +169,7 @@ import { AppConsts } from '@shared/AppConsts';
       this.sanitized.location = this.data?.location;
 
       this.sanitized.isSaved = this.data?.isSaved;
+      this.sanitized.isPurchased = this.data?.isPurchased;
 
       this.sanitized.pill = {} as ServiceCardPill;
       this.sanitized.pill.label =  this.sanitized.pill.label ?? this.sanitized.type;
@@ -203,16 +205,16 @@ import { AppConsts } from '@shared/AppConsts';
             this.sanitized.composition.articles = this.data?.articlesCount;
           // }
 
-          this.sanitizedActions.splice(0, 0, { type: 'submit', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
+          this.sanitizedActions.splice(0, 0, { type: 'purchase', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
           break;
 
         case 'broadcast':
-          this.sanitizedActions.splice(0, 0, { type: 'submit', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
+          this.sanitizedActions.splice(0, 0, { type: 'purchase', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
           break;
 
         case 'coaching':
           this.sanitized.owner.isBannerAvatar = true;
-          this.sanitizedActions.splice(0, 0, { type: 'submit', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
+          this.sanitizedActions.splice(0, 0, { type: 'purchase', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
           break;
 
         case 'course':
@@ -231,11 +233,11 @@ import { AppConsts } from '@shared/AppConsts';
           this.sanitized.people.isShowAvatars = true;
           this.sanitized.people.isShowCount = true;
 
-          this.sanitizedActions.splice(0, 0, { type: 'submit', action: 'enroll', label: 'Enroll', class: 'btn-primary' } as ServiceCardButton);
+          this.sanitizedActions.splice(0, 0, { type: 'purchase', action: 'purchase', label: 'Enroll', class: 'btn-primary' } as ServiceCardButton);
           break;
 
         case 'event':
-          this.sanitizedActions.splice(0, 0, { type: 'submit', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
+          this.sanitizedActions.splice(0, 0, { type: 'purchase', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
           break;
 
         case 'space':
@@ -245,7 +247,7 @@ import { AppConsts } from '@shared/AppConsts';
           this.sanitized.people.isShowAvatars = true;
           this.sanitized.people.isShowCount = true;
 
-          this.sanitizedActions.splice(0, 0, { type: 'submit', action: 'subscribe', label: 'Subscribe', class: 'btn-primary' } as ServiceCardButton);
+          this.sanitizedActions.splice(0, 0, { type: 'purchase', action: 'purchase', label: 'Subscribe', class: 'btn-primary' } as ServiceCardButton);
           break;
 
         case 'tutorial':
@@ -253,7 +255,7 @@ import { AppConsts } from '@shared/AppConsts';
           this.sanitized.composition.videos = this.data?.videoCount;
           this.sanitized.composition.durationInSec = this.data?.videoLength;
 
-          this.sanitizedActions.splice(0, 0, { type: 'submit', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
+          this.sanitizedActions.splice(0, 0, { type: 'purchase', action: 'purchase', label: 'Purchase', class: 'btn-primary' } as ServiceCardButton);
           break;
 
         case 'user':

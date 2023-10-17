@@ -32137,6 +32137,7 @@ export class ArticleDto implements IArticleDto {
     thumbnailImageUrl: string | undefined;
     articlesCount: number;
     isSaved: boolean;
+    isPurchased: boolean;
 
     constructor(data?: IArticleDto) {
         if (data) {
@@ -32180,6 +32181,7 @@ export class ArticleDto implements IArticleDto {
             this.thumbnailImageUrl = _data["thumbnailImageUrl"];
             this.articlesCount = _data["articlesCount"];
             this.isSaved = _data["isSaved"];
+            this.isPurchased = _data["isPurchased"];
         }
     }
 
@@ -32223,6 +32225,7 @@ export class ArticleDto implements IArticleDto {
         data["thumbnailImageUrl"] = this.thumbnailImageUrl;
         data["articlesCount"] = this.articlesCount;
         data["isSaved"] = this.isSaved;
+        data["isPurchased"] = this.isPurchased;
         return data; 
     }
 
@@ -32262,6 +32265,7 @@ export interface IArticleDto {
     thumbnailImageUrl: string | undefined;
     articlesCount: number;
     isSaved: boolean;
+    isPurchased: boolean;
 }
 
 export class ArticleDtoPagedResultDto implements IArticleDtoPagedResultDto {
@@ -34361,6 +34365,7 @@ export class CoachingDto implements ICoachingDto {
     children: CoachingDto[] | undefined;
     popularityWeight: number;
     isSaved: boolean;
+    isPurchased: boolean;
 
     constructor(data?: ICoachingDto) {
         if (data) {
@@ -34465,6 +34470,7 @@ export class CoachingDto implements ICoachingDto {
             }
             this.popularityWeight = _data["popularityWeight"];
             this.isSaved = _data["isSaved"];
+            this.isPurchased = _data["isPurchased"];
         }
     }
 
@@ -34569,6 +34575,7 @@ export class CoachingDto implements ICoachingDto {
         }
         data["popularityWeight"] = this.popularityWeight;
         data["isSaved"] = this.isSaved;
+        data["isPurchased"] = this.isPurchased;
         return data; 
     }
 
@@ -34669,6 +34676,7 @@ export interface ICoachingDto {
     children: CoachingDto[] | undefined;
     popularityWeight: number;
     isSaved: boolean;
+    isPurchased: boolean;
 }
 
 export class CoachingDtoPagedResultDto implements ICoachingDtoPagedResultDto {
@@ -36496,6 +36504,7 @@ export class CourseDto implements ICourseDto {
     progress: number;
     units: number;
     isSaved: boolean;
+    isPurchased: boolean;
     isDoneRating: boolean;
     enrolled: UserDto[] | undefined;
 
@@ -36547,6 +36556,7 @@ export class CourseDto implements ICourseDto {
             this.progress = _data["progress"];
             this.units = _data["units"];
             this.isSaved = _data["isSaved"];
+            this.isPurchased = _data["isPurchased"];
             this.isDoneRating = _data["isDoneRating"];
             if (Array.isArray(_data["enrolled"])) {
                 this.enrolled = [] as any;
@@ -36602,6 +36612,7 @@ export class CourseDto implements ICourseDto {
         data["progress"] = this.progress;
         data["units"] = this.units;
         data["isSaved"] = this.isSaved;
+        data["isPurchased"] = this.isPurchased;
         data["isDoneRating"] = this.isDoneRating;
         if (Array.isArray(this.enrolled)) {
             data["enrolled"] = [];
@@ -36653,6 +36664,7 @@ export interface ICourseDto {
     progress: number;
     units: number;
     isSaved: boolean;
+    isPurchased: boolean;
     isDoneRating: boolean;
     enrolled: UserDto[] | undefined;
 }
@@ -40312,6 +40324,7 @@ export class EventDto implements IEventDto {
     children: EventDto[] | undefined;
     popularityWeight: number;
     isSaved: boolean;
+    isPurchased: boolean;
 
     constructor(data?: IEventDto) {
         if (data) {
@@ -40430,6 +40443,7 @@ export class EventDto implements IEventDto {
             }
             this.popularityWeight = _data["popularityWeight"];
             this.isSaved = _data["isSaved"];
+            this.isPurchased = _data["isPurchased"];
         }
     }
 
@@ -40548,6 +40562,7 @@ export class EventDto implements IEventDto {
         }
         data["popularityWeight"] = this.popularityWeight;
         data["isSaved"] = this.isSaved;
+        data["isPurchased"] = this.isPurchased;
         return data; 
     }
 
@@ -40662,6 +40677,7 @@ export interface IEventDto {
     children: EventDto[] | undefined;
     popularityWeight: number;
     isSaved: boolean;
+    isPurchased: boolean;
 }
 
 export class EventDtoPagedResultDto implements IEventDtoPagedResultDto {
@@ -57243,6 +57259,7 @@ export class VideoDto implements IVideoDto {
     likeCount: number;
     thumbnailImageUrl: string | undefined;
     isSaved: boolean;
+    isPurchased: boolean;
 
     constructor(data?: IVideoDto) {
         if (data) {
@@ -57293,6 +57310,7 @@ export class VideoDto implements IVideoDto {
             this.likeCount = _data["likeCount"];
             this.thumbnailImageUrl = _data["thumbnailImageUrl"];
             this.isSaved = _data["isSaved"];
+            this.isPurchased = _data["isPurchased"];
         }
     }
 
@@ -57343,6 +57361,7 @@ export class VideoDto implements IVideoDto {
         data["likeCount"] = this.likeCount;
         data["thumbnailImageUrl"] = this.thumbnailImageUrl;
         data["isSaved"] = this.isSaved;
+        data["isPurchased"] = this.isPurchased;
         return data; 
     }
 
@@ -57389,6 +57408,7 @@ export interface IVideoDto {
     likeCount: number;
     thumbnailImageUrl: string | undefined;
     isSaved: boolean;
+    isPurchased: boolean;
 }
 
 export class VideoDtoPagedResultDto implements IVideoDtoPagedResultDto {

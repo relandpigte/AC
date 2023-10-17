@@ -17,6 +17,7 @@ using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace Academically.Services.Articles
@@ -27,6 +28,7 @@ namespace Academically.Services.Articles
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IRepository<StudentArticle, Guid> _studentArticleRepository;
         private readonly IRepository<SavedService, Guid> _savedServiceRepository;
+        private readonly IRepository<ServicePurchase, Guid> _servicePurchasesRepository;
         private readonly IExploreRepository _exploreRepository;
 
         public ArticlesAppService(
@@ -34,6 +36,7 @@ namespace Academically.Services.Articles
             IDocumentsDomainService documentsDomainService,
             IRepository<StudentArticle, Guid> studentArticleRepository,
             IRepository<SavedService, Guid> savedServiceRepository,
+            IRepository<ServicePurchase, Guid> servicePurchasesRepository,
             IExploreRepository exploreRepository
             )
         {
@@ -41,6 +44,7 @@ namespace Academically.Services.Articles
             _documentsDomainService = documentsDomainService;
             _studentArticleRepository = studentArticleRepository;
             _savedServiceRepository = savedServiceRepository;
+            _servicePurchasesRepository = servicePurchasesRepository;
             _exploreRepository = exploreRepository;
         }
 
@@ -274,6 +278,9 @@ namespace Academically.Services.Articles
 
                 var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == article.Id.ToString());
                 article.IsSaved = savedService != null;
+
+                var purchasedService = await this._servicePurchasesRepository.FirstOrDefaultAsync(p => p.ReferenceId.ToString() == article.Id.ToString() && p.CreatorUserId == this.AbpSession.UserId);
+                article.IsPurchased = purchasedService != null;
 
                 article.ArticlesCount = article.Children.Count();
             }
