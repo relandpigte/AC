@@ -8,6 +8,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { ArticleDto, ArticlesServiceProxy, CoachingDto, CoachingsServiceProxy, CourseDto, CoursesServiceProxy, DateGrains, EventCategory, EventDto, EventsServiceProxy, PostsServiceProxy, ServicesServiceProxy, SharedType, UserDto, UserServiceProxy, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { PurchaseServiceComponent } from '@shared/components/purchase-service/purchase-service.component';
+import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 
 @Component({
   selector: 'app-explore-for-you',
@@ -53,7 +54,8 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
     private _videoService: VideosServiceProxy,
     private _coachingsService: CoachingsServiceProxy,
     private _postsService: PostsServiceProxy,
-    private _servicesService: ServicesServiceProxy
+    private _servicesService: ServicesServiceProxy,
+    private _dashboardPagesService: DashboardPagesService
   ) {
     super(injector);
   }
@@ -124,6 +126,11 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
 
   handleNewCoachingServiceCardClick(coaching: CoachingDto): void {
     this._router.navigate(['app/coaching' , coaching.id, 'about']);
+  }
+
+  async handleServiceRedirect(url: string): Promise<void> {
+    this._dashboardPagesService.setCurrentTab('for-you');
+    await this._router.navigate([url]);
   }
 
   handleServiceCardShareClick(service: any): void {

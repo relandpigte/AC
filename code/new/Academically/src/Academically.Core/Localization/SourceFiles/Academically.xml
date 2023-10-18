@@ -1965,6 +1965,7 @@
     <text name="AreYouSure">Are you sure?</text>
 
     <!-- Dashboard -->
+    <text name="DashboardForYou">For you</text>
     <text name="CurrentLearning">Current learning</text>
     <text name="RecentlyCreated">Recently created</text>
     <text name="TotalRevenue">Total Revenue</text>

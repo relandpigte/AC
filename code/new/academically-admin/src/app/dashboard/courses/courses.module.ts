@@ -16,6 +16,7 @@ import { LearningListComponent } from './_components/learning-list/learning-list
 import { DashboardModule } from '@app/dashboard/dashboard.module';
 import { CreatedComponent } from './_components/created/created.component';
 import { PurchasedComponent } from './_components/purchased/purchased.component';
+import { ForYouComponent } from '@app/dashboard/courses/_components/for-you/for-you.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { PurchasedComponent } from './_components/purchased/purchased.component'
     LearningListComponent,
     CreatedComponent,
     PurchasedComponent,
+    ForYouComponent
   ],
   imports: [
     CommonModule,

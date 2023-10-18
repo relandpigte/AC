@@ -32,7 +32,6 @@
                 <ng-container *ngSwitchCase="dashboardServiceView.creator">
                     <div class="tab-pane fade show active" id="created" role="tabpanel" aria-labelledby="created-tab">
                         <app-created></app-created>
-                        <!-- <app-teaching></app-teaching> -->
                     </div>
                     <div class="tab-pane fade" id="analytics" role="tabpanel" aria-labelledby="analytics-tab">
                         This is analytics tab
@@ -41,13 +40,12 @@
                 <ng-container *ngSwitchDefault>
                     <div class="tab-pane fade show active" id="purchased" role="tabpanel" aria-labelledby="purchased-tab">
                         <app-purchased></app-purchased>
-                        <!-- <app-learning></app-learning> -->
                     </div>
                     <div class="tab-pane fade" id="saved" role="tabpanel" aria-labelledby="save-tab">
                         <p>This is saved tab content.</p>
                     </div>
-                    <div class="tab-pane fade" id="discover" role="tabpanel" aria-labelledby="discover-tab">
-                        <p>This is Discover tab content.</p>
+                    <div class="tab-pane fade" id="for-you" role="tabpanel" aria-labelledby="for-you-tab">
+                        <app-events-for-you></app-events-for-you>
                     </div>
                 </ng-container>
             </div>
