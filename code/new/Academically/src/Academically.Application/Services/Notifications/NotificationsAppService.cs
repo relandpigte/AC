@@ -271,7 +271,7 @@ namespace Academically.Services.Notifications
 
             if (await this.NotificationHasPronoun(notification))
             {
-                var pronoun = await this.FormatPronoun();
+                var pronoun = await this.FormatPronoun(notification.Action);
                 if (!string.IsNullOrEmpty(pronoun))
                 {
                     formatted.Add(" ");
@@ -365,6 +365,8 @@ namespace Academically.Services.Notifications
                     return "answered";
                 case NotificationAction.Post:
                     return "posted";
+                case NotificationAction.Chat:
+                    return "sent";
                 default:
                     return "reacted";
             }
@@ -384,6 +386,8 @@ namespace Academically.Services.Notifications
                     return "comment";
                 case NotificationTarget.Comment:
                     return "comment";
+                case NotificationTarget.Chat:
+                    return "message";
                 default:
                     return "post";
             }
@@ -443,9 +447,9 @@ namespace Academically.Services.Notifications
             return await this.NotificationActionToText(notification.Action);
         }
 
-        private async Task<string> FormatPronoun()
+        private async Task<string> FormatPronoun(NotificationAction action)
         {
-            return "your";
+            return NotificationAction.Chat.Equals(action) ? "you a" : "your";
         }
 
         private async Task<string> FormatTarget(NotificationDto notification)

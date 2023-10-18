@@ -14,6 +14,7 @@ import * as _ from 'lodash';
 import {
   ChatComposerConversationComponent
 } from '@shared/components/chat-composer-conversation/chat-composer-conversation.component';
+import { ActivatedRoute } from '@angular/router';
 
 export interface MessageComposeData {
   parentId?: string;
@@ -28,6 +29,7 @@ export interface MessageComposeData {
 export class ChatComponent extends AppComponentBase implements OnInit {
   channelsStateService: ChannelsStateService;
   replyingTo: ChannelMessageDto;
+  channelId: string;
 
   channels: ChannelDto[] = [];
   totalChannelsCount = 0;
@@ -56,7 +58,8 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     private _cdr: ChangeDetectorRef,
     private _chatService: ChatService,
     private _hubService: HubService,
-    private _chatsService: ChatsServiceProxy
+    private _chatsService: ChatsServiceProxy,
+    private _route: ActivatedRoute
   ) {
     super(injector);
 
@@ -129,6 +132,8 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     this._chatService.selectedService$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(service => this.selectedService = service);
+
+    this._route.queryParams.subscribe(params => this.channelId = params.channel);
   }
 
   get isSearchingKeyword(): boolean { return this._isSearchingKeyword; }
@@ -158,6 +163,7 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     await this.initChannelsAppStates();
     this.getCurrentUserBlockers();
     this.getAllMutedChannelByUser();
+    this.setChannelFromNotification();
   }
 
   handleOnComposeMessage(): void {
@@ -284,5 +290,16 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     this.channels = this.channelsStateService.getAllChannels();
     this.totalChannelsCount = this.channelsStateService.totalChannelsCount;
     this._chatService.selectedChannel$.next(this.channels?.[0]);
+  }
+
+  private setChannelFromNotification(): void {
+    if (!!!this.channelId) { return; }
+    this._chatsService.getChannel(this.channelId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(channel => {
+        if (!!channel.id) {
+          this._chatService.selectedChannel$.next(channel);
+        }
+      });
   }
 }

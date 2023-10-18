@@ -66,7 +66,7 @@
         <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
             <div class="notification list-group list-group-flush list-group-activity my-n3">
                 <ng-container *ngIf="notifications?.length">
-                    <a *ngFor="let notification of notifications; let idx = index" class="notification-item list-group-item text-reset" (click)="onNotificationClick(notification)">
+                    <a *ngFor="let notification of notifications; let idx = index" class="notification-item list-group-item text-reset cursor-pointer" (click)="onNotificationClick(notification)">
                         <div class="d-flex gap-10">
                             <div class="notification-avatar avatar avatar-sm flex-grow-1">
                                 <img *ngIf="getDominantUser(notification); else avatarPlaceHolderTemplate" class="avatar-img rounded-circle" [src]="getDominantUser(notification).profilePictureUrl" alt="...">
