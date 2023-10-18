@@ -103,6 +103,8 @@ export class NotificationsPreviewComponent extends AppComponentBase implements O
     this.notificationsModal.show();
   }
 
+
+  // tslint:disable-next-line: member-ordering
   onNotificationClick(notification: NotificationDto): void {
     this.setNotificationAsRead(notification);
     const decodedUrl = decodeURIComponent(notification.url);

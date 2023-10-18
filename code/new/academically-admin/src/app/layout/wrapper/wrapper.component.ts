@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { uiEvents } from '@shared/constants/ui-events.constant';
@@ -23,7 +23,7 @@ import { HubService } from '@app/_shared/services/hub.service';
   styleUrls: ['./wrapper.component.less'],
   providers: [ TitleCasePipe ]
 })
-export class WrapperComponent extends AppComponentBase implements OnInit {
+export class WrapperComponent extends AppComponentBase implements OnInit, OnDestroy {
   NavigationPosition = NavigationPosition;
   SidebarSize = SidebarSize;
   themeSetting: IThemeSetting;
@@ -65,6 +65,12 @@ export class WrapperComponent extends AppComponentBase implements OnInit {
     this._cdr.detectChanges();
   }
 
+  ngOnDestroy(): void {
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
+  }
+
   private async initNotificationAppStates(): Promise<void> {
     const appStateConfig: AppStateConfig = {
       ['notification']: {
@@ -83,11 +89,12 @@ export class WrapperComponent extends AppComponentBase implements OnInit {
     this.notificationsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingList$.next(loading));
     this.notificationsStateService.notifications$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
       switch (event.type) {
-        case StateUpdateType.Update:
-          this.notification = event.data;
+        case StateUpdateType.Add:
           if (this.timer) { clearTimeout(this.timer); }
           this.notification = event.data;
-          this.timer = setTimeout(() => this.notification = null, 10000);
+          this.timer = setTimeout((): void => {
+            this.notification = null;
+          }, 10000);
           break;
       }
       this._cdr.detectChanges();

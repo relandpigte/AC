@@ -12,6 +12,7 @@ namespace Academically.Domain.Enums
         Answer,
         Question,
         Reply,
-        Comment
+        Comment,
+        Chat
     }
 }
