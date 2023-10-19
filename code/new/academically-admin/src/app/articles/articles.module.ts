@@ -12,6 +12,7 @@ import { DashboardModule } from '@app/dashboard/dashboard.module';
 import { PurchasedComponent } from './_components/purchased/purchased.component';
 import { CreatedComponent } from './_components/created/created.component';
 import { ForYouComponent } from '@app/articles/_components/for-you/for-you.component';
+import { SavedModule } from '@app/articles/_components/learning/saved/saved.module';
 @NgModule({
   declarations: [
     ArticlesComponent,
@@ -29,6 +30,7 @@ import { ForYouComponent } from '@app/articles/_components/for-you/for-you.compo
     TeachingModule,
     LearningModule,
     DashboardModule,
+    SavedModule,
   ],
 })
 export class ArticlesModule { }
