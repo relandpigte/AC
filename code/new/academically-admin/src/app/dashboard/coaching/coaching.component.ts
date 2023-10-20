@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { filter, takeUntil } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 
@@ -23,6 +23,7 @@ import { CoachingsServiceProxy, CoachingType, CreateCoachingDto, ServicesType } 
 })
 export class CoachingComponent extends AppComponentBase implements OnInit, AfterViewInit {
   shimmerType = ShimmerType;
+  readonly DashboardServiceView = DashboardServiceView;
 
   constructor(
     injector: Injector,
@@ -40,12 +41,11 @@ export class CoachingComponent extends AppComponentBase implements OnInit, After
   get dashboardServiceView() { return DashboardServiceView; }
   get serviceType() { return ServicesType.Coaching; }
   get switchButtonText(): string { return this._dashboardService.switchButtonText(); }
-  get defaultUserView(): DashboardServiceView { return this._dashboardService.getUserView(); }
+  get userView(): string { return this._dashboardService.getUserView(); }
   get isLearnerView(): boolean { return this._dashboardService.getUserView() === DashboardServiceView.learner; }
   get isLoading$() { return this._dashboardPageService.isLoading$; }
 
   ngOnInit(): void {
-    this._dashboardService.setUserView(DashboardServiceView.learner);
     setTimeout(() => this._dashboardPageService.setIsLoading(false), 3000);
     this._cdr.detectChanges();
   }
@@ -85,5 +85,4 @@ export class CoachingComponent extends AppComponentBase implements OnInit, After
     this._dashboardService.handleSwitchView();
     this._cdr.detectChanges();
   }
-
 }

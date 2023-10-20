@@ -14,8 +14,8 @@ import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
   animations: [appModuleAnimation()],
 })
 export class CoursesComponent extends AppComponentBase implements OnInit, AfterViewInit {
-
   shimmerType = ShimmerType;
+  readonly DashboardServiceView = DashboardServiceView;
 
   constructor(
     injector: Injector,
@@ -27,16 +27,12 @@ export class CoursesComponent extends AppComponentBase implements OnInit, AfterV
     super(injector);
   }
 
-  get dashboardServiceView() { return DashboardServiceView; }
   get switchButtonText(): string { return this._dashboardService.switchButtonText(); }
-  get defaultUserView(): DashboardServiceView { return this._dashboardService.getUserView(); }
+  get userView(): string { return this._dashboardService.getUserView(); }
   get isLearnerView(): boolean { return this._dashboardService.getUserView() === DashboardServiceView.learner; }
-  get isCreatorView(): boolean { return this._dashboardService.getUserView() === DashboardServiceView.creator; }
   get isLoading$() { return this._dashboardPageService.isLoading$; }
 
   ngOnInit(): void {
-    this._dashboardService.setUserView(DashboardServiceView.learner);
-
     setTimeout(() => this._dashboardPageService.setIsLoading(false), 300);
   }
 

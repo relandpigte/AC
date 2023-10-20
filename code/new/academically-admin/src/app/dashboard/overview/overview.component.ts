@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { DashboardService, DashboardServiceView } from '@app/dashboard/_services/dashboard.service';
 
@@ -7,18 +7,14 @@ import { DashboardService, DashboardServiceView } from '@app/dashboard/_services
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.less']
 })
-export class OverviewComponent extends AppComponentBase implements OnInit {
+export class OverviewComponent extends AppComponentBase {
+  readonly DashboardServiceView = DashboardServiceView;
+
   constructor(
     injector: Injector,
     private _dashboardService: DashboardService
   ) {
     super(injector);
   }
-
-  get dashboardServiceView() { return DashboardServiceView; }
-  get defaultUserView(): DashboardServiceView { return this._dashboardService.getUserView(); }
-
-  ngOnInit(): void {
-    this._dashboardService.setUserView(DashboardServiceView.learner);
-  }
+  get userView(): string { return this._dashboardService.getUserView(); }
 }

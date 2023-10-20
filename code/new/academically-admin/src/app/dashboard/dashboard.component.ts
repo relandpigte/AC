@@ -26,6 +26,7 @@ export class DashboardComponent extends AppComponentBase implements OnInit, Afte
   isOnboarding = false;
 
   shimmerType = ShimmerType;
+  readonly DashboardServiceView = DashboardServiceView;
 
   constructor(
     injector: Injector,
@@ -42,22 +43,18 @@ export class DashboardComponent extends AppComponentBase implements OnInit, Afte
     this.user = this.appSession.user;
   }
 
-  get dashboardServiceView() { return DashboardServiceView; }
   get switchButtonText(): string { return this._dashboardService.switchButtonText(); }
-  get defaultUserView(): DashboardServiceView { return this._dashboardService.getUserView(); }
-
+  get userView(): string { return this._dashboardService.getUserView(); }
   get isLearnerView(): boolean { return this._dashboardService.getUserView() === DashboardServiceView.learner; }
-  get isCreatorView(): boolean { return this._dashboardService.getUserView() === DashboardServiceView.creator; }
-
   get isLoading$() { return this._dashboardPageService.isLoading$; }
 
   handleSwitchView(): void {
     this._dashboardService.handleSwitchView();
     this._cdr.detectChanges();
+    console.warn(this.userView);
   }
 
   ngOnInit(): void {
-    this._dashboardService.setUserView(DashboardServiceView.learner);
     this.greetings = this.getGreetings();
     this._route.queryParams.subscribe(paramMap => {
       if (paramMap.code) {
