@@ -6,7 +6,7 @@ import { PortalService } from '@app/dashboard/events/portal/broadcast/student/po
 import { PortalPollService } from '../../_services/portal-poll.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { CreateEditPollComponent } from '@app/dashboard/events/details/broadcast/single/resources/_components/create-edit-poll/create-edit-poll.component';
-import { SignalAction, SignalData } from '../../polls.component';
+import { PollTab, SignalAction, SignalData } from '../../polls.component';
 import { HubConnection } from '@aspnet/signalr';
 
 @Component({
@@ -18,6 +18,10 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
   @Input() poll: EventPollDto;
   @Input() showVoterPercentage = false;
   @Input() showBackButton = true;
+  @Input() showMinimizeButton = false;
+
+  isModal = false;
+  isMaximized = false;
 
   EventPollStatus = EventPollStatus;
   hub: HubConnection;
@@ -46,22 +50,30 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
         this.handleHubEvent();
       }
     });
-  }
 
-  ngOnInit(): void {
+    this.pipeDestroy(this._portalPollService.pollSelectedMaximized$, maximized => this.isMaximized = maximized);
   }
 
   get numberOfExpectedVoters(): number { return this.voterUserIds.length; }
 
+  ngOnInit(): void {
+    if (this.poll) {
+      this.init();
+    }
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
     if (changes && changes.poll) {
-      const votedUserIds: number[] = _.flatMap(this.poll.eventPollQuestions, q => q.eventPollAnswers).filter(x => x).map(a => a.creatorUser.id);
-      const totalVoterPercentage = this.numberOfExpectedVoters > 0 ? Math.round((votedUserIds.length / this.numberOfExpectedVoters) * 100) : 0;
-      if (this.totalVoterPercentage === 0 || this.totalVoterPercentage !== totalVoterPercentage) {
-        this.totalVoterPercentage = totalVoterPercentage;
-        this.setChartSettings();
-      }
+      this.init();
+    }
+  }
+
+  private init(): void {
+    const votedUserIds: number[] = _.flatMap(this.poll.eventPollQuestions, q => q.eventPollAnswers).filter(x => x).map(a => a.creatorUser.id);
+    const totalVoterPercentage = this.numberOfExpectedVoters > 0 ? Math.round((votedUserIds.length / this.numberOfExpectedVoters) * 100) : 0;
+    if (this.totalVoterPercentage === 0 || this.totalVoterPercentage !== totalVoterPercentage) {
+      this.totalVoterPercentage = totalVoterPercentage;
+      setTimeout(() => this.setChartSettings());
     }
   }
 
@@ -85,23 +97,24 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
   }
 
   getVoterUsers(question: EventPollQuestionDto): UserDto[] {
-    return _.uniq(question.eventPollAnswers.filter(x => x).map(a => a.creatorUser));
+    return _.uniq(question.eventPollAnswers?.filter(x => x).map(a => a.creatorUser) ?? []);
   }
 
   private setChartSettings(): void {
     this.chartSettings = {
       type: 'doughnut',
       options: {
-        cutoutPercentage: 80,
+        aspectRatio: 1,
+        cutoutPercentage: this.isModal ? 80 : 70,
         plugins: {
           tooltip: {
             callbacks: {
               afterLabel: function () {
                 return '%';
-              }
-            }
-          }
-        }
+              },
+            },
+          },
+        },
       },
       data: {
         labels: ['Voted', 'NotVoted'],
@@ -115,10 +128,6 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
 
   onBackClick(): void {
     this._portalPollService.pollSelected = undefined;
-  }
-
-  onCancelClick(): void {
-    this._portalPollService.pollCancelled = this.poll;
   }
 
   onEditClick(): void {
@@ -136,8 +145,9 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
     });
   }
 
-  onStartClick(): void {
-    this.sendSignal(this.voterUserIds, new SignalData(SignalAction.PollStarted, this.poll));
+  onLaunchClick(): void {
+    this._portalPollService.pollSelectedMaximized = true;
+    // this.sendSignal(this.voterUserIds, new SignalData(SignalAction.PollStarted, this.poll));
   }
 
   onStopClick(): void {
@@ -156,6 +166,13 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
     this._portalPollService.pollClosed = tempPoll;
     this._portalPollService.pollSelected = undefined;
     this.sendSignal(this.voterUserIds, new SignalData(SignalAction.PollClosed, tempPoll));
+  }
+
+  onMinimizeClick(): void {
+    this._portalPollService.pollTabSelected = this.poll.status === EventPollStatus.Queue ?
+      PollTab.Queue : this.poll.status === EventPollStatus.Open ?
+      PollTab.Open : PollTab.Closed;
+    this._portalPollService.pollSelectedMaximized = false;
   }
 
   private async sendSignal<TObject>(userIds: number[], signalData: SignalData<TObject>, callback?: () => void): Promise<void> {

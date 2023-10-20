@@ -72,6 +72,38 @@ namespace Academically.Services.EventPolls
                 .Select(e => ObjectMapper.Map<EventPollDto>(e))
                 .ToListAsync();
         }
+
+        public async Task<EventPollDto> LaunchPoll(Guid Id)
+        {
+            var poll = await this.Repository.GetAll()
+               .Where(o => o.Id == Id)
+               .FirstOrDefaultAsync();
+
+            if (poll != null)
+            {
+                poll.Status = EventPollStatus.Open;
+                poll.LaunchedTime = DateTime.Now;
+                // await this._hubManager.NotifyUsersForServiceOfferLaunched(ObjectMapper.Map<ServiceOfferDto>(offer));
+                return ObjectMapper.Map<EventPollDto>(poll);
+            }
+            return null;
+        }
+
+        public async Task<EventPollDto> ClosePoll(Guid Id)
+        {
+            var poll = await this.Repository.GetAll()
+               .Where(o => o.Id == Id)
+               .FirstOrDefaultAsync();
+
+            if (poll != null)
+            {
+                poll.Status = EventPollStatus.Closed;
+                poll.EndedTime = DateTime.Now;
+                // await this._hubManager.NotifyUsersForServiceOfferClosed(ObjectMapper.Map<ServiceOfferDto>(offer));
+                return ObjectMapper.Map<EventPollDto>(poll);
+            }
+            return null;
+        }
     }
 }
 

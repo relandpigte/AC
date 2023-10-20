@@ -13,6 +13,8 @@ namespace Academically.Services.EventPolls.Dto
 		public string Name { get; set; }
         public Guid EventId { get; set; }
 		public EventPollStatus Status { get; set; }
+        public DateTime? LaunchedTime { get; set; }
+        public DateTime? EndedTime { get; set; }
         public DateTime CreationTime { get; set; }
 
         public IEnumerable<EventPollQuestionDto> EventPollQuestions { get; set; }

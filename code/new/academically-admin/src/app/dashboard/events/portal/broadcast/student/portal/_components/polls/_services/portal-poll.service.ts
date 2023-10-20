@@ -9,12 +9,14 @@ import { PollTab } from '../polls.component';
 export class PortalPollService {
   public pollTab$: Observable<PollTab>;
   public pollSelected$: Observable<EventPollDto>;
+  public pollSelectedMaximized$: Observable<boolean>;
   public pollCancelled$: Observable<EventPollDto>;
   public pollClosed$: Observable<EventPollDto>;
   public refreshPollQueue$: Observable<boolean>;
 
   private _pollTabSubject: BehaviorSubject<PollTab>;
   private _pollSelectedSubject: BehaviorSubject<EventPollDto>;
+  private _pollSelectedMaximizedSubject: BehaviorSubject<boolean>;
   private _pollCancelledSubject: BehaviorSubject<EventPollDto>;
   private _pollClosedSubject: BehaviorSubject<EventPollDto>;
   private _refreshPollQueueSubject: BehaviorSubject<boolean>;
@@ -25,6 +27,9 @@ export class PortalPollService {
 
     this._pollSelectedSubject = new BehaviorSubject<EventPollDto>(undefined);
     this.pollSelected$ = this._pollSelectedSubject.asObservable();
+
+    this._pollSelectedMaximizedSubject = new BehaviorSubject<boolean>(false);
+    this.pollSelectedMaximized$ = this._pollSelectedMaximizedSubject.asObservable();
 
     this._pollCancelledSubject = new BehaviorSubject<EventPollDto>(undefined);
     this.pollCancelled$ = this._pollCancelledSubject.asObservable();
@@ -38,6 +43,7 @@ export class PortalPollService {
 
   public set pollTabSelected(value: PollTab) { this._pollTabSubject.next(value); }
   public set pollSelected(value: EventPollDto) { this._pollSelectedSubject.next(value); }
+  public set pollSelectedMaximized(value: boolean) { this._pollSelectedMaximizedSubject.next(value); }
   public set pollCancelled(value: EventPollDto) { this._pollCancelledSubject.next(value); }
   public set pollClosed(value: EventPollDto) { this._pollClosedSubject.next(value); }
   public set refreshPollQueue(value: boolean) { this._refreshPollQueueSubject.next(value); }

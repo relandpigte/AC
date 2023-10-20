@@ -1,65 +1,76 @@
-<div *ngIf="isHost else notHostPollTemplate" class="d-flex flex-column h-100">
-  <ul class="nav nav-tabs nav-tabs-sm px-3">
-    <li class="nav-item">
-      <a #queueNav href="#" class="nav-link" [class.active]="isQueueTabSelected" id="polls-queue-tab" data-toggle="tab" href="#polls-queue-container"
-        role="tab" aria-controls="polls-queue-container" [aria-selected]="isQueueTabSelected" (click)="handleTabClick(PollTab.Queue)">
-        {{ 'Queue' | localize }}
-      </a>
-    </li>
-    <li class="nav-item">
-      <a #openNav href="#" class="nav-link" [class.active]="isOpenTabSelected" id="polls-open-tab" data-toggle="tab" href="#polls-open-container"
-        role="tab" aria-controls="polls-open-container" [aria-selected]="isOpenTabSelected" (click)="handleTabClick(PollTab.Open)">
-        {{ 'Open' | localize }}
-      </a>
-    </li>
-    <li class="nav-item">
-      <a #closedNav href="#" class="nav-link" [class.active]="isClosedTabSelected" id="polls-closed-tab" data-toggle="tab" href="#polls-closed-container"
-        role="tab" aria-controls="polls-closed-container" [aria-selected]="isClosedTabSelected" (click)="handleTabClick(PollTab.Closed)">
-        {{ 'Closed' | localize }}
-      </a>
-    </li>
-  </ul>
-  <div class="tab-content">
-    <ng-container *ngIf="!selectedPoll">
-      <div class="tab-pane fade" [ngClass]="{ 'show active': isQueueTabSelected }" id="polls-queue-container" role="tabpanel" aria-labelledby="polls-queue-tab">
-        <app-polls-queue></app-polls-queue>
-      </div>
-      <div class="tab-pane fade" [ngClass]="{ 'show active': isOpenTabSelected }" id="polls-open-container" role="tabpanel" aria-labelledby="polls-registants-tab">
-        <app-polls-open></app-polls-open>
-      </div>
-      <div class="tab-pane fade" [ngClass]="{ 'show active': isClosedTabSelected }" id="polls-closed-container" role="tabpanel" aria-labelledby="polls-closed-tab">
-        <app-polls-closed></app-polls-closed>
-      </div>
-    </ng-container>
-    <ng-conatiner *ngIf="selectedPoll">
-      <app-poll [poll]="selectedPoll" class="poll"></app-poll>
-    </ng-conatiner>
-  </div>
-</div>
-<ng-template #notHostPollTemplate>
-  <div class="d-flex flex-column h-100">
-    <ul class="nav nav-tabs nav-tabs-sm px-3">
-      <li class="nav-item">
-        <a #openNav href="#" class="nav-link active" id="polls-open-tab" data-toggle="tab" href="#polls-open-container"
-          role="tab" aria-controls="polls-open-container" aria-selected="true">
-          {{ 'Open' | localize }}
-        </a>
-      </li>
-      <li class="nav-item">
-        <a #closedNav href="#" class="nav-link" id="polls-closed-tab" data-toggle="tab" href="#polls-closed-container"
-          role="tab" aria-controls="polls-closed-container" aria-selected="true">
-          {{ 'Closed' | localize }}
-        </a>
-      </li>
-    </ul>
-    <div class="tab-content">
-      <div class="tab-pane fade show active" id="polls-open-container" role="tabpanel"
-        aria-labelledby="polls-registants-tab">
-        <app-polls-attendee-open></app-polls-attendee-open>
-      </div>
-      <div class="tab-pane fade" id="polls-closed-container" role="tabpanel" aria-labelledby="polls-closed-tab">
-        <app-polls-attendee-closed></app-polls-attendee-closed>
+
+
+<ng-container *ngIf="isSelectedMaximized">
+  <div class="maximized d-flex justify-content-center align-items-center">{{ 'Viewing in expanded view' | localize }}</div>
+</ng-container>
+<ng-container *ngIf="!isSelectedMaximized">
+  <ng-container *ngIf="selectedPoll">
+    <div class="d-flex flex-column h-100">
+      <div class="tab-content">
+        <app-poll [poll]="selectedPoll" class="poll"></app-poll>
       </div>
     </div>
-  </div>
-</ng-template>
+  </ng-container>
+  <ng-container *ngIf="!selectedPoll">
+    <div *ngIf="isHost else notHostPollTemplate" class="flex-column h-100p">
+      <ul class="nav nav-tabs nav-tabs-sm px-3">
+        <li class="nav-item">
+          <a #queueNav href="#" class="nav-link" [class.active]="isQueueTabSelected" id="polls-queue-tab" data-toggle="tab" href="#polls-queue-container"
+            role="tab" aria-controls="polls-queue-container" [aria-selected]="isQueueTabSelected" (click)="handleTabClick(PollTab.Queue)">
+            {{ 'Queue' | localize }}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a #openNav href="#" class="nav-link" [class.active]="isOpenTabSelected" id="polls-open-tab" data-toggle="tab" href="#polls-open-container"
+            role="tab" aria-controls="polls-open-container" [aria-selected]="isOpenTabSelected" (click)="handleTabClick(PollTab.Open)">
+            {{ 'Open' | localize }}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a #closedNav href="#" class="nav-link" [class.active]="isClosedTabSelected" id="polls-closed-tab" data-toggle="tab" href="#polls-closed-container"
+            role="tab" aria-controls="polls-closed-container" [aria-selected]="isClosedTabSelected" (click)="handleTabClick(PollTab.Closed)">
+            {{ 'Closed' | localize }}
+          </a>
+        </li>
+      </ul>
+      <div class="tab-content">
+          <div class="tab-pane fade" [ngClass]="{ 'show active': isQueueTabSelected }" id="polls-queue-container" role="tabpanel" aria-labelledby="polls-queue-tab">
+            <app-polls-queue></app-polls-queue>
+          </div>
+          <div class="tab-pane fade" [ngClass]="{ 'show active': isOpenTabSelected }" id="polls-open-container" role="tabpanel" aria-labelledby="polls-registants-tab">
+            <app-polls-open></app-polls-open>
+          </div>
+          <div class="tab-pane fade" [ngClass]="{ 'show active': isClosedTabSelected }" id="polls-closed-container" role="tabpanel" aria-labelledby="polls-closed-tab">
+            <app-polls-closed></app-polls-closed>
+          </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #notHostPollTemplate>
+    <div class="d-flex flex-column h-100">
+      <ul class="nav nav-tabs nav-tabs-sm px-3">
+        <li class="nav-item">
+          <a #openNav href="#" class="nav-link active" id="polls-open-tab" data-toggle="tab" href="#polls-open-container"
+            role="tab" aria-controls="polls-open-container" aria-selected="true">
+            {{ 'Open' | localize }}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a #closedNav href="#" class="nav-link" id="polls-closed-tab" data-toggle="tab" href="#polls-closed-container"
+            role="tab" aria-controls="polls-closed-container" aria-selected="true">
+            {{ 'Closed' | localize }}
+          </a>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="polls-open-container" role="tabpanel"
+          aria-labelledby="polls-registants-tab">
+          <app-polls-attendee-open></app-polls-attendee-open>
+        </div>
+        <div class="tab-pane fade" id="polls-closed-container" role="tabpanel" aria-labelledby="polls-closed-tab">
+          <app-polls-attendee-closed></app-polls-attendee-closed>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</ng-container>

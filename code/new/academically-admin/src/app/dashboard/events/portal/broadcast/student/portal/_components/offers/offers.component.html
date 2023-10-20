@@ -1,33 +1,37 @@
 <div class="flex-column h-100p">
-  <ul class="nav nav-tabs nav-tabs-sm px-3">
-    <li *ngIf="isTutor" class="nav-item">
-      <a href="#" class="nav-link" [class.active]="activeTab === OffersTabs.Queued" id="queue-tab" data-toggle="tab" href="#queue-container" role="tab"
-        aria-controls="queue-container" aria-selected="true" (click)="onTabChange(OffersTabs.Queued)">
-        {{ 'Queue' | localize }}
-      </a>
-    </li>
-    <li class="nav-item">
-      <a href="#" class="nav-link" [class.active]="activeTab === OffersTabs.Open" id="open-tab" data-toggle="tab" href="#open-container" role="tab"
-        aria-controls="open-container" aria-selected="true" (click)="onTabChange(OffersTabs.Open)">
-        {{ 'Open' | localize }}
-      </a>
-    </li>
-    <li *ngIf="isTutor" class="nav-item">
-      <a href="#" class="nav-link" [class.active]="activeTab === OffersTabs.Closed" id="closed-tab" data-toggle="tab" href="#closed-container" role="tab"
-        aria-controls="closed-container" aria-selected="true" (click)="onTabChange(OffersTabs.Closed)">
-        {{ 'Closed' | localize }}
-      </a>
-    </li>
-    <li *ngIf="!isTutor" class="nav-item">
-      <a href="#" class="nav-link" [class.active]="activeTab === OffersTabs.Purchased" id="purchased-tab" data-toggle="tab" href="#purchased-container" role="tab"
-        aria-controls="purchased-container" aria-selected="true" (click)="onTabChange(OffersTabs.Purchased)">
-        {{ 'Purchased' | localize }}
-      </a>
-    </li>
-  </ul>
-  <div class="tab-content flex-grow-1 flex-column overflow-hidden">
-    <app-offer-details *ngIf="selectedOffer" [offer]="selectedOffer" [isHost]="isHost" (onBack)="selectedOffer=false"></app-offer-details>
-    <ng-container *ngIf="!selectedOffer">
+  <ng-container *ngIf="selectedOffer">
+    <div class="tab-content flex-grow-1 flex-column overflow-hidden">
+      <app-offer-details [offer]="selectedOffer" [isHost]="isHost" (onBack)="selectedOffer=false"></app-offer-details>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!selectedOffer">
+    <ul class="nav nav-tabs nav-tabs-sm px-3">
+      <li *ngIf="isTutor" class="nav-item">
+        <a href="#" class="nav-link" [class.active]="activeTab === OffersTabs.Queued" id="queue-tab" data-toggle="tab" href="#queue-container" role="tab"
+          aria-controls="queue-container" aria-selected="true" (click)="onTabChange(OffersTabs.Queued)">
+          {{ 'Queue' | localize }}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" [class.active]="activeTab === OffersTabs.Open" id="open-tab" data-toggle="tab" href="#open-container" role="tab"
+          aria-controls="open-container" aria-selected="true" (click)="onTabChange(OffersTabs.Open)">
+          {{ 'Open' | localize }}
+        </a>
+      </li>
+      <li *ngIf="isTutor" class="nav-item">
+        <a href="#" class="nav-link" [class.active]="activeTab === OffersTabs.Closed" id="closed-tab" data-toggle="tab" href="#closed-container" role="tab"
+          aria-controls="closed-container" aria-selected="true" (click)="onTabChange(OffersTabs.Closed)">
+          {{ 'Closed' | localize }}
+        </a>
+      </li>
+      <li *ngIf="!isTutor" class="nav-item">
+        <a href="#" class="nav-link" [class.active]="activeTab === OffersTabs.Purchased" id="purchased-tab" data-toggle="tab" href="#purchased-container" role="tab"
+          aria-controls="purchased-container" aria-selected="true" (click)="onTabChange(OffersTabs.Purchased)">
+          {{ 'Purchased' | localize }}
+        </a>
+      </li>
+    </ul>
+    <div class="tab-content flex-grow-1 flex-column overflow-hidden">
       <div *ngIf="isTutor" class="tab-pane fade flex-grow-1" [ngClass]="{ 'show active': activeTab === OffersTabs.Queued }" id="queue-container" role="tabpanel" aria-labelledby="queue-tab">
         <app-queue [referenceId]="referenceId" [isHost]="isHost"></app-queue>
       </div>
@@ -40,6 +44,6 @@
       <div *ngIf="!isTutor" class="tab-pane fade flex-grow-1" [ngClass]="{ 'show active': activeTab === OffersTabs.Purchased }" id="purchased-container" role="tabpanel" aria-labelledby="purchased-tab">
         <app-purchased [referenceId]="referenceId" [isHost]="isHost"></app-purchased>
       </div>
-    </ng-container>
-  </div>
+    </div>
+  </ng-container>
 </div>

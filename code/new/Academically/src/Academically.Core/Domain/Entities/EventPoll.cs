@@ -13,6 +13,8 @@ namespace Academically.Domain.Entities
         public string Name { get; set; }
         public Guid EventId { get; set; }
 		public EventPollStatus Status { get; set; }
+        public DateTime? LaunchedTime { get; set; }
+        public DateTime? EndedTime { get; set; }
 
         [ForeignKey("EventId")]
         public Event Event { get; set; }

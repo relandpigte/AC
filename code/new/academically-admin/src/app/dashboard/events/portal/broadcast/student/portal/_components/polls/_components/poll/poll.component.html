@@ -1,9 +1,11 @@
 <div *ngIf="showBackButton" class="back d-flex justify-content-start align-items-center border-bottom w-100 h-70-px cursor-pointer" [style.padding.px]="20" (click)="onBackClick()">
-  <img src="assets/img/events/chat/back.svg" alt="Back">
-  {{ 'Back' | localize }}
+  <img src="assets/img/events/chat/back.svg" alt="Back"> {{ 'Back' | localize }}
 </div>
 
-<div class="poll">
+<div class="poll position-relative" [class.is-modal]="isModal">
+  <div *ngIf="showMinimizeButton" class="poll-minimize cursor-pointer" (click)="onMinimizeClick()">
+    <img src="assets/img/events/poll/minimize.svg" alt="Minimize">
+  </div>
   <div class="poll-header">
     <ng-container *ngIf="!showVoterPercentage">
       <div class="poll-header-name">
@@ -15,16 +17,15 @@
         {{ poll.name }}
       </div>
       <div class="poll-doughnut-container">
-        <div class="poll-doughnut-canvas-container">
-          <canvas class="chart-canvas" chart [chartSettings]="chartSettings">
-          </canvas>
+        <div class="poll-doughnut-canvas-container" [ngClass]="{ 'w-160-px h-160-px': isModal, 'w-90-px h-90-px': !isModal }">
+          <canvas class="chart-canvas" chart [chartSettings]="chartSettings"></canvas>
           <h5 class="m-0 p-0 percentage">
             {{ getTotalVoterPercentage() }}%
           </h5>
         </div>
         <div class="poll-doughnut-label">
           <div class="dot mr-2"></div>
-          <label>
+          <label class="m-0">
             <small class="text-muted">
               {{ 'Participation' | localize }}
             </small>
@@ -33,7 +34,7 @@
       </div>
     </ng-container>
   </div>
-  <div class="questions">
+  <div class="questions slick-scroll">
     <div *ngFor="let question of poll.eventPollQuestions" class="questions-item card custom-card-border custom-card-shadow">
       <div class="card-header h-auto border-0 p-0">
         <div class="card-header-title">{{ question.text }}</div>
@@ -61,8 +62,8 @@
         </ng-container>
         <ng-container *ngIf="showVoterPercentage">
           <div class="questions-item-voters d-flex align-items-center gap-5">
-            <div class="questions-item-voters-badge-avatars">
-              <div class="avatar-group">
+            <div class="questions-item-voters-badge-avatars d-flex align-items-center">
+              <div class="avatar-group hide-empty">
                 <div *ngFor="let voterUser of getVoterUsers(question)" class="avatar avatar-xs">
                   <img *ngIf="voterUser.profilePictureDocument && voterUser.profilePictureDocument.id else
                   noProfilePictureTemplate" [src]="getProfilePictureUrl(voterUser.profilePictureDocument)" alt="..."
@@ -85,34 +86,27 @@
   <div class="actions">
     <ng-container [ngSwitch]="poll.status">
       <ng-container *ngSwitchCase="EventPollStatus.Queue">
-        <button class="btn btn-sm btn-white" (click)="onCancelClick()">
-          {{ 'Cancel' | localize }}
-        </button>
-        <button class="btn btn-sm btn-white" (click)="onEditClick()">
+        <button class="btn btn-block btn-white" (click)="onEditClick()">
           {{ 'EditPoll' | localize }}
         </button>
-        <button class="btn btn-sm btn-primary" (click)="onStartClick()">
-          {{ 'StartPoll' | localize }}
+        <button class="btn btn-block btn-primary" (click)="onLaunchClick()">
+          {{ 'Launch Poll' | localize }}
         </button>
       </ng-container>
       <ng-container *ngSwitchCase="EventPollStatus.Open">
-        <button class="btn btn-sm btn-white" (click)="onStopClick()">
+        <button class="btn btn-block btn-white" (click)="onStopClick()">
           {{ 'StopPoll' | localize }}
         </button>
       </ng-container>
       <ng-container *ngSwitchCase="EventPollStatus.Closed">
-        <button class="btn btn-sm btn-info" (click)="onShareClick()" [disabled]="isResultsShared"
+        <button class="btn btn-block btn-info" (click)="onShareClick()" [disabled]="isResultsShared"
           [class.results-shared]="isResultsShared" [class.text-primary]="isResultsShared">
           {{ (isResultsShared ? 'ResultsSharedWithAudience' : 'ShareResultsWithAttendeesNoQM') | localize }}
         </button>
-        <button class="btn btn-sm btn-outline-primary" (click)="onCloseClick()">
+        <button class="btn btn-block btn-outline-primary" (click)="onCloseClick()">
           {{ 'ClosePoll' | localize }}
         </button>
       </ng-container>
     </ng-container>
   </div>
 </div>
-
-<ng-template #avatarGroupTemplate>
-
-</ng-template>
