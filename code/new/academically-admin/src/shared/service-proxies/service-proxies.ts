@@ -4967,6 +4967,69 @@ export class CoachingsServiceProxy {
     }
 
     /**
+     * @param creatorUserId (optional) 
+     * @return Success
+     */
+    getAllPurchasedCoaching(creatorUserId: number | undefined): Observable<AvailableServiceDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Coachings/GetAllPurchasedCoaching?";
+        if (creatorUserId === null)
+            throw new Error("The parameter 'creatorUserId' cannot be null.");
+        else if (creatorUserId !== undefined)
+            url_ += "creatorUserId=" + encodeURIComponent("" + creatorUserId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllPurchasedCoaching(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllPurchasedCoaching(<any>response_);
+                } catch (e) {
+                    return <Observable<AvailableServiceDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AvailableServiceDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllPurchasedCoaching(response: HttpResponseBase): Observable<AvailableServiceDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(AvailableServiceDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AvailableServiceDto[]>(<any>null);
+    }
+
+    /**
      * @param id (optional) 
      * @return Success
      */
@@ -21861,6 +21924,86 @@ export class ServicesServiceProxy {
     }
 
     protected processGetAllPurchases(response: HttpResponseBase): Observable<ServicePurchaseDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(ServicePurchaseDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServicePurchaseDto[]>(<any>null);
+    }
+
+    /**
+     * @param userId (optional) 
+     * @param type (optional) 1 = Event
+    
+    2 = Course
+    
+    3 = Tutorial
+    
+    4 = Article
+    
+    5 = Coaching
+    
+    6 = Workshop
+    
+    7 = User
+     * @return Success
+     */
+    getAllPurchasedByType(userId: number | undefined, type: ServicesType | undefined): Observable<ServicePurchaseDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetAllPurchasedByType?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        if (type === null)
+            throw new Error("The parameter 'type' cannot be null.");
+        else if (type !== undefined)
+            url_ += "type=" + encodeURIComponent("" + type) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllPurchasedByType(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllPurchasedByType(<any>response_);
+                } catch (e) {
+                    return <Observable<ServicePurchaseDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServicePurchaseDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllPurchasedByType(response: HttpResponseBase): Observable<ServicePurchaseDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -44278,7 +44421,7 @@ export interface IMyServiceViewDto {
     items: MyServiceItemViewDto[] | undefined;
 }
 
-/** 0 = Like 1 = React 2 = Share 3 = Comment 4 = Post 5 = Reply 6 = Answer */
+/** 0 = Like 1 = React 2 = Share 3 = Comment 4 = Post 5 = Reply 6 = Answer 7 = Chat */
 export enum NotificationAction {
     Like = 0,
     React = 1,
@@ -44287,6 +44430,7 @@ export enum NotificationAction {
     Post = 4,
     Reply = 5,
     Answer = 6,
+    Chat = 7,
 }
 
 export class NotificationData implements INotificationData {
@@ -44476,13 +44620,14 @@ export enum NotificationSeverity {
     Fatal = 4,
 }
 
-/** 0 = Post 1 = Answer 2 = Question 3 = Reply 4 = Comment */
+/** 0 = Post 1 = Answer 2 = Question 3 = Reply 4 = Comment 5 = Chat */
 export enum NotificationTarget {
     Post = 0,
     Answer = 1,
     Question = 2,
     Reply = 3,
     Comment = 4,
+    Chat = 5,
 }
 
 export class NotificationUserDto implements INotificationUserDto {
