@@ -130,7 +130,7 @@ export class TutorCalendarComponent extends AppComponentBase implements OnInit, 
       },
       dateClick: this.handleDateClick.bind(this),
       dayCellClassNames: this.dayCellClassNamesCallback.bind(this),
-      timeZone: 'UTC',
+      timeZone: moment.tz.guess(),
       showNonCurrentDates: false
     };
   }
