@@ -89,6 +89,10 @@ export class TutorCalendarComponent extends AppComponentBase implements OnInit, 
     if (moment(currentDate).isAfter()) {
       return 'future-events';
     }
+
+    if (moment().isSame(moment(currentDate), 'day')) {
+      return 'active';
+    }
     return;
   }
 
@@ -126,7 +130,7 @@ export class TutorCalendarComponent extends AppComponentBase implements OnInit, 
       },
       dateClick: this.handleDateClick.bind(this),
       dayCellClassNames: this.dayCellClassNamesCallback.bind(this),
-      timeZone: 'UTC',
+      timeZone: moment.tz.guess(),
       showNonCurrentDates: false
     };
   }

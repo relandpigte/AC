@@ -1,11 +1,10 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { finalize, takeUntil } from 'rxjs/operators';
 
-import { CoachingDto, CoachingsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, CoachingDto, CoachingsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
-import * as moment from '@node_modules/moment';
 
 @Component({
   selector: 'app-purchased',
@@ -13,7 +12,7 @@ import * as moment from '@node_modules/moment';
   styleUrls: ['./purchased.component.less']
 })
 export class PurchasedComponent extends AppComponentBase implements OnInit {
-  upcomingCoachings: CoachingDto[] = [];
+  upcomingCoachings: AvailableServiceDto[] = [];
   pastCoachings: CoachingDto[] = [];
   cancelledCoachings: CoachingDto[] = [];
 
@@ -27,6 +26,7 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
+  get userId(): number { return this.appSession.userId; }
   get isLoading$() { return this._dashboardPageService.isLoading$; }
   get totalUpcomingCoaching(): number { return this.upcomingCoachings?.length; }
   get totalPastCoaching(): number { return this.pastCoachings?.length; }
@@ -45,13 +45,12 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
 
   private loadPurchasedCoaching(): void {
     this._dashboardPageService.isLoading$.next(true);
-    this._coachingService.getAll(undefined, undefined, undefined, undefined, undefined, undefined, undefined)
+    this._coachingService.getAllPurchasedCoaching(this.userId)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this._dashboardPageService.isLoading$.next(false)))
-      .subscribe(coachings => {
-        this.upcomingCoachings = coachings?.items;
-        this.pastCoachings = coachings?.items;
-        this.cancelledCoachings = coachings?.items;
+      .subscribe(data => {
+        this.upcomingCoachings = data;
+        console.warn(data);
       });
   }
 }

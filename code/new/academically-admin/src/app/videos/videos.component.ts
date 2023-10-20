@@ -18,7 +18,7 @@ import { DashboardService, DashboardServiceView } from '@app/dashboard/_services
   animations: [appModuleAnimation()],
 })
 export class VideosComponent extends AppComponentBase implements OnInit {
-
+  readonly DashboardServiceView = DashboardServiceView;
   constructor(
     injector: Injector,
     private _modalService: BsModalService,
@@ -30,12 +30,10 @@ export class VideosComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
-  get dashboardServiceView() { return DashboardServiceView; }
   get switchButtonText(): string { return this._dashboardService.switchButtonText(); }
-  get defaultUserView(): DashboardServiceView { return this._dashboardService.getUserView(); }
+  get userView(): string { return this._dashboardService.getUserView(); }
 
   ngOnInit(): void {
-    this._dashboardService.setUserView(DashboardServiceView.learner);
   }
 
   handleSwitchView(): void {

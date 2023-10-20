@@ -92,7 +92,7 @@
         <span>Load more...</span>
     </div>
 
-    <div *ngIf="!(isLoading$ | async) && usersYouMayKnow?.length > 0" class="card community-content-post">
+    <div *ngIf="!(isLoading$ | async) && usersYouMayKnow?.length > 0" class="card custom-card-shadow custom-card-border community-content-post">
         <div class="row align-items-center community-content-post-title">
           <div class="col d-flex flex-wrap align-items-center justify-content-between">
             <span class="community-content-post-title-heading">Users you may know</span>
@@ -113,7 +113,7 @@
         </div>
     </div>
 
-    <div *ngIf="!(isLoading$ | async) && recommendedCourses?.length > 0" class="card community-content-post">
+    <div *ngIf="!(isLoading$ | async) && recommendedCourses?.length > 0" class="card custom-card-border custom-card-shadow community-content-post">
       <div class="row align-items-center community-content-post-title">
         <div class="col d-flex flex-wrap align-items-center justify-content-between">
           <span class="community-content-post-title-heading">Recommended Courses</span>

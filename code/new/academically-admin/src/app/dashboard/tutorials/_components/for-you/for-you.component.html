@@ -1,0 +1,125 @@
+<div [@routerTransition]>
+  <div class="header">
+    <div class="container-fluid p-0">
+      <div class="header-body pt-0">
+
+        <div *ngIf="isGroupByTopics" [style.marginBottom.px]="20">
+          <app-carousel-pill [choices]="validTopics" (onSelect)="handleFilterTopics($event)"></app-carousel-pill>
+        </div>
+
+        <div [style.marginBottom.px]="40">
+          <app-carousel
+            [items]="featured"
+            [isInfiteScroll]="false"
+            [isLoading]="isLoading"
+            [isFeatured]="true"
+            [itemWidth]="543"
+            [itemSpacing]="30"
+            [isAutoFit]="true"
+          ></app-carousel>
+        </div>
+
+        <ng-container *ngIf="isGroupByTopics">
+          <ng-container *ngFor="let t of filteredTopics">
+            <div class="row align-items-center" [style.marginBottom.px]="25">
+              <div class="col d-flex flex-wrap gap-15">
+                <span class="section-title">{{ t | titlecase }}</span>
+              </div>
+            </div>
+            <div class="row align-items-center" [style.marginBottom.px]="45">
+              <div class="col d-flex flex-wrap gap-27">
+                <app-service-card
+                  *ngFor="let d of topicGroups[t]?.items; trackBy:d?.id;"
+                  [data]="d"
+                  [isLoading]="isLoading"
+                  (onClick)="handleServiceCardClick($event)"
+                  (onActionClick)="handleServiceCardActionClick($event)"
+                  (onShareClick)="handleServiceCardShareClick($event)"
+                ></app-service-card>
+                <ng-container *ngIf="showTopicShowMoreButton(t)">
+                  <div class="flex-break"></div>
+                  <div class="btn btn-block btn-white flex-grow-1" (click)="onShowMoreTopicButtonClick(t)" [style.marginTop.px]="-34">Show More</div>
+                </ng-container>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="!isGroupByTopics">
+          <ng-container *ngIf="popular?.items?.length">
+            <div class="row align-items-center" [style.marginBottom.px]="25">
+              <div class="col d-flex flex-wrap gap-15">
+                <span class="section-title">Popular</span>
+              </div>
+            </div>
+            <div class="row align-items-center" [style.marginBottom.px]="45">
+              <div class="col d-flex flex-wrap gap-27">
+                <app-service-card
+                  *ngFor="let d of popular?.items; trackBy:d?.id"
+                  [data]="d"
+                  [isLoading]="isPopularLoading"
+                  (onClick)="handleServiceCardClick($event)"
+                  (onActionClick)="handleServiceCardActionClick($event)"
+                  (onShareClick)="handleServiceCardShareClick($event)"
+                ></app-service-card>
+                <ng-container *ngIf="showPopularShowMoreButton">
+                  <div class="flex-break"></div>
+                  <div class="btn btn-block btn-white flex-grow-1" (click)="onShowMorePopularButtonClick()" [style.marginTop.px]="-34">Show More</div>
+                </ng-container>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="latest?.items?.length">
+            <div class="row align-items-center" [style.marginBottom.px]="25">
+              <div class="col d-flex flex-wrap gap-15">
+                <span class="section-title">Latest</span>
+              </div>
+            </div>
+            <div class="row align-items-center" [style.marginBottom.px]="45">
+              <div class="col d-flex flex-wrap gap-27">
+                <app-service-card
+                  *ngFor="let d of latest?.items; trackBy:d?.id"
+                  [data]="d"
+                  [isLoading]="isLoading"
+                  (onClick)="handleServiceCardClick($event)"
+                  (onActionClick)="handleServiceCardActionClick($event)"
+                  (onShareClick)="handleServiceCardShareClick($event)"
+                ></app-service-card>
+                <ng-container *ngIf="showLastestShowMore">
+                  <div class="flex-break"></div>
+                  <div class="btn btn-block btn-white flex-grow-1" (click)="onShowMoreLatestButtonClick()" [style.marginTop.px]="-34">Show More</div>
+                </ng-container>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="lastMonth?.items?.length">
+            <div class="row align-items-center" [style.marginBottom.px]="25">
+              <div class="col d-flex flex-wrap gap-15">
+                <span class="section-title">Last Month</span>
+              </div>
+            </div>
+            <div class="row align-items-center">
+              <div class="col d-flex flex-wrap gap-27">
+                <app-service-card
+                  *ngFor="let d of lastMonth?.items"
+                  [data]="d"
+                  [isLoading]="isLoading"
+                  (onClick)="handleServiceCardClick($event)"
+                  (onActionClick)="handleServiceCardActionClick($event)"
+                  (onShareClick)="handleServiceCardShareClick($event)"
+                ></app-service-card>
+                <ng-container *ngIf="showLastMonthShowMoreButton">
+                  <div class="flex-break"></div>
+                  <div class="btn btn-block btn-white flex-grow-1" (click)="onShowMoreLastMonthButtonClick()" [style.marginTop.px]="-34">Show More</div>
+                </ng-container>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+
+      </div>
+    </div>
+  </div>
+</div>

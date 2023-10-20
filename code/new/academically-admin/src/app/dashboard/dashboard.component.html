@@ -9,18 +9,18 @@
                         <h1 class="header-title">{{ greetings }}, {{ user.name }}</h1>
                     </div>
                     <div *ngIf="isTutor" class="ml-auto p-2 d-flex flex-row gap-10">
-                        <div class="dropdown" *ngIf="defaultUserView === dashboardServiceView.creator">
+                        <div class="dropdown" *ngIf="userView === DashboardServiceView.creator">
                             <a href="#" class="btn btn-primary d-flex gap-9" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="fe fe-plus"></span>
                                 {{ 'Create' | localize}}
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <div class="dropdown-item cursor-pointer" (click)="onCreateClick()">{{ 'Course' | localize}}</div>
-                                <div class="dropdown-item cursor-pointer">{{ 'Broadcast' | localize}}</div>
-                                <div class="dropdown-item cursor-pointer">{{ 'Workshop' | localize}}</div>
-                                <div class="dropdown-item cursor-pointer">{{ 'Coaching' | localize}}</div>
-                                <div class="dropdown-item cursor-pointer">{{ 'Article' | localize}}</div>
-                                <div class="dropdown-item cursor-pointer">{{ 'Tutorial' | localize}}</div>
+                                <div class="dropdown-item cursor-pointer" (click)="onCreateCourseClick()">{{ 'Course' | localize}}</div>
+                                <div class="dropdown-item cursor-pointer" (click)="onCreateBroadcastClick()">{{ 'Broadcast' | localize}}</div>
+                                <div class="dropdown-item cursor-pointer" (click)="onCreateWorkshopClick()">{{ 'Workshop' | localize}}</div>
+                                <div class="dropdown-item cursor-pointer" (click)="onCreateCoachingClick()">{{ 'Coaching' | localize}}</div>
+                                <div class="dropdown-item cursor-pointer" (click)="onCreateArticleClick()">{{ 'Article' | localize}}</div>
+                                <div class="dropdown-item cursor-pointer" (click)="onCreateTutorialClick()">{{ 'Tutorial' | localize}}</div>
                             </div>
                         </div>
 

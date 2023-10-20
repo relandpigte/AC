@@ -3,35 +3,35 @@
         <ul class="nav nav-tabs nav-overflow header-tabs" [ngSwitch]="userView">
             <ng-container *ngSwitchCase="dashboardServiceView.creator">
                 <li *ngIf="servicesType.Coaching === serviceType" class="nav-item">
-                    <a href="#bookings" class="nav-link active" id="bookings-tab" aria-controls="created" aria-selected="true" data-toggle="tab" role="tab">
-                        {{ 'Bookings' | localize | titlecase }}
+                    <a href="#bookings" class="nav-link active" id="bookings-tab" data-toggle="tab" role="tab">
+                        {{ 'Bookings' | localize }}
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#created" class="nav-link" [ngClass]="{'active': servicesType.Coaching !== serviceType}" id="created-tab" aria-controls="created" aria-selected="true" data-toggle="tab" role="tab">
-                        {{ 'Created' | localize | titlecase }}
+                    <a href="#created" class="nav-link" [ngClass]="{'active': servicesType.Coaching !== serviceType}" id="created-tab" data-toggle="tab" role="tab">
+                        {{ 'Created' | localize }}
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#analytics" class="nav-link" id="analytics-tab" aria-controls="analytics" aria-selected="false" data-toggle="tab" role="tab">
-                        {{ 'Analytics' | localize | titlecase }}
+                    <a href="#analytics" class="nav-link" aria-selected="false" data-toggle="tab" role="tab">
+                        {{ 'Analytics' | localize }}
                     </a>
                 </li>
             </ng-container>
             <ng-container *ngSwitchCase="dashboardServiceView.learner">
                 <li class="nav-item">
-                    <a href="#purchased" class="nav-link active" aria-controls="purchased" aria-selected="true" data-toggle="tab" role="tab">
-                        {{ 'Purchased' | localize | titlecase }}
+                    <a href="#purchased" class="nav-link active" data-toggle="tab" role="tab">
+                        {{ 'Purchased' | localize }}
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#saved" class="nav-link" aria-controls="saved" aria-selected="false" data-toggle="tab" role="tab">
-                        {{ 'Saved' | localize | titlecase }}
+                    <a href="#saved" class="nav-link" data-toggle="tab" role="tab">
+                        {{ 'Saved' | localize }}
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#discover" class="nav-link" aria-controls="discover" aria-selected="false" data-toggle="tab" role="tab">
-                        {{ 'Discover' | localize | titlecase }}
+                    <a href="#for-you" class="nav-link for-you-menu" data-toggle="tab" role="tab">
+                        {{ 'DashboardForYou' | localize }}
                     </a>
                 </li>
             </ng-container>

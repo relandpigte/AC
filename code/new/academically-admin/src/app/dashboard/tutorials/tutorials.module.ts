@@ -16,6 +16,8 @@ import { TutorialsComponent } from './tutorials.component';
 // import { LearningListComponent } from './_components/learning-list/learning-list.component';
 import { CreatedComponent } from './_components/created/created.component';
 import { PurchasedComponent } from './_components/purchased/purchased.component';
+import { ForYouComponent } from '@app/dashboard/tutorials/_components/for-you/for-you.component';
+import { SavedModule } from '@app/dashboard/tutorials/_components/saved/saved.module';
 
 @NgModule({
   declarations: [
@@ -31,6 +33,7 @@ import { PurchasedComponent } from './_components/purchased/purchased.component'
     // LearningListComponent,
     CreatedComponent,
     PurchasedComponent,
+    ForYouComponent
   ],
   imports: [
     CommonModule,
@@ -38,6 +41,7 @@ import { PurchasedComponent } from './_components/purchased/purchased.component'
     SharedModule,
     AppSharedModule,
     DashboardModule,
+    SavedModule
   ],
 })
 export class TutorialsModule { }

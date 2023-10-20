@@ -114,6 +114,10 @@ export class StudentCalendarComponent extends AppComponentBase implements OnInit
     if (moment(currentDate).isAfter()) {
       return 'future-events';
     }
+
+    if (moment().isSame(moment(currentDate), 'day')) {
+      return 'active';
+    }
     return;
   }
 }

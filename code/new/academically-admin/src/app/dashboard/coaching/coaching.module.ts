@@ -15,6 +15,7 @@ import { ScheduleComponent } from './schedule/schedule.component';
 import { CoachingComponent } from './coaching.component';
 import { DashboardModule } from '@app/dashboard/dashboard.module';
 import { PurchasedComponent } from './_components/purchased/purchased.component';
+import { ForYouComponent } from '@app/dashboard/coaching/_components/for-you/for-you.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { PurchasedComponent } from './_components/purchased/purchased.component'
     RequestsComponent,
     BookingsComponent,
     CreatedComponent,
-    PurchasedComponent
+    PurchasedComponent,
+    ForYouComponent
   ],
   imports: [
     CommonModule,

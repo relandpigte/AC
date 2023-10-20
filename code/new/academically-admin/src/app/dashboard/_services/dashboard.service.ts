@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
+import { AppSessionService } from '@shared/session/app-session.service';
 
 export enum DashboardServiceView {
   creator = 'creator',
@@ -9,22 +10,41 @@ export enum DashboardServiceView {
   providedIn: 'root'
 })
 export class DashboardService {
-  private userView: DashboardServiceView;
+  appSession: AppSessionService;
+  private currentView = 'currentView';
 
-  setUserView(view: DashboardServiceView): void {
-    this.userView = view;
+  constructor(injector: Injector) {
+    this.appSession = injector.get(AppSessionService);
+    this.initDashboardService();
   }
 
-  getUserView(): DashboardServiceView {
-    return this.userView;
+  setUserView(view: DashboardServiceView): void {
+    localStorage.setItem(this.currentView, view);
+  }
+
+  getUserView(): string {
+    return localStorage.getItem(this.currentView);
   }
 
   switchButtonText(): string {
-    return this.userView === DashboardServiceView.learner ? DashboardServiceView.creator : DashboardServiceView.learner;
+    return this.getUserView() === DashboardServiceView.learner ?
+      DashboardServiceView.creator :
+      DashboardServiceView.learner;
   }
 
   handleSwitchView(): void {
-    this.userView =
-      this.userView === DashboardServiceView.learner ? DashboardServiceView.creator : DashboardServiceView.learner;
+    this.setUserView(this.getUserView() === DashboardServiceView.learner ?
+      DashboardServiceView.creator :
+      DashboardServiceView.learner);
+  }
+
+  private initDashboardService(): void {
+    if (this.checkUserRole('student')) {
+      this.setUserView(DashboardServiceView.learner);
+    }
+  }
+
+  private checkUserRole(role: string): boolean {
+    return this.appSession.user.roles.findIndex(e => e.toLowerCase() === role) >= 0;
   }
 }

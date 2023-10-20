@@ -11,6 +11,8 @@ import { LearningModule } from './_components/learning/learning.module';
 import { DashboardModule } from '@app/dashboard/dashboard.module';
 import { PurchasedComponent } from './_components/purchased/purchased.component';
 import { CreatedComponent } from './_components/created/created.component';
+import { ForYouComponent } from '@app/articles/_components/for-you/for-you.component';
+import { SavedModule } from '@app/articles/_components/learning/saved/saved.module';
 @NgModule({
   declarations: [
     ArticlesComponent,
@@ -18,6 +20,7 @@ import { CreatedComponent } from './_components/created/created.component';
     CreateArticleComponent,
     PurchasedComponent,
     CreatedComponent,
+    ForYouComponent
   ],
   imports: [
     CommonModule,
@@ -27,6 +30,7 @@ import { CreatedComponent } from './_components/created/created.component';
     TeachingModule,
     LearningModule,
     DashboardModule,
+    SavedModule,
   ],
 })
 export class ArticlesModule { }

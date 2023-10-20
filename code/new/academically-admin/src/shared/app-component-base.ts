@@ -405,7 +405,7 @@ export abstract class AppComponentBase implements OnDestroy {
 
   removeHTMLTags(str: string): string | boolean {
     if ((str === null) || (str === '') || str === undefined) {
-      return false;
+      return;
     } else {
       str = str.toString();
     }

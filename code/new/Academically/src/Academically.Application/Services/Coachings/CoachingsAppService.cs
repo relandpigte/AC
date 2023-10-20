@@ -327,5 +327,21 @@ namespace Academically.Services.Coachings
                                   .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
                                   .ToListAsync();
         }
+
+        public async Task<List<AvailableServiceDto>> GetAllPurchasedCoaching(long creatorUserId)
+        {
+            var purchases = await _servicePurchasesRepository.GetAll()
+                .Where(p => p.Type == ServicesType.Coaching)
+                .Where(p => p.CreatorUserId == creatorUserId)
+                .Select(p => p.ReferenceId)
+                .ToListAsync();
+            
+            return await Repository.GetAll()
+                .Where(w => w.ParentId == null && w.Visible.Value && w.Status == CoachingStatus.Published)
+                .WhereIf(purchases.Count > 0, x => purchases.Contains(x.Id))
+                .Include(c => c.CreatorUser)
+                .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                .ToListAsync();
+        }
     }
 }

@@ -26,7 +26,7 @@
           <div class="row align-items-center" [style.marginTop.px]="45" [style.marginBottom.px]="25">
             <div class="col d-flex flex-wrap align-items-center justify-content-between">
               <span class="recommended-title">Upcoming Broadcasts</span>
-              <span class="view-all cursor-pointer" [routerLink]="['events']">View All</span>
+              <span class="view-all cursor-pointer" (click)="handleServiceRedirect('/app/dashboard/events')">View All</span>
             </div>
           </div>
           <app-carousel
@@ -48,7 +48,7 @@
           <div class="row align-items-center" [style.marginTop.px]="45" [style.marginBottom.px]="25">
             <div class="col d-flex flex-wrap align-items-center justify-content-between">
               <span class="recommended-title">Upcoming Workshops</span>
-              <span class="view-all cursor-pointer" [routerLink]="['events']">View All</span>
+              <span class="view-all cursor-pointer" (click)="handleServiceRedirect('/app/dashboard/events')">View All</span>
             </div>
           </div>
           <app-carousel
@@ -70,7 +70,7 @@
           <div class="row align-items-center" [style.marginTop.px]="45" [style.marginBottom.px]="25">
             <div class="col d-flex flex-wrap align-items-center justify-content-between">
               <span class="recommended-title">Recommended Courses</span>
-              <span class="view-all cursor-pointer" [routerLink]="['courses']">View All</span>
+              <span class="view-all cursor-pointer" (click)="handleServiceRedirect('/app/dashboard/courses')">View All</span>
             </div>
           </div>
           <app-carousel
@@ -92,7 +92,7 @@
           <div class="row align-items-center" [style.marginTop.px]="45" [style.marginBottom.px]="25">
             <div class="col d-flex flex-wrap align-items-center justify-content-between">
               <span class="recommended-title">New Articles</span>
-              <span class="view-all cursor-pointer" [routerLink]="['articles']">View All</span>
+              <span class="view-all cursor-pointer" (click)="handleServiceRedirect('/app/articles')">View All</span>
             </div>
           </div>
           <app-carousel
@@ -114,7 +114,7 @@
           <div class="row align-items-center" [style.marginTop.px]="45" [style.marginBottom.px]="25">
             <div class="col d-flex flex-wrap align-items-center justify-content-between">
               <span class="recommended-title">Recommended Tutorials</span>
-              <span class="view-all cursor-pointer" [routerLink]="['tutorials']">View All</span>
+              <span class="view-all cursor-pointer" (click)="handleServiceRedirect('/app/dashboard/tutorials')">View All</span>
             </div>
           </div>
           <app-carousel
@@ -136,7 +136,7 @@
           <div class="row align-items-center" [style.marginTop.px]="45" [style.marginBottom.px]="25">
             <div class="col d-flex flex-wrap align-items-center justify-content-between">
               <span class="recommended-title">New Coachings</span>
-              <span class="view-all cursor-pointer" [routerLink]="['coachings']">View All</span>
+              <span class="view-all cursor-pointer" (click)="handleServiceRedirect('/app/dashboard/coaching')">View All</span>
             </div>
           </div>
           <app-carousel

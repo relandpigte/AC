@@ -22,5 +22,6 @@ namespace Academically.Services.Coachings
         Task<IEnumerable<AvailableServiceDto>> GetAllCoaching();
         Task<IEnumerable<AvailableServiceDto>> GetCoachingByKeyword(string keyword, long? creatorUserId);
         Task<IEnumerable<AvailableServiceDto>> GetCoachingSchedule(long? creatorUserId, ScheduledServiceType? type);
+        Task<List<AvailableServiceDto>> GetAllPurchasedCoaching(long creatorUserId);
     }
 }

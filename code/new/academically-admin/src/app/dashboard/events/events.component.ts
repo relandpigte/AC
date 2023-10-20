@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
@@ -20,8 +20,10 @@ import { ServiceDataService } from '@shared/services/service-data.service';
   styleUrls: ['./events.component.less'],
   animations: [appModuleAnimation()],
 })
-export class EventsComponent extends AppComponentBase implements OnInit {
+export class EventsComponent extends AppComponentBase implements OnInit, AfterViewInit {
   shimmerType = ShimmerType;
+  readonly DashboardServiceView = DashboardServiceView;
+
   constructor(
     injector: Injector,
     private _router: Router,
@@ -35,16 +37,17 @@ export class EventsComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
-  get dashboardServiceView() { return DashboardServiceView; }
   get switchButtonText(): string { return this._dashboardService.switchButtonText(); }
-  get defaultUserView(): DashboardServiceView { return this._dashboardService.getUserView(); }
+  get userView(): string { return this._dashboardService.getUserView(); }
   get isLearnerView(): boolean { return this._dashboardService.getUserView() === DashboardServiceView.learner; }
-  get isCreatorView(): boolean { return this._dashboardService.getUserView() === DashboardServiceView.creator; }
   get isLoading$() { return this._dashboardPageService.isLoading$; }
 
   ngOnInit(): void {
-    this._dashboardService.setUserView(DashboardServiceView.learner);
     setTimeout(() => this._dashboardPageService.setIsLoading(false), 3000);
+  }
+
+  ngAfterViewInit(): void {
+    this._cdr.detectChanges();
   }
 
   handleSwitchView(): void {

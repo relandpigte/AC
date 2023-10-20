@@ -316,7 +316,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
             } else if (this.isCancelled) {
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'buy', label: 'Buy again' });
             } else {
-              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join workshop' });
+              this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join session' });
             }
           } else {
             this.sanitizedOptions.headingType = 'unbooked';

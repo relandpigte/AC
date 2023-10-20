@@ -1,15 +1,10 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { AppComponentBase } from '@shared/app-component-base';
-import {
-  CoachingsServiceProxy,
-  CoachingType,
-  CreateCoachingDto,
-  ServicesType
-} from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { switchMap, takeUntil } from 'rxjs/operators';
+
+import { AppComponentBase } from '@shared/app-component-base';
 import { ChooseTemplateComponent } from './_components/choose-template/choose-template.component';
 import { CreateCoachingComponent } from './_components/create-coaching/create-coaching.component';
 import { CoachingTemplate } from './_models/coaching-template';
@@ -17,6 +12,8 @@ import { DashboardService, DashboardServiceView } from '@app/dashboard/_services
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { ServiceDataService } from '@shared/services/service-data.service';
+import { CoachingsServiceProxy, CoachingType, CreateCoachingDto, ServicesType } from '@shared/service-proxies/service-proxies';
+
 
 @Component({
   selector: 'app-coaching',
@@ -26,6 +23,8 @@ import { ServiceDataService } from '@shared/services/service-data.service';
 })
 export class CoachingComponent extends AppComponentBase implements OnInit, AfterViewInit {
   shimmerType = ShimmerType;
+  readonly DashboardServiceView = DashboardServiceView;
+
   constructor(
     injector: Injector,
     private _router: Router,
@@ -42,13 +41,11 @@ export class CoachingComponent extends AppComponentBase implements OnInit, After
   get dashboardServiceView() { return DashboardServiceView; }
   get serviceType() { return ServicesType.Coaching; }
   get switchButtonText(): string { return this._dashboardService.switchButtonText(); }
-  get defaultUserView(): DashboardServiceView { return this._dashboardService.getUserView(); }
+  get userView(): string { return this._dashboardService.getUserView(); }
   get isLearnerView(): boolean { return this._dashboardService.getUserView() === DashboardServiceView.learner; }
-  get isCreatorView(): boolean { return this._dashboardService.getUserView() === DashboardServiceView.creator; }
   get isLoading$() { return this._dashboardPageService.isLoading$; }
 
   ngOnInit(): void {
-    this._dashboardService.setUserView(DashboardServiceView.learner);
     setTimeout(() => this._dashboardPageService.setIsLoading(false), 3000);
     this._cdr.detectChanges();
   }
@@ -88,5 +85,4 @@ export class CoachingComponent extends AppComponentBase implements OnInit, After
     this._dashboardService.handleSwitchView();
     this._cdr.detectChanges();
   }
-
 }

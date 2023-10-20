@@ -1,5 +1,5 @@
-<ng-container [ngSwitch]="defaultUserView">
-    <ng-container *ngSwitchCase="dashboardServiceView.creator">
+<ng-container [ngSwitch]="userView">
+    <ng-container *ngSwitchCase="DashboardServiceView.creator">
         <app-creator></app-creator>
     </ng-container>
     <ng-container *ngSwitchDefault>

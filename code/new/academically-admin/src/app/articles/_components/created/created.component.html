@@ -8,38 +8,36 @@
 <ng-container *ngIf="!(isLoading$ | async)">
     <div class="card custom-card-border">
         <div class="card-header border-0">
-            <div class="row align-items-center">
-                <div class="col">
-                    <form>
-                        <div class="input-group input-group-flush">
-                            <div class="input-group-prepend">
+            <div class="d-flex align-items-center">
+                <form>
+                    <div class="input-group input-group-flush">
+                        <div class="input-group-prepend">
                             <span class="input-group-text">
                                 <i class="fe fe-search"></i>
                             </span>
-                            </div>
-                            <input class="list-search form-control" type="search" name="Search" placeholder="Search" />
                         </div>
-                    </form>
+                        <input class="list-search form-control" type="search" name="Search" placeholder="Search" />
+                    </div>
+                </form>
+                <div class="search-nav d-flex ml-auto">
+                    <ul class="nav nav-tabs nav-tabs-sm border-0">
+                        <li class="nav-item">
+                            <a href="#active-articles" class="nav-link active" data-toggle="tab" role="tab">
+                                Active <span class="badge badge-pill badge-light">{{ totalActiveArticles }}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#draft-articles" class="nav-link" data-toggle="tab" role="tab">
+                                Draft <span class="badge badge-pill badge-light">{{ totalDraftArticles }}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#archived-articles" class="nav-link" data-toggle="tab" role="tab">
+                                Archived <span class="badge badge-pill badge-light">{{ totalArchivedArticles }}</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
-            </div>
-            <div class="search-nav d-flex ml-auto">
-                <ul class="nav nav-tabs nav-tabs-sm border-0">
-                    <li class="nav-item">
-                        <a href="#active-articles" class="nav-link active" data-toggle="tab" role="tab">
-                            Active <span class="badge badge-pill badge-light">{{ totalActiveArticles }}</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#draft-articles" class="nav-link" data-toggle="tab" role="tab">
-                            Draft <span class="badge badge-pill badge-light">{{ totalDraftArticles }}</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#archived-articles" class="nav-link" data-toggle="tab" role="tab">
-                            Archived <span class="badge badge-pill badge-light">{{ totalArchivedArticles }}</span>
-                        </a>
-                    </li>
-                </ul>
             </div>
         </div>
     </div>

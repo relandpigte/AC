@@ -10,44 +10,43 @@
                             <h6 class="header-pretitle">{{ 'Dashboard' | localize }}</h6>
                             <h1 class="header-title">{{ 'Coaching' | localize }}</h1>
                         </div>
-                        <div class="col-auto d-flex gap-10">
-                            <button *ngIf="isTutor" class="btn btn-primary" (click)="onNewCoachingClick()">
-                                {{ 'NewCoaching' | localize | titlecase }}
-                            </button>
-                            <button *ngIf="isTutor" class="btn btn-white custom-card-border d-flex align-items-center gap-10" (click)="handleSwitchView()">
-                                <span class="fe fe-refresh-cw"></span>
-                                Switch to {{ switchButtonText }} view
-                            </button>
-                        </div>
+                        <ng-container *ngIf="isTutor">
+                            <div class="col-auto d-flex gap-10">
+                                <button *ngIf="userView === DashboardServiceView.creator" class="btn btn-primary" (click)="onNewCoachingClick()">
+                                    {{ 'NewCoaching' | localize | titlecase }}
+                                </button>
+                                <button class="btn btn-white custom-card-border d-flex align-items-center gap-10" (click)="handleSwitchView()">
+                                    <span class="fe fe-refresh-cw"></span>
+                                    Switch to {{ switchButtonText }} view
+                                </button>
+                            </div>
+                        </ng-container>
                     </div>
-                    <app-sub-header [userView]="defaultUserView" [serviceType]="serviceType"></app-sub-header>
+                    <app-sub-header [userView]="userView" [serviceType]="serviceType"></app-sub-header>
                 </div>
             </div>
 
-            <div class="tab-content" [ngSwitch]="defaultUserView">
+            <div class="tab-content" [ngSwitch]="userView">
                 <ng-container *ngSwitchCase="dashboardServiceView.creator">
                     <div class="tab-pane fade show active" id="bookings" role="tabpanel" aria-labelledby="bookings-tab">
                         <app-bookings></app-bookings>
                     </div>
                     <div class="tab-pane fade" id="created" role="tabpanel" aria-labelledby="created-tab">
                         <app-created></app-created>
-                        <!-- <app-teaching></app-teaching> -->
                     </div>
                     <div class="tab-pane fade" id="analytics" role="tabpanel" aria-labelledby="analytics-tab">
                         This is analytics tab
                     </div>
                 </ng-container>
                 <ng-container *ngSwitchDefault>
-                    <div class="tab-pane fade show active" id="purchased" role="tabpanel"
-                         aria-labelledby="purchased-tab">
+                    <div class="tab-pane fade show active" id="purchased" role="tabpanel" aria-labelledby="purchased-tab">
                         <app-purchased></app-purchased>
-                        <!-- <app-learning></app-learning> -->
                     </div>
                     <div class="tab-pane fade" id="saved" role="tabpanel" aria-labelledby="save-tab">
                         this is saved tab
                     </div>
-                    <div class="tab-pane fade" id="discover" role="tabpanel" aria-labelledby="discover-tab">
-                        <app-schedule></app-schedule>
+                    <div class="tab-pane fade" id="for-you" role="tabpanel" aria-labelledby="for-you-tab">
+                        <app-coaching-for-you></app-coaching-for-you>
                     </div>
                 </ng-container>
             </div>

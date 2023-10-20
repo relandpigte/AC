@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Injector, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ArticleService } from './_services/article.service';
 import { ArticlesServiceProxy, ArticleDto, ArticleStatus, ArticleType } from '@shared/service-proxies/service-proxies';
@@ -19,8 +19,10 @@ import { DashboardPagesService } from '@shared/services/dashboard-pages.service'
   styleUrls: ['./articles.component.less'],
   animations: [appModuleAnimation()],
 })
-export class ArticlesComponent extends AppComponentBase implements OnInit {
+export class ArticlesComponent extends AppComponentBase implements OnInit, AfterViewInit {
   shimmerType = ShimmerType;
+  readonly DashboardServiceView = DashboardServiceView;
+
   constructor(
     injector: Injector,
     private _modalService: BsModalService,
@@ -34,16 +36,17 @@ export class ArticlesComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
-  get dashboardServiceView() { return DashboardServiceView; }
   get switchButtonText(): string { return this._dashboardService.switchButtonText(); }
-  get defaultUserView(): DashboardServiceView { return this._dashboardService.getUserView(); }
+  get userView(): string { return this._dashboardService.getUserView(); }
   get isLearnerView(): boolean { return this._dashboardService.getUserView() === DashboardServiceView.learner; }
-  get isCreatorView(): boolean { return this._dashboardService.getUserView() === DashboardServiceView.creator; }
   get isLoading$() { return this._dashboardPageService.isLoading$; }
 
   ngOnInit(): void {
-    this._dashboardService.setUserView(DashboardServiceView.learner);
     setTimeout(() => this._dashboardPageService.setIsLoading(false), 3000);
+  }
+
+  ngAfterViewInit(): void {
+    this._cdr.detectChanges();
   }
 
   handleSwitchView(): void {
