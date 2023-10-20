@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Academically.Domain.Entities;
+using Academically.Domain.Enums;
 
 namespace Academically.Services.EventPolls.Dto
 {
@@ -11,6 +12,7 @@ namespace Academically.Services.EventPolls.Dto
 	{
 		public string Name { get; set; }
         public Guid EventId { get; set; }
+		public EventPollStatus Status { get; set; }
         public DateTime CreationTime { get; set; }
 
         public IEnumerable<EventPollQuestionDto> EventPollQuestions { get; set; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
 using Academically.Authorization.Users;
+using Academically.Domain.Enums;
 
 namespace Academically.Domain.Entities
 {
@@ -11,8 +12,9 @@ namespace Academically.Domain.Entities
 	{
         public string Name { get; set; }
         public Guid EventId { get; set; }
+		public EventPollStatus Status { get; set; }
 
-		[ForeignKey("EventId")]
+        [ForeignKey("EventId")]
         public Event Event { get; set; }
 		[ForeignKey("CreatorUserId")]
 		public User CreatorUser { get; set; }

@@ -1,22 +1,28 @@
 import { Injectable } from '@angular/core';
 import { EventPollDto } from '@shared/service-proxies/service-proxies';
 import { Observable, BehaviorSubject } from 'rxjs';
+import { PollTab } from '../polls.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PortalPollService {
+  public pollTab$: Observable<PollTab>;
   public pollSelected$: Observable<EventPollDto>;
   public pollCancelled$: Observable<EventPollDto>;
   public pollClosed$: Observable<EventPollDto>;
   public refreshPollQueue$: Observable<boolean>;
 
+  private _pollTabSubject: BehaviorSubject<PollTab>;
   private _pollSelectedSubject: BehaviorSubject<EventPollDto>;
   private _pollCancelledSubject: BehaviorSubject<EventPollDto>;
   private _pollClosedSubject: BehaviorSubject<EventPollDto>;
   private _refreshPollQueueSubject: BehaviorSubject<boolean>;
 
   constructor() {
+    this._pollTabSubject = new BehaviorSubject<PollTab>(PollTab.Queue);
+    this.pollTab$ = this._pollTabSubject.asObservable();
+
     this._pollSelectedSubject = new BehaviorSubject<EventPollDto>(undefined);
     this.pollSelected$ = this._pollSelectedSubject.asObservable();
 
@@ -30,6 +36,7 @@ export class PortalPollService {
     this.refreshPollQueue$ = this._refreshPollQueueSubject.asObservable();
   }
 
+  public set pollTabSelected(value: PollTab) { this._pollTabSubject.next(value); }
   public set pollSelected(value: EventPollDto) { this._pollSelectedSubject.next(value); }
   public set pollCancelled(value: EventPollDto) { this._pollCancelledSubject.next(value); }
   public set pollClosed(value: EventPollDto) { this._pollClosedSubject.next(value); }

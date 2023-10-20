@@ -1,79 +1,118 @@
+<div *ngIf="showBackButton" class="back d-flex justify-content-start align-items-center border-bottom w-100 h-70-px cursor-pointer" [style.padding.px]="20" (click)="onBackClick()">
+  <img src="assets/img/events/chat/back.svg" alt="Back">
+  {{ 'Back' | localize }}
+</div>
+
 <div class="poll">
-  <div class="poll-header mb-2">
-    <h5 class="text-center">
-      {{ poll.name }}
-    </h5>
-    <div *ngIf="showVoterPercentage" class="poll-doughnut-container ">
-      <div class="poll-doughnut-canvas-container">
-        <canvas class="chart-canvas" chart [chartSettings]="chartSettings">
-        </canvas>
-        <h5 class="m-0 p-0 percentage">
-          {{ getTotalVoterPercentage() }}%
-        </h5>
+  <div class="poll-header">
+    <ng-container *ngIf="!showVoterPercentage">
+      <div class="poll-header-name">
+        {{ poll.name }}
       </div>
-      <div class="poll-doughnut-label">
-        <div class="dot mr-2"></div>
-        <label>
-          <small class="text-muted">
-            {{ 'Voted' | localize }}
-          </small>
-        </label>
+    </ng-container>
+    <ng-container *ngIf="showVoterPercentage">
+      <div class="poll-header-name doughnut text-center">
+        {{ poll.name }}
       </div>
-    </div>
+      <div class="poll-doughnut-container">
+        <div class="poll-doughnut-canvas-container">
+          <canvas class="chart-canvas" chart [chartSettings]="chartSettings">
+          </canvas>
+          <h5 class="m-0 p-0 percentage">
+            {{ getTotalVoterPercentage() }}%
+          </h5>
+        </div>
+        <div class="poll-doughnut-label">
+          <div class="dot mr-2"></div>
+          <label>
+            <small class="text-muted">
+              {{ 'Participation' | localize }}
+            </small>
+          </label>
+        </div>
+      </div>
+    </ng-container>
   </div>
   <div class="questions">
-    <div *ngFor="let question of poll.eventPollQuestions" class="card card-sm mb-2">
-      <div class="card-header h-auto p-3">
-        <p class="card-header-title small">
-          <b>
-            {{ question.text }}
-          </b>
-        </p>
+    <div *ngFor="let question of poll.eventPollQuestions" class="questions-item card custom-card-border custom-card-shadow">
+      <div class="card-header h-auto border-0 p-0">
+        <div class="card-header-title">{{ question.text }}</div>
       </div>
-      <div class="card-body p-3">
-        <div *ngFor="let option of question.eventPollQuestionOptions" class="option">
-          <p class="small mb-n2">
-            <b>{{ option.text }}</b>
-          </p>
-          <div class="row align-items-center no-gutters">
-            <div class="col">
-              <div class="progress progress-sm mr-3">
+      <div class="card-body p-0">
+        <div *ngFor="let option of question.eventPollQuestionOptions" class="questions-item-option">
+          <div class="questions-item-option-text">{{ option.text }}</div>
+          <div class="questions-item-option-percentage row d-flex justify-content-center align-items-center no-gutters">
+            <div class="questions-item-option-percentage-chart col h-100 d-flex justify-content-center align-items-center">
+              <div class="progress progress-sm w-100 mr-3">
                 <div class="progress-bar" role="progressbar" [style.width]="getOptionPercentage(question, option)"
                   [attr.aria-valuenow]="85" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
-            <div class="col-auto">
+            <div class="questions-item-option-percentage-value col-auto h-100 d-flex justify-content-center align-items-center">
               <small>{{ getOptionPercentage(question, option) }}</small>
             </div>
           </div>
         </div>
-        <div class="voters d-flex align-items-center">
-          <div *ngIf="!question.eventPollAnswers || !question.eventPollAnswers.length else avatarGroupTemplate"
-            class="avatars d-flex">
-            <div class="avatar avatar-xs">
-              <span class="avatar-title rounded-circle"></span>
-            </div>
+        <ng-container *ngIf="!showVoterPercentage">
+          <div class="questions-item-voters d-flex align-items-center gap-5">
+            <div class="questions-item-voters-badge-count d-flex justify-content-center align-items-center">{{ getQuestionTotalVotes(question) }}</div>
+            <div class="questions-item-voters-badge-text">{{ 'Total submissions' | localize }}</div>
           </div>
-          <ng-template #avatarGroupTemplate>
-            <div class="avatar-group">
-              <div *ngFor="let voterUser of getVoterUsers(question)" class="avatar avatar-xs">
-                <img *ngIf="voterUser.profilePictureDocument && voterUser.profilePictureDocument.id else
-                noProfilePictureTemplate" [src]="getProfilePictureUrl(voterUser.profilePictureDocument)" alt="..."
-                  class="avatar-img rounded-circle">
-                <ng-template #noProfilePictureTemplate>
-                  <span class="avatar-title rounded-circle" [tooltip]="voterUser.fullName">
-                    {{ getNameInitials(voterUser) }}
-                  </span>
-                </ng-template>
+        </ng-container>
+        <ng-container *ngIf="showVoterPercentage">
+          <div class="questions-item-voters d-flex align-items-center gap-5">
+            <div class="questions-item-voters-badge-avatars">
+              <div class="avatar-group">
+                <div *ngFor="let voterUser of getVoterUsers(question)" class="avatar avatar-xs">
+                  <img *ngIf="voterUser.profilePictureDocument && voterUser.profilePictureDocument.id else
+                  noProfilePictureTemplate" [src]="getProfilePictureUrl(voterUser.profilePictureDocument)" alt="..."
+                    class="avatar-img rounded-circle">
+                  <ng-template #noProfilePictureTemplate>
+                    <span class="avatar-title rounded-circle" [tooltip]="voterUser.fullName">
+                      {{ getNameInitials(voterUser) }}
+                    </span>
+                  </ng-template>
+                </div>
               </div>
+              <div class="questions-item-voters-badge-count d-flex justify-content-center align-items-center">{{ getQuestionTotalVotes(question) }}</div>
             </div>
-          </ng-template>
-          <p class="small m-0 ml-2">
-            {{ 'TotalVotes' | localize | titlecase }}:
-            {{ getQuestionTotalVotes(question) }}
-          </p>
-        </div>
+            <div class="questions-item-voters-badge-text">{{ 'Total votes' | localize }}</div>
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>
+  <div class="actions">
+    <ng-container [ngSwitch]="poll.status">
+      <ng-container *ngSwitchCase="EventPollStatus.Queue">
+        <button class="btn btn-sm btn-white" (click)="onCancelClick()">
+          {{ 'Cancel' | localize }}
+        </button>
+        <button class="btn btn-sm btn-white" (click)="onEditClick()">
+          {{ 'EditPoll' | localize }}
+        </button>
+        <button class="btn btn-sm btn-primary" (click)="onStartClick()">
+          {{ 'StartPoll' | localize }}
+        </button>
+      </ng-container>
+      <ng-container *ngSwitchCase="EventPollStatus.Open">
+        <button class="btn btn-sm btn-white" (click)="onStopClick()">
+          {{ 'StopPoll' | localize }}
+        </button>
+      </ng-container>
+      <ng-container *ngSwitchCase="EventPollStatus.Closed">
+        <button class="btn btn-sm btn-info" (click)="onShareClick()" [disabled]="isResultsShared"
+          [class.results-shared]="isResultsShared" [class.text-primary]="isResultsShared">
+          {{ (isResultsShared ? 'ResultsSharedWithAudience' : 'ShareResultsWithAttendeesNoQM') | localize }}
+        </button>
+        <button class="btn btn-sm btn-outline-primary" (click)="onCloseClick()">
+          {{ 'ClosePoll' | localize }}
+        </button>
+      </ng-container>
+    </ng-container>
+  </div>
 </div>
+
+<ng-template #avatarGroupTemplate>
+
+</ng-template>

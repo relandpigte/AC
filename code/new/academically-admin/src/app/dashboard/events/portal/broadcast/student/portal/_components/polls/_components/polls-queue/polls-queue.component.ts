@@ -1,6 +1,6 @@
 import { Component, OnInit, Injector } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { EventPollsServiceProxy, EventPollDto, EventDto } from '@shared/service-proxies/service-proxies';
+import { EventPollsServiceProxy, EventPollDto, EventDto, EventPollStatus } from '@shared/service-proxies/service-proxies';
 import { PortalService } from '@app/dashboard/events/portal/broadcast/student/portal/_services/portal.service';
 import { PortalPollService } from '@app/dashboard/events/portal/broadcast/student/portal/_components/polls/_services/portal-poll.service';
 import * as _ from 'lodash';
@@ -57,9 +57,6 @@ export class PollsQueueComponent extends AppComponentBase implements OnInit {
   }
 
   private getAllPolls(): void {
-    this.pipeDestroy(this._eventPollsService.getAllUnpaged(this.event.id),
-      (responses) => {
-        this.polls = responses;
-      });
+    this.pipeDestroy(this._eventPollsService.getAllUnpaged(this.event.id, EventPollStatus.Queue), polls => this.polls = polls);
   }
 }

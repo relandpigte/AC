@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
+using Academically.Domain.Enums;
 using Academically.Services.EventPolls.Dto;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,7 +24,8 @@ namespace Academically.Services.EventPolls
         protected override IQueryable<EventPoll> CreateFilteredQuery(PagedEventPollResultRequestDto input)
         {
             return base.CreateFilteredQuery(input)
-                .Where(e => e.EventId == input.EventIdFilter);
+                .WhereIf(input.EventIdFilter.HasValue, e => e.EventId == input.EventIdFilter.Value)
+                .WhereIf(input.Status.HasValue, e => e.Status == input.Status.Value);
         }
 
         protected override IQueryable<EventPoll> ApplyPaging(IQueryable<EventPoll> query, PagedEventPollResultRequestDto input)
@@ -59,9 +62,10 @@ namespace Academically.Services.EventPolls
             return base.CreateAsync(input);
         }
 
-        public async Task<IEnumerable<EventPollDto>> GetAllUnpagedAsync(Guid eventId)
+        public async Task<IEnumerable<EventPollDto>> GetAllUnpagedAsync(Guid eventId, EventPollStatus? status)
         {
             return await Repository.GetAll()
+                .WhereIf(status.HasValue, e => e.Status == status.Value)
                 .Where(e => e.EventId == eventId)
                     .Include(e => e.EventPollQuestions)
                         .ThenInclude(e => e.EventPollQuestionOptions)

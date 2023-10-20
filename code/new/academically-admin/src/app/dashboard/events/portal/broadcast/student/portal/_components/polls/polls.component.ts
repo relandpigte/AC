@@ -2,6 +2,7 @@ import { Component, OnInit, Injector, ViewChild, ElementRef } from '@angular/cor
 import { AppComponentBase } from '@shared/app-component-base';
 import { PortalService } from '../../_services/portal.service';
 import { PortalPollService } from './_services/portal-poll.service';
+import { EventPollDto } from '@shared/service-proxies/service-proxies';
 
 export enum SignalAction {
   PollStarted = 100,
@@ -9,6 +10,10 @@ export enum SignalAction {
   PollStopped,
   SharePoll,
   PollClosed,
+}
+
+export enum PollTab {
+  Queue, Open, Closed
 }
 
 export class SignalData<TObject> {
@@ -39,6 +44,11 @@ export class PollsComponent extends AppComponentBase implements OnInit {
   @ViewChild('openNav') openNav: ElementRef;
   @ViewChild('closedNav') closedNav: ElementRef;
 
+  PollTab = PollTab;
+  selectedTab: PollTab = PollTab.Queue;
+
+  selectedPoll: EventPollDto;
+
   isHost = false;
 
   constructor(
@@ -47,14 +57,12 @@ export class PollsComponent extends AppComponentBase implements OnInit {
     private _portalPollService: PortalPollService,
   ) {
     super(injector);
+
+    this.pipeDestroy(this._portalPollService.pollTab$, tab => this.selectedTab = tab);
+    this.pipeDestroy(this._portalPollService.pollSelected$, poll => this.selectedPoll = poll);
     this.pipeDestroy(this._portalService.event$, (response) => {
       if (response) {
         this.isHost = response.creatorUserId === this.appSession.userId;
-      }
-    });
-    this.pipeDestroy(this._portalPollService.pollSelected$, (response) => {
-      if (response != null && this.openNav) {
-        (this.openNav.nativeElement as HTMLDivElement).click();
       }
     });
     this.pipeDestroy(this._portalPollService.pollCancelled$, (response) => {
@@ -70,4 +78,12 @@ export class PollsComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
   }
 
+  get isQueueTabSelected(): boolean { return this.selectedTab === PollTab.Queue; }
+  get isOpenTabSelected(): boolean { return this.selectedTab === PollTab.Open; }
+  get isClosedTabSelected(): boolean { return this.selectedTab === PollTab.Closed; }
+
+  handleTabClick(tab: PollTab): void {
+    this._portalPollService.pollSelected = null;
+    this._portalPollService.pollTabSelected = tab;
+  }
 }

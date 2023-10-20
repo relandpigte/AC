@@ -10890,17 +10890,26 @@ export class EventPollsServiceProxy {
 
     /**
      * @param eventIdFilter (optional) 
+     * @param status (optional) 0 = Queue
+    
+    1 = Open
+    
+    2 = Closed
      * @param sorting (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAll(eventIdFilter: string | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<EventPollDtoPagedResultDto> {
+    getAll(eventIdFilter: string | undefined, status: EventPollStatus | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<EventPollDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/EventPolls/GetAll?";
         if (eventIdFilter === null)
             throw new Error("The parameter 'eventIdFilter' cannot be null.");
         else if (eventIdFilter !== undefined)
             url_ += "EventIdFilter=" + encodeURIComponent("" + eventIdFilter) + "&";
+        if (status === null)
+            throw new Error("The parameter 'status' cannot be null.");
+        else if (status !== undefined)
+            url_ += "Status=" + encodeURIComponent("" + status) + "&";
         if (sorting === null)
             throw new Error("The parameter 'sorting' cannot be null.");
         else if (sorting !== undefined)
@@ -11129,14 +11138,23 @@ export class EventPollsServiceProxy {
 
     /**
      * @param eventId (optional) 
+     * @param status (optional) 0 = Queue
+    
+    1 = Open
+    
+    2 = Closed
      * @return Success
      */
-    getAllUnpaged(eventId: string | undefined): Observable<EventPollDto[]> {
+    getAllUnpaged(eventId: string | undefined, status: EventPollStatus | undefined): Observable<EventPollDto[]> {
         let url_ = this.baseUrl + "/api/services/app/EventPolls/GetAllUnpaged?";
         if (eventId === null)
             throw new Error("The parameter 'eventId' cannot be null.");
         else if (eventId !== undefined)
             url_ += "eventId=" + encodeURIComponent("" + eventId) + "&";
+        if (status === null)
+            throw new Error("The parameter 'status' cannot be null.");
+        else if (status !== undefined)
+            url_ += "status=" + encodeURIComponent("" + status) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -38087,6 +38105,7 @@ export class CreateEventPollDto implements ICreateEventPollDto {
     id: string;
     name: string | undefined;
     eventId: string;
+    status: EventPollStatus;
     eventPollQuestions: EventPollQuestionDto[] | undefined;
 
     constructor(data?: ICreateEventPollDto) {
@@ -38103,6 +38122,7 @@ export class CreateEventPollDto implements ICreateEventPollDto {
             this.id = _data["id"];
             this.name = _data["name"];
             this.eventId = _data["eventId"];
+            this.status = _data["status"];
             if (Array.isArray(_data["eventPollQuestions"])) {
                 this.eventPollQuestions = [] as any;
                 for (let item of _data["eventPollQuestions"])
@@ -38123,6 +38143,7 @@ export class CreateEventPollDto implements ICreateEventPollDto {
         data["id"] = this.id;
         data["name"] = this.name;
         data["eventId"] = this.eventId;
+        data["status"] = this.status;
         if (Array.isArray(this.eventPollQuestions)) {
             data["eventPollQuestions"] = [];
             for (let item of this.eventPollQuestions)
@@ -38143,6 +38164,7 @@ export interface ICreateEventPollDto {
     id: string;
     name: string | undefined;
     eventId: string;
+    status: EventPollStatus;
     eventPollQuestions: EventPollQuestionDto[] | undefined;
 }
 
@@ -41280,6 +41302,7 @@ export class EventPollDto implements IEventPollDto {
     id: string;
     name: string | undefined;
     eventId: string;
+    status: EventPollStatus;
     creationTime: moment.Moment;
     eventPollQuestions: EventPollQuestionDto[] | undefined;
 
@@ -41297,6 +41320,7 @@ export class EventPollDto implements IEventPollDto {
             this.id = _data["id"];
             this.name = _data["name"];
             this.eventId = _data["eventId"];
+            this.status = _data["status"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             if (Array.isArray(_data["eventPollQuestions"])) {
                 this.eventPollQuestions = [] as any;
@@ -41318,6 +41342,7 @@ export class EventPollDto implements IEventPollDto {
         data["id"] = this.id;
         data["name"] = this.name;
         data["eventId"] = this.eventId;
+        data["status"] = this.status;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         if (Array.isArray(this.eventPollQuestions)) {
             data["eventPollQuestions"] = [];
@@ -41339,6 +41364,7 @@ export interface IEventPollDto {
     id: string;
     name: string | undefined;
     eventId: string;
+    status: EventPollStatus;
     creationTime: moment.Moment;
     eventPollQuestions: EventPollQuestionDto[] | undefined;
 }
@@ -41603,6 +41629,13 @@ export interface IEventPollQuestionOptionDto {
 export enum EventPollQuestionType {
     MultipleChoice = 0,
     MultipleResponse = 1,
+}
+
+/** 0 = Queue 1 = Open 2 = Closed */
+export enum EventPollStatus {
+    Queue = 0,
+    Open = 1,
+    Closed = 2,
 }
 
 export class EventPresenterDto implements IEventPresenterDto {

@@ -106,6 +106,7 @@ export class PollsComponent extends PagedListingComponentBase<EventPollDto> impl
       this._eventPollsService
         .getAll(
           request.eventIdFilter,
+          undefined,
           request.sort,
           request.skipCount,
           request.maxResultCount
