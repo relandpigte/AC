@@ -10,7 +10,7 @@ import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.servi
 import { HubService } from '@app/_shared/services/hub.service';
 import { takeUntil } from 'rxjs/operators';
 
-export enum SignalAction {
+export enum PollSignalAction {
   PollStarted = 100,
   VoteSubmitted,
   PollStopped,
@@ -20,24 +20,6 @@ export enum SignalAction {
 
 export enum PollTab {
   Queue, Open, Closed
-}
-
-export class SignalData<TObject> {
-  action: SignalAction;
-  data: string;
-
-  constructor(action?: SignalAction, data?: TObject) {
-    this.action = action;
-    if (data !== undefined) {
-      this.data = JSON.stringify(data);
-    } else {
-      this.data = '';
-    }
-  }
-
-  public getDataObject(): TObject {
-    return JSON.parse(this.data) as TObject;
-  }
 }
 
 @Component({
@@ -77,14 +59,6 @@ export class PollsComponent extends AppComponentBase implements OnInit {
     this.pipeDestroy(this._portalService.event$, (response) => {
       if (response) {
         this.isHost = response.creatorUserId === this.appSession.userId;
-      }
-    });
-    this.pipeDestroy(this._portalPollService.pollCancelled$, (response) => {
-      if (response) {
-        (this.queueNav.nativeElement as HTMLDivElement).click();
-        setTimeout(() => {
-          this._portalPollService.pollSelected = undefined;
-        }, 500);
       }
     });
   }
@@ -132,14 +106,12 @@ export class PollsComponent extends AppComponentBase implements OnInit {
         modalSettings.class = 'modal-lg modal-dialog-centered w-580-px h-908-px';
         modalSettings.initialState = {
           poll: EventPollDto.fromJS({ ...this.selectedPoll}),
-          showVoterPercentage: true,
           showBackButton: false,
-          showMinimizeButton: true,
           isModal: true
         };
         this.pollWindowRef = this._modalService.show(PollComponent, modalSettings);
       } else {
-        this.pollWindowRef.hide();
+        this.pollWindowRef?.hide();
       }
     }
   }

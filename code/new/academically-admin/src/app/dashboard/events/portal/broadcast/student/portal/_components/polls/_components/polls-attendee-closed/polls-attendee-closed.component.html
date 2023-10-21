@@ -24,7 +24,7 @@
 
 <ng-template #viewPollTemplate>
   <div class="poll-queue p-3">
-    <app-poll class="poll" [poll]="poll" [showVoterPercentage]="false"></app-poll>
+    <app-poll class="poll" [poll]="poll"></app-poll>
     <div class="actions">
       <button class="btn btn-sm btn-white" (click)="onBackClick()">
         {{ 'Back' | localize }}

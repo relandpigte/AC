@@ -1,13 +1,12 @@
-import { Component, OnInit, Injector, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { EventPollDto, EventPollQuestionDto, EventPollQuestionOptionDto, EventPollQuestionAnswerDto, EventPollStatus, UserDto, EventPollsServiceProxy } from '@shared/service-proxies/service-proxies';
-import { AppComponentBase } from '@shared/app-component-base';
-import * as _ from 'lodash';
-import { PortalService } from '@app/dashboard/events/portal/broadcast/student/portal/_services/portal.service';
-import { PortalPollService } from '../../_services/portal-poll.service';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { Component, Injector, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { CreateEditPollComponent } from '@app/dashboard/events/details/broadcast/single/resources/_components/create-edit-poll/create-edit-poll.component';
-import { PollTab, SignalAction, SignalData } from '../../polls.component';
-import { HubConnection } from '@aspnet/signalr';
+import { PortalService } from '@app/dashboard/events/portal/broadcast/student/portal/_services/portal.service';
+import { AppComponentBase, SignalData } from '@shared/app-component-base';
+import { EventPollDto, EventPollQuestionAnswerDto, EventPollQuestionDto, EventPollQuestionOptionDto, EventPollStatus, EventPollsServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
+import * as _ from 'lodash';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { PortalPollService } from '../../_services/portal-poll.service';
+import { PollSignalAction, PollTab } from '../../polls.component';
 
 @Component({
   selector: 'app-poll',
@@ -16,15 +15,13 @@ import { HubConnection } from '@aspnet/signalr';
 })
 export class PollComponent extends AppComponentBase implements OnInit, OnChanges {
   @Input() poll: EventPollDto;
-  @Input() showVoterPercentage = false;
   @Input() showBackButton = true;
-  @Input() showMinimizeButton = false;
+  @Input() showToggleViewButton = true;
 
   isModal = false;
   isMaximized = false;
 
   EventPollStatus = EventPollStatus;
-  hub: HubConnection;
 
   answers: EventPollQuestionAnswerDto[] = [];
   voterUserIds: number[] = [];
@@ -55,6 +52,7 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
   }
 
   get numberOfExpectedVoters(): number { return this.voterUserIds.length; }
+  get isShowVoterPercentage(): boolean { return this.poll.status !== EventPollStatus.Queue; }
 
   ngOnInit(): void {
     if (this.poll) {
@@ -75,6 +73,21 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
       this.totalVoterPercentage = totalVoterPercentage;
       setTimeout(() => this.setChartSettings());
     }
+  }
+
+  private handleHubEvent(): void {
+    this.receiveSignal(async (sSignalData: string) => {
+      if (this.poll) {
+        const signalData = new SignalData();
+        Object.assign(signalData, JSON.parse(sSignalData));
+
+        switch (signalData.action) {
+          case PollSignalAction.VoteSubmitted:
+            this.onVoteSubmittedEvent(signalData.getDataObject());
+            break;
+        }
+      }
+    });
   }
 
   getOptionPercentage(question: EventPollQuestionDto, option: EventPollQuestionOptionDto): string {
@@ -126,6 +139,17 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
     };
   }
 
+  onVoteSubmittedEvent(data: any): void {
+    const answer = new EventPollQuestionAnswerDto();
+    answer.init(data as EventPollQuestionAnswerDto);
+    const question = this.poll.eventPollQuestions.find(e => e.id === answer.eventPollQuestionId);
+    if (!question.eventPollAnswers) {
+      question.eventPollAnswers = [];
+    }
+    question.eventPollAnswers.push(answer);
+    this.poll = _.cloneDeep(this.poll);
+  }
+
   onBackClick(): void {
     this._portalPollService.pollSelected = undefined;
   }
@@ -147,68 +171,33 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
 
   onLaunchClick(): void {
     this._portalPollService.pollSelectedMaximized = true;
-    // this.sendSignal(this.voterUserIds, new SignalData(SignalAction.PollStarted, this.poll));
+    this.pipeDestroy(this._eventPollsService.launchPoll(this.poll.id), _ => {});
   }
 
   onStopClick(): void {
     // this.pollStatus = PollStatus.Stopped;
-    this.sendSignal(this.voterUserIds, new SignalData(SignalAction.PollStopped, this.poll));
+    this.sendSignal(this.voterUserIds, new SignalData(PollSignalAction.PollStopped, this.poll));
   }
 
   onShareClick(): void {
     // this.isResultsShared = true;
-    this.sendSignal(this.voterUserIds, new SignalData(SignalAction.SharePoll, this.poll));
+    this.sendSignal(this.voterUserIds, new SignalData(PollSignalAction.SharePoll, this.poll));
   }
 
   onCloseClick(): void {
     // this.pollStatus = PollStatus.Closed;
     const tempPoll = this.poll;
-    this._portalPollService.pollClosed = tempPoll;
     this._portalPollService.pollSelected = undefined;
-    this.sendSignal(this.voterUserIds, new SignalData(SignalAction.PollClosed, tempPoll));
+    this.sendSignal(this.voterUserIds, new SignalData(PollSignalAction.PollClosed, tempPoll));
   }
 
-  onMinimizeClick(): void {
+  onToggleViewClick(): void {
+    this.isMaximized = !this.isMaximized;
     this._portalPollService.pollTabSelected = this.poll.status === EventPollStatus.Queue ?
       PollTab.Queue : this.poll.status === EventPollStatus.Open ?
       PollTab.Open : PollTab.Closed;
-    this._portalPollService.pollSelectedMaximized = false;
+    this._portalPollService.pollSelectedMaximized = this.isMaximized;
   }
 
-  private async sendSignal<TObject>(userIds: number[], signalData: SignalData<TObject>, callback?: () => void): Promise<void> {
-    console.log('invoking sendSignal');
-    console.log(userIds);
-    console.log(signalData);
-    const sSignalData = JSON.stringify(signalData);
-    await this.hub.invoke('sendSignal', userIds, sSignalData)
-      .then(() => {
-        if (callback) {
-          callback();
-        }
-      });
-  }
 
-  private handleHubEvent(): void {
-    this.hub.on('receiveSignal', async (sSignalData: string) => {
-      if (this.poll) {
-        const signalData = new SignalData();
-        Object.assign(signalData, JSON.parse(sSignalData));
-        console.log('handling receiveSignal');
-
-        switch (signalData.action) {
-          case SignalAction.VoteSubmitted:
-            console.log('receieveSignal - VoteSubmitted');
-            const answer = new EventPollQuestionAnswerDto();
-            answer.init(signalData.getDataObject() as EventPollQuestionAnswerDto);
-            const question = this.poll.eventPollQuestions.find(e => e.id === answer.eventPollQuestionId);
-            if (!question.eventPollAnswers) {
-              question.eventPollAnswers = [];
-            }
-            question.eventPollAnswers.push(answer);
-            this.poll = _.cloneDeep(this.poll);
-            break;
-        }
-      }
-    });
-  }
 }

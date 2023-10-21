@@ -3,16 +3,17 @@
 </div>
 
 <div class="poll position-relative" [class.is-modal]="isModal">
-  <div *ngIf="showMinimizeButton" class="poll-minimize cursor-pointer" (click)="onMinimizeClick()">
-    <img src="assets/img/events/poll/minimize.svg" alt="Minimize">
+  <div *ngIf="showToggleViewButton" class="poll-minimize cursor-pointer" (click)="onToggleViewClick()">
+    <img *ngIf="isMaximized" src="assets/img/events/poll/minimize.svg" alt="Minimize">
+    <img *ngIf="!isMaximized" src="assets/img/events/poll/maximize.svg" alt="Maximize">
   </div>
   <div class="poll-header">
-    <ng-container *ngIf="!showVoterPercentage">
+    <ng-container *ngIf="!isShowVoterPercentage">
       <div class="poll-header-name">
         {{ poll.name }}
       </div>
     </ng-container>
-    <ng-container *ngIf="showVoterPercentage">
+    <ng-container *ngIf="isShowVoterPercentage">
       <div class="poll-header-name doughnut text-center">
         {{ poll.name }}
       </div>
@@ -53,14 +54,15 @@
               <small>{{ getOptionPercentage(question, option) }}</small>
             </div>
           </div>
+
         </div>
-        <ng-container *ngIf="!showVoterPercentage">
+        <ng-container *ngIf="!isShowVoterPercentage">
           <div class="questions-item-voters d-flex align-items-center gap-5">
             <div class="questions-item-voters-badge-count d-flex justify-content-center align-items-center">{{ getQuestionTotalVotes(question) }}</div>
             <div class="questions-item-voters-badge-text">{{ 'Total submissions' | localize }}</div>
           </div>
         </ng-container>
-        <ng-container *ngIf="showVoterPercentage">
+        <ng-container *ngIf="isShowVoterPercentage">
           <div class="questions-item-voters d-flex align-items-center gap-5">
             <div class="questions-item-voters-badge-avatars d-flex align-items-center">
               <div class="avatar-group hide-empty">

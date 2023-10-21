@@ -1,8 +1,7 @@
 import { Component, OnInit, Injector } from '@angular/core';
-import { AppComponentBase } from '@shared/app-component-base';
+import { AppComponentBase, SignalData } from '@shared/app-component-base';
 import { PortalService } from '@app/dashboard/events/portal/broadcast/student/portal/_services/portal.service';
 import { HubConnection } from '@aspnet/signalr';
-import { SignalData, SignalAction } from '../../polls.component';
 import {
   EventPollDto,
   EventPollQuestionDto,
@@ -14,6 +13,7 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import { PortalPollService } from '../../_services/portal-poll.service';
+import { PollSignalAction } from '../../polls.component';
 
 @Component({
   selector: 'app-polls-attendee-open',
@@ -98,8 +98,7 @@ export class PollsAttendeeOpenComponent extends AppComponentBase implements OnIn
 
   onVoteClick(question: EventPollQuestionDto): void {
     const answer = this.answers.find(e => e.eventPollQuestionId === question.id);
-    console.log(answer);
-    this.sendSignal([this.event.creatorUserId], new SignalData(SignalAction.VoteSubmitted, answer));
+    this.sendSignal([this.event.creatorUserId], new SignalData(PollSignalAction.VoteSubmitted, answer));
     const index = this.poll.eventPollQuestions.findIndex(e => e.id === question.id);
     this.poll.eventPollQuestions.splice(index, 1);
     if (this.poll.eventPollQuestions.length === 0) {
@@ -108,48 +107,22 @@ export class PollsAttendeeOpenComponent extends AppComponentBase implements OnIn
   }
 
   private handleHubEvent(): void {
-    this.hub.on('receiveSignal', async (sSignalData: string) => {
+    this.receiveSignal(async (sSignalData: string) => {
       const signalData = new SignalData();
       Object.assign(signalData, JSON.parse(sSignalData));
-      console.log('handling receiveSignal');
-      console.log(sSignalData);
-      console.log(signalData);
-
       switch (signalData.action) {
-        case SignalAction.PollStarted:
-          console.log('receieveSignal - PollStarted');
+        case PollSignalAction.PollStarted:
           this._portalPollService.pollSelected = signalData.getDataObject() as EventPollDto;
           break;
 
-        case SignalAction.PollStopped:
-          console.log('receieveSignal - PollStopped');
+        case PollSignalAction.PollStopped:
           this.votingFinished = true;
           break;
 
-        case SignalAction.SharePoll:
-          console.log('receieveSignal - SharePoll');
+        case PollSignalAction.SharePoll:
           this.sharedPoll = JSON.parse(signalData.data) as EventPollDto;
-          break;
-
-        case SignalAction.PollClosed:
-          console.log('receieveSignal - PollClosed');
-          this._portalPollService.pollSelected = undefined;
-          this._portalPollService.pollClosed = JSON.parse(signalData.data) as EventPollDto;
           break;
       }
     });
-  }
-
-  private async sendSignal<TObject>(userIds: number[], signalData: SignalData<TObject>, callback?: () => void): Promise<void> {
-    console.log('invoking sendSignal');
-    console.log(userIds);
-    console.log(signalData);
-    const sSignalData = JSON.stringify(signalData);
-    await this.hub.invoke('sendSignal', userIds, sSignalData)
-      .then(() => {
-        if (callback) {
-          callback();
-        }
-      });
   }
 }

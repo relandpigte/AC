@@ -1,15 +1,20 @@
 <div class="poll-queue">
   <div class="polls">
-    <div *ngFor="let poll of polls" class="poll custom-card-border custom-card-shadow cursor-pointer" (click)="onSelectClick(poll)">
-      <div class="row">
-        <div class="col">
-          <h5 class="poll-name line-clamp-2">{{ poll.name }}</h5>
-          <p class="poll-info m-0">
-            {{ 'Poll' | localize }} · {{ poll.eventPollQuestions.length }} questions
-          </p>
+    <ng-container *ngIf="polls?.length > 0; else noPolls" >
+      <div *ngFor="let poll of polls" class="poll custom-card-border custom-card-shadow cursor-pointer" (click)="onSelectClick(poll)">
+        <div class="row">
+          <div class="col">
+            <h5 class="poll-name line-clamp-2">{{ poll.name }}</h5>
+            <p class="poll-info m-0">
+              {{ 'Poll' | localize }} · {{ poll.eventPollQuestions.length }} questions
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    </ng-container>
+    <ng-template #noPolls>
+      <div class="no-polls text-center">{{ 'No activities' | localize }} </div>
+    </ng-template>
   </div>
 
   <div class="poll-actions">

@@ -17,11 +17,6 @@ export class PollsAttendeeClosedComponent extends AppComponentBase implements On
     private _portalPollService: PortalPollService,
   ) {
     super(injector);
-    this.pipeDestroy(this._portalPollService.pollClosed$, (response) => {
-      if (response) {
-        this.polls.push(response);
-      }
-    });
   }
 
   ngOnInit(): void {

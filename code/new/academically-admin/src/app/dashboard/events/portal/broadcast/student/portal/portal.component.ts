@@ -23,7 +23,7 @@ import * as _ from 'lodash';
 import { HubConnection } from '@aspnet/signalr';
 import { ShareVideosComponent } from './_components/share-videos/share-videos.component';
 import * as rtc from 'rtc-lib';
-import { SignalAction as PortalSignalAction } from './_components/polls/polls.component';
+import { PollSignalAction } from './_components/polls/polls.component';
 import { PortalPollService } from './_components/polls/_services/portal-poll.service';
 import { BsModalService, ModalOptions, BsModalRef } from 'ngx-bootstrap/modal';
 import { AttendeeOpenDialogComponent } from './_components/polls/_components/attendee-open-dialog/attendee-open-dialog.component';
@@ -72,7 +72,6 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
   @ViewChild(ShareVideosComponent) shareVideosComponent: ShareVideosComponent;
   @ViewChild('presenterVideoEl') presenterVideoEl: ElementRef;
 
-  eventSessionsHub: HubConnection;
   offersStateService: ServiceOffersStateService;
   selectedOffer: ServiceOfferDto;
 
@@ -314,100 +313,11 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
   }
 
   private async initHub(): Promise<void> {
-    this.eventSessionsHub = await this._hubService.getEventSessionsHub(() => {
+    this.hub = await this._hubService.getEventSessionsHub(() => {
       this.hubConnected = true;
-      this._portalService.hub = this.eventSessionsHub;
+      this._portalService.hub = this.hub;
       this.initRoom();
-      let modal: BsModalRef;
-
-      this.eventSessionsHub.on('receiveSignal', async (sSignalData: string) => {
-        const signalData = new SignalData();
-        Object.assign(signalData, JSON.parse(sSignalData));
-        console.log('handling receiveSignal');
-        console.log(sSignalData);
-        console.log(signalData);
-
-        switch (signalData.action) {
-          case SignalAction.StartEvent:
-            console.log('receieveSignal - StartEvent');
-            this.eventStarting = false;
-            this.eventStarted = true;
-            break;
-
-          case SignalAction.JoinEvent:
-            console.log('receieveSignal - JoinEvent');
-            const joinedEventUser = signalData.getDataObject() as EventUserDto;
-            this.joiningUsers.push(joinedEventUser);
-            this._portalService.attendeeJoined = joinedEventUser;
-            break;
-
-          case SignalAction.EndEvent:
-            console.log('receieveSignal - EndEvent');
-            this.eventStarted = false;
-            this.eventJoined = false;
-            break;
-
-          case SignalAction.GuestJoined:
-            console.log('receieveSignal - GuestJoined');
-            const guestEventUser = signalData.getDataObject() as EventUserDto;
-            this._portalService.guestJoined = guestEventUser;
-            break;
-
-          case SignalAction.AutoAdmitChange:
-            console.log('receieveSignal - AutoAdmitChange');
-            const autoAdmit = signalData.getDataObject() as boolean;
-            this.model.autoAdmitAttendees = autoAdmit;
-            this._portalService.event = this.model;
-            break;
-
-          case SignalAction.AdmitGuest:
-            console.log('receieveSignal - AdmitGuest');
-            const userToAdmit = signalData.getDataObject() as EventUserDto;
-            if (userToAdmit.user.id === this.eventUser.user.id) {
-              await this.joinRoom();
-              this.eventJoined = true;
-            }
-            break;
-
-          case SignalAction.LobbyEntered:
-            console.log('receieveSignal - LobbyEntered');
-            const lobbyUser = signalData.getDataObject() as EventUserDto;
-            console.log(lobbyUser);
-
-            if (!this.allEventUsers.some(u => u.user.id === lobbyUser.user.id)) {
-              this.allEventUsers.push(lobbyUser);
-            }
-
-            if (lobbyUser.user.id !== this.host.user.id) {
-              console.log(lobbyUser.user.fullName + ' has entered');
-              this._portalService.lobbyUser = lobbyUser;
-            } else {
-              if (!this.model.autoAdmitAttendees && this.inLobby) {
-                this.sendSignal([this.host.user.id], new SignalData(SignalAction.LobbyEntered, this.eventUser));
-              }
-            }
-            break;
-        }
-
-        switch (signalData.action as number as PortalSignalAction) {
-          case PortalSignalAction.PollStarted:
-            this._portalPollService.pollSelected = signalData.getDataObject() as EventPollDto;
-            const modalSettings = this.defaultModalSettings as ModalOptions<AttendeeOpenDialogComponent>;
-            modal = this._modalService.show(AttendeeOpenDialogComponent, modalSettings);
-            console.log(modal);
-            break;
-
-          case PortalSignalAction.SharePoll:
-          case PortalSignalAction.PollStopped:
-          case PortalSignalAction.PollClosed:
-            console.log(modal);
-            if (modal) {
-              modal.hide();
-              modal = undefined;
-            }
-            break;
-        }
-      });
+      this.receiveSignal();
     });
   }
 
@@ -464,6 +374,98 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     const videoDom = new rtc.MediaDomElement(videoEl, stream);
   }
 
+  private receiveSignal(): void {
+    this.hub.on('receiveSignal', async (sSignalData: string) => {
+      let modal: BsModalRef;
+      const signalData = new SignalData();
+      Object.assign(signalData, JSON.parse(sSignalData));
+      console.log('handling receiveSignal');
+      console.log(sSignalData);
+      console.log(signalData);
+
+      switch (signalData.action) {
+        case SignalAction.StartEvent:
+          console.log('receieveSignal - StartEvent');
+          this.eventStarting = false;
+          this.eventStarted = true;
+          break;
+
+        case SignalAction.JoinEvent:
+          console.log('receieveSignal - JoinEvent');
+          const joinedEventUser = signalData.getDataObject() as EventUserDto;
+          this.joiningUsers.push(joinedEventUser);
+          this._portalService.attendeeJoined = joinedEventUser;
+          break;
+
+        case SignalAction.EndEvent:
+          console.log('receieveSignal - EndEvent');
+          this.eventStarted = false;
+          this.eventJoined = false;
+          break;
+
+        case SignalAction.GuestJoined:
+          console.log('receieveSignal - GuestJoined');
+          const guestEventUser = signalData.getDataObject() as EventUserDto;
+          this._portalService.guestJoined = guestEventUser;
+          break;
+
+        case SignalAction.AutoAdmitChange:
+          console.log('receieveSignal - AutoAdmitChange');
+          const autoAdmit = signalData.getDataObject() as boolean;
+          this.model.autoAdmitAttendees = autoAdmit;
+          this._portalService.event = this.model;
+          break;
+
+        case SignalAction.AdmitGuest:
+          console.log('receieveSignal - AdmitGuest');
+          const userToAdmit = signalData.getDataObject() as EventUserDto;
+          if (userToAdmit.user.id === this.eventUser.user.id) {
+            await this.joinRoom();
+            this.eventJoined = true;
+          }
+          break;
+
+        case SignalAction.LobbyEntered:
+          console.log('receieveSignal - LobbyEntered');
+          const lobbyUser = signalData.getDataObject() as EventUserDto;
+          console.log(lobbyUser);
+
+          if (!this.allEventUsers.some(u => u.user.id === lobbyUser.user.id)) {
+            this.allEventUsers.push(lobbyUser);
+          }
+
+          if (lobbyUser.user.id !== this.host.user.id) {
+            console.log(lobbyUser.user.fullName + ' has entered');
+            this._portalService.lobbyUser = lobbyUser;
+          } else {
+            if (!this.model.autoAdmitAttendees && this.inLobby) {
+              this.sendSignal([this.host.user.id], new SignalData(SignalAction.LobbyEntered, this.eventUser));
+            }
+          }
+          break;
+      }
+
+      switch (signalData.action as number as PollSignalAction) {
+        case PollSignalAction.PollStarted:
+          this._portalPollService.pollSelected = signalData.getDataObject() as EventPollDto;
+          const modalSettings = this.defaultModalSettings as ModalOptions<AttendeeOpenDialogComponent>;
+          modal = this._modalService.show(AttendeeOpenDialogComponent, modalSettings);
+          console.log(modal);
+          break;
+
+        case PollSignalAction.SharePoll:
+        case PollSignalAction.PollStopped:
+        case PollSignalAction.PollClosed:
+          console.log(modal);
+          if (modal) {
+            modal.hide();
+            modal = undefined;
+          }
+          break;
+      }
+    });
+  }
+
   private async joinRoom(): Promise<void> {
     const userIds = this.allEventUsers
       .filter(e => e.user.id !== this.eventUser.user.id)
@@ -501,19 +503,6 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
         this.host = this.allEventUsers.find(e => e.type === EventUserType.Host);
         this.eventUser = this.allEventUsers.find(e => e.user.id === this.appSession.userId);
         this._portalService.attendees = this.allEventUsers.filter(e => e.type !== EventUserType.Host);
-      });
-  }
-
-  private async sendSignal<TObject>(userIds: number[], signalData: SignalData<TObject>, callback?: () => void): Promise<void> {
-    console.log('invoking sendSignal');
-    console.log(userIds);
-    console.log(signalData);
-    const sSignalData = JSON.stringify(signalData);
-    await this.eventSessionsHub.invoke('sendSignal', userIds, sSignalData)
-      .then(() => {
-        if (callback) {
-          callback();
-        }
       });
   }
 

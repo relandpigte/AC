@@ -32,12 +32,35 @@ import {
   VideoType
 } from './service-proxies/service-proxies';
 import { PubSubService } from './services/pub-sub.service';
+import { HubConnection } from '@aspnet/signalr';
+
+export class SignalData<TObject> {
+  action: any;
+  data: string;
+
+  constructor(action?: any, data?: TObject) {
+    this.action = action;
+    if (data !== undefined) {
+      this.data = JSON.stringify(data);
+    } else {
+      this.data = '';
+    }
+  }
+
+  public getDataObject(): TObject {
+    return JSON.parse(this.data) as TObject;
+  }
+}
 
 @Injectable()
 export abstract class AppComponentBase implements OnDestroy {
   public isTutor: boolean;
   public isStudent: boolean;
   public isCurrentUserAdmin: boolean;
+
+  hub: HubConnection;
+  readonly hubSendMethod = 'sendSignal';
+  readonly hubReceiveMethod = 'receiveSignal';
 
   localizationSourceName = AppConsts.localization.defaultLocalizationSourceName;
 
@@ -695,5 +718,19 @@ export abstract class AppComponentBase implements OnDestroy {
     for (const o of object)
       if (key in o) return o[key]
       else return this.deepSearch(Object.values(o), key);
+  }
+
+  public async sendSignal<TObject>(userIds: number[], signalData: SignalData<TObject>, callback?: () => void): Promise<void> {
+    const sSignalData = JSON.stringify(signalData);
+    await this.hub.invoke(this.hubSendMethod, userIds, sSignalData)
+      .then(() => {
+        if (callback) callback();
+      });
+  }
+
+  public async receiveSignal(callback: (sSignalData: string) => void): Promise<void> {
+    this.hub.on(this.hubReceiveMethod, async (sSignalData: string) => {
+      callback(sSignalData);
+    });
   }
 }
