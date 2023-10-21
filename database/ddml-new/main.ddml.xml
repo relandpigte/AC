@@ -190,6 +190,7 @@
 	<include file="ddml-new/ddml.2023-10-09-94-create-service-offer-purchases-table.xml" />
 	<include file="ddml-new/ddml.2023-10-15-99-alter-servicepurchase-table.xml" />
 	<include file="ddml-new/ddml.2023-10-15-99-alter-post-table.xml" />
+	<include file="ddml-new/ddml.2023-10-17-97-alter-eventpolls-table.xml" />
 	<include file="ddml-new/ddml.2023-10-17-98-alter-eventpolls-table.xml" />
 	<include file="ddml-new/ddml.2023-10-17-99-alter-eventpolls-table.xml" />
 	

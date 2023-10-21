@@ -11324,6 +11324,62 @@ export class EventPollsServiceProxy {
      * @param id (optional) 
      * @return Success
      */
+    sharePoll(id: string | undefined): Observable<EventPollDto> {
+        let url_ = this.baseUrl + "/api/services/app/EventPolls/SharePoll?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSharePoll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSharePoll(<any>response_);
+                } catch (e) {
+                    return <Observable<EventPollDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventPollDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSharePoll(response: HttpResponseBase): Observable<EventPollDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventPollDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventPollDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
     delete(id: string | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/EventPolls/Delete?";
         if (id === null)
@@ -41337,7 +41393,9 @@ export class EventPollDto implements IEventPollDto {
     status: EventPollStatus;
     launchedTime: moment.Moment | undefined;
     endedTime: moment.Moment | undefined;
+    sharedTime: moment.Moment | undefined;
     creationTime: moment.Moment;
+    creatorUserId: number;
     eventPollQuestions: EventPollQuestionDto[] | undefined;
 
     constructor(data?: IEventPollDto) {
@@ -41357,7 +41415,9 @@ export class EventPollDto implements IEventPollDto {
             this.status = _data["status"];
             this.launchedTime = _data["launchedTime"] ? moment(_data["launchedTime"].toString()) : <any>undefined;
             this.endedTime = _data["endedTime"] ? moment(_data["endedTime"].toString()) : <any>undefined;
+            this.sharedTime = _data["sharedTime"] ? moment(_data["sharedTime"].toString()) : <any>undefined;
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
             if (Array.isArray(_data["eventPollQuestions"])) {
                 this.eventPollQuestions = [] as any;
                 for (let item of _data["eventPollQuestions"])
@@ -41381,7 +41441,9 @@ export class EventPollDto implements IEventPollDto {
         data["status"] = this.status;
         data["launchedTime"] = this.launchedTime ? this.launchedTime.toISOString() : <any>undefined;
         data["endedTime"] = this.endedTime ? this.endedTime.toISOString() : <any>undefined;
+        data["sharedTime"] = this.sharedTime ? this.sharedTime.toISOString() : <any>undefined;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
         if (Array.isArray(this.eventPollQuestions)) {
             data["eventPollQuestions"] = [];
             for (let item of this.eventPollQuestions)
@@ -41405,7 +41467,9 @@ export interface IEventPollDto {
     status: EventPollStatus;
     launchedTime: moment.Moment | undefined;
     endedTime: moment.Moment | undefined;
+    sharedTime: moment.Moment | undefined;
     creationTime: moment.Moment;
+    creatorUserId: number;
     eventPollQuestions: EventPollQuestionDto[] | undefined;
 }
 
@@ -43319,7 +43383,7 @@ export interface IGroupedPermissionDtoListResultDto {
     items: GroupedPermissionDto[] | undefined;
 }
 
-/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted 18 = ChannelMessageCreated 19 = ChannelMessageUpdated 20 = ChannelMessageDeleted 21 = ChannelMemberTyping 22 = ChannelArchive 23 = ChannelUnarchive 24 = NewUserLoggedIn 25 = NotificationCreated 26 = NotificationUpdated 27 = NotificationDeleted 28 = QuestionCreated 29 = QuestionUpdated 30 = QuestionDeleted 31 = QuestionReactionCreated 32 = QuestionReactionUpdated 33 = QuestionReactionDeleted 34 = ServiceOfferCreated 35 = ServiceOfferUpdated 36 = ServiceOfferDeleted 37 = ServiceOfferLaunched 38 = ServiceOfferClosed 39 = AnsweringLiveQuestion 40 = EndAnsweringLiveQuestion 41 = EventPollCreated 42 = EventPollUpdated 43 = EventPollDeleted 44 = EventPollLaunched 45 = EventPollClosed */
+/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted 18 = ChannelMessageCreated 19 = ChannelMessageUpdated 20 = ChannelMessageDeleted 21 = ChannelMemberTyping 22 = ChannelArchive 23 = ChannelUnarchive 24 = NewUserLoggedIn 25 = NotificationCreated 26 = NotificationUpdated 27 = NotificationDeleted 28 = QuestionCreated 29 = QuestionUpdated 30 = QuestionDeleted 31 = QuestionReactionCreated 32 = QuestionReactionUpdated 33 = QuestionReactionDeleted 34 = ServiceOfferCreated 35 = ServiceOfferUpdated 36 = ServiceOfferDeleted 37 = ServiceOfferLaunched 38 = ServiceOfferClosed 39 = AnsweringLiveQuestion 40 = EndAnsweringLiveQuestion 41 = EventPollCreated 42 = EventPollUpdated 43 = EventPollDeleted 44 = EventPollLaunched 45 = EventPollClosed 46 = EventPollShared */
 export enum HubEvent {
     PostCreated = 0,
     PostUpdated = 1,
@@ -43367,6 +43431,7 @@ export enum HubEvent {
     EventPollDeleted = 43,
     EventPollLaunched = 44,
     EventPollClosed = 45,
+    EventPollShared = 46,
 }
 
 export class ICustomAttributeProvider implements IICustomAttributeProvider {

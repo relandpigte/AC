@@ -244,6 +244,11 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
           break;
         case 'closed':
           this._portalPollService.pollSelected = null;
+          this._portalPollService.pollSelectedMaximized = false;
+          break;
+        case 'shared':
+          this._portalPollService.pollSelected = event.data;
+          this._portalPollService.pollSelectedMaximized = true;
           break;
       }
     });

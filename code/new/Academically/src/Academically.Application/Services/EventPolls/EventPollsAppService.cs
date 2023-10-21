@@ -109,6 +109,21 @@ namespace Academically.Services.EventPolls
             }
             return null;
         }
+
+        public async Task<EventPollDto> SharePoll(Guid Id)
+        {
+            var poll = await this.Repository.GetAll()
+               .Where(o => o.Id == Id)
+               .FirstOrDefaultAsync();
+
+            if (poll != null)
+            {
+                poll.SharedTime = DateTime.Now;
+                await this._hubManager.NotifyUsersForEventPollShared(ObjectMapper.Map<EventPollDto>(poll));
+                return ObjectMapper.Map<EventPollDto>(poll);
+            }
+            return null;
+        }
     }
 }
 

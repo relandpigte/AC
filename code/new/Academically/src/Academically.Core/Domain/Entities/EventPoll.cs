@@ -15,6 +15,7 @@ namespace Academically.Domain.Entities
 		public EventPollStatus Status { get; set; }
         public DateTime? LaunchedTime { get; set; }
         public DateTime? EndedTime { get; set; }
+        public DateTime? SharedTime { get; set; }
 
         [ForeignKey("EventId")]
         public Event Event { get; set; }

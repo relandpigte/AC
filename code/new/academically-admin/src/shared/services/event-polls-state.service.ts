@@ -61,6 +61,7 @@ export class EventPollsStateService extends StateServiceBase {
             this.hub.off(HubEvent[HubEvent.EventPollDeleted], this.handleDeletePolls);
             this.hub.off(HubEvent[HubEvent.EventPollLaunched], this.handleLaunchedPolls);
             this.hub.off(HubEvent[HubEvent.EventPollClosed], this.handleClosedPolls);
+            this.hub.off(HubEvent[HubEvent.EventPollShared], this.handleSharedPolls);
         }
     }
 
@@ -72,6 +73,7 @@ export class EventPollsStateService extends StateServiceBase {
             this.hub.on(HubEvent[HubEvent.EventPollDeleted], this.handleDeletePolls);
             this.hub.on(HubEvent[HubEvent.EventPollLaunched], this.handleLaunchedPolls);
             this.hub.on(HubEvent[HubEvent.EventPollClosed], this.handleClosedPolls);
+            this.hub.on(HubEvent[HubEvent.EventPollShared], this.handleSharedPolls);
         } catch (err) {
             console.error(err);
         }
@@ -126,6 +128,19 @@ export class EventPollsStateService extends StateServiceBase {
             const closed = await this._eventPollsService.get(poll.id).toPromise();
             this.updateFromMap(this.polls, Utils.toObjectMap([closed], (o) => o.id, (p) => p), this.polls$);
             this.polls$.next({ data: closed, type: 'closed', silent: false });
+        } catch (err) {
+            console.error(err);
+        }
+        this.loading$.next(false);
+    }
+
+    handleSharedPolls = async (poll: EventPollDto) => {
+        if (!this.canViewPoll(poll)) return;
+        this.loading$.next(true);
+        try {
+            const closed = await this._eventPollsService.get(poll.id).toPromise();
+            this.updateFromMap(this.polls, Utils.toObjectMap([closed], (o) => o.id, (p) => p), this.polls$);
+            this.polls$.next({ data: closed, type: 'shared', silent: false });
         } catch (err) {
             console.error(err);
         }

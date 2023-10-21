@@ -12,6 +12,7 @@ namespace Academically.Services.EventPolls
 		Task<IEnumerable<EventPollDto>> GetAllUnpagedAsync(Guid eventId, EventPollStatus? status);
         Task<EventPollDto> LaunchPoll(Guid Id);
         Task<EventPollDto> ClosePoll(Guid Id);
+        Task<EventPollDto> SharePoll(Guid Id);
     }
 }
 

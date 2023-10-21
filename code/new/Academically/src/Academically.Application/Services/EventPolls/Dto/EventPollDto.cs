@@ -15,7 +15,9 @@ namespace Academically.Services.EventPolls.Dto
 		public EventPollStatus Status { get; set; }
         public DateTime? LaunchedTime { get; set; }
         public DateTime? EndedTime { get; set; }
+        public DateTime? SharedTime { get; set; }
         public DateTime CreationTime { get; set; }
+		public long CreatorUserId { get; set; }
 
         public IEnumerable<EventPollQuestionDto> EventPollQuestions { get; set; }
 	}

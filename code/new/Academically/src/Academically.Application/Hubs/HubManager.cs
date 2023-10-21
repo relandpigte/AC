@@ -66,6 +66,7 @@ namespace Academically.Hubs
         Task NotifyUsersForEventPollDeleted(EventPollDto poll);
         Task NotifyUsersForEventPollLaunched(EventPollDto poll);
         Task NotifyUsersForEventPollClosed(EventPollDto poll);
+        Task NotifyUsersForEventPollShared(EventPollDto poll);
 
     }
 
@@ -476,6 +477,11 @@ namespace Academically.Hubs
         public async Task NotifyUsersForEventPollClosed(EventPollDto poll)
         {
             await _eventPollsHub.Clients.Group($"{poll.EventId}").SendAsync(nameof(HubEvent.EventPollClosed), poll);
+        }
+
+        public async Task NotifyUsersForEventPollShared(EventPollDto poll)
+        {
+            await _eventPollsHub.Clients.Group($"{poll.EventId}").SendAsync(nameof(HubEvent.EventPollShared), poll);
         }
     }
 }

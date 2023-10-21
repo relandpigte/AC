@@ -4,7 +4,7 @@ import { PortalService } from '@app/dashboard/events/portal/broadcast/student/po
 import { AppComponentBase, SignalData } from '@shared/app-component-base';
 import { EventPollDto, EventPollQuestionAnswerDto, EventPollQuestionDto, EventPollQuestionOptionDto, EventPollStatus, EventPollsServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { PortalPollService } from '../../_services/portal-poll.service';
 import { PollSignalAction, PollTab } from '../../polls.component';
 
@@ -54,6 +54,8 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
 
   get numberOfExpectedVoters(): number { return this.voterUserIds.length; }
   get isShowVoterPercentage(): boolean { return this.poll.status !== EventPollStatus.Queue; }
+  get isHost(): boolean { return this.poll?.creatorUserId === this.appSession.userId; }
+  get isResultsShared(): boolean { return !!this.poll?.sharedTime; }
 
   ngOnInit(): void {
     if (this.poll) {
@@ -171,14 +173,11 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
   }
 
   onLaunchClick(): void {
-    this.pipeDestroy(this._eventPollsService.launchPoll(this.poll.id), _ => {
-      setTimeout(() => this._portalPollService.pollSelectedMaximized = true);
-    });
+    this.pipeDestroy(this._eventPollsService.launchPoll(this.poll.id), _ => {});
   }
 
-  onStopClick(): void {
-    // this.pollStatus = PollStatus.Stopped;
-    this.sendSignal(this.voterUserIds, new SignalData(PollSignalAction.PollStopped, this.poll));
+  onDoneClick(): void {
+    this._modalService._hideModal();
   }
 
   onShareClick(): void {
@@ -187,10 +186,7 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
   }
 
   onCloseClick(): void {
-    // this.pollStatus = PollStatus.Closed;
-    const tempPoll = this.poll;
-    this._portalPollService.pollSelected = undefined;
-    this.sendSignal(this.voterUserIds, new SignalData(PollSignalAction.PollClosed, tempPoll));
+    this.pipeDestroy(this._eventPollsService.closePoll(this.poll.id), _ => {});
   }
 
   onToggleViewClick(): void {
