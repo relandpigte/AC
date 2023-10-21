@@ -48,6 +48,7 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
       }
     });
 
+    this.pipeDestroy(this._portalPollService.pollSelected$, poll => this.poll = poll);
     this.pipeDestroy(this._portalPollService.pollSelectedMaximized$, maximized => this.isMaximized = maximized);
   }
 
@@ -170,8 +171,9 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
   }
 
   onLaunchClick(): void {
-    this._portalPollService.pollSelectedMaximized = true;
-    this.pipeDestroy(this._eventPollsService.launchPoll(this.poll.id), _ => {});
+    this.pipeDestroy(this._eventPollsService.launchPoll(this.poll.id), _ => {
+      setTimeout(() => this._portalPollService.pollSelectedMaximized = true);
+    });
   }
 
   onStopClick(): void {

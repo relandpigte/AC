@@ -7,7 +7,7 @@
     <img *ngIf="isMaximized" src="assets/img/events/poll/minimize.svg" alt="Minimize">
     <img *ngIf="!isMaximized" src="assets/img/events/poll/maximize.svg" alt="Maximize">
   </div>
-  <div class="poll-header">
+  <div class="poll-header d-flex flex-column w-100">
     <ng-container *ngIf="!isShowVoterPercentage">
       <div class="poll-header-name">
         {{ poll.name }}

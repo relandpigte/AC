@@ -67,11 +67,11 @@ export class EventPollsStateService extends StateServiceBase {
     protected async setupSubscriptions(component: any, userId: number) {
         try {
             this.hub = await this._hubService.getEventPollsHub(...this.updateArgs);
-            this.hub.on(HubEvent[HubEvent.ServiceOfferCreated], this.handleUpsertPolls);
-            this.hub.on(HubEvent[HubEvent.ServiceOfferUpdated], this.handleUpsertPolls);
-            this.hub.on(HubEvent[HubEvent.ServiceOfferDeleted], this.handleDeletePolls);
-            this.hub.on(HubEvent[HubEvent.ServiceOfferLaunched], this.handleLaunchedPolls);
-            this.hub.on(HubEvent[HubEvent.ServiceOfferClosed], this.handleClosedPolls);
+            this.hub.on(HubEvent[HubEvent.EventPollCreated], this.handleUpsertPolls);
+            this.hub.on(HubEvent[HubEvent.EventPollUpdated], this.handleUpsertPolls);
+            this.hub.on(HubEvent[HubEvent.EventPollDeleted], this.handleDeletePolls);
+            this.hub.on(HubEvent[HubEvent.EventPollLaunched], this.handleLaunchedPolls);
+            this.hub.on(HubEvent[HubEvent.EventPollClosed], this.handleClosedPolls);
         } catch (err) {
             console.error(err);
         }

@@ -11,7 +11,7 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import { Observable, ReplaySubject } from 'rxjs';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, finalize, takeUntil } from 'rxjs/operators';
 import {
   ArticleDto,
   ArticleType,
@@ -499,6 +499,7 @@ export abstract class AppComponentBase implements OnDestroy {
   ): void {
     o.pipe(
       takeUntil(this.destroyed$),
+      distinctUntilChanged(),
       finalize(() => {
         if (finalizeCallback) {
           finalizeCallback();

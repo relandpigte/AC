@@ -8,6 +8,7 @@ using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Hubs;
 using Academically.Services.EventPolls.Dto;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,10 +16,14 @@ namespace Academically.Services.EventPolls
 {
     public class EventPollsAppService : AsyncCrudAppService<EventPoll, EventPollDto, Guid, PagedEventPollResultRequestDto, CreateEventPollDto>, IEventPollsAppService
     {
+        private readonly IHubManager _hubManager;
 
-
-        public EventPollsAppService(IRepository<EventPoll, Guid> repository) : base(repository)
+        public EventPollsAppService(
+            IRepository<EventPoll, Guid> repository,
+            IHubManager hubManager
+        ) : base(repository)
         {
+            this._hubManager = hubManager;
         }
 
         protected override IQueryable<EventPoll> CreateFilteredQuery(PagedEventPollResultRequestDto input)
@@ -83,7 +88,7 @@ namespace Academically.Services.EventPolls
             {
                 poll.Status = EventPollStatus.Open;
                 poll.LaunchedTime = DateTime.Now;
-                // await this._hubManager.NotifyUsersForServiceOfferLaunched(ObjectMapper.Map<ServiceOfferDto>(offer));
+                await this._hubManager.NotifyUsersForEventPollLaunched(ObjectMapper.Map<EventPollDto>(poll));
                 return ObjectMapper.Map<EventPollDto>(poll);
             }
             return null;
@@ -99,7 +104,7 @@ namespace Academically.Services.EventPolls
             {
                 poll.Status = EventPollStatus.Closed;
                 poll.EndedTime = DateTime.Now;
-                // await this._hubManager.NotifyUsersForServiceOfferClosed(ObjectMapper.Map<ServiceOfferDto>(offer));
+                await this._hubManager.NotifyUsersForEventPollClosed(ObjectMapper.Map<EventPollDto>(poll));
                 return ObjectMapper.Map<EventPollDto>(poll);
             }
             return null;

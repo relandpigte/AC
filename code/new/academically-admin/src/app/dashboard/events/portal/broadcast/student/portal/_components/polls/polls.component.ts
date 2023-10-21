@@ -39,7 +39,6 @@ export class PollsComponent extends AppComponentBase implements OnInit {
 
   selectedPoll: EventPollDto;
   isSelectedMaximized: boolean;
-  pollWindowRef: any;
 
   isHost = false;
 
@@ -55,12 +54,12 @@ export class PollsComponent extends AppComponentBase implements OnInit {
 
     this.pipeDestroy(this._portalPollService.pollTab$, tab => this.selectedTab = tab);
     this.pipeDestroy(this._portalPollService.pollSelected$, poll => this.selectedPoll = poll);
-    this.pipeDestroy(this._portalPollService.pollSelectedMaximized$, isMaximized => this.handleSelectedPollMaximized(isMaximized));
     this.pipeDestroy(this._portalService.event$, (response) => {
       if (response) {
         this.isHost = response.creatorUserId === this.appSession.userId;
       }
     });
+    this.pipeDestroy(this._portalPollService.pollSelectedMaximized$, isMaximized => this.isSelectedMaximized = isMaximized);
   }
 
   async ngOnInit() {
@@ -98,21 +97,5 @@ export class PollsComponent extends AppComponentBase implements OnInit {
     this._portalPollService.pollTabSelected = tab;
   }
 
-  handleSelectedPollMaximized(isMaximized: boolean): void {
-    this.isSelectedMaximized = isMaximized;
-    if (this.selectedPoll) {
-      if (isMaximized) {
-        const modalSettings = this.defaultModalSettings as ModalOptions<PollComponent>;
-        modalSettings.class = 'modal-lg modal-dialog-centered w-580-px h-908-px';
-        modalSettings.initialState = {
-          poll: EventPollDto.fromJS({ ...this.selectedPoll}),
-          showBackButton: false,
-          isModal: true
-        };
-        this.pollWindowRef = this._modalService.show(PollComponent, modalSettings);
-      } else {
-        this.pollWindowRef?.hide();
-      }
-    }
-  }
+
 }

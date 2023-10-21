@@ -10,7 +10,7 @@ import {
   ProfilesServiceProxy,
   ServiceOfferStatus,
   ServicesServiceProxy,
-  ServiceOfferDto, QuestionDto, HubEvent, QuestionsServiceProxy,
+  ServiceOfferDto, QuestionDto, HubEvent, QuestionsServiceProxy, EventPollsServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -31,6 +31,8 @@ import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-d
 import { ServiceOffersStateService, offersType } from '@shared/services/service-offers-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { ServiceOffersService } from '@shared/services/service-offers.service';
+import { EventPollsStateService, pollsType } from '@shared/services/event-polls-state.service';
+import { PollComponent } from './_components/polls/_components/poll/poll.component';
 
 enum SignalAction {
   StartEvent,
@@ -75,6 +77,10 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
   offersStateService: ServiceOffersStateService;
   selectedOffer: ServiceOfferDto;
 
+  pollsStateService: EventPollsStateService;
+  pollWindowRef: any;
+  selectedPoll: EventPollDto;
+
   liveQuestion: QuestionDto;
   answeringLiveQuestion: HubConnection;
 
@@ -113,6 +119,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     private _portalService: PortalService,
     private _portalPollService: PortalPollService,
     private _eventSessionsService: EventSessionsServiceProxy,
+    private _eventPollsService: EventPollsServiceProxy,
     private _profilesService: ProfilesServiceProxy,
     private _modalService: BsModalService,
     private _modalDialogService: ModalDialogService,
@@ -147,9 +154,14 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
       .subscribe(question => {
         this.liveQuestion = question;
       });
+
+    // polls
+    this.pipeDestroy(this._portalPollService.pollSelected$, poll => this.selectedPoll = poll);
+    this.pipeDestroy(this._portalPollService.pollSelectedMaximized$, isMaximized => this.handleSelectedPollMaximized(isMaximized));
   }
 
   get offersStateId(): string { return 'offers-event'; }
+  get pollsStateId(): string { return 'polls-event'; }
   get isHost(): boolean {
     return this.model.creatorUserId === this.appSession.userId;
   }
@@ -166,6 +178,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
   async ngOnInit() {
     await this.initHub();
     await this.initOffersAppStates();
+    await this.initPollsAppStates();
     await this.initLiveAnsweringQuestion();
   }
 
@@ -207,6 +220,50 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
           break;
       }
     });
+  }
+
+  private async initPollsAppStates() {
+    const appStateConfig: AppStateConfig = {
+      [this.pollsStateId]: {
+        update: { referenceId: this.eventId }
+      }
+    };
+    const appStateServices: AppStateServices = {
+      [this.pollsStateId]: {
+        type: EventPollsStateService,
+        args: [pollsType.opened, this.appSession, this._hubService, this._eventPollsService]
+      }
+    };
+    await this.pubSubService.start(this, appStateConfig, appStateServices);
+    this.pollsStateService = this.pubSubService.getStateService<EventPollsStateService>(this.pollsStateId);
+    this.pollsStateService.polls$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
+      switch (event.type) {
+        case 'launched':
+          this._portalPollService.pollSelected = event.data;
+          this._portalPollService.pollSelectedMaximized = true;
+          break;
+        case 'closed':
+          this._portalPollService.pollSelected = null;
+          break;
+      }
+    });
+  }
+
+  handleSelectedPollMaximized(isMaximized: boolean): void {
+    if (this.selectedPoll) {
+      if (isMaximized) {
+        const modalSettings = this.defaultModalSettings as ModalOptions<PollComponent>;
+        modalSettings.class = 'modal-lg modal-dialog-centered w-580-px h-908-px';
+        modalSettings.initialState = {
+          poll: EventPollDto.fromJS({ ...this.selectedPoll}),
+          showBackButton: false,
+          isModal: true
+        };
+        this.pollWindowRef = this._modalService.show(PollComponent, modalSettings);
+      } else {
+        this.pollWindowRef?.hide();
+      }
+    }
   }
 
   onOfferClick(offer: ServiceOfferDto): void {
@@ -317,7 +374,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
       this.hubConnected = true;
       this._portalService.hub = this.hub;
       this.initRoom();
-      this.receiveSignal();
+      this.handleHubEvents();
     });
   }
 
@@ -374,8 +431,8 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     const videoDom = new rtc.MediaDomElement(videoEl, stream);
   }
 
-  private receiveSignal(): void {
-    this.hub.on('receiveSignal', async (sSignalData: string) => {
+  private handleHubEvents(): void {
+    this.receiveSignal(async (sSignalData: string) => {
       let modal: BsModalRef;
       const signalData = new SignalData();
       Object.assign(signalData, JSON.parse(sSignalData));
