@@ -21,6 +21,7 @@ namespace Academically.Services.Articles
 		Task DeleteAsync(Guid id);
 		Task<IEnumerable<AvailableServiceDto>> GetAllArticles();
 		Task<IEnumerable<AvailableServiceDto>> GetArticlesByKeyword(string keyword, long? creatorUserId);
+		Task<IEnumerable<ArticleDto>> GetEnrolledArticlesByUser();
 	}
 }
 

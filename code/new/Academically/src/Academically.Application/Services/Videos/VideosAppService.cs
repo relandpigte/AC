@@ -7,6 +7,7 @@ using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Expressions;
 using Abp.Linq.Extensions;
+using Abp.Runtime.Session;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
@@ -364,6 +365,29 @@ namespace Academically.Services.Videos
 
 
             return (await GetVideosDetailsAsync(topVideos)).GroupByPopularityPagedExt(totalCount);
+        }
+
+        public async Task<IEnumerable<VideoDto>> GetEnrolledVideosByUser()
+        {
+            var purchases = await _servicePurchasesRepository.GetAll()
+                .Where(p => p.Type == ServicesType.Tutorial)
+                .Where(p => p.CreatorUserId == AbpSession.GetUserId())
+                .Select(p => p.ReferenceId)
+                .ToListAsync();
+            
+            var videos = await _videosRepository.GetAll()
+                .Include(e => e.Document)
+                .Include(e => e.ThumbnailDocument)
+                .Include(e => e.Parent)
+                .Include(e => e.Children)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.ProfilePictureDocument)
+                .Where(v => purchases.Contains(v.Id))
+                .Select(e => ObjectMapper.Map<VideoDto>(e))
+                .ToListAsync();
+
+            return await GetVideosDetailsAsync(videos);
+
         }
 
         private async Task<List<VideoDto>> GetVideosDetailsAsync(List<VideoDto> topVideos)

@@ -37,22 +37,12 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
 
   private initStudentEvents(): void {
     this._dashboardPageService.setIsLoading(true);
-    this._eventsService.getAll(
-      undefined,
-      this.appSession.userId,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined
-    )
+    this._eventsService.getEnrolledEventsByUser()
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this._dashboardPageService.setIsLoading(false)))
       .subscribe(events => {
-        this.upcomingEvents = events?.items?.filter(e => moment().isBefore(e.eventDateTime) && e.status !== 0);
-        this.pastEvents = events?.items?.filter(e => moment().isAfter(e.eventDateTime));
+        this.upcomingEvents = events?.filter(e => moment().isBefore(e.eventDateTime) && e.status !== 0);
+        this.pastEvents = events?.filter(e => moment().isAfter(e.eventDateTime));
       });
   }
 }

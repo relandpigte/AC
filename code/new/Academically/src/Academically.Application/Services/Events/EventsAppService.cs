@@ -9,6 +9,7 @@ using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Expressions;
 using Abp.Linq.Extensions;
+using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.UI;
 using Academically.Authorization.Roles;
@@ -643,6 +644,26 @@ namespace Academically.Services.Events
             await _eventResourceRepository.DeleteAsync(er => er.EventId == input.Id);
             await _studentEventsRepository.DeleteAsync(se => se.EventId == input.Id);
             await Repository.DeleteAsync(input.Id);
+        }
+        
+        public async Task<IEnumerable<EventDto>> GetEnrolledEventsByUser()
+        { 
+            var purchases = await _servicePurchasesRepository.GetAll()
+                .Where(p => p.Type == ServicesType.Workshop || p.Type == ServicesType.Event)
+                .Where(p => p.CreatorUserId == AbpSession.GetUserId())
+                .Select(p => p.ReferenceId)
+                .ToListAsync();
+
+            var events = await Repository.GetAll()
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.CoverPhotoDocument)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.ProfilePictureDocument)
+                .Where(e => purchases.Contains(e.Id))
+                .Select(e => ObjectMapper.Map<EventDto>(e))
+                .ToListAsync();
+
+            return await GetEventDetailsAsync(events);
         }
     }
 }

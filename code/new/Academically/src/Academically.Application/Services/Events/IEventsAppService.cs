@@ -33,5 +33,6 @@ namespace Academically.Services.Events
         Task RemovePresenterAsync(Guid eventPresenterId);
         Task UnsaveAsync(Guid studentEventId);
         Task UpdateAutoAdmit(Guid id, bool autoAdmitAttendees);
+        Task<IEnumerable<EventDto>> GetEnrolledEventsByUser();
     }
 }

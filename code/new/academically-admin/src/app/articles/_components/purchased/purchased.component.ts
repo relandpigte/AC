@@ -35,11 +35,11 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
 
   private loadArticles(): void {
     this._dashboardPageService.isLoading$.next(true);
-    this._articlesService.getAll(undefined, undefined, undefined, undefined, undefined, undefined)
+    this._articlesService.getEnrolledArticlesByUser()
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this._dashboardPageService.isLoading$.next(false)))
       .subscribe(articles => {
-        this.allArticles = articles?.items;
+        this.allArticles = articles;
       });
   }
 }

@@ -19,6 +19,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Abp.Collections.Extensions;
+using Abp.Runtime.Session;
 
 namespace Academically.Services.Articles
 {
@@ -265,6 +267,23 @@ namespace Academically.Services.Articles
                 .ToListAsync();
 
             return (await GetArticleDetailsAsync(topArticles)).GroupByPopularityPagedExt(totalCount);
+        }
+        
+        public async Task<IEnumerable<ArticleDto>> GetEnrolledArticlesByUser()
+        {
+            var purchases = await _servicePurchasesRepository.GetAll()
+                .Where(p => p.Type == ServicesType.Article)
+                .Where(p => p.CreatorUserId == AbpSession.GetUserId())
+                .Select(p => p.ReferenceId)
+                .ToListAsync();
+
+            return await _articlesRepository.GetAll()
+                .Include(e => e.Parent)
+                .Include(e => e.ThumbnailDocument)
+                .Include(e => e.CreatorUser)
+                .Where(e => purchases.Contains(e.Id))
+                .Select(e => ObjectMapper.Map<ArticleDto>(e))
+                .ToListAsync();
         }
 
         private async Task<List<ArticleDto>> GetArticleDetailsAsync(List<ArticleDto> topArticles)

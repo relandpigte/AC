@@ -13,9 +13,9 @@ import { DashboardPagesService } from '@shared/services/dashboard-pages.service'
   styleUrls: ['./purchased.component.less']
 })
 export class PurchasedComponent extends AppComponentBase implements OnInit {
-  allVideos: VideoDto[] = [];
-  unwatchedVideos: VideoDto[] = [];
-  watchedVideos: VideoDto[] = [];
+  tutorials: VideoDto[] = [];
+  unwatchedTutorials: VideoDto[] = [];
+  watchedTutorials: VideoDto[] = [];
 
   shimmerType = ShimmerType;
 
@@ -28,21 +28,21 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
   }
 
   get isLoading$(): Observable<boolean> { return this._dashboardPageService.isLoading$; }
-  get totalVideos(): number { return this.allVideos?.length; }
-  get totalUnwatchedVideos(): number { return this.unwatchedVideos?.length; }
-  get totalWatchedVideos(): number { return this.watchedVideos?.length; }
+  get totalTutorials(): number { return this.tutorials?.length; }
+  get totalUnwatchedTutorials(): number { return this.unwatchedTutorials?.length; }
+  get totalWatchedTutorials(): number { return this.watchedTutorials?.length; }
 
   ngOnInit(): void {
-    this.loadVideos();
+    this.initTutorials();
   }
 
-  private loadVideos(): void {
+  private initTutorials(): void {
     this._dashboardPageService.isLoading$.next(true);
-    this._videoService.getAll(undefined, undefined, undefined, undefined, undefined)
+    this._videoService.getEnrolledVideosByUser()
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this._dashboardPageService.isLoading$.next(false)))
       .subscribe(videos => {
-        this.allVideos = videos?.items;
+        this.tutorials = videos;
       });
   }
 }

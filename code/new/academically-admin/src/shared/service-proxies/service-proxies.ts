@@ -1320,6 +1320,64 @@ export class ArticlesServiceProxy {
         }
         return _observableOf<{ [key: string]: ArticleDtoPagedResultDto; }>(<any>null);
     }
+
+    /**
+     * @return Success
+     */
+    getEnrolledArticlesByUser(): Observable<ArticleDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Articles/GetEnrolledArticlesByUser";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetEnrolledArticlesByUser(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetEnrolledArticlesByUser(<any>response_);
+                } catch (e) {
+                    return <Observable<ArticleDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ArticleDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetEnrolledArticlesByUser(response: HttpResponseBase): Observable<ArticleDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(ArticleDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ArticleDto[]>(<any>null);
+    }
 }
 
 @Injectable()
@@ -13080,6 +13138,64 @@ export class EventsServiceProxy {
     }
 
     /**
+     * @return Success
+     */
+    getEnrolledEventsByUser(): Observable<EventDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Events/GetEnrolledEventsByUser";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetEnrolledEventsByUser(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetEnrolledEventsByUser(<any>response_);
+                } catch (e) {
+                    return <Observable<EventDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetEnrolledEventsByUser(response: HttpResponseBase): Observable<EventDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(EventDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventDto[]>(<any>null);
+    }
+
+    /**
      * @param parentIdFilter (optional) 
      * @param userIdFilter (optional) 
      * @param searchFilter (optional) 
@@ -21924,86 +22040,6 @@ export class ServicesServiceProxy {
     }
 
     protected processGetAllPurchases(response: HttpResponseBase): Observable<ServicePurchaseDto[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200.push(ServicePurchaseDto.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<ServicePurchaseDto[]>(<any>null);
-    }
-
-    /**
-     * @param userId (optional) 
-     * @param type (optional) 1 = Event
-    
-    2 = Course
-    
-    3 = Tutorial
-    
-    4 = Article
-    
-    5 = Coaching
-    
-    6 = Workshop
-    
-    7 = User
-     * @return Success
-     */
-    getAllPurchasedByType(userId: number | undefined, type: ServicesType | undefined): Observable<ServicePurchaseDto[]> {
-        let url_ = this.baseUrl + "/api/services/app/Services/GetAllPurchasedByType?";
-        if (userId === null)
-            throw new Error("The parameter 'userId' cannot be null.");
-        else if (userId !== undefined)
-            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
-        if (type === null)
-            throw new Error("The parameter 'type' cannot be null.");
-        else if (type !== undefined)
-            url_ += "type=" + encodeURIComponent("" + type) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetAllPurchasedByType(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetAllPurchasedByType(<any>response_);
-                } catch (e) {
-                    return <Observable<ServicePurchaseDto[]>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<ServicePurchaseDto[]>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetAllPurchasedByType(response: HttpResponseBase): Observable<ServicePurchaseDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -31561,6 +31597,64 @@ export class VideosServiceProxy {
             }));
         }
         return _observableOf<{ [key: string]: VideoDtoPagedResultDto; }>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getEnrolledVideosByUser(): Observable<VideoDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Videos/GetEnrolledVideosByUser";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetEnrolledVideosByUser(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetEnrolledVideosByUser(<any>response_);
+                } catch (e) {
+                    return <Observable<VideoDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<VideoDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetEnrolledVideosByUser(response: HttpResponseBase): Observable<VideoDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(VideoDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<VideoDto[]>(<any>null);
     }
 }
 

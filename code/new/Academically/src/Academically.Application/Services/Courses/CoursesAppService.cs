@@ -216,8 +216,8 @@ namespace Academically.Services.Courses
         private async Task<List<CourseDto>> GetCoursesDetailsAsync(List<CourseDto> popularCourses)
         {
             var courseSections = await _courseSectionRepository.GetAll()
-                               .Where(cs => popularCourses.Select(x => x.Id).Contains(cs.CourseId))
-                               .ToListAsync();
+                .Where(cs => popularCourses.Select(x => x.Id).Contains(cs.CourseId))
+                .ToListAsync();
 
             var studentCourses = await _studentCourseRepository.GetAll()
                 .Where(x => x.CreatorUserId == AbpSession.GetUserId())
@@ -348,17 +348,19 @@ namespace Academically.Services.Courses
 
         public async Task<IEnumerable<CourseDto>> GetEnrolledCoursesByUser()
         { 
-            var studentCourses = await _studentCourseRepository.GetAll()
-                .Where(x => x.CreatorUserId == AbpSession.GetUserId())
+            var purchases = await _servicePurchasesRepository.GetAll()
+                .Where(p => p.Type == ServicesType.Course)
+                .Where(p => p.CreatorUserId == AbpSession.GetUserId())
+                .Select(p => p.ReferenceId)
                 .ToListAsync();
 
             var courses = await Repository.GetAll()
-                .Where(c => c.IsVisible && c.Status == CourseStatus.Published)
-                .Where(c => studentCourses.Select(sc => sc.CourseId).Contains(c.Id))
                 .Include(c => c.CreatorUser)
                 .Include(c => c.StudentCourses)
                     .ThenInclude(c => c.StudentCourseSections)
                         .ThenInclude(c => c.CourseSection)
+                .Where(c => c.IsVisible && c.Status == CourseStatus.Published)
+                .Where(c => purchases.Contains(c.Id))
                 .Select(e => ObjectMapper.Map<CourseDto>(e))
                 .ToListAsync();
 
