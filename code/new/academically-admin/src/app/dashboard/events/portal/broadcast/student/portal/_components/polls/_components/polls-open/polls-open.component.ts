@@ -1,13 +1,17 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, OnInit, Injector, Input, ChangeDetectorRef } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { EventPollDto, EventPollsServiceProxy, EventPollQuestionAnswerDto } from '@shared/service-proxies/service-proxies';
+import { EventPollDto, EventPollsServiceProxy, EventPollQuestionAnswerDto, EventPollStatus, EventDto } from '@shared/service-proxies/service-proxies';
 import { PortalPollService } from '../../_services/portal-poll.service';
 import { ModalOptions, BsModalService } from 'ngx-bootstrap/modal';
 import { CreateEditPollComponent } from '@app/dashboard/events/details/broadcast/single/resources/_components/create-edit-poll/create-edit-poll.component';
-import { HubConnection } from '@aspnet/signalr';
-import { SignalData, SignalAction } from '../../polls.component';
 import { PortalService } from '@app/dashboard/events/portal/broadcast/student/portal/_services/portal.service';
 import * as _ from 'lodash';
+import { EventPollsStateService, pollsType } from '@shared/services/event-polls-state.service';
+import { BehaviorSubject } from 'rxjs';
+import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
+import { HubService } from '@app/_shared/services/hub.service';
+import { takeUntil } from 'rxjs/operators';
+import { StateUpdateType } from '@shared/services/state-base.service';
 
 enum PollStatus {
   Preparing,
@@ -22,119 +26,97 @@ enum PollStatus {
   styleUrls: ['./polls-open.component.less']
 })
 export class PollsOpenComponent extends AppComponentBase implements OnInit {
-  poll: EventPollDto;
-  hub: HubConnection;
-  pollStatus = PollStatus.Preparing;
-  isResultsShared = false;
-  voterUserIds: number[] = [];
+  pollsStateService: EventPollsStateService;
+  @Input() referenceId: string;
+  @Input() isHost = false;
 
-  PollStatus = PollStatus;
+  polls: EventPollDto[] = [];
+  totalPollsCount = 0;
+  isLoadingList$ = new BehaviorSubject<boolean>(true);
 
   constructor(
     injector: Injector,
+    private _cdr: ChangeDetectorRef,
+    private _hubService: HubService,
     private _portalService: PortalService,
     private _portalPollService: PortalPollService,
-    private _modalService: BsModalService,
     private _eventPollsService: EventPollsServiceProxy,
+    private _modalService: BsModalService,
   ) {
     super(injector);
-    this.pipeDestroy(this._portalService.hub$, (response) => {
+    this.pipeDestroy(this._portalPollService.refreshPollQueue$, (response) => {
       if (response) {
-        this.hub = response;
-        this.handleHubEvent();
+        this.getAllPolls();
       }
     });
-    this.pipeDestroy(this._portalService.attendees$, (responses) => {
-      if (responses) {
-        this.voterUserIds = responses.map(e => e.user.id);
+  }
+
+  get pollsStateId(): string { return 'polls-opened'; }
+  get loadingSources$() { return [ this.isLoadingList$ ]; }
+
+  async ngOnInit() {
+    await this.initPollsAppStates();
+  }
+
+  private async initPollsAppStates() {
+    const appStateConfig: AppStateConfig = {
+      [this.pollsStateId]: {
+        load: [this.referenceId, EventPollStatus.Open],
+        update: { referenceId: this.referenceId }
       }
+    };
+    const appStateServices: AppStateServices = {
+      [this.pollsStateId]: {
+        type: EventPollsStateService,
+        args: [pollsType.opened, this.appSession, this._hubService, this._eventPollsService]
+      }
+    };
+    await this.pubSubService.start(this, appStateConfig, appStateServices);
+    this.pollsStateService = this.pubSubService.getStateService<EventPollsStateService>(this.pollsStateId);
+    this.pollsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingList$.next(loading));
+    this.pollsStateService.polls$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
+      switch (event.type) {
+        case StateUpdateType.Add:
+          this.polls = [event.data].concat(this.polls);
+          this.totalPollsCount++;
+          break;
+        case StateUpdateType.Update:
+          if (event.silent) {
+            this.polls = this.polls.map(c => c.id === event.data.id ? event.data : c);
+          } else {
+            const idx = this.polls.findIndex(c => c.id === event.data.id);
+            this.polls.splice(idx, 1);
+            this.polls = [event.data].concat(this.polls);
+          }
+          break;
+        case StateUpdateType.Delete:
+          this.polls = this.polls.filter(c => c.id != event.data.id);
+          this.totalPollsCount--;
+          break;
+      }
+      this._cdr.detectChanges();
     });
-    this.pipeDestroy(this._portalPollService.pollSelected$, (response) => {
-      this.poll = response;
-      this.isResultsShared = false;
-      this.pollStatus = PollStatus.Preparing;
-    });
+    this.polls = this.pollsStateService.getAllPolls();
+    this.totalPollsCount = this.pollsStateService.totalPollsCount;
   }
 
-  ngOnInit(): void {
+  onSelectClick(poll: EventPollDto): void {
+    this._portalPollService.pollSelected = _.cloneDeep(poll);
   }
 
-  onCancelClick(): void {
-    this._portalPollService.pollCancelled = this.poll;
-  }
-
-  onEditClick(): void {
+  onCreatePollClick(): void {
     const modalSettings = this.defaultModalSettings as ModalOptions<CreateEditPollComponent>;
     modalSettings.class = 'modal-lg';
     modalSettings.initialState = {
-      model: this.poll,
+      eventId: this.referenceId,
     };
     const modal = this._modalService.show(CreateEditPollComponent, modalSettings).content;
     this.pipeDestroy(modal.modelSaved, () => {
-      this.pipeDestroy(this._eventPollsService.get(this.poll.id), (response) => {
-        this._portalPollService.pollSelected = response;
-        this._portalPollService.refreshPollQueue = true;
-      });
+      this._portalPollService.refreshPollQueue = true;
     });
   }
 
-  onStartClick(): void {
-    this.pollStatus = PollStatus.Started;
-    this.sendSignal(this.voterUserIds, new SignalData(SignalAction.PollStarted, this.poll));
-  }
-
-  onStopClick(): void {
-    this.pollStatus = PollStatus.Stopped;
-    this.sendSignal(this.voterUserIds, new SignalData(SignalAction.PollStopped, this.poll));
-  }
-
-  onShareClick(): void {
-    this.isResultsShared = true;
-    this.sendSignal(this.voterUserIds, new SignalData(SignalAction.SharePoll, this.poll));
-  }
-
-  onCloseClick(): void {
-    this.pollStatus = PollStatus.Closed;
-    const tempPoll = this.poll;
-    this._portalPollService.pollClosed = tempPoll;
-    this._portalPollService.pollSelected = undefined;
-    this.sendSignal(this.voterUserIds, new SignalData(SignalAction.PollClosed, tempPoll));
-  }
-
-  private async sendSignal<TObject>(userIds: number[], signalData: SignalData<TObject>, callback?: () => void): Promise<void> {
-    console.log('invoking sendSignal');
-    console.log(userIds);
-    console.log(signalData);
-    const sSignalData = JSON.stringify(signalData);
-    await this.hub.invoke('sendSignal', userIds, sSignalData)
-      .then(() => {
-        if (callback) {
-          callback();
-        }
-      });
-  }
-
-  private handleHubEvent(): void {
-    this.hub.on('receiveSignal', async (sSignalData: string) => {
-      if (this.poll) {
-        const signalData = new SignalData();
-        Object.assign(signalData, JSON.parse(sSignalData));
-        console.log('handling receiveSignal');
-
-        switch (signalData.action) {
-          case SignalAction.VoteSubmitted:
-            console.log('receieveSignal - VoteSubmitted');
-            const answer = new EventPollQuestionAnswerDto();
-            answer.init(signalData.getDataObject() as EventPollQuestionAnswerDto);
-            const question = this.poll.eventPollQuestions.find(e => e.id === answer.eventPollQuestionId);
-            if (!question.eventPollAnswers) {
-              question.eventPollAnswers = [];
-            }
-            question.eventPollAnswers.push(answer);
-            this.poll = _.cloneDeep(this.poll);
-            break;
-        }
-      }
-    });
+  private getAllPolls(): void {
+    this.pipeDestroy(this._eventPollsService.getAllUnpaged(this.referenceId, EventPollStatus.Open), polls => this.polls = polls);
   }
 }

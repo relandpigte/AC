@@ -93,6 +93,7 @@ export class PollsComponent extends PagedListingComponentBase<EventPollDto> impl
       this._workshopPollsService
         .getAll(
           request.workshopIdFilter,
+          undefined,
           request.sort,
           request.skipCount,
           request.maxResultCount

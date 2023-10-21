@@ -83,8 +83,6 @@
     <Folder Include="Services\UserFollowers\Dto\" />
     <Folder Include="Services\EventResources\" />
     <Folder Include="Services\EventResources\Dto\" />
-    <Folder Include="Services\EventPolls\" />
-    <Folder Include="Services\EventPolls\Dto\" />
     <Folder Include="Services\Forums\" />
     <Folder Include="Services\Forums\Dto\" />
     <Folder Include="Services\Topics\" />

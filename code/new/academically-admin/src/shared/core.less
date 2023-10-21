@@ -1418,6 +1418,9 @@ each(range(1px, 100px, 1), {
 each(range(1px, 2000px, 1), {
     .w-@{index}-px {
       width: @value !important;
+      > .modal-content {
+        width: @value !important;
+      }
     }
   }
 );
@@ -1425,8 +1428,31 @@ each(range(1px, 2000px, 1), {
 each(range(1px, 2000px, 1), {
     .h-@{index}-px {
       height: @value !important;
+      > .modal-content {
+        height: @value !important;
+      }
     }
   }
+);
+
+each(range(1px, 2000px, 1), {
+  .minw-@{index}-px {
+    min-width: @value !important;
+    > .modal-content {
+      min-width: @value !important;
+    }
+  }
+}
+);
+
+each(range(1px, 2000px, 1), {
+  .minh-@{index}-px {
+    min-height: @value !important;
+    > .modal-content {
+      min-height: @value !important;
+    }
+  }
+}
 );
 
 each(range(1px, 100px, 1), {

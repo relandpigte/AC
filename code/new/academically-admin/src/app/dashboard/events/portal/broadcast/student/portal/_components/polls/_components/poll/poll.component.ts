@@ -1,8 +1,12 @@
-import { Component, OnInit, Injector, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { EventPollDto, EventPollQuestionDto, EventPollQuestionOptionDto, EventPollQuestionAnswerDto, UserDto } from '@shared/service-proxies/service-proxies';
-import { AppComponentBase } from '@shared/app-component-base';
-import * as _ from 'lodash';
+import { Component, Injector, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { CreateEditPollComponent } from '@app/dashboard/events/details/broadcast/single/resources/_components/create-edit-poll/create-edit-poll.component';
 import { PortalService } from '@app/dashboard/events/portal/broadcast/student/portal/_services/portal.service';
+import { AppComponentBase, SignalData } from '@shared/app-component-base';
+import { EventPollDto, EventPollQuestionAnswerDto, EventPollQuestionDto, EventPollQuestionOptionDto, EventPollStatus, EventPollsServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
+import * as _ from 'lodash';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { PortalPollService } from '../../_services/portal-poll.service';
+import { PollSignalAction, PollTab } from '../../polls.component';
 
 @Component({
   selector: 'app-poll',
@@ -11,7 +15,14 @@ import { PortalService } from '@app/dashboard/events/portal/broadcast/student/po
 })
 export class PollComponent extends AppComponentBase implements OnInit, OnChanges {
   @Input() poll: EventPollDto;
-  @Input() showVoterPercentage = true;
+  @Input() showBackButton = true;
+  @Input() showToggleViewButton = true;
+
+  isModal = false;
+  isMaximized = false;
+
+  EventPollStatus = EventPollStatus;
+
   answers: EventPollQuestionAnswerDto[] = [];
   voterUserIds: number[] = [];
   chartSettings: any = {};
@@ -19,41 +30,67 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
 
   constructor(
     injector: Injector,
+    private _modalService: BsModalService,
+    private _eventPollsService: EventPollsServiceProxy,
     private _portalService: PortalService,
+    private _portalPollService: PortalPollService,
   ) {
     super(injector);
-    this.pipeDestroy(this._portalService.attendees$, (responses) => {
-      if (responses) {
-        this.voterUserIds = responses.map(e => e.user.id);
-        console.log(this.voterUserIds);
+
+    this.pipeDestroy(this._portalService.attendees$, attendees => {
+      if (attendees) this.voterUserIds = attendees.map(e => e.user.id);
+    });
+
+    this.pipeDestroy(this._portalService.hub$, hub => {
+      if (hub) {
+        this.hub = hub;
+        this.handleHubEvent();
       }
     });
-    console.log(this.poll);
+
+    this.pipeDestroy(this._portalPollService.pollSelected$, poll => this.poll = poll);
+    this.pipeDestroy(this._portalPollService.pollSelectedMaximized$, maximized => this.isMaximized = maximized);
   }
 
+  get numberOfExpectedVoters(): number { return this.voterUserIds.length; }
+  get isShowVoterPercentage(): boolean { return this.poll.status !== EventPollStatus.Queue; }
+  get isHost(): boolean { return this.poll?.creatorUserId === this.appSession.userId; }
+  get isResultsShared(): boolean { return !!this.poll?.sharedTime; }
+
   ngOnInit(): void {
+    if (this.poll) {
+      this.init();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
     if (changes && changes.poll) {
-      console.log('change detected');
-      const votedUserIds: number[] = [];
-      _.forEach(this.poll.eventPollQuestions, question => {
-        _.forEach(question.eventPollAnswers, answer => {
-          const index = votedUserIds.findIndex(e => e === answer.creatorUser.id);
-          if (index < 0) {
-            votedUserIds.push(answer.creatorUser.id);
-          }
-        });
-      });
-      const totalVoterPercentage = Math.round((votedUserIds.length / this.voterUserIds.length) * 100);
-      if (this.totalVoterPercentage === 0 || this.totalVoterPercentage !== totalVoterPercentage) {
-        console.log(totalVoterPercentage);
-        this.totalVoterPercentage = totalVoterPercentage;
-        this.setChartSettings();
-      }
+      this.init();
     }
+  }
+
+  private init(): void {
+    const votedUserIds: number[] = _.flatMap(this.poll.eventPollQuestions, q => q.eventPollAnswers).filter(x => x).map(a => a.creatorUser.id);
+    const totalVoterPercentage = this.numberOfExpectedVoters > 0 ? Math.round((votedUserIds.length / this.numberOfExpectedVoters) * 100) : 0;
+    if (this.totalVoterPercentage === 0 || this.totalVoterPercentage !== totalVoterPercentage) {
+      this.totalVoterPercentage = totalVoterPercentage;
+      setTimeout(() => this.setChartSettings());
+    }
+  }
+
+  private handleHubEvent(): void {
+    this.receiveSignal(async (sSignalData: string) => {
+      if (this.poll) {
+        const signalData = new SignalData();
+        Object.assign(signalData, JSON.parse(sSignalData));
+
+        switch (signalData.action) {
+          case PollSignalAction.VoteSubmitted:
+            this.onVoteSubmittedEvent(signalData.getDataObject());
+            break;
+        }
+      }
+    });
   }
 
   getOptionPercentage(question: EventPollQuestionDto, option: EventPollQuestionOptionDto): string {
@@ -63,55 +100,37 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
       const optionVotePercentage = Math.round((totalOptionVotes / totalVotes) * 100);
       return `${optionVotePercentage}%`;
     }
-
     return '0%';
   }
 
   getTotalVoterPercentage(): number {
-    const votedUserIds: number[] = [];
-    _.forEach(this.poll.eventPollQuestions, question => {
-      _.forEach(question.eventPollAnswers, answer => {
-        const index = votedUserIds.findIndex(e => e === answer.creatorUser.id);
-        if (index < 0) {
-          votedUserIds.push(answer.creatorUser.id);
-        }
-      });
-    });
-    return Math.round((votedUserIds.length / this.voterUserIds.length) * 100);
+    const votedUserIds: number[] = _.flatMap(this.poll.eventPollQuestions, q => q.eventPollAnswers).filter(x => x).map(a => a.creatorUser.id);
+    return this.numberOfExpectedVoters > 0 ? Math.round((votedUserIds.length / this.numberOfExpectedVoters) * 100) : 0;
   }
 
   getQuestionTotalVotes(question: EventPollQuestionDto): number {
-    let totalVotes = 0;
-    _.forEach(question.eventPollAnswers, answer => {
-      totalVotes += answer.eventPollQuestionOptionIds.length;
-    });
-    return totalVotes;
+    return _.sumBy(question.eventPollAnswers, a => a.eventPollQuestionOptionIds.length);
   }
 
   getVoterUsers(question: EventPollQuestionDto): UserDto[] {
-    const users: UserDto[] = [];
-    _.forEach(question.eventPollAnswers, answer => {
-      if (!users.includes(answer.creatorUser)) {
-        users.push(answer.creatorUser);
-      }
-    });
-    return users;
+    return _.uniq(question.eventPollAnswers?.filter(x => x).map(a => a.creatorUser) ?? []);
   }
 
   private setChartSettings(): void {
     this.chartSettings = {
       type: 'doughnut',
       options: {
-        cutoutPercentage: 80,
+        aspectRatio: 1,
+        cutoutPercentage: this.isModal ? 80 : 70,
         plugins: {
           tooltip: {
             callbacks: {
               afterLabel: function () {
                 return '%';
-              }
-            }
-          }
-        }
+              },
+            },
+          },
+        },
       },
       data: {
         labels: ['Voted', 'NotVoted'],
@@ -122,4 +141,61 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
       }
     };
   }
+
+  onVoteSubmittedEvent(data: any): void {
+    const answer = new EventPollQuestionAnswerDto();
+    answer.init(data as EventPollQuestionAnswerDto);
+    const question = this.poll.eventPollQuestions.find(e => e.id === answer.eventPollQuestionId);
+    if (!question.eventPollAnswers) {
+      question.eventPollAnswers = [];
+    }
+    question.eventPollAnswers.push(answer);
+    this.poll = _.cloneDeep(this.poll);
+  }
+
+  onBackClick(): void {
+    this._portalPollService.pollSelected = undefined;
+  }
+
+  onEditClick(): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<CreateEditPollComponent>;
+    modalSettings.class = 'modal-lg';
+    modalSettings.initialState = {
+      model: this.poll,
+    };
+    const modal = this._modalService.show(CreateEditPollComponent, modalSettings).content;
+    this.pipeDestroy(modal.modelSaved, () => {
+      this.pipeDestroy(this._eventPollsService.get(this.poll.id), (response) => {
+        this._portalPollService.pollSelected = response;
+        this._portalPollService.refreshPollQueue = true;
+      });
+    });
+  }
+
+  onLaunchClick(): void {
+    this.pipeDestroy(this._eventPollsService.launchPoll(this.poll.id), _ => {});
+  }
+
+  onDoneClick(): void {
+    this._modalService._hideModal();
+  }
+
+  onShareClick(): void {
+    // this.isResultsShared = true;
+    this.sendSignal(this.voterUserIds, new SignalData(PollSignalAction.SharePoll, this.poll));
+  }
+
+  onCloseClick(): void {
+    this.pipeDestroy(this._eventPollsService.closePoll(this.poll.id), _ => {});
+  }
+
+  onToggleViewClick(): void {
+    this.isMaximized = !this.isMaximized;
+    this._portalPollService.pollTabSelected = this.poll.status === EventPollStatus.Queue ?
+      PollTab.Queue : this.poll.status === EventPollStatus.Open ?
+      PollTab.Open : PollTab.Closed;
+    this._portalPollService.pollSelectedMaximized = this.isMaximized;
+  }
+
+
 }

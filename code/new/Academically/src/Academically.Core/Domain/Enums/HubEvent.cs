@@ -42,6 +42,12 @@
         ServiceOfferLaunched,
         ServiceOfferClosed,
         AnsweringLiveQuestion,
-        EndAnsweringLiveQuestion
+        EndAnsweringLiveQuestion,
+        EventPollCreated,
+        EventPollUpdated,
+        EventPollDeleted,
+        EventPollLaunched,
+        EventPollClosed,
+        EventPollShared,
     }
 }

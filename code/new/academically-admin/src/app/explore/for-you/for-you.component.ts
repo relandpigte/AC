@@ -105,11 +105,13 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
   }
 
   handleBroadcastServiceCardClick(event: EventDto): void {
-    this._router.navigate(['app/events' , event.id, 'about']);
+    // this._router.navigate(['app/events' , event.id, 'about']);
+    this._router.navigate(['/app/dashboard/events/portal/broadcast/student', event.id, 'portal']);
   }
 
   handleWorkshopServiceCardClick(event: EventDto): void {
-    this._router.navigate(['app/events' , event.id, 'about']);
+    // this._router.navigate(['app/events' , event.id, 'about']);
+    this._router.navigate(['/app/dashboard/events/portal/workshop/student', event.id, 'portal']);
   }
 
   handleCourseServiceCardClick(course: CourseDto): void {

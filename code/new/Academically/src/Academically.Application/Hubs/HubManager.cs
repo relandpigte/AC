@@ -16,6 +16,7 @@ using Academically.Users.Dto;
 using Academically.Services.Notifications.Dto;
 using Academically.Services.Questions.Dto;
 using Academically.Services.Services.Dto;
+using Academically.Services.EventPolls.Dto;
 
 namespace Academically.Hubs
 {
@@ -60,6 +61,13 @@ namespace Academically.Hubs
         Task NotifyUsersForServiceOfferDeleted(ServiceOfferDto offer);
         Task NotifyUsersForServiceOfferLaunched(ServiceOfferDto offer);
         Task NotifyUsersForServiceOfferClosed(ServiceOfferDto offer);
+        Task NotifyUsersForEventPollCreated(EventPollDto poll);
+        Task NotifyUsersForEventPollUpdated(EventPollDto poll);
+        Task NotifyUsersForEventPollDeleted(EventPollDto poll);
+        Task NotifyUsersForEventPollLaunched(EventPollDto poll);
+        Task NotifyUsersForEventPollClosed(EventPollDto poll);
+        Task NotifyUsersForEventPollShared(EventPollDto poll);
+
     }
 
     public class HubManager : IHubManager
@@ -88,6 +96,7 @@ namespace Academically.Hubs
         private readonly IHubContext<QuestionsHub> _questionHub;
         private readonly IHubContext<QuestionsReactionsHub> _questionsReactionsHub;
         private readonly IHubContext<ServiceOffersHub> _serviceOffersHub;
+        private readonly IHubContext<EventPollsHub> _eventPollsHub;
 
         public HubManager(IHubContext<UserTopicsHub> userTopicsHub,
             IHubContext<PostsHub> postsHub,
@@ -104,7 +113,8 @@ namespace Academically.Hubs
             IRepository<Question, Guid> questionRepository,
             IHubContext<QuestionsHub> questionHub,
             IHubContext<QuestionsReactionsHub> questionsReactionsHub,
-            IHubContext<ServiceOffersHub> serviceOffersHub)
+            IHubContext<ServiceOffersHub> serviceOffersHub,
+            IHubContext<EventPollsHub> eventPollsHub)
         {
             _userTopicsHub = userTopicsHub;
             _postsHub = postsHub;
@@ -121,6 +131,7 @@ namespace Academically.Hubs
             _questionHub = questionHub;
             _questionsReactionsHub = questionsReactionsHub;
             _serviceOffersHub = serviceOffersHub;
+            _eventPollsHub = eventPollsHub;
         }
 
         public async Task NotifyUsersForPostCreated(PostDto post)
@@ -441,6 +452,36 @@ namespace Academically.Hubs
         public async Task NotifyUsersForServiceOfferClosed(ServiceOfferDto offer)
         {
             await _serviceOffersHub.Clients.Group($"{offer.ReferenceId}").SendAsync(nameof(HubEvent.ServiceOfferClosed), offer);
+        }
+
+        public async Task NotifyUsersForEventPollCreated(EventPollDto poll)
+        {
+            await _eventPollsHub.Clients.Group($"{poll.EventId}").SendAsync(nameof(HubEvent.EventPollCreated), poll);
+        }
+
+        public async Task NotifyUsersForEventPollUpdated(EventPollDto poll)
+        {
+            await _eventPollsHub.Clients.Group($"{poll.EventId}").SendAsync(nameof(HubEvent.EventPollUpdated), poll);
+        }
+
+        public async Task NotifyUsersForEventPollDeleted(EventPollDto poll)
+        {
+            await _eventPollsHub.Clients.Group($"{poll.EventId}").SendAsync(nameof(HubEvent.EventPollDeleted), poll);
+        }
+
+        public async Task NotifyUsersForEventPollLaunched(EventPollDto poll)
+        {
+            await _eventPollsHub.Clients.Group($"{poll.EventId}").SendAsync(nameof(HubEvent.EventPollLaunched), poll);
+        }
+
+        public async Task NotifyUsersForEventPollClosed(EventPollDto poll)
+        {
+            await _eventPollsHub.Clients.Group($"{poll.EventId}").SendAsync(nameof(HubEvent.EventPollClosed), poll);
+        }
+
+        public async Task NotifyUsersForEventPollShared(EventPollDto poll)
+        {
+            await _eventPollsHub.Clients.Group($"{poll.EventId}").SendAsync(nameof(HubEvent.EventPollShared), poll);
         }
     }
 }

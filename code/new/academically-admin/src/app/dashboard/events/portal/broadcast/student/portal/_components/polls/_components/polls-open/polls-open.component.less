@@ -1,27 +1,69 @@
-.poll-queue {
-  height  : 100%;
-  display: flex;
-  flex-direction: column;
+.no-polls {
+  color: #282828;
+  text-align: center;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.15px;
+  margin-top: 20px;
+}
 
-  .poll {
-    flex: 1 1 0px
-  }
-
-  .actions {
+.poll {
+  &-open {
+    height        : 100%;
     display       : flex;
     flex-direction: column;
-    background    : #FFFFFF;
-    padding       : 5px 0 0 0;
+    padding: 20px;
 
-    button {
-      margin-top   : 5px;
-      margin-bottom: 5px;
+    .polls {
+      flex      : 1 1 0px;
+      overflow-y: auto;
 
-      &.results-shared {
-        background: none;
-        border    : none;
-        opacity   : 1;
+      .poll {
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #E4EBF6;
+        background: #FFF;
+        margin-bottom: 15px;
+
+        &-name {
+          color: #12263F;
+          font-size: 15px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+          letter-spacing: -0.15px;
+          margin-bottom: 5px;
+        }
+
+        &-info {
+          color: #6E84A3;
+          font-size: 13px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+          letter-spacing: -0.13px;
+        }
       }
+    }
+  }
+
+  &-actions {
+    button {
+      display: flex;
+      width: 295px;
+      height: 34px;
+      justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
+      color: #FFF;
+      text-align: center;
+      font-size: 15px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 0%;
+      letter-spacing: -0.15px;
     }
   }
 }

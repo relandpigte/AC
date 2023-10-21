@@ -10948,17 +10948,26 @@ export class EventPollsServiceProxy {
 
     /**
      * @param eventIdFilter (optional) 
+     * @param status (optional) 0 = Queue
+    
+    1 = Open
+    
+    2 = Closed
      * @param sorting (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAll(eventIdFilter: string | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<EventPollDtoPagedResultDto> {
+    getAll(eventIdFilter: string | undefined, status: EventPollStatus | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<EventPollDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/EventPolls/GetAll?";
         if (eventIdFilter === null)
             throw new Error("The parameter 'eventIdFilter' cannot be null.");
         else if (eventIdFilter !== undefined)
             url_ += "EventIdFilter=" + encodeURIComponent("" + eventIdFilter) + "&";
+        if (status === null)
+            throw new Error("The parameter 'status' cannot be null.");
+        else if (status !== undefined)
+            url_ += "Status=" + encodeURIComponent("" + status) + "&";
         if (sorting === null)
             throw new Error("The parameter 'sorting' cannot be null.");
         else if (sorting !== undefined)
@@ -11187,14 +11196,23 @@ export class EventPollsServiceProxy {
 
     /**
      * @param eventId (optional) 
+     * @param status (optional) 0 = Queue
+    
+    1 = Open
+    
+    2 = Closed
      * @return Success
      */
-    getAllUnpaged(eventId: string | undefined): Observable<EventPollDto[]> {
+    getAllUnpaged(eventId: string | undefined, status: EventPollStatus | undefined): Observable<EventPollDto[]> {
         let url_ = this.baseUrl + "/api/services/app/EventPolls/GetAllUnpaged?";
         if (eventId === null)
             throw new Error("The parameter 'eventId' cannot be null.");
         else if (eventId !== undefined)
             url_ += "eventId=" + encodeURIComponent("" + eventId) + "&";
+        if (status === null)
+            throw new Error("The parameter 'status' cannot be null.");
+        else if (status !== undefined)
+            url_ += "status=" + encodeURIComponent("" + status) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -11246,6 +11264,174 @@ export class EventPollsServiceProxy {
             }));
         }
         return _observableOf<EventPollDto[]>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    launchPoll(id: string | undefined): Observable<EventPollDto> {
+        let url_ = this.baseUrl + "/api/services/app/EventPolls/LaunchPoll?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processLaunchPoll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processLaunchPoll(<any>response_);
+                } catch (e) {
+                    return <Observable<EventPollDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventPollDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processLaunchPoll(response: HttpResponseBase): Observable<EventPollDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventPollDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventPollDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    closePoll(id: string | undefined): Observable<EventPollDto> {
+        let url_ = this.baseUrl + "/api/services/app/EventPolls/ClosePoll?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processClosePoll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processClosePoll(<any>response_);
+                } catch (e) {
+                    return <Observable<EventPollDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventPollDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processClosePoll(response: HttpResponseBase): Observable<EventPollDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventPollDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventPollDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    sharePoll(id: string | undefined): Observable<EventPollDto> {
+        let url_ = this.baseUrl + "/api/services/app/EventPolls/SharePoll?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSharePoll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSharePoll(<any>response_);
+                } catch (e) {
+                    return <Observable<EventPollDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventPollDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSharePoll(response: HttpResponseBase): Observable<EventPollDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventPollDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventPollDto>(<any>null);
     }
 
     /**
@@ -38181,6 +38367,7 @@ export class CreateEventPollDto implements ICreateEventPollDto {
     id: string;
     name: string | undefined;
     eventId: string;
+    status: EventPollStatus;
     eventPollQuestions: EventPollQuestionDto[] | undefined;
 
     constructor(data?: ICreateEventPollDto) {
@@ -38197,6 +38384,7 @@ export class CreateEventPollDto implements ICreateEventPollDto {
             this.id = _data["id"];
             this.name = _data["name"];
             this.eventId = _data["eventId"];
+            this.status = _data["status"];
             if (Array.isArray(_data["eventPollQuestions"])) {
                 this.eventPollQuestions = [] as any;
                 for (let item of _data["eventPollQuestions"])
@@ -38217,6 +38405,7 @@ export class CreateEventPollDto implements ICreateEventPollDto {
         data["id"] = this.id;
         data["name"] = this.name;
         data["eventId"] = this.eventId;
+        data["status"] = this.status;
         if (Array.isArray(this.eventPollQuestions)) {
             data["eventPollQuestions"] = [];
             for (let item of this.eventPollQuestions)
@@ -38237,6 +38426,7 @@ export interface ICreateEventPollDto {
     id: string;
     name: string | undefined;
     eventId: string;
+    status: EventPollStatus;
     eventPollQuestions: EventPollQuestionDto[] | undefined;
 }
 
@@ -41374,7 +41564,12 @@ export class EventPollDto implements IEventPollDto {
     id: string;
     name: string | undefined;
     eventId: string;
+    status: EventPollStatus;
+    launchedTime: moment.Moment | undefined;
+    endedTime: moment.Moment | undefined;
+    sharedTime: moment.Moment | undefined;
     creationTime: moment.Moment;
+    creatorUserId: number;
     eventPollQuestions: EventPollQuestionDto[] | undefined;
 
     constructor(data?: IEventPollDto) {
@@ -41391,7 +41586,12 @@ export class EventPollDto implements IEventPollDto {
             this.id = _data["id"];
             this.name = _data["name"];
             this.eventId = _data["eventId"];
+            this.status = _data["status"];
+            this.launchedTime = _data["launchedTime"] ? moment(_data["launchedTime"].toString()) : <any>undefined;
+            this.endedTime = _data["endedTime"] ? moment(_data["endedTime"].toString()) : <any>undefined;
+            this.sharedTime = _data["sharedTime"] ? moment(_data["sharedTime"].toString()) : <any>undefined;
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
             if (Array.isArray(_data["eventPollQuestions"])) {
                 this.eventPollQuestions = [] as any;
                 for (let item of _data["eventPollQuestions"])
@@ -41412,7 +41612,12 @@ export class EventPollDto implements IEventPollDto {
         data["id"] = this.id;
         data["name"] = this.name;
         data["eventId"] = this.eventId;
+        data["status"] = this.status;
+        data["launchedTime"] = this.launchedTime ? this.launchedTime.toISOString() : <any>undefined;
+        data["endedTime"] = this.endedTime ? this.endedTime.toISOString() : <any>undefined;
+        data["sharedTime"] = this.sharedTime ? this.sharedTime.toISOString() : <any>undefined;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
         if (Array.isArray(this.eventPollQuestions)) {
             data["eventPollQuestions"] = [];
             for (let item of this.eventPollQuestions)
@@ -41433,7 +41638,12 @@ export interface IEventPollDto {
     id: string;
     name: string | undefined;
     eventId: string;
+    status: EventPollStatus;
+    launchedTime: moment.Moment | undefined;
+    endedTime: moment.Moment | undefined;
+    sharedTime: moment.Moment | undefined;
     creationTime: moment.Moment;
+    creatorUserId: number;
     eventPollQuestions: EventPollQuestionDto[] | undefined;
 }
 
@@ -41697,6 +41907,13 @@ export interface IEventPollQuestionOptionDto {
 export enum EventPollQuestionType {
     MultipleChoice = 0,
     MultipleResponse = 1,
+}
+
+/** 0 = Queue 1 = Open 2 = Closed */
+export enum EventPollStatus {
+    Queue = 0,
+    Open = 1,
+    Closed = 2,
 }
 
 export class EventPresenterDto implements IEventPresenterDto {
@@ -43340,7 +43557,7 @@ export interface IGroupedPermissionDtoListResultDto {
     items: GroupedPermissionDto[] | undefined;
 }
 
-/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted 18 = ChannelMessageCreated 19 = ChannelMessageUpdated 20 = ChannelMessageDeleted 21 = ChannelMemberTyping 22 = ChannelArchive 23 = ChannelUnarchive 24 = NewUserLoggedIn 25 = NotificationCreated 26 = NotificationUpdated 27 = NotificationDeleted 28 = QuestionCreated 29 = QuestionUpdated 30 = QuestionDeleted 31 = QuestionReactionCreated 32 = QuestionReactionUpdated 33 = QuestionReactionDeleted 34 = ServiceOfferCreated 35 = ServiceOfferUpdated 36 = ServiceOfferDeleted 37 = ServiceOfferLaunched 38 = ServiceOfferClosed 39 = AnsweringLiveQuestion 40 = EndAnsweringLiveQuestion */
+/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted 18 = ChannelMessageCreated 19 = ChannelMessageUpdated 20 = ChannelMessageDeleted 21 = ChannelMemberTyping 22 = ChannelArchive 23 = ChannelUnarchive 24 = NewUserLoggedIn 25 = NotificationCreated 26 = NotificationUpdated 27 = NotificationDeleted 28 = QuestionCreated 29 = QuestionUpdated 30 = QuestionDeleted 31 = QuestionReactionCreated 32 = QuestionReactionUpdated 33 = QuestionReactionDeleted 34 = ServiceOfferCreated 35 = ServiceOfferUpdated 36 = ServiceOfferDeleted 37 = ServiceOfferLaunched 38 = ServiceOfferClosed 39 = AnsweringLiveQuestion 40 = EndAnsweringLiveQuestion 41 = EventPollCreated 42 = EventPollUpdated 43 = EventPollDeleted 44 = EventPollLaunched 45 = EventPollClosed 46 = EventPollShared */
 export enum HubEvent {
     PostCreated = 0,
     PostUpdated = 1,
@@ -43383,6 +43600,12 @@ export enum HubEvent {
     ServiceOfferClosed = 38,
     AnsweringLiveQuestion = 39,
     EndAnsweringLiveQuestion = 40,
+    EventPollCreated = 41,
+    EventPollUpdated = 42,
+    EventPollDeleted = 43,
+    EventPollLaunched = 44,
+    EventPollClosed = 45,
+    EventPollShared = 46,
 }
 
 export class ICustomAttributeProvider implements IICustomAttributeProvider {

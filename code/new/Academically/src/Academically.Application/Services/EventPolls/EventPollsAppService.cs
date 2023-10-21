@@ -5,7 +5,10 @@ using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
+using Academically.Domain.Enums;
+using Academically.Hubs;
 using Academically.Services.EventPolls.Dto;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,16 +16,21 @@ namespace Academically.Services.EventPolls
 {
     public class EventPollsAppService : AsyncCrudAppService<EventPoll, EventPollDto, Guid, PagedEventPollResultRequestDto, CreateEventPollDto>, IEventPollsAppService
     {
+        private readonly IHubManager _hubManager;
 
-
-        public EventPollsAppService(IRepository<EventPoll, Guid> repository) : base(repository)
+        public EventPollsAppService(
+            IRepository<EventPoll, Guid> repository,
+            IHubManager hubManager
+        ) : base(repository)
         {
+            this._hubManager = hubManager;
         }
 
         protected override IQueryable<EventPoll> CreateFilteredQuery(PagedEventPollResultRequestDto input)
         {
             return base.CreateFilteredQuery(input)
-                .Where(e => e.EventId == input.EventIdFilter);
+                .WhereIf(input.EventIdFilter.HasValue, e => e.EventId == input.EventIdFilter.Value)
+                .WhereIf(input.Status.HasValue, e => e.Status == input.Status.Value);
         }
 
         protected override IQueryable<EventPoll> ApplyPaging(IQueryable<EventPoll> query, PagedEventPollResultRequestDto input)
@@ -59,14 +67,62 @@ namespace Academically.Services.EventPolls
             return base.CreateAsync(input);
         }
 
-        public async Task<IEnumerable<EventPollDto>> GetAllUnpagedAsync(Guid eventId)
+        public async Task<IEnumerable<EventPollDto>> GetAllUnpagedAsync(Guid eventId, EventPollStatus? status)
         {
             return await Repository.GetAll()
+                .WhereIf(status.HasValue, e => e.Status == status.Value)
                 .Where(e => e.EventId == eventId)
                     .Include(e => e.EventPollQuestions)
                         .ThenInclude(e => e.EventPollQuestionOptions)
                 .Select(e => ObjectMapper.Map<EventPollDto>(e))
                 .ToListAsync();
+        }
+
+        public async Task<EventPollDto> LaunchPoll(Guid Id)
+        {
+            var poll = await this.Repository.GetAll()
+               .Where(o => o.Id == Id)
+               .FirstOrDefaultAsync();
+
+            if (poll != null)
+            {
+                poll.Status = EventPollStatus.Open;
+                poll.LaunchedTime = DateTime.Now;
+                await this._hubManager.NotifyUsersForEventPollLaunched(ObjectMapper.Map<EventPollDto>(poll));
+                return ObjectMapper.Map<EventPollDto>(poll);
+            }
+            return null;
+        }
+
+        public async Task<EventPollDto> ClosePoll(Guid Id)
+        {
+            var poll = await this.Repository.GetAll()
+               .Where(o => o.Id == Id)
+               .FirstOrDefaultAsync();
+
+            if (poll != null)
+            {
+                poll.Status = EventPollStatus.Closed;
+                poll.EndedTime = DateTime.Now;
+                await this._hubManager.NotifyUsersForEventPollClosed(ObjectMapper.Map<EventPollDto>(poll));
+                return ObjectMapper.Map<EventPollDto>(poll);
+            }
+            return null;
+        }
+
+        public async Task<EventPollDto> SharePoll(Guid Id)
+        {
+            var poll = await this.Repository.GetAll()
+               .Where(o => o.Id == Id)
+               .FirstOrDefaultAsync();
+
+            if (poll != null)
+            {
+                poll.SharedTime = DateTime.Now;
+                await this._hubManager.NotifyUsersForEventPollShared(ObjectMapper.Map<EventPollDto>(poll));
+                return ObjectMapper.Map<EventPollDto>(poll);
+            }
+            return null;
         }
     }
 }
