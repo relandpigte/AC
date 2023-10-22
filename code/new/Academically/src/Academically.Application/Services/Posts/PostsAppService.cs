@@ -986,9 +986,11 @@ namespace Academically.Services.Posts
                     switch (propertyChange.PropertyName)
                     {
                         case nameof(history.Title):
-                            history.Title = propertyChange.OriginalValue.Trim('"'); break;
+                            history.Title = propertyChange.OriginalValue.Trim('"');
+                            break;
                         case nameof(history.Content):
-                            history.Content = propertyChange.OriginalValue.Trim('"'); break;
+                            history.Content = propertyChange.OriginalValue.Trim('"');
+                            break;
                         case "DisciplineTaxonomyIds":
                             var disciplineTaxonomyIds = propertyChange.OriginalValue?.Trim('"').Split(",").ToList();
                             if (disciplineTaxonomyIds == null) history.PostTopics = new List<DisciplineTaxonomyDto>();

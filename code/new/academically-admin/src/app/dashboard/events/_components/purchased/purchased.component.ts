@@ -43,7 +43,6 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
       .subscribe(events => {
         this.upcomingEvents = events?.filter(e => moment().isBefore(e.eventDateTime) && e.status !== 0);
         this.pastEvents = events?.filter(e => moment().isAfter(e.eventDateTime));
-        console.warn(events);
       });
   }
 }

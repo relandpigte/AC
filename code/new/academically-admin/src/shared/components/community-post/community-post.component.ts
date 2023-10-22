@@ -33,6 +33,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     @Input() closeHiddenPostAfter = 0;
     @Input() isHistoryCard: boolean;
     @Input() hideEdited: boolean;
+    @Input() hideSharing: boolean;
     @Input() canOverrideOwner: boolean;
     @Input() reactionGroup: ReactionGroup = ReactionGroup.Emotions;
     @Input() isCommunity: boolean;
@@ -83,7 +84,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     }
 
     get title(): string { return this.data?.title ?? ''; }
-    get description(): string { return this.data?.content ?? ''; }
+    get description(): string { return this.data?.content?.replace(/(\\r\\n|\\n|\\r|\\n\\r)/gm, ' ') ?? ''; }
     get isOwner(): boolean { return this.appSession.userId === this.data?.creatorUserId; }
     get isQuickPost(): boolean { return this.data?.type === PostType.QuickPost; }
     get isQuestion(): boolean { return this.data?.type === PostType.Question; }

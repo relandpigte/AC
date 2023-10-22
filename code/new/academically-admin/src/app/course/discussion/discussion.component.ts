@@ -160,8 +160,10 @@ export class CourseDiscussionComponent extends AppComponentBase implements OnIni
     this.postsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingChildren = loading);
 
     this.postsStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
-      if (this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) return;
-      switch(event.type) {
+      if (this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) {
+        return;
+      }
+      switch (event.type) {
         case StateUpdateType.Add:
           this.children = [event.data].concat(this.children);
           this.totalChildrenCount++;

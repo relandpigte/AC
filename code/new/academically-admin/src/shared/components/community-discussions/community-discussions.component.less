@@ -159,12 +159,8 @@
   }
 }
 
-.tier-1-comment {
-  .avatar {
-    width: 40px;
-    height: 40px;
-  }
 
+.tier-1-comment {
   &:last-of-type,
   &:last-child,
   &:last-of-type {
@@ -179,7 +175,7 @@
     margin-top: 15px;
   }
 }
-
+.tier-1-comment,
 .tier-2-comment,
 .tier-3-comment {
   margin-bottom: 0;
@@ -187,6 +183,15 @@
   .avatar {
     width: 30px;
     height: 30px;
+  }
+}
+
+.tier-1-comment {
+  & > div > div:first-child {
+    .avatar {
+      width: 40px !important;
+      height: 40px !important;
+    }
   }
 }
 

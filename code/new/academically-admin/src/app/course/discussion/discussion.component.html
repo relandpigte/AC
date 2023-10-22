@@ -43,6 +43,7 @@
             *ngIf="!p.isHidden && !p.isDeleted"
             [isLoading]="isLoading"
             [data]="p"
+            [hideSharing]="true"
             [reactionGroup]="reactionGroup.Votes"
             [canOverrideOwner]="true"
             (onChildrenUpdate)="handleChildrenUpdate(p)"

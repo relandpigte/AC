@@ -99,7 +99,7 @@
                 >
                     <span class="fe fe-download rotate right"></span>Go to discussion
                 </div>
-                <div role="button" (click)="handleSharePost($event)" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0">
+                <div *ngIf="!hideSharing" role="button" (click)="handleSharePost($event)" class="btn btn-white post-actions-left-item d-flex justify-content-center align-items-center gap-9 border-0">
                     <span class="post-actions-left-item-share bg-center" [ngStyle]="{ 'background-image': 'url(\'assets/img/icon-share.svg\')' }"></span>Share
                 </div>
                 <div class="dropdown ">

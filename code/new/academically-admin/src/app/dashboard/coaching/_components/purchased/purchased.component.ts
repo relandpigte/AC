@@ -50,7 +50,6 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
       .pipe(finalize(() => this._dashboardPageService.isLoading$.next(false)))
       .subscribe(data => {
         this.upcomingCoachings = data;
-        console.warn(data);
       });
   }
 }

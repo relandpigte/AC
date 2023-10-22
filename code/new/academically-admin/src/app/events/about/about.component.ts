@@ -24,7 +24,6 @@ export class EventsAboutComponent extends AppComponentBase implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .subscribe(data => {
         this.data = data;
-        console.warn(data);
       });
   }
 }
