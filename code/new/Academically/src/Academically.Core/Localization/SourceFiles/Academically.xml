@@ -1988,5 +1988,21 @@
 
     <!-- Notification -->
     <text name="NewNotification">New notification</text>
+
+    <!-- Calendar Settings -->
+    <text name="BookingIntervals">Booking intervals</text>
+    <text name="BookingIntervalsDesc">Set the frequency of bookable time slots</text>
+    <text name="MaximumBookings">Maximum bookings per day</text>
+    <text name="MaximumBookingsDesc">Limit the number of sessions per day</text>
+    <text name="Padding">Padding</text>
+    <text name="PaddingDesc">Give yourself time to prepare by adding buffer time between your bookings</text>
+    <text name="BeforeBooking">Before booking</text>
+    <text name="AfterBooking">After booking</text>
+    <text name="MinimumBookingNotice">Minimum booking notice</text>
+    <text name="MinimumBookingNoticeDesc">Set the minimum required notice period</text>
+    <text name="MaximumAdvanceNotice">Maximum advance notice</text>
+    <text name="MaximumAdvanceNoticeDesc">Limit how far into the future users can book</text>
+    <text name="WeekStartDay">Week start day</text>
+    <text name="WeekStartDayDesc">Select the day you’d like your week to start</text>
   </texts>
 </localizationDictionary>

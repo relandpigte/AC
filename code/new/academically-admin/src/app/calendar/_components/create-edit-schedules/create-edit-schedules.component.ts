@@ -7,7 +7,8 @@ import { flatMap } from 'lodash';
 
 export enum ScheduleType {
   DEFAULT = 'default',
-  CUSTOM = 'custom'
+  CUSTOM = 'custom',
+  SETTINGS = 'settings'
 }
 
 @Component({
@@ -20,16 +21,10 @@ export class CreateEditSchedulesComponent extends AppComponentBase implements On
   @Output() modelSaved = new EventEmitter();
 
   defaultModels: any;
-
   isLoading = false;
+  activeTab = ScheduleType.DEFAULT;
 
-  activeTab = 'default';
-
-
-  get scheduleType(): ScheduleType {
-    return this.activeTab === 'default' ? ScheduleType.DEFAULT : ScheduleType.CUSTOM;
-  }
-
+  readonly ScheduleType = ScheduleType;
   constructor(
     injector: Injector,
     private _modal: BsModalRef,
@@ -68,4 +63,5 @@ export class CreateEditSchedulesComponent extends AppComponentBase implements On
   get isModelValid(): boolean {
     return this.defaultModels && Object.keys(this.defaultModels).every(m => (this.defaultModels[m].breaks?.every(b => b.startTime?.value < b.endTime?.value) ?? false) === true);
   }
+
 }

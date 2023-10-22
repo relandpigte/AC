@@ -9,20 +9,25 @@
 
       <ul class="nav nav-tabs nav-overflow header-tabs d-flex justify-content-center align-items-center">
         <li class="nav-item h-100">
-          <span [class.active]="activeTab === 'default'" class="nav-link d-flex justify-content-center align-items-center h-100" role="button" (click)="activeTab = 'default'">
+          <span [class.active]="activeTab === ScheduleType.DEFAULT" class="nav-link d-flex justify-content-center align-items-center h-100" role="button" (click)="activeTab = ScheduleType.DEFAULT">
             {{ 'Default' | localize }}
           </span>
         </li>
         <li class="nav-item h-100">
-          <span [class.active]="activeTab === 'custom'" class="nav-link d-flex justify-content-center align-items-center h-100" role="button" (click)="activeTab = 'custom'">
+          <span [class.active]="activeTab === ScheduleType.CUSTOM" class="nav-link d-flex justify-content-center align-items-center h-100" role="button" (click)="activeTab = ScheduleType.CUSTOM">
             {{ 'Custom' | localize }}
+          </span>
+        </li>
+        <li class="nav-item h-100">
+          <span [class.active]="activeTab === ScheduleType.SETTINGS" class="nav-link d-flex justify-content-center align-items-center h-100" role="button" (click)="activeTab = ScheduleType.SETTINGS">
+            {{ 'Settings' | localize }}
           </span>
         </li>
       </ul>
     </div>
 
     <div class="card-body flex-grow-1" [loader]="isLoading">
-      <app-schedules [userAvailabilities]="userAvailabilities" [type]="scheduleType" (modelChanged)="handleModelChanged($event)"></app-schedules>
+      <app-schedules [userAvailabilities]="userAvailabilities" [type]="activeTab" (modelChanged)="handleModelChanged($event)"></app-schedules>
     </div>
     <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading" [saveDisabled]="isLoading || !isModelValid"
       (onCancelClick)="onCloseClick()">

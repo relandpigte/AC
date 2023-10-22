@@ -122,6 +122,172 @@
             </div>
         </div>
     </ng-container>
+    <ng-container *ngIf="type === ScheduleType.SETTINGS">
+        <div class="settings container-fluid">
+            <div class="row d-flex gap-15">
+                <div class="col form-group">
+                    <label class="title">{{ 'BookingIntervals' | localize }}</label>
+                    <span class="sub-title">{{ 'BookingIntervalsDesc' | localize }}</span>
+                    <div class="dropdown">
+                        <a href="javascript:void(0)" class="dropdown-ellipses dropdown-toggle d-flex justify-content-between align-items-center h-100" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Select <span class="fe fe-chevron-down"></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right custom-card-shadow">
+                            <div class="dropdown-item-container">
+                                <div *ngFor="let booking of settingTimeSelections" class="dropdown-item cursor-pointer d-flex justify-content-end">
+                                    {{ booking.label }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col form-group">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <label class="title" for="maximum-bookings">{{ 'MaximumBookings' | localize }}</label>
+                            <span class="sub-title">{{ 'MaximumBookingsDesc' | localize }}</span>
+                        </div>
+                        <div class="custom-control custom-switch ml-auto">
+                            <input type="checkbox" class="custom-control-input" id="maximum-bookings-input" checked/>
+                            <label class="custom-control-label" for="maximum-bookings-input"></label>
+                        </div>
+                    </div>
+                    <input type="text" id="maximum-bookings" class="form-control" placeholder="Input">
+                </div>
+            </div>
+            <div class="settings-separator row"></div>
+            <div class="row" [style.margin-bottom.px]="10">
+                <div class="col form-group">
+                    <label class="title">{{ 'Padding' | localize }}</label>
+                    <span class="sub-title">{{ 'PaddingDesc' | localize }}</span>
+                </div>
+            </div>
+            <div class="row d-flex gap-15">
+                <div class="col form-group">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <label class="title" for="maximum-bookings">{{ 'BeforeBooking' | localize }}</label>
+                        </div>
+                        <div class="custom-control custom-switch ml-auto">
+                            <input type="checkbox" class="custom-control-input" id="before-booking" checked/>
+                            <label class="custom-control-label" for="before-booking"></label>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <a href="javascript:void(0)" class="dropdown-ellipses dropdown-toggle d-flex justify-content-between align-items-center h-100" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Select <span class="fe fe-chevron-down"></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right custom-card-shadow">
+                            <div class="dropdown-item-container">
+                                <div *ngFor="let booking of settingTimeSelections" class="dropdown-item cursor-pointer d-flex justify-content-end">
+                                    {{ booking.label }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col form-group">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <label class="title" for="maximum-bookings">{{ 'AfterBooking' | localize }}</label>
+                        </div>
+                        <div class="custom-control custom-switch ml-auto">
+                            <input type="checkbox" class="custom-control-input" id="after-booking" checked/>
+                            <label class="custom-control-label" for="after-booking"></label>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <a href="javascript:void(0)" class="dropdown-ellipses dropdown-toggle d-flex justify-content-between align-items-center h-100" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Select <span class="fe fe-chevron-down"></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right custom-card-shadow">
+                            <div class="dropdown-item-container">
+                                <div *ngFor="let booking of settingTimeSelections" class="dropdown-item cursor-pointer d-flex justify-content-end">
+                                    {{ booking.label }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-separator row"></div>
+            <div class="row d-flex gap-15">
+                <div class="col form-group">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <label class="title">{{ 'MinimumBookingNotice' | localize }}</label>
+                            <span class="sub-title">{{ 'MinimumBookingNoticeDesc' | localize }}</span>
+                        </div>
+                        <div class="custom-control custom-switch ml-auto">
+                            <input type="checkbox" class="custom-control-input" id="minimum-booking" checked/>
+                            <label class="custom-control-label" for="minimum-booking"></label>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-10">
+                        <input type="text" class="form-control booking-input" placeholder="Input">
+                        <div class="dropdown flex-grow-1">
+                            <a href="javascript:void(0)" class="dropdown-ellipses dropdown-toggle d-flex justify-content-between align-items-center h-100" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Select <span class="fe fe-chevron-down"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right custom-card-shadow booking-dropdown">
+                                <div class="dropdown-item-container">
+                                    <div *ngFor="let booking of settingTimeNoticePeriod" class="dropdown-item cursor-pointer d-flex">
+                                        {{ booking.label }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col form-group">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <label class="title" for="maximum-bookings">{{ 'MaximumAdvanceNotice' | localize }}</label>
+                            <span class="sub-title">{{ 'MaximumAdvanceNoticeDesc' | localize }}</span>
+                        </div>
+                        <div class="custom-control custom-switch ml-auto">
+                            <input type="checkbox" class="custom-control-input" id="maximum-booking" checked/>
+                            <label class="custom-control-label" for="maximum-booking"></label>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-10">
+                        <input type="text" class="form-control booking-input" placeholder="Input">
+                        <div class="dropdown flex-grow-1">
+                            <a href="javascript:void(0)" class="dropdown-ellipses dropdown-toggle d-flex justify-content-between align-items-center h-100" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Select <span class="fe fe-chevron-down"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right custom-card-shadow booking-dropdown">
+                                <div class="dropdown-item-container">
+                                    <div *ngFor="let booking of settingTimeNoticePeriod" class="dropdown-item cursor-pointer d-flex">
+                                        {{ booking.label }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-separator row"></div>
+            <div class="row d-flex gap-15">
+                <div class="col form-group">
+                    <label class="title">{{ 'WeekStartDay' | localize }}</label>
+                    <span class="sub-title">{{ 'WeekStartDayDesc' | localize }}</span>
+                    <div class="dropdown">
+                        <a href="javascript:void(0)" class="dropdown-ellipses dropdown-toggle d-flex justify-content-between align-items-center h-100" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Select <span class="fe fe-chevron-down"></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right custom-card-shadow week-dropdown">
+                            <div class="dropdown-item-container">
+                                <div *ngFor="let dayOfWeek of DayOfWeek | enumToArray | keyvalue" class="dropdown-item cursor-pointer d-flex">
+                                    {{ dayOfWeek.value }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
 </div>
 
 <ng-template #breakTemplate let-day="day" let-idx="idx">
