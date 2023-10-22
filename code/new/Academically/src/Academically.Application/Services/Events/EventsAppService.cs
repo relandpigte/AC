@@ -108,6 +108,21 @@ namespace Academically.Services.Events
             }
         }
         
+        public override async Task<PagedResultDto<EventDto>> GetAllAsync(PagedEventResultRequestDto input)
+        {
+            var output = await base.GetAllAsync(input);
+            foreach (var item in output.Items)
+            {
+                item.Purchased = await _servicePurchasesRepository.GetAll()
+                    .Where(c => c.ReferenceId == item.Id)
+                    .Select(c => ObjectMapper.Map<UserDto>(c.CreatorUser))
+                    .ToListAsync();
+                
+                foreach (var u in item.Purchased) if (u.ProfilePictureDocumentId.HasValue) u.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(u.ProfilePictureDocumentId.Value);
+            }
+            return output;
+        }
+        
         public override async Task<EventDto> GetAsync(EntityDto<Guid> input)
         {
             return await Repository.GetAll()
@@ -230,6 +245,13 @@ namespace Academically.Services.Events
 
                 var purchasedService = await this._servicePurchasesRepository.FirstOrDefaultAsync(p => p.ReferenceId.ToString() == vid.Id.ToString() && p.CreatorUserId == this.AbpSession.UserId);
                 vid.IsPurchased = purchasedService != null;
+                
+                vid.Purchased = await _servicePurchasesRepository.GetAll()
+                    .Where(c => c.ReferenceId == vid.Id)
+                    .Select(c => ObjectMapper.Map<UserDto>(c.CreatorUser))
+                    .ToListAsync();
+                
+                foreach (var u in vid.Purchased) if (u.ProfilePictureDocumentId.HasValue) u.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(u.ProfilePictureDocumentId.Value);
             }
             return popularEvents;
         }

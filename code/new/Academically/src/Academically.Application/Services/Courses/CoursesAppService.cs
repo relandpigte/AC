@@ -111,8 +111,8 @@ namespace Academically.Services.Courses
                 item.Modules = courseSections.Count(x => x.Type == CourseSectionType.Module && item.Id == x.CourseId && x.ParentId == null);
                 item.Lessons = courseSections.Count(x => x.Type == CourseSectionType.Lesson && item.Id == x.CourseId && x.ParentId == null);
                 item.Units = courseSections.Count(x => x.Type == CourseSectionType.Unit && item.Id == x.CourseId && x.ParentId == null);
-                item.Enrolled = await _studentCourseRepository.GetAll()
-                    .Where(c => c.CourseId == item.Id)
+                item.Enrolled = await _servicePurchasesRepository.GetAll()
+                    .Where(c => c.ReferenceId == item.Id)
                     .Select(c => ObjectMapper.Map<UserDto>(c.CreatorUser))
                     .ToListAsync();
                 

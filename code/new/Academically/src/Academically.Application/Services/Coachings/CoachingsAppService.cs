@@ -328,7 +328,7 @@ namespace Academically.Services.Coachings
                                   .ToListAsync();
         }
 
-        public async Task<List<AvailableServiceDto>> GetAllPurchasedCoaching(long creatorUserId)
+        public async Task<List<CoachingDto>> GetAllPurchasedCoaching(long creatorUserId)
         {
             var purchases = await _servicePurchasesRepository.GetAll()
                 .Where(p => p.Type == ServicesType.Coaching)
@@ -336,12 +336,38 @@ namespace Academically.Services.Coachings
                 .Select(p => p.ReferenceId)
                 .ToListAsync();
             
-            return await Repository.GetAll()
+            var output = await Repository.GetAll()
                 .Where(w => w.ParentId == null && w.Visible.Value && w.Status == CoachingStatus.Published)
                 .Where(x => purchases.Contains(x.Id))
                 .Include(c => c.CreatorUser)
-                .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                .Select(e => ObjectMapper.Map<CoachingDto>(e))
                 .ToListAsync();
+            
+            foreach (var item in output)
+            {
+                item.Purchased = await _servicePurchasesRepository.GetAll()
+                    .Where(c => c.ReferenceId == item.Id)
+                    .Select(c => ObjectMapper.Map<UserDto>(c.CreatorUser))
+                    .ToListAsync();
+                
+                foreach (var u in item.Purchased) if (u.ProfilePictureDocumentId.HasValue) u.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(u.ProfilePictureDocumentId.Value);
+            }
+            return output;
+        }
+
+        public override async Task<PagedResultDto<CoachingDto>> GetAllAsync(PagedCoachingResultRequestDto input)
+        {
+            var output = await base.GetAllAsync(input);
+            foreach (var item in output.Items)
+            {
+                item.Purchased = await _servicePurchasesRepository.GetAll()
+                    .Where(c => c.ReferenceId == item.Id)
+                    .Select(c => ObjectMapper.Map<UserDto>(c.CreatorUser))
+                    .ToListAsync();
+                
+                foreach (var u in item.Purchased) if (u.ProfilePictureDocumentId.HasValue) u.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(u.ProfilePictureDocumentId.Value);
+            }
+            return output;
         }
     }
 }

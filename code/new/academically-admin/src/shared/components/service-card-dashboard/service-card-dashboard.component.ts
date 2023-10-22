@@ -53,6 +53,8 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   @Input() isOverview: boolean;
 
   @Output() onDelete: Subject<any> = new Subject<any>();
+  @Output() onOverView: Subject<any> = new Subject<any>();
+  @Output() onEdit: Subject<any> = new Subject<any>();
   @Output() onClickAction: Subject<any> = new Subject<any>();
   @Output() onReviewAction: Subject<any> = new Subject<any>();
 
@@ -75,10 +77,9 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   get images(): ServiceCardImage[] { return this.sanitized?.images; }
   get name(): string { return this.sanitized?.name; }
   get info(): string { return this.sanitized?.info; }
-  get articleType(): number { return this.data?.type; }
   get people(): ServiceCardPeople { return this.sanitized?.people; }
   get status(): ServiceCardStatus { return this.sanitized?.status; }
-  get learners(): number { return this.data?.enrolled?.length ?? 20; }
+  get learners(): number { return this.data?.enrolled?.length ?? this.data?.purchased?.length ?? 0; }
   get progress(): number | null {
     if (this.status?.type === 'completed') { return null; }
     return this.sanitized?.progress ?? 0;
@@ -140,7 +141,8 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     if (courses?.progress === 0) {
       section = courses?.studentCourseSections[0]?.courseSection;
     }
-    return `${CourseSectionType[section?.type]} - ${section?.name}`;
+    return 'Lesson: start your new journey';
+    // return `${CourseSectionType[section?.type]} - ${section?.name}`;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -154,6 +156,14 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
 
   handleDelete(id: string): void {
     this.onDelete.next(id);
+  }
+
+  handleOverView(id: string): void {
+    this.onOverView.next(id);
+  }
+
+  handleEdit(id: string): void {
+    this.onEdit.next(id);
   }
 
   handleOnReview(serviceId: string): void {
@@ -245,7 +255,6 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         }
         break;
       case 'workshop':
-      case 'broadcast':
         if (this.isCreator) {
           this.sanitizedOptions.isShowStatus = true;
           if (EventStatus.Draft === this.serviceStatus) {
@@ -260,6 +269,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
             this.sanitizedOptions.isShowActions = true;
           }
         } else {
+          this.sanitizedOptions.isShowStatus = false;
           if (this.isExpired) {
             this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'review', label: 'Leave review' });
           } else {
@@ -267,12 +277,52 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
           }
           this.sanitizedOptions.isShowActions = true;
         }
+        this.sanitized.people = <ServiceCardPeople>{};
+        this.sanitized.people.people = this.data?.purchased?.map((u: UserDto): ServiceCardPerson => ({
+          ...this.sanitized.owner,
+          avatar: { src: u.profilePictureUrl },
+          fullName: u.fullName
+        }));
+        this.sanitized.people.avatarStackCount = 3;
+        this.sanitized.people.isShowAvatars = true;
+        break;
+      case 'broadcast':
+        if (this.isCreator) {
+          this.sanitizedOptions.isShowStatus = true;
+          if (EventStatus.Draft === this.serviceStatus) {
+            this.sanitized.status = <ServiceCardStatus>{ type: 'draft', label: 'Draft', show: true };
+          }
+          if (this.isExpired) {
+            this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Published', show: true };
+          }
+          if (this.isUpcoming && EventStatus.Draft !== this.serviceStatus) {
+            this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join broadcast' });
+            this.sanitized.status = <ServiceCardStatus>{ type: 'published', label: 'Published', show: true };
+            this.sanitizedOptions.isShowActions = true;
+          }
+        } else {
+          this.sanitizedOptions.isShowStatus = false;
+          if (this.isExpired) {
+            this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'review', label: 'Leave review' });
+          } else {
+            this.sanitizedActions.splice(0, 0, <ServiceCardButton>{ type: 'join', label: 'Join broadcast' });
+          }
+          this.sanitizedOptions.isShowActions = true;
+        }
+        this.sanitized.people = <ServiceCardPeople>{};
+        this.sanitized.people.people = this.data?.purchased?.map((u: UserDto): ServiceCardPerson => ({
+          ...this.sanitized.owner,
+          avatar: { src: u.profilePictureUrl },
+          fullName: u.fullName
+        }));
+        this.sanitized.people.avatarStackCount = 3;
+        this.sanitized.people.isShowAvatars = true;
         break;
       case 'coaching':
         this.sanitized.composition = this.sanitized.composition ?? {} as ServiceCardComposition;
         this.sanitized.composition.sessions = 1;
         this.sanitized.composition.durationInSec = Math.floor(Math.random() * (10000 - 20) + 20);
-
+        this.sanitized.people.isShowAvatars = false;
         if (this.isCreator) {
           if (this.isBooked) {
             this.sanitizedOptions.isShowActions = true;
@@ -378,6 +428,8 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
           this.sanitized.composition.videos = this.getRndInteger(1, 11);
           this.sanitized.composition.durationInSec = Math.floor(Math.random() * (3600 - 20) + 20);
 
+          this.sanitizedOptions.isSHowPurchased = true;
+          this.sanitized.people.isShowAvatars = false;
           switch (this.serviceStatus) {
             case ArticleStatus.Archived:
               this.sanitized.status = <ServiceCardStatus>{ type: 'archived', label: 'Archived', show: true };
@@ -437,14 +489,27 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         if (this.isCreator) {
           if (!this.options || !('isShowStatus' in this.options)) { this.sanitizedOptions.isShowStatus = true; }
           if (!this.options || !('isSHowPurchased' in this.options)) { this.sanitizedOptions.isSHowPurchased = true; }
+
+          this.sanitized.people = <ServiceCardPeople>{};
+          this.sanitized.people.people = this.data?.purchased?.map((u: UserDto): ServiceCardPerson => ({
+            ...this.sanitized.owner,
+            avatar: { src: u.profilePictureUrl },
+            fullName: u.fullName
+          }));
+          this.sanitized.people.avatarStackCount = 3;
+          this.sanitized.people.isShowAvatars = true;
         } else {
           if (!this.options || !('isShowActions' in this.options)) { this.sanitizedOptions.isShowActions = true; }
         }
         if (!this.options || !('isShowInfo' in this.options)) { this.sanitizedOptions.isShowInfo = true; }
         break;
       case 'broadcast':
+        if (!this.options || !('isShowDate' in this.options)) { this.sanitizedOptions.isShowDate = true; }
+        if (!this.options || !('isShowHeading' in this.options)) { this.sanitizedOptions.isShowHeading = true; }
+        if (!this.options || !('headingType' in this.options)) { this.sanitizedOptions.headingType = 'schedule'; }
+        if (!this.options || !('isShowGoing' in this.options)) { this.sanitizedOptions.isShowGoing = true; }
+        break;
       case 'workshop':
-        // if (!this.options || !('isShowEnrolled' in this.options)) { this.sanitizedOptions.isShowEnrolled = true; }
         if (!this.options || !('isShowDate' in this.options)) { this.sanitizedOptions.isShowDate = true; }
         if (!this.options || !('isShowHeading' in this.options)) { this.sanitizedOptions.isShowHeading = true; }
         if (!this.options || !('headingType' in this.options)) { this.sanitizedOptions.headingType = 'schedule'; }
@@ -480,6 +545,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         }
         break;
       case 'event':
+        if (!this.options || !('isShowGoing' in this.options)) { this.sanitizedOptions.isShowGoing = true; }
         break;
       case 'space':
         break;

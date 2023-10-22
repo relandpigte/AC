@@ -111,5 +111,8 @@ namespace Academically.Services.Coachings.Dto
 
         [NotMapped]
         public bool IsPurchased { get; set; }
+        
+        [NotMapped]
+        public IEnumerable<UserDto> Purchased { get; set; }
     }
 }

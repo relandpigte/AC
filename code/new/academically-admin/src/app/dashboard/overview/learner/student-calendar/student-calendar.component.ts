@@ -18,20 +18,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 export class StudentCalendarComponent extends AppComponentBase implements OnInit {
   @ViewChild('calendar') calendarComponent: FullCalendarComponent;
 
-  calendarOptions: CalendarOptions = {
-    initialView: 'dayGridMonth',
-    height: 'auto',
-    themeSystem: 'bootstrap',
-    headerToolbar: {
-      left:   'title',
-      center: '',
-      right:  'prev,next'
-    },
-    dateClick: this.handleDateClick.bind(this),
-    dayCellClassNames: this.dayCellClassNamesCallback.bind(this),
-    timeZone: 'UTC',
-    showNonCurrentDates: false
-  };
+  calendarOptions: CalendarOptions;
 
   shimmerType = ShimmerType;
   purchasedEvents: EventDto[] = [];
@@ -56,8 +43,7 @@ export class StudentCalendarComponent extends AppComponentBase implements OnInit
   get dateNow() { return this._dateClicked; }
   set dateNow(date) { this._dateClicked = date; }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   getEventSchedule(data: EventDto): string {
     if (moment(data.eventDateTime).diff(moment(), 'minutes') < 1 && moment(data.eventDateTime).isAfter()) {
@@ -102,6 +88,7 @@ export class StudentCalendarComponent extends AppComponentBase implements OnInit
       .subscribe(events => {
         this.purchasedEvents = events.items;
         this.selectedEvents = events.items?.filter(e => moment(e.eventDateTime).isSame(moment(), 'day'));
+        this.initCalendar();
       });
   }
 
@@ -119,5 +106,22 @@ export class StudentCalendarComponent extends AppComponentBase implements OnInit
       return 'active';
     }
     return;
+  }
+
+  private initCalendar(): void {
+    this.calendarOptions = {
+      initialView: 'dayGridMonth',
+      height: 'auto',
+      themeSystem: 'bootstrap',
+      headerToolbar: {
+        left: 'title',
+        center: '',
+        right: 'prev,next'
+      },
+      dateClick: this.handleDateClick.bind(this),
+      dayCellClassNames: this.dayCellClassNamesCallback.bind(this),
+      timeZone: moment.tz.guess(),
+      showNonCurrentDates: false
+    };
   }
 }

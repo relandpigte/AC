@@ -12,7 +12,7 @@ import { DashboardPagesService } from '@shared/services/dashboard-pages.service'
   styleUrls: ['./purchased.component.less']
 })
 export class PurchasedComponent extends AppComponentBase implements OnInit {
-  upcomingCoachings: AvailableServiceDto[] = [];
+  upcomingCoachings: CoachingDto[] = [];
   pastCoachings: CoachingDto[] = [];
   cancelledCoachings: CoachingDto[] = [];
 

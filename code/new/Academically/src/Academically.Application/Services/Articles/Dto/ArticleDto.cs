@@ -51,6 +51,9 @@ namespace Academically.Services.Articles.Dto
 
         [NotMapped]
         public bool IsPurchased { get; set; }
+        
+        [NotMapped]
+        public IEnumerable<UserDto> Purchased { get; set; }
 
         public ArticleDto()
 		{

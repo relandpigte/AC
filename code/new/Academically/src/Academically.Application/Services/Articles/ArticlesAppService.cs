@@ -21,6 +21,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Abp.Collections.Extensions;
 using Abp.Runtime.Session;
+using Academically.Users.Dto;
 
 namespace Academically.Services.Articles
 {
@@ -66,6 +67,15 @@ namespace Academically.Services.Articles
                 .Select(e => ObjectMapper.Map<ArticleDto>(e))
                 .ToListAsync();
 
+            foreach (var article in articles)
+            {
+                article.Purchased = await _servicePurchasesRepository.GetAll()
+                    .Where(c => c.ReferenceId == article.Id)
+                    .Select(c => ObjectMapper.Map<UserDto>(c.CreatorUser))
+                    .ToListAsync();
+                
+                foreach (var u in article.Purchased) if (u.ProfilePictureDocumentId.HasValue) u.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(u.ProfilePictureDocumentId.Value);
+            }
             return new PagedResultDto<ArticleDto>()
             {
                 TotalCount = totalCount,
@@ -278,7 +288,6 @@ namespace Academically.Services.Articles
                 .ToListAsync();
 
             return await _articlesRepository.GetAll()
-                .Include(e => e.Parent)
                 .Include(e => e.ThumbnailDocument)
                 .Include(e => e.CreatorUser)
                 .Where(e => purchases.Contains(e.Id))

@@ -80,8 +80,7 @@ export class TutorRevenueComponent extends AppComponentBase implements OnInit {
             type: 'linear',
             display: 'auto',
             ticks: {
-              min: 0,
-              stepSize: 500,
+              stepSize: 1000,
               callback: (num: number): string => {
                 return `£${Math.abs(num) > 999 ?
                   Math.sign(num) * ((Math.abs(num) / 1000)) + 'k' :

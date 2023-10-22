@@ -55,7 +55,10 @@ namespace Academically.Services.Videos.Dto
 
         [NotMapped]
         public bool IsPurchased { get; set; }
-
+        
+        [NotMapped]
+        public IEnumerable<UserDto> Purchased { get; set; }
+        
         public VideoDto()
 		{
 		}

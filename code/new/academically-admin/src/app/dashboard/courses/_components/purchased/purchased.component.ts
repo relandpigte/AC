@@ -52,6 +52,7 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
         this.allCourses = courses;
         this.todoCourses = courses.filter(c => c.progress < 100);
         this.completedCourses = courses.filter(c => c.progress === 100);
+        console.warn(courses);
       });
   }
 }

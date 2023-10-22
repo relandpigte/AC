@@ -651,20 +651,20 @@ export class ArticlesServiceProxy {
     }
 
     /**
-     * @param maxResultCount (optional) 
      * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
-    getAllForHome(maxResultCount: number | undefined, skipCount: number | undefined): Observable<ArticleDtoPagedResultDto> {
+    getAllForHome(skipCount: number | undefined, maxResultCount: number | undefined): Observable<ArticleDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Articles/GetAllForHome?";
-        if (maxResultCount === null)
-            throw new Error("The parameter 'maxResultCount' cannot be null.");
-        else if (maxResultCount !== undefined)
-            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
             url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -5028,7 +5028,7 @@ export class CoachingsServiceProxy {
      * @param creatorUserId (optional) 
      * @return Success
      */
-    getAllPurchasedCoaching(creatorUserId: number | undefined): Observable<AvailableServiceDto[]> {
+    getAllPurchasedCoaching(creatorUserId: number | undefined): Observable<CoachingDto[]> {
         let url_ = this.baseUrl + "/api/services/app/Coachings/GetAllPurchasedCoaching?";
         if (creatorUserId === null)
             throw new Error("The parameter 'creatorUserId' cannot be null.");
@@ -5051,14 +5051,14 @@ export class CoachingsServiceProxy {
                 try {
                     return this.processGetAllPurchasedCoaching(<any>response_);
                 } catch (e) {
-                    return <Observable<AvailableServiceDto[]>><any>_observableThrow(e);
+                    return <Observable<CoachingDto[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AvailableServiceDto[]>><any>_observableThrow(response_);
+                return <Observable<CoachingDto[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAllPurchasedCoaching(response: HttpResponseBase): Observable<AvailableServiceDto[]> {
+    protected processGetAllPurchasedCoaching(response: HttpResponseBase): Observable<CoachingDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -5072,7 +5072,7 @@ export class CoachingsServiceProxy {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200.push(AvailableServiceDto.fromJS(item));
+                    result200.push(CoachingDto.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -5084,63 +5084,7 @@ export class CoachingsServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AvailableServiceDto[]>(<any>null);
-    }
-
-    /**
-     * @param id (optional) 
-     * @return Success
-     */
-    get(id: string | undefined): Observable<CoachingDto> {
-        let url_ = this.baseUrl + "/api/services/app/Coachings/Get?";
-        if (id === null)
-            throw new Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "Id=" + encodeURIComponent("" + id) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGet(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGet(<any>response_);
-                } catch (e) {
-                    return <Observable<CoachingDto>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<CoachingDto>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGet(response: HttpResponseBase): Observable<CoachingDto> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = CoachingDto.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<CoachingDto>(<any>null);
+        return _observableOf<CoachingDto[]>(<any>null);
     }
 
     /**
@@ -5231,6 +5175,62 @@ export class CoachingsServiceProxy {
             }));
         }
         return _observableOf<CoachingDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: string | undefined): Observable<CoachingDto> {
+        let url_ = this.baseUrl + "/api/services/app/Coachings/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<CoachingDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CoachingDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<CoachingDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CoachingDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CoachingDto>(<any>null);
     }
 
     /**
@@ -11812,6 +11812,106 @@ export class EventsServiceProxy {
     }
 
     /**
+     * @param parentIdFilter (optional) 
+     * @param userIdFilter (optional) 
+     * @param searchFilter (optional) 
+     * @param visible (optional) 
+     * @param open (optional) 
+     * @param statusFilter (optional) 0 = Draft
+    
+    1 = Published
+     * @param categoryFilter (optional) 0 = Broadcast
+    
+    1 = Workshop
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(parentIdFilter: string | undefined, userIdFilter: number | undefined, searchFilter: string | undefined, visible: boolean | undefined, open: boolean | undefined, statusFilter: EventStatus | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<EventDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Events/GetAll?";
+        if (parentIdFilter === null)
+            throw new Error("The parameter 'parentIdFilter' cannot be null.");
+        else if (parentIdFilter !== undefined)
+            url_ += "ParentIdFilter=" + encodeURIComponent("" + parentIdFilter) + "&";
+        if (userIdFilter === null)
+            throw new Error("The parameter 'userIdFilter' cannot be null.");
+        else if (userIdFilter !== undefined)
+            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
+        if (searchFilter === null)
+            throw new Error("The parameter 'searchFilter' cannot be null.");
+        else if (searchFilter !== undefined)
+            url_ += "SearchFilter=" + encodeURIComponent("" + searchFilter) + "&";
+        if (visible === null)
+            throw new Error("The parameter 'visible' cannot be null.");
+        else if (visible !== undefined)
+            url_ += "Visible=" + encodeURIComponent("" + visible) + "&";
+        if (open === null)
+            throw new Error("The parameter 'open' cannot be null.");
+        else if (open !== undefined)
+            url_ += "Open=" + encodeURIComponent("" + open) + "&";
+        if (statusFilter === null)
+            throw new Error("The parameter 'statusFilter' cannot be null.");
+        else if (statusFilter !== undefined)
+            url_ += "StatusFilter=" + encodeURIComponent("" + statusFilter) + "&";
+        if (categoryFilter === null)
+            throw new Error("The parameter 'categoryFilter' cannot be null.");
+        else if (categoryFilter !== undefined)
+            url_ += "CategoryFilter=" + encodeURIComponent("" + categoryFilter) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<EventDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<EventDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventDtoPagedResultDto>(<any>null);
+    }
+
+    /**
      * @param id (optional) 
      * @return Success
      */
@@ -13379,106 +13479,6 @@ export class EventsServiceProxy {
             }));
         }
         return _observableOf<EventDto[]>(<any>null);
-    }
-
-    /**
-     * @param parentIdFilter (optional) 
-     * @param userIdFilter (optional) 
-     * @param searchFilter (optional) 
-     * @param visible (optional) 
-     * @param open (optional) 
-     * @param statusFilter (optional) 0 = Draft
-    
-    1 = Published
-     * @param categoryFilter (optional) 0 = Broadcast
-    
-    1 = Workshop
-     * @param skipCount (optional) 
-     * @param maxResultCount (optional) 
-     * @return Success
-     */
-    getAll(parentIdFilter: string | undefined, userIdFilter: number | undefined, searchFilter: string | undefined, visible: boolean | undefined, open: boolean | undefined, statusFilter: EventStatus | undefined, categoryFilter: EventCategory | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<EventDtoPagedResultDto> {
-        let url_ = this.baseUrl + "/api/services/app/Events/GetAll?";
-        if (parentIdFilter === null)
-            throw new Error("The parameter 'parentIdFilter' cannot be null.");
-        else if (parentIdFilter !== undefined)
-            url_ += "ParentIdFilter=" + encodeURIComponent("" + parentIdFilter) + "&";
-        if (userIdFilter === null)
-            throw new Error("The parameter 'userIdFilter' cannot be null.");
-        else if (userIdFilter !== undefined)
-            url_ += "UserIdFilter=" + encodeURIComponent("" + userIdFilter) + "&";
-        if (searchFilter === null)
-            throw new Error("The parameter 'searchFilter' cannot be null.");
-        else if (searchFilter !== undefined)
-            url_ += "SearchFilter=" + encodeURIComponent("" + searchFilter) + "&";
-        if (visible === null)
-            throw new Error("The parameter 'visible' cannot be null.");
-        else if (visible !== undefined)
-            url_ += "Visible=" + encodeURIComponent("" + visible) + "&";
-        if (open === null)
-            throw new Error("The parameter 'open' cannot be null.");
-        else if (open !== undefined)
-            url_ += "Open=" + encodeURIComponent("" + open) + "&";
-        if (statusFilter === null)
-            throw new Error("The parameter 'statusFilter' cannot be null.");
-        else if (statusFilter !== undefined)
-            url_ += "StatusFilter=" + encodeURIComponent("" + statusFilter) + "&";
-        if (categoryFilter === null)
-            throw new Error("The parameter 'categoryFilter' cannot be null.");
-        else if (categoryFilter !== undefined)
-            url_ += "CategoryFilter=" + encodeURIComponent("" + categoryFilter) + "&";
-        if (skipCount === null)
-            throw new Error("The parameter 'skipCount' cannot be null.");
-        else if (skipCount !== undefined)
-            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
-        if (maxResultCount === null)
-            throw new Error("The parameter 'maxResultCount' cannot be null.");
-        else if (maxResultCount !== undefined)
-            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetAll(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetAll(<any>response_);
-                } catch (e) {
-                    return <Observable<EventDtoPagedResultDto>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<EventDtoPagedResultDto>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetAll(response: HttpResponseBase): Observable<EventDtoPagedResultDto> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = EventDtoPagedResultDto.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<EventDtoPagedResultDto>(<any>null);
     }
 
     /**
@@ -18275,20 +18275,20 @@ export class ProjectsServiceProxy {
     }
 
     /**
-     * @param maxResultCount (optional) 
      * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
-    getAllFormHome(maxResultCount: number | undefined, skipCount: number | undefined): Observable<ProjectDtoPagedResultDto> {
+    getAllFormHome(skipCount: number | undefined, maxResultCount: number | undefined): Observable<ProjectDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Projects/GetAllFormHome?";
-        if (maxResultCount === null)
-            throw new Error("The parameter 'maxResultCount' cannot be null.");
-        else if (maxResultCount !== undefined)
-            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
             url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -30996,20 +30996,20 @@ export class VideosServiceProxy {
     }
 
     /**
-     * @param maxResultCount (optional) 
      * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
-    getAllForHome(maxResultCount: number | undefined, skipCount: number | undefined): Observable<VideoDtoPagedResultDto> {
+    getAllForHome(skipCount: number | undefined, maxResultCount: number | undefined): Observable<VideoDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Videos/GetAllForHome?";
-        if (maxResultCount === null)
-            throw new Error("The parameter 'maxResultCount' cannot be null.");
-        else if (maxResultCount !== undefined)
-            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
             url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -32561,6 +32561,7 @@ export class ArticleDto implements IArticleDto {
     articlesCount: number;
     isSaved: boolean;
     isPurchased: boolean;
+    purchased: UserDto[] | undefined;
 
     constructor(data?: IArticleDto) {
         if (data) {
@@ -32605,6 +32606,11 @@ export class ArticleDto implements IArticleDto {
             this.articlesCount = _data["articlesCount"];
             this.isSaved = _data["isSaved"];
             this.isPurchased = _data["isPurchased"];
+            if (Array.isArray(_data["purchased"])) {
+                this.purchased = [] as any;
+                for (let item of _data["purchased"])
+                    this.purchased.push(UserDto.fromJS(item));
+            }
         }
     }
 
@@ -32649,6 +32655,11 @@ export class ArticleDto implements IArticleDto {
         data["articlesCount"] = this.articlesCount;
         data["isSaved"] = this.isSaved;
         data["isPurchased"] = this.isPurchased;
+        if (Array.isArray(this.purchased)) {
+            data["purchased"] = [];
+            for (let item of this.purchased)
+                data["purchased"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -32689,6 +32700,7 @@ export interface IArticleDto {
     articlesCount: number;
     isSaved: boolean;
     isPurchased: boolean;
+    purchased: UserDto[] | undefined;
 }
 
 export class ArticleDtoPagedResultDto implements IArticleDtoPagedResultDto {
@@ -34789,6 +34801,7 @@ export class CoachingDto implements ICoachingDto {
     popularityWeight: number;
     isSaved: boolean;
     isPurchased: boolean;
+    purchased: UserDto[] | undefined;
 
     constructor(data?: ICoachingDto) {
         if (data) {
@@ -34894,6 +34907,11 @@ export class CoachingDto implements ICoachingDto {
             this.popularityWeight = _data["popularityWeight"];
             this.isSaved = _data["isSaved"];
             this.isPurchased = _data["isPurchased"];
+            if (Array.isArray(_data["purchased"])) {
+                this.purchased = [] as any;
+                for (let item of _data["purchased"])
+                    this.purchased.push(UserDto.fromJS(item));
+            }
         }
     }
 
@@ -34999,6 +35017,11 @@ export class CoachingDto implements ICoachingDto {
         data["popularityWeight"] = this.popularityWeight;
         data["isSaved"] = this.isSaved;
         data["isPurchased"] = this.isPurchased;
+        if (Array.isArray(this.purchased)) {
+            data["purchased"] = [];
+            for (let item of this.purchased)
+                data["purchased"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -35100,6 +35123,7 @@ export interface ICoachingDto {
     popularityWeight: number;
     isSaved: boolean;
     isPurchased: boolean;
+    purchased: UserDto[] | undefined;
 }
 
 export class CoachingDtoPagedResultDto implements ICoachingDtoPagedResultDto {
@@ -40752,6 +40776,7 @@ export class EventDto implements IEventDto {
     popularityWeight: number;
     isSaved: boolean;
     isPurchased: boolean;
+    purchased: UserDto[] | undefined;
 
     constructor(data?: IEventDto) {
         if (data) {
@@ -40871,6 +40896,11 @@ export class EventDto implements IEventDto {
             this.popularityWeight = _data["popularityWeight"];
             this.isSaved = _data["isSaved"];
             this.isPurchased = _data["isPurchased"];
+            if (Array.isArray(_data["purchased"])) {
+                this.purchased = [] as any;
+                for (let item of _data["purchased"])
+                    this.purchased.push(UserDto.fromJS(item));
+            }
         }
     }
 
@@ -40990,6 +41020,11 @@ export class EventDto implements IEventDto {
         data["popularityWeight"] = this.popularityWeight;
         data["isSaved"] = this.isSaved;
         data["isPurchased"] = this.isPurchased;
+        if (Array.isArray(this.purchased)) {
+            data["purchased"] = [];
+            for (let item of this.purchased)
+                data["purchased"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -41105,6 +41140,7 @@ export interface IEventDto {
     popularityWeight: number;
     isSaved: boolean;
     isPurchased: boolean;
+    purchased: UserDto[] | undefined;
 }
 
 export class EventDtoPagedResultDto implements IEventDtoPagedResultDto {
@@ -57722,6 +57758,7 @@ export class VideoDto implements IVideoDto {
     thumbnailImageUrl: string | undefined;
     isSaved: boolean;
     isPurchased: boolean;
+    purchased: UserDto[] | undefined;
 
     constructor(data?: IVideoDto) {
         if (data) {
@@ -57773,6 +57810,11 @@ export class VideoDto implements IVideoDto {
             this.thumbnailImageUrl = _data["thumbnailImageUrl"];
             this.isSaved = _data["isSaved"];
             this.isPurchased = _data["isPurchased"];
+            if (Array.isArray(_data["purchased"])) {
+                this.purchased = [] as any;
+                for (let item of _data["purchased"])
+                    this.purchased.push(UserDto.fromJS(item));
+            }
         }
     }
 
@@ -57824,6 +57866,11 @@ export class VideoDto implements IVideoDto {
         data["thumbnailImageUrl"] = this.thumbnailImageUrl;
         data["isSaved"] = this.isSaved;
         data["isPurchased"] = this.isPurchased;
+        if (Array.isArray(this.purchased)) {
+            data["purchased"] = [];
+            for (let item of this.purchased)
+                data["purchased"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -57871,6 +57918,7 @@ export interface IVideoDto {
     thumbnailImageUrl: string | undefined;
     isSaved: boolean;
     isPurchased: boolean;
+    purchased: UserDto[] | undefined;
 }
 
 export class VideoDtoPagedResultDto implements IVideoDtoPagedResultDto {

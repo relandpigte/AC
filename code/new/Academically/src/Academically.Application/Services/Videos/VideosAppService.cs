@@ -18,6 +18,7 @@ using Academically.Services.Events.Dto;
 using Academically.Services.Explore.Dto;
 using Academically.Services.Posts.Dto;
 using Academically.Services.Videos.Dto;
+using Academically.Users.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
@@ -73,6 +74,13 @@ namespace Academically.Services.Videos
             {
                 video.LikeCount = await _reactionsRepository.CountAsync(e => e.ReferenceId == video.Id.ToString()
                     && e.Type == ReactionType.Like);
+                
+                video.Purchased = await _servicePurchasesRepository.GetAll()
+                    .Where(c => c.ReferenceId == video.Id)
+                    .Select(c => ObjectMapper.Map<UserDto>(c.CreatorUser))
+                    .ToListAsync();
+                
+                foreach (var u in video.Purchased) if (u.ProfilePictureDocumentId.HasValue) u.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(u.ProfilePictureDocumentId.Value);
             }
 
             return new PagedResultDto<VideoDto>()
