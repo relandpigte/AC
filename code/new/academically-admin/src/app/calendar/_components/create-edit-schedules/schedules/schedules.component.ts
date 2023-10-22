@@ -19,6 +19,14 @@ export class SchedulesComponent extends AutoSaveComponentBase implements OnInit,
     @Output() modelChanged: EventEmitter<any> = new EventEmitter();
 
     timeSelections: { label: string; value: Date }[] = [];
+
+    settingTimeSelections: { label: string; value: number; }[] = [];
+    settingTimeNoticePeriod: { label: string; value: string; }[] = [
+        { label: 'Minutes', value: 'minutes'},
+        { label: 'Hours', value: 'hours'},
+        { label: 'Days', value: 'days'}
+    ];
+
     models: {
         [day in DayOfWeek | number]?: {
             availability: any;
@@ -75,6 +83,7 @@ export class SchedulesComponent extends AutoSaveComponentBase implements OnInit,
         this.initTimeselections();
         this.initModels();
         this.initChangesDetector();
+        this.initBookingTimeSelections();
     }
 
     private createDateFromTime(time: string): Date {
@@ -97,6 +106,17 @@ export class SchedulesComponent extends AutoSaveComponentBase implements OnInit,
                 this.timeSelections.push({
                     label: `${hour.toString().padStart(2, '0')}:${min.toString().padStart(2, '0')}${hour < 12 ? 'am' : 'pm'}`,
                     value: new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, min, 0),
+                });
+            }
+        }
+    }
+
+    private initBookingTimeSelections(): void {
+        for (let i = 1; i <= 60; i++) {
+            if (i % 5 === 0) {
+                this.settingTimeSelections.push({
+                    label: `${i} mins`,
+                    value: i
                 });
             }
         }

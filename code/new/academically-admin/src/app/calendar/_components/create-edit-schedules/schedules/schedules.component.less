@@ -3,76 +3,77 @@
     gap: 14px;
 
     &.disabled {
-      .schedule {
-        &-time, &-actions {
-          opacity: 0.6;
+        .schedule {
+            &-time, &-actions {
+                opacity: 0.6;
 
-          *:not(.schedule-actions-trash) {
-            cursor: default;
-            pointer-events: none;
-          }
-        }
+                *:not(.schedule-actions-trash) {
+                    cursor: default;
+                    pointer-events: none;
+                }
+            }
 
-        &-available, &-break {
-          opacity: 0.6;
-          * {
-            color: #95AAC9;
-          }
-        }
+            &-available, &-break {
+                opacity: 0.6;
 
-        &-actions {
-            &-plus {
-                .plus {
-                    &.active {
-                        display: none;
-                    }
+                * {
+                    color: #95AAC9;
+                }
+            }
 
-                    &.inactive {
-                        display: block;
+            &-actions {
+                &-plus {
+                    .plus {
+                        &.active {
+                            display: none;
+                        }
+
+                        &.inactive {
+                            display: block;
+                        }
                     }
                 }
             }
         }
-      }
     }
 
     &.removable {
-      .schedule {
-        &-time {
-          &-from, &-to {
-            .dropdown {
-              width: 115px;
+        .schedule {
+            &-time {
+                &-from, &-to {
+                    .dropdown {
+                        width: 115px;
+                    }
+                }
             }
-          }
         }
-      }
     }
 
     &-container {
-      gap: 20px;
+        gap: 20px;
     }
 
     &-separator {
-      width: 100%;
-      border-bottom: 1px solid #EDF2F9;
+        width: 100%;
+        border-bottom: 1px solid #EDF2F9;
     }
 
     &-day {
-      max-width: 140px;
+        max-width: 140px;
 
-      .datepicker {
-        .input-group-text {
-          padding-left: 10px;
-          padding-right: 0;
-        }
+        .datepicker {
+            .input-group-text {
+                padding-left: 10px;
+                padding-right: 0;
+            }
 
-        input {
-          &:focus {
-            outline: none !important;
-            border-color: #d2ddec;
-          }
+            input {
+                &:focus {
+                    outline: none !important;
+                    border-color: #d2ddec;
+                }
+            }
         }
-      }
     }
 
     &-available {
@@ -89,60 +90,61 @@
     }
 
     &-time {
-      gap: 18px;
-      color: #3B516C;
-      font-size: 15px;
-      font-style: normal;
-      font-weight: 400;
+        gap: 18px;
+        color: #3B516C;
+        font-size: 15px;
+        font-style: normal;
+        font-weight: 400;
 
 
-      &-from, &-to {
-        .dropdown {
-          width: 130px;
-          height: 40px;
-          border-radius: 6px;
-          border: 1px solid #E3EBF6;
-          background: #FFF;
+        &-from, &-to {
+            .dropdown {
+                width: 130px;
+                height: 40px;
+                border-radius: 6px;
+                border: 1px solid #E3EBF6;
+                background: #FFF;
 
-          &-toggle {
-            color: #3B516C;
-            font-size: 15px;
-            font-style: normal;
-            font-weight: 400;
-            padding: 8px 15px;
-          }
+                &-toggle {
+                    color: #3B516C;
+                    font-size: 15px;
+                    font-style: normal;
+                    font-weight: 400;
+                    padding: 8px 15px;
+                }
 
-          &-menu {
-            margin-top: 5px;
-            min-height: 200px;
-            min-width: 103px;
-            height: 200px;
-            height: 103px;
-            max-height: 200px;
-            max-width: 103px;
-            padding: 5px;
-            overflow: hidden;
-          }
+                &-menu {
+                    margin-top: 5px;
+                    min-height: 200px;
+                    min-width: 103px;
+                    height: 200px;
+                    height: 103px;
+                    max-height: 200px;
+                    max-width: 103px;
+                    padding: 5px;
+                    overflow: hidden;
+                }
 
-          &-item {
-            padding: 10px;
-            &-container {
-              overflow: auto;
-              height: 100%;
+                &-item {
+                    padding: 10px;
 
-              &::-webkit-scrollbar {
-                width: 1.5px;
-              }
+                    &-container {
+                        overflow: auto;
+                        height: 100%;
 
-              &::-webkit-scrollbar-thumb {
-                background: #D2DDEC;
-                border-radius: 10px;
-              }
+                        &::-webkit-scrollbar {
+                            width: 1.5px;
+                        }
 
+                        &::-webkit-scrollbar-thumb {
+                            background: #D2DDEC;
+                            border-radius: 10px;
+                        }
+
+                    }
+                }
             }
-          }
         }
-      }
     }
 
     &-actions {
@@ -160,23 +162,134 @@
     }
 
     &-add {
-      max-height: 20px;
+        max-height: 20px;
 
-      .datepicker {
-        max-width: 140px;
+        .datepicker {
+            max-width: 140px;
 
-        label {
-          color: #2C7BE5;font-size: 15px;
-          font-style: normal;
-          font-weight: 600;
-          line-height: 152.402%;
-          letter-spacing: -0.15px;
+            label {
+                color: #2C7BE5;
+                font-size: 15px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 152.402%;
+                letter-spacing: -0.15px;
+            }
+
+            input {
+                position: absolute;
+                right: 0;
+            }
         }
-
-        input {
-          position: absolute;
-          right: 0;
-        }
-      }
     }
-  }
+}
+
+.settings {
+    .row {
+        .col {
+            padding: 0;
+            margin: 0;
+
+            .title {
+                color: #12263F;
+                display: block;
+                font-size: 15px;
+            }
+
+            .sub-title {
+                font-size: 13px;
+                color: #6E84A3;
+                display: block;
+            }
+
+            .custom-control {
+                margin-right: -9px;
+            }
+
+            input {
+                height: 39px;
+                margin-top: 10px;
+                padding: 8px 10px;
+
+                &:focus {
+                    outline: none !important;
+                    border-color: #d2ddec;
+                }
+
+                &.booking-input {
+                    max-width: 201px;
+                }
+            }
+
+            .dropdown {
+                height: 39px;
+                border-radius: 6px;
+                border: 1px solid #E3EBF6;
+                background: #FFF;
+                margin-top: 10px;
+
+                &-toggle {
+                    color: #B4C1D7;
+                    font-size: 15px;
+                    font-style: normal;
+                    font-weight: 400;
+                    padding: 8px 10px;
+                }
+
+                &-menu {
+                    margin-top: 5px;
+                    margin-bottom: 5px;
+                    min-height: 180px;
+                    height: 180px;
+                    max-height: 180px;
+                    min-width: 92px;
+                    max-width: 92px;
+                    padding: 5px;
+                    overflow: hidden;
+
+                    &.booking-dropdown {
+                        min-height: 140px;
+                        max-height: 140px;
+                        height: 140px;
+                        min-width: 95px;
+                        max-width: 95px;
+                    }
+
+                    &.week-dropdown {
+                        min-height: 180px;
+                        max-height: 180px;
+                        height: 180px;
+                        min-width: 119px;
+                        max-width: 119px;
+                    }
+                }
+
+                &-item {
+                    padding: 10px;
+
+                    &-container {
+                        overflow: auto;
+                        height: 100%;
+
+                        &::-webkit-scrollbar {
+                            width: 1.5px;
+                        }
+
+                        &::-webkit-scrollbar-thumb {
+                            background: #D2DDEC;
+                            border-radius: 10px;
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+
+    &-separator {
+        height: 1px;
+        background-color: #EFF2F7;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+}
