@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Academically.Services.StudentCourses;
 
 namespace Academically.Services.Services
 {
@@ -24,6 +25,7 @@ namespace Academically.Services.Services
         private readonly IRepository<ServiceOffer, Guid> _serviceOffersRepository;
         private readonly IPostsAppService _postsAppService;
         private readonly IHubManager _hubManager;
+        private readonly IStudentCoursesAppService _studentCoursesAppService;
 
         private readonly List<Service2Dto> StaticServiceLevels = new List<Service2Dto>
             {
@@ -85,7 +87,8 @@ namespace Academically.Services.Services
             IRepository<ServicePurchase, Guid> servicePurchasesRepository,
             IRepository<ServiceOffer, Guid> serviceOffersRepository,
             IPostsAppService postsAppService,
-            IHubManager hubManager
+            IHubManager hubManager,
+            IStudentCoursesAppService studentCoursesAppService
             )
         {
             _servicesRepository = servicesRepository;
@@ -95,6 +98,7 @@ namespace Academically.Services.Services
             _serviceOffersRepository = serviceOffersRepository;
             _postsAppService = postsAppService;
             _hubManager = hubManager;
+            _studentCoursesAppService = studentCoursesAppService;
         }
 
         public async Task<IEnumerable<ServiceDto>> GetCategories()
@@ -235,7 +239,18 @@ namespace Academically.Services.Services
                 offer.SoldCount = offer.SoldCount + 1;
             }
 
+            await CreateStudentServiceRecords(created.ReferenceId.Value, created.Type.Value);
             return await this.GetPurchase(created.Id);
+        }
+
+        private async Task CreateStudentServiceRecords(Guid id, ServicesType type)
+        {
+            switch (type)
+            {
+                case ServicesType.Course:
+                    await _studentCoursesAppService.Create(id);
+                    break;
+            }
         }
 
         private bool IsOfferActive(ServiceOffer offer)
