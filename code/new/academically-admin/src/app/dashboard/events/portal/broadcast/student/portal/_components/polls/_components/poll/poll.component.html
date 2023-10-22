@@ -1,192 +1,193 @@
-<div *ngIf="showBackButton" class="back d-flex justify-content-start align-items-center border-bottom w-100 h-70-px cursor-pointer" [style.padding.px]="20" (click)="onBackClick()">
-  <img src="assets/img/events/chat/back.svg" alt="Back"> {{ 'Back' | localize }}
-</div>
-
-<div class="poll position-relative" [class.is-modal]="isModal">
-  <div *ngIf="showToggleViewButton" class="poll-minimize cursor-pointer" (click)="onToggleViewClick()">
-    <img *ngIf="isMaximized" src="assets/img/events/poll/minimize.svg" alt="Minimize">
-    <img *ngIf="!isMaximized" src="assets/img/events/poll/maximize.svg" alt="Maximize">
+<div class="wrapper d-flex flex-column" [class.is-modal]="isModal" [class.is-results]="model.hasFinishedVoting">
+  <div *ngIf="showBackButton && !model.hasFinishedVoting" class="back d-flex justify-content-start align-items-center border-bottom w-100 h-70-px cursor-pointer" [style.padding.px]="20" (click)="onBackClick()">
+    <img src="assets/img/events/chat/back.svg" alt="Back"> {{ 'Back' | localize }}
   </div>
 
-  <ng-container *ngIf="(model.isHost || (!model.isHost && !model.hasFinishedVoting)) else finishedVoting">
-    <div class="poll-header d-flex flex-column w-100">
-      <ng-container *ngIf="!model.isHost || !model.isShowVoterPercentage">
-        <div class="poll-header-name">
-          {{ poll.name }}
-        </div>
-      </ng-container>
-      <ng-container *ngIf="model.isHost && model.isShowVoterPercentage">
-        <div class="poll-header-name doughnut text-center">
-          {{ poll.name }}
-        </div>
-        <div class="poll-doughnut-container">
-          <div class="poll-doughnut-canvas-container" [ngClass]="{ 'w-160-px h-160-px': isModal, 'w-90-px h-90-px': !isModal }">
-            <canvas class="chart-canvas" chart [chartSettings]="model.chartSettings"></canvas>
-            <h5 class="m-0 p-0 percentage">
-              {{ getTotalVoterPercentage() }}%
-            </h5>
-          </div>
-          <div class="poll-doughnut-label">
-            <div class="dot mr-2"></div>
-            <label class="m-0">
-              <small class="text-muted">
-                {{ 'Participation' | localize }}
-              </small>
-            </label>
-          </div>
-        </div>
-      </ng-container>
+  <div class="poll position-relative">
+    <div *ngIf="showToggleViewButton" class="poll-minimize cursor-pointer" (click)="onToggleViewClick()">
+      <img *ngIf="isMaximized" src="assets/img/events/poll/minimize.svg" alt="Minimize">
+      <img *ngIf="!isMaximized" src="assets/img/events/poll/maximize.svg" alt="Maximize">
     </div>
-    <div class="questions slick-scroll">
-      <ng-container *ngIf="model.isHost else votingQuestions">
-        <div *ngFor="let question of poll.eventPollQuestions" class="questions-item card custom-card-border custom-card-shadow">
-          <div class="card-header h-auto border-0 p-0">
-            <div class="card-header-title">{{ question.text }}</div>
+
+    <ng-container *ngIf="(model.isHost || !model.hasFinishedVoting) else finishedVoting">
+      <div class="poll-header d-flex flex-column w-100">
+        <ng-container *ngIf="!model.isHost || !model.isShowVoterPercentage">
+          <div class="poll-header-name">
+            {{ poll.name }}
           </div>
-          <div class="card-body p-0">
-            <div *ngFor="let option of question.eventPollQuestionOptions" class="questions-item-option">
-              <div class="questions-item-option-text">{{ option.text }}</div>
-              <div class="questions-item-option-percentage row d-flex justify-content-center align-items-center no-gutters">
-                <div class="questions-item-option-percentage-chart col h-100 d-flex justify-content-center align-items-center">
-                  <div class="progress progress-sm w-100 mr-3">
-                    <div class="progress-bar" role="progressbar" [style.width]="getOptionPercentage(question, option)"
-                      [attr.aria-valuenow]="85" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                </div>
-                <div class="questions-item-option-percentage-value col-auto h-100 d-flex justify-content-center align-items-center">
-                  <small>{{ getOptionPercentage(question, option) }}</small>
-                </div>
-              </div>
+        </ng-container>
+        <ng-container *ngIf="model.isHost && model.isShowVoterPercentage">
+          <div class="poll-header-name doughnut text-center">
+            {{ poll.name }}
+          </div>
+          <div class="poll-doughnut-container">
+            <div class="poll-doughnut-canvas-container" [ngClass]="{ 'w-160-px h-160-px': isModal, 'w-90-px h-90-px': !isModal }">
+              <canvas class="chart-canvas" chart [chartSettings]="model.chartSettings"></canvas>
+              <h5 class="m-0 p-0 percentage">
+                {{ getTotalVoterPercentage() }}%
+              </h5>
             </div>
-            <ng-container *ngIf="!model.isShowVotedUsersAvatar">
-              <div class="questions-item-voters d-flex align-items-center gap-5">
-                <div class="questions-item-voters-badge-count d-flex justify-content-center align-items-center">{{ getQuestionTotalVotes(question) }}</div>
-                <div class="questions-item-voters-badge-text">{{ 'Total submissions' | localize }}</div>
-              </div>
-            </ng-container>
-            <ng-container *ngIf="model.isShowVotedUsersAvatar">
-              <div class="questions-item-voters d-flex align-items-center gap-5">
-                <div class="questions-item-voters-badge-avatars d-flex align-items-center">
-                  <div class="avatar-group hide-empty">
-                    <div *ngFor="let voterUser of getVoterUsers(question)" class="avatar avatar-xs">
-                      <img *ngIf="voterUser.profilePictureDocument && voterUser.profilePictureDocument.id else
-                      noProfilePictureTemplate" [src]="getProfilePictureUrl(voterUser.profilePictureDocument)" alt="..."
-                        class="avatar-img rounded-circle">
-                      <ng-template #noProfilePictureTemplate>
-                        <span class="avatar-title rounded-circle" [tooltip]="voterUser.fullName">
-                          {{ getNameInitials(voterUser) }}
-                        </span>
-                      </ng-template>
+            <div class="poll-doughnut-label">
+              <div class="dot mr-2"></div>
+              <label class="m-0">
+                <small class="text-muted">
+                  {{ 'Participation' | localize }}
+                </small>
+              </label>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <div class="questions slick-scroll">
+        <ng-container *ngIf="model.isHost else votingQuestions">
+          <div *ngFor="let question of poll.eventPollQuestions" class="questions-item card custom-card-border custom-card-shadow">
+            <div class="card-header h-auto border-0 p-0">
+              <div class="card-header-title">{{ question.text }}</div>
+            </div>
+            <div class="card-body p-0">
+              <div *ngFor="let option of question.eventPollQuestionOptions" class="questions-item-option">
+                <div class="questions-item-option-text">{{ option.text }}</div>
+                <div class="questions-item-option-percentage row d-flex justify-content-center align-items-center no-gutters">
+                  <div class="questions-item-option-percentage-chart col h-100 d-flex justify-content-center align-items-center">
+                    <div class="progress progress-sm w-100 mr-3">
+                      <div class="progress-bar" role="progressbar" [style.width]="getOptionPercentage(question, option)"
+                        [attr.aria-valuenow]="85" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                   </div>
-                  <div class="questions-item-voters-badge-count d-flex justify-content-center align-items-center">{{ getQuestionTotalVotes(question) }}</div>
+                  <div class="questions-item-option-percentage-value col-auto h-100 d-flex justify-content-center align-items-center">
+                    <small>{{ getOptionPercentage(question, option) }}</small>
+                  </div>
                 </div>
-                <div class="questions-item-voters-badge-text">{{ 'Total votes' | localize }}</div>
               </div>
-            </ng-container>
-          </div>
-        </div>
-      </ng-container>
-    </div>
-    <div class="actions">
-      <ng-container *ngIf="model.isHost">
-        <ng-container [ngSwitch]="poll.status">
-          <ng-container *ngSwitchCase="EventPollStatus.Queue">
-            <button class="btn btn-block btn-white" (click)="onEditClick()">
-              {{ 'EditPoll' | localize }}
-            </button>
-            <button class="btn btn-block btn-primary" (click)="onLaunchClick()">
-              {{ 'Launch Poll' | localize }}
-            </button>
-          </ng-container>
-          <ng-container *ngSwitchCase="EventPollStatus.Open">
-            <button class="btn btn-block btn-danger" (click)="onCloseClick()">
-              {{ 'ClosePoll' | localize }}
-            </button>
-          </ng-container>
-          <ng-container *ngSwitchCase="EventPollStatus.Closed">
-            <ng-container *ngIf="model.isResultsShared">
-              <button class="btn btn-block btn-label">
-                {{ 'Results shared with attendees' | localize }}
-              </button>
-              <button class="btn btn-block btn-primary" (click)="onDoneClick()">
-                {{ 'Done' | localize }}
-              </button>
-            </ng-container>
-            <ng-container *ngIf="!model.isResultsShared">
-              <button class="btn btn-block btn-white" (click)="onDoneClick()">
-                {{ 'Done' | localize }}
-              </button>
-              <button class="btn btn-block btn-primary" (click)="onShareClick()" [disabled]="model.isResultsShared"
-                [class.results-shared]="model.isResultsShared" [class.text-primary]="model.isResultsShared">
-                {{ (model.isResultsShared ? 'ResultsSharedWithAudience' : 'ShareResultsWithAttendeesNoQM') | localize }}
-              </button>
-            </ng-container>
-          </ng-container>
-        </ng-container>
-      </ng-container>
-      <ng-container *ngIf="!model.isHost">
-        <div class="actions d-flex justify-content-center align-items-center w-100" [ngClass]="{ 'flex-row gap-14 ': isMaximized, 'flex-column gap-12': !isMaximized }">
-          <button class="flex-grow-1 btn btn-white" [class.w-100]="!isMaximized" (click)="onDoneClick()">
-            {{ 'Close' | localize }}
-          </button>
-          <button class="flex-grow-1 btn btn-primary" [class.w-100]="!isMaximized" (click)="onSubmitClick()">
-            {{ 'Submit' | localize }}
-          </button>
-        </div>
-      </ng-container>
-    </div>
-  </ng-container>
-</div>
-
-<ng-template #finishedVoting>
-  <div class="card card-sm finish-voting">
-    <div class="card-body p-5 text-center">
-      <h4 class="text-center mb-0">{{ poll.name }}</h4>
-      <i class="fas fa-check-circle option-icon text-primary my-3"></i>
-      <p class="m-0">
-        {{ 'FinishedVotingMessage' | localize }}
-      </p>
-      <p class="small m-0">
-        {{ 'FinishedVotingSubmessage' | localize }}
-      </p>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #votingQuestions>
-  <div *ngFor="let question of poll.eventPollQuestions" class="questions-item card custom-card-border custom-card-shadow">
-    <div class="card-header h-auto border-0 p-0">
-      <div class="card-header-title">{{ question.text }}</div>
-    </div>
-    <div class="card-body p-0">
-      <div *ngFor="let option of question.eventPollQuestionOptions" class="questions-item-option active d-flex align-items-center cursor-pointer" (click)="onOptionClick(question, option)">
-        <ng-container [ngSwitch]="checkVotedOption(option)">
-          <img *ngSwitchCase="true" class="questions-item-option-icon" src="assets/img/events/poll/option-selected.svg" [alt]="option.text">
-          <img *ngSwitchCase="false" class="questions-item-option-icon" src="assets/img/events/poll/option.svg" [alt]="option.text">
-        </ng-container>
-        <div class="questions-item-option-text flex-grow-1">{{ option.text }}</div>
-      </div>
-      <ng-container *ngIf="model.isShowVotedUsersAvatar">
-        <div class="questions-item-voters active d-flex align-items-center">
-          <div class="questions-item-voters-badge-avatars d-flex align-items-center">
-            <div class="avatar-group hide-empty">
-              <div *ngFor="let voterUser of getVoterUsers(question)" class="avatar avatar-xs">
-                <img *ngIf="voterUser.profilePictureDocument && voterUser.profilePictureDocument.id else
-                noProfilePictureTemplate" [src]="getProfilePictureUrl(voterUser.profilePictureDocument)" alt="..."
-                  class="avatar-img rounded-circle">
-                <ng-template #noProfilePictureTemplate>
-                  <span class="avatar-title rounded-circle" [tooltip]="voterUser.fullName">
-                    {{ getNameInitials(voterUser) }}
-                  </span>
-                </ng-template>
-              </div>
+              <ng-container *ngIf="!model.isShowVotedUsersAvatar">
+                <div class="questions-item-voters d-flex align-items-center gap-5">
+                  <div class="questions-item-voters-badge-count d-flex justify-content-center align-items-center">{{ getQuestionTotalVotes(question) }}</div>
+                  <div class="questions-item-voters-badge-text">{{ 'Total submissions' | localize }}</div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="model.isShowVotedUsersAvatar">
+                <div class="questions-item-voters d-flex align-items-center gap-5">
+                  <div class="questions-item-voters-badge-avatars d-flex align-items-center">
+                    <div class="avatar-group hide-empty">
+                      <div *ngFor="let voterUser of getVoterUsers(question)" class="avatar avatar-xs">
+                        <img *ngIf="voterUser.profilePictureDocument && voterUser.profilePictureDocument.id else
+                        noProfilePictureTemplate" [src]="getProfilePictureUrl(voterUser.profilePictureDocument)" alt="..."
+                          class="avatar-img rounded-circle">
+                        <ng-template #noProfilePictureTemplate>
+                          <span class="avatar-title rounded-circle" [tooltip]="voterUser.fullName">
+                            {{ getNameInitials(voterUser) }}
+                          </span>
+                        </ng-template>
+                      </div>
+                    </div>
+                    <div class="questions-item-voters-badge-count d-flex justify-content-center align-items-center">{{ getQuestionTotalVotes(question) }}</div>
+                  </div>
+                  <div class="questions-item-voters-badge-text">{{ 'Total votes' | localize }}</div>
+                </div>
+              </ng-container>
             </div>
-            <div class="questions-item-voters-badge-count d-flex justify-content-center align-items-center">{{ getQuestionTotalVotes(question) }}</div>
           </div>
-          <div class="questions-item-voters-badge-text">{{ 'Total submissions' | localize }}</div>
-        </div>
-      </ng-container>
-    </div>
+        </ng-container>
+      </div>
+      <div class="actions">
+        <ng-container *ngIf="model.isHost">
+          <ng-container [ngSwitch]="poll.status">
+            <ng-container *ngSwitchCase="EventPollStatus.Queue">
+              <button class="btn btn-block btn-white" (click)="onEditClick()">
+                {{ 'EditPoll' | localize }}
+              </button>
+              <button class="btn btn-block btn-primary" (click)="onLaunchClick()">
+                {{ 'Launch Poll' | localize }}
+              </button>
+            </ng-container>
+            <ng-container *ngSwitchCase="EventPollStatus.Open">
+              <button class="btn btn-block btn-danger" (click)="onCloseClick()">
+                {{ 'ClosePoll' | localize }}
+              </button>
+            </ng-container>
+            <ng-container *ngSwitchCase="EventPollStatus.Closed">
+              <ng-container *ngIf="model.isResultsShared">
+                <button class="btn btn-block btn-label">
+                  {{ 'Results shared with attendees' | localize }}
+                </button>
+                <button class="btn btn-block btn-primary" (click)="onDoneClick()">
+                  {{ 'Done' | localize }}
+                </button>
+              </ng-container>
+              <ng-container *ngIf="!model.isResultsShared">
+                <button class="btn btn-block btn-white" (click)="onDoneClick()">
+                  {{ 'Done' | localize }}
+                </button>
+                <button class="btn btn-block btn-primary" (click)="onShareClick()" [disabled]="model.isResultsShared"
+                  [class.results-shared]="model.isResultsShared" [class.text-primary]="model.isResultsShared">
+                  {{ (model.isResultsShared ? 'ResultsSharedWithAudience' : 'ShareResultsWithAttendeesNoQM') | localize }}
+                </button>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="!model.isHost">
+          <div class="actions d-flex justify-content-center align-items-center w-100" [ngClass]="{ 'flex-row gap-14 ': isMaximized, 'flex-column gap-12': !isMaximized }">
+            <button class="flex-grow-1 btn btn-white" [class.w-100]="!isMaximized" (click)="onDoneClick()">
+              {{ 'Close' | localize }}
+            </button>
+            <button class="flex-grow-1 btn btn-primary" [class.w-100]="!isMaximized" (click)="onSubmitClick()">
+              {{ 'Submit' | localize }}
+            </button>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
   </div>
-</ng-template>
+
+  <ng-template #finishedVoting>
+    <div class="finish-voting-content d-flex flex-column justify-content-center align-items-center w-100">
+      <div class="d-flex justify-content-center align-items-center gap-10" [style.marginBottom.px]="30">
+        <img class="finish-voting-content-icon" src="assets/img/events/poll/option-selected.svg">
+        <div class="finish-voting-content-title">{{ 'Voting successful' | localize }}</div>
+      </div>
+      <div class="finish-voting-content-subtitle text-center" [style.marginBottom.px]="40">{{ 'FinishedVotingMessage' | localize }} {{ 'FinishedVotingSubmessage' | localize }}</div>
+      <button class="finish-voting-content-done btn btn-block btn-primary" [class.w-100]="!isMaximized" (click)="onDoneClick()">
+        {{ 'Done' | localize }}
+      </button>
+    </div>
+  </ng-template>
+
+  <ng-template #votingQuestions>
+    <div *ngFor="let question of poll.eventPollQuestions" class="questions-item card custom-card-border custom-card-shadow">
+      <div class="card-header h-auto border-0 p-0">
+        <div class="card-header-title">{{ question.text }}</div>
+      </div>
+      <div class="card-body p-0">
+        <div *ngFor="let option of question.eventPollQuestionOptions" class="questions-item-option active d-flex align-items-center cursor-pointer" (click)="onOptionClick(question, option)">
+          <ng-container [ngSwitch]="checkVotedOption(option)">
+            <img *ngSwitchCase="true" class="questions-item-option-icon" src="assets/img/events/poll/option-selected.svg" [alt]="option.text">
+            <img *ngSwitchCase="false" class="questions-item-option-icon" src="assets/img/events/poll/option.svg" [alt]="option.text">
+          </ng-container>
+          <div class="questions-item-option-text flex-grow-1">{{ option.text }}</div>
+        </div>
+        <ng-container *ngIf="model.isShowVotedUsersAvatar">
+          <div class="questions-item-voters active d-flex align-items-center">
+            <div class="questions-item-voters-badge-avatars d-flex align-items-center">
+              <div class="avatar-group hide-empty">
+                <div *ngFor="let voterUser of getVoterUsers(question)" class="avatar avatar-xs">
+                  <img *ngIf="voterUser.profilePictureDocument && voterUser.profilePictureDocument.id else
+                  noProfilePictureTemplate" [src]="getProfilePictureUrl(voterUser.profilePictureDocument)" alt="..."
+                    class="avatar-img rounded-circle">
+                  <ng-template #noProfilePictureTemplate>
+                    <span class="avatar-title rounded-circle" [tooltip]="voterUser.fullName">
+                      {{ getNameInitials(voterUser) }}
+                    </span>
+                  </ng-template>
+                </div>
+              </div>
+              <div class="questions-item-voters-badge-count d-flex justify-content-center align-items-center">{{ getQuestionTotalVotes(question) }}</div>
+            </div>
+            <div class="questions-item-voters-badge-text">{{ 'Total submissions' | localize }}</div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </ng-template>
+
+</div>

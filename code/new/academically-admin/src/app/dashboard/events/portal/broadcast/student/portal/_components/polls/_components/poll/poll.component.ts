@@ -100,7 +100,7 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
     this.model.pollQuestions = this.poll?.eventPollQuestions ?? [];
     this.model.pollAnswers = this.model?.answersMap?.get(this.appSession.userId) ?? [];
     this.model.pollSubmittedAnswers = this.model?.pollAnswers?.filter(x => !!x.submittedTime) ?? [];
-    this.model.hasFinishedVoting = this.model?.pollQuestions?.every(q => q.hasBeenAnswered) ?? false;
+    this.model.hasFinishedVoting = (this.model?.isHost === false && this.model?.pollQuestions?.every(q => q.hasBeenAnswered)) ?? false;
   }
 
   private getAnswersMap(): Map<number, EventPollAnswerDto[]> {
@@ -217,7 +217,8 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
   }
 
   onDoneClick(): void {
-    this._modalService._hideModal();
+    this._portalPollService.pollSelectedMaximized = false;
+    setTimeout(() => this._portalPollService.pollSelected = undefined, 500);
   }
 
   onShareClick(): void {

@@ -260,7 +260,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     if (this.selectedPoll) {
       if (isMaximized) {
         const modalSettings = this.defaultModalSettings as ModalOptions<PollComponent>;
-        modalSettings.class = 'modal-lg modal-dialog-centered w-580-px h-908-px';
+        modalSettings.class = 'modal-w-auto modal-dialog-centered';
         modalSettings.initialState = {
           poll: EventPollDto.fromJS({ ...this.selectedPoll}),
           showBackButton: false,
