@@ -23,6 +23,7 @@ namespace Academically.Domain.Entities
         public User CreatorUser { get; set; }
 
         public virtual ICollection<EventPollQuestionOption> EventPollQuestionOptions { get; set; }
+        public virtual ICollection<EventPollAnswer> EventPollAnswers { get; set; }
 
         public EventPollQuestion()
 		{

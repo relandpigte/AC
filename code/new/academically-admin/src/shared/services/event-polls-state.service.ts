@@ -9,7 +9,9 @@ export enum pollsType {
     all = 'all',
     queued = 'queued',
     opened = 'opened',
-    closed = 'closed'
+    closed = 'closed',
+    todo = 'todo',
+    results = 'results'
 }
 
 export class EventPollsStateService extends StateServiceBase {
@@ -27,6 +29,8 @@ export class EventPollsStateService extends StateServiceBase {
         [pollsType.queued]: 'getAllUnpaged',
         [pollsType.opened]: 'getAllUnpaged',
         [pollsType.closed]: 'getAllUnpaged',
+        [pollsType.todo]: 'getAllUnpagedForStudents',
+        [pollsType.results]: 'getAllUnpagedForStudents',
     };
 
     getAllPolls = () => Array.from(this.polls.values());
@@ -84,7 +88,9 @@ export class EventPollsStateService extends StateServiceBase {
         if (!poll) return false;
         return (this.type === pollsType.queued ? poll.status === EventPollStatus.Queue : true) &&
             (this.type === pollsType.opened ? poll.status === EventPollStatus.Open : true) &&
-            (this.type === pollsType.closed ? poll.status === EventPollStatus.Closed : true);
+            (this.type === pollsType.closed ? poll.status === EventPollStatus.Closed : true) &&
+            (this.type === pollsType.todo ? poll.status === EventPollStatus.Open && poll.eventPollQuestions?.some(q => !q.hasBeenAnswered) : true) &&
+            (this.type === pollsType.results ? poll.status !== EventPollStatus.Queue && poll.eventPollQuestions?.every(q => q.hasBeenAnswered) : true);
     };
 
     handleUpsertPolls = async (poll: EventPollDto) => {

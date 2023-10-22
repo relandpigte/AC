@@ -10,9 +10,12 @@ namespace Academically.Services.EventPolls
 	public interface IEventPollsAppService : IAsyncCrudAppService<EventPollDto, Guid, PagedEventPollResultRequestDto, CreateEventPollDto>
 	{
 		Task<IEnumerable<EventPollDto>> GetAllUnpagedAsync(Guid eventId, EventPollStatus? status);
-        Task<EventPollDto> LaunchPoll(Guid Id);
-        Task<EventPollDto> ClosePoll(Guid Id);
-        Task<EventPollDto> SharePoll(Guid Id);
+		Task<IEnumerable<EventPollDto>> GetAllUnpagedForStudentsAsync(Guid eventId, EventPollStudentStatus? status);
+        Task<EventPollDto> LaunchPoll(Guid id);
+        Task<EventPollDto> ClosePoll(Guid id);
+        Task<EventPollDto> SharePoll(Guid id);
+        Task<EventPollDto> UpsertPollAnswer(UpsertEventPollAnswerDto input);
+        Task<EventPollDto> SubmitPollAnswers(Guid id, Guid eventPollId);
     }
 }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, Injector, Input, ChangeDetectorRef } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { EventPollDto, EventPollsServiceProxy, EventPollQuestionAnswerDto, EventPollStatus, EventDto } from '@shared/service-proxies/service-proxies';
+import { EventPollDto, EventPollsServiceProxy, EventPollStatus, EventPollStudentStatus } from '@shared/service-proxies/service-proxies';
 import { PortalPollService } from '../../_services/portal-poll.service';
 import { ModalOptions, BsModalService } from 'ngx-bootstrap/modal';
 import { CreateEditPollComponent } from '@app/dashboard/events/details/broadcast/single/resources/_components/create-edit-poll/create-edit-poll.component';
@@ -61,14 +61,14 @@ export class PollsOpenComponent extends AppComponentBase implements OnInit {
   private async initPollsAppStates() {
     const appStateConfig: AppStateConfig = {
       [this.pollsStateId]: {
-        load: [this.referenceId, EventPollStatus.Open],
+        load: [this.referenceId, this.isHost ? EventPollStatus.Open : EventPollStudentStatus.Todo],
         update: { referenceId: this.referenceId }
       }
     };
     const appStateServices: AppStateServices = {
       [this.pollsStateId]: {
         type: EventPollsStateService,
-        args: [pollsType.opened, this.appSession, this._hubService, this._eventPollsService]
+        args: [this.isHost ? pollsType.opened : pollsType.todo, this.appSession, this._hubService, this._eventPollsService]
       }
     };
     await this.pubSubService.start(this, appStateConfig, appStateServices);

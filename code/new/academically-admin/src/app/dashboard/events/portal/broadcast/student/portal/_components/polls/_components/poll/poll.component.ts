@@ -2,11 +2,35 @@ import { Component, Injector, Input, OnChanges, OnInit, SimpleChanges } from '@a
 import { CreateEditPollComponent } from '@app/dashboard/events/details/broadcast/single/resources/_components/create-edit-poll/create-edit-poll.component';
 import { PortalService } from '@app/dashboard/events/portal/broadcast/student/portal/_services/portal.service';
 import { AppComponentBase, SignalData } from '@shared/app-component-base';
-import { EventPollDto, EventPollQuestionAnswerDto, EventPollQuestionDto, EventPollQuestionOptionDto, EventPollStatus, EventPollsServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
+import { Utils } from '@shared/helpers/utils';
+import { EventPollAnswerDto, EventPollDto, EventPollQuestionDto, EventPollQuestionOptionDto, EventPollQuestionType, EventPollStatus, EventPollsServiceProxy, UpsertEventPollAnswerDto, UserDto } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
-import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { PortalPollService } from '../../_services/portal-poll.service';
 import { PollSignalAction, PollTab } from '../../polls.component';
+
+export interface PollViewModel {
+  answersMap?: Map<number, EventPollAnswerDto[]>;
+  chartSettings?: any;
+  voterUserIds?: number[];
+  numberOfExpectedVoters?: number;
+  isHost?: boolean;
+  isResultsShared?: boolean;
+  isShowVoterPercentage?: boolean;
+  isShowVotedUsersAvatar?: boolean;
+  hasFinishedVoting?: boolean;
+  pollQuestions?: EventPollQuestionDto[];
+  pollAnswers?: EventPollAnswerDto[];
+  pollSubmittedAnswers?: EventPollAnswerDto[];
+}
+
+export interface PollInitOptions {
+  chartOptions?: PollChartOptions
+}
+
+export interface PollChartOptions {
+  disableAnimation?: boolean;
+}
 
 @Component({
   selector: 'app-poll',
@@ -22,11 +46,9 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
   isMaximized = false;
 
   EventPollStatus = EventPollStatus;
+  EventPollQuestionType = EventPollQuestionType;
 
-  answers: EventPollQuestionAnswerDto[] = [];
-  voterUserIds: number[] = [];
-  chartSettings: any = {};
-  totalVoterPercentage = 0;
+  model: PollViewModel = {};
 
   constructor(
     injector: Injector,
@@ -38,7 +60,7 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
     super(injector);
 
     this.pipeDestroy(this._portalService.attendees$, attendees => {
-      if (attendees) this.voterUserIds = attendees.map(e => e.user.id);
+      if (attendees) this.model.voterUserIds = attendees.map(e => e.user.id);
     });
 
     this.pipeDestroy(this._portalService.hub$, hub => {
@@ -48,14 +70,12 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
       }
     });
 
-    this.pipeDestroy(this._portalPollService.pollSelected$, poll => this.poll = poll);
+    this.pipeDestroy(this._portalPollService.pollSelected$, poll => {
+      this.poll = poll;
+      if (poll) this.init({ chartOptions: { disableAnimation: true }});
+    });
     this.pipeDestroy(this._portalPollService.pollSelectedMaximized$, maximized => this.isMaximized = maximized);
   }
-
-  get numberOfExpectedVoters(): number { return this.voterUserIds.length; }
-  get isShowVoterPercentage(): boolean { return this.poll.status !== EventPollStatus.Queue; }
-  get isHost(): boolean { return this.poll?.creatorUserId === this.appSession.userId; }
-  get isResultsShared(): boolean { return !!this.poll?.sharedTime; }
 
   ngOnInit(): void {
     if (this.poll) {
@@ -69,13 +89,57 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
     }
   }
 
-  private init(): void {
-    const votedUserIds: number[] = _.flatMap(this.poll.eventPollQuestions, q => q.eventPollAnswers).filter(x => x).map(a => a.creatorUser.id);
-    const totalVoterPercentage = this.numberOfExpectedVoters > 0 ? Math.round((votedUserIds.length / this.numberOfExpectedVoters) * 100) : 0;
-    if (this.totalVoterPercentage === 0 || this.totalVoterPercentage !== totalVoterPercentage) {
-      this.totalVoterPercentage = totalVoterPercentage;
-      setTimeout(() => this.setChartSettings());
+  private init(options?: PollInitOptions): void {
+    this.model.answersMap = this.getAnswersMap();
+    this.model.chartSettings = this.getChartSettings(options?.chartOptions);
+    this.model.numberOfExpectedVoters = this.model?.voterUserIds?.length ?? 0;
+    this.model.isHost = this.poll?.creatorUserId === this.appSession.userId ?? false;
+    this.model.isResultsShared = !!this.poll?.sharedTime;
+    this.model.isShowVoterPercentage = this.poll?.status !== EventPollStatus.Queue ?? false;
+    this.model.isShowVotedUsersAvatar = ((!this.model?.isHost && this.poll.status === EventPollStatus.Open) || (this.model?.isHost && this.poll.status !== EventPollStatus.Queue)) ?? false;
+    this.model.pollQuestions = this.poll?.eventPollQuestions ?? [];
+    this.model.pollAnswers = this.model?.answersMap?.get(this.appSession.userId) ?? [];
+    this.model.pollSubmittedAnswers = this.model?.pollAnswers?.filter(x => !!x.submittedTime) ?? [];
+    this.model.hasFinishedVoting = this.model?.pollQuestions?.every(q => q.hasBeenAnswered) ?? false;
+  }
+
+  private getAnswersMap(): Map<number, EventPollAnswerDto[]> {
+    return _.flatMap(this.poll.eventPollQuestions, q => q.eventPollAnswers).filter(x => x).reduce(
+      (map, curr) => map.set(curr.creatorUserId, [ ...(map.get(curr.creatorUserId) ?? []), curr ]),
+      new Map<number, EventPollAnswerDto[]>()
+    );
+  }
+
+  private getChartSettings(options?: PollChartOptions) {
+    let chartSettings: any = {
+      type: 'doughnut',
+      options: {
+        aspectRatio: 1,
+        cutoutPercentage: this.isModal ? 80 : 70,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              afterLabel: function () {
+                return '%';
+              },
+            },
+          },
+        },
+      },
+      data: {
+        labels: ['Voted', 'NotVoted'],
+        datasets: [{
+          data: [this.getTotalVoterPercentage(), 100 - this.getTotalVoterPercentage()],
+          backgroundColor: ['#2C7BE5', '#D2DCEA']
+        }],
+      }
+    };
+
+    if (options?.disableAnimation) {
+      chartSettings.options = { ...chartSettings.options, animation: { duration: 0 }};
     }
+
+    return chartSettings;
   }
 
   private handleHubEvent(): void {
@@ -96,7 +160,7 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
   getOptionPercentage(question: EventPollQuestionDto, option: EventPollQuestionOptionDto): string {
     const totalVotes = this.getQuestionTotalVotes(question);
     if (totalVotes > 0) {
-      const totalOptionVotes = question.eventPollAnswers.filter(e => e.eventPollQuestionOptionIds.includes(option.id)).length;
+      const totalOptionVotes = question.eventPollAnswers.filter(a => a.eventPollQuestionOptionId === option.id && !!a.submittedTime).length;
       const optionVotePercentage = Math.round((totalOptionVotes / totalVotes) * 100);
       return `${optionVotePercentage}%`;
     }
@@ -104,47 +168,23 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
   }
 
   getTotalVoterPercentage(): number {
-    const votedUserIds: number[] = _.flatMap(this.poll.eventPollQuestions, q => q.eventPollAnswers).filter(x => x).map(a => a.creatorUser.id);
-    return this.numberOfExpectedVoters > 0 ? Math.round((votedUserIds.length / this.numberOfExpectedVoters) * 100) : 0;
+    const votedUserIds: number[] = _.uniq(_.flatMap(this.poll.eventPollQuestions, q => q.eventPollAnswers).filter(x => x && !!x.submittedTime).map(a => a.creatorUserId));
+    return this.model.numberOfExpectedVoters > 0 ? Math.round((votedUserIds.length / this.model.numberOfExpectedVoters) * 100) : 0;
   }
 
   getQuestionTotalVotes(question: EventPollQuestionDto): number {
-    return _.sumBy(question.eventPollAnswers, a => a.eventPollQuestionOptionIds.length);
+    return question?.eventPollAnswers?.filter(x => x && !!x.submittedTime)?.length ?? 0;
   }
 
   getVoterUsers(question: EventPollQuestionDto): UserDto[] {
-    return _.uniq(question.eventPollAnswers?.filter(x => x).map(a => a.creatorUser) ?? []);
+    return _.uniq(question.eventPollAnswers?.filter(x => x && !!x.submittedTime).map(a => a.creatorUser) ?? []);
   }
 
-  private setChartSettings(): void {
-    this.chartSettings = {
-      type: 'doughnut',
-      options: {
-        aspectRatio: 1,
-        cutoutPercentage: this.isModal ? 80 : 70,
-        plugins: {
-          tooltip: {
-            callbacks: {
-              afterLabel: function () {
-                return '%';
-              },
-            },
-          },
-        },
-      },
-      data: {
-        labels: ['Voted', 'NotVoted'],
-        datasets: [{
-          data: [this.totalVoterPercentage, 100 - this.totalVoterPercentage],
-          backgroundColor: ['#2C7BE5', '#D2DCEA']
-        }],
-      }
-    };
-  }
+
 
   onVoteSubmittedEvent(data: any): void {
-    const answer = new EventPollQuestionAnswerDto();
-    answer.init(data as EventPollQuestionAnswerDto);
+    const answer = new EventPollAnswerDto();
+    answer.init(data as EventPollAnswerDto);
     const question = this.poll.eventPollQuestions.find(e => e.id === answer.eventPollQuestionId);
     if (!question.eventPollAnswers) {
       question.eventPollAnswers = [];
@@ -182,11 +222,15 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
 
   onShareClick(): void {
     // this.isResultsShared = true;
-    this.sendSignal(this.voterUserIds, new SignalData(PollSignalAction.SharePoll, this.poll));
+    this.sendSignal(this.model.voterUserIds, new SignalData(PollSignalAction.SharePoll, this.poll));
   }
 
   onCloseClick(): void {
     this.pipeDestroy(this._eventPollsService.closePoll(this.poll.id), _ => {});
+  }
+
+  onSubmitClick(): void {
+    this.pipeDestroy(this._eventPollsService.submitPollAnswers(this.poll.eventId, this.poll.id), _ => {});
   }
 
   onToggleViewClick(): void {
@@ -197,5 +241,18 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
     this._portalPollService.pollSelectedMaximized = this.isMaximized;
   }
 
+  checkVotedOption(option: EventPollQuestionOptionDto): boolean {
+    const answers = this.model.answersMap.get(this.appSession.userId);
+    return !!answers?.find(a => a.eventPollQuestionOptionId === option.id);
+  }
 
+  onOptionClick(question: EventPollQuestionDto, option: EventPollQuestionOptionDto): void {
+    this.pipeDestroy(this._eventPollsService.upsertPollAnswer(UpsertEventPollAnswerDto.fromJS({
+      referenceId: this.poll.eventId,
+      eventPollId: this.poll.id,
+      eventPollQuestionId: question.id,
+      eventPollQuestionOptionId: option.id,
+      creatorUserId: this.appSession.userId
+    })), _ => {});
+  }
 }

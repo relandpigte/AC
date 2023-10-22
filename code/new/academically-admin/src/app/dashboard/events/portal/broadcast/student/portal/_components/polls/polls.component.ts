@@ -86,7 +86,7 @@ export class PollsComponent extends AppComponentBase implements OnInit {
     await this.pubSubService.start(this, appStateConfig, appStateServices);
     this.eventPollsStateService = this.pubSubService.getStateService<EventPollsStateService>(this.pollsStateId);
     this.eventPollsStateService.polls$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
-      if (this.selectedPoll.id === event?.data?.id) {
+      if (this.selectedPoll?.id === event?.data?.id) {
         this._portalPollService.pollSelected = event.data;
       }
     });

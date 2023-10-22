@@ -26,7 +26,6 @@ import * as rtc from 'rtc-lib';
 import { PollSignalAction } from './_components/polls/polls.component';
 import { PortalPollService } from './_components/polls/_services/portal-poll.service';
 import { BsModalService, ModalOptions, BsModalRef } from 'ngx-bootstrap/modal';
-import { AttendeeOpenDialogComponent } from './_components/polls/_components/attendee-open-dialog/attendee-open-dialog.component';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { ServiceOffersStateService, offersType } from '@shared/services/service-offers-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
@@ -237,6 +236,9 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     await this.pubSubService.start(this, appStateConfig, appStateServices);
     this.pollsStateService = this.pubSubService.getStateService<EventPollsStateService>(this.pollsStateId);
     this.pollsStateService.polls$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
+      if (this.selectedPoll?.id === event?.data?.id) {
+        this._portalPollService.pollSelected = event.data;
+      }
       switch (event.type) {
         case 'launched':
           this._portalPollService.pollSelected = event.data;
@@ -441,9 +443,6 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
       let modal: BsModalRef;
       const signalData = new SignalData();
       Object.assign(signalData, JSON.parse(sSignalData));
-      console.log('handling receiveSignal');
-      console.log(sSignalData);
-      console.log(signalData);
 
       switch (signalData.action) {
         case SignalAction.StartEvent:
@@ -494,6 +493,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
 
           if (!this.allEventUsers.some(u => u.user.id === lobbyUser.user.id)) {
             this.allEventUsers.push(lobbyUser);
+            this._portalService.attendees = this.allEventUsers.filter(e => e.type !== EventUserType.Host);
           }
 
           if (lobbyUser.user.id !== this.host.user.id) {
@@ -508,13 +508,6 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
       }
 
       switch (signalData.action as number as PollSignalAction) {
-        case PollSignalAction.PollStarted:
-          this._portalPollService.pollSelected = signalData.getDataObject() as EventPollDto;
-          const modalSettings = this.defaultModalSettings as ModalOptions<AttendeeOpenDialogComponent>;
-          modal = this._modalService.show(AttendeeOpenDialogComponent, modalSettings);
-          console.log(modal);
-          break;
-
         case PollSignalAction.SharePoll:
         case PollSignalAction.PollStopped:
         case PollSignalAction.PollClosed:

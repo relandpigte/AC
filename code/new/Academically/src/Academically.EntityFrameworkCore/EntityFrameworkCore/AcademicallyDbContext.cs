@@ -94,6 +94,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<EventPoll> EventPolls { get; set; }
         public virtual DbSet<EventPollQuestion> EventPollQuestions { get; set; }
         public virtual DbSet<EventPollQuestionOption> EventPollQuestionOptions { get; set; }
+        public virtual DbSet<EventPollAnswer> EventPollAnswers { get; set; }
         public virtual DbSet<QuestionReaction> QuestionReactions { get; set; }
         public virtual DbSet<Forum> Forums { get; set; }
         public virtual DbSet<ForumReply> ForumReplies { get; set; }

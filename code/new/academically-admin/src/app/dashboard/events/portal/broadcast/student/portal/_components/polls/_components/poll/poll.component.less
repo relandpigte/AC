@@ -26,7 +26,7 @@
     padding: 70px 30px 20px;
 
     .poll-header {
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       gap: 20px;
 
       &-name {
@@ -139,6 +139,26 @@
       &-option {
         margin-bottom: 15px;
 
+        &.active {
+          .questions-item-option {
+            &-icon {
+              width: 20px;
+              height: 20px;
+              border-radius: 50%;
+              margin-right: 10px;
+            }
+
+            &-text {
+              color: #12263F;
+              font-size: 13px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: normal;
+              letter-spacing: -0.13px;
+            }
+          }
+        }
+
         &-text {
           color: #6E84A3;
           font-size: 13px;
@@ -164,10 +184,43 @@
       }
 
       &-voters {
+        gap: 5px;
+
+        &.active {
+          gap: 10px;
+
+          .questions-item-voters {
+            &-badge {
+              &-text {
+                color: #3B516C;
+                font-size: 13px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+                letter-spacing: -0.13px;
+              }
+            }
+          }
+        }
+
         &-badge {
+          &-avatars {
+            .avatar-group {
+              z-index: 1;
+              margin-right: -6px;
+              .avatar {
+                width: 18px;
+                height: 18px;
+                border: 1px solid white;
+              }
+            }
+          }
+
           &-count {
+            z-index: 2;
             width: 18px;
             height: 18px;
+            border: 1px solid white;
             border-radius: 50%;
             background-color: #95AAC9;
             color: #FFF;
@@ -196,7 +249,7 @@
     display       : flex;
     flex-direction: column;
     background    : #FFFFFF;
-    gap: 5px;
+    gap: 12px;
     width: 100%;
 
     button {
@@ -211,12 +264,24 @@
       font-weight: 400;
       line-height: 0%;
       letter-spacing: -0.15px;
+      margin: 0;
 
       &.results-shared {
         background: none;
         border    : none;
         opacity   : 1;
       }
+    }
+  }
+}
+
+.attendee-open {
+  height: 100%;
+
+  .finish-voting {
+    .option-icon {
+      font-size: 24px;
+      cursor   : pointer;
     }
   }
 }

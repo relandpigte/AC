@@ -52,23 +52,23 @@
         <li class="nav-item">
           <a #openNav href="#" class="nav-link active" id="polls-open-tab" data-toggle="tab" href="#polls-open-container"
             role="tab" aria-controls="polls-open-container" aria-selected="true">
-            {{ 'Open' | localize }}
+            {{ 'To do' | localize }}
           </a>
         </li>
         <li class="nav-item">
           <a #closedNav href="#" class="nav-link" id="polls-closed-tab" data-toggle="tab" href="#polls-closed-container"
             role="tab" aria-controls="polls-closed-container" aria-selected="true">
-            {{ 'Closed' | localize }}
+            {{ 'Results' | localize }}
           </a>
         </li>
       </ul>
       <div class="tab-content">
         <div class="tab-pane fade show active" id="polls-open-container" role="tabpanel"
           aria-labelledby="polls-registants-tab">
-          <app-polls-attendee-open></app-polls-attendee-open>
+          <app-polls-open [referenceId]="referenceId" [isHost]="isHost"></app-polls-open>
         </div>
         <div class="tab-pane fade" id="polls-closed-container" role="tabpanel" aria-labelledby="polls-closed-tab">
-          <app-polls-attendee-closed></app-polls-attendee-closed>
+          <app-polls-closed [referenceId]="referenceId" [isHost]="isHost"></app-polls-closed>
         </div>
       </div>
     </div>

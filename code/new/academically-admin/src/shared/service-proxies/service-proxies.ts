@@ -11267,6 +11267,76 @@ export class EventPollsServiceProxy {
     }
 
     /**
+     * @param eventId (optional) 
+     * @param status (optional) 0 = Todo
+    
+    1 = Results
+     * @return Success
+     */
+    getAllUnpagedForStudents(eventId: string | undefined, status: EventPollStudentStatus | undefined): Observable<EventPollDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/EventPolls/GetAllUnpagedForStudents?";
+        if (eventId === null)
+            throw new Error("The parameter 'eventId' cannot be null.");
+        else if (eventId !== undefined)
+            url_ += "eventId=" + encodeURIComponent("" + eventId) + "&";
+        if (status === null)
+            throw new Error("The parameter 'status' cannot be null.");
+        else if (status !== undefined)
+            url_ += "status=" + encodeURIComponent("" + status) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllUnpagedForStudents(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllUnpagedForStudents(<any>response_);
+                } catch (e) {
+                    return <Observable<EventPollDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventPollDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllUnpagedForStudents(response: HttpResponseBase): Observable<EventPollDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(EventPollDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventPollDto[]>(<any>null);
+    }
+
+    /**
      * @param id (optional) 
      * @return Success
      */
@@ -11275,7 +11345,7 @@ export class EventPollsServiceProxy {
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
         else if (id !== undefined)
-            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -11331,7 +11401,7 @@ export class EventPollsServiceProxy {
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
         else if (id !== undefined)
-            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -11387,7 +11457,7 @@ export class EventPollsServiceProxy {
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
         else if (id !== undefined)
-            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -11413,6 +11483,123 @@ export class EventPollsServiceProxy {
     }
 
     protected processSharePoll(response: HttpResponseBase): Observable<EventPollDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventPollDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventPollDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    upsertPollAnswer(body: UpsertEventPollAnswerDto | undefined): Observable<EventPollDto> {
+        let url_ = this.baseUrl + "/api/services/app/EventPolls/UpsertPollAnswer";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpsertPollAnswer(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpsertPollAnswer(<any>response_);
+                } catch (e) {
+                    return <Observable<EventPollDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventPollDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpsertPollAnswer(response: HttpResponseBase): Observable<EventPollDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventPollDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventPollDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @param eventPollId (optional) 
+     * @return Success
+     */
+    submitPollAnswers(id: string | undefined, eventPollId: string | undefined): Observable<EventPollDto> {
+        let url_ = this.baseUrl + "/api/services/app/EventPolls/SubmitPollAnswers?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        if (eventPollId === null)
+            throw new Error("The parameter 'eventPollId' cannot be null.");
+        else if (eventPollId !== undefined)
+            url_ += "eventPollId=" + encodeURIComponent("" + eventPollId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSubmitPollAnswers(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSubmitPollAnswers(<any>response_);
+                } catch (e) {
+                    return <Observable<EventPollDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventPollDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSubmitPollAnswers(response: HttpResponseBase): Observable<EventPollDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -41596,6 +41783,101 @@ export enum EventOfferServiceTypes {
     Workshop = 6,
 }
 
+export class EventPollAnswerDto implements IEventPollAnswerDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    referenceId: string;
+    eventPollId: string;
+    eventPollQuestionId: string;
+    eventPollQuestionOptionId: string;
+    submittedTime: moment.Moment | undefined;
+    creatorUser: UserDto;
+
+    constructor(data?: IEventPollAnswerDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.lastModificationTime = _data["lastModificationTime"] ? moment(_data["lastModificationTime"].toString()) : <any>undefined;
+            this.lastModifierUserId = _data["lastModifierUserId"];
+            this.isDeleted = _data["isDeleted"];
+            this.deleterUserId = _data["deleterUserId"];
+            this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
+            this.referenceId = _data["referenceId"];
+            this.eventPollId = _data["eventPollId"];
+            this.eventPollQuestionId = _data["eventPollQuestionId"];
+            this.eventPollQuestionOptionId = _data["eventPollQuestionOptionId"];
+            this.submittedTime = _data["submittedTime"] ? moment(_data["submittedTime"].toString()) : <any>undefined;
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): EventPollAnswerDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new EventPollAnswerDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : <any>undefined;
+        data["lastModifierUserId"] = this.lastModifierUserId;
+        data["isDeleted"] = this.isDeleted;
+        data["deleterUserId"] = this.deleterUserId;
+        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
+        data["referenceId"] = this.referenceId;
+        data["eventPollId"] = this.eventPollId;
+        data["eventPollQuestionId"] = this.eventPollQuestionId;
+        data["eventPollQuestionOptionId"] = this.eventPollQuestionOptionId;
+        data["submittedTime"] = this.submittedTime ? this.submittedTime.toISOString() : <any>undefined;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): EventPollAnswerDto {
+        const json = this.toJSON();
+        let result = new EventPollAnswerDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IEventPollAnswerDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    referenceId: string;
+    eventPollId: string;
+    eventPollQuestionId: string;
+    eventPollQuestionOptionId: string;
+    submittedTime: moment.Moment | undefined;
+    creatorUser: UserDto;
+}
+
 export class EventPollDto implements IEventPollDto {
     id: string;
     name: string | undefined;
@@ -41738,65 +42020,6 @@ export interface IEventPollDtoPagedResultDto {
     totalCount: number;
 }
 
-export class EventPollQuestionAnswerDto implements IEventPollQuestionAnswerDto {
-    eventPollQuestionId: string;
-    creatorUser: UserDto;
-    eventPollQuestionOptionIds: string[] | undefined;
-
-    constructor(data?: IEventPollQuestionAnswerDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.eventPollQuestionId = _data["eventPollQuestionId"];
-            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
-            if (Array.isArray(_data["eventPollQuestionOptionIds"])) {
-                this.eventPollQuestionOptionIds = [] as any;
-                for (let item of _data["eventPollQuestionOptionIds"])
-                    this.eventPollQuestionOptionIds.push(item);
-            }
-        }
-    }
-
-    static fromJS(data: any): EventPollQuestionAnswerDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new EventPollQuestionAnswerDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["eventPollQuestionId"] = this.eventPollQuestionId;
-        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
-        if (Array.isArray(this.eventPollQuestionOptionIds)) {
-            data["eventPollQuestionOptionIds"] = [];
-            for (let item of this.eventPollQuestionOptionIds)
-                data["eventPollQuestionOptionIds"].push(item);
-        }
-        return data; 
-    }
-
-    clone(): EventPollQuestionAnswerDto {
-        const json = this.toJSON();
-        let result = new EventPollQuestionAnswerDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IEventPollQuestionAnswerDto {
-    eventPollQuestionId: string;
-    creatorUser: UserDto;
-    eventPollQuestionOptionIds: string[] | undefined;
-}
-
 export class EventPollQuestionDto implements IEventPollQuestionDto {
     id: string;
     text: string | undefined;
@@ -41805,8 +42028,10 @@ export class EventPollQuestionDto implements IEventPollQuestionDto {
     maximumResponse: number | undefined;
     shareResults: boolean;
     eventPollId: string;
+    readonly isAnswersReady: boolean;
+    readonly hasBeenAnswered: boolean;
     eventPollQuestionOptions: EventPollQuestionOptionDto[] | undefined;
-    eventPollAnswers: EventPollQuestionAnswerDto[] | undefined;
+    eventPollAnswers: EventPollAnswerDto[] | undefined;
 
     constructor(data?: IEventPollQuestionDto) {
         if (data) {
@@ -41826,6 +42051,8 @@ export class EventPollQuestionDto implements IEventPollQuestionDto {
             this.maximumResponse = _data["maximumResponse"];
             this.shareResults = _data["shareResults"];
             this.eventPollId = _data["eventPollId"];
+            (<any>this).isAnswersReady = _data["isAnswersReady"];
+            (<any>this).hasBeenAnswered = _data["hasBeenAnswered"];
             if (Array.isArray(_data["eventPollQuestionOptions"])) {
                 this.eventPollQuestionOptions = [] as any;
                 for (let item of _data["eventPollQuestionOptions"])
@@ -41834,7 +42061,7 @@ export class EventPollQuestionDto implements IEventPollQuestionDto {
             if (Array.isArray(_data["eventPollAnswers"])) {
                 this.eventPollAnswers = [] as any;
                 for (let item of _data["eventPollAnswers"])
-                    this.eventPollAnswers.push(EventPollQuestionAnswerDto.fromJS(item));
+                    this.eventPollAnswers.push(EventPollAnswerDto.fromJS(item));
             }
         }
     }
@@ -41855,6 +42082,8 @@ export class EventPollQuestionDto implements IEventPollQuestionDto {
         data["maximumResponse"] = this.maximumResponse;
         data["shareResults"] = this.shareResults;
         data["eventPollId"] = this.eventPollId;
+        data["isAnswersReady"] = this.isAnswersReady;
+        data["hasBeenAnswered"] = this.hasBeenAnswered;
         if (Array.isArray(this.eventPollQuestionOptions)) {
             data["eventPollQuestionOptions"] = [];
             for (let item of this.eventPollQuestionOptions)
@@ -41884,8 +42113,10 @@ export interface IEventPollQuestionDto {
     maximumResponse: number | undefined;
     shareResults: boolean;
     eventPollId: string;
+    isAnswersReady: boolean;
+    hasBeenAnswered: boolean;
     eventPollQuestionOptions: EventPollQuestionOptionDto[] | undefined;
-    eventPollAnswers: EventPollQuestionAnswerDto[] | undefined;
+    eventPollAnswers: EventPollAnswerDto[] | undefined;
 }
 
 export class EventPollQuestionOptionDto implements IEventPollQuestionOptionDto {
@@ -41950,6 +42181,12 @@ export enum EventPollStatus {
     Queue = 0,
     Open = 1,
     Closed = 2,
+}
+
+/** 0 = Todo 1 = Results */
+export enum EventPollStudentStatus {
+    Todo = 0,
+    Results = 1,
 }
 
 export class EventPresenterDto implements IEventPresenterDto {
@@ -54330,6 +54567,65 @@ export interface IUpdateVideoSettingsDto {
     commentModeration: boolean;
     customUrl: string | undefined;
     isVisible: boolean;
+}
+
+export class UpsertEventPollAnswerDto implements IUpsertEventPollAnswerDto {
+    referenceId: string;
+    eventPollId: string;
+    eventPollQuestionId: string;
+    eventPollQuestionOptionId: string;
+    creatorUserId: number;
+
+    constructor(data?: IUpsertEventPollAnswerDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.referenceId = _data["referenceId"];
+            this.eventPollId = _data["eventPollId"];
+            this.eventPollQuestionId = _data["eventPollQuestionId"];
+            this.eventPollQuestionOptionId = _data["eventPollQuestionOptionId"];
+            this.creatorUserId = _data["creatorUserId"];
+        }
+    }
+
+    static fromJS(data: any): UpsertEventPollAnswerDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpsertEventPollAnswerDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["referenceId"] = this.referenceId;
+        data["eventPollId"] = this.eventPollId;
+        data["eventPollQuestionId"] = this.eventPollQuestionId;
+        data["eventPollQuestionOptionId"] = this.eventPollQuestionOptionId;
+        data["creatorUserId"] = this.creatorUserId;
+        return data; 
+    }
+
+    clone(): UpsertEventPollAnswerDto {
+        const json = this.toJSON();
+        let result = new UpsertEventPollAnswerDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpsertEventPollAnswerDto {
+    referenceId: string;
+    eventPollId: string;
+    eventPollQuestionId: string;
+    eventPollQuestionOptionId: string;
+    creatorUserId: number;
 }
 
 export class User implements IUser {

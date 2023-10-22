@@ -1,5 +1,5 @@
 import { Component, OnInit, Injector, Input, ChangeDetectorRef } from '@angular/core';
-import { EventDto, EventPollDto, EventPollStatus, EventPollsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { EventDto, EventPollDto, EventPollStatus, EventPollStudentStatus, EventPollsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/app-component-base';
 import { PortalPollService } from '../../_services/portal-poll.service';
 import * as _ from 'lodash';
@@ -54,14 +54,14 @@ export class PollsClosedComponent extends AppComponentBase implements OnInit {
   private async initPollsAppStates() {
     const appStateConfig: AppStateConfig = {
       [this.pollsStateId]: {
-        load: [this.referenceId, EventPollStatus.Closed],
+        load: [this.referenceId, this.isHost ? EventPollStatus.Closed : EventPollStudentStatus.Results],
         update: { referenceId: this.referenceId }
       }
     };
     const appStateServices: AppStateServices = {
       [this.pollsStateId]: {
         type: EventPollsStateService,
-        args: [pollsType.closed, this.appSession, this._hubService, this._eventPollsService]
+        args: [this.isHost ? pollsType.closed : pollsType.results, this.appSession, this._hubService, this._eventPollsService]
       }
     };
     await this.pubSubService.start(this, appStateConfig, appStateServices);

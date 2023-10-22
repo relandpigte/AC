@@ -67,7 +67,6 @@ namespace Academically.Hubs
         Task NotifyUsersForEventPollLaunched(EventPollDto poll);
         Task NotifyUsersForEventPollClosed(EventPollDto poll);
         Task NotifyUsersForEventPollShared(EventPollDto poll);
-
     }
 
     public class HubManager : IHubManager

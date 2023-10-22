@@ -38,10 +38,7 @@ import { PollsComponent } from './_components/polls/polls.component';
 import { PollsQueueComponent } from './_components/polls/_components/polls-queue/polls-queue.component';
 import { PollsOpenComponent } from './_components/polls/_components/polls-open/polls-open.component';
 import { PollsClosedComponent } from './_components/polls/_components/polls-closed/polls-closed.component';
-import { PollsAttendeeOpenComponent } from './_components/polls/_components/polls-attendee-open/polls-attendee-open.component';
-import { PollsAttendeeClosedComponent } from './_components/polls/_components/polls-attendee-closed/polls-attendee-closed.component';
 import { PollComponent } from './_components/polls/_components/poll/poll.component';
-import { AttendeeOpenDialogComponent } from './_components/polls/_components/attendee-open-dialog/attendee-open-dialog.component';
 import { ChatComponent } from './_components/chat/chat.component';
 import { CommentsComponent } from './_components/comments/comments.component';
 import { LiveQuestionCardComponent } from './_components/questions/components/live-question-card/live-question-card.component';
@@ -80,10 +77,7 @@ import { LiveQuestionCardComponent } from './_components/questions/components/li
     PollsQueueComponent,
     PollsOpenComponent,
     PollsClosedComponent,
-    PollsAttendeeOpenComponent,
-    PollsAttendeeClosedComponent,
     PollComponent,
-    AttendeeOpenDialogComponent,
     ChatComponent,
     CommentsComponent,
     LiveQuestionCardComponent,

@@ -13,11 +13,18 @@
       </div>
     </ng-container>
     <ng-template #noPolls>
-      <div class="no-polls text-center">{{ 'No polls' | localize }} </div>
+      <div class="no-polls text-center">
+        <ng-container *ngIf="isHost">
+          {{ 'No polls' | localize }}
+        </ng-container>
+        <ng-container *ngIf="!isHost">
+          {{ 'No activities' | localize }}
+        </ng-container>
+      </div>
     </ng-template>
   </div>
 
-  <div class="poll-actions">
+  <div *ngIf="isHost" class="poll-actions">
     <button class="btn btn-block btn-primary" (click)="onCreatePollClick()">
       {{ 'New activity' | localize }}
     </button>

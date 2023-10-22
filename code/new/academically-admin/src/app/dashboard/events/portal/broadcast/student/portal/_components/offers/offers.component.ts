@@ -67,7 +67,7 @@ export class OffersComponent extends AppComponentBase implements OnInit {
     await this.pubSubService.start(this, appStateConfig, appStateServices);
     this.offersStateService = this.pubSubService.getStateService<ServiceOffersStateService>(this.offersStateId);
     this.offersStateService.offers$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
-      if (this.selectedOffer.id === event?.data?.id) {
+      if (this.selectedOffer?.id === event?.data?.id) {
         this._serviceOffersService.selectServiceOffer(event.data);
       }
     });
