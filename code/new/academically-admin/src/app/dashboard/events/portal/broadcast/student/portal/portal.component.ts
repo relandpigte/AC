@@ -215,7 +215,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
           this.selectedOffer = event.data;
           break;
         case 'closed':
-          this.selectedOffer = null
+          this.selectedOffer = event.data;
           break;
       }
     });
@@ -230,7 +230,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     const appStateServices: AppStateServices = {
       [this.pollsStateId]: {
         type: EventPollsStateService,
-        args: [pollsType.opened, this.appSession, this._hubService, this._eventPollsService]
+        args: [pollsType.all, this.appSession, this._hubService, this._eventPollsService]
       }
     };
     await this.pubSubService.start(this, appStateConfig, appStateServices);
@@ -245,12 +245,12 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
           this._portalPollService.pollSelectedMaximized = true;
           break;
         case 'closed':
-          this._portalPollService.pollSelected = null;
-          this._portalPollService.pollSelectedMaximized = false;
           break;
         case 'shared':
-          this._portalPollService.pollSelected = event.data;
-          this._portalPollService.pollSelectedMaximized = true;
+          if (!this.isHost) {
+            this._portalPollService.pollSelected = event.data;
+            this._portalPollService.pollSelectedMaximized = true;
+          }
           break;
       }
     });

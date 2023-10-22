@@ -15,6 +15,7 @@ export interface PollViewModel {
   voterUserIds?: number[];
   numberOfExpectedVoters?: number;
   isHost?: boolean;
+  isResultsView?: boolean;
   isResultsShared?: boolean;
   isShowVoterPercentage?: boolean;
   isShowVotedUsersAvatar?: boolean;
@@ -101,6 +102,7 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
     this.model.pollAnswers = this.model?.answersMap?.get(this.appSession.userId) ?? [];
     this.model.pollSubmittedAnswers = this.model?.pollAnswers?.filter(x => !!x.submittedTime) ?? [];
     this.model.hasFinishedVoting = (this.model?.isHost === false && this.model?.pollQuestions?.every(q => q.hasBeenAnswered)) ?? false;
+    this.model.isResultsView = (!this.model?.isHost && (this.poll?.status === EventPollStatus.Closed || this.model?.hasFinishedVoting)) ?? false;
   }
 
   private getAnswersMap(): Map<number, EventPollAnswerDto[]> {
@@ -222,8 +224,7 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
   }
 
   onShareClick(): void {
-    // this.isResultsShared = true;
-    this.sendSignal(this.model.voterUserIds, new SignalData(PollSignalAction.SharePoll, this.poll));
+    this.pipeDestroy(this._eventPollsService.sharePoll(this.poll.id), _ => {});
   }
 
   onCloseClick(): void {

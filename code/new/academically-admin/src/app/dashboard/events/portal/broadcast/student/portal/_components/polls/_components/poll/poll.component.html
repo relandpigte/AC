@@ -1,15 +1,55 @@
-<div class="wrapper d-flex flex-column" [class.is-modal]="isModal" [class.is-results]="model.hasFinishedVoting">
-  <div *ngIf="showBackButton && !model.hasFinishedVoting" class="back d-flex justify-content-start align-items-center border-bottom w-100 h-70-px cursor-pointer" [style.padding.px]="20" (click)="onBackClick()">
-    <img src="assets/img/events/chat/back.svg" alt="Back"> {{ 'Back' | localize }}
+<ng-container *ngIf="model.isResultsView">
+  <div *ngIf="model.hasFinishedVoting" class="wrapper d-flex flex-column is-results type-1" [class.is-modal]="isModal">
+    <div class="poll position-relative">
+      <div *ngIf="showToggleViewButton" class="poll-minimize cursor-pointer" (click)="onToggleViewClick()">
+        <img *ngIf="isMaximized" src="assets/img/events/poll/minimize.svg" alt="Minimize">
+        <img *ngIf="!isMaximized" src="assets/img/events/poll/maximize.svg" alt="Maximize">
+      </div>
+      <div class="finish-voting-content d-flex flex-column justify-content-center align-items-center w-100 h-100">
+        <div class="d-flex justify-content-center align-items-center gap-10" [style.marginBottom.px]="30">
+          <img class="finish-voting-content-icon" src="assets/img/events/poll/option-selected.svg">
+          <div class="finish-voting-content-title">{{ 'Voting successful' | localize }}</div>
+        </div>
+        <div class="finish-voting-content-subtitle text-center flex-grow-1" [style.marginBottom.px]="40">{{ 'Thank you for your participation in the poll. Your answers have been sent to the presenter.' | localize }}</div>
+        <button class="finish-voting-content-done btn btn-block btn-primary" [class.w-100]="!isMaximized" (click)="onDoneClick()">
+          {{ 'Done' | localize }}
+        </button>
+      </div>
+    </div>
   </div>
 
-  <div class="poll position-relative">
-    <div *ngIf="showToggleViewButton" class="poll-minimize cursor-pointer" (click)="onToggleViewClick()">
-      <img *ngIf="isMaximized" src="assets/img/events/poll/minimize.svg" alt="Minimize">
-      <img *ngIf="!isMaximized" src="assets/img/events/poll/maximize.svg" alt="Maximize">
+  <div *ngIf="!model.hasFinishedVoting" class="wrapper d-flex flex-column is-results type-2" [class.is-modal]="isModal">
+    <div class="poll position-relative">
+      <div *ngIf="showToggleViewButton" class="poll-minimize cursor-pointer" (click)="onToggleViewClick()">
+        <img *ngIf="isMaximized" src="assets/img/events/poll/minimize.svg" alt="Minimize">
+        <img *ngIf="!isMaximized" src="assets/img/events/poll/maximize.svg" alt="Maximize">
+      </div>
+      <div class="finish-voting-content d-flex flex-column justify-content-center align-items-center w-100 h-100">
+        <div class="d-flex justify-content-center align-items-center gap-10" [style.marginBottom.px]="30">
+          <img class="finish-voting-content-icon" src="assets/img/events/poll/option-selected.svg">
+          <div class="finish-voting-content-title">{{ 'Voting closed' | localize }}</div>
+        </div>
+        <div class="finish-voting-content-subtitle text-center flex-grow-1" [style.marginBottom.px]="40">{{ 'The host may share the results of this poll later.' | localize }}</div>
+        <button class="finish-voting-content-done btn btn-block btn-primary" [class.w-100]="!isMaximized" (click)="onDoneClick()">
+          {{ 'Done' | localize }}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="!model.isResultsView">
+  <div class="wrapper d-flex flex-column" [class.is-modal]="isModal">
+    <div *ngIf="showBackButton" class="back d-flex justify-content-start align-items-center border-bottom w-100 h-70-px cursor-pointer" [style.padding.px]="20" (click)="onBackClick()">
+      <img src="assets/img/events/chat/back.svg" alt="Back"> {{ 'Back' | localize }}
     </div>
 
-    <ng-container *ngIf="(model.isHost || !model.hasFinishedVoting) else finishedVoting">
+    <div class="poll position-relative">
+      <div *ngIf="showToggleViewButton" class="poll-minimize cursor-pointer" (click)="onToggleViewClick()">
+        <img *ngIf="isMaximized" src="assets/img/events/poll/minimize.svg" alt="Minimize">
+        <img *ngIf="!isMaximized" src="assets/img/events/poll/maximize.svg" alt="Maximize">
+      </div>
+
       <div class="poll-header d-flex flex-column w-100">
         <ng-container *ngIf="!model.isHost || !model.isShowVoterPercentage">
           <div class="poll-header-name">
@@ -107,7 +147,7 @@
             </ng-container>
             <ng-container *ngSwitchCase="EventPollStatus.Closed">
               <ng-container *ngIf="model.isResultsShared">
-                <button class="btn btn-block btn-label">
+                <button class="btn btn-block btn-label" (click)="onShareClick()">
                   {{ 'Results shared with attendees' | localize }}
                 </button>
                 <button class="btn btn-block btn-primary" (click)="onDoneClick()">
@@ -137,57 +177,43 @@
           </div>
         </ng-container>
       </div>
-    </ng-container>
+    </div>
   </div>
+</ng-container>
 
-  <ng-template #finishedVoting>
-    <div class="finish-voting-content d-flex flex-column justify-content-center align-items-center w-100">
-      <div class="d-flex justify-content-center align-items-center gap-10" [style.marginBottom.px]="30">
-        <img class="finish-voting-content-icon" src="assets/img/events/poll/option-selected.svg">
-        <div class="finish-voting-content-title">{{ 'Voting successful' | localize }}</div>
-      </div>
-      <div class="finish-voting-content-subtitle text-center" [style.marginBottom.px]="40">{{ 'FinishedVotingMessage' | localize }} {{ 'FinishedVotingSubmessage' | localize }}</div>
-      <button class="finish-voting-content-done btn btn-block btn-primary" [class.w-100]="!isMaximized" (click)="onDoneClick()">
-        {{ 'Done' | localize }}
-      </button>
+<ng-template #votingQuestions>
+  <div *ngFor="let question of poll.eventPollQuestions" class="questions-item card custom-card-border custom-card-shadow">
+    <div class="card-header h-auto border-0 p-0">
+      <div class="card-header-title">{{ question.text }}</div>
     </div>
-  </ng-template>
-
-  <ng-template #votingQuestions>
-    <div *ngFor="let question of poll.eventPollQuestions" class="questions-item card custom-card-border custom-card-shadow">
-      <div class="card-header h-auto border-0 p-0">
-        <div class="card-header-title">{{ question.text }}</div>
-      </div>
-      <div class="card-body p-0">
-        <div *ngFor="let option of question.eventPollQuestionOptions" class="questions-item-option active d-flex align-items-center cursor-pointer" (click)="onOptionClick(question, option)">
-          <ng-container [ngSwitch]="checkVotedOption(option)">
-            <img *ngSwitchCase="true" class="questions-item-option-icon" src="assets/img/events/poll/option-selected.svg" [alt]="option.text">
-            <img *ngSwitchCase="false" class="questions-item-option-icon" src="assets/img/events/poll/option.svg" [alt]="option.text">
-          </ng-container>
-          <div class="questions-item-option-text flex-grow-1">{{ option.text }}</div>
-        </div>
-        <ng-container *ngIf="model.isShowVotedUsersAvatar">
-          <div class="questions-item-voters active d-flex align-items-center">
-            <div class="questions-item-voters-badge-avatars d-flex align-items-center">
-              <div class="avatar-group hide-empty">
-                <div *ngFor="let voterUser of getVoterUsers(question)" class="avatar avatar-xs">
-                  <img *ngIf="voterUser.profilePictureDocument && voterUser.profilePictureDocument.id else
-                  noProfilePictureTemplate" [src]="getProfilePictureUrl(voterUser.profilePictureDocument)" alt="..."
-                    class="avatar-img rounded-circle">
-                  <ng-template #noProfilePictureTemplate>
-                    <span class="avatar-title rounded-circle" [tooltip]="voterUser.fullName">
-                      {{ getNameInitials(voterUser) }}
-                    </span>
-                  </ng-template>
-                </div>
-              </div>
-              <div class="questions-item-voters-badge-count d-flex justify-content-center align-items-center">{{ getQuestionTotalVotes(question) }}</div>
-            </div>
-            <div class="questions-item-voters-badge-text">{{ 'Total submissions' | localize }}</div>
-          </div>
+    <div class="card-body p-0">
+      <div *ngFor="let option of question.eventPollQuestionOptions" class="questions-item-option active d-flex align-items-center cursor-pointer" (click)="onOptionClick(question, option)">
+        <ng-container [ngSwitch]="checkVotedOption(option)">
+          <img *ngSwitchCase="true" class="questions-item-option-icon" src="assets/img/events/poll/option-selected.svg" [alt]="option.text">
+          <img *ngSwitchCase="false" class="questions-item-option-icon" src="assets/img/events/poll/option.svg" [alt]="option.text">
         </ng-container>
+        <div class="questions-item-option-text flex-grow-1">{{ option.text }}</div>
       </div>
+      <ng-container *ngIf="model.isShowVotedUsersAvatar">
+        <div class="questions-item-voters active d-flex align-items-center">
+          <div class="questions-item-voters-badge-avatars d-flex align-items-center">
+            <div class="avatar-group hide-empty">
+              <div *ngFor="let voterUser of getVoterUsers(question)" class="avatar avatar-xs">
+                <img *ngIf="voterUser.profilePictureDocument && voterUser.profilePictureDocument.id else
+                noProfilePictureTemplate" [src]="getProfilePictureUrl(voterUser.profilePictureDocument)" alt="..."
+                  class="avatar-img rounded-circle">
+                <ng-template #noProfilePictureTemplate>
+                  <span class="avatar-title rounded-circle" [tooltip]="voterUser.fullName">
+                    {{ getNameInitials(voterUser) }}
+                  </span>
+                </ng-template>
+              </div>
+            </div>
+            <div class="questions-item-voters-badge-count d-flex justify-content-center align-items-center">{{ getQuestionTotalVotes(question) }}</div>
+          </div>
+          <div class="questions-item-voters-badge-text">{{ 'Total submissions' | localize }}</div>
+        </div>
+      </ng-container>
     </div>
-  </ng-template>
-
-</div>
+  </div>
+</ng-template>

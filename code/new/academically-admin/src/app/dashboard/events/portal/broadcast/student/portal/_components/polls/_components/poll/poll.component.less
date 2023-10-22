@@ -14,8 +14,15 @@
     height: 908px !important;
 
     &.is-results {
-      width: 568px !important;
-      height: 270px !important;
+      &.type-1 {
+        width: 568px !important;
+        height: 270px !important;
+      }
+
+      &.type-2 {
+        width: 580px !important;
+        height: 253px !important;
+      }
 
       .poll {
         padding: 70px 24px 24px;
@@ -33,6 +40,21 @@
           width: 100%;
           text-align: center;
         }
+      }
+    }
+  }
+
+  &:not(.is-modal).is-results {
+    .poll {
+      &-minimize {
+        position: relative;
+        top: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        align-self: end;
+        margin-bottom: 20px;
       }
     }
   }

@@ -86,7 +86,8 @@ export class EventPollsStateService extends StateServiceBase {
 
     canViewPoll = (poll: EventPollDto): boolean => {
         if (!poll) return false;
-        return (this.type === pollsType.queued ? poll.status === EventPollStatus.Queue : true) &&
+        return (this.type === pollsType.all ? true : true) &&
+            (this.type === pollsType.queued ? poll.status === EventPollStatus.Queue : true) &&
             (this.type === pollsType.opened ? poll.status === EventPollStatus.Open : true) &&
             (this.type === pollsType.closed ? poll.status === EventPollStatus.Closed : true) &&
             (this.type === pollsType.todo ? poll.status === EventPollStatus.Open && poll.eventPollQuestions?.some(q => !q.hasBeenAnswered) : true) &&
