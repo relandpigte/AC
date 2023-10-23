@@ -112,4 +112,8 @@ export class PollsClosedComponent extends AppComponentBase implements OnInit {
   private getAllPolls(): void {
     this.pipeDestroy(this._eventPollsService.getAllUnpaged(this.referenceId, EventPollStatus.Closed), polls => this.polls = polls);
   }
+
+  isPollMissed(poll: EventPollDto): boolean {
+    return (poll?.eventPollQuestions?.some(q => (q.eventPollAnswers?.filter(a => a.creatorUserId === this.appSession.userId && !!a.submittedTime) ?? []).length === 0)) ?? false;
+  }
 }

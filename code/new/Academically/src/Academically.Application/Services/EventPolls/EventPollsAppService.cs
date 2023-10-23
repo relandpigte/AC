@@ -120,17 +120,21 @@ namespace Academically.Services.EventPolls
 
             if (status.HasValue)
             {
-                if (status.Value == EventPollStudentStatus.Results) polls = polls.Where(e => e.SharedTime != null && e.EventPollQuestions.All(q => q.HasBeenAnswered)).ToList();
+                if (status.Value == EventPollStudentStatus.Results) polls = polls.Where(e => e.SharedTime != null && (e.Status == EventPollStatus.Closed || e.EventPollQuestions.All(q => q.HasBeenAnswered))).ToList();
                 else polls = polls.Where(e => e.Status == EventPollStatus.Open && e.EventPollQuestions.Any(q => !q.HasBeenAnswered)).ToList();
-            }
 
-            foreach (var poll in polls)
-            {
-                foreach (var question in poll.EventPollQuestions)
+                if (status.Value == EventPollStudentStatus.Todo)
                 {
-                    question.EventPollAnswers = question.EventPollAnswers.Where(a => a.CreatorUserId == this.AbpSession.UserId).ToList();
+                    foreach (var poll in polls)
+                    {
+                        foreach (var question in poll.EventPollQuestions)
+                        {
+                            question.EventPollAnswers = question.EventPollAnswers.Where(a => a.CreatorUserId == this.AbpSession.UserId).ToList();
+                        }
+                    }
                 }
             }
+            
             return polls;
         }
 

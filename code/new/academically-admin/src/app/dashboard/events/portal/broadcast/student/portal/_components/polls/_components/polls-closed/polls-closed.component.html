@@ -7,6 +7,7 @@
             <h5 class="poll-name line-clamp-2">{{ poll.name }}</h5>
             <p class="poll-info m-0">
               {{ 'Poll' | localize }} · {{ poll.eventPollQuestions.length }} questions
+              <span *ngIf="isPollMissed(poll)" class="missed"> · {{ 'Missed' | localize }}</span>
             </p>
           </div>
         </div>

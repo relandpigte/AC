@@ -20,6 +20,7 @@ export interface PollViewModel {
   isShowVoterPercentage?: boolean;
   isShowVotedUsersAvatar?: boolean;
   hasFinishedVoting?: boolean;
+  hasMissedVoting?: boolean;
   pollQuestions?: EventPollQuestionDto[];
   pollAnswers?: EventPollAnswerDto[];
   pollSubmittedAnswers?: EventPollAnswerDto[];
@@ -103,6 +104,7 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
     this.model.pollSubmittedAnswers = this.model?.pollAnswers?.filter(x => !!x.submittedTime) ?? [];
     this.model.hasFinishedVoting = (this.model?.isHost === false && this.model?.pollQuestions?.every(q => q.hasBeenAnswered)) ?? false;
     this.model.isResultsView = (!this.model?.isHost && (this.poll?.status === EventPollStatus.Closed || this.model?.hasFinishedVoting)) ?? false;
+    this.model.hasMissedVoting = this.model?.pollSubmittedAnswers?.length === 0 ?? false;
   }
 
   private getAnswersMap(): Map<number, EventPollAnswerDto[]> {
