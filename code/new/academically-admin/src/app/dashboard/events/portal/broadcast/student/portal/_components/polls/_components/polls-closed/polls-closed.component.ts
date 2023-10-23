@@ -114,6 +114,7 @@ export class PollsClosedComponent extends AppComponentBase implements OnInit {
   }
 
   isPollMissed(poll: EventPollDto): boolean {
+    if (this.isHost) return false;
     return (poll?.eventPollQuestions?.some(q => (q.eventPollAnswers?.filter(a => a.creatorUserId === this.appSession.userId && !!a.submittedTime) ?? []).length === 0)) ?? false;
   }
 }

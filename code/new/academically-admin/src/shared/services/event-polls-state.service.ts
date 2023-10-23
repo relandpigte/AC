@@ -91,7 +91,7 @@ export class EventPollsStateService extends StateServiceBase {
             (this.type === pollsType.opened ? poll.status === EventPollStatus.Open : true) &&
             (this.type === pollsType.closed ? poll.status === EventPollStatus.Closed : true) &&
             (this.type === pollsType.todo ? poll.status === EventPollStatus.Open && poll.eventPollQuestions?.some(q => !q.hasBeenAnswered) : true) &&
-            (this.type === pollsType.results ? poll.status !== EventPollStatus.Queue && poll.eventPollQuestions?.every(q => q.hasBeenAnswered) : true);
+            (this.type === pollsType.results ? poll.status !== EventPollStatus.Queue && poll.eventPollQuestions?.every(q => q.hasBeenAnswered) && !!poll.sharedTime : true);
     };
 
     handleUpsertPolls = async (poll: EventPollDto) => {

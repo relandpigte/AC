@@ -236,22 +236,6 @@
         <div class="poll-header-name doughnut text-center">
           {{ poll.name }}
         </div>
-        <div class="poll-doughnut-container">
-          <div class="poll-doughnut-canvas-container" [ngClass]="{ 'w-160-px h-160-px': isModal, 'w-90-px h-90-px': !isModal }">
-            <canvas class="chart-canvas" chart [chartSettings]="model.chartSettings"></canvas>
-            <h5 class="m-0 p-0 percentage">
-              {{ getTotalVoterPercentage() }}%
-            </h5>
-          </div>
-          <div class="poll-doughnut-label">
-            <div class="dot mr-2"></div>
-            <label class="m-0">
-              <small class="text-muted">
-                {{ 'Participation' | localize }}
-              </small>
-            </label>
-          </div>
-        </div>
       </div>
 
       <div *ngIf="model.hasMissedVoting" class="missed card custom-card-border custom-card-shadow d-flex flex-column justify-content-center align-items-start gap-5 hide-empty">

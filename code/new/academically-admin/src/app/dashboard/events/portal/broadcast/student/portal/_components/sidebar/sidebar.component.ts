@@ -38,7 +38,7 @@ export class SidebarComponent extends AppComponentBase implements OnInit, OnChan
     this.menuItems.push(new MenuItem('Chat', 'chat'));
     this.menuItems.push(new MenuItem('Comments', 'comments'));
     this.menuItems.push(new MenuItem('Questions', 'help'));
-    this.menuItems.push(new MenuItem('Polls', 'pie-chart'));
+    this.menuItems.push(new MenuItem('Activities', 'pie-chart'));
     this.menuItems.push(new MenuItem('Handouts', 'folder'));
     this.menuItems.push(new MenuItem('Offers', 'shopping-bag'));
     this.menuItems.push(new MenuItem('Reviews', 'star'));
