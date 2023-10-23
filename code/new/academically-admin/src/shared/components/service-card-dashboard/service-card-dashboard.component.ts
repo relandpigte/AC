@@ -141,8 +141,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     if (courses?.progress === 0) {
       section = courses?.studentCourseSections[0]?.courseSection;
     }
-    return 'Lesson: start your new journey';
-    // return `${CourseSectionType[section?.type]} - ${section?.name}`;
+    return `${CourseSectionType[section?.type]} - ${section?.name}`;
   }
 
   ngOnChanges(changes: SimpleChanges) {

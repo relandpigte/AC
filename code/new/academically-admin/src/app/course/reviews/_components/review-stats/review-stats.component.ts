@@ -3,9 +3,9 @@ import { finalize, takeUntil } from 'rxjs/operators';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
-import { CourseDto, RatingsServiceProxy, TutorRatingSummaryDto } from '@shared/service-proxies/service-proxies';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
 import { ServiceDataService } from '@shared/services/service-data.service';
+import { CourseDto, CourseRatingSummaryDto, RatingsServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-review-stats',
@@ -14,7 +14,7 @@ import { ServiceDataService } from '@shared/services/service-data.service';
 })
 export class ReviewStatsComponent extends AppComponentBase implements OnInit, OnChanges {
   shimmerType = ShimmerType;
-  tutorRatingSummary: TutorRatingSummaryDto;
+  courseRatingSummary: CourseRatingSummaryDto;
   isSummaryLoading: boolean;
 
   @Input() data: CourseDto;
@@ -30,6 +30,9 @@ export class ReviewStatsComponent extends AppComponentBase implements OnInit, On
 
   get isLoading$() { return this._landingPageService.isLoading$; }
   get tutorId(): number { return this.data?.creatorUser?.id; }
+  get communicationRatings(): number { return this.courseRatingSummary?.totalCommunicationRatings; }
+  get valueForMoneyRatings(): number { return this.courseRatingSummary?.totalValueForMoneyRatings; }
+  get punctualityRatings(): number { return this.courseRatingSummary?.totalPunctualityRatings; }
 
   ngOnInit(): void {
     this._serviceData.serviceData$.pipe(takeUntil(this.destroyed$)).subscribe(d => this.data = d);
@@ -43,15 +46,11 @@ export class ReviewStatsComponent extends AppComponentBase implements OnInit, On
 
   private getRatingSummary(): void {
     this.isSummaryLoading = true;
-    this._ratingsService.getTutorRatingSummary(this.tutorId)
-      .pipe(
-        takeUntil(this.destroyed$),
-        finalize((): void => {
-          this.isSummaryLoading = false;
-        })
-      )
+    this._ratingsService.getCourseRatingSummary(this.data?.id)
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this.isSummaryLoading = false))
       .subscribe(rating => {
-        this.tutorRatingSummary = rating;
+        this.courseRatingSummary = rating;
       });
   }
 }

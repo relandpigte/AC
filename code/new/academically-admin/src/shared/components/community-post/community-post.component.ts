@@ -14,6 +14,7 @@ import { AvailableServiceDto, DisciplineTaxonomyDto, PostDto, PostsServiceProxy,
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { UserFollowingService } from '@shared/services/user-following.service';
 import { CommunityDiscussionsComponent } from '../community-discussions/community-discussions.component';
+import { PostsStateService } from '@shared/services/posts-state.service';
 
 enum SubscribeType {
     subscribe = 'Subscribe',
@@ -60,6 +61,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     isLoadingSubscriberIds = false;
 
     subscriberIds: number[] = [];
+    postsStateService: PostsStateService;
 
     constructor(
         injector: Injector,

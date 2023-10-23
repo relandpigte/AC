@@ -70,12 +70,12 @@ export class RelatedCoursesComponent extends AppComponentBase implements OnInit 
         const courses = pagedCourses;
         if (courses) {
           this.relatedCourses = [];
-          Object.keys(courses).forEach((range) => {
+          Object.keys(courses).forEach((range): void => {
             this.relatedCourses = _.concat(
               this.relatedCourses,
               courses[range]?.items
             );
-            this.relatedCourses = _.take(this.relatedCourses, 4);
+            this.relatedCourses = _.take(this.relatedCourses.filter(x => x.id !== this.data?.id), 4);
           });
         }
       });

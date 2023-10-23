@@ -83,7 +83,18 @@ namespace Academically.Services.Courses
                 .Include(e => e.StudentCourses)
                 .FirstOrDefaultAsync();
             var output = ObjectMapper.Map<CourseDto>(course);
+            var courseSections = await _courseSectionRepository.GetAll()
+                .Where(cs => cs.CourseId == output.Id)
+                .ToListAsync();
+            
             output.CourseImageUrl = await _documentsDomainService.GetFileUrlAsync(course.ImageDocument);
+            output.Modules = courseSections.Count(x => x.Type == CourseSectionType.Module && output.Id == x.CourseId && x.ParentId == null);
+            output.Lessons = courseSections.Count(x => x.Type == CourseSectionType.Lesson && output.Id == x.CourseId && x.ParentId == null);
+            output.Units = courseSections.Count(x => x.Type == CourseSectionType.Unit && output.Id == x.CourseId && x.ParentId == null);
+            
+            if (output.CreatorUser.ProfilePictureDocumentId.HasValue)
+                output.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(output.CreatorUser.ProfilePictureDocumentId.Value);
+                
             return output;
         }
 

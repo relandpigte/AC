@@ -5,7 +5,7 @@
         <div class="stat d-flex flex-column">
             <div class="stat-title">{{ tutorRatingSummary?.positivePercentage }}% {{ 'PositiveReviews' | localize}}</div>
             <div class="stat-overall-rating d-flex justify-content-start">
-                <app-star-ratings *ngIf="tutorRatingSummary?.totalRatingPercentage" [userRating]="tutorRatingSummary?.totalRatingPercentage"></app-star-ratings>
+                <app-star-rating-review *ngIf="tutorRatingSummary?.totalRatingPercentage" [actualRating]="tutorRatingSummary?.totalRatingPercentage"></app-star-rating-review>
                 <span class="ml-1">{{ tutorRatingSummary?.totalRatingPercentage }}/5.0</span>
             </div>
             <div class="stat-overall-review">{{ tutorRatingSummary?.totalReviews }} reviews</div>
@@ -35,27 +35,27 @@
             <div class="stat-breakdown">
                 <div class="d-flex justify-content-start gap-10">
                     <div>3.5/5</div>
-                    <app-star-ratings [userRating]="3.5"></app-star-ratings>
+                    <div><app-star-rating-review [actualRating]="3.5"></app-star-rating-review></div>
                     <div>Accuracy & recentness</div>
                 </div>
                 <div class="d-flex gap-10">
                     <div>4.6/5</div>
-                    <app-star-ratings [userRating]="3.6"></app-star-ratings>
+                    <div><app-star-rating-review [actualRating]="4.6"></app-star-rating-review></div>
                     <div>Value for money</div>
                 </div>
                 <div class="d-flex gap-10">
                     <div>3.8/5</div>
-                    <app-star-ratings [userRating]="3.8"></app-star-ratings>
+                    <div><app-star-rating-review [actualRating]="3.8"></app-star-rating-review></div>
                     <div>Interaction & engagement</div>
                 </div>
                 <div class="d-flex gap-10">
                     <div>2.4/5</div>
-                    <app-star-ratings [userRating]="2.4"></app-star-ratings>
+                    <div><app-star-rating-review [actualRating]="2.4"></app-star-rating-review></div>
                     <div>Design & structure</div>
                 </div>
                 <div class="d-flex gap-10">
                     <div>1.8/5</div>
-                    <app-star-ratings [userRating]="1.8"></app-star-ratings>
+                    <div><app-star-rating-review [actualRating]="1.8"></app-star-rating-review></div>
                     <div>Communication & support</div>
                 </div>
             </div>

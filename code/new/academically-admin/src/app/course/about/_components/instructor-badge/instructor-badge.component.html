@@ -10,7 +10,7 @@
 
     <div class="card-footer d-flex justify-content-between">
         <div class="coach-status online d-flex gap-5"><span>●</span>Online</div>
-        <div>
+        <div *ngIf="!isOwner">
             <button class="btn btn-outline-primary btn-sm coach-message" (click)="onMessageClick()"> {{ 'Message' | localize }}</button>
         </div>
     </div>

@@ -160,7 +160,7 @@ export class CourseDiscussionComponent extends AppComponentBase implements OnIni
     this.postsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingChildren = loading);
 
     this.postsStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
-      if (this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) {
+      if ((this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) || event.data.isHidden) {
         return;
       }
       switch (event.type) {

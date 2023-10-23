@@ -33,6 +33,6 @@
     </div>
 
     <div *ngIf="tutorRatings" class="reviews-content w-100">
-        <app-service-review *ngFor="let rating of tutorRatings" [rating]="rating"></app-service-review>
+        <app-service-review-card *ngFor="let rating of tutorRatings" [rating]="rating"></app-service-review-card>
     </div>
 </div>

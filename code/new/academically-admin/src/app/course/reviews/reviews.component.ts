@@ -2,7 +2,12 @@ import { Component, Injector, Input, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
-import { CourseDto, RatingExperienceType, RatingsServiceProxy, TutorRatingDto } from '@shared/service-proxies/service-proxies';
+import {
+  CourseDto,
+  CourseRatingDto,
+  RatingExperienceType,
+  RatingsServiceProxy,
+} from '@shared/service-proxies/service-proxies';
 import { ServiceDataService } from '@shared/services/service-data.service';
 import { takeUntil } from 'rxjs/operators';
 
@@ -16,7 +21,7 @@ export class CourseReviewsComponent extends AppComponentBase implements OnInit {
   shimmerType = ShimmerType;
 
   RatingExperienceType = RatingExperienceType;
-  tutorRatings: TutorRatingDto[];
+  courseRating: CourseRatingDto[];
 
   constructor(
     injector: Injector,
@@ -29,21 +34,22 @@ export class CourseReviewsComponent extends AppComponentBase implements OnInit {
 
   get isLoading$() { return this._landingPageService.isLoading$; }
   get tutorId(): number { return this.data?.creatorUser?.id; }
+  get totalReview(): number { return this.courseRating?.length; }
 
   ngOnInit(): void {
     this._serviceData.serviceData$.pipe(takeUntil(this.destroyed$)).subscribe(d => {
       if (d) {
         this.data = d;
-        this.getTutorRatings();
+        this.getCourseRatings();
       }
     });
   }
 
-  private getTutorRatings(): void {
-    this._ratingsService.getTutorRatings(this.tutorId, undefined, undefined)
+  private getCourseRatings(): void {
+    this._ratingsService.getCourseRatings(this.data?.id, undefined, undefined)
       .pipe(takeUntil(this.destroyed$))
       .subscribe((result): void => {
-        this.tutorRatings = result.items;
+        this.courseRating = result.items;
       });
   }
 }

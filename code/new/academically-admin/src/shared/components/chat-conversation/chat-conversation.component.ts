@@ -107,7 +107,7 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
   }
 
   get userId(): number { return this.replyingToUser?.id; }
-  get replyingToUser(): UserDto { return this.channel?.members?.find(m => m.userId !== this.appSession.userId)?.user ?? this.sendToUser; }
+  get replyingToUser(): UserDto { return this.sendToUser; }
   get recipientName(): string { return this.replyingToUser?.name; }
   get isMutedChannel() { return this.mutedUserChannelIds?.includes(this.channel?.id); }
 

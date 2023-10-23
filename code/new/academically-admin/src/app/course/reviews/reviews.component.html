@@ -4,7 +4,7 @@
     <div class="reviews-controls d-flex flex-row justify-content-between w-100">
         <div class="reviews-controls-left d-flex align-items-end">
             <div class="reviews-controls-left-posts-count">
-                24 reviews
+                {{ totalReview }} reviews
             </div>
         </div>
         <div class="reviews-controls-right d-flex flex-row align-items-center gap-10">
@@ -14,7 +14,7 @@
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{ 'Latest' | localize }} <span class="fe fe-chevron-down"></span>
                 </a>
-                <div class="dropdown-menu dropdown-menu-left" [style.marginTop.px]="10">
+                <div class="dropdown-menu dropdown-menu-left" [style.margin-top.px]="10">
                     <div class="dropdown-item cursor-pointer d-flex justify-content-between">
                         <div>{{ 'Latest' | localize }}</div>
                         <i *ngIf="false" class="fe fe-check"></i>
@@ -32,7 +32,7 @@
         </div>
     </div>
 
-    <div *ngIf="tutorRatings" class="reviews-content w-100">
-        <app-service-review *ngFor="let rating of tutorRatings" [rating]="rating"></app-service-review>
+    <div *ngIf="courseRating" class="reviews-content w-100">
+        <app-service-review-card *ngFor="let rating of courseRating" [rating]="rating"></app-service-review-card>
     </div>
 </div>

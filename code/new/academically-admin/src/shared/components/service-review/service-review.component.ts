@@ -4,14 +4,14 @@ import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { RatingExperienceType, TutorRatingDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
-  selector: 'app-service-review',
+  selector: 'app-service-review-card',
   templateUrl: './service-review.component.html',
   styleUrls: ['./service-review.component.less']
 })
 export class ServiceReviewComponent extends AppComponentBase implements OnInit {
   ratingExperienceType = RatingExperienceType;
 
-  @Input() rating: TutorRatingDto;
+  @Input() rating: any;
 
   constructor(
     injector: Injector

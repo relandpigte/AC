@@ -228,8 +228,10 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
         this.postsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingChildren = loading);
 
         this.postsStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
-            if (this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) return;
-            switch(event.type) {
+            if ((this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) || event.data.isHidden) {
+                return;
+            }
+            switch (event.type) {
             case StateUpdateType.Add:
                 this.children = [event.data].concat(this.children);
                 this.totalChildrenCount++;
@@ -249,9 +251,9 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
     }
 
     private async loadOtherInfo() {
-        this.getParticipants();
-        this.getSubscriberIds();
-        this.getRelatedDiscussions();
+        await this.getParticipants();
+        await this.getSubscriberIds();
+        await this.getRelatedDiscussions();
     }
 
     async getParticipants() {

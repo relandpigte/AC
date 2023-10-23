@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="review-rating-container d-flex gap-10 align-items-center">
-            <app-star-ratings [userRating]="userRatingValue"></app-star-ratings>
+            <app-star-rating-review [actualRating]="userRatingValue"></app-star-rating-review>
             <div class="rating-badge d-flex gap-10">
                 <span class="label">{{ userRatingValue }}/5</span>
                 <ng-container [ngSwitch]="rating?.experienceType">

@@ -1,7 +1,7 @@
 <div class="d-flex flex-column justify-content-center align-items-center w-100">
-    <app-community-composer [placeholder]="'Coaching.Composer.Placeholder'" [isLoading]="isLoading"  [showBottomActions]="false" (onQuickPostClick)="handleAddPost()" class="w-100"></app-community-composer>
+    <app-community-composer [isLoading]="isLoading"  [showBottomActions]="false" (onQuickPostClick)="handleAddPost()" class="w-100"></app-community-composer>
 
-    <div *ngIf="!isLoading" class="discussion-controls d-flex flex-row justify-content-between w-100" [style.marginBottom.px]="10">
+    <div *ngIf="!isLoading" class="discussion-controls d-flex flex-row justify-content-between w-100" [style.margin-bottom.px]="10">
         <div class="discussion-controls-left d-flex align-items-end">
             <div class="discussion-controls-left-posts-count">
                 {{ postsCount }} posts
@@ -13,7 +13,7 @@
                 <a href="#" class="dropdown-ellipses dropdown-toggle d-flex flex-row align-items-center gap-5" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{ selectedSorting | localize }} <span class="fe fe-chevron-down"></span>
                 </a>
-                <div class="dropdown-menu dropdown-menu-left" [style.marginTop.px]="10">
+                <div class="dropdown-menu dropdown-menu-left" [style.margin-top.px]="10">
 
                     <div
                         class="dropdown-item cursor-pointer d-flex justify-content-between"

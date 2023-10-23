@@ -14,17 +14,11 @@
             <span class="d-flex align-items-center"><i class="fe fe-align-justify mr-2"></i>Beginner</span>
         </div>
         <div class="card-body-duration">
-            <span class="d-flex align-items-center"><i class="fe fe-layers mr-2"></i>4 modules · 53 lessons</span>
+            <span class="d-flex align-items-center"><i class="fe fe-layers mr-2"></i>{{ modules }} modules · {{ lessons }} lessons</span>
         </div>
         <div class="ratings d-flex align-items-center gap-10">
-            <div class="d-flex justify-content-center align-items-center">
-                <div class="icon fas fa-star active"></div>
-                <div class="icon fas fa-star active"></div>
-                <div class="icon fas fa-star active"></div>
-                <div class="icon fas fa-star active"></div>
-                <div class="icon fas fa-star"></div>
-            </div>
-            <div class="label">4.2/5.0</div>
+            <app-star-rating-review [actualRating]="ratingPercentage"></app-star-rating-review>
+            <div class="label">{{ ratingPercentage }}/5.0</div>
         </div>
         <div class="card-body-text">
             {{ description }}

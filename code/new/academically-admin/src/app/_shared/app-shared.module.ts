@@ -78,10 +78,7 @@ import { CommentHistoryComponent } from '@shared/modals/comment-history/comment-
 import { ServiceReviewComponent } from '@shared/components/service-review/service-review.component';
 import { ServiceCardDashboardComponent } from '@shared/components/service-card-dashboard/service-card-dashboard.component';
 import { UserAvatarComponent } from '@shared/components/user-avatar/user-avatar.component';
-import { ServiceRatingsComponent } from '@shared/components/service-ratings/service-ratings.component';
-import {
-  ChatConversationMessageComponent
-} from '@shared/components/chat-conversation-message/chat-conversation-message.component';
+import { ChatConversationMessageComponent } from '@shared/components/chat-conversation-message/chat-conversation-message.component';
 import { ChatComposerComponent } from '@shared/components/chat-composer/chat-composer.component';
 import { ChatConversationComponent } from '@shared/components/chat-conversation/chat-conversation.component';
 import { ChatComposerConversationComponent } from '@shared/components/chat-composer-conversation/chat-composer-conversation.component';
@@ -147,7 +144,6 @@ import { NotificationCardComponent } from '@shared/components/notification-card/
     CommentHistoryComponent,
     NewPostFloaterComponent,
     ServiceReviewComponent,
-    ServiceRatingsComponent,
     ServiceCardDashboardComponent,
     ChatConversationMessageComponent,
     UserAvatarComponent,
@@ -257,7 +253,6 @@ import { NotificationCardComponent } from '@shared/components/notification-card/
     CommentHistoryComponent,
     NewPostFloaterComponent,
     ServiceReviewComponent,
-    ServiceRatingsComponent,
     ServiceCardDashboardComponent,
     ChatConversationMessageComponent,
     UserAvatarComponent,
