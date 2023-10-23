@@ -9,6 +9,7 @@ using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Expressions;
 using Abp.Linq.Extensions;
+using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.UI;
 using Academically.Authorization.Roles;
@@ -84,6 +85,36 @@ namespace Academically.Services.Coachings
                 .Include(e => e.CreatorUser)
                     .ThenInclude(e => e.ProfilePictureDocument)
                 .FirstOrDefaultAsync();
+        }
+        
+        public override async Task<CoachingDto> GetAsync(EntityDto<Guid> input)
+        {
+            var result = await Repository.GetAll()
+                .Where(e => e.Id == input.Id)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.CoverPhotoDocument)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.ProfilePictureDocument)
+                .Select(e => ObjectMapper.Map<CoachingDto>(e))
+                .FirstOrDefaultAsync();
+
+            result.Purchased = await _servicePurchasesRepository.GetAll()
+                .Where(c => c.ReferenceId == result.Id)
+                .Select(c => ObjectMapper.Map<UserDto>(c.CreatorUser))
+                .ToListAsync();
+            
+            foreach (var u in result.Purchased)
+                if (u.ProfilePictureDocumentId.HasValue)
+                    u.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(u.ProfilePictureDocumentId.Value);
+            
+            var servicePurchase = await _servicePurchasesRepository
+                .FirstOrDefaultAsync(p => p.ReferenceId.ToString() == result.Id.ToString() && p.CreatorUserId == AbpSession.GetUserId());
+            result.IsPurchased = servicePurchase != null;
+            
+            var savedService = await _savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == result.Id.ToString());
+            result.IsSaved = savedService != null;
+            
+            return result;
         }
 
         public async Task UpdateStatusAsync(Guid id, CoachingStatus status)

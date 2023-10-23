@@ -125,7 +125,7 @@ namespace Academically.Services.Events
         
         public override async Task<EventDto> GetAsync(EntityDto<Guid> input)
         {
-            return await Repository.GetAll()
+            var result = await Repository.GetAll()
                 .Where(e => e.Id == input.Id)
                 .Include(e => e.CreatorUser)
                     .ThenInclude(e => e.CoverPhotoDocument)
@@ -133,6 +133,24 @@ namespace Academically.Services.Events
                     .ThenInclude(e => e.ProfilePictureDocument)
                 .Select(e => ObjectMapper.Map<EventDto>(e))
                 .FirstOrDefaultAsync();
+
+            result.Purchased = await _servicePurchasesRepository.GetAll()
+                .Where(c => c.ReferenceId == result.Id)
+                .Select(c => ObjectMapper.Map<UserDto>(c.CreatorUser))
+                .ToListAsync();
+            
+            foreach (var u in result.Purchased)
+                if (u.ProfilePictureDocumentId.HasValue)
+                    u.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(u.ProfilePictureDocumentId.Value);
+            
+            var servicePurchase = await _servicePurchasesRepository
+                .FirstOrDefaultAsync(p => p.ReferenceId.ToString() == result.Id.ToString() && p.CreatorUserId == AbpSession.GetUserId());
+            result.IsPurchased = servicePurchase != null;
+            
+            var savedService = await _savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == result.Id.ToString());
+            result.IsSaved = savedService != null;
+            
+            return result;
         }
 
         public async Task<Dictionary<string, PagedResultDto<EventDto>>> GetByTopicsAsync(PagedExploreGroupByTopicResultRequestDto input)

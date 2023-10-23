@@ -29,6 +29,7 @@ export class AboutCoachComponent extends AppComponentBase implements OnInit {
   get profileFullName(): string { return `${this.appSession.user.name} ${this.appSession.user.surname}`; }
   get profileAboutText() { return this.removeHTMLTags(this.data?.creatorUser?.about); }
   get isLoading$() { return this._landingPageService.isLoading$; }
+  get isOwner(): boolean { return this.data?.creatorUserId === this.appSession.userId; }
 
   ngOnInit(): void {}
 

@@ -11,10 +11,12 @@
     <div class="container-fluid">
         <div class="row border-bottom">
             <div class="col-6 py-4 text-center">
-                <h6 class="text-uppercase text-muted">
-                    SETS USED
-                </h6>
-                <h2 class="mb-0">4 of 6</h2>
+                <ng-container *ngIf="isWorkShop else broadcast">
+                    <h6 class="text-uppercase text-muted">
+                        SITS USED
+                    </h6>
+                    <h2 class="mb-0">{{ attendeesTotal }} of {{ attendeesLimit }}</h2>
+                </ng-container>
             </div>
             <div class="col-6 py-4 text-center border-left">
                 <h6 class="text-uppercase text-muted">
@@ -26,64 +28,20 @@
     </div>
 
     <div class="card-body">
-        <div class="list-group list-group-flush my-n3">
-            <div class="list-group-item">
-                <div class="row align-items-center">
+        <div *ngIf="!!attendees else noAttendee" class="list-group list-group-flush my-n3">
+            <div *ngFor="let attendee of attendees" class="list-group-item">
+                <div class="row align-items-center" >
                     <div class="col-auto">
                         <a href="#" class="avatar">
-                            <img src="https://i.pravatar.cc/300" alt="..." class="avatar-img rounded-circle">
+                            <img [src]="attendee.profilePictureUrl" alt="..." class="avatar-img rounded-circle">
                         </a>
                     </div>
                     <div class="col pl-1">
                         <h4 class="mb-1">
-                            <a href="#">Dianna Smiley</a>
+                            <a href="#">{{ attendee.fullName }}</a>
                         </h4>
                         <p class="small mb-0">
                             <span class="text-muted">Going</span>
-                        </p>
-                    </div>
-                    <div class="col-auto">
-                        <a href="#!" class="btn btn-outline-primary btn-sm">
-                            Follow
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="list-group-item">
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <a href="#" class="avatar">
-                            <img src="https://i.pravatar.cc/300" alt="..." class="avatar-img rounded-circle">
-                        </a>
-                    </div>
-                    <div class="col pl-1">
-                        <h4 class="mb-1">
-                            <a href="#">Dianna Smiley</a>
-                        </h4>
-                        <p class="small mb-0">
-                            <span class="text-muted">Going</span>
-                        </p>
-                    </div>
-                    <div class="col-auto">
-                        <a href="#!" class="btn btn-outline-primary btn-sm">
-                            Follow
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="list-group-item">
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <a href="#" class="avatar">
-                            <img src="https://i.pravatar.cc/300" alt="..." class="avatar-img rounded-circle">
-                        </a>
-                    </div>
-                    <div class="col pl-1">
-                        <h4 class="mb-1">
-                            <a href="#">Dianna Smiley</a>
-                        </h4>
-                        <p class="small mb-0">
-                            <span class="text-muted">Interested</span>
                         </p>
                     </div>
                     <div class="col-auto">
@@ -96,3 +54,16 @@
         </div>
     </div>
 </div>
+
+<ng-template #noAttendee>
+    <div class="row align-items-center">
+        <span class="text-muted w-100 d-block text-center">No attendees</span>
+    </div>
+</ng-template>
+
+<ng-template #broadcast>
+    <h6 class="text-uppercase text-muted">
+        GOING
+    </h6>
+    <h2 class="mb-0">{{ attendeesTotal }}</h2>
+</ng-template>

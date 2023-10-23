@@ -12,12 +12,12 @@
                 <div class="col col-sm-12">
                     <ng-container *ngIf="isAboutTab">
                         <app-about-coach [data]="data" ></app-about-coach>
-                        <app-about-related-coaching></app-about-related-coaching>
+                        <app-about-related-coaching [data]="data"></app-about-related-coaching>
                     </ng-container>
                     <ng-container *ngIf="isDiscussionTab">
                         <app-coach-badge [data]="data"></app-coach-badge>
                         <app-session-badge [data]="data"></app-session-badge>
-                        <app-about-related-coaching></app-about-related-coaching>
+                        <app-about-related-coaching [data]="data" ></app-about-related-coaching>
                     </ng-container>
                     <ng-container *ngIf="isReviewsTab">
                         <app-review-stats [data]="data"></app-review-stats>

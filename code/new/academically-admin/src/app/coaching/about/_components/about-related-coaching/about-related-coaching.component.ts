@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, Input } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { CoachingDto, CoachingsServiceProxy, CourseDto, DateGrains } from '@shared/service-proxies/service-proxies';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
@@ -12,6 +12,7 @@ import * as _ from 'lodash';
   styleUrls: ['./about-related-coaching.component.less']
 })
 export class AboutRelatedCoachingComponent extends AppComponentBase implements OnInit {
+  @Input() data: CoachingDto;
   relatedCoaching: CoachingDto[] = Array(4).fill([]).map(() => this.generateRandomCoaching()) as CoachingDto[];
 
   constructor(
@@ -54,7 +55,7 @@ export class AboutRelatedCoachingComponent extends AppComponentBase implements O
               this.relatedCoaching,
               coachings[range]?.items
             );
-            this.relatedCoaching = _.take(this.relatedCoaching, 4);
+            this.relatedCoaching = _.take(this.relatedCoaching.filter(x => x.id !== this.data?.id), 4);
           });
         }
       });

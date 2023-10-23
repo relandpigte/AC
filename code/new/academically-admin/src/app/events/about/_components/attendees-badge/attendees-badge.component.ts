@@ -1,7 +1,7 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
-import { EventDto, UserDto } from '@shared/service-proxies/service-proxies';
+import { EventCategory, EventDto, UserDto } from '@shared/service-proxies/service-proxies';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
 
 @Component({
@@ -22,6 +22,10 @@ export class AttendeesBadgeComponent extends AppComponentBase implements OnInit 
   }
 
   get isLoading$() { return this._landingPageService.isLoading$; }
+  get attendeesTotal(): number { return this.data?.purchased?.length; }
+  get attendeesLimit(): number { return this.data?.numberOfAttendees; }
+  get attendees(): UserDto[] { return this.data?.purchased; }
+  get isWorkShop(): boolean { return this.data?.category === EventCategory.Workshop; }
 
   ngOnInit(): void {
   }

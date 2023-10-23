@@ -22,16 +22,22 @@
                     <h6 class="header-pretitle">{{ eventCategoryName }}</h6>
                     <h1 class="header-title">{{ eventTitle | titlecase }}</h1>
                 </div>
-                <div class="col-12 col-md-auto mt-2 mt-md-0 mb-md-3">
-                    <button class="btn btn-primary d-block d-md-inline-block custom-button-width" (click)="onPurchaseClick()" [disabled]="isPurchased">
-                        {{ price | currency: 'GBP' }}
+                <div class="col-12 col-md-auto mt-2 mt-md-0 mb-md-3 d-flex">
+                    <button class="btn btn-primary d-block d-md-inline-block custom-button-width" (click)="onPurchaseClick()" [class.btn-disabled]="isPurchased">
+                        {{ isPurchased ? 'Purchased' : price | currency: 'GBP' }}
                     </button>
-                    <button class="btn btn-light d-block d-md-inline-block custom-button-width">
-                        {{ 'Save' | localize }}
+                    <button class="btn btn-light d-block d-md-inline-block custom-button-width" (click)="handleSaveClick()" [class.btn-disabled]="isSaved">
+                        {{ isSaved ? 'Saved' : 'Save' | localize }}
                     </button>
-                    <button class="btn btn-light d-block d-md-inline-block">
-                        <span class="d-inline-block bg-center" [ngStyle]="{'background-image': 'url(assets/img/icon-share.svg)', 'width': '20px', 'height': '20px'}"></span>
-                    </button>
+                    <div class="dropup">
+                        <button class="btn btn-light d-block d-md-inline-block" data-toggle="dropdown">
+                            <span class="d-inline-block bg-center" [ngStyle]="{'background-image': 'url(assets/img/icon-share.svg)', 'width': '20px', 'height': '20px'}"></span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-left" [style.margin-bottom.px]="2">
+                            <div class="dropdown-item cursor-pointer" (click)="handleShareClick($event)">Share in post</div>
+                            <div class="dropdown-item cursor-pointer" (click)="handleCopyLink($event)" data-toggle="dropdown">Copy link</div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row align-items-center">

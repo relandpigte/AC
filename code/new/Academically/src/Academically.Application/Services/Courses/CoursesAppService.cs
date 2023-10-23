@@ -92,8 +92,15 @@ namespace Academically.Services.Courses
             output.Lessons = courseSections.Count(x => x.Type == CourseSectionType.Lesson && output.Id == x.CourseId && x.ParentId == null);
             output.Units = courseSections.Count(x => x.Type == CourseSectionType.Unit && output.Id == x.CourseId && x.ParentId == null);
             
+            var servicePurchase = await _servicePurchasesRepository
+                .FirstOrDefaultAsync(p => p.ReferenceId.ToString() == output.Id.ToString() && p.CreatorUserId == AbpSession.GetUserId());
+            output.IsPurchased = servicePurchase != null;
+            
             if (output.CreatorUser.ProfilePictureDocumentId.HasValue)
                 output.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(output.CreatorUser.ProfilePictureDocumentId.Value);
+            
+            var savedService = await _savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == output.Id.ToString());
+            output.IsSaved = savedService != null;
                 
             return output;
         }

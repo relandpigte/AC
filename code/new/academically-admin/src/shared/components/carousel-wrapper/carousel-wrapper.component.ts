@@ -14,6 +14,7 @@ export class CarouselWrapperComponent extends AppComponentBase implements AfterV
   @ViewChild("carouselContainer") carouselContainer: ElementRef<HTMLElement>;
   carouselInstance: KeenSliderInstance = null;
   currentItem: number = 0;
+  zIndex = 999;
 
   private MIN_ITEMS = 3;
 
