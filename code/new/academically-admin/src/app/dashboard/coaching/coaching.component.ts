@@ -75,7 +75,7 @@ export class CoachingComponent extends AppComponentBase implements OnInit, After
             } else {
               this._router.navigate(['/app/dashboard/coaching/series/', response.id]);
             }
-            this._serviceData.createServiceDiscussion(response.id, ServicesType.Coaching);
+            this._serviceData.createServiceDiscussion(response.id, ServicesType.Coaching, this.currentUserId);
           });
       });
     });

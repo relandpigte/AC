@@ -146,21 +146,25 @@ export class CoachingDiscussionComponent extends AppComponentBase implements OnI
     };
     await this.pubSubService.start(this, appStateConfig, appStateServices);
     this.postsStateService = this.pubSubService.getStateService<PostsStateService>(this.postsStateId);
-
     this.postsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingChildren = loading);
-
-    this.postsStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
-      if (this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) return;
-      switch(event.type) {
+    this.postsStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(async event => {
+      if (this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) {
+        return;
+      }
+      switch (event.type) {
         case StateUpdateType.Add:
           this.children = [event.data].concat(this.children);
           this.totalChildrenCount++;
           break;
         case StateUpdateType.Update:
+          const isHidden = await this._postsService.getPostVisibility(event.data.id, this.currentUserId).toPromise();
+          if ((this.currentUserId !== event.data.creatorUserId && isHidden) || event.data.isHidden) {
+            break;
+          }
           this.children = this.children.map(p => p.id === event.data.id ? event.data : p);
           break;
         case StateUpdateType.Delete:
-          this.children = this.children.filter(p => p.id != event.data.id);
+          this.children = this.children.filter(p => p.id !== event.data.id);
           this.totalChildrenCount--;
           break;
       }

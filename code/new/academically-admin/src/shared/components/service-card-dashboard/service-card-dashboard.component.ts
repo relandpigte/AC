@@ -501,6 +501,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
           if (!this.options || !('isShowActions' in this.options)) { this.sanitizedOptions.isShowActions = true; }
         }
         if (!this.options || !('isShowInfo' in this.options)) { this.sanitizedOptions.isShowInfo = true; }
+        if (!this.options || !('isShowImages' in this.options)) { this.sanitizedOptions.isShowImages = false; }
         break;
       case 'broadcast':
         if (!this.options || !('isShowDate' in this.options)) { this.sanitizedOptions.isShowDate = true; }

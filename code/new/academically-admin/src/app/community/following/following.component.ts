@@ -186,13 +186,16 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
 
     await this.pubSubService.start(this, appStateConfig, appStateServices);
     this.postsDiscussionsStateServiceMap[discussionId] = this.pubSubService.getStateService<PostsStateService>(`posts-${discussionId}`);
-    this.postsDiscussionsStateServiceMap[discussionId].newPosts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
+    this.postsDiscussionsStateServiceMap[discussionId].posts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
       if (this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) {
         return;
       }
       switch (event.type) {
         case StateUpdateType.Add:
-          this.postsStateService.handleNewPosts(event.data);
+          this.postsStateService.handleNewDiscussionPosts(event.data);
+          break;
+        case StateUpdateType.Delete:
+          this.postsStateService.handleDeletePosts(event.data.id);
           break;
       }
       this._cdr.detectChanges();

@@ -185,7 +185,7 @@ export class DashboardComponent extends AppComponentBase implements OnInit, Afte
             } else {
               await this._router.navigate(['/app/dashboard/events/broadcast/series/', response.id]);
             }
-            this._serviceData.createServiceDiscussion(response.id, ServicesType.Event);
+            this._serviceData.createServiceDiscussion(response.id, ServicesType.Event, this.currentUserId);
           });
       });
     });
@@ -214,7 +214,7 @@ export class DashboardComponent extends AppComponentBase implements OnInit, Afte
             } else {
               await this._router.navigate(['/app/dashboard/events/workshop/series/', response.id]);
             }
-            this._serviceData.createServiceDiscussion(response.id, ServicesType.Event);
+            this._serviceData.createServiceDiscussion(response.id, ServicesType.Event, this.currentUserId);
           });
       });
     });
@@ -241,7 +241,7 @@ export class DashboardComponent extends AppComponentBase implements OnInit, Afte
             } else {
               await this._router.navigate(['/app/dashboard/coaching/series/', response.id]);
             }
-            this._serviceData.createServiceDiscussion(response.id, ServicesType.Coaching);
+            this._serviceData.createServiceDiscussion(response.id, ServicesType.Coaching, this.currentUserId);
           });
       });
     });

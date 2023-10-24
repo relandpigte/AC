@@ -78,7 +78,7 @@ export class EventsComponent extends AppComponentBase implements OnInit, AfterVi
             } else {
               this._router.navigate(['/app/dashboard/events/broadcast/series/', response.id]);
             }
-            this._serviceData.createServiceDiscussion(response.id, ServicesType.Event);
+            this._serviceData.createServiceDiscussion(response.id, ServicesType.Event, this.currentUserId);
           });
       });
     });
@@ -107,7 +107,7 @@ export class EventsComponent extends AppComponentBase implements OnInit, AfterVi
             } else {
               this._router.navigate(['/app/dashboard/events/workshop/series/', response.id]);
             }
-            this._serviceData.createServiceDiscussion(response.id, ServicesType.Event);
+            this._serviceData.createServiceDiscussion(response.id, ServicesType.Event, this.currentUserId);
           });
       });
     });

@@ -57,6 +57,7 @@ export abstract class AppComponentBase implements OnDestroy {
   public isTutor: boolean;
   public isStudent: boolean;
   public isCurrentUserAdmin: boolean;
+  public currentUserId: number;
 
   hub: HubConnection;
   readonly hubSendMethod = 'sendSignal';
@@ -105,6 +106,7 @@ export abstract class AppComponentBase implements OnDestroy {
       this.isTutor = this.checkUserRole('tutor');
       this.isStudent = this.checkUserRole('student');
       this.isCurrentUserAdmin = this.checkUserRole('admin');
+      this.currentUserId = this.appSession.userId;
     }
   }
 

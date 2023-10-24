@@ -93,19 +93,13 @@ export class StudentCalendarComponent extends AppComponentBase implements OnInit
   }
 
   private dayCellClassNamesCallback(date: any): string {
-    if (!this.eventDates.includes(moment(date.date).format('YYYY-MM-DD'))) {
-      return;
-    }
-
     const currentDate = moment(date.date).format('YYYY-MM-DD');
-    if (moment(currentDate).isAfter()) {
-      return 'future-events';
+    if (this.eventDates.includes(currentDate)) {
+      return 'with-events';
     }
-
     if (moment().isSame(moment(currentDate), 'day')) {
       return 'active';
     }
-    return;
   }
 
   private initCalendar(): void {

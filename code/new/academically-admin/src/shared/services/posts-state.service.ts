@@ -62,45 +62,46 @@ export class PostsStateService extends StateServiceBase {
     this.loading$.next(false);
   }
 
-  protected async setupSubscriptions(component: any, userId: number) {
-    try {
-      const hub = await this._hubService.getPostsHub(...this.updateArgs);
-      hub.on(HubEvent[HubEvent.PostCreated], this.handleNewPosts);
-      hub.on(HubEvent[HubEvent.PostUpdated], this.handleUpdatePosts);
-      hub.on(HubEvent[HubEvent.PostDeleted], this.handleDeletePosts);
-    } catch (err) {
-      console.error(err);
-    }
-    return null;
-  }
-
   canViewPost = (post: PostDto): boolean => {
-    if (!post) return false;
+    if (!post) {
+      return false;
+    }
     const [type, parentId, creationTime] = this.loadArgs;
     return (
       (!type || post.type === type) &&
       (!parentId || post.parentId === parentId) &&
       (!creationTime || post.creationTime.isBefore(creationTime))
     );
-  };
+  }
 
   handleNewPosts = async (post: PostDto) => {
-    if (!this.canViewPost(post)) return;
+    if (!this.canViewPost(post)) {
+      return;
+    }
     this.loading$.next(true);
-    if (this._appSession.userId === post.creatorUserId) {
+    if (this._appSession.userId === post.creatorUserId || !!post.parentId) {
       this.updateFromMap(this.posts, Utils.toObjectMap([post], (p) => p.id, (p) => p), this.posts$);
     } else {
       this.updateFromMap(this.newPosts, Utils.toObjectMap([post], (p) => p.id, (p) => p), this.newPosts$);
     }
     this.loading$.next(false);
-  };
+  }
+
+  handleNewDiscussionPosts = async (post: PostDto): Promise<void> => {
+    if (!this.canViewPost(post)) {
+      return;
+    }
+    this.loading$.next(true);
+    this.updateFromMap(this.newPosts, Utils.toObjectMap([post], (p) => p.id, (p) => p), this.newPosts$);
+    this.loading$.next(false);
+  }
 
   handleUpdatePosts = async (post: PostDto) => {
     if (!this.canViewPost(post)) return;
     this.loading$.next(true);
     this.updateFromMap(this.posts, Utils.toObjectMap([post], (p) => p.id, (p) => p), this.posts$);
     this.loading$.next(false);
-  };
+  }
 
   handleDeletePosts = async (id: string) => {
     if (!this.canViewPost(this.posts.get(id))) return;
@@ -141,5 +142,17 @@ export class PostsStateService extends StateServiceBase {
   removePosts(posts: PostDto[]) {
     const removedPosts = posts.map(c => c.id);
     this.posts = Utils.toMap([...Array.from(this.posts.values()).filter(p => !removedPosts.includes(p.id))]);
+  }
+
+  protected async setupSubscriptions(component: any, userId: number) {
+    try {
+      const hub = await this._hubService.getPostsHub(...this.updateArgs);
+      hub.on(HubEvent[HubEvent.PostCreated], this.handleNewPosts);
+      hub.on(HubEvent[HubEvent.PostUpdated], this.handleUpdatePosts);
+      hub.on(HubEvent[HubEvent.PostDeleted], this.handleDeletePosts);
+    } catch (err) {
+      console.error(err);
+    }
+    return null;
   }
 }

@@ -82,11 +82,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
         private _userFollowingService: UserFollowingService
     ) {
         super(injector);
-        this._route.paramMap.subscribe(async paramMap => {
-            if (paramMap.has('id')) {
-                this.id = paramMap.get('id');
-            }
-        });
+        this.id = this._route.snapshot.params.id;
     }
 
     get postsStateId(): string { return `posts-${this.discussionId}`; }
@@ -121,7 +117,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
         return this.convertMomentToPostDateAgo(time);
     }
     get postSort(): PostSort {
-        switch(this.selectedSorting) {
+        switch (this.selectedSorting) {
           case PostSorting.Activity:
             return PostSort.Activity;
           default:
@@ -129,17 +125,15 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
         }
       }
 
-    async ngOnInit() {
+    async ngOnInit(): Promise<void> {
         this.isLoadingPost = true;
-
         try {
             await this.initDiscussion();
             await this.initPostsAppStates();
-            this.loadOtherInfo();
-        } catch(err) {
+            await this.loadOtherInfo();
+        } catch (err) {
             console.error(err);
         }
-
         this.isLoadingPost = false;
         this._cdr.detectChanges();
     }
@@ -224,11 +218,9 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
         };
         await this.pubSubService.start(this, appStateConfig, appStateServices);
         this.postsStateService = this.pubSubService.getStateService<PostsStateService>(this.postsStateId);
-
         this.postsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingChildren = loading);
-
-        this.postsStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
-            if ((this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) || event.data.isHidden) {
+        this.postsStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(async event => {
+            if (this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) {
                 return;
             }
             switch (event.type) {
@@ -237,6 +229,10 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
                 this.totalChildrenCount++;
                 break;
             case StateUpdateType.Update:
+                const isHidden = await this._postsService.getPostVisibility(event.data.id, this.currentUserId).toPromise();
+                if ((this.currentUserId !== event.data.creatorUserId && isHidden) || event.data.isHidden) {
+                    break;
+                }
                 this.children = this.children.map(p => p.id === event.data.id ? event.data : p);
                 break;
             case StateUpdateType.Delete:

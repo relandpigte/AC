@@ -28,8 +28,7 @@ export class CourseNameComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   onCloseClick(): void {
     this.modalClose.emit();
@@ -50,7 +49,7 @@ export class CourseNameComponent extends AppComponentBase implements OnInit {
         })
       )
       .subscribe((response) => {
-        this._serviceData.createServiceDiscussion(response.id, ServicesType.Course);
+        this._serviceData.createServiceDiscussion(response.id, ServicesType.Course, this.currentUserId);
         this.notify.success(this.l('SavedSuccessfully'));
         this.modalClose.emit();
         this._router.navigate(['/app/courses', response.id]);

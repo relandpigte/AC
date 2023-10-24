@@ -33,7 +33,7 @@ export class ServiceDataService {
     this._discussionId.next(value);
   }
 
-  createServiceDiscussion(serviceId: string, serviceType: ServicesType): void {
+  createServiceDiscussion(serviceId: string, serviceType: ServicesType, userId: number): void {
     this._postsService.create(
       `Discussion for ${ServicesType[serviceType]}: ${serviceId}`,
       undefined,
@@ -58,6 +58,7 @@ export class ServiceDataService {
             serviceType: serviceType,
             postId: postId
           });
+          this._postsService.deletePostNotification(postId, userId).subscribe();
           return this._serviceDiscussion.createServiceDiscussion(serviceDiscussionDto);
         })
       )

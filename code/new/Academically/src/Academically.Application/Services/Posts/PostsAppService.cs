@@ -760,6 +760,12 @@ namespace Academically.Services.Posts
             return query;
         }
 
+        public async Task<bool> GetPostVisibility(Guid postId, long userId)
+        {
+            var response = await _postVisibilityRepository.FirstOrDefaultAsync(p => p.PostId == postId && p.CreatorUserId == userId && p.IsHidden);
+            return response != null;
+        }
+
         public async Task<Guid> SetPostVisibility([FromForm] PostVisibilityDto input)
         {
             input.CreatorUserId = AbpSession.UserId.Value;

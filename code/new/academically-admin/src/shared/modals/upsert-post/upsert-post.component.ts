@@ -266,7 +266,8 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
   }
 
   private isValidQuickPost(): boolean {
-    return this.model && this.model.information || !!this.model.file;
+    return this.model && this.model.information || !!this.model.file || (!!this.model.sharedId &&
+      !!this.model.sharedType && !!this.model.sharedServiceType);
   }
 
   private isValidQuestion(): boolean {
