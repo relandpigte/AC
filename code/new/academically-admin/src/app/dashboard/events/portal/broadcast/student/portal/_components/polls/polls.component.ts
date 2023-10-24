@@ -57,6 +57,7 @@ export class PollsComponent extends AppComponentBase implements OnInit {
     this.pipeDestroy(this._portalService.event$, (response) => {
       if (response) {
         this.isHost = response.creatorUserId === this.appSession.userId;
+        this.selectedTab = this.isHost ? PollTab.Queue : PollTab.Open;
       }
     });
     this.pipeDestroy(this._portalPollService.pollSelectedMaximized$, isMaximized => this.isSelectedMaximized = isMaximized);

@@ -50,24 +50,23 @@
     <div class="d-flex flex-column h-100">
       <ul class="nav nav-tabs nav-tabs-sm px-3">
         <li class="nav-item">
-          <a #openNav href="#" class="nav-link active" id="polls-open-tab" data-toggle="tab" href="#polls-open-container"
-            role="tab" aria-controls="polls-open-container" aria-selected="true">
+          <a #openNav href="#" class="nav-link" [class.active]="isOpenTabSelected" id="polls-open-tab" data-toggle="tab" href="#polls-open-container"
+            role="tab" aria-controls="polls-open-container" [aria-selected]="isOpenTabSelected" (click)="handleTabClick(PollTab.Open)">
             {{ 'To do' | localize }}
           </a>
         </li>
         <li class="nav-item">
-          <a #closedNav href="#" class="nav-link" id="polls-closed-tab" data-toggle="tab" href="#polls-closed-container"
-            role="tab" aria-controls="polls-closed-container" aria-selected="true">
+          <a #closedNav href="#" class="nav-link" [class.active]="isClosedTabSelected" id="polls-closed-tab" data-toggle="tab" href="#polls-closed-container"
+            role="tab" aria-controls="polls-closed-container" [aria-selected]="isClosedTabSelected" (click)="handleTabClick(PollTab.Closed)">
             {{ 'Results' | localize }}
           </a>
         </li>
       </ul>
       <div class="tab-content">
-        <div class="tab-pane fade show active" id="polls-open-container" role="tabpanel"
-          aria-labelledby="polls-registants-tab">
+        <div class="tab-pane fade" [ngClass]="{ 'show active': isOpenTabSelected }" id="polls-open-container" role="tabpanel" aria-labelledby="polls-registants-tab">
           <app-polls-open [referenceId]="referenceId" [isHost]="isHost"></app-polls-open>
         </div>
-        <div class="tab-pane fade" id="polls-closed-container" role="tabpanel" aria-labelledby="polls-closed-tab">
+        <div class="tab-pane fade" [ngClass]="{ 'show active': isClosedTabSelected }" id="polls-closed-container" role="tabpanel" aria-labelledby="polls-closed-tab">
           <app-polls-closed [referenceId]="referenceId" [isHost]="isHost"></app-polls-closed>
         </div>
       </div>
