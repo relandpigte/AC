@@ -15,7 +15,7 @@ import { AppConsts } from '@shared/AppConsts';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import {
   EventCategory,
-  EventDto,
+  EventDto, EventsServiceProxy,
   PostsServiceProxy, SavedServicesServiceProxy,
   ServicesServiceProxy, SharedType,
   UserDto
@@ -32,7 +32,6 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
   NavigationPosition = NavigationPosition;
 
   shimmerType = ShimmerType;
-  isPurchased = true;
   isSaved: boolean;
 
   constructor(
@@ -41,10 +40,10 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
     private _modalService: BsModalService,
     private _landingPageService: LandingPagesService,
     private _serviceData: ServiceDataService,
-    private _servicesService: ServicesServiceProxy,
     private _clipboard: Clipboard,
     private _postsService: PostsServiceProxy,
     private _savedService: SavedServicesServiceProxy,
+    private _eventsService: EventsServiceProxy
   ) {
     super(injector);
     this.themeSettings = _themeSettingsService.getConfiguration();
@@ -56,6 +55,7 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
   get eventTitle(): string { return this.data?.name; }
   get eventCategoryName(): string { return this.data?.category === EventCategory.Broadcast ? 'Broadcast' : 'Workshop'; }
   get price(): number { return this.data?.price ?? 0; }
+  get isPurchased(): boolean { return this.data?.isPurchased; }
 
   ngOnInit(): void {
     this._serviceData.serviceData$
@@ -63,7 +63,6 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
       .subscribe(async data => {
         this.data = data;
         this.isSaved = this.data?.isSaved;
-        this.isPurchased = this.data?.isPurchased;
       });
   }
 
@@ -75,7 +74,9 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
     modalSettings.class = 'modal-lg modal-dialog-centered';
     modalSettings.initialState = { serviceId: this.data.id, data: this.data };
     const modal = this._modalService.show(PurchaseServiceComponent, modalSettings);
-    modal.content.onPaid.subscribe(async () => this.isPurchased = true);
+    modal.content.onPaid.subscribe(async () => {
+      this._serviceData.serviceData = await this._eventsService.get(this.data?.id).toPromise();
+    });
   }
 
   handleShareClick(e: Event): void {
@@ -110,9 +111,7 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
   }
 
   handleSaveClick(): void {
-    if (!!!this.data?.id) {
-      return;
-    }
+    if (!!!this.data?.id) { return; }
     if (this.isSaved) {
       this._savedService.delete(this.data.id).subscribe(() => this.isSaved = false);
     } else {

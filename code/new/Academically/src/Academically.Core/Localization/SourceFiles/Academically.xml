@@ -1954,7 +1954,6 @@
 	<text name="Community.Share.AddToTimeline.Body">If you share this service to your timeline, it is will show in your profile and the feed.</text>
 	<!-- Events -->
 	<text name="EventsSchedule">From {0}</text>
-	  
     <text name="LiveNow">Live now</text>
 	<text name="StartingIn">Starting in {0}</text>
 	<text name="StartingFrom">{0} FROM {1}-{2}</text>
@@ -1963,6 +1962,9 @@
     <text name="LastActive">Active {0}</text>
     <text name="ReviewCount">{0} reviews</text>
     <text name="AreYouSure">Are you sure?</text>
+    <text name="TimeToStart">Time to start</text>
+    <text name="CompletedEvent">You’ve completed this {0}</text>
+    <text name="LeaveReview">Leave review</text>
 
     <!-- Dashboard -->
     <text name="DashboardForYou">For you</text>
