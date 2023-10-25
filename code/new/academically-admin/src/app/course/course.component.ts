@@ -49,10 +49,8 @@ export class CourseComponent extends  AppComponentBase implements OnInit {
 
   private async openMessageModal(): Promise<void> {
     const channel = await this._chatsService.getChannelByRecipient(this.eventOwnerId, this.appSession.userId).toPromise();
-    if (channel) {
-      this._chatService.replyingToUser$.next(this.data?.creatorUser);
-      this._chatService.selectedChannel$.next(channel);
-    }
+    this._chatService.replyingToUser$.next(this.data?.creatorUser);
+    this._chatService.selectedChannel$.next(channel);
 
     const modalSettings = this.defaultModalSettings as ModalOptions<ChatComposerConversationComponent>;
     modalSettings.class = 'modal-lg';
@@ -60,7 +58,7 @@ export class CourseComponent extends  AppComponentBase implements OnInit {
       hasActions: false,
       hasClose: true,
       showAttachmentInfo: false,
-      channel: channel,
+      channel: !!channel.id ? channel : null,
       isSearchingUser: false
     };
     const modal = this._modalService.show(ChatComposerConversationComponent, modalSettings);

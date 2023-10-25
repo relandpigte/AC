@@ -1,5 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { finalize, takeUntil } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import * as moment from 'moment';
 
 import { AppComponentBase } from '@shared/app-component-base';
@@ -18,14 +19,14 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
   cancelledEvents: EventDto[] = [];
   draftEvents: EventDto[] = [];
 
-
   isLoading = true;
   shimmerType = ShimmerType;
 
   constructor(
     injector: Injector,
     private _dashboardPageService: DashboardPagesService,
-    private _eventsService: EventsServiceProxy
+    private _eventsService: EventsServiceProxy,
+    private _router: Router
   ) {
     super(injector);
   }
@@ -38,6 +39,10 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
 
   ngOnInit(): void {
     this.initEvents();
+  }
+
+  async handleJoinClick(id: string): Promise<void> {
+    await this._router.navigate(['app/dashboard/events/portal/broadcast/student', id, 'portal']);
   }
 
   private initEvents(): void {

@@ -11,6 +11,7 @@
             <div class="row">
                 <div class="col col-sm-12">
                     <ng-container *ngIf="isAboutTab">
+                        <app-join-badge [data]="data"></app-join-badge>
                         <app-organizer-badge [data]="data"></app-organizer-badge>
                         <app-attendees-badge [data]="data"></app-attendees-badge>
                         <app-related-events-badge [data]="data"></app-related-events-badge>

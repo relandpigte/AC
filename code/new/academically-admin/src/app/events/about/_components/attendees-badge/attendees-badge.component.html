@@ -28,30 +28,32 @@
     </div>
 
     <div class="card-body">
-        <div *ngIf="!!attendees else noAttendee" class="list-group list-group-flush my-n3">
-            <div *ngFor="let attendee of attendees" class="list-group-item">
-                <div class="row align-items-center" >
-                    <div class="col-auto">
-                        <a href="#" class="avatar">
-                            <img [src]="attendee.profilePictureUrl" alt="..." class="avatar-img rounded-circle">
-                        </a>
-                    </div>
-                    <div class="col pl-1">
-                        <h4 class="mb-1">
-                            <a href="#">{{ attendee.fullName }}</a>
-                        </h4>
-                        <p class="small mb-0">
-                            <span class="text-muted">Going</span>
-                        </p>
-                    </div>
-                    <div class="col-auto">
-                        <a href="#!" class="btn btn-outline-primary btn-sm">
-                            Follow
-                        </a>
+        <ng-container *ngIf="!!attendees?.length else noAttendee">
+            <div class="list-group list-group-flush my-n3">
+                <div *ngFor="let attendee of attendees" class="list-group-item">
+                    <div class="row align-items-center" >
+                        <div class="col-auto">
+                            <a href="#" class="avatar">
+                                <img [src]="attendee.profilePictureUrl" alt="..." class="avatar-img rounded-circle">
+                            </a>
+                        </div>
+                        <div class="col pl-1">
+                            <h4 class="mb-1">
+                                <a href="#">{{ attendee.fullName }}</a>
+                            </h4>
+                            <p class="small mb-0">
+                                <span class="text-muted">Going</span>
+                            </p>
+                        </div>
+                        <div class="col-auto">
+                            <a href="#!" class="btn btn-outline-primary btn-sm">
+                                Follow
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </ng-container>
     </div>
 </div>
 
@@ -62,8 +64,6 @@
 </ng-template>
 
 <ng-template #broadcast>
-    <h6 class="text-uppercase text-muted">
-        GOING
-    </h6>
+    <h6 class="text-uppercase text-muted">{{ 'Going' | localize }}</h6>
     <h2 class="mb-0">{{ attendeesTotal }}</h2>
 </ng-template>

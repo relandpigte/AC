@@ -1,11 +1,14 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { Injector } from '@node_modules/@angular/core';
+import { Component, Injector, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Router } from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
+import * as _ from 'lodash';
+import * as moment from 'moment';
+
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
-import { EventDto, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
-import { Router } from '@angular/router';
-import { takeUntil } from 'rxjs/operators';
+import { EventDto, EventsServiceProxy, EventStatus } from '@shared/service-proxies/service-proxies';
+
 
 @Component({
   selector: 'app-related-events-badge',
@@ -28,7 +31,6 @@ export class RelatedEventsBadgeComponent extends AppComponentBase implements OnI
   }
 
   get isLoading$() { return this._landingPageService.isLoading$; }
-  get userId(): number { return this.appSession.userId; }
 
   ngOnInit(): void {}
 
@@ -38,21 +40,31 @@ export class RelatedEventsBadgeComponent extends AppComponentBase implements OnI
     }
   }
 
-  handleItemClick(item: any, type: string): void {
-    switch (type) {
-      case 'events':
-        this._router.navigate(['app/events', item.id, 'about']);
-        break;
-      default:
-    }
+  dateComposition(event: EventDto): string {
+    const { eventDateTime, duration} = event;
+    return `FROM ${moment(eventDateTime).format('HH:mm')}-${moment(eventDateTime).add(duration, 'minutes').format('HH:mm')}, ${moment(eventDateTime).format('DD ddd, YYYY')}`;
+  }
+
+  async handleItemClick(item: any): Promise<void> {
+    await this._router.navigate(['app/events', item.id, 'about']);
   }
 
   private initRelatedEvents(): void {
-    this._eventsService.getAll(undefined, this.userId, undefined, undefined, undefined, undefined, undefined, undefined, 4)
+    this._eventsService.getAll(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      EventStatus.Published,
+      undefined,
+      undefined,
+      undefined
+    )
       .pipe(takeUntil(this.destroyed$))
       .subscribe(events => {
-        this.relatedEvents = events.items;
-        console.warn(events);
+        this.relatedEvents = _.take(events.items.filter(x => x.id !== this.data?.id), 4);
+        console.warn(this.relatedEvents);
       });
   }
 }
