@@ -128,5 +128,11 @@ namespace Academically.Services.Events.Dto
         
         [NotMapped]
         public IEnumerable<UserDto> Purchased { get; set; }
+        
+        [NotMapped]
+        public bool HasReviewed { get; set; }
+        
+        [NotMapped]
+        public EventRating Review { get; set; }
     }
 }

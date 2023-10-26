@@ -47,6 +47,7 @@ namespace Academically.Services.Events
         private readonly IRepository<ServicePurchase, Guid> _servicePurchasesRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IExploreRepository _exploreRepository;
+        private readonly IRepository<EventRating, Guid> _eventRatingsRepository;
 
         public EventsAppService(
             RoleManager roleManager,
@@ -61,7 +62,8 @@ namespace Academically.Services.Events
             IRepository<SavedService, Guid> savedServiceRepository,
             IRepository<ServicePurchase, Guid> servicePurchasesRepository,
             IDocumentsDomainService documentsDomainService,
-            IExploreRepository exploreRepository
+            IExploreRepository exploreRepository,
+            IRepository<EventRating, Guid> eventRatingsRepository
             ) : base(repository)
         {
             LocalizationSourceName = AcademicallyConsts.LocalizationSourceName;
@@ -78,6 +80,7 @@ namespace Academically.Services.Events
             _servicePurchasesRepository = servicePurchasesRepository;
             _documentsDomainService = documentsDomainService;
             _exploreRepository = exploreRepository;
+            _eventRatingsRepository = eventRatingsRepository;
         }
 
         protected override IQueryable<Event> CreateFilteredQuery(PagedEventResultRequestDto input)
@@ -146,6 +149,10 @@ namespace Academically.Services.Events
             var servicePurchase = await _servicePurchasesRepository
                 .FirstOrDefaultAsync(p => p.ReferenceId.ToString() == result.Id.ToString() && p.CreatorUserId == AbpSession.GetUserId());
             result.IsPurchased = servicePurchase != null;
+
+            var eventReview = await _eventRatingsRepository.FirstOrDefaultAsync(r => r.EventId == result.Id && r.CreatorUserId == AbpSession.GetUserId());
+            result.HasReviewed = eventReview != null;
+            result.Review = eventReview;
             
             var savedService = await _savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == result.Id.ToString());
             result.IsSaved = savedService != null;
@@ -263,6 +270,10 @@ namespace Academically.Services.Events
 
                 var purchasedService = await this._servicePurchasesRepository.FirstOrDefaultAsync(p => p.ReferenceId.ToString() == vid.Id.ToString() && p.CreatorUserId == this.AbpSession.UserId);
                 vid.IsPurchased = purchasedService != null;
+                
+                var eventReview = await _eventRatingsRepository.FirstOrDefaultAsync(r => r.EventId == vid.Id && r.CreatorUserId == AbpSession.GetUserId());
+                vid.HasReviewed = eventReview != null;
+                vid.Review = eventReview;
                 
                 vid.Purchased = await _servicePurchasesRepository.GetAll()
                     .Where(c => c.ReferenceId == vid.Id)

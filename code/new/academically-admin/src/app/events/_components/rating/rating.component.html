@@ -1,0 +1,35 @@
+<form class="modal-card card rating" autocomplete="off" #form="ngForm" (ngSubmit)="handleFormSubmit()">
+    <abp-modal-header [title]="l('LeaveRating')" (onCloseClick)="onCloseClick()">
+    </abp-modal-header>
+    <div class="card-body rating-body">
+        <div class="row">
+            <div class="col">
+                <h6 class="rating-title text-center">{{ 'OverallRate' | localize : data.name }}</h6>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="rating-stars d-flex justify-content-center">
+                    <app-star-rating-review [actualRating]="model.rating" [readonly]="false" (ratingUpdated)="handleRatingUpdated($event)"></app-star-rating-review>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group rating-comment">
+                    <label for="comments" class="sr-only">Comment</label>
+                    <textarea class="form-control" [(ngModel)]="model.comments" id="comments" name="comments" placeholder="{{ 'EventExperience' | localize : data.name }}"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="d-flex justify-content-end rating-button">
+                    <button type="submit" class="btn btn-primary pl-5 pr-5" [disabled]="isLoading || !form.form.valid || !isFormValid">
+                        {{ 'Submit' | localize }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

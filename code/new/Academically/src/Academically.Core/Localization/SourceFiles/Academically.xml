@@ -1952,6 +1952,7 @@
 	<!-- Community - Share -->
 	<text name="Community.Share.AddToTimeline.Title">Add it to timeline</text>
 	<text name="Community.Share.AddToTimeline.Body">If you share this service to your timeline, it is will show in your profile and the feed.</text>
+    
 	<!-- Events -->
 	<text name="EventsSchedule">From {0}</text>
     <text name="LiveNow">Live now</text>
@@ -1965,6 +1966,12 @@
     <text name="TimeToStart">Time to start</text>
     <text name="CompletedEvent">You’ve completed this {0}</text>
     <text name="LeaveReview">Leave review</text>
+    <text name="LeaveRating">Leave a rating</text>
+    <text name="OverallRate">Overall, how would you rate {0}</text>
+    <text name="EventExperience">Tell us about your experience of {0}</text>
+    <text name="YourEventRating">Your rating for this {0}</text>
+    <text name="RatingSubmitted">Rating submitted</text>
+    <text name="ThankYouForRating">Thank you for your rating. Your response has been sent to the organiser.</text>
 
     <!-- Dashboard -->
     <text name="DashboardForYou">For you</text>

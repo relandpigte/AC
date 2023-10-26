@@ -75,7 +75,8 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
     modalSettings.initialState = { serviceId: this.data.id, data: this.data };
     const modal = this._modalService.show(PurchaseServiceComponent, modalSettings);
     modal.content.onPaid.subscribe(async () => {
-      this._serviceData.serviceData = await this._eventsService.get(this.data?.id).toPromise();
+      this.data.isPurchased = true;
+      this._serviceData.serviceData = this.data;
     });
   }
 

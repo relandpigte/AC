@@ -1,4 +1,4 @@
-<div *ngIf="isPurchased" class="card custom-card-border custom-card-shadow">
+<div *ngIf="isPurchased && !hasReviewed" class="card custom-card-border custom-card-shadow">
     <div class="card-body">
         <ng-container *ngIf="!eventFinished else rateEvent">
             <div class="schedule">
@@ -15,6 +15,6 @@
     <div class="review">
         <img class="mx-auto d-block" src="assets/img/events/completed-icon.svg" alt="Leave review">
         <h6 class="review-text text-center text-uppercase">{{ completedText }}</h6>
-        <button class="btn btn-primary w-100">{{ 'LeaveReview' | localize }}</button>
+        <button class="btn btn-primary w-100" (click)="handleEventReview()">{{ 'LeaveReview' | localize }}</button>
     </div>
 </ng-template>
