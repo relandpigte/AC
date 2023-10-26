@@ -37434,7 +37434,7 @@ export class CourseDto implements ICourseDto {
     units: number;
     isSaved: boolean;
     isPurchased: boolean;
-    isDoneRating: boolean;
+    hasReviewed: boolean;
     enrolled: UserDto[] | undefined;
 
     constructor(data?: ICourseDto) {
@@ -37486,7 +37486,7 @@ export class CourseDto implements ICourseDto {
             this.units = _data["units"];
             this.isSaved = _data["isSaved"];
             this.isPurchased = _data["isPurchased"];
-            this.isDoneRating = _data["isDoneRating"];
+            this.hasReviewed = _data["hasReviewed"];
             if (Array.isArray(_data["enrolled"])) {
                 this.enrolled = [] as any;
                 for (let item of _data["enrolled"])
@@ -37542,7 +37542,7 @@ export class CourseDto implements ICourseDto {
         data["units"] = this.units;
         data["isSaved"] = this.isSaved;
         data["isPurchased"] = this.isPurchased;
-        data["isDoneRating"] = this.isDoneRating;
+        data["hasReviewed"] = this.hasReviewed;
         if (Array.isArray(this.enrolled)) {
             data["enrolled"] = [];
             for (let item of this.enrolled)
@@ -37594,7 +37594,7 @@ export interface ICourseDto {
     units: number;
     isSaved: boolean;
     isPurchased: boolean;
-    isDoneRating: boolean;
+    hasReviewed: boolean;
     enrolled: UserDto[] | undefined;
 }
 

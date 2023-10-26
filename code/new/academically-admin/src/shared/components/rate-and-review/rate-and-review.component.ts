@@ -13,7 +13,6 @@ import {
 import { AppSessionService } from '@shared/session/app-session.service';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { BsModalRef } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
@@ -25,6 +24,7 @@ import { Subject } from 'rxjs';
 export class RateAndReviewComponent extends AppComponentBase implements OnInit {
   @Input() serviceId: string;
   @Output() onSuccessReview = new Subject<any>();
+  @Output() onClose = new Subject<any>();
 
   service: AvailableServiceDto;
   isLoading = false;
@@ -39,7 +39,6 @@ export class RateAndReviewComponent extends AppComponentBase implements OnInit {
 
   constructor(
     injector: Injector,
-    private _modal: BsModalRef,
     private _appSession: AppSessionService,
     private _postsService: PostsServiceProxy,
     private _ratingsService: RatingsServiceProxy,
@@ -90,7 +89,7 @@ export class RateAndReviewComponent extends AppComponentBase implements OnInit {
   }
 
   onCloseClick(): void {
-    this._modal.hide();
+    this.onClose.next();
   }
 
   getRatingAreaValue(area: RatingAreaType): number {

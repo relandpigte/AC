@@ -36,6 +36,7 @@ export class CourseReviewsComponent extends AppComponentBase implements OnInit {
   get courseId(): string { return this.data?.id; }
   get isLoading$() { return this._landingPageService.isLoading$; }
   get tutorId(): number { return this.data?.creatorUser?.id; }
+  get hasReviewed(): boolean { return this.data?.hasReviewed; }
 
   ngOnInit(): void {
     this._serviceData.serviceData$.pipe(takeUntil(this.destroyed$)).subscribe(d => {
@@ -44,6 +45,11 @@ export class CourseReviewsComponent extends AppComponentBase implements OnInit {
         this.getCourseRatings();
       }
     });
+  }
+
+  handleSuccessReview(): void {
+    this.data.hasReviewed = true;
+    this._serviceData.serviceData = this.data;
   }
 
   private getCourseRatings(): void {

@@ -42,6 +42,7 @@ namespace Academically.Services.Courses
         private readonly IRepository<ServicePurchase, Guid> _servicePurchasesRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IExploreRepository _exploreRepository;
+        private readonly IRepository<ServiceRating, Guid> _serviceRatingRepository;
 
         public CoursesAppService(
             IRepository<Course, Guid> coursesRepository,
@@ -55,7 +56,8 @@ namespace Academically.Services.Courses
             IRepository<SavedService, Guid> savedServiceRepository,
             IRepository<ServicePurchase, Guid> servicePurchasesRepository,
             IDocumentsDomainService documentsDomainService,
-            IExploreRepository exploreRepository
+            IExploreRepository exploreRepository,
+            IRepository<ServiceRating, Guid> serviceRatingRepository
             ) : base(coursesRepository)
         {
             _ratingRepository = ratingRepository;
@@ -69,6 +71,7 @@ namespace Academically.Services.Courses
             _courseConversationReactionRepository = courseConversationReactionRepository;
             _savedServiceRepository = savedServiceRepository;
             _servicePurchasesRepository = servicePurchasesRepository;
+            _serviceRatingRepository = serviceRatingRepository;
         }
 
         public override async Task<CourseDto> GetAsync(EntityDto<Guid> input)
@@ -110,6 +113,9 @@ namespace Academically.Services.Courses
             
             var savedService = await _savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == output.Id.ToString());
             output.IsSaved = savedService != null;
+            
+            var userRating = await _serviceRatingRepository.FirstOrDefaultAsync(r => r.ServiceId == output.Id && r.CreatorUserId == AbpSession.GetUserId());
+            output.HasReviewed = userRating != null;
                 
             return output;
         }
@@ -260,16 +266,17 @@ namespace Academically.Services.Courses
                 course.Modules = courseSections.Count(x => x.Type == CourseSectionType.Module && course.Id == x.CourseId && x.ParentId == null);
                 course.Lessons = courseSections.Count(x => x.Type == CourseSectionType.Lesson && course.Id == x.CourseId && x.ParentId == null);
                 course.Units = courseSections.Count(x => x.Type == CourseSectionType.Unit && course.Id == x.CourseId && x.ParentId == null);
-                course.IsDoneRating = await _ratingRepository.CountAsync(r =>
-                    r.CourseId == course.Id && r.CreatorUserId == AbpSession.GetUserId()) > 0;
+
+                var userRating = await _serviceRatingRepository.FirstOrDefaultAsync(r => r.ServiceId == course.Id && r.CreatorUserId == AbpSession.GetUserId());
+                course.HasReviewed = userRating != null;
 
                 if (studentCourses.Any(x => x.CourseId == course.Id))
                     course.Progress = studentCourses.FirstOrDefault(x => x.CourseId == course.Id)!.Progress;
 
-                var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == course.Id.ToString());
+                var savedService = await _savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == course.Id.ToString());
                 course.IsSaved = savedService != null;
 
-                var purchasedService = await this._servicePurchasesRepository.FirstOrDefaultAsync(p => p.ReferenceId.ToString() == course.Id.ToString() && p.CreatorUserId == this.AbpSession.UserId);
+                var purchasedService = await _servicePurchasesRepository.FirstOrDefaultAsync(p => p.ReferenceId.ToString() == course.Id.ToString() && p.CreatorUserId == this.AbpSession.UserId);
                 course.IsPurchased = purchasedService != null;
             }
 

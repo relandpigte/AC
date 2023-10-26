@@ -27,7 +27,7 @@ export class StartBadgeComponent extends AppComponentBase {
   }
 
   get courseId(): string { return this.data?.id; }
-  get hasReviewed(): boolean { return !!this.rating; }
+  get hasReviewed(): boolean { return this.data?.hasReviewed; }
   get serviceThumbnail(): string { return this.data?.courseImageUrl || 'assets/img/cover-photos/cp-1.jpeg'; }
   get progress(): number { return this.data?.progress; }
   get isCompleted(): boolean { return this.data?.progress === 100; }
@@ -58,7 +58,13 @@ export class StartBadgeComponent extends AppComponentBase {
       modalSettings.initialState = { serviceId: this.courseId };
       const modal = this._modalService.show(RateAndReviewComponent, modalSettings).content;
       modal.onSuccessReview.subscribe(async (): Promise<void> => {
+        this.data.hasReviewed = true;
+        this._serviceData.serviceData = this.data;
         this._serviceData.serviceRating = await this._ratingService.getUserServiceReview(this.data?.id).toPromise();
+      });
+
+      modal.onClose.subscribe((): void => {
+        this._modalService.hide();
       });
     } else {
       await this._router.navigate(['/app/student-portal', this.courseId, 'learn']);

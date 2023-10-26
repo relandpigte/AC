@@ -104,7 +104,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   get isArchive(): boolean { return this.sanitized?.status?.type === 'archived'; }
   get isExpired(): boolean { return this.sanitized?.dates?.startDate?.isBefore(moment()); }
   get isUpcoming(): boolean { return this.sanitized?.dates?.startDate?.isAfter(moment()); }
-  get hasReviewed(): boolean { return this.data?.isDoneRating; }
+  get hasReviewed(): boolean { return this.data?.hasReviewed; }
   get sessionDuration(): string { return humanizeDuration(this.composition.durationInSec * 1000); }
   get isScheduleNear(): boolean { return moment(this.sanitized?.dates?.startDate)?.diff(moment(), 'hours') < 1; }
   get schedule(): string {

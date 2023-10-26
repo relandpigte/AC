@@ -1,3 +1,10 @@
+<div *ngIf="!hasReviewed" class="reviews-inline">
+    <app-rate-and-review [serviceId]="courseId" (onSuccessReview)="handleSuccessReview()"></app-rate-and-review>
+    <div class="reviews-inline-separator d-flex align-items-center text-center">
+        <span class="flex-grow-1">{{ 'OtherReviews' | localize }}</span>
+    </div>
+</div>
+
 <div class="d-flex flex-column justify-content-center align-items-center w-100 position-relative">
     <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.LandingLeftReview" backgroundColor="#f9fbfd"></app-shimmer>
 

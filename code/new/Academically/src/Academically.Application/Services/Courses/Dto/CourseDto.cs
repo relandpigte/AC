@@ -60,9 +60,10 @@ namespace Academically.Services.Courses.Dto
         public bool IsPurchased { get; set; }
 
         [NotMapped]
-        public bool IsDoneRating { get; set; }
+        public bool HasReviewed { get; set; }
         
         [NotMapped]
         public IEnumerable<UserDto> Enrolled { get; set; }
+        
     }
 }
