@@ -4,7 +4,7 @@
     <div class="reviews-controls d-flex flex-row justify-content-between w-100">
         <div class="reviews-controls-left d-flex align-items-end">
             <div class="reviews-controls-left-posts-count">
-                {{ totalReview }} reviews
+                {{ totalServiceRatings }} reviews
             </div>
         </div>
         <div class="reviews-controls-right d-flex flex-row align-items-center gap-10">
@@ -32,7 +32,7 @@
         </div>
     </div>
 
-    <div *ngIf="courseRating" class="reviews-content w-100">
-        <app-service-review-card *ngFor="let rating of courseRating" [rating]="rating"></app-service-review-card>
+    <div *ngIf="!!totalServiceRatings" class="reviews-content w-100">
+        <app-service-review-card *ngFor="let review of serviceRatings" [review]="review"></app-service-review-card>
     </div>
 </div>

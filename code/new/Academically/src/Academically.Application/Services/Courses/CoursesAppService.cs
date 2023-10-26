@@ -80,7 +80,9 @@ namespace Academically.Services.Courses
                     .ThenInclude(e => e.CoverPhotoDocument)
                 .Include(e => e.CreatorUser)
                     .ThenInclude(e => e.ProfilePictureDocument)
-                .Include(e => e.StudentCourses)
+                .Include(c => c.StudentCourses)
+                    .ThenInclude(c => c.StudentCourseSections)
+                        .ThenInclude(c => c.CourseSection)
                 .FirstOrDefaultAsync();
             var output = ObjectMapper.Map<CourseDto>(course);
             var courseSections = await _courseSectionRepository.GetAll()
@@ -91,6 +93,13 @@ namespace Academically.Services.Courses
             output.Modules = courseSections.Count(x => x.Type == CourseSectionType.Module && output.Id == x.CourseId && x.ParentId == null);
             output.Lessons = courseSections.Count(x => x.Type == CourseSectionType.Lesson && output.Id == x.CourseId && x.ParentId == null);
             output.Units = courseSections.Count(x => x.Type == CourseSectionType.Unit && output.Id == x.CourseId && x.ParentId == null);
+            
+            var studentCourses = await _studentCourseRepository.GetAll()
+                .Where(x => x.CreatorUserId == AbpSession.GetUserId())
+                .ToListAsync();
+            
+            if (studentCourses.Any(x => x.CourseId == course.Id))
+                output.Progress = studentCourses.FirstOrDefault(x => x.CourseId == course.Id)!.Progress;
             
             var servicePurchase = await _servicePurchasesRepository
                 .FirstOrDefaultAsync(p => p.ReferenceId.ToString() == output.Id.ToString() && p.CreatorUserId == AbpSession.GetUserId());

@@ -10,9 +10,11 @@ import { BehaviorSubject, Observable } from '@node_modules/rxjs';
 export class ServiceDataService {
   public discussionId$: Observable<string>;
   public serviceData$: Observable<any>;
+  public serviceRating$: Observable<any>;
 
   private _discussionId: BehaviorSubject<string>;
   private _serviceData: BehaviorSubject<any>;
+  private _serviceRating: BehaviorSubject<any>;
 
   constructor(
     private _postsService: PostsServiceProxy,
@@ -23,6 +25,9 @@ export class ServiceDataService {
 
     this._serviceData = new BehaviorSubject<any>(null);
     this.serviceData$ = this._serviceData.asObservable();
+
+    this._serviceRating = new BehaviorSubject<any>(null);
+    this.serviceRating$ = this._serviceRating.asObservable();
   }
 
   public set serviceData(value: any) {
@@ -31,6 +36,10 @@ export class ServiceDataService {
 
   public set discussionId(value: string) {
     this._discussionId.next(value);
+  }
+
+  public set serviceRating(value: any) {
+    this._serviceRating.next(value);
   }
 
   createServiceDiscussion(serviceId: string, serviceType: ServicesType, userId: number): void {

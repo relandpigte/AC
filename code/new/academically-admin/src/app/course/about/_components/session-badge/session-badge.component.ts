@@ -4,7 +4,7 @@ import { finalize, takeUntil } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
-import { CourseDto, CourseRatingSummaryDto, RatingsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CourseDto, RatingsServiceProxy, ServiceRatingSummaryDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-session-badge',
@@ -15,7 +15,7 @@ export class SessionBadgeComponent extends AppComponentBase implements OnInit, O
   @Input() data: CourseDto;
 
   shimmerType = ShimmerType;
-  courseRatingSummary: CourseRatingSummaryDto;
+  courseRatingSummary: ServiceRatingSummaryDto;
   isSummaryLoading: boolean;
 
   constructor(
@@ -27,10 +27,11 @@ export class SessionBadgeComponent extends AppComponentBase implements OnInit, O
   }
 
   get isLoading$() { return this._landingPageService.isLoading$; }
+  get courseId(): string { return this.data?.id; }
   get description(): string { return this.data?.description; }
   get modules(): number { return this.data?.modules; }
   get lessons(): number { return this.data?.lessons; }
-  get ratingPercentage(): number { return this.courseRatingSummary?.totalRatingPercentage; }
+  get totalRatingPercentage(): number { return this.courseRatingSummary?.totalRatingPercentage; }
 
   ngOnInit(): void {}
 
@@ -42,7 +43,7 @@ export class SessionBadgeComponent extends AppComponentBase implements OnInit, O
 
   private getRatingSummary(): void {
     this.isSummaryLoading = true;
-    this._ratingsService.getCourseRatingSummary(this.data?.id)
+    this._ratingsService.getServiceRatingsSummary(this.courseId)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isSummaryLoading = false))
       .subscribe(rating => {

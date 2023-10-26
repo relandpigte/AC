@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import {
   AvailableServiceDto,
@@ -15,6 +15,7 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { finalize, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-rate-and-review',
@@ -23,6 +24,7 @@ import { finalize, takeUntil } from 'rxjs/operators';
 })
 export class RateAndReviewComponent extends AppComponentBase implements OnInit {
   @Input() serviceId: string;
+  @Output() onSuccessReview = new Subject<any>();
 
   service: AvailableServiceDto;
   isLoading = false;
@@ -82,6 +84,7 @@ export class RateAndReviewComponent extends AppComponentBase implements OnInit {
       )
       .subscribe(() => {
         this.notify.success(this.l('RateAndReviewSubmittionAlertMessage'));
+        this.onSuccessReview.next();
         this.onCloseClick();
       });
   }

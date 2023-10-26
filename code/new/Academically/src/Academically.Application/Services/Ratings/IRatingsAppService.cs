@@ -11,6 +11,8 @@ namespace Academically.Services.Ratings
     {
         Task<EventRating> CreateEventRatings(CreateEventRatingsDto input);
         Task CreateServiceRatings(CreateServiceRatingDto input);
+        Task<decimal> GetUserServiceReview(Guid serviceId);
+        Task<PagedResultDto<ServiceRatingDto>> GetServiceRatings(PagedServiceRatingRequestDto input);
         Task<StudentRatingSummaryDto> GetStudentRatingSummary(long studentId);
         Task<TutorRatingSummaryDto> GetTutorRatingSummary(long tutorId);
         Task<CourseRatingSummaryDto> GetCourseRatingSummary(Guid courseId);

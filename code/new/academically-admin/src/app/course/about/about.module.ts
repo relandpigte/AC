@@ -10,6 +10,8 @@ import { CourseAboutComponent } from '@app/course/about/about.component';
 import { InstructorBadgeComponent } from './_components/instructor-badge/instructor-badge.component';
 import { RelatedCoursesComponent } from './_components/related-courses/related-courses.component';
 import { CurriculumBadgeComponent } from './_components/curriculum-badge/curriculum-badge.component';
+import { StartBadgeComponent } from './_components/start-badge/start-badge.component';
+import { ReviewBadgeComponent } from '@app/course/about/_components/review-badge/review-badge.component';
 
 @NgModule({
   declarations: [
@@ -18,11 +20,15 @@ import { CurriculumBadgeComponent } from './_components/curriculum-badge/curricu
     LearnBadgeComponent,
     InstructorBadgeComponent,
     RelatedCoursesComponent,
-    CurriculumBadgeComponent
+    CurriculumBadgeComponent,
+    StartBadgeComponent,
+    ReviewBadgeComponent
   ],
   exports: [
     InstructorBadgeComponent,
-    RelatedCoursesComponent
+    RelatedCoursesComponent,
+    StartBadgeComponent,
+    ReviewBadgeComponent
   ],
   imports: [
     CommonModule,

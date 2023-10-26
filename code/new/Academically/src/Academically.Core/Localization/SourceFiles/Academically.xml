@@ -2013,5 +2013,9 @@
     <text name="MaximumAdvanceNoticeDesc">Limit how far into the future users can book</text>
     <text name="WeekStartDay">Week start day</text>
     <text name="WeekStartDayDesc">Select the day you’d like your week to start</text>
+
+    <!-- Course service -->
+    <text name="CourseCompleted">You’ve completed this course</text>
+    <text name="YourCourseReview">Your review for this Course</text>
   </texts>
 </localizationDictionary>

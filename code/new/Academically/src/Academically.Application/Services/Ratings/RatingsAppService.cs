@@ -9,7 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Abp.Runtime.Session;
+using ServiceRatingDto = Academically.Services.Ratings.Dto.ServiceRatingDto;
 
 namespace Academically.Services.Ratings
 {
@@ -22,6 +25,7 @@ namespace Academically.Services.Ratings
         private readonly IRepository<CourseRatingArea, Guid> _courseRatingAreasRepository;
         private readonly IRepository<ServiceRating, Guid> _serviceRatingsRepository;
         private readonly IRepository<EventRating, Guid> _eventRatingsRepository;
+        private readonly IRepository<ServiceRatingArea, Guid> _serviceRatingAreaRepository;
 
         public RatingsAppService(
             IRepository<StudentRating, Guid> studentRatingsRepository,
@@ -30,7 +34,8 @@ namespace Academically.Services.Ratings
             IRepository<CourseRating, Guid> courseRatingsRepository,
             IRepository<CourseRatingArea, Guid> courseRatingAreasRepository,
             IRepository<ServiceRating, Guid> serviceRatingsRepository,
-            IRepository<EventRating, Guid> eventRatingsRepository
+            IRepository<EventRating, Guid> eventRatingsRepository,
+            IRepository<ServiceRatingArea, Guid> serviceRatingAreaRepository
             )
         {
             _studentRatingsRepository = studentRatingsRepository;
@@ -40,6 +45,7 @@ namespace Academically.Services.Ratings
             _courseRatingAreasRepository = courseRatingAreasRepository;
             _serviceRatingsRepository = serviceRatingsRepository;
             _eventRatingsRepository = eventRatingsRepository;
+            _serviceRatingAreaRepository = serviceRatingAreaRepository;
         }
 
         public async Task<EventRating> CreateEventRatings(CreateEventRatingsDto input)
@@ -58,6 +64,72 @@ namespace Academically.Services.Ratings
                 .ToList();
 
             await _serviceRatingsRepository.InsertAsync(serviceRating);
+        }
+
+        public async Task<decimal> GetUserServiceReview(Guid serviceId)
+        {
+            var rating = await _serviceRatingsRepository.GetAll()
+                .Include(s => s.ServiceRatingAreas)
+                .Where(s => s.ServiceId == serviceId && s.CreatorUserId == AbpSession.GetUserId())
+                .FirstOrDefaultAsync();
+
+            if (rating == null) return 0;
+            return rating.ServiceRatingAreas.Sum(s => s.Rating).ToDecimal() / 5;
+        }
+
+        public async Task<PagedResultDto<ServiceRatingDto>> GetServiceRatings(PagedServiceRatingRequestDto input)
+        {
+            var serviceRatings = await _serviceRatingsRepository.GetAll()
+                .Include(s => s.ServiceRatingAreas)
+                .Include(s => s.CreatorUser)
+                    .ThenInclude(e => e.ProfilePictureDocument)
+                .Where(s => s.ServiceId == input.ServiceId)
+                .OrderByDescending(e => e.CreationTime)
+                .PageBy(input)
+                .Take(input.MaxResultCount)
+                .ToListAsync();
+            
+            var outputs = new List<ServiceRatingDto>();
+            foreach (var rating in serviceRatings)
+            {
+                var output = ObjectMapper.Map<ServiceRatingDto>(rating);
+                output.TotalRatingPercentage = rating.ServiceRatingAreas.Sum(s => s.Rating).ToDecimal() / 5;
+                outputs.Add(output);
+            }
+                
+            return new PagedResultDto<ServiceRatingDto>(serviceRatings.Count, outputs);
+        }
+
+        public async Task<ServiceRatingSummaryDto> GetServiceRatingsSummary(Guid serviceId)
+        {
+            var serviceRatingsSummary = new ServiceRatingSummaryDto();
+            var serviceRatingsQuery = _serviceRatingsRepository.GetAll()
+                .Where(s => s.ServiceId == serviceId);
+
+            serviceRatingsSummary.TotalReviews = await serviceRatingsQuery.CountAsync();
+            if (serviceRatingsSummary.TotalReviews != 0)
+            {
+                serviceRatingsSummary.TotalNeutralReviews = await _serviceRatingsRepository.CountAsync(e => e.ExperienceType == RatingExperienceType.Neutral);
+                if (serviceRatingsSummary.TotalReviews != serviceRatingsSummary.TotalNeutralReviews)
+                {
+                    serviceRatingsSummary.TotalPositiveReviews = await _serviceRatingsRepository.CountAsync(e => e.ExperienceType == RatingExperienceType.Positive);
+                    serviceRatingsSummary.TotalNegativeReviews = await _serviceRatingsRepository.CountAsync(e => e.ExperienceType == RatingExperienceType.Negative);
+                    serviceRatingsSummary.PositivePercentage = serviceRatingsSummary.TotalPositiveReviews.ToDecimal() / (serviceRatingsSummary.TotalPositiveReviews.ToDecimal() + serviceRatingsSummary.TotalNegativeReviews.ToDecimal());
+                    serviceRatingsSummary.PositivePercentage = Math.Round(serviceRatingsSummary.PositivePercentage * 100, 1);
+                }
+            }
+
+            var serviceRatingAreasQuery = _serviceRatingAreaRepository.GetAll()
+                .Where(e => e.ServiceRating.ServiceId == serviceId);
+            serviceRatingsSummary.TotalCommunicationRatings = await GetTotalServiceRatingsOnArea(serviceRatingAreasQuery, RatingAreaType.Communication);
+            serviceRatingsSummary.TotalValueForMoneyRatings = await GetTotalServiceRatingsOnArea(serviceRatingAreasQuery, RatingAreaType.ValueForMoney);
+            serviceRatingsSummary.TotalPunctualityRatings = await GetTotalServiceRatingsOnArea(serviceRatingAreasQuery, RatingAreaType.Punctuality);
+            serviceRatingsSummary.TotalProfessionalismsRating = await GetTotalServiceRatingsOnArea(serviceRatingAreasQuery, RatingAreaType.Professionalism);
+            serviceRatingsSummary.TotalKnowledgeRatings = await GetTotalServiceRatingsOnArea(serviceRatingAreasQuery, RatingAreaType.Knowledge);
+            serviceRatingsSummary.TotalRatingPercentage = Math.Round((serviceRatingsSummary.TotalCommunicationRatings + serviceRatingsSummary.TotalValueForMoneyRatings
+                + serviceRatingsSummary.TotalPunctualityRatings + serviceRatingsSummary.TotalProfessionalismsRating + serviceRatingsSummary.TotalKnowledgeRatings) / 5, 1);
+
+            return serviceRatingsSummary;
         }
 
         public async Task<StudentRatingSummaryDto> GetStudentRatingSummary(long studentId)
@@ -308,6 +380,14 @@ namespace Academically.Services.Ratings
                 return 0;
             }
             return Math.Round(sumOfAllRatingsByNRatingForArea.ToDecimal() / sumOfAllRatingsForArea.ToDecimal(), 1);
+        }
+
+        private static async Task<decimal> GetTotalServiceRatingsOnArea(IQueryable<ServiceRatingArea> ratingAreas, RatingAreaType areaType)
+        {
+            var totalRatingAreas = await ratingAreas.CountAsync(r => r.AreaType == areaType);
+            return totalRatingAreas == 0 ? 0 : Math.Round((await ratingAreas
+                .Where(r => r.AreaType == areaType)
+                .SumAsync(r => r.Rating)).ToDecimal() / totalRatingAreas, 1);
         }
     }
 }

@@ -1,0 +1,27 @@
+<div *ngIf="isPurchased && !hasReviewed" class="card start custom-card-border custom-card-shadow">
+    <div class="card-body start-body">
+        <ng-container *ngIf="!isCompleted else reviewTemplate">
+            <div class="start-details d-flex gap-15">
+                <div class="start-details-thumb flex-shrink-0">
+                    <img src="{{ serviceThumbnail }}" alt="...">
+                </div>
+                <div class="start-details-text">
+                    <p>{{ currentLesson | shorten : 55 }}</p>
+                    <div class="start-details-progress progress progress-sm">
+                        <div class="progress-bar" role="progressbar" [style.width.%]="progress"></div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <div class="start-button">
+            <button class="btn btn-primary w-100" (click)="handleStartCourse()">{{ startButton }}</button>
+        </div>
+    </div>
+</div>
+
+<ng-template #reviewTemplate>
+    <div class="start-review">
+        <img class="mx-auto d-block" src="assets/img/events/completed-icon.svg" alt="Leave review">
+        <h6 class="start-review-text text-center text-uppercase">{{ 'CourseCompleted' | localize }}</h6>
+    </div>
+</ng-template>

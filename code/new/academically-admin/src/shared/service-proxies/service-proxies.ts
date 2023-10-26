@@ -19974,6 +19974,184 @@ export class RatingsServiceProxy {
     }
 
     /**
+     * @param serviceId (optional) 
+     * @return Success
+     */
+    getUserServiceReview(serviceId: string | undefined): Observable<number> {
+        let url_ = this.baseUrl + "/api/services/app/Ratings/GetUserServiceReview?";
+        if (serviceId === null)
+            throw new Error("The parameter 'serviceId' cannot be null.");
+        else if (serviceId !== undefined)
+            url_ += "serviceId=" + encodeURIComponent("" + serviceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetUserServiceReview(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetUserServiceReview(<any>response_);
+                } catch (e) {
+                    return <Observable<number>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetUserServiceReview(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number>(<any>null);
+    }
+
+    /**
+     * @param serviceId (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getServiceRatings(serviceId: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<ServiceRatingDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Ratings/GetServiceRatings?";
+        if (serviceId === null)
+            throw new Error("The parameter 'serviceId' cannot be null.");
+        else if (serviceId !== undefined)
+            url_ += "ServiceId=" + encodeURIComponent("" + serviceId) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetServiceRatings(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetServiceRatings(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceRatingDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceRatingDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetServiceRatings(response: HttpResponseBase): Observable<ServiceRatingDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServiceRatingDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceRatingDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param serviceId (optional) 
+     * @return Success
+     */
+    getServiceRatingsSummary(serviceId: string | undefined): Observable<ServiceRatingSummaryDto> {
+        let url_ = this.baseUrl + "/api/services/app/Ratings/GetServiceRatingsSummary?";
+        if (serviceId === null)
+            throw new Error("The parameter 'serviceId' cannot be null.");
+        else if (serviceId !== undefined)
+            url_ += "serviceId=" + encodeURIComponent("" + serviceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetServiceRatingsSummary(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetServiceRatingsSummary(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceRatingSummaryDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceRatingSummaryDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetServiceRatingsSummary(response: HttpResponseBase): Observable<ServiceRatingSummaryDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServiceRatingSummaryDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceRatingSummaryDto>(<any>null);
+    }
+
+    /**
      * @param studentId (optional) 
      * @return Success
      */
@@ -49965,6 +50143,211 @@ export interface IServicePurchaseDto {
     creatorUser: UserDto;
     ownerId: number | undefined;
     type: ServicesType;
+}
+
+export class ServiceRatingDto implements IServiceRatingDto {
+    id: string;
+    serviceId: string;
+    experienceType: RatingExperienceType;
+    comments: string | undefined;
+    creationTime: moment.Moment;
+    creatorUser: UserDto;
+    totalRatingPercentage: number;
+
+    constructor(data?: IServiceRatingDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.serviceId = _data["serviceId"];
+            this.experienceType = _data["experienceType"];
+            this.comments = _data["comments"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+            this.totalRatingPercentage = _data["totalRatingPercentage"];
+        }
+    }
+
+    static fromJS(data: any): ServiceRatingDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServiceRatingDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["serviceId"] = this.serviceId;
+        data["experienceType"] = this.experienceType;
+        data["comments"] = this.comments;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        data["totalRatingPercentage"] = this.totalRatingPercentage;
+        return data; 
+    }
+
+    clone(): ServiceRatingDto {
+        const json = this.toJSON();
+        let result = new ServiceRatingDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IServiceRatingDto {
+    id: string;
+    serviceId: string;
+    experienceType: RatingExperienceType;
+    comments: string | undefined;
+    creationTime: moment.Moment;
+    creatorUser: UserDto;
+    totalRatingPercentage: number;
+}
+
+export class ServiceRatingDtoPagedResultDto implements IServiceRatingDtoPagedResultDto {
+    items: ServiceRatingDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IServiceRatingDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(ServiceRatingDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): ServiceRatingDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServiceRatingDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): ServiceRatingDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new ServiceRatingDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IServiceRatingDtoPagedResultDto {
+    items: ServiceRatingDto[] | undefined;
+    totalCount: number;
+}
+
+export class ServiceRatingSummaryDto implements IServiceRatingSummaryDto {
+    positivePercentage: number;
+    totalReviews: number;
+    totalPositiveReviews: number;
+    totalNeutralReviews: number;
+    totalNegativeReviews: number;
+    totalRatingPercentage: number;
+    totalCommunicationRatings: number;
+    totalValueForMoneyRatings: number;
+    totalPunctualityRatings: number;
+    totalProfessionalismsRating: number;
+    totalKnowledgeRatings: number;
+
+    constructor(data?: IServiceRatingSummaryDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.positivePercentage = _data["positivePercentage"];
+            this.totalReviews = _data["totalReviews"];
+            this.totalPositiveReviews = _data["totalPositiveReviews"];
+            this.totalNeutralReviews = _data["totalNeutralReviews"];
+            this.totalNegativeReviews = _data["totalNegativeReviews"];
+            this.totalRatingPercentage = _data["totalRatingPercentage"];
+            this.totalCommunicationRatings = _data["totalCommunicationRatings"];
+            this.totalValueForMoneyRatings = _data["totalValueForMoneyRatings"];
+            this.totalPunctualityRatings = _data["totalPunctualityRatings"];
+            this.totalProfessionalismsRating = _data["totalProfessionalismsRating"];
+            this.totalKnowledgeRatings = _data["totalKnowledgeRatings"];
+        }
+    }
+
+    static fromJS(data: any): ServiceRatingSummaryDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServiceRatingSummaryDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["positivePercentage"] = this.positivePercentage;
+        data["totalReviews"] = this.totalReviews;
+        data["totalPositiveReviews"] = this.totalPositiveReviews;
+        data["totalNeutralReviews"] = this.totalNeutralReviews;
+        data["totalNegativeReviews"] = this.totalNegativeReviews;
+        data["totalRatingPercentage"] = this.totalRatingPercentage;
+        data["totalCommunicationRatings"] = this.totalCommunicationRatings;
+        data["totalValueForMoneyRatings"] = this.totalValueForMoneyRatings;
+        data["totalPunctualityRatings"] = this.totalPunctualityRatings;
+        data["totalProfessionalismsRating"] = this.totalProfessionalismsRating;
+        data["totalKnowledgeRatings"] = this.totalKnowledgeRatings;
+        return data; 
+    }
+
+    clone(): ServiceRatingSummaryDto {
+        const json = this.toJSON();
+        let result = new ServiceRatingSummaryDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IServiceRatingSummaryDto {
+    positivePercentage: number;
+    totalReviews: number;
+    totalPositiveReviews: number;
+    totalNeutralReviews: number;
+    totalNegativeReviews: number;
+    totalRatingPercentage: number;
+    totalCommunicationRatings: number;
+    totalValueForMoneyRatings: number;
+    totalPunctualityRatings: number;
+    totalProfessionalismsRating: number;
+    totalKnowledgeRatings: number;
 }
 
 /** 0 = CalendarEvents 1 = ProjectOffers 2 = Projects 3 = CourseSections 4 = Courses */

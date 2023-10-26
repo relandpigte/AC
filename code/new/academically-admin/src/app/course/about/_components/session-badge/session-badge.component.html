@@ -17,8 +17,8 @@
             <span class="d-flex align-items-center"><i class="fe fe-layers mr-2"></i>{{ modules }} modules · {{ lessons }} lessons</span>
         </div>
         <div class="ratings d-flex align-items-center gap-10">
-            <app-star-rating-review [actualRating]="ratingPercentage"></app-star-rating-review>
-            <div class="label">{{ ratingPercentage }}/5.0</div>
+            <app-star-rating-review [actualRating]="totalRatingPercentage"></app-star-rating-review>
+            <div class="label">{{ totalRatingPercentage | number : '1.1-1' }}/5.0</div>
         </div>
         <div class="card-body-text">
             {{ description }}

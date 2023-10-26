@@ -11,6 +11,8 @@
             <div class="row">
                 <div class="col col-sm-12">
                     <ng-container *ngIf="isAboutTab || isDiscussionTab">
+                        <app-review-badge [rating]="rating"></app-review-badge>
+                        <app-start-badge [data]="data" [rating]="rating"></app-start-badge>
                         <app-instructor-badge [data]="data"></app-instructor-badge>
                         <app-related-courses [data]="data"></app-related-courses>
                     </ng-container>

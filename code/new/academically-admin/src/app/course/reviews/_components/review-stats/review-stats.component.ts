@@ -5,7 +5,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
 import { ServiceDataService } from '@shared/services/service-data.service';
-import { CourseDto, CourseRatingSummaryDto, RatingsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CourseDto, RatingsServiceProxy, ServiceRatingSummaryDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-review-stats',
@@ -14,7 +14,7 @@ import { CourseDto, CourseRatingSummaryDto, RatingsServiceProxy } from '@shared/
 })
 export class ReviewStatsComponent extends AppComponentBase implements OnInit, OnChanges {
   shimmerType = ShimmerType;
-  courseRatingSummary: CourseRatingSummaryDto;
+  courseRatingSummary: ServiceRatingSummaryDto;
   isSummaryLoading: boolean;
 
   @Input() data: CourseDto;
@@ -29,10 +29,18 @@ export class ReviewStatsComponent extends AppComponentBase implements OnInit, On
   }
 
   get isLoading$() { return this._landingPageService.isLoading$; }
+  get courseId(): string { return this.data?.id; }
   get tutorId(): number { return this.data?.creatorUser?.id; }
-  get communicationRatings(): number { return this.courseRatingSummary?.totalCommunicationRatings; }
-  get valueForMoneyRatings(): number { return this.courseRatingSummary?.totalValueForMoneyRatings; }
-  get punctualityRatings(): number { return this.courseRatingSummary?.totalPunctualityRatings; }
+  get totalCommunicationRatings(): number { return this.courseRatingSummary?.totalCommunicationRatings; }
+  get totalValueForMoneyRatings(): number { return this.courseRatingSummary?.totalValueForMoneyRatings; }
+  get totalPunctualityRatings(): number { return this.courseRatingSummary?.totalPunctualityRatings; }
+  get totalProfessionalismsRating(): number { return this.courseRatingSummary?.totalProfessionalismsRating; }
+  get totalKnowledgeRatings(): number { return this.courseRatingSummary?.totalKnowledgeRatings; }
+  get totalRatingPercentage(): number { return this.courseRatingSummary?.totalRatingPercentage; }
+  get totalReviews(): number { return this.courseRatingSummary?.totalReviews; }
+  get totalPositiveReviews(): number { return this.courseRatingSummary?.totalPositiveReviews; }
+  get totalNeutralReviews(): number { return this.courseRatingSummary?.totalNeutralReviews; }
+  get totalNegativeReviews(): number { return this.courseRatingSummary?.totalNegativeReviews; }
 
   ngOnInit(): void {
     this._serviceData.serviceData$.pipe(takeUntil(this.destroyed$)).subscribe(d => this.data = d);
@@ -46,7 +54,7 @@ export class ReviewStatsComponent extends AppComponentBase implements OnInit, On
 
   private getRatingSummary(): void {
     this.isSummaryLoading = true;
-    this._ratingsService.getCourseRatingSummary(this.data?.id)
+    this._ratingsService.getServiceRatingsSummary(this.courseId)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isSummaryLoading = false))
       .subscribe(rating => {

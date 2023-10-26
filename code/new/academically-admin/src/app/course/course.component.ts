@@ -9,7 +9,12 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { takeUntil } from 'rxjs/operators';
 import { ServiceDataService } from '@shared/services/service-data.service';
 import { ChatComposerConversationComponent } from '@shared/components/chat-composer-conversation/chat-composer-conversation.component';
-import { ChatsServiceProxy, CourseDto, CoursesServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  ChatsServiceProxy,
+  CourseDto,
+  CoursesServiceProxy,
+  RatingsServiceProxy
+} from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-course',
@@ -20,6 +25,7 @@ import { ChatsServiceProxy, CourseDto, CoursesServiceProxy } from '@shared/servi
 export class CourseComponent extends  AppComponentBase implements OnInit {
   id: string;
   data: CourseDto;
+  rating: number;
 
   constructor(
     injector: Injector,
@@ -30,11 +36,13 @@ export class CourseComponent extends  AppComponentBase implements OnInit {
     private _route: ActivatedRoute,
     private _serviceData: ServiceDataService,
     private _courseService: CoursesServiceProxy,
-    private _chatsService: ChatsServiceProxy
+    private _chatsService: ChatsServiceProxy,
+    private _ratingService: RatingsServiceProxy
   ) {
     super(injector);
     this._chatService.openChat$.subscribe(() => this.openMessageModal());
     this._serviceData.serviceData$.pipe(takeUntil(this.destroyed$)).subscribe(d => this.data = d);
+    this._serviceData.serviceRating$.pipe(takeUntil(this.destroyed$)).subscribe(r => this.rating = r);
   }
 
   get isAboutTab(): boolean { return this._router.url.includes([`course/${this.id}`, 'about'].join('/')); }
@@ -73,6 +81,7 @@ export class CourseComponent extends  AppComponentBase implements OnInit {
         this.id = paramMap.get('id');
         this._serviceData.serviceData = await this._courseService.get(this.id).toPromise();
         this._serviceData.discussionId = await this._serviceData.getServiceDiscussionId(this.id);
+        this._serviceData.serviceRating = await this._ratingService.getUserServiceReview(this.id).toPromise();
       }
     });
   }

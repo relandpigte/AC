@@ -27,7 +27,7 @@
             <app-star-rating-review [actualRating]="userRatingValue"></app-star-rating-review>
             <div class="rating-badge d-flex gap-10">
                 <span class="label">{{ userRatingValue }}/5</span>
-                <ng-container [ngSwitch]="rating?.experienceType">
+                <ng-container [ngSwitch]="experienceType">
                     <span *ngSwitchCase="ratingExperienceType.Positive" class="badge badge-soft-success rounded-pill d-flex align-items-center">
                         <i class="fe fe-plus mr-1"></i>Positive
                     </span>
