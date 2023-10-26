@@ -12,6 +12,7 @@ import { LearnBadgeComponent } from './_components/learn-badge/learn-badge.compo
 import { EventsAboutComponent } from '@app/events/about/about.component';
 import { PresentersBadgeComponent } from './_components/presenters-badge/presenters-badge.component';
 import { JoinBadgeComponent } from './_components/join-badge/join-badge.component';
+import { ReviewBadgeComponent } from './_components/review-badge/review-badge.component';
 
 @NgModule({
   declarations: [
@@ -22,14 +23,16 @@ import { JoinBadgeComponent } from './_components/join-badge/join-badge.componen
     SessionBadgeComponent,
     LearnBadgeComponent,
     PresentersBadgeComponent,
-    JoinBadgeComponent
+    JoinBadgeComponent,
+    ReviewBadgeComponent
   ],
   exports: [
     OrganizerBadgeComponent,
     RelatedEventsBadgeComponent,
     AttendeesBadgeComponent,
     SessionBadgeComponent,
-    JoinBadgeComponent
+    JoinBadgeComponent,
+    ReviewBadgeComponent
   ],
   imports: [
     CommonModule,

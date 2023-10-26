@@ -21,6 +21,7 @@ namespace Academically.Services.Ratings
         private readonly IRepository<CourseRating, Guid> _courseRatingsRepository;
         private readonly IRepository<CourseRatingArea, Guid> _courseRatingAreasRepository;
         private readonly IRepository<ServiceRating, Guid> _serviceRatingsRepository;
+        private readonly IRepository<EventRating, Guid> _eventRatingsRepository;
 
         public RatingsAppService(
             IRepository<StudentRating, Guid> studentRatingsRepository,
@@ -28,7 +29,8 @@ namespace Academically.Services.Ratings
             IRepository<TutorRatingArea, Guid> tutorRatingAreasRepository,
             IRepository<CourseRating, Guid> courseRatingsRepository,
             IRepository<CourseRatingArea, Guid> courseRatingAreasRepository,
-            IRepository<ServiceRating, Guid> serviceRatingsRepository
+            IRepository<ServiceRating, Guid> serviceRatingsRepository,
+            IRepository<EventRating, Guid> eventRatingsRepository
             )
         {
             _studentRatingsRepository = studentRatingsRepository;
@@ -37,6 +39,13 @@ namespace Academically.Services.Ratings
             _courseRatingsRepository = courseRatingsRepository;
             _courseRatingAreasRepository = courseRatingAreasRepository;
             _serviceRatingsRepository = serviceRatingsRepository;
+            _eventRatingsRepository = eventRatingsRepository;
+        }
+
+        public async Task<EventRating> CreateEventRatings(CreateEventRatingsDto input)
+        {
+            var eventRating = ObjectMapper.Map<EventRating>(input);
+            return await _eventRatingsRepository.InsertAsync(eventRating);
         }
 
         public async Task CreateServiceRatings(CreateServiceRatingDto input)

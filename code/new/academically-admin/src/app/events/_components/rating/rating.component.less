@@ -1,0 +1,65 @@
+::ng-deep {
+    .modal-event-rating {
+        max-width: 738px !important;
+        margin-left: auto;
+        margin-right: auto;
+
+        .modal-content {
+            border: 0 none;
+        }
+    }
+}
+
+app-star-rating-review {
+    ::ng-deep {
+        .star-rating-base,
+        .star-rating {
+            margin: 0 !important;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .star-container {
+            width: 30px;
+            height: 30px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+    }
+}
+
+.rating {
+    &-body {
+        padding: 0 24px 20px;
+    }
+
+    &-title {
+        font-size: 15px;
+        color: #12263F;
+        font-weight: 400;
+        margin: 55px 0 20px;
+    }
+
+    &-comment {
+        margin-bottom: 15px;
+        margin-top: 30px;
+        textarea {
+            height: 110px;
+            border: 1px solid #E4EBF6;
+            border-radius: 5px;
+            padding: 5px 10px;
+        }
+    }
+
+    &-button {
+        button {
+            width: 114px;
+            height: 32px;
+            padding: 4px !important;
+            border-radius: 5px;
+        }
+    }
+}

@@ -64,7 +64,6 @@ export class RelatedEventsBadgeComponent extends AppComponentBase implements OnI
       .pipe(takeUntil(this.destroyed$))
       .subscribe(events => {
         this.relatedEvents = _.take(events.items.filter(x => x.id !== this.data?.id), 4);
-        console.warn(this.relatedEvents);
       });
   }
 }

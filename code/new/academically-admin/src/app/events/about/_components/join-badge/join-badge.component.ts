@@ -1,9 +1,10 @@
-import { Component, Injector, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Injector, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import { EventCategory, EventDto } from '@shared/service-proxies/service-proxies';
+import { Subject } from 'rxjs';
 
 enum timeline {
   days = 'days',
@@ -19,6 +20,7 @@ enum timeline {
 })
 export class JoinBadgeComponent extends AppComponentBase implements OnInit, OnChanges, OnDestroy {
   @Input() data: EventDto;
+  @Output() onReview = new Subject<EventDto>();
 
   countdown = 0;
   timeline: timeline = timeline.seconds;
@@ -32,6 +34,7 @@ export class JoinBadgeComponent extends AppComponentBase implements OnInit, OnCh
   }
 
   get isPurchased(): boolean { return this.data?.isPurchased; }
+  get hasReviewed(): boolean { return this.data?.hasReviewed; }
   get eventId(): string { return this.data?.id; }
   get eventFinished(): boolean { return this.countdown <= 0; }
   get eventCategoryName(): string { return this.data?.category === EventCategory.Broadcast ? 'Broadcast' : 'Workshop'; }
@@ -48,6 +51,10 @@ export class JoinBadgeComponent extends AppComponentBase implements OnInit, OnCh
       this.initJoinBadge();
       this.initCountDown();
     }
+  }
+
+  handleEventReview(): void {
+    this.onReview.next(this.data);
   }
 
   async handleJoinClick(): Promise<void> {

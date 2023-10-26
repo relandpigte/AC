@@ -19869,6 +19869,62 @@ export class RatingsServiceProxy {
      * @param body (optional) 
      * @return Success
      */
+    createEventRatings(body: CreateEventRatingsDto | undefined): Observable<EventRating> {
+        let url_ = this.baseUrl + "/api/services/app/Ratings/CreateEventRatings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateEventRatings(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateEventRatings(<any>response_);
+                } catch (e) {
+                    return <Observable<EventRating>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventRating>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateEventRatings(response: HttpResponseBase): Observable<EventRating> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventRating.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventRating>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
     createServiceRatings(body: CreateServiceRatingDto | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/Ratings/CreateServiceRatings";
         url_ = url_.replace(/[?&]$/, "");
@@ -38753,6 +38809,57 @@ export interface ICreateEventPresenterDto {
     email: string | undefined;
 }
 
+export class CreateEventRatingsDto implements ICreateEventRatingsDto {
+    eventId: string;
+    comments: string | undefined;
+    rating: number;
+
+    constructor(data?: ICreateEventRatingsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.eventId = _data["eventId"];
+            this.comments = _data["comments"];
+            this.rating = _data["rating"];
+        }
+    }
+
+    static fromJS(data: any): CreateEventRatingsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateEventRatingsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["eventId"] = this.eventId;
+        data["comments"] = this.comments;
+        data["rating"] = this.rating;
+        return data; 
+    }
+
+    clone(): CreateEventRatingsDto {
+        const json = this.toJSON();
+        let result = new CreateEventRatingsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateEventRatingsDto {
+    eventId: string;
+    comments: string | undefined;
+    rating: number;
+}
+
 export class CreateEventResourceDto implements ICreateEventResourceDto {
     id: string;
     name: string | undefined;
@@ -40908,6 +41015,477 @@ export interface IEducationLevelDto {
     shortName: string | undefined;
 }
 
+export class Event implements IEvent {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    serviceType: ServicesType;
+    category: EventCategory;
+    type: EventType;
+    status: EventStatus;
+    parentId: string | undefined;
+    name: string | undefined;
+    description: string | undefined;
+    categories: string | undefined;
+    thumbnailDocumentId: string | undefined;
+    languageId: string | undefined;
+    pricingType: PricingType;
+    price: number | undefined;
+    frequencyType: EventFrequencyType;
+    eventDateTime: moment.Moment | undefined;
+    endDate: moment.Moment | undefined;
+    duration: number | undefined;
+    delayType: ServiceDelayType;
+    delayValue: string | undefined;
+    recursionType: EventRecursionType;
+    timesPerDay: number | undefined;
+    sessionTimes: string | undefined;
+    sessionDaysOfWeek: string | undefined;
+    sessionDaysOfMonth: string | undefined;
+    replayType: EventReplayType;
+    questionsEnabled: boolean | undefined;
+    questionType: QuestionType;
+    attendeesCanUpvote: boolean | undefined;
+    attendeesCanRespond: boolean | undefined;
+    chatEnabled: boolean | undefined;
+    customWebinarUrl: string | undefined;
+    registrationEmailNotification: boolean | undefined;
+    twentyFourHourReminderNotification: boolean | undefined;
+    oneHourReminderNotification: boolean | undefined;
+    fifteenMinuteReminderNotification: boolean | undefined;
+    replayFollowUpNotification: boolean | undefined;
+    visible: boolean | undefined;
+    opened: boolean | undefined;
+    cohostsEnableMicrophone: boolean;
+    cohostsEnableWebCam: boolean;
+    cohostsEnablePresentationTools: boolean;
+    cohostsEnableSpeakRequests: boolean;
+    cohostsViewRegistrants: boolean;
+    cohostsManageGuests: boolean;
+    cohostsManageGuestSettings: boolean;
+    cohostsManageAudience: boolean;
+    cohostsManageAudienceSettings: boolean;
+    cohostsChatPublicly: boolean;
+    cohostsChatPubliclyTagMembers: boolean;
+    cohostsChatPrivately: boolean;
+    cohostsChatPrivatelySelected: boolean;
+    cohostsAllowCohostsToUpvote: boolean;
+    cohostsAllowCohostsToRespond: boolean;
+    cohostsCreatePolls: boolean;
+    cohostsCreateOffers: boolean;
+    cohostsUploadHandouts: boolean;
+    guestsEnableMicrophone: boolean;
+    guestsEnableWebCam: boolean;
+    guestsEnablePresentationTools: boolean;
+    guestsEnableSpeakRequests: boolean;
+    guestsViewRegistrants: boolean;
+    guestsManageAudience: boolean;
+    guestsManageAudienceSettings: boolean;
+    guestsChatPublicly: boolean;
+    guestsChatPubliclyTagMembers: boolean;
+    guestsChatPrivately: boolean;
+    guestsChatPrivatelySelected: boolean;
+    guestsAllowGuestsToUpvote: boolean;
+    guestsAllowGuestsToRespond: boolean;
+    guestsCreatePolls: boolean;
+    guestsCreateOffers: boolean;
+    guestsCreateHandouts: boolean;
+    audienceEnableMicrophone: boolean;
+    audienceEnableWebCam: boolean;
+    audienceEnablePresentationTools: boolean;
+    audienceEnableSpeakRequests: boolean;
+    audienceViewAudience: boolean;
+    audienceChatPublicly: boolean;
+    audienceChatPubliclyTagMembers: boolean;
+    audienceChatPrivately: boolean;
+    audienceChatPrivatelySelected: boolean;
+    audienceAskQuestions: boolean;
+    audienceAskPublicQuestions: boolean;
+    audienceAskPublicQuestionsAllowAudienceToUpvote: boolean;
+    audienceAskPublicQuestionsAllowAudienceToRespond: boolean;
+    audienceAskPrivateQuestionsWithAdmins: boolean;
+    audienceAskPrivateQuestionsAllowFollowUpResponse: boolean;
+    audienceEnablePollsTab: boolean;
+    audienceEnableOffersTab: boolean;
+    audienceEnableOffersTabDisplayNoOfPurchases: boolean;
+    audienceEnableHandoutsTab: boolean;
+    autoAdmitAttendees: boolean;
+    numberOfAttendees: number | undefined;
+    parent: Event;
+    thumbnailDocument: Document;
+    language: SpokenLanguage;
+    creatorUser: User;
+    children: Event[] | undefined;
+    studentEvents: StudentEvent[] | undefined;
+    eventPresenters: EventPresenter[] | undefined;
+
+    constructor(data?: IEvent) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.serviceType = _data["serviceType"];
+            this.category = _data["category"];
+            this.type = _data["type"];
+            this.status = _data["status"];
+            this.parentId = _data["parentId"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.categories = _data["categories"];
+            this.thumbnailDocumentId = _data["thumbnailDocumentId"];
+            this.languageId = _data["languageId"];
+            this.pricingType = _data["pricingType"];
+            this.price = _data["price"];
+            this.frequencyType = _data["frequencyType"];
+            this.eventDateTime = _data["eventDateTime"] ? moment(_data["eventDateTime"].toString()) : <any>undefined;
+            this.endDate = _data["endDate"] ? moment(_data["endDate"].toString()) : <any>undefined;
+            this.duration = _data["duration"];
+            this.delayType = _data["delayType"];
+            this.delayValue = _data["delayValue"];
+            this.recursionType = _data["recursionType"];
+            this.timesPerDay = _data["timesPerDay"];
+            this.sessionTimes = _data["sessionTimes"];
+            this.sessionDaysOfWeek = _data["sessionDaysOfWeek"];
+            this.sessionDaysOfMonth = _data["sessionDaysOfMonth"];
+            this.replayType = _data["replayType"];
+            this.questionsEnabled = _data["questionsEnabled"];
+            this.questionType = _data["questionType"];
+            this.attendeesCanUpvote = _data["attendeesCanUpvote"];
+            this.attendeesCanRespond = _data["attendeesCanRespond"];
+            this.chatEnabled = _data["chatEnabled"];
+            this.customWebinarUrl = _data["customWebinarUrl"];
+            this.registrationEmailNotification = _data["registrationEmailNotification"];
+            this.twentyFourHourReminderNotification = _data["twentyFourHourReminderNotification"];
+            this.oneHourReminderNotification = _data["oneHourReminderNotification"];
+            this.fifteenMinuteReminderNotification = _data["fifteenMinuteReminderNotification"];
+            this.replayFollowUpNotification = _data["replayFollowUpNotification"];
+            this.visible = _data["visible"];
+            this.opened = _data["opened"];
+            this.cohostsEnableMicrophone = _data["cohostsEnableMicrophone"];
+            this.cohostsEnableWebCam = _data["cohostsEnableWebCam"];
+            this.cohostsEnablePresentationTools = _data["cohostsEnablePresentationTools"];
+            this.cohostsEnableSpeakRequests = _data["cohostsEnableSpeakRequests"];
+            this.cohostsViewRegistrants = _data["cohostsViewRegistrants"];
+            this.cohostsManageGuests = _data["cohostsManageGuests"];
+            this.cohostsManageGuestSettings = _data["cohostsManageGuestSettings"];
+            this.cohostsManageAudience = _data["cohostsManageAudience"];
+            this.cohostsManageAudienceSettings = _data["cohostsManageAudienceSettings"];
+            this.cohostsChatPublicly = _data["cohostsChatPublicly"];
+            this.cohostsChatPubliclyTagMembers = _data["cohostsChatPubliclyTagMembers"];
+            this.cohostsChatPrivately = _data["cohostsChatPrivately"];
+            this.cohostsChatPrivatelySelected = _data["cohostsChatPrivatelySelected"];
+            this.cohostsAllowCohostsToUpvote = _data["cohostsAllowCohostsToUpvote"];
+            this.cohostsAllowCohostsToRespond = _data["cohostsAllowCohostsToRespond"];
+            this.cohostsCreatePolls = _data["cohostsCreatePolls"];
+            this.cohostsCreateOffers = _data["cohostsCreateOffers"];
+            this.cohostsUploadHandouts = _data["cohostsUploadHandouts"];
+            this.guestsEnableMicrophone = _data["guestsEnableMicrophone"];
+            this.guestsEnableWebCam = _data["guestsEnableWebCam"];
+            this.guestsEnablePresentationTools = _data["guestsEnablePresentationTools"];
+            this.guestsEnableSpeakRequests = _data["guestsEnableSpeakRequests"];
+            this.guestsViewRegistrants = _data["guestsViewRegistrants"];
+            this.guestsManageAudience = _data["guestsManageAudience"];
+            this.guestsManageAudienceSettings = _data["guestsManageAudienceSettings"];
+            this.guestsChatPublicly = _data["guestsChatPublicly"];
+            this.guestsChatPubliclyTagMembers = _data["guestsChatPubliclyTagMembers"];
+            this.guestsChatPrivately = _data["guestsChatPrivately"];
+            this.guestsChatPrivatelySelected = _data["guestsChatPrivatelySelected"];
+            this.guestsAllowGuestsToUpvote = _data["guestsAllowGuestsToUpvote"];
+            this.guestsAllowGuestsToRespond = _data["guestsAllowGuestsToRespond"];
+            this.guestsCreatePolls = _data["guestsCreatePolls"];
+            this.guestsCreateOffers = _data["guestsCreateOffers"];
+            this.guestsCreateHandouts = _data["guestsCreateHandouts"];
+            this.audienceEnableMicrophone = _data["audienceEnableMicrophone"];
+            this.audienceEnableWebCam = _data["audienceEnableWebCam"];
+            this.audienceEnablePresentationTools = _data["audienceEnablePresentationTools"];
+            this.audienceEnableSpeakRequests = _data["audienceEnableSpeakRequests"];
+            this.audienceViewAudience = _data["audienceViewAudience"];
+            this.audienceChatPublicly = _data["audienceChatPublicly"];
+            this.audienceChatPubliclyTagMembers = _data["audienceChatPubliclyTagMembers"];
+            this.audienceChatPrivately = _data["audienceChatPrivately"];
+            this.audienceChatPrivatelySelected = _data["audienceChatPrivatelySelected"];
+            this.audienceAskQuestions = _data["audienceAskQuestions"];
+            this.audienceAskPublicQuestions = _data["audienceAskPublicQuestions"];
+            this.audienceAskPublicQuestionsAllowAudienceToUpvote = _data["audienceAskPublicQuestionsAllowAudienceToUpvote"];
+            this.audienceAskPublicQuestionsAllowAudienceToRespond = _data["audienceAskPublicQuestionsAllowAudienceToRespond"];
+            this.audienceAskPrivateQuestionsWithAdmins = _data["audienceAskPrivateQuestionsWithAdmins"];
+            this.audienceAskPrivateQuestionsAllowFollowUpResponse = _data["audienceAskPrivateQuestionsAllowFollowUpResponse"];
+            this.audienceEnablePollsTab = _data["audienceEnablePollsTab"];
+            this.audienceEnableOffersTab = _data["audienceEnableOffersTab"];
+            this.audienceEnableOffersTabDisplayNoOfPurchases = _data["audienceEnableOffersTabDisplayNoOfPurchases"];
+            this.audienceEnableHandoutsTab = _data["audienceEnableHandoutsTab"];
+            this.autoAdmitAttendees = _data["autoAdmitAttendees"];
+            this.numberOfAttendees = _data["numberOfAttendees"];
+            this.parent = _data["parent"] ? Event.fromJS(_data["parent"]) : <any>undefined;
+            this.thumbnailDocument = _data["thumbnailDocument"] ? Document.fromJS(_data["thumbnailDocument"]) : <any>undefined;
+            this.language = _data["language"] ? SpokenLanguage.fromJS(_data["language"]) : <any>undefined;
+            this.creatorUser = _data["creatorUser"] ? User.fromJS(_data["creatorUser"]) : <any>undefined;
+            if (Array.isArray(_data["children"])) {
+                this.children = [] as any;
+                for (let item of _data["children"])
+                    this.children.push(Event.fromJS(item));
+            }
+            if (Array.isArray(_data["studentEvents"])) {
+                this.studentEvents = [] as any;
+                for (let item of _data["studentEvents"])
+                    this.studentEvents.push(StudentEvent.fromJS(item));
+            }
+            if (Array.isArray(_data["eventPresenters"])) {
+                this.eventPresenters = [] as any;
+                for (let item of _data["eventPresenters"])
+                    this.eventPresenters.push(EventPresenter.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): Event {
+        data = typeof data === 'object' ? data : {};
+        let result = new Event();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["serviceType"] = this.serviceType;
+        data["category"] = this.category;
+        data["type"] = this.type;
+        data["status"] = this.status;
+        data["parentId"] = this.parentId;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["categories"] = this.categories;
+        data["thumbnailDocumentId"] = this.thumbnailDocumentId;
+        data["languageId"] = this.languageId;
+        data["pricingType"] = this.pricingType;
+        data["price"] = this.price;
+        data["frequencyType"] = this.frequencyType;
+        data["eventDateTime"] = this.eventDateTime ? this.eventDateTime.toISOString() : <any>undefined;
+        data["endDate"] = this.endDate ? this.endDate.toISOString() : <any>undefined;
+        data["duration"] = this.duration;
+        data["delayType"] = this.delayType;
+        data["delayValue"] = this.delayValue;
+        data["recursionType"] = this.recursionType;
+        data["timesPerDay"] = this.timesPerDay;
+        data["sessionTimes"] = this.sessionTimes;
+        data["sessionDaysOfWeek"] = this.sessionDaysOfWeek;
+        data["sessionDaysOfMonth"] = this.sessionDaysOfMonth;
+        data["replayType"] = this.replayType;
+        data["questionsEnabled"] = this.questionsEnabled;
+        data["questionType"] = this.questionType;
+        data["attendeesCanUpvote"] = this.attendeesCanUpvote;
+        data["attendeesCanRespond"] = this.attendeesCanRespond;
+        data["chatEnabled"] = this.chatEnabled;
+        data["customWebinarUrl"] = this.customWebinarUrl;
+        data["registrationEmailNotification"] = this.registrationEmailNotification;
+        data["twentyFourHourReminderNotification"] = this.twentyFourHourReminderNotification;
+        data["oneHourReminderNotification"] = this.oneHourReminderNotification;
+        data["fifteenMinuteReminderNotification"] = this.fifteenMinuteReminderNotification;
+        data["replayFollowUpNotification"] = this.replayFollowUpNotification;
+        data["visible"] = this.visible;
+        data["opened"] = this.opened;
+        data["cohostsEnableMicrophone"] = this.cohostsEnableMicrophone;
+        data["cohostsEnableWebCam"] = this.cohostsEnableWebCam;
+        data["cohostsEnablePresentationTools"] = this.cohostsEnablePresentationTools;
+        data["cohostsEnableSpeakRequests"] = this.cohostsEnableSpeakRequests;
+        data["cohostsViewRegistrants"] = this.cohostsViewRegistrants;
+        data["cohostsManageGuests"] = this.cohostsManageGuests;
+        data["cohostsManageGuestSettings"] = this.cohostsManageGuestSettings;
+        data["cohostsManageAudience"] = this.cohostsManageAudience;
+        data["cohostsManageAudienceSettings"] = this.cohostsManageAudienceSettings;
+        data["cohostsChatPublicly"] = this.cohostsChatPublicly;
+        data["cohostsChatPubliclyTagMembers"] = this.cohostsChatPubliclyTagMembers;
+        data["cohostsChatPrivately"] = this.cohostsChatPrivately;
+        data["cohostsChatPrivatelySelected"] = this.cohostsChatPrivatelySelected;
+        data["cohostsAllowCohostsToUpvote"] = this.cohostsAllowCohostsToUpvote;
+        data["cohostsAllowCohostsToRespond"] = this.cohostsAllowCohostsToRespond;
+        data["cohostsCreatePolls"] = this.cohostsCreatePolls;
+        data["cohostsCreateOffers"] = this.cohostsCreateOffers;
+        data["cohostsUploadHandouts"] = this.cohostsUploadHandouts;
+        data["guestsEnableMicrophone"] = this.guestsEnableMicrophone;
+        data["guestsEnableWebCam"] = this.guestsEnableWebCam;
+        data["guestsEnablePresentationTools"] = this.guestsEnablePresentationTools;
+        data["guestsEnableSpeakRequests"] = this.guestsEnableSpeakRequests;
+        data["guestsViewRegistrants"] = this.guestsViewRegistrants;
+        data["guestsManageAudience"] = this.guestsManageAudience;
+        data["guestsManageAudienceSettings"] = this.guestsManageAudienceSettings;
+        data["guestsChatPublicly"] = this.guestsChatPublicly;
+        data["guestsChatPubliclyTagMembers"] = this.guestsChatPubliclyTagMembers;
+        data["guestsChatPrivately"] = this.guestsChatPrivately;
+        data["guestsChatPrivatelySelected"] = this.guestsChatPrivatelySelected;
+        data["guestsAllowGuestsToUpvote"] = this.guestsAllowGuestsToUpvote;
+        data["guestsAllowGuestsToRespond"] = this.guestsAllowGuestsToRespond;
+        data["guestsCreatePolls"] = this.guestsCreatePolls;
+        data["guestsCreateOffers"] = this.guestsCreateOffers;
+        data["guestsCreateHandouts"] = this.guestsCreateHandouts;
+        data["audienceEnableMicrophone"] = this.audienceEnableMicrophone;
+        data["audienceEnableWebCam"] = this.audienceEnableWebCam;
+        data["audienceEnablePresentationTools"] = this.audienceEnablePresentationTools;
+        data["audienceEnableSpeakRequests"] = this.audienceEnableSpeakRequests;
+        data["audienceViewAudience"] = this.audienceViewAudience;
+        data["audienceChatPublicly"] = this.audienceChatPublicly;
+        data["audienceChatPubliclyTagMembers"] = this.audienceChatPubliclyTagMembers;
+        data["audienceChatPrivately"] = this.audienceChatPrivately;
+        data["audienceChatPrivatelySelected"] = this.audienceChatPrivatelySelected;
+        data["audienceAskQuestions"] = this.audienceAskQuestions;
+        data["audienceAskPublicQuestions"] = this.audienceAskPublicQuestions;
+        data["audienceAskPublicQuestionsAllowAudienceToUpvote"] = this.audienceAskPublicQuestionsAllowAudienceToUpvote;
+        data["audienceAskPublicQuestionsAllowAudienceToRespond"] = this.audienceAskPublicQuestionsAllowAudienceToRespond;
+        data["audienceAskPrivateQuestionsWithAdmins"] = this.audienceAskPrivateQuestionsWithAdmins;
+        data["audienceAskPrivateQuestionsAllowFollowUpResponse"] = this.audienceAskPrivateQuestionsAllowFollowUpResponse;
+        data["audienceEnablePollsTab"] = this.audienceEnablePollsTab;
+        data["audienceEnableOffersTab"] = this.audienceEnableOffersTab;
+        data["audienceEnableOffersTabDisplayNoOfPurchases"] = this.audienceEnableOffersTabDisplayNoOfPurchases;
+        data["audienceEnableHandoutsTab"] = this.audienceEnableHandoutsTab;
+        data["autoAdmitAttendees"] = this.autoAdmitAttendees;
+        data["numberOfAttendees"] = this.numberOfAttendees;
+        data["parent"] = this.parent ? this.parent.toJSON() : <any>undefined;
+        data["thumbnailDocument"] = this.thumbnailDocument ? this.thumbnailDocument.toJSON() : <any>undefined;
+        data["language"] = this.language ? this.language.toJSON() : <any>undefined;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        if (Array.isArray(this.children)) {
+            data["children"] = [];
+            for (let item of this.children)
+                data["children"].push(item.toJSON());
+        }
+        if (Array.isArray(this.studentEvents)) {
+            data["studentEvents"] = [];
+            for (let item of this.studentEvents)
+                data["studentEvents"].push(item.toJSON());
+        }
+        if (Array.isArray(this.eventPresenters)) {
+            data["eventPresenters"] = [];
+            for (let item of this.eventPresenters)
+                data["eventPresenters"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): Event {
+        const json = this.toJSON();
+        let result = new Event();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IEvent {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    serviceType: ServicesType;
+    category: EventCategory;
+    type: EventType;
+    status: EventStatus;
+    parentId: string | undefined;
+    name: string | undefined;
+    description: string | undefined;
+    categories: string | undefined;
+    thumbnailDocumentId: string | undefined;
+    languageId: string | undefined;
+    pricingType: PricingType;
+    price: number | undefined;
+    frequencyType: EventFrequencyType;
+    eventDateTime: moment.Moment | undefined;
+    endDate: moment.Moment | undefined;
+    duration: number | undefined;
+    delayType: ServiceDelayType;
+    delayValue: string | undefined;
+    recursionType: EventRecursionType;
+    timesPerDay: number | undefined;
+    sessionTimes: string | undefined;
+    sessionDaysOfWeek: string | undefined;
+    sessionDaysOfMonth: string | undefined;
+    replayType: EventReplayType;
+    questionsEnabled: boolean | undefined;
+    questionType: QuestionType;
+    attendeesCanUpvote: boolean | undefined;
+    attendeesCanRespond: boolean | undefined;
+    chatEnabled: boolean | undefined;
+    customWebinarUrl: string | undefined;
+    registrationEmailNotification: boolean | undefined;
+    twentyFourHourReminderNotification: boolean | undefined;
+    oneHourReminderNotification: boolean | undefined;
+    fifteenMinuteReminderNotification: boolean | undefined;
+    replayFollowUpNotification: boolean | undefined;
+    visible: boolean | undefined;
+    opened: boolean | undefined;
+    cohostsEnableMicrophone: boolean;
+    cohostsEnableWebCam: boolean;
+    cohostsEnablePresentationTools: boolean;
+    cohostsEnableSpeakRequests: boolean;
+    cohostsViewRegistrants: boolean;
+    cohostsManageGuests: boolean;
+    cohostsManageGuestSettings: boolean;
+    cohostsManageAudience: boolean;
+    cohostsManageAudienceSettings: boolean;
+    cohostsChatPublicly: boolean;
+    cohostsChatPubliclyTagMembers: boolean;
+    cohostsChatPrivately: boolean;
+    cohostsChatPrivatelySelected: boolean;
+    cohostsAllowCohostsToUpvote: boolean;
+    cohostsAllowCohostsToRespond: boolean;
+    cohostsCreatePolls: boolean;
+    cohostsCreateOffers: boolean;
+    cohostsUploadHandouts: boolean;
+    guestsEnableMicrophone: boolean;
+    guestsEnableWebCam: boolean;
+    guestsEnablePresentationTools: boolean;
+    guestsEnableSpeakRequests: boolean;
+    guestsViewRegistrants: boolean;
+    guestsManageAudience: boolean;
+    guestsManageAudienceSettings: boolean;
+    guestsChatPublicly: boolean;
+    guestsChatPubliclyTagMembers: boolean;
+    guestsChatPrivately: boolean;
+    guestsChatPrivatelySelected: boolean;
+    guestsAllowGuestsToUpvote: boolean;
+    guestsAllowGuestsToRespond: boolean;
+    guestsCreatePolls: boolean;
+    guestsCreateOffers: boolean;
+    guestsCreateHandouts: boolean;
+    audienceEnableMicrophone: boolean;
+    audienceEnableWebCam: boolean;
+    audienceEnablePresentationTools: boolean;
+    audienceEnableSpeakRequests: boolean;
+    audienceViewAudience: boolean;
+    audienceChatPublicly: boolean;
+    audienceChatPubliclyTagMembers: boolean;
+    audienceChatPrivately: boolean;
+    audienceChatPrivatelySelected: boolean;
+    audienceAskQuestions: boolean;
+    audienceAskPublicQuestions: boolean;
+    audienceAskPublicQuestionsAllowAudienceToUpvote: boolean;
+    audienceAskPublicQuestionsAllowAudienceToRespond: boolean;
+    audienceAskPrivateQuestionsWithAdmins: boolean;
+    audienceAskPrivateQuestionsAllowFollowUpResponse: boolean;
+    audienceEnablePollsTab: boolean;
+    audienceEnableOffersTab: boolean;
+    audienceEnableOffersTabDisplayNoOfPurchases: boolean;
+    audienceEnableHandoutsTab: boolean;
+    autoAdmitAttendees: boolean;
+    numberOfAttendees: number | undefined;
+    parent: Event;
+    thumbnailDocument: Document;
+    language: SpokenLanguage;
+    creatorUser: User;
+    children: Event[] | undefined;
+    studentEvents: StudentEvent[] | undefined;
+    eventPresenters: EventPresenter[] | undefined;
+}
+
 export enum EventAttributes {
     None = 0,
     SpecialName = 512,
@@ -41025,6 +41603,8 @@ export class EventDto implements IEventDto {
     isSaved: boolean;
     isPurchased: boolean;
     purchased: UserDto[] | undefined;
+    hasReviewed: boolean;
+    review: EventRating;
 
     constructor(data?: IEventDto) {
         if (data) {
@@ -41149,6 +41729,8 @@ export class EventDto implements IEventDto {
                 for (let item of _data["purchased"])
                     this.purchased.push(UserDto.fromJS(item));
             }
+            this.hasReviewed = _data["hasReviewed"];
+            this.review = _data["review"] ? EventRating.fromJS(_data["review"]) : <any>undefined;
         }
     }
 
@@ -41273,6 +41855,8 @@ export class EventDto implements IEventDto {
             for (let item of this.purchased)
                 data["purchased"].push(item.toJSON());
         }
+        data["hasReviewed"] = this.hasReviewed;
+        data["review"] = this.review ? this.review.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -41389,6 +41973,8 @@ export interface IEventDto {
     isSaved: boolean;
     isPurchased: boolean;
     purchased: UserDto[] | undefined;
+    hasReviewed: boolean;
+    review: EventRating;
 }
 
 export class EventDtoPagedResultDto implements IEventDtoPagedResultDto {
@@ -42250,6 +42836,89 @@ export enum EventPollStudentStatus {
     Results = 1,
 }
 
+export class EventPresenter implements IEventPresenter {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    type: EventPresenterType;
+    eventId: string;
+    userId: number | undefined;
+    email: string | undefined;
+    status: EventPresenterStatus;
+    creatorUser: User;
+    event: Event;
+    user: User;
+
+    constructor(data?: IEventPresenter) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.type = _data["type"];
+            this.eventId = _data["eventId"];
+            this.userId = _data["userId"];
+            this.email = _data["email"];
+            this.status = _data["status"];
+            this.creatorUser = _data["creatorUser"] ? User.fromJS(_data["creatorUser"]) : <any>undefined;
+            this.event = _data["event"] ? Event.fromJS(_data["event"]) : <any>undefined;
+            this.user = _data["user"] ? User.fromJS(_data["user"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): EventPresenter {
+        data = typeof data === 'object' ? data : {};
+        let result = new EventPresenter();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["type"] = this.type;
+        data["eventId"] = this.eventId;
+        data["userId"] = this.userId;
+        data["email"] = this.email;
+        data["status"] = this.status;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        data["event"] = this.event ? this.event.toJSON() : <any>undefined;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): EventPresenter {
+        const json = this.toJSON();
+        let result = new EventPresenter();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IEventPresenter {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    type: EventPresenterType;
+    eventId: string;
+    userId: number | undefined;
+    email: string | undefined;
+    status: EventPresenterStatus;
+    creatorUser: User;
+    event: Event;
+    user: User;
+}
+
 export class EventPresenterDto implements IEventPresenterDto {
     id: string;
     type: EventPresenterType;
@@ -42333,6 +43002,77 @@ export enum EventPresenterType {
     Host = 0,
     CoHost = 1,
     Guest = 2,
+}
+
+export class EventRating implements IEventRating {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    eventId: string;
+    comments: string | undefined;
+    rating: number;
+    event: Event;
+    reviewer: User;
+
+    constructor(data?: IEventRating) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.eventId = _data["eventId"];
+            this.comments = _data["comments"];
+            this.rating = _data["rating"];
+            this.event = _data["event"] ? Event.fromJS(_data["event"]) : <any>undefined;
+            this.reviewer = _data["reviewer"] ? User.fromJS(_data["reviewer"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): EventRating {
+        data = typeof data === 'object' ? data : {};
+        let result = new EventRating();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["eventId"] = this.eventId;
+        data["comments"] = this.comments;
+        data["rating"] = this.rating;
+        data["event"] = this.event ? this.event.toJSON() : <any>undefined;
+        data["reviewer"] = this.reviewer ? this.reviewer.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): EventRating {
+        const json = this.toJSON();
+        let result = new EventRating();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IEventRating {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    eventId: string;
+    comments: string | undefined;
+    rating: number;
+    event: Event;
+    reviewer: User;
 }
 
 /** 0 = Daily 1 = Weekly 2 = Monthly */
@@ -50035,6 +50775,73 @@ export enum StudentCourseSectionStatus {
     NotStarted = 0,
     InProgress = 1,
     Finished = 2,
+}
+
+export class StudentEvent implements IStudentEvent {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    eventId: string;
+    saveOnly: boolean;
+    creatorUser: User;
+    event: Event;
+
+    constructor(data?: IStudentEvent) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.eventId = _data["eventId"];
+            this.saveOnly = _data["saveOnly"];
+            this.creatorUser = _data["creatorUser"] ? User.fromJS(_data["creatorUser"]) : <any>undefined;
+            this.event = _data["event"] ? Event.fromJS(_data["event"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): StudentEvent {
+        data = typeof data === 'object' ? data : {};
+        let result = new StudentEvent();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["eventId"] = this.eventId;
+        data["saveOnly"] = this.saveOnly;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        data["event"] = this.event ? this.event.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): StudentEvent {
+        const json = this.toJSON();
+        let result = new StudentEvent();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IStudentEvent {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    eventId: string;
+    saveOnly: boolean;
+    creatorUser: User;
+    event: Event;
 }
 
 export class StudentEventDto implements IStudentEventDto {

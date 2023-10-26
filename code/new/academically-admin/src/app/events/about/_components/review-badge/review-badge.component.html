@@ -1,0 +1,11 @@
+<div *ngIf="hasReviewed" class="card rating custom-card-border custom-card-shadow">
+    <div class="card-body rating-body">
+        <div class="rating">
+            <span class="rating-points d-block w-100 text-center">{{ rating | number : '1.1-1'}}</span>
+            <h6 class="rating-title text-center text-uppercase">{{ 'YourEventRating' | localize: eventCategoryName }}</h6>
+            <div class="rating-stars d-flex justify-content-center">
+                <app-star-rating-review [actualRating]="rating"></app-star-rating-review>
+            </div>
+        </div>
+    </div>
+</div>

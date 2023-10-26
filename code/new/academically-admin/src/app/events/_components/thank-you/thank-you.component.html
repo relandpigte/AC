@@ -1,0 +1,12 @@
+<div class="card-body rating">
+    <div class="rating-success text-center">
+        <img class="rating-success-img" src="assets/img/events/completed-icon.svg" alt="Success">
+        <div class="rating-success-title">{{ 'RatingSubmitted' | localize }}</div>
+        <div class="rating-success-message">{{ 'ThankYouForRating' | localize }}</div>
+        <div class="d-flex justify-content-end rating-success-button">
+            <button type="submit" class="btn btn-primary pl-5 pr-5" (click)="handleClose()">
+                {{ 'Done' | localize }}
+            </button>
+        </div>
+    </div>
+</div>

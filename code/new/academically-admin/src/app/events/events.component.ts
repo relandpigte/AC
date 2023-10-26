@@ -9,10 +9,10 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { takeUntil } from 'rxjs/operators';
 import { ActivatedRoute } from '@node_modules/@angular/router';
 import { ServiceDataService } from '@shared/services/service-data.service';
-import { ChannelDto, ChatsServiceProxy, EventDto, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
-import {
-  ChatComposerConversationComponent
-} from '@shared/components/chat-composer-conversation/chat-composer-conversation.component';
+import {  ChatsServiceProxy, EventDto, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ChatComposerConversationComponent } from '@shared/components/chat-composer-conversation/chat-composer-conversation.component';
+import { RatingComponent } from '@app/events/_components/rating/rating.component';
+import { ThankYouComponent } from '@app/events/_components/thank-you/thank-you.component';
 
 @Component({
   selector: 'app-events',
@@ -47,6 +47,18 @@ export class EventsComponent extends  AppComponentBase implements OnInit {
   ngOnInit(): void {
     setTimeout(() => this._landingPageService.setIsLoading(false), 2000);
     this.getServiceId();
+  }
+
+  handleEventReview(data: EventDto): void {
+    const modalSettings = this.defaultModalSettings;
+    modalSettings.class = 'modal-sm modal-event-rating modal-dialog-centered';
+    modalSettings.initialState = { data };
+
+    const modal = this._modalService.show(RatingComponent, modalSettings).content;
+    modal.onSuccessReview.subscribe((): void => {
+      modalSettings.class = 'modal-sm modal-rating-success modal-dialog-centered';
+      this._modalService.show(ThankYouComponent, modalSettings);
+    });
   }
 
   private async openMessageModal(): Promise<void> {
