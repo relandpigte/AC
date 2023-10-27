@@ -14,7 +14,7 @@
         </div>
     </div>
 
-    <div class="chat position-relative d-flex flex-row border mb-5">
+    <div class="chat position-relative d-flex flex-row border border-bottom-0">
         <div class="chat-content-left border-right">
             <app-search-filter (onComposeMessage)="handleOnComposeMessage()"></app-search-filter>
             <div *ngIf="listHeader" class="chat-content-left-nav d-flex justify-content-start align-items-center gap-10 cursor-pointer" (click)="switchToInbox()">
