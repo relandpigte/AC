@@ -1,5 +1,5 @@
-<div *ngIf="!hasReviewed" class="reviews-inline">
-    <app-rate-and-review [serviceId]="courseId" (onSuccessReview)="handleSuccessReview()"></app-rate-and-review>
+<div *ngIf="isCompleted && !hasReviewed" class="reviews-inline">
+    <app-rate-and-review [serviceId]="courseId" (onSuccessReview)="handleSuccessReview()" [inline]="true"></app-rate-and-review>
     <div class="reviews-inline-separator d-flex align-items-center text-center">
         <span class="flex-grow-1">{{ 'OtherReviews' | localize }}</span>
     </div>

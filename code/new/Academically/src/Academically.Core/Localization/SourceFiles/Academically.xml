@@ -2018,5 +2018,6 @@
     <text name="CourseCompleted">You’ve completed this course</text>
     <text name="YourCourseReview">Your review for this Course</text>
     <text name="OtherReviews">Other reviews</text>
+    <text name="LeaveAReview">Leave a review</text>
   </texts>
 </localizationDictionary>

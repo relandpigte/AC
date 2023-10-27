@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnInit, Output } from '@angular/core';
+import { Component, Injector, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import {
   AvailableServiceDto,
@@ -21,8 +21,9 @@ import { Subject } from 'rxjs';
   templateUrl: './rate-and-review.component.html',
   styleUrls: ['./rate-and-review.component.less']
 })
-export class RateAndReviewComponent extends AppComponentBase implements OnInit {
+export class RateAndReviewComponent extends AppComponentBase implements OnInit, OnChanges {
   @Input() serviceId: string;
+  @Input() inline: boolean;
   @Output() onSuccessReview = new Subject<any>();
   @Output() onClose = new Subject<any>();
 
@@ -57,13 +58,20 @@ export class RateAndReviewComponent extends AppComponentBase implements OnInit {
   }
 
   get serviceName(): string { return this.service?.name; }
+  get title(): string { return this.inline ? this.l('LeaveAReview') : `${this.l('WriteAReviewFor')} ${this.serviceName}`; }
 
   async ngOnInit() {
-    await this.retrieveService();
     this.generateTestData();
+    await this.retrieveService();
   }
 
-  async retrieveService() {
+  async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    if ('serviceId' in changes && this.serviceId) {
+      await this.retrieveService();
+    }
+  }
+
+  async retrieveService(): Promise<void> {
     try {
       this.service = await this._postsService.getService(this.serviceId).toPromise();
     } catch (err) {
@@ -73,7 +81,6 @@ export class RateAndReviewComponent extends AppComponentBase implements OnInit {
 
   onFormSubmit(): void {
     this.isLoading = true;
-
     this._ratingsService.createServiceRatings(this.model)
       .pipe(
         takeUntil(this.destroyed$),
@@ -125,7 +132,6 @@ export class RateAndReviewComponent extends AppComponentBase implements OnInit {
 
   generateAreaRating(areaType: RatingExperienceType): number {
     let rating = 3;
-
     switch (areaType) {
       case RatingExperienceType.Positive:
         rating = 5;
@@ -136,7 +142,6 @@ export class RateAndReviewComponent extends AppComponentBase implements OnInit {
       case RatingExperienceType.Negative:
         rating = 1;
     }
-
     return rating;
   }
 

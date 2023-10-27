@@ -5,11 +5,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
 import { ServiceDataService } from '@shared/services/service-data.service';
-import {
-  CourseDto,
-  RatingExperienceType,
-  RatingsServiceProxy, ServiceRatingDto,
-} from '@shared/service-proxies/service-proxies';
+import { CourseDto, RatingExperienceType, RatingsServiceProxy, ServiceRatingDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-reviews',
@@ -37,13 +33,12 @@ export class CourseReviewsComponent extends AppComponentBase implements OnInit {
   get isLoading$() { return this._landingPageService.isLoading$; }
   get tutorId(): number { return this.data?.creatorUser?.id; }
   get hasReviewed(): boolean { return this.data?.hasReviewed; }
+  get isCompleted(): boolean { return this.data?.progress === 100; }
 
   ngOnInit(): void {
     this._serviceData.serviceData$.pipe(takeUntil(this.destroyed$)).subscribe(d => {
-      if (d) {
-        this.data = d;
-        this.getCourseRatings();
-      }
+      this.data = d;
+      this.getCourseRatings();
     });
   }
 

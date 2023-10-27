@@ -78,10 +78,14 @@ export class CourseComponent extends  AppComponentBase implements OnInit {
   private getServiceId(): void {
     this._route.paramMap.subscribe(async paramMap => {
       if (paramMap.has('id')) {
-        this.id = paramMap.get('id');
-        this._serviceData.serviceData = await this._courseService.get(this.id).toPromise();
-        this._serviceData.discussionId = await this._serviceData.getServiceDiscussionId(this.id);
-        this._serviceData.serviceRating = await this._ratingService.getUserServiceReview(this.id).toPromise();
+        try {
+          this.id = paramMap.get('id');
+          this._serviceData.serviceData = await this._courseService.get(this.id).toPromise();
+          this._serviceData.discussionId = await this._serviceData.getServiceDiscussionId(this.id);
+          this._serviceData.serviceRating = await this._ratingService.getUserServiceReview(this.id).toPromise();
+        } catch (e) {
+          console.error(e);
+        }
       }
     });
   }
