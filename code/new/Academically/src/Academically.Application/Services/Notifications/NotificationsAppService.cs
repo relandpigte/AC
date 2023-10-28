@@ -261,7 +261,7 @@ namespace Academically.Services.Notifications
             if (await this.NotificationHasAdverb(notification))
             {
                 formatted.Add(" ");
-                formatted.Add(await this.FormatAdverb(notification.Target));
+                formatted.Add(await this.FormatAdverb(notification));
             }
 
             if (await this.NotificationHasPronoun(notification))
@@ -368,6 +368,8 @@ namespace Academically.Services.Notifications
                     return "purchased";
                 case NotificationAction.Enroll:
                     return "enrolled";
+                case NotificationAction.Review:
+                    return "left a review";
                 default:
                     return "reacted";
             }
@@ -394,7 +396,7 @@ namespace Academically.Services.Notifications
                 case NotificationTarget.Broadcast:
                     return "broadcast";
                 case NotificationTarget.Coaching:
-                    return "coaching";
+                    return "coaching session";
                 case NotificationTarget.Course:
                     return "course";
                 case NotificationTarget.Tutorial:
@@ -420,15 +422,18 @@ namespace Academically.Services.Notifications
 
         private async Task<bool> NotificationHasAdverb(NotificationDto notification)
         {
-            switch (notification.Target)
+            if (notification.Action == NotificationAction.Purchase || notification.Action == NotificationAction.Enroll)
             {
-                case NotificationTarget.Broadcast:
-                case NotificationTarget.Workshop:
-                case NotificationTarget.Course:
-                    return true;
-                default:
-                    return false;
+                switch (notification.Target)
+                {
+                    case NotificationTarget.Broadcast:
+                    case NotificationTarget.Workshop:
+                    case NotificationTarget.Course:
+                        return true;
+                }
             }
+            if (notification.Action == NotificationAction.Review) return true;
+            return false;
         }
 
         private async Task<bool> NotificationHasLocation(NotificationDto notification)
@@ -478,18 +483,21 @@ namespace Academically.Services.Notifications
             return await this.NotificationActionToText(notification.Action);
         }
 
-        private async Task<string> FormatAdverb(NotificationTarget target)
+        private async Task<string> FormatAdverb(NotificationDto notification)
         {
-            switch (target)
+            if (notification.Action == NotificationAction.Purchase || notification.Action == NotificationAction.Enroll)
             {
-                case NotificationTarget.Broadcast:
-                case NotificationTarget.Workshop:
-                    return "a ticket to";
-                case NotificationTarget.Course:
-                    return "on";
-                default:
-                    return "";
+                switch (notification.Target)
+                {
+                    case NotificationTarget.Broadcast:
+                    case NotificationTarget.Workshop:
+                        return "a ticket to";
+                    case NotificationTarget.Course:
+                        return "on";
+                }
             }
+            if (notification.Action == NotificationAction.Review) return "for";
+            return null;
         }
 
         private async Task<string> FormatPronoun(NotificationAction action)

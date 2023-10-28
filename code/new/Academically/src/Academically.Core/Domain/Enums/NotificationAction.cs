@@ -17,6 +17,7 @@ namespace Academically.Domain.Enums
         Answer,
         Chat,
         Purchase,
-        Enroll
+        Enroll,
+        Review
     }
 }

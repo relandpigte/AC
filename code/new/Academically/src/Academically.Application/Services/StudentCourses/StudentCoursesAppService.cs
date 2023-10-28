@@ -150,6 +150,7 @@ namespace Academically.Services.StudentCourses
                 .Include(e => e.StudentCourseSections)
                     .ThenInclude(e => e.CourseSection)
                         .ThenInclude(e => e.ImageDocument)
+                .Include(e => e.CreatorUser)
                 .Select(e => ObjectMapper.Map<StudentCourseDto>(e))
                 .FirstOrDefaultAsync();
         }

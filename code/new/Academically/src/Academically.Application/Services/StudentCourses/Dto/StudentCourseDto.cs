@@ -17,6 +17,7 @@ namespace Academically.Services.StudentCourses.Dto
         public DateTime CreationTime { get; set; }
 
         public CourseDto Course { get; set; }
+        public long CreatorUserId { get; set; }
         public UserDto CreatorUser { get; set; }
 
         public IEnumerable<StudentCourseSectionDto> StudentCourseSections { get; set; }

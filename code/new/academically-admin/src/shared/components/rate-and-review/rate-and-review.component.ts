@@ -74,6 +74,8 @@ export class RateAndReviewComponent extends AppComponentBase implements OnInit, 
   async retrieveService(): Promise<void> {
     try {
       this.service = await this._postsService.getService(this.serviceId).toPromise();
+      this.model.serviceType = this.service.serviceType;
+      this.model.serviceOwnerId = this.service.creatorUserId;
     } catch (err) {
       console.error(err);
     }

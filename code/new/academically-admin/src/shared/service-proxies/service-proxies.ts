@@ -37412,6 +37412,7 @@ export class CourseDto implements ICourseDto {
     creationTime: moment.Moment;
     courseImageUrl: string | undefined;
     thumbnailImageUrl: string | undefined;
+    creatorUserId: number;
     creatorUser: UserDto;
     imageDocument: DocumentDto;
     studentCourses: StudentCourseDto[] | undefined;
@@ -37460,6 +37461,7 @@ export class CourseDto implements ICourseDto {
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.courseImageUrl = _data["courseImageUrl"];
             this.thumbnailImageUrl = _data["thumbnailImageUrl"];
+            this.creatorUserId = _data["creatorUserId"];
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
             this.imageDocument = _data["imageDocument"] ? DocumentDto.fromJS(_data["imageDocument"]) : <any>undefined;
             if (Array.isArray(_data["studentCourses"])) {
@@ -37516,6 +37518,7 @@ export class CourseDto implements ICourseDto {
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["courseImageUrl"] = this.courseImageUrl;
         data["thumbnailImageUrl"] = this.thumbnailImageUrl;
+        data["creatorUserId"] = this.creatorUserId;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         data["imageDocument"] = this.imageDocument ? this.imageDocument.toJSON() : <any>undefined;
         if (Array.isArray(this.studentCourses)) {
@@ -37572,6 +37575,7 @@ export interface ICourseDto {
     creationTime: moment.Moment;
     courseImageUrl: string | undefined;
     thumbnailImageUrl: string | undefined;
+    creatorUserId: number;
     creatorUser: UserDto;
     imageDocument: DocumentDto;
     studentCourses: StudentCourseDto[] | undefined;
@@ -37644,6 +37648,8 @@ export interface ICourseDtoPagedResultDto {
 export class CourseRatingDto implements ICourseRatingDto {
     id: string;
     courseId: string;
+    serviceType: ServicesType;
+    serviceOwnerId: number | undefined;
     experienceType: RatingExperienceType;
     comments: string | undefined;
     creationTime: moment.Moment;
@@ -37663,6 +37669,8 @@ export class CourseRatingDto implements ICourseRatingDto {
         if (_data) {
             this.id = _data["id"];
             this.courseId = _data["courseId"];
+            this.serviceType = _data["serviceType"];
+            this.serviceOwnerId = _data["serviceOwnerId"];
             this.experienceType = _data["experienceType"];
             this.comments = _data["comments"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
@@ -37682,6 +37690,8 @@ export class CourseRatingDto implements ICourseRatingDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["courseId"] = this.courseId;
+        data["serviceType"] = this.serviceType;
+        data["serviceOwnerId"] = this.serviceOwnerId;
         data["experienceType"] = this.experienceType;
         data["comments"] = this.comments;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
@@ -37701,6 +37711,8 @@ export class CourseRatingDto implements ICourseRatingDto {
 export interface ICourseRatingDto {
     id: string;
     courseId: string;
+    serviceType: ServicesType;
+    serviceOwnerId: number | undefined;
     experienceType: RatingExperienceType;
     comments: string | undefined;
     creationTime: moment.Moment;
@@ -38500,6 +38512,8 @@ export interface ICreateCourseRatingAreaDto {
 
 export class CreateCourseRatingDto implements ICreateCourseRatingDto {
     courseId: string;
+    serviceType: ServicesType;
+    serviceOwnerId: number | undefined;
     experienceType: RatingExperienceType;
     comments: string | undefined;
     creatorUserId: number;
@@ -38517,6 +38531,8 @@ export class CreateCourseRatingDto implements ICreateCourseRatingDto {
     init(_data?: any) {
         if (_data) {
             this.courseId = _data["courseId"];
+            this.serviceType = _data["serviceType"];
+            this.serviceOwnerId = _data["serviceOwnerId"];
             this.experienceType = _data["experienceType"];
             this.comments = _data["comments"];
             this.creatorUserId = _data["creatorUserId"];
@@ -38538,6 +38554,8 @@ export class CreateCourseRatingDto implements ICreateCourseRatingDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["courseId"] = this.courseId;
+        data["serviceType"] = this.serviceType;
+        data["serviceOwnerId"] = this.serviceOwnerId;
         data["experienceType"] = this.experienceType;
         data["comments"] = this.comments;
         data["creatorUserId"] = this.creatorUserId;
@@ -38559,6 +38577,8 @@ export class CreateCourseRatingDto implements ICreateCourseRatingDto {
 
 export interface ICreateCourseRatingDto {
     courseId: string;
+    serviceType: ServicesType;
+    serviceOwnerId: number | undefined;
     experienceType: RatingExperienceType;
     comments: string | undefined;
     creatorUserId: number;
@@ -39844,6 +39864,8 @@ export interface ICreateServiceRatingAreaDto {
 
 export class CreateServiceRatingDto implements ICreateServiceRatingDto {
     serviceId: string;
+    serviceType: ServicesType;
+    serviceOwnerId: number | undefined;
     experienceType: RatingExperienceType;
     comments: string | undefined;
     creatorUserId: number;
@@ -39861,6 +39883,8 @@ export class CreateServiceRatingDto implements ICreateServiceRatingDto {
     init(_data?: any) {
         if (_data) {
             this.serviceId = _data["serviceId"];
+            this.serviceType = _data["serviceType"];
+            this.serviceOwnerId = _data["serviceOwnerId"];
             this.experienceType = _data["experienceType"];
             this.comments = _data["comments"];
             this.creatorUserId = _data["creatorUserId"];
@@ -39882,6 +39906,8 @@ export class CreateServiceRatingDto implements ICreateServiceRatingDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["serviceId"] = this.serviceId;
+        data["serviceType"] = this.serviceType;
+        data["serviceOwnerId"] = this.serviceOwnerId;
         data["experienceType"] = this.experienceType;
         data["comments"] = this.comments;
         data["creatorUserId"] = this.creatorUserId;
@@ -39903,6 +39929,8 @@ export class CreateServiceRatingDto implements ICreateServiceRatingDto {
 
 export interface ICreateServiceRatingDto {
     serviceId: string;
+    serviceType: ServicesType;
+    serviceOwnerId: number | undefined;
     experienceType: RatingExperienceType;
     comments: string | undefined;
     creatorUserId: number;
@@ -45978,7 +46006,7 @@ export interface IMyServiceViewDto {
     items: MyServiceItemViewDto[] | undefined;
 }
 
-/** 0 = Like 1 = React 2 = Share 3 = Comment 4 = Post 5 = Reply 6 = Answer 7 = Chat 8 = Purchase 9 = Enroll */
+/** 0 = Like 1 = React 2 = Share 3 = Comment 4 = Post 5 = Reply 6 = Answer 7 = Chat 8 = Purchase 9 = Enroll 10 = Review */
 export enum NotificationAction {
     Like = 0,
     React = 1,
@@ -45990,6 +46018,7 @@ export enum NotificationAction {
     Chat = 7,
     Purchase = 8,
     Enroll = 9,
+    Review = 10,
 }
 
 export class NotificationData implements INotificationData {
@@ -50144,6 +50173,8 @@ export interface IServicePurchaseDto {
 export class ServiceRatingDto implements IServiceRatingDto {
     id: string;
     serviceId: string;
+    serviceType: ServicesType;
+    serviceOwnerId: number | undefined;
     experienceType: RatingExperienceType;
     comments: string | undefined;
     creationTime: moment.Moment;
@@ -50163,6 +50194,8 @@ export class ServiceRatingDto implements IServiceRatingDto {
         if (_data) {
             this.id = _data["id"];
             this.serviceId = _data["serviceId"];
+            this.serviceType = _data["serviceType"];
+            this.serviceOwnerId = _data["serviceOwnerId"];
             this.experienceType = _data["experienceType"];
             this.comments = _data["comments"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
@@ -50182,6 +50215,8 @@ export class ServiceRatingDto implements IServiceRatingDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["serviceId"] = this.serviceId;
+        data["serviceType"] = this.serviceType;
+        data["serviceOwnerId"] = this.serviceOwnerId;
         data["experienceType"] = this.experienceType;
         data["comments"] = this.comments;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
@@ -50201,6 +50236,8 @@ export class ServiceRatingDto implements IServiceRatingDto {
 export interface IServiceRatingDto {
     id: string;
     serviceId: string;
+    serviceType: ServicesType;
+    serviceOwnerId: number | undefined;
     experienceType: RatingExperienceType;
     comments: string | undefined;
     creationTime: moment.Moment;
@@ -50903,6 +50940,7 @@ export class StudentCourseDto implements IStudentCourseDto {
     progress: number;
     creationTime: moment.Moment;
     course: CourseDto;
+    creatorUserId: number;
     creatorUser: UserDto;
     studentCourseSections: StudentCourseSectionDto[] | undefined;
 
@@ -50922,6 +50960,7 @@ export class StudentCourseDto implements IStudentCourseDto {
             this.progress = _data["progress"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.course = _data["course"] ? CourseDto.fromJS(_data["course"]) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
             if (Array.isArray(_data["studentCourseSections"])) {
                 this.studentCourseSections = [] as any;
@@ -50945,6 +50984,7 @@ export class StudentCourseDto implements IStudentCourseDto {
         data["progress"] = this.progress;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["course"] = this.course ? this.course.toJSON() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         if (Array.isArray(this.studentCourseSections)) {
             data["studentCourseSections"] = [];
@@ -50968,6 +51008,7 @@ export interface IStudentCourseDto {
     progress: number;
     creationTime: moment.Moment;
     course: CourseDto;
+    creatorUserId: number;
     creatorUser: UserDto;
     studentCourseSections: StudentCourseSectionDto[] | undefined;
 }

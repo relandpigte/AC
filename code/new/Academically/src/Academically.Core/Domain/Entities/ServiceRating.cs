@@ -13,6 +13,8 @@ namespace Academically.Domain.Entities
         public Guid ServiceId { get; set; }
         public RatingExperienceType ExperienceType { get; set; }
         public string Comments { get; set; }
+        public ServicesType? ServiceType { get; set; }
+        public long? ServiceOwnerId { get; set; }
 
         [ForeignKey("CreatorUserId")]
         public virtual User CreatorUser { get; set; }

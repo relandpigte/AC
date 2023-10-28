@@ -6,6 +6,7 @@ import {
   CreateCourseRatingDto,
   RatingAreaType,
   RatingExperienceType,
+  ServicesType,
   StudentCoursesServiceProxy,
   UserLoginInfoDto
 } from '@shared/service-proxies/service-proxies';
@@ -93,6 +94,8 @@ export class RateAndReviewCourseComponent extends AppComponentBase implements On
 
   generateTestData(): void {
     this.model.courseId = this.course.id;
+    this.model.serviceType = ServicesType.Course;
+    this.model.serviceOwnerId = this.course.creatorUserId;
     this.model.experienceType = RatingExperienceType.Neutral;
     this.generateCourseAreaRating();
   }

@@ -196,4 +196,6 @@
 	<include file="ddml-new/ddml.2023-10-18-90-create-eventpollanswers-table.xml" />
 	<include file="ddml-new/ddml.2023-10-18-91-alter-eventpollanswers-table.xml" />
 	<include file="ddml-new/ddml.2023-10-25-01.create-event-ratings-tables.xml" />
+	<include file="ddml-new/ddml.2023-10-29-99-alter-serviceratings-table.xml" />
+	<include file="ddml-new/ddml.2023-10-29-99-alter-courseratings-table.xml" />
 </databaseChangeLog>

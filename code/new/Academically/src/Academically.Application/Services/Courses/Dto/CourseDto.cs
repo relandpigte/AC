@@ -43,6 +43,7 @@ namespace Academically.Services.Courses.Dto
         public string CourseImageUrl { get; set; }
         public string ThumbnailImageUrl { get; set; }
 
+        public long CreatorUserId { get; set; }
         public UserDto CreatorUser { get; set; }
         public DocumentDto ImageDocument { get; set; }
 

@@ -10,6 +10,8 @@ namespace Academically.Services.Ratings.Dto
     public class CreateServiceRatingDto
     {
         public Guid ServiceId { get; set; }
+        public ServicesType? ServiceType { get; set; }
+        public long? ServiceOwnerId { get; set; }
         public RatingExperienceType ExperienceType { get; set; }
         public string Comments { get; set; }
         public long CreatorUserId { get; set; }

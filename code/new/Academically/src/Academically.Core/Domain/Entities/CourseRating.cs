@@ -11,6 +11,8 @@ namespace Academically.Domain.Entities
     public class CourseRating : CreationAuditedEntity<Guid>
     {
         public Guid CourseId { get; set; }
+        public ServicesType? ServiceType { get; set; }
+        public long? ServiceOwnerId { get; set; }
         public RatingExperienceType ExperienceType { get; set; }
         public string Comments { get; set; }
 
