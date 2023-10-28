@@ -19,6 +19,7 @@ namespace Academically.Domain.Enums
         Coaching,
         Course,
         Tutorial,
-        Workshop
+        Workshop,
+        User
     }
 }

@@ -370,6 +370,8 @@ namespace Academically.Services.Notifications
                     return "enrolled";
                 case NotificationAction.Review:
                     return "left a review";
+                case NotificationAction.Follow:
+                    return "started following";
                 default:
                     return "reacted";
             }
@@ -411,6 +413,7 @@ namespace Academically.Services.Notifications
         private async Task<bool> NotificationHasTarget(NotificationDto notification)
         {
             if (notification.Action == NotificationAction.Post) return false;
+            if (notification.Action == NotificationAction.Follow) return false;
             return true;
         }
 
@@ -438,6 +441,7 @@ namespace Academically.Services.Notifications
 
         private async Task<bool> NotificationHasLocation(NotificationDto notification)
         {
+            if (notification.Action == NotificationAction.Follow) return false;
             if (notification.Actors.Count > 1)
             {
                 if (notification.Action == NotificationAction.Answer) return false;
@@ -450,13 +454,12 @@ namespace Academically.Services.Notifications
 
         private async Task<bool> NotificationHasObject(NotificationDto notification)
         {
+            if (notification.Action == NotificationAction.Purchase) return false;
+            if (notification.Action == NotificationAction.Enroll) return false;
+            if (notification.Action == NotificationAction.Follow) return false;
             if (notification.Actors.Count > 1)
             {
                 if (notification.Action == NotificationAction.Post && notification.Target == NotificationTarget.Post) return false;
-            }
-            if (notification.Action == NotificationAction.Purchase || notification.Action == NotificationAction.Enroll)
-            {
-                return false;
             }
             return true;
         }
@@ -502,7 +505,15 @@ namespace Academically.Services.Notifications
 
         private async Task<string> FormatPronoun(NotificationAction action)
         {
-            return NotificationAction.Chat.Equals(action) ? "you a" : "your";
+            switch(action)
+            {
+                case NotificationAction.Chat:
+                    return "you a";
+                case NotificationAction.Follow:
+                    return "you";
+                default:
+                    return "your";
+            }
         }
 
         private async Task<string> FormatTarget(NotificationDto notification)
