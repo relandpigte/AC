@@ -24,5 +24,8 @@ namespace Academically.Services.Notifications.Dto
 
         // Service of the related discussion for the notification, if applicable.
         public AvailableServiceDto? DiscussionService { get; set; }
+
+        // Related service of the notification
+        public AvailableServiceDto? Service { get; set; }
     }
 }

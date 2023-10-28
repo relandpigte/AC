@@ -17,8 +17,8 @@ namespace Academically.Services.Notifications
         Task<NotificationDto> Get(string notificationId);
         Task<IList<NotificationDto>> GetLatest(int take);
         Task<IList<NotificationDto>> GetAll();
-        Task<NotificationDto> Create(CreateNotificationDto input);
-        Task<NotificationDto> Read(string notificationId);
-        Task<NotificationDto> Unread(string notificationId);
+        Task Create(CreateNotificationDto input);
+        Task Read(string notificationId);
+        Task Unread(string notificationId);
     }
 }

@@ -172,14 +172,9 @@ namespace Academically.Services.Notifications
             return notifications;
         }
 
-        public async Task<NotificationDto> Create(CreateNotificationDto input)
+        public async Task Create(CreateNotificationDto input)
         {
-            if (input.UserId == input.ActorId) return null;
-
-            var post = await this._postsRepository.GetAll()
-                .Include(p => p.Parent)
-                .Where(p => p.Id == input.ReferenceId)
-                .FirstOrDefaultAsync();
+            if (input.UserId == input.ActorId) return;
 
             var latestUserNotification = this._notificationsRepository.GetAll()
                 .Include(n => n.User)
@@ -191,7 +186,7 @@ namespace Academically.Services.Notifications
                 .Where(n => n.ReadTime == null)
                 .Where(n => n.Action == input.Action)
                 .Where(n => n.Target == input.Target)
-                .WhereIf(post?.Parent == null || post?.Parent?.Type != PostType.Discussion, n => n.ReferenceId == input.ReferenceId)
+                .Where(n => n.ReferenceId == input.ReferenceId)
                 .FirstOrDefault();
 
             if (latestUserNotification == null)
@@ -220,11 +215,9 @@ namespace Academically.Services.Notifications
             latestUserNotification.ReadTime = null;
             latestUserNotification.LastModifierUserId = input.ActorId;
             latestUserNotification.LastModificationTime = Clock.Now;
-
-            return await this.Get(latestUserNotification.Id.ToString());
         }
 
-        public async Task<NotificationDto> Read(string notificationId)
+        public async Task Read(string notificationId)
         {
             var notification = await this._notificationsRepository.GetAll()
                 .Include(n => n.User)
@@ -237,11 +230,9 @@ namespace Academically.Services.Notifications
             {
                 notification.ReadTime = DateTime.Now;
             }
-
-            return ObjectMapper.Map<NotificationDto>(notification);
         }
 
-        public async Task<NotificationDto> Unread(string notificationId)
+        public async Task Unread(string notificationId)
         {
             var notification = await this._notificationsRepository.GetAll()
                 .Include(n => n.User)
@@ -254,8 +245,6 @@ namespace Academically.Services.Notifications
             {
                 notification.ReadTime = null;
             }
-
-            return ObjectMapper.Map<NotificationDto>(notification);
         }
 
         private async Task<string> FormatNotification(NotificationDto notification)
@@ -268,6 +257,12 @@ namespace Academically.Services.Notifications
 
             formatted.Add(" ");
             formatted.Add(await this.FormatVerb(notification));
+
+            if (await this.NotificationHasAdverb(notification))
+            {
+                formatted.Add(" ");
+                formatted.Add(await this.FormatAdverb(notification.Target));
+            }
 
             if (await this.NotificationHasPronoun(notification))
             {
@@ -346,6 +341,8 @@ namespace Academically.Services.Notifications
                     .FirstOrDefaultAsync();
             }
 
+            references.Service = await this._postsAppService.GetService(notification.ReferenceId);
+
             return references;
         }
 
@@ -367,6 +364,10 @@ namespace Academically.Services.Notifications
                     return "posted";
                 case NotificationAction.Chat:
                     return "sent";
+                case NotificationAction.Purchase:
+                    return "purchased";
+                case NotificationAction.Enroll:
+                    return "enrolled";
                 default:
                     return "reacted";
             }
@@ -388,6 +389,18 @@ namespace Academically.Services.Notifications
                     return "comment";
                 case NotificationTarget.Chat:
                     return "message";
+                case NotificationTarget.Article:
+                    return "article";
+                case NotificationTarget.Broadcast:
+                    return "broadcast";
+                case NotificationTarget.Coaching:
+                    return "coaching";
+                case NotificationTarget.Course:
+                    return "course";
+                case NotificationTarget.Tutorial:
+                    return "tutorial";
+                case NotificationTarget.Workshop:
+                    return "workshop";
                 default:
                     return "post";
             }
@@ -403,6 +416,19 @@ namespace Academically.Services.Notifications
         {
             if (notification.Action == NotificationAction.Post) return false;
             return true;
+        }
+
+        private async Task<bool> NotificationHasAdverb(NotificationDto notification)
+        {
+            switch (notification.Target)
+            {
+                case NotificationTarget.Broadcast:
+                case NotificationTarget.Workshop:
+                case NotificationTarget.Course:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         private async Task<bool> NotificationHasLocation(NotificationDto notification)
@@ -423,11 +449,16 @@ namespace Academically.Services.Notifications
             {
                 if (notification.Action == NotificationAction.Post && notification.Target == NotificationTarget.Post) return false;
             }
+            if (notification.Action == NotificationAction.Purchase || notification.Action == NotificationAction.Enroll)
+            {
+                return false;
+            }
             return true;
         }
 
         private async Task<string> FormatActors(List<UserDto> actors) {
             var textinfo = new CultureInfo("en-US", false).TextInfo;
+            if (actors.Count == 0) return "";
             if (actors.Count == 1)
             {
                 return $"<span>{textinfo.ToTitleCase(actors.ElementAt(0).FullName)}</span>";
@@ -447,6 +478,20 @@ namespace Academically.Services.Notifications
             return await this.NotificationActionToText(notification.Action);
         }
 
+        private async Task<string> FormatAdverb(NotificationTarget target)
+        {
+            switch (target)
+            {
+                case NotificationTarget.Broadcast:
+                case NotificationTarget.Workshop:
+                    return "a ticket to";
+                case NotificationTarget.Course:
+                    return "on";
+                default:
+                    return "";
+            }
+        }
+
         private async Task<string> FormatPronoun(NotificationAction action)
         {
             return NotificationAction.Chat.Equals(action) ? "you a" : "your";
@@ -459,9 +504,14 @@ namespace Academically.Services.Notifications
 
         private async Task<string> FormatLocation(NotificationReferencesDto references)
         {
+            var service = references.Service;
             var referencePost = references.ParentPost?.Parent ?? references.Post?.Parent;
             string location = null;
-            if (referencePost != null)
+            if (service != null)
+            {
+                location = $"<span>{service.Name}</span>";
+            }
+            else if (referencePost != null)
             {
                 if (references.Discussion == null) location = $"in <span>{referencePost.Title ?? referencePost.Content}</span>";
                 else
