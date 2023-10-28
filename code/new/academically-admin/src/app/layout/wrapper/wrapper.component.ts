@@ -90,11 +90,10 @@ export class WrapperComponent extends AppComponentBase implements OnInit, OnDest
     this.notificationsStateService.notifications$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
       switch (event.type) {
         case StateUpdateType.Add:
-          if (this.timer) { clearTimeout(this.timer); }
+        case StateUpdateType.Update:
+          if (this.timer) clearTimeout(this.timer);
           this.notification = event.data;
-          this.timer = setTimeout((): void => {
-            this.notification = null;
-          }, 10000);
+          this.timer = setTimeout((): void => this.notification = null, 10_000);
           break;
       }
       this._cdr.detectChanges();
