@@ -71,7 +71,8 @@ export class NotificationsStateService extends StateServiceBase {
 
     handleUpsertNotifications = async (notification: NotificationDto) => {
         this.loading$.next(true);
-        this.updateFromMap(this.notifications, Utils.toObjectMap([notification], (c) => c.id, (p) => p), this.notifications$);
+        const upserted = await this._notificationsService.get(notification.id).toPromise();
+        this.updateFromMap(this.notifications, Utils.toObjectMap([upserted], (c) => c.id, (p) => p), this.notifications$);
         this.loading$.next(false);
     };
 

@@ -13,6 +13,12 @@ namespace Academically.Domain.Enums
         Question,
         Reply,
         Comment,
-        Chat
+        Chat,
+        Article,
+        Broadcast,
+        Coaching,
+        Course,
+        Tutorial,
+        Workshop
     }
 }

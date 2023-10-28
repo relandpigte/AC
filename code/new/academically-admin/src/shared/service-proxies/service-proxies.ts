@@ -14636,7 +14636,7 @@ export class NotificationsServiceProxy {
      * @param body (optional) 
      * @return Success
      */
-    create(body: CreateNotificationDto | undefined): Observable<NotificationDto> {
+    create(body: CreateNotificationDto | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/Notifications/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -14648,7 +14648,6 @@ export class NotificationsServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "Content-Type": "application/json-patch+json",
-                "Accept": "text/plain"
             })
         };
 
@@ -14659,14 +14658,14 @@ export class NotificationsServiceProxy {
                 try {
                     return this.processCreate(<any>response_);
                 } catch (e) {
-                    return <Observable<NotificationDto>><any>_observableThrow(e);
+                    return <Observable<void>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<NotificationDto>><any>_observableThrow(response_);
+                return <Observable<void>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCreate(response: HttpResponseBase): Observable<NotificationDto> {
+    protected processCreate(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -14675,24 +14674,21 @@ export class NotificationsServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = NotificationDto.fromJS(resultData200);
-            return _observableOf(result200);
+            return _observableOf<void>(<any>null);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<NotificationDto>(<any>null);
+        return _observableOf<void>(<any>null);
     }
 
     /**
      * @param notificationId (optional) 
      * @return Success
      */
-    read(notificationId: string | undefined): Observable<NotificationDto> {
+    read(notificationId: string | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/Notifications/Read?";
         if (notificationId === null)
             throw new Error("The parameter 'notificationId' cannot be null.");
@@ -14704,7 +14700,6 @@ export class NotificationsServiceProxy {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Accept": "text/plain"
             })
         };
 
@@ -14715,14 +14710,14 @@ export class NotificationsServiceProxy {
                 try {
                     return this.processRead(<any>response_);
                 } catch (e) {
-                    return <Observable<NotificationDto>><any>_observableThrow(e);
+                    return <Observable<void>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<NotificationDto>><any>_observableThrow(response_);
+                return <Observable<void>><any>_observableThrow(response_);
         }));
     }
 
-    protected processRead(response: HttpResponseBase): Observable<NotificationDto> {
+    protected processRead(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -14731,24 +14726,21 @@ export class NotificationsServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = NotificationDto.fromJS(resultData200);
-            return _observableOf(result200);
+            return _observableOf<void>(<any>null);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<NotificationDto>(<any>null);
+        return _observableOf<void>(<any>null);
     }
 
     /**
      * @param notificationId (optional) 
      * @return Success
      */
-    unread(notificationId: string | undefined): Observable<NotificationDto> {
+    unread(notificationId: string | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/Notifications/Unread?";
         if (notificationId === null)
             throw new Error("The parameter 'notificationId' cannot be null.");
@@ -14760,7 +14752,6 @@ export class NotificationsServiceProxy {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Accept": "text/plain"
             })
         };
 
@@ -14771,14 +14762,14 @@ export class NotificationsServiceProxy {
                 try {
                     return this.processUnread(<any>response_);
                 } catch (e) {
-                    return <Observable<NotificationDto>><any>_observableThrow(e);
+                    return <Observable<void>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<NotificationDto>><any>_observableThrow(response_);
+                return <Observable<void>><any>_observableThrow(response_);
         }));
     }
 
-    protected processUnread(response: HttpResponseBase): Observable<NotificationDto> {
+    protected processUnread(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -14787,17 +14778,14 @@ export class NotificationsServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = NotificationDto.fromJS(resultData200);
-            return _observableOf(result200);
+            return _observableOf<void>(<any>null);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<NotificationDto>(<any>null);
+        return _observableOf<void>(<any>null);
     }
 }
 
@@ -45990,7 +45978,7 @@ export interface IMyServiceViewDto {
     items: MyServiceItemViewDto[] | undefined;
 }
 
-/** 0 = Like 1 = React 2 = Share 3 = Comment 4 = Post 5 = Reply 6 = Answer 7 = Chat */
+/** 0 = Like 1 = React 2 = Share 3 = Comment 4 = Post 5 = Reply 6 = Answer 7 = Chat 8 = Purchase 9 = Enroll */
 export enum NotificationAction {
     Like = 0,
     React = 1,
@@ -46000,6 +45988,8 @@ export enum NotificationAction {
     Reply = 5,
     Answer = 6,
     Chat = 7,
+    Purchase = 8,
+    Enroll = 9,
 }
 
 export class NotificationData implements INotificationData {
@@ -46189,7 +46179,7 @@ export enum NotificationSeverity {
     Fatal = 4,
 }
 
-/** 0 = Post 1 = Answer 2 = Question 3 = Reply 4 = Comment 5 = Chat */
+/** 0 = Post 1 = Answer 2 = Question 3 = Reply 4 = Comment 5 = Chat 6 = Article 7 = Broadcast 8 = Coaching 9 = Course 10 = Tutorial 11 = Workshop */
 export enum NotificationTarget {
     Post = 0,
     Answer = 1,
@@ -46197,6 +46187,12 @@ export enum NotificationTarget {
     Reply = 3,
     Comment = 4,
     Chat = 5,
+    Article = 6,
+    Broadcast = 7,
+    Coaching = 8,
+    Course = 9,
+    Tutorial = 10,
+    Workshop = 11,
 }
 
 export class NotificationUserDto implements INotificationUserDto {
