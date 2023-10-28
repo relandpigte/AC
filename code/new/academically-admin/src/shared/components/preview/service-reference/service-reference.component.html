@@ -1,0 +1,26 @@
+<div class="service-reference-preview d-flex justify-content-center align-items-center gap-10 position-relative custom-card-shadow custom-card-border">
+    <div *ngIf="model.isImgShown" class="service-reference-preview-image" [ngClass]="{ 'square': model.isSquareImg, 'circle': model.isCircleImg, 'rectangle': model.isRectangleImg }">
+        <div [ngStyle]="{ 'background-image': 'url(\'' + model.img + '\')' }"></div>
+    </div>
+    <div *ngIf="model.isVideoShown" class="service-reference-preview-video d-flex flex-column justify-content-center align-items-center position-relative">
+        <img [class.can-play]="canPlay" src="/assets/img/actions/play.svg" class="service-reference-preview-video-play">
+        <div [ngStyle]="{ 'background-image': 'url(\'' + model.img + '\')' }"></div>
+    </div>
+    <div class="service-reference-preview-content flex-grow-1 d-flex flex-column justify-content-center align-items-center gap-2">
+        <div *ngIf="model.isScheduleShown" class="service-reference-preview-schedule w-100">
+            {{ model.schedule }}
+        </div>
+        <div class="service-reference-preview-title w-100 line-clamp-2">
+            {{ model.title }}
+        </div>
+        <div *ngIf="model.isDescriptionShown" class="service-reference-preview-description w-100 wrap-text">
+            {{ model.description }}
+        </div>
+        <div *ngIf="model.isAuthorShown" class="service-reference-preview-author w-100">
+            {{ model.author }}
+        </div>
+        <div *ngIf="model.isCompositionsShown" class="service-reference-preview-composition w-100">
+            {{ model.composition }}
+        </div>
+    </div>
+</div>

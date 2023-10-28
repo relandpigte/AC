@@ -1,11 +1,10 @@
 import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
+import { FileUtils } from '@shared/helpers/file-utils';
 import { ChannelMessageDto, ChatsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { ChatService } from '@shared/services/chat.service';
-import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { ModalDialogService } from '@shared/services/modal-dialog.service';
 import { Subject } from 'rxjs';
-import { FileUtils } from '@shared/helpers/file-utils';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-chat-conversation-message',

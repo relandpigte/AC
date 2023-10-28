@@ -70,6 +70,7 @@ import { StarRatingReviewComponent } from '@shared/components/star-rating-review
 import { PreviewLinksComponent } from '@shared/components/preview/links/links.component';
 import { PreviewPostsComponent } from '@shared/components/preview/posts/posts.component';
 import { PreviewServicesComponent } from '@shared/components/preview/services/services.component';
+import { PreviewServiceReferenceComponent } from '@shared/components/preview/service-reference/service-reference.component';
 import { NewPostFloaterComponent } from '@shared/components/new-post-floater/new-post-floater.component';
 
 import { KeysPipe } from '@shared/pipes/keys.pipe';
@@ -140,6 +141,7 @@ import { NotificationCardComponent } from '@shared/components/notification-card/
     PreviewLinksComponent,
     PreviewPostsComponent,
     PreviewServicesComponent,
+    PreviewServiceReferenceComponent,
     ShortenPipe,
     CommentHistoryComponent,
     NewPostFloaterComponent,
@@ -249,6 +251,7 @@ import { NotificationCardComponent } from '@shared/components/notification-card/
     PreviewLinksComponent,
     PreviewPostsComponent,
     PreviewServicesComponent,
+    PreviewServiceReferenceComponent,
     ShortenPipe,
     CommentHistoryComponent,
     NewPostFloaterComponent,
