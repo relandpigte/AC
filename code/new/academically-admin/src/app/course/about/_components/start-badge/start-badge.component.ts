@@ -4,8 +4,9 @@ import { Router } from '@angular/router';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import { RateAndReviewComponent } from '@shared/components/rate-and-review/rate-and-review.component';
-import { CourseDto, RatingsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CourseDto, CoursesServiceProxy, RatingsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { ServiceDataService } from '@shared/services/service-data.service';
+import { ThankYouComponent } from '@app/course/_components/thank-you/thank-you.component';
 
 @Component({
   selector: 'app-start-badge',
@@ -21,17 +22,36 @@ export class StartBadgeComponent extends AppComponentBase {
     private _router: Router,
     private _modalService: BsModalService,
     private _serviceData: ServiceDataService,
-    private _ratingService: RatingsServiceProxy
+    private _ratingService: RatingsServiceProxy,
+    private _courseService: CoursesServiceProxy
   ) {
     super(injector);
   }
 
-  get courseId(): string { return this.data?.id; }
-  get hasReviewed(): boolean { return this.data?.hasReviewed; }
-  get serviceThumbnail(): string { return this.data?.courseImageUrl || 'assets/img/cover-photos/cp-1.jpeg'; }
-  get progress(): number { return this.data?.progress; }
-  get isCompleted(): boolean { return this.data?.progress === 100; }
-  get isPurchased(): boolean { return this.data?.isPurchased; }
+  get courseId(): string {
+    return this.data?.id;
+  }
+
+  get hasReviewed(): boolean {
+    return this.data?.hasReviewed;
+  }
+
+  get serviceThumbnail(): string {
+    return this.data?.courseImageUrl || 'assets/img/cover-photos/cp-1.jpeg';
+  }
+
+  get progress(): number {
+    return this.data?.progress;
+  }
+
+  get isCompleted(): boolean {
+    return this.data?.progress === 100;
+  }
+
+  get isPurchased(): boolean {
+    return this.data?.isPurchased;
+  }
+
   get startButton(): string {
     switch (this.progress) {
       case 0:
@@ -42,6 +62,7 @@ export class StartBadgeComponent extends AppComponentBase {
         return this.l('Continue');
     }
   }
+
   get currentLesson(): string {
     const courses = this.data?.studentCourses?.find(s => s.progress < 100);
     let section = courses?.studentCourseSections?.find(s => s.status === 1)?.courseSection;
@@ -54,13 +75,20 @@ export class StartBadgeComponent extends AppComponentBase {
   async handleStartCourse(): Promise<void> {
     if (this.isCompleted) {
       const modalSettings = this.defaultModalSettings;
-      modalSettings.class = 'modal-lg';
-      modalSettings.initialState = { serviceId: this.courseId };
+      modalSettings.class = 'modal-lg modal-dialog-centered';
+      modalSettings.initialState = {serviceId: this.courseId};
       const modal = this._modalService.show(RateAndReviewComponent, modalSettings).content;
       modal.onSuccessReview.subscribe(async (): Promise<void> => {
-        this.data.hasReviewed = true;
-        this._serviceData.serviceData = this.data;
-        this._serviceData.serviceRating = await this._ratingService.getUserServiceReview(this.data?.id).toPromise();
+        try {
+          setTimeout(() => {
+            modalSettings.class = 'modal-sm modal-rating-success modal-dialog-centered';
+            this._modalService.show(ThankYouComponent, modalSettings);
+          }, 200);
+          this._serviceData.serviceData = await this._courseService.get(this.courseId).toPromise();
+          this._serviceData.serviceRating = await this._ratingService.getUserServiceReview(this.data?.id).toPromise();
+        } catch (e) {
+          console.error(e);
+        }
       });
 
       modal.onClose.subscribe((): void => {

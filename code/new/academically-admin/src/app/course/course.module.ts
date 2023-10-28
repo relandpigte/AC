@@ -9,12 +9,14 @@ import { HeaderComponent } from './_components/header/header.component';
 import { CourseAboutModule } from '@app/course/about/about.module';
 import { CourseReviewsModule } from '@app/course/reviews/reviews.module';
 import { CourseDiscussionModule } from '@app/course/discussion/discussion.module';
+import { ThankYouComponent } from '@app/course/_components/thank-you/thank-you.component';
 
 
 @NgModule({
   declarations: [
     CourseComponent,
-    HeaderComponent
+    HeaderComponent,
+    ThankYouComponent
   ],
   imports: [
     CommonModule,

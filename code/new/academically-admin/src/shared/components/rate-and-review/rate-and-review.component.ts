@@ -92,8 +92,8 @@ export class RateAndReviewComponent extends AppComponentBase implements OnInit, 
       )
       .subscribe(() => {
         this.notify.success(this.l('RateAndReviewSubmittionAlertMessage'));
-        this.onSuccessReview.next();
         this.onCloseClick();
+        this.onSuccessReview.next();
       });
   }
 

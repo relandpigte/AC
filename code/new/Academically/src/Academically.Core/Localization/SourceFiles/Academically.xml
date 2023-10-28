@@ -2019,5 +2019,8 @@
     <text name="YourCourseReview">Your review for this Course</text>
     <text name="OtherReviews">Other reviews</text>
     <text name="LeaveAReview">Leave a review</text>
+    <text name="ReviewSubmitted">Review submitted</text>
+    <text name="ThankYouForReviewing">Thank you for your review. Your response has been sent to the instructor.</text>
+    <text name="GoToReviews">Go to reviews</text>
   </texts>
 </localizationDictionary>
