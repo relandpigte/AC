@@ -102,7 +102,7 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
     }
 
     getPostReactionIconSrc(reactionType: ReactionType) {
-        return `/assets/img/emoticons/post/${this.getReactionIcon(reactionType)}.svg`;
+        return `/assets/img/emoticons/action/${this.getReactionIcon(reactionType)}${this.MyReactionType ? '-active' : ''}.svg`;
     }
 
     getCommentReactionIconSrc(reactionType: ReactionType) {
