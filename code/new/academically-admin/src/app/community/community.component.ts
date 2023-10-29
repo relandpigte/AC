@@ -194,7 +194,6 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
   }
 
   handleItemClick(item: any, type: string): void {
-    debugger;
     switch (type) {
       case "topics":
         break;
@@ -314,7 +313,13 @@ export class CommunityComponent extends AppComponentBase implements OnInit {
 
   getUserTopics(): void {
     this.getUserTopics$().subscribe(
-      (topics) => (this.userTopics = topics.filter((x) => x))
+      (topics) => {
+        this.userTopics = topics.filter((x) => x);
+        // refresh suggested topics collection based on user's followed topics
+        this.suggestedTopics.forEach(t => {
+          t.userTopics = this.userTopics.filter(ut => ut.disciplineTaxonomyId === t.id);
+        });
+      }
     );
   }
 

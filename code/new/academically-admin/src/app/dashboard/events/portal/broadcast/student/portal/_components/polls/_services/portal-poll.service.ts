@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { EventPollDto } from '@shared/service-proxies/service-proxies';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { PollTab } from '../polls.component';
+
+export enum PollTab {
+  Queue, Open, Closed
+}
 
 @Injectable({
   providedIn: 'root'

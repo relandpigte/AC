@@ -1,10 +1,7 @@
 <div class="d-flex">
     <div class="conversation-wrapper d-flex flex-column gap-5" [class.has-reply]="parentMessage" [ngClass]="isSender ? 'sender' : 'recipient'" [class.msg-empty]="!chatMessage">
-        <div *ngIf="hasAttachedService(data)" class="d-flex">
-            <app-preview-service-reference
-                [service]="getAttachedService(data)"
-                [serviceType]="data.serviceType"
-            ></app-preview-service-reference>
+        <div *ngIf="serviceReference" class="d-flex">
+            <app-preview-service-reference [service]="serviceReference"></app-preview-service-reference>
         </div>
 
         <div class="d-flex gap-10">

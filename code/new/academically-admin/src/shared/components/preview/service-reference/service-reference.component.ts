@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, Input, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ServicesType } from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, ServicesType } from '@shared/service-proxies/service-proxies';
 
 export interface ServiceReference {
   isSquareImg?: boolean;
@@ -26,9 +26,7 @@ export interface ServiceReference {
   styleUrls: ['./service-reference.component.scss']
 })
 export class PreviewServiceReferenceComponent extends AppComponentBase implements OnInit {
-
-  @Input() service: any;
-  @Input() serviceType: ServicesType;
+  @Input() service: AvailableServiceDto;
 
   ServicesType = ServicesType;
 
@@ -46,7 +44,7 @@ export class PreviewServiceReferenceComponent extends AppComponentBase implement
   }
 
   init(): void {
-    this.model.img = this.service?.thumbnailImageUrl ?? 'assets/img/img-placeholder.png';
+    this.model.img = this.service?.thumbnailImageUrl || 'assets/img/img-placeholder.png';
     this.model.schedule = this.service?.eventDateTime ? this.convertMomentToShorterPostDateFormat(this.service.eventDateTime) : null;
     this.model.title = this.service?.name;
     this.model.description = this.service?.description;
@@ -56,14 +54,14 @@ export class PreviewServiceReferenceComponent extends AppComponentBase implement
     if (this.service?.lessons) composition.push(`${this.service?.lessons} lessons`);
     this.model.composition = composition.join(' · ');
 
-    this.model.isSquareImg = this.serviceType === ServicesType.Event;
-    this.model.isCircleImg = this.serviceType === ServicesType.Coaching;
+    this.model.isSquareImg = this.service.serviceType === ServicesType.Event;
+    this.model.isCircleImg = this.service.serviceType === ServicesType.Coaching;
     this.model.isRectangleImg = !this.model.isSquareImg && !this.model.isCircleImg;
-    this.model.isImgShown = this.serviceType !== ServicesType.Article && this.serviceType !== ServicesType.Tutorial;
-    this.model.isVideoShown = this.serviceType !== ServicesType.Article && this.serviceType === ServicesType.Tutorial;
-    this.model.isDescriptionShown = !!this.model.description && this.serviceType === ServicesType.Article;
-    this.model.isScheduleShown = !!this.model.schedule && this.serviceType === ServicesType.Event;
-    this.model.isAuthorShown = !!this.model.author && this.serviceType === ServicesType.Coaching;
-    this.model.isCompositionsShown = !!this.model.composition && (this.serviceType === ServicesType.Course || this.serviceType === ServicesType.Tutorial);
+    this.model.isImgShown = this.service.serviceType !== ServicesType.Article && this.service.serviceType !== ServicesType.Tutorial;
+    this.model.isVideoShown = this.service.serviceType !== ServicesType.Article && this.service.serviceType === ServicesType.Tutorial;
+    this.model.isDescriptionShown = !!this.model.description && this.service.serviceType === ServicesType.Article;
+    this.model.isScheduleShown = !!this.model.schedule && this.service.serviceType === ServicesType.Event;
+    this.model.isAuthorShown = !!this.model.author && this.service.serviceType === ServicesType.Coaching;
+    this.model.isCompositionsShown = !!this.model.composition && (this.service.serviceType === ServicesType.Course || this.service.serviceType === ServicesType.Tutorial);
   }
 }

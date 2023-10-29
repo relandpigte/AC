@@ -1,7 +1,7 @@
 import { Component, OnInit, Injector, ViewChild, ElementRef, Input } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { PortalService } from '../../_services/portal.service';
-import { PortalPollService } from './_services/portal-poll.service';
+import { PollTab, PortalPollService } from './_services/portal-poll.service';
 import { EventPollDto, EventPollsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { PollComponent } from './_components/poll/poll.component';
@@ -16,10 +16,6 @@ export enum PollSignalAction {
   PollStopped,
   SharePoll,
   PollClosed,
-}
-
-export enum PollTab {
-  Queue, Open, Closed
 }
 
 @Component({
