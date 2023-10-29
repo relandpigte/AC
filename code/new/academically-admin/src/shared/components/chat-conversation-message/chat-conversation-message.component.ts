@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { FileUtils } from '@shared/helpers/file-utils';
-import { ChannelMessageDto, ChatsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, ChannelMessageDto, ChatsServiceProxy, PostsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { ChatService } from '@shared/services/chat.service';
 import { ModalDialogService } from '@shared/services/modal-dialog.service';
 import { Subject } from 'rxjs';
@@ -20,13 +20,15 @@ export class ChatConversationMessageComponent extends AppComponentBase implement
   @Output() onMessageInfoClick: Subject<ChannelMessageDto> = new Subject<ChannelMessageDto>();
   @Output() onDeleteMessage: Subject<string> = new Subject<string>();
 
+  serviceReference: AvailableServiceDto;
   fileAttachment: File;
 
   constructor(
     injector: Injector,
     private _chatService: ChatService,
     private _modalDialogService: ModalDialogService,
-    private _chatsService: ChatsServiceProxy
+    private _chatsService: ChatsServiceProxy,
+    private _postsService: PostsServiceProxy,
     ) {
     super(injector);
   }
@@ -37,6 +39,7 @@ export class ChatConversationMessageComponent extends AppComponentBase implement
   get isDeleted(): boolean { return this.data?.isDeleted; }
 
   async ngOnInit(): Promise<void> {
+    await this.getServiceReference();
     await this.getFileAttachment();
   }
 
@@ -58,6 +61,16 @@ export class ChatConversationMessageComponent extends AppComponentBase implement
 
   getAttachedService(message: ChannelMessageDto): any {
     return message?.article ?? message?.coaching ?? message?.course ?? message?.event ?? message?.video;
+  }
+
+  private async getServiceReference(): Promise<void> {
+    if (this.data?.referenceId) {
+      try {
+        this.serviceReference = await this._postsService.getService(this.data.referenceId).toPromise();
+      } catch (err) {
+        console.error(err);
+      }
+    }
   }
 
   private async getFileAttachment(): Promise<void> {

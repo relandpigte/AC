@@ -6,8 +6,8 @@ import { Utils } from '@shared/helpers/utils';
 import { EventPollAnswerDto, EventPollDto, EventPollQuestionDto, EventPollQuestionOptionDto, EventPollQuestionType, EventPollStatus, EventPollsServiceProxy, UpsertEventPollAnswerDto, UserDto } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { PortalPollService } from '../../_services/portal-poll.service';
-import { PollSignalAction, PollTab } from '../../polls.component';
+import { PollTab, PortalPollService } from '../../_services/portal-poll.service';
+import { PollSignalAction } from '../../polls.component';
 
 export interface PollViewModel {
   answersMap?: Map<number, EventPollAnswerDto[]>;
