@@ -516,6 +516,12 @@ namespace Academically.Services.Posts
             var param = new PagedGetAvailableServicesRequestDto() { Keyword = id.ToString(), CreatorUserId = currentUser.Id };
             return this.GetAvailableServices(param).Result.Items.FirstOrDefault();
         }
+        
+        public Task<AvailableServiceDto> GetAvailableServiceByUser(Guid id, long userId)
+        {
+            var param = new PagedGetAvailableServicesRequestDto { Keyword = id.ToString(), CreatorUserId = userId };
+            return Task.FromResult(GetAvailableServices(param).Result.Items.FirstOrDefault());
+        }
 
         public async Task<PagedResultDto<AvailableServiceDto>> GetAvailableServices(PagedGetAvailableServicesRequestDto request)
         {

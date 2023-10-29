@@ -183,7 +183,7 @@
                             <i *ngIf="action.icon" [class]="action.icon"></i>
                             <span class="service-card-actions-share-icon bg-center" [ngStyle]="{ 'background-image': 'url(\'assets/img/icon-share.svg\')' }"></span>
                         </button>
-                        <div class="dropdown-menu dropdown-menu-left" [style.margin-bottom.px]="2">
+                        <div class="dropdown-menu dropdown-menu-right" [style.margin-bottom.px]="2">
                             <div class="dropdown-item cursor-pointer" (click)="handleShareClick($event)">Share in post</div>
                             <div class="dropdown-item cursor-pointer" (click)="handleCopyLink($event)" data-toggle="dropdown">Copy link</div>
                         </div>

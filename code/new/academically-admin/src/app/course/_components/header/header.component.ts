@@ -51,6 +51,8 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
   get courseTitle(): string { return this.data?.name; }
   get price(): number { return this.data?.price ?? 0; }
   get isPurchased(): boolean { return this.data?.isPurchased; }
+  get serviceId(): string { return this.data?.id; }
+  get serviceOwner(): number { return this.data?.creatorUserId; }
 
   ngOnInit(): void {
     this._dataService.serviceData$
@@ -63,7 +65,7 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
 
   handleShareClick(e: Event): void {
     e.stopPropagation();
-    this._postsService.getAvailableService(this.data?.id)
+    this._postsService.getAvailableServiceByUser(this.serviceId, this.serviceOwner)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(service => {
         const modalSettings = this.defaultModalSettings as ModalOptions<UpsertPostComponent>;

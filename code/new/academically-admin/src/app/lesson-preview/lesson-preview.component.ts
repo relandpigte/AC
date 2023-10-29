@@ -15,6 +15,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./lesson-preview.component.less']
 })
 export class LessonPreviewComponent extends AppComponentBase implements OnInit {
+  @Input() hasReviewed: boolean;
   @Output() nextSection = new EventEmitter();
   @Output() writeReview = new EventEmitter();
   contents: PageContent[] = [];

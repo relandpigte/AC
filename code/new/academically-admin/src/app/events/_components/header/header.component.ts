@@ -1,5 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { takeUntil } from 'rxjs/operators';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import { NavigationPosition } from '@shared/enums/theme-settings/navigation-position.enum';
@@ -8,18 +10,15 @@ import { ThemeManagerService } from '@shared/services/theme-manager.service';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
 import { ServiceDataService } from '@shared/services/service-data.service';
-import { takeUntil } from 'rxjs/operators';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { PurchaseServiceComponent } from '@shared/components/purchase-service/purchase-service.component';
 import { AppConsts } from '@shared/AppConsts';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import {
-  EventCategory,
-  EventDto, EventsServiceProxy,
+  EventCategory, EventDto, EventsServiceProxy,
   PostsServiceProxy, SavedServicesServiceProxy,
-  ServicesServiceProxy, SharedType,
-  UserDto
+  SharedType, UserDto
 } from '@shared/service-proxies/service-proxies';
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -42,8 +41,7 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
     private _serviceData: ServiceDataService,
     private _clipboard: Clipboard,
     private _postsService: PostsServiceProxy,
-    private _savedService: SavedServicesServiceProxy,
-    private _eventsService: EventsServiceProxy
+    private _savedService: SavedServicesServiceProxy
   ) {
     super(injector);
     this.themeSettings = _themeSettingsService.getConfiguration();
@@ -56,6 +54,8 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
   get eventCategoryName(): string { return this.data?.category === EventCategory.Broadcast ? 'Broadcast' : 'Workshop'; }
   get price(): number { return this.data?.price ?? 0; }
   get isPurchased(): boolean { return this.data?.isPurchased; }
+  get serviceId(): string { return this.data?.id; }
+  get serviceOwner(): number { return this.data?.creatorUserId; }
 
   ngOnInit(): void {
     this._serviceData.serviceData$
@@ -82,7 +82,7 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
 
   handleShareClick(e: Event): void {
     e.stopPropagation();
-    this._postsService.getAvailableService(this.data?.id)
+    this._postsService.getAvailableServiceByUser(this.serviceId, this.serviceOwner)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(service => {
         const modalSettings = this.defaultModalSettings as ModalOptions<UpsertPostComponent>;

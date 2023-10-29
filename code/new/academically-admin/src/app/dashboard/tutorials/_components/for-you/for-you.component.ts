@@ -217,9 +217,10 @@ export class ForYouComponent extends AppComponentBase implements OnInit {
     this._router.navigate(['app/videos/student-portal' , tutorial.id]);
   }
 
+  // tslint:disable-next-line: member-ordering
   handleServiceCardShareClick(service: any): void {
     this.isLoadingTutorial = true;
-    this._postsService.getAvailableService(service.id)
+    this._postsService.getAvailableServiceByUser(service.id, service.creatorUserId)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoadingTutorial = false))
       .subscribe(service => {
@@ -233,7 +234,7 @@ export class ForYouComponent extends AppComponentBase implements OnInit {
           model: { serviceId: service.id },
           selectedService: service
         };
-        this._modalService.show(UpsertPostComponent, modalSettings).content;
+        this._modalService.show(UpsertPostComponent, modalSettings);
       });
   }
 

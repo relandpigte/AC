@@ -137,7 +137,7 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
 
   handleServiceCardShareClick(service: any): void {
     this.isLoadingService = true;
-    this._postsService.getAvailableService(service.id)
+    this._postsService.getAvailableServiceByUser(service.id, service.creatorUserId)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoadingService = false))
       .subscribe(service => {

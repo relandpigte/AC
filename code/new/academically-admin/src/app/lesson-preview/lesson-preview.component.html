@@ -13,7 +13,7 @@
 </div>
 
 <ng-template #completedTemplate>
-  <div class="d-flex justify-content-center align-items-start h-100">
+  <div *ngIf="!hasReviewed" class="d-flex justify-content-center align-items-start h-100">
     <div class="alert alert-success w-100 mt-4 mx-5" role="alert">
       <div class="row">
         <div class="col">

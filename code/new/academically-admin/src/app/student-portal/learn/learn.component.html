@@ -1,18 +1,22 @@
 <div class="learn-container">
-  <div class="learn-content">
-    <app-lesson-preview [id]="currentCourseSectionId" [completed]="percentage >= 100" (nextSection)="onNextSection()"
-      (writeReview)="onReviewClick()">
-    </app-lesson-preview>
-  </div>
-  <button class="btn btn-sm btn-rounded-circle btn-white btn-rightbar-show">
-    <i class="fe fe-chevron-left"></i>
-  </button>
-  <div sidebarCollapse [width]="'350px'" [collapseButtonClass]="'btn-rightbar-collapse'"
-    [showButtonClass]="'btn-rightbar-show'" [contentClass]="'learn-content'" [marginAdjustment]="'right'"
-    class="learn-rightbar navbar-light">
-    <button class="btn btn-sm btn-rounded-circle btn-white btn-rightbar-collapse">
-      <i class="fe fe-chevron-right"></i>
+    <div class="learn-content">
+        <app-lesson-preview
+            [id]="currentCourseSectionId"
+            [completed]="percentage >= 100"
+            [hasReviewed]="hasReviewed"
+            (nextSection)="onNextSection()"
+            (writeReview)="onReviewClick()"
+        ></app-lesson-preview>
+    </div>
+    <button class="btn btn-sm btn-rounded-circle btn-white btn-rightbar-show">
+        <i class="fe fe-chevron-left"></i>
     </button>
-    <app-discussions></app-discussions>
-  </div>
+    <div sidebarCollapse [width]="'350px'" [collapseButtonClass]="'btn-rightbar-collapse'"
+         [showButtonClass]="'btn-rightbar-show'" [contentClass]="'learn-content'" [marginAdjustment]="'right'"
+         class="learn-rightbar navbar-light">
+        <button class="btn btn-sm btn-rounded-circle btn-white btn-rightbar-collapse">
+            <i class="fe fe-chevron-right"></i>
+        </button>
+        <app-discussions></app-discussions>
+    </div>
 </div>

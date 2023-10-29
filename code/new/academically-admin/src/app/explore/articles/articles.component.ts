@@ -224,7 +224,7 @@ export class ExploreArticlesComponent extends AppComponentBase implements OnInit
 
   handleServiceCardShareClick(service: any): void {
     this.isLoadingArticle = true;
-    this._postsService.getAvailableService(service.id)
+    this._postsService.getAvailableServiceByUser(service.id, service.creatorUserId)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoadingArticle = false))
       .subscribe(service => {

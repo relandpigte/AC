@@ -1,12 +1,18 @@
 import { Component, OnInit, Injector } from '@angular/core';
-import { AppComponentBase } from '@shared/app-component-base';
-import { ActivatedRoute } from '@angular/router';
-import { StudentCoursesServiceProxy, StudentCourseDto, StudentCourseSectionStatus, StudentCourseSectionsServiceProxy } from '@shared/service-proxies/service-proxies';
-import { StudentPortalService } from '../_services/student-portal.service';
 import { takeUntil } from 'rxjs/operators';
-import * as _ from 'lodash';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { RateAndReviewCourseComponent } from '../_components/rate-and-review-course/rate-and-review-course.component';
+import { ActivatedRoute } from '@angular/router';
+
+import { AppComponentBase } from '@shared/app-component-base';
+import { StudentPortalService } from '../_services/student-portal.service';
+import { RateAndReviewComponent } from '@shared/components/rate-and-review/rate-and-review.component';
+import {
+  StudentCoursesServiceProxy,
+  StudentCourseDto,
+  StudentCourseSectionStatus,
+  StudentCourseSectionsServiceProxy,
+  RatingsServiceProxy
+} from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-learn',
@@ -21,6 +27,7 @@ export class LearnComponent extends AppComponentBase implements OnInit {
   percentage = 0;
   hasBeenProgressed = false;
   isWriteReviewShown = false;
+  hasReviewed: boolean;
 
   constructor(
     injector: Injector,
@@ -29,11 +36,13 @@ export class LearnComponent extends AppComponentBase implements OnInit {
     private _studentPortalService: StudentPortalService,
     private _studentCoursesService: StudentCoursesServiceProxy,
     private _studentCourseSectionsService: StudentCourseSectionsServiceProxy,
+    private _ratingService: RatingsServiceProxy
   ) {
     super(injector);
     this._route.parent.parent.parent.paramMap.subscribe(paramMap => {
       if (paramMap.has('course-id')) {
         this.courseId = paramMap.get('course-id');
+        this.initRatings();
       }
     });
     this._studentPortalService.percentage$
@@ -112,10 +121,19 @@ export class LearnComponent extends AppComponentBase implements OnInit {
   private showReviewModal(): void {
     this.isWriteReviewShown = true;
     const modalSettings = this.defaultModalSettings;
-    modalSettings.class = 'modal-lg';
-    modalSettings.initialState = {
-      course: this.studentCourse.course,
-    };
-    this._modalService.show(RateAndReviewCourseComponent, modalSettings);
+    modalSettings.class = 'modal-lg modal-dialog-centered';
+    modalSettings.initialState = {serviceId: this.courseId};
+    const modal = this._modalService.show(RateAndReviewComponent, modalSettings).content;
+
+    modal.onClose.subscribe((): void => {
+      this._modalService.hide();
+      this.initRatings();
+    });
+  }
+
+  private initRatings(): void {
+    this._ratingService.getUserServiceReview(this.courseId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(review => this.hasReviewed = review > 0);
   }
 }

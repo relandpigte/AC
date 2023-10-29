@@ -219,7 +219,7 @@ export class ExploreTutorialsComponent extends AppComponentBase implements OnIni
 
   handleServiceCardShareClick(service: any): void {
     this.isLoadingTutorial = true;
-    this._postsService.getAvailableService(service.id)
+    this._postsService.getAvailableServiceByUser(service.id, service.creatorUserId)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoadingTutorial = false))
       .subscribe(service => {

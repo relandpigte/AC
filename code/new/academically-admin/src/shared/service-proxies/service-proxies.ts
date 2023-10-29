@@ -16026,6 +16026,67 @@ export class PostsServiceProxy {
     }
 
     /**
+     * @param id (optional) 
+     * @param userId (optional) 
+     * @return Success
+     */
+    getAvailableServiceByUser(id: string | undefined, userId: number | undefined): Observable<AvailableServiceDto> {
+        let url_ = this.baseUrl + "/api/services/app/Posts/GetAvailableServiceByUser?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAvailableServiceByUser(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAvailableServiceByUser(<any>response_);
+                } catch (e) {
+                    return <Observable<AvailableServiceDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AvailableServiceDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAvailableServiceByUser(response: HttpResponseBase): Observable<AvailableServiceDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AvailableServiceDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AvailableServiceDto>(<any>null);
+    }
+
+    /**
      * @param keyword (optional) 
      * @param take (optional) 
      * @param creatorUserId (optional) 
@@ -46006,7 +46067,7 @@ export interface IMyServiceViewDto {
     items: MyServiceItemViewDto[] | undefined;
 }
 
-/** 0 = Like 1 = React 2 = Share 3 = Comment 4 = Post 5 = Reply 6 = Answer 7 = Chat 8 = Purchase 9 = Enroll 10 = Review */
+/** 0 = Like 1 = React 2 = Share 3 = Comment 4 = Post 5 = Reply 6 = Answer 7 = Chat 8 = Purchase 9 = Enroll 10 = Review 11 = Follow */
 export enum NotificationAction {
     Like = 0,
     React = 1,
@@ -46019,6 +46080,7 @@ export enum NotificationAction {
     Purchase = 8,
     Enroll = 9,
     Review = 10,
+    Follow = 11,
 }
 
 export class NotificationData implements INotificationData {
@@ -46208,7 +46270,7 @@ export enum NotificationSeverity {
     Fatal = 4,
 }
 
-/** 0 = Post 1 = Answer 2 = Question 3 = Reply 4 = Comment 5 = Chat 6 = Article 7 = Broadcast 8 = Coaching 9 = Course 10 = Tutorial 11 = Workshop */
+/** 0 = Post 1 = Answer 2 = Question 3 = Reply 4 = Comment 5 = Chat 6 = Article 7 = Broadcast 8 = Coaching 9 = Course 10 = Tutorial 11 = Workshop 12 = User */
 export enum NotificationTarget {
     Post = 0,
     Answer = 1,
@@ -46222,6 +46284,7 @@ export enum NotificationTarget {
     Course = 9,
     Tutorial = 10,
     Workshop = 11,
+    User = 12,
 }
 
 export class NotificationUserDto implements INotificationUserDto {

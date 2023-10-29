@@ -219,7 +219,7 @@ export class ForYouComponent extends AppComponentBase implements OnInit {
 
   handleServiceCardShareClick(service: any): void {
     this.isLoadingEvent = true;
-    this._postsService.getAvailableService(service.id)
+    this._postsService.getAvailableServiceByUser(service.id, service.creatorUserId)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoadingEvent = false))
       .subscribe(service => {

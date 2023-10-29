@@ -55,6 +55,8 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
   get profileCoverPhotoUrl(): string { return this.appSession.user.coverPictureUrl; }
   get coachingTitle(): string { return this.data?.name; }
   get price(): number { return this.data?.price ?? 0; }
+  get serviceId(): string { return this.data?.id; }
+  get serviceOwner(): number { return this.data?.creatorUserId; }
 
   get isLoading$() { return this._landingPageService.isLoading$; }
 
@@ -74,14 +76,14 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
     }
     const modalSettings = this.defaultModalSettings as ModalOptions<PurchaseServiceComponent>;
     modalSettings.class = 'modal-lg modal-dialog-centered';
-    modalSettings.initialState = { serviceId: this.data.id, data: this.data };
+    modalSettings.initialState = { serviceId: this.serviceId, data: this.data };
     const modal = this._modalService.show(PurchaseServiceComponent, modalSettings);
     modal.content.onPaid.subscribe(async () => this.isPurchased = true);
   }
 
   handleShareClick(e: Event): void {
     e.stopPropagation();
-    this._postsService.getAvailableService(this.data?.id)
+    this._postsService.getAvailableServiceByUser(this.serviceId, this.serviceOwner)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(service => {
         const modalSettings = this.defaultModalSettings as ModalOptions<UpsertPostComponent>;
