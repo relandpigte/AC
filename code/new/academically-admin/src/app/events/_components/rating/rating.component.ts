@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 
 import { ServiceDataService } from '@shared/services/service-data.service';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CreateEventRatingsDto, EventDto, RatingsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CreateEventRatingsDto, EventCategory, EventDto, RatingsServiceProxy, ServicesType } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-rating',
@@ -37,6 +37,8 @@ export class RatingComponent extends AppComponentBase {
   handleFormSubmit(): void {
     this.isLoading = true;
     this.model.eventId = this.data.id;
+    this.model.serviceType = this.data.category === EventCategory.Broadcast ? ServicesType.Event : ServicesType.Workshop;
+    this.model.serviceOwnerId = this.data.creatorUserId;
     this._ratingService.createEventRatings(this.model)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isLoading = false))

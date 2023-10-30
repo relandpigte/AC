@@ -39058,6 +39058,8 @@ export interface ICreateEventPresenterDto {
 
 export class CreateEventRatingsDto implements ICreateEventRatingsDto {
     eventId: string;
+    serviceType: ServicesType;
+    serviceOwnerId: number | undefined;
     comments: string | undefined;
     rating: number;
 
@@ -39073,6 +39075,8 @@ export class CreateEventRatingsDto implements ICreateEventRatingsDto {
     init(_data?: any) {
         if (_data) {
             this.eventId = _data["eventId"];
+            this.serviceType = _data["serviceType"];
+            this.serviceOwnerId = _data["serviceOwnerId"];
             this.comments = _data["comments"];
             this.rating = _data["rating"];
         }
@@ -39088,6 +39092,8 @@ export class CreateEventRatingsDto implements ICreateEventRatingsDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["eventId"] = this.eventId;
+        data["serviceType"] = this.serviceType;
+        data["serviceOwnerId"] = this.serviceOwnerId;
         data["comments"] = this.comments;
         data["rating"] = this.rating;
         return data; 
@@ -39103,6 +39109,8 @@ export class CreateEventRatingsDto implements ICreateEventRatingsDto {
 
 export interface ICreateEventRatingsDto {
     eventId: string;
+    serviceType: ServicesType;
+    serviceOwnerId: number | undefined;
     comments: string | undefined;
     rating: number;
 }
@@ -43264,6 +43272,8 @@ export class EventRating implements IEventRating {
     creationTime: moment.Moment;
     creatorUserId: number | undefined;
     eventId: string;
+    serviceType: ServicesType;
+    serviceOwnerId: number | undefined;
     comments: string | undefined;
     rating: number;
     event: Event;
@@ -43284,6 +43294,8 @@ export class EventRating implements IEventRating {
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.creatorUserId = _data["creatorUserId"];
             this.eventId = _data["eventId"];
+            this.serviceType = _data["serviceType"];
+            this.serviceOwnerId = _data["serviceOwnerId"];
             this.comments = _data["comments"];
             this.rating = _data["rating"];
             this.event = _data["event"] ? Event.fromJS(_data["event"]) : <any>undefined;
@@ -43304,6 +43316,8 @@ export class EventRating implements IEventRating {
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["creatorUserId"] = this.creatorUserId;
         data["eventId"] = this.eventId;
+        data["serviceType"] = this.serviceType;
+        data["serviceOwnerId"] = this.serviceOwnerId;
         data["comments"] = this.comments;
         data["rating"] = this.rating;
         data["event"] = this.event ? this.event.toJSON() : <any>undefined;
@@ -43324,6 +43338,8 @@ export interface IEventRating {
     creationTime: moment.Moment;
     creatorUserId: number | undefined;
     eventId: string;
+    serviceType: ServicesType;
+    serviceOwnerId: number | undefined;
     comments: string | undefined;
     rating: number;
     event: Event;

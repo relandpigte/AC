@@ -75,7 +75,7 @@ namespace Academically.Events
                 case ServicesType.Article:
                     return $"/app/articles/student-portal/{id}";
                 case ServicesType.Event:
-                    return $"/app/dashboard/events/portal/broadcast/student/{id}/portal";
+                    return $"/app/events/{id}/about";
                 case ServicesType.Coaching:
                     return $"app/coaching/{id}/review";
                 case ServicesType.Course:
@@ -83,7 +83,7 @@ namespace Academically.Events
                 case ServicesType.Tutorial:
                     return $"app/videos/student-portal/{id}";
                 default:
-                    return $"/app/dashboard/events/portal/workshop/student/{id}/portal";
+                    return $"/app/events/{id}/about";
             }
         }
     }

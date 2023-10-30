@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
 using Academically.Authorization.Users;
+using Academically.Domain.Enums;
 
 namespace Academically.Domain.Entities;
 
@@ -9,6 +10,8 @@ namespace Academically.Domain.Entities;
 public class EventRating : CreationAuditedEntity<Guid>
 {
     public Guid EventId { get; set; }
+    public ServicesType? ServiceType { get; set; }
+    public long? ServiceOwnerId { get; set; }
     public string Comments { get; set; }
     public int Rating { get; set; }
 
