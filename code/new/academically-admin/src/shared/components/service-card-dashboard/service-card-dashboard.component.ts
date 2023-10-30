@@ -135,13 +135,13 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   get isCourseStarted(): boolean { return this.sanitized?.progress > 0 && this.sanitized?.progress < 100; }
   get isCourseCompleted(): boolean { return this.sanitized?.progress === 100; }
   get currentLesson(): string {
-    if (this.isCourseCompleted) { return; }
-    const courses = <StudentCourseDto>this.data?.studentCourses?.find((s: StudentCourseDto): boolean => s.progress < 100);
-    let section = courses?.studentCourseSections?.find(s => s.status === 1)?.courseSection;
-    if (courses?.progress === 0) {
-      section = courses?.studentCourseSections[0]?.courseSection;
+    const course = this.data?.studentCourses?.find(x => x.creatorUserId === this.currentUserId);
+
+    let inProgress = course?.studentCourseSections?.find(x => x.status === 1);
+    if (inProgress === undefined) {
+      inProgress = course?.studentCourseSections[0];
     }
-    return section?.name;
+    return inProgress?.courseSection?.name;
   }
 
   ngOnChanges(changes: SimpleChanges) {

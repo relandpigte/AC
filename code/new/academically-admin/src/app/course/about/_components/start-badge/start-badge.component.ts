@@ -64,12 +64,12 @@ export class StartBadgeComponent extends AppComponentBase {
   }
 
   get currentLesson(): string {
-    const courses = this.data?.studentCourses?.find(s => s.progress < 100);
-    let section = courses?.studentCourseSections?.find(s => s.status === 1)?.courseSection;
-    if (courses?.progress === 0) {
-      section = courses?.studentCourseSections[0]?.courseSection;
+    const course = this.data?.studentCourses?.find(x => x.creatorUserId === this.currentUserId);
+    let inProgress = course?.studentCourseSections?.find(x => x.status === 1);
+    if (inProgress === undefined) {
+      inProgress = course?.studentCourseSections[0];
     }
-    return section?.name;
+    return inProgress?.courseSection?.name;
   }
 
   async handleStartCourse(): Promise<void> {

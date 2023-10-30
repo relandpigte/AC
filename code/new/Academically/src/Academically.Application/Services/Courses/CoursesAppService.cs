@@ -102,7 +102,7 @@ namespace Academically.Services.Courses
                 .ToListAsync();
             
             if (studentCourses.Any(x => x.CourseId == course.Id))
-                output.Progress = studentCourses.FirstOrDefault(x => x.CourseId == course.Id)!.Progress;
+                output.Progress = studentCourses.FirstOrDefault(x => x.CourseId == course.Id && x.CreatorUserId == AbpSession.GetUserId())!.Progress;
             
             var servicePurchase = await _servicePurchasesRepository
                 .FirstOrDefaultAsync(p => p.ReferenceId.ToString() == output.Id.ToString() && p.CreatorUserId == AbpSession.GetUserId());
