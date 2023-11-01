@@ -2022,5 +2022,9 @@
     <text name="ReviewSubmitted">Review submitted</text>
     <text name="ThankYouForReviewing">Thank you for your review. Your response has been sent to the instructor.</text>
     <text name="GoToReviews">Go to reviews</text>
+
+    <!-- Account Settings -->
+    <text name="BlockedUsers">Blocked users</text>
+    <text name="Unblock">Unblock</text>
   </texts>
 </localizationDictionary>

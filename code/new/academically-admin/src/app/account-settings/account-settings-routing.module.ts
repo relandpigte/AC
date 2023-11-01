@@ -42,6 +42,13 @@ import { AccountSettingsComponent } from './account-settings.component';
                     (m) => m.NotificationsModule,
                   ),
               },
+              {
+                path: 'blocking',
+                loadChildren: () =>
+                  import('@app/account-settings/blocking/blocking.module').then(
+                    (m) => m.BlockingModule,
+                  ),
+              },
               { path: '', redirectTo: 'general' },
             ]
           },

@@ -1,0 +1,31 @@
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-header-title me-auto">
+            {{ 'BlockedUsers' | localize }}
+        </h4>
+    </div>
+
+    <div class="card-body py-0">
+        <div *ngIf="!!userCount" class="list-group list-group-flush">
+            <div *ngFor="let user of users" class="list-group-item">
+                <div class="d-flex align-items-center gap-15">
+                    <div>
+                        <a href="javascript:void(0)" class="avatar">
+                            <img src="{{ user.profilePictureUrl }}" alt="..." class="avatar-img rounded-circle">
+                        </a>
+                    </div>
+                    <div>
+                        <h4 class="list-group-item-name m-0">
+                            {{ user.fullName }}
+                        </h4>
+                    </div>
+                    <div class="ml-auto">
+                        <button class="btn btn-outline-secondary list-group-item-button" (click)="handleUnblockUser(user.id)">
+                            {{ 'Unblock' | localize }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
