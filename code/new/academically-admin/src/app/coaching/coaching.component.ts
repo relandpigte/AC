@@ -7,7 +7,7 @@ import { accountModuleAnimation } from '@shared/animations/routerTransition';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ChatService } from '@shared/services/chat.service';
-import { CoachingDto, CoachingsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CoachingDto, CoachingsServiceProxy, RatingsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { ServiceDataService } from '@shared/services/service-data.service';
 import {
   ChatComposerConversationComponent
@@ -22,6 +22,7 @@ import {
 export class CoachingComponent extends  AppComponentBase implements OnInit {
   id: string;
   data: CoachingDto;
+  rating: number;
 
   constructor(
     injector: Injector,
@@ -31,11 +32,13 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
     private _route: ActivatedRoute,
     private _router: Router,
     private _coachingService: CoachingsServiceProxy,
-    private _serviceData: ServiceDataService
+    private _serviceData: ServiceDataService,
+    private _ratingService: RatingsServiceProxy
   ) {
     super(injector);
     this._chatService.openChat$.subscribe(() => this.openMessageModal());
     this._serviceData.serviceData$.pipe(takeUntil(this.destroyed$)).subscribe(d => this.data = d);
+    this._serviceData.serviceRating$.pipe(takeUntil(this.destroyed$)).subscribe(r => this.rating = r);
   }
 
   get isAboutTab(): boolean { return this._router.url.includes([`coaching/${this.id}`, 'about'].join('/')); }
@@ -67,6 +70,7 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
         this.id = paramMap.get('id');
         this._serviceData.serviceData = await this._coachingService.get(this.id).toPromise();
         this._serviceData.discussionId = await this._serviceData.getServiceDiscussionId(this.id);
+        this._serviceData.serviceRating = await this._ratingService.getUserServiceReview(this.id).toPromise();
       }
     });
   }

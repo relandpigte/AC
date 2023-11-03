@@ -10,6 +10,8 @@ import { AboutLearnComponent } from './_components/about-learn/about-learn.compo
 import { AboutCoachComponent } from './_components/about-coach/about-coach.component';
 import { AboutRelatedCoachingComponent } from './_components/about-related-coaching/about-related-coaching.component';
 import { IntroductionModule } from '@app/profile/introduction/introduction.module';
+import { LeaveReviewBadgeComponent } from './_components/leave-review-badge/leave-review-badge.component';
+import { ReviewBadgeComponent } from '@app/coaching/about/_components/review-badge/review-badge.component';
 
 @NgModule({
   declarations: [
@@ -17,11 +19,15 @@ import { IntroductionModule } from '@app/profile/introduction/introduction.modul
     AboutSessionComponent,
     AboutLearnComponent,
     AboutCoachComponent,
-    AboutRelatedCoachingComponent
+    AboutRelatedCoachingComponent,
+    LeaveReviewBadgeComponent,
+    ReviewBadgeComponent
   ],
   exports: [
     AboutCoachComponent,
-    AboutRelatedCoachingComponent
+    AboutRelatedCoachingComponent,
+    LeaveReviewBadgeComponent,
+    ReviewBadgeComponent
   ],
   imports: [
     CommonModule,

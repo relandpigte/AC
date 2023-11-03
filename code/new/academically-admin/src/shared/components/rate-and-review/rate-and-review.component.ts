@@ -36,7 +36,7 @@ export class RateAndReviewComponent extends AppComponentBase implements OnInit, 
   RatingAreaType = RatingAreaType;
   RatingExperienceType = RatingExperienceType;
 
-  model: CreateServiceRatingDto = new CreateServiceRatingDto();
+  model = new CreateServiceRatingDto();
 
   constructor(
     injector: Injector,
@@ -57,6 +57,7 @@ export class RateAndReviewComponent extends AppComponentBase implements OnInit, 
     return ratingTotal / 5;
   }
 
+  get isFormValid(): boolean { return !!this.model.comments && !this.isLoading; }
   get serviceName(): string { return this.service?.name; }
   get title(): string { return this.inline ? this.l('LeaveAReview') : `${this.l('WriteAReviewFor')} ${this.serviceName}`; }
 

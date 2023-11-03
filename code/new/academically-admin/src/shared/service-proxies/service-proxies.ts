@@ -35396,6 +35396,7 @@ export class CoachingDto implements ICoachingDto {
     isSaved: boolean;
     isPurchased: boolean;
     purchased: UserDto[] | undefined;
+    hasReviewed: boolean;
 
     constructor(data?: ICoachingDto) {
         if (data) {
@@ -35506,6 +35507,7 @@ export class CoachingDto implements ICoachingDto {
                 for (let item of _data["purchased"])
                     this.purchased.push(UserDto.fromJS(item));
             }
+            this.hasReviewed = _data["hasReviewed"];
         }
     }
 
@@ -35616,6 +35618,7 @@ export class CoachingDto implements ICoachingDto {
             for (let item of this.purchased)
                 data["purchased"].push(item.toJSON());
         }
+        data["hasReviewed"] = this.hasReviewed;
         return data; 
     }
 
@@ -35718,6 +35721,7 @@ export interface ICoachingDto {
     isSaved: boolean;
     isPurchased: boolean;
     purchased: UserDto[] | undefined;
+    hasReviewed: boolean;
 }
 
 export class CoachingDtoPagedResultDto implements ICoachingDtoPagedResultDto {

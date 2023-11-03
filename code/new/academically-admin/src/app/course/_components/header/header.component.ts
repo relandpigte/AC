@@ -95,9 +95,7 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
   }
 
   handleSaveClick(): void {
-    if (!!!this.data?.id) {
-      return;
-    }
+    if (!!!this.data?.id) { return; }
     if (this.isSaved) {
       this._savedService.delete(this.data.id).subscribe(() => this.isSaved = false);
     } else {

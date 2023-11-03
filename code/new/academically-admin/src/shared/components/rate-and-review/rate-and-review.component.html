@@ -183,7 +183,7 @@
       </div>
       <div class="col-12">
         <div class="d-flex justify-content-end">
-          <button type="submit" class="btn btn-primary pl-5 pr-5" [disabled]="isLoading || !form.form.valid">
+          <button type="submit" class="btn btn-primary pl-5 pr-5" [disabled]="!isFormValid || !form.form.valid">
             {{ 'Submit' | localize }}
           </button>
         </div>

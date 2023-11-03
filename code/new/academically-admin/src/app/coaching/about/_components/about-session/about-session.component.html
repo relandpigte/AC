@@ -17,8 +17,8 @@
             <span><i class="fe fe-clock mr-2"></i><strong>Duration</strong>: 2 hours</span>
         </div>
         <div class="card-body-ratings d-flex gap-10">
-            <app-star-rating [actualRating]="4.2"></app-star-rating>
-            <span>4.2/5.0</span>
+            <app-star-rating [actualRating]="totalRatingPercentage"></app-star-rating>
+            <div class="label">{{ totalRatingPercentage | number : '1.1-1' }}/5.0</div>
         </div>
         <div class="card-body-text">
             {{ description }}

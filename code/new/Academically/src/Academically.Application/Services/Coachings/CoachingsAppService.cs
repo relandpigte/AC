@@ -4,17 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
-using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
-using Abp.Linq.Expressions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
-using Abp.Timing;
-using Abp.UI;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
-using Academically.Configuration;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
@@ -23,11 +18,9 @@ using Academically.Extensions;
 using Academically.Services.Coachings.Dto;
 using Academically.Services.Explore.Dto;
 using Academically.Services.Posts.Dto;
-using Academically.Services.Services.Dto;
 using Academically.Users.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 namespace Academically.Services.Coachings
 {
@@ -39,7 +32,7 @@ namespace Academically.Services.Coachings
         private readonly IRepository<SavedService, Guid> _savedServiceRepository;
         private readonly IRepository<ServicePurchase, Guid> _servicePurchasesRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
-        private readonly IExploreRepository _exploreRepository;
+        private readonly IRepository<ServiceRating, Guid> _serviceRatingRepository;
 
         public CoachingsAppService(
             RoleManager roleManager,
@@ -49,7 +42,8 @@ namespace Academically.Services.Coachings
             IRepository<SavedService, Guid> savedServiceRepository,
             IRepository<ServicePurchase, Guid> servicePurchasesRepository,
             IDocumentsDomainService documentsDomainService,
-            IExploreRepository exploreRepository
+            IExploreRepository exploreRepository,
+            IRepository<ServiceRating, Guid> serviceRatingRepository
             ) : base(repository)
         {
             LocalizationSourceName = AcademicallyConsts.LocalizationSourceName;
@@ -60,7 +54,7 @@ namespace Academically.Services.Coachings
             _savedServiceRepository = savedServiceRepository;
             _servicePurchasesRepository = servicePurchasesRepository;
             _documentsDomainService = documentsDomainService;
-            _exploreRepository = exploreRepository;
+            _serviceRatingRepository = serviceRatingRepository;
         }
 
         protected override IQueryable<Coaching> CreateFilteredQuery(PagedCoachingResultRequestDto input)
@@ -113,6 +107,9 @@ namespace Academically.Services.Coachings
             
             var savedService = await _savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == result.Id.ToString());
             result.IsSaved = savedService != null;
+            
+            var userRating = await _serviceRatingRepository.FirstOrDefaultAsync(r => r.ServiceId == result.Id && r.CreatorUserId == AbpSession.GetUserId());
+            result.HasReviewed = userRating != null;
             
             return result;
         }
@@ -381,7 +378,15 @@ namespace Academically.Services.Coachings
                     .Select(c => ObjectMapper.Map<UserDto>(c.CreatorUser))
                     .ToListAsync();
                 
-                foreach (var u in item.Purchased) if (u.ProfilePictureDocumentId.HasValue) u.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(u.ProfilePictureDocumentId.Value);
+                foreach (var u in item.Purchased)
+                    if (u.ProfilePictureDocumentId.HasValue)
+                        u.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(u.ProfilePictureDocumentId.Value);
+                
+                var userRating = await _serviceRatingRepository.FirstOrDefaultAsync(r => r.ServiceId == item.Id && r.CreatorUserId == AbpSession.GetUserId());
+                item.HasReviewed = userRating != null;
+                
+                var savedService = await _savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == item.Id.ToString());
+                item.IsSaved = savedService != null;
             }
             return output;
         }
@@ -396,7 +401,15 @@ namespace Academically.Services.Coachings
                     .Select(c => ObjectMapper.Map<UserDto>(c.CreatorUser))
                     .ToListAsync();
                 
-                foreach (var u in item.Purchased) if (u.ProfilePictureDocumentId.HasValue) u.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(u.ProfilePictureDocumentId.Value);
+                foreach (var u in item.Purchased)
+                    if (u.ProfilePictureDocumentId.HasValue)
+                        u.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(u.ProfilePictureDocumentId.Value);
+                
+                var userRating = await _serviceRatingRepository.FirstOrDefaultAsync(r => r.ServiceId == item.Id && r.CreatorUserId == AbpSession.GetUserId());
+                item.HasReviewed = userRating != null;
+                
+                var savedService = await _savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == item.Id.ToString());
+                item.IsSaved = savedService != null;
             }
             return output;
         }

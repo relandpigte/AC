@@ -24,14 +24,14 @@ export class CourseReviewsComponent extends AppComponentBase implements OnInit {
     injector: Injector,
     private _landingPageService: LandingPagesService,
     private _ratingsService: RatingsServiceProxy,
-    private _serviceData: ServiceDataService
+    private _serviceData: ServiceDataService,
+    private _ratingService: RatingsServiceProxy
   ) {
     super(injector);
   }
 
-  get courseId(): string { return this.data?.id; }
+  get serviceId(): string { return this.data?.id; }
   get isLoading$() { return this._landingPageService.isLoading$; }
-  get tutorId(): number { return this.data?.creatorUser?.id; }
   get hasReviewed(): boolean { return this.data?.hasReviewed; }
   get isCompleted(): boolean { return this.data?.progress === 100; }
 
@@ -42,13 +42,18 @@ export class CourseReviewsComponent extends AppComponentBase implements OnInit {
     });
   }
 
-  handleSuccessReview(): void {
-    this.data.hasReviewed = true;
-    this._serviceData.serviceData = this.data;
+  async handleSuccessReview(): Promise<void> {
+    try {
+      this.data.hasReviewed = true;
+      this._serviceData.serviceData = this.data;
+      this._serviceData.serviceRating = await this._ratingService.getUserServiceReview(this.serviceId).toPromise();
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   private getCourseRatings(): void {
-    this._ratingsService.getServiceRatings(this.courseId, undefined, undefined)
+    this._ratingsService.getServiceRatings(this.serviceId, undefined, undefined)
       .pipe(takeUntil(this.destroyed$))
       .subscribe((result): void => {
         this.serviceRatings = result.items;
