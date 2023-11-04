@@ -26,6 +26,15 @@
 
                     <div
                         class="dropdown-item cursor-pointer d-flex justify-content-between"
+                        [class.selected]="isSelectedSorting(postSortingEnum.Relevant)"
+                        (click)="handleSortingChange(postSortingEnum.Relevant)"
+                    >
+                        <div>{{ postSortingEnum.Relevant  | localize }}</div>
+                        <i *ngIf="isSelectedSorting(postSortingEnum.Relevant)" class="fe fe-check"></i>
+                    </div>
+
+                    <div
+                        class="dropdown-item cursor-pointer d-flex justify-content-between"
                         [class.selected]="isSelectedSorting(postSortingEnum.Latest)"
                         (click)="handleSortingChange(postSortingEnum.Latest)"
                     >
