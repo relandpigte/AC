@@ -76,8 +76,10 @@ export class CoachingDiscussionComponent extends AppComponentBase implements OnI
   }
   get postSort(): PostSort {
     switch(this.selectedSorting) {
-      case PostSorting.Activity:
-        return PostSort.Activity;
+      case PostSorting.Top:
+        return PostSort.Top;
+      case PostSorting.Relevant:
+        return PostSort.Relevant;
       default:
         return PostSort.Latest;
     }
@@ -134,7 +136,7 @@ export class CoachingDiscussionComponent extends AppComponentBase implements OnI
   private async initPostsAppStates() {
     const appStateConfig: AppStateConfig = {
       [this.postsStateId]: {
-        load: [undefined, this.id, undefined, this.postSort, 0, MAX_POSTS_TO_LOAD],
+        load: [undefined, this.id, undefined, this.postSort, undefined, 0, MAX_POSTS_TO_LOAD],
         update: { postId: this.id }
       }
     };

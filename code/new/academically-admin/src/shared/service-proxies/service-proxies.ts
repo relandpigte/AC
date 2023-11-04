@@ -15477,14 +15477,17 @@ export class PostsServiceProxy {
     3 = Shared
      * @param parentId (optional) 
      * @param creationTime (optional) 
-     * @param postSort (optional) 0 = Activity
+     * @param postSort (optional) 0 = Relevant
     
     1 = Latest
+    
+    2 = Top
+     * @param notificationId (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAllPostsPaged(type: PostType | undefined, parentId: string | undefined, creationTime: moment.Moment | undefined, postSort: PostSort | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PostDtoPagedResultDto> {
+    getAllPostsPaged(type: PostType | undefined, parentId: string | undefined, creationTime: moment.Moment | undefined, postSort: PostSort | undefined, notificationId: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PostDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Posts/GetAllPostsPaged?";
         if (type === null)
             throw new Error("The parameter 'type' cannot be null.");
@@ -15502,6 +15505,10 @@ export class PostsServiceProxy {
             throw new Error("The parameter 'postSort' cannot be null.");
         else if (postSort !== undefined)
             url_ += "PostSort=" + encodeURIComponent("" + postSort) + "&";
+        if (notificationId === null)
+            throw new Error("The parameter 'notificationId' cannot be null.");
+        else if (notificationId !== undefined)
+            url_ += "NotificationId=" + encodeURIComponent("" + notificationId) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -46776,6 +46783,8 @@ export class PostDto implements IPostDto {
     sharedType: SharedType;
     sharedServiceType: ServicesType;
     isPublic: boolean;
+    isFromNotification: boolean;
+    isFromFollowing: boolean;
     commentsCount: number;
     sharesCount: number;
     reactionsCount: number;
@@ -46785,6 +46794,7 @@ export class PostDto implements IPostDto {
     participants: UserDto[] | undefined;
     postNotification: PostNotificationDto[] | undefined;
     postVisibility: PostVisibilityDto[] | undefined;
+    readonly relevantPoints: number;
     readonly activityPoints: number;
     sharedPost: PostDto;
     sharedServiceArticle: ArticleDto;
@@ -46825,6 +46835,8 @@ export class PostDto implements IPostDto {
             this.sharedType = _data["sharedType"];
             this.sharedServiceType = _data["sharedServiceType"];
             this.isPublic = _data["isPublic"];
+            this.isFromNotification = _data["isFromNotification"];
+            this.isFromFollowing = _data["isFromFollowing"];
             this.commentsCount = _data["commentsCount"];
             this.sharesCount = _data["sharesCount"];
             this.reactionsCount = _data["reactionsCount"];
@@ -46858,6 +46870,7 @@ export class PostDto implements IPostDto {
                 for (let item of _data["postVisibility"])
                     this.postVisibility.push(PostVisibilityDto.fromJS(item));
             }
+            (<any>this).relevantPoints = _data["relevantPoints"];
             (<any>this).activityPoints = _data["activityPoints"];
             this.sharedPost = _data["sharedPost"] ? PostDto.fromJS(_data["sharedPost"]) : <any>undefined;
             this.sharedServiceArticle = _data["sharedServiceArticle"] ? ArticleDto.fromJS(_data["sharedServiceArticle"]) : <any>undefined;
@@ -46902,6 +46915,8 @@ export class PostDto implements IPostDto {
         data["sharedType"] = this.sharedType;
         data["sharedServiceType"] = this.sharedServiceType;
         data["isPublic"] = this.isPublic;
+        data["isFromNotification"] = this.isFromNotification;
+        data["isFromFollowing"] = this.isFromFollowing;
         data["commentsCount"] = this.commentsCount;
         data["sharesCount"] = this.sharesCount;
         data["reactionsCount"] = this.reactionsCount;
@@ -46935,6 +46950,7 @@ export class PostDto implements IPostDto {
             for (let item of this.postVisibility)
                 data["postVisibility"].push(item.toJSON());
         }
+        data["relevantPoints"] = this.relevantPoints;
         data["activityPoints"] = this.activityPoints;
         data["sharedPost"] = this.sharedPost ? this.sharedPost.toJSON() : <any>undefined;
         data["sharedServiceArticle"] = this.sharedServiceArticle ? this.sharedServiceArticle.toJSON() : <any>undefined;
@@ -46979,6 +46995,8 @@ export interface IPostDto {
     sharedType: SharedType;
     sharedServiceType: ServicesType;
     isPublic: boolean;
+    isFromNotification: boolean;
+    isFromFollowing: boolean;
     commentsCount: number;
     sharesCount: number;
     reactionsCount: number;
@@ -46988,6 +47006,7 @@ export interface IPostDto {
     participants: UserDto[] | undefined;
     postNotification: PostNotificationDto[] | undefined;
     postVisibility: PostVisibilityDto[] | undefined;
+    relevantPoints: number;
     activityPoints: number;
     sharedPost: PostDto;
     sharedServiceArticle: ArticleDto;
@@ -47175,10 +47194,11 @@ export interface IPostNotificationDto {
     notifyUserId: number | undefined;
 }
 
-/** 0 = Activity 1 = Latest */
+/** 0 = Relevant 1 = Latest 2 = Top */
 export enum PostSort {
-    Activity = 0,
+    Relevant = 0,
     Latest = 1,
+    Top = 2,
 }
 
 export class PostTopicDto implements IPostTopicDto {

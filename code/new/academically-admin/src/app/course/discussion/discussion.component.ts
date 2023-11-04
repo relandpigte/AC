@@ -68,8 +68,10 @@ export class CourseDiscussionComponent extends AppComponentBase implements OnIni
 
   get postSort(): PostSort {
     switch(this.selectedSorting) {
-      case PostSorting.Activity:
-        return PostSort.Activity;
+      case PostSorting.Top:
+        return PostSort.Top;
+      case PostSorting.Relevant:
+        return PostSort.Relevant;
       default:
         return PostSort.Latest;
     }
@@ -133,7 +135,7 @@ export class CourseDiscussionComponent extends AppComponentBase implements OnIni
 
   onLoadMore(): void {
     const lastPostCreationTime = this.children?.[this.children.length - 1]?.creationTime;
-    this._postsService.getAllPostsPaged(undefined, undefined, lastPostCreationTime, this.postSort, 0, MAX_POSTS_TO_LOAD)
+    this._postsService.getAllPostsPaged(undefined, undefined, lastPostCreationTime, this.postSort, undefined, 0, MAX_POSTS_TO_LOAD)
       .subscribe(posts => {
         this.postsStateService.pushMorePosts(posts.items);
         this.children = this.postsStateService.getAllPosts();
@@ -144,7 +146,7 @@ export class CourseDiscussionComponent extends AppComponentBase implements OnIni
   private async initPostsAppStates() {
     const appStateConfig: AppStateConfig = {
       [this.postsStateId]: {
-        load: [undefined, this.id, undefined, this.postSort, 0, MAX_POSTS_TO_LOAD],
+        load: [undefined, this.id, undefined, this.postSort, undefined, 0, MAX_POSTS_TO_LOAD],
         update: { postId: this.id }
       }
     };

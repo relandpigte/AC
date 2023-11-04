@@ -32,6 +32,12 @@ namespace Academically.Services.Posts.Dto
         public bool IsPublic { get; set; }
 
         [NotMapped]
+        public bool IsFromNotification { get; set; } = false;
+
+        [NotMapped]
+        public bool IsFromFollowing { get; set; } = false;
+
+        [NotMapped]
         public int CommentsCount { get; set; }
 
         [NotMapped]
@@ -48,7 +54,10 @@ namespace Academically.Services.Posts.Dto
         public IEnumerable<PostVisibilityDto> PostVisibility { get; set; }
 
         [NotMapped]
-        public double ActivityPoints { get { return (this.CommentsCount * 2) + this.ReactionsCount + this.Children.Sum(c => c.ActivityPoints); } }
+        public double RelevantPoints { get { return (this.IsFromNotification ? 99_999 : 0) + (this.IsFromFollowing ? 1 : 0); } }
+
+        [NotMapped]
+        public double ActivityPoints { get { return ((this.Children?.Count() ?? 0) * 3) +(this.CommentsCount * 2) + this.ReactionsCount; } }
 
         [NotMapped]
         public PostDto SharedPost { get; set; }
