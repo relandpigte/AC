@@ -90,6 +90,10 @@ import { ChatRecipientComponent } from '@shared/components/chat-recipient/chat-r
 import { EventQuestionsComponent } from '@shared/components/event-questions/event-questions.component';
 import { EventQuestionsComposerComponent } from '@shared/components/event-questions-composer/event-questions-composer.component';
 import { NotificationCardComponent } from '@shared/components/notification-card/notification-card.component';
+import { ServiceChatComponent } from '@shared/modals/service-chat/service-chat.component';
+import {
+  ServiceChatConfirmationComponent
+} from '@shared/modals/service-chat/components/service-chat-confirmation/service-chat-confirmation.component';
 
 @NgModule({
   declarations: [
@@ -157,7 +161,9 @@ import { NotificationCardComponent } from '@shared/components/notification-card/
     ChatRecipientComponent,
     EventQuestionsComponent,
     EventQuestionsComposerComponent,
-    NotificationCardComponent
+    NotificationCardComponent,
+    ServiceChatComponent,
+    ServiceChatConfirmationComponent
   ],
   imports: [
     CommonModule,
@@ -267,7 +273,9 @@ import { NotificationCardComponent } from '@shared/components/notification-card/
     ChatRecipientComponent,
     EventQuestionsComponent,
     EventQuestionsComposerComponent,
-    NotificationCardComponent
+    NotificationCardComponent,
+    ServiceChatComponent,
+    ServiceChatConfirmationComponent
   ],
 })
 export class AppSharedModule { }

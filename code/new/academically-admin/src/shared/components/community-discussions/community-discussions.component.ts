@@ -274,7 +274,9 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       this._cdr.detectChanges();
     });
 
-    this.comments = this.isChild ? [] : this.commentsStateService.getAllComments({ direction: this.isChild ? 'asc' : 'desc' });
+    this.comments = this.isChild ?
+      this.level === 2 ? this.commentsStateService.getAllComments({ direction: 'asc' }) : [] :
+      this.commentsStateService.getAllComments({ direction: 'desc' });
     this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
     this.showAddComment = !!this.totalCommentsCount;
   }
@@ -283,7 +285,9 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     this.foldSubject$
       .subscribe(() => {
         this.commentsStateService.removeComments(this.comments.slice(1));
-        this.comments = this.isChild ? [] : this.commentsStateService.getAllComments({ direction: this.isChild ? 'asc' : 'desc' });
+        this.comments = this.isChild ?
+          this.level === 2 ? this.commentsStateService.getAllComments({ direction: 'asc' }) : [] :
+          this.commentsStateService.getAllComments({ direction: 'desc' });
         this._cdr.detectChanges();
       });
   }

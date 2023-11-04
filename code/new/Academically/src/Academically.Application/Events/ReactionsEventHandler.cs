@@ -83,14 +83,14 @@ namespace Academically.Events
                 userId = comment.CreatorUserId.GetValueOrDefault();
             }
 
-            await this._notificationsAppService.Create(new CreateNotificationDto()
+            await _notificationsAppService.Create(new CreateNotificationDto
             {
                 UserId = userId,
                 ActorId = reaction.CreatorUserId,
                 Action = await this.getNotificationAction(reaction.Type),
                 Target = await this.getNotificationTarget(post, comment),
                 ReferenceId = referenceId,
-                Url = ""
+                Url = $"app/community/post/{referenceId}"
             });
         }
 

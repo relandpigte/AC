@@ -2023,5 +2023,27 @@
     <text name="ReviewSubmitted">Review submitted</text>
     <text name="ThankYouForReviewing">Thank you for your review. Your response has been sent to the instructor.</text>
     <text name="GoToReviews">Go to reviews</text>
+
+    <!-- Coaching service -->
+    <text name="AttendedSession">You attended this session</text>
+    <text name="PurchaseAgain">Purchase again</text>
+    <text name="ExploreMore">Explore more</text>
+    <text name="CoachingReviewMessage">Thank you for your review. Your response has been sent to the coach.</text>
+    <text name="YourSessionReview">Your review for this session</text>
+    
+    <!-- Account Settings -->
+    <text name="BlockedUsers">Blocked users</text>
+    <text name="Unblock">Unblock</text>
+
+    <!-- Service Landing Page -->
+    <text name="MessageTo">Message to {0}</text>
+    <text name="WriteAMessageHere">Write a message here</text>
+    <text name="MessageSent">Message Sent</text>
+    <text name="MessageSentDesc">Thank you for your message. {0} will be in touch soon.</text>
+    <text name="MessageNotSent">Your message did not send</text>
+    <text name="MessageNotSentDesc">Oops, something went wrong. Please try again.</text>
+    <text name="Done">Done</text>
+    <text name="TryAgain">Try again</text>
+    
   </texts>
 </localizationDictionary>

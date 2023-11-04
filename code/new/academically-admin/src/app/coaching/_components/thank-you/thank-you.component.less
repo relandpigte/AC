@@ -1,0 +1,58 @@
+::ng-deep {
+    .modal-rating-success {
+        max-width: 380px !important;
+        margin-left: auto;
+        margin-right: auto;
+
+        .modal-content {
+            border: 0 none;
+        }
+    }
+}
+
+.rating {
+    padding: 20px;
+
+    &-success {
+        &-img {
+            margin-top: 16px;
+        }
+
+        &-title {
+            margin-top: 24px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #12263F;
+        }
+
+        &-message {
+            margin-top: 8px;
+            font-weight: 400;
+            font-size: 13px;
+            color: #6E84A3;
+        }
+
+        &-button {
+            margin-top: 20px;
+
+            button {
+                height: 32px;
+                width: 100%;
+                padding: 4px;
+
+                &.btn-outline-secondary {
+                    border-color: #E4EBF6;
+                    color: #3B516C;
+
+                    &:active,
+                    &:focus,
+                    &:hover {
+                        background: transparent;
+                        border-color: #E4EBF6;
+                        color: #3B516C;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,59 @@
+app-star-rating-review {
+    ::ng-deep {
+        .star-rating-base,
+        .star-rating {
+            margin: 0 !important;
+            display: flex !important;
+            align-items: center;
+            justify-content: left;
+            gap: 10px;
+        }
+        .star-container {
+            width: 30px;
+            height: 30px !important;
+            font-size: 24px;
+            display: flex !important;
+            align-items: center;
+            justify-content: left;
+        }
+    }
+}
+
+.rating {
+    &-body {
+        padding: 20px;
+    }
+
+    &-points {
+        font-size: 32px;
+        font-weight: 600;
+        color: #3B516C;
+        letter-spacing: 1px;
+        margin-top: 22px;
+        margin-bottom: 11px;
+        line-height: 40px;
+    }
+
+    &-title {
+        color: #95AAC9;
+        font-size: 12px;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+    }
+
+    &-stars {
+        margin-bottom: 24px;
+    }
+
+    &-button {
+        button {
+            height: 34px;
+            padding: 5px 10px;
+            font-size: 15px;
+
+            &:first-child {
+                margin-bottom: 10px;
+            }
+        }
+    }
+}

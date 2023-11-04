@@ -367,6 +367,23 @@ namespace Academically.Users
                 .Select(us => ObjectMapper.Map<UserStatusLogDto>(us))
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<List<UserDto>> GetBlockedUsers(long? userId)
+        {
+            var blockedUsers = await _userBlockingsRepository.GetAll()
+                .WhereIf(userId.HasValue, x => x.CreatorUserId == userId.Value)
+                .WhereIf(!userId.HasValue, x => x.CreatorUserId == AbpSession.GetUserId())
+                .Select(x => ObjectMapper.Map<UserDto>(x.BlockedUser))
+                .ToListAsync();
+
+            foreach (var user in blockedUsers.Where(user => user.ProfilePictureDocumentId != null))
+            {
+                user.ProfilePictureUrl = await _documentsDomainService
+                    .GetFileUrlAsync(user.ProfilePictureDocumentId.Value);
+            }
+
+            return blockedUsers;
+        }
     }
 }
 

@@ -19,14 +19,8 @@
         </div>
 
         <div class="ratings d-flex justify-content-center align-items-center gap-10">
-            <div class="d-flex justify-content-center align-items-center">
-                <div class="icon fas fa-star active"></div>
-                <div class="icon fas fa-star active"></div>
-                <div class="icon fas fa-star active"></div>
-                <div class="icon fas fa-star active"></div>
-                <div class="icon fas fa-star"></div>
-            </div>
-            <div class="label">4.2/5.0</div>
+            <app-star-rating [actualRating]="totalRatingPercentage"></app-star-rating>
+            <div class="label">{{ totalRatingPercentage | number : '1.1-1' }}/5.0</div>
         </div>
 
         <div class="description">

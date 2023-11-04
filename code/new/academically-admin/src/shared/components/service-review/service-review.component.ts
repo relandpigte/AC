@@ -20,8 +20,9 @@ export class ServiceReviewComponent extends AppComponentBase {
   get shimmerType() { return ShimmerType; }
   get userRatingAvatar(): string {  return this.getProfilePictureUrl(this.review?.creatorUser?.profilePictureDocument); }
   get userRatingName(): string { return this.review?.creatorUser?.fullName; }
-  get userRatingDate(): string { return this.convertMomentToDateAgo(this.review?.creationTime); }
+  get userRatingDate(): string { return this.convertMomentToDateAgo(this.review?.creationTime, true); }
   get userReviewComment() { return this.removeHTMLTags(this.review?.comments); }
   get userRatingValue(): number { return this.review?.totalRatingPercentage; }
-  get experienceType(): RatingExperienceType { return this.review.experienceType; }
+  get experienceType(): RatingExperienceType { return this.review?.experienceType; }
+  get isOwner(): boolean { return this.review?.creatorUser?.id === this.currentUserId; }
 }

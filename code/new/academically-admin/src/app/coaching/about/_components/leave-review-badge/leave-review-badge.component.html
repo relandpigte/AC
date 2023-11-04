@@ -1,0 +1,13 @@
+<div *ngIf="isPurchased && !hasReviewed" class="card review custom-card-border custom-card-shadow">
+    <div class="card-body review-body">
+        <div class="review-body-details">
+            <img class="mx-auto d-block" src="assets/img/events/completed-icon.svg" alt="Leave review">
+            <h6 class="review-body-details-text text-center text-uppercase">{{ 'AttendedSession' | localize }}</h6>
+        </div>
+        <div class="review-button">
+            <button class="btn btn-primary w-100" (click)="handleLeaveReview()">{{ 'LeaveReview' | localize }}</button>
+            <button class="btn btn-light w-100">{{ 'PurchaseAgain' | localize }}</button>
+        </div>
+    </div>
+</div>
+

@@ -109,11 +109,11 @@ namespace Academically.Services.Ratings
             serviceRatingsSummary.TotalReviews = await serviceRatingsQuery.CountAsync();
             if (serviceRatingsSummary.TotalReviews != 0)
             {
-                serviceRatingsSummary.TotalNeutralReviews = await _serviceRatingsRepository.CountAsync(e => e.ExperienceType == RatingExperienceType.Neutral);
+                serviceRatingsSummary.TotalNeutralReviews = await _serviceRatingsRepository.CountAsync(e => e.ExperienceType == RatingExperienceType.Neutral && e.ServiceId == serviceId);
                 if (serviceRatingsSummary.TotalReviews != serviceRatingsSummary.TotalNeutralReviews)
                 {
-                    serviceRatingsSummary.TotalPositiveReviews = await _serviceRatingsRepository.CountAsync(e => e.ExperienceType == RatingExperienceType.Positive);
-                    serviceRatingsSummary.TotalNegativeReviews = await _serviceRatingsRepository.CountAsync(e => e.ExperienceType == RatingExperienceType.Negative);
+                    serviceRatingsSummary.TotalPositiveReviews = await _serviceRatingsRepository.CountAsync(e => e.ExperienceType == RatingExperienceType.Positive && e.ServiceId == serviceId);
+                    serviceRatingsSummary.TotalNegativeReviews = await _serviceRatingsRepository.CountAsync(e => e.ExperienceType == RatingExperienceType.Negative && e.ServiceId == serviceId);
                     serviceRatingsSummary.PositivePercentage = serviceRatingsSummary.TotalPositiveReviews.ToDecimal() / (serviceRatingsSummary.TotalPositiveReviews.ToDecimal() + serviceRatingsSummary.TotalNegativeReviews.ToDecimal());
                     serviceRatingsSummary.PositivePercentage = Math.Round(serviceRatingsSummary.PositivePercentage * 100, 1);
                 }

@@ -1,0 +1,14 @@
+<div class="modal-card card" role="dialog">
+    <div class="modal-content">
+        <div class="card-body">
+            <div class="card-body-header text-center">
+                <img class="mx-auto d-block" [src]="'assets/img/chat/icons/icon-' + type + '.svg'" alt="...">
+                <h3 class="card-body-header-title d-block">{{ title }}</h3>
+                <p class="card-body-header-content d-block">{{ content }}</p>
+            </div>
+        </div>
+        <div class="card-footer border-top-0">
+            <button type="button" class="btn btn-primary w-100" (click)="handleOnAction()">{{ buttonText }}</button>
+        </div>
+    </div>
+</div>

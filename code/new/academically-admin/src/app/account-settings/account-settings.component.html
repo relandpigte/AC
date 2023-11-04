@@ -32,6 +32,11 @@
                     {{ 'Security' | localize }}
                   </a>
                 </li>
+                <li *ngIf="permission.isGranted('Pages.AccountSettings.Blocking')" class="nav-item">
+                  <a [routerLink]="['blocking']" routerLinkActive="active" class="nav-link">
+                    {{ 'Blocking' | localize }}
+                  </a>
+                </li>
                 <li *ngIf="permission.isGranted('Pages.AccountSettings.Notifications')" class="nav-item">
                   <a [routerLink]="['notifications']" routerLinkActive="active" class="nav-link">
                     {{ 'Notifications' | localize }}

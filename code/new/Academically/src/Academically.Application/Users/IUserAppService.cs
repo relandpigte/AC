@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Application.Services;
@@ -23,5 +24,7 @@ namespace Academically.Users
         Task CreateUserStatusLog([FromForm] UserStatus status);
 
         Task<List<UserStatusLogDto>> GetAllUserStatusLogs();
+
+        Task<List<UserDto>> GetBlockedUsers(long? userId);
     }
 }

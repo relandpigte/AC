@@ -33,7 +33,6 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
   NavigationPosition = NavigationPosition;
 
   shimmerType = ShimmerType;
-  isPurchased: boolean;
   isSaved: boolean;
 
   constructor(
@@ -57,6 +56,7 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
   get price(): number { return this.data?.price ?? 0; }
   get serviceId(): string { return this.data?.id; }
   get serviceOwner(): number { return this.data?.creatorUserId; }
+  get isPurchased(): boolean { return this.data?.isPurchased; }
 
   get isLoading$() { return this._landingPageService.isLoading$; }
 
@@ -66,19 +66,21 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
       .subscribe(async data => {
         this.data = data;
         this.isSaved = this.data?.isSaved;
-        this.isPurchased = this.data?.isPurchased;
       });
   }
 
   onPurchaseClick(): void {
-    if (this.isPurchased) {
-      return;
-    }
+    if (this.isPurchased) { return; }
+
     const modalSettings = this.defaultModalSettings as ModalOptions<PurchaseServiceComponent>;
     modalSettings.class = 'modal-lg modal-dialog-centered';
     modalSettings.initialState = { serviceId: this.serviceId, data: this.data };
     const modal = this._modalService.show(PurchaseServiceComponent, modalSettings);
-    modal.content.onPaid.subscribe(async () => this.isPurchased = true);
+
+    modal.content.onPaid.subscribe((): void => {
+      this.data.isPurchased = true;
+      this._serviceData.serviceData = this.data;
+    });
   }
 
   handleShareClick(e: Event): void {
@@ -113,9 +115,7 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
   }
 
   handleSaveClick(): void {
-    if (!!!this.data?.id) {
-      return;
-    }
+    if (!!!this.data?.id) { return; }
     if (this.isSaved) {
       this._savedService.delete(this.data.id).subscribe(() => this.isSaved = false);
     } else {

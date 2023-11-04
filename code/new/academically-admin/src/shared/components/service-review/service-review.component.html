@@ -10,7 +10,7 @@
             <div class="review-heading-owner flex-grow-1 d-flex flex-column flex-nowrap gap-3">
                 <div class="review-heading-owner-name d-flex flex-row align-items-center gap-8">
                     {{ userRatingName | titlecase }}
-                    <button
+                    <button *ngIf="!isOwner"
                         type="button"
                         class="btn btn-link review-heading-owner-follow d-flex justify-content-center align-items-center">
                         <span class="text">
