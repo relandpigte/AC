@@ -1,0 +1,24 @@
+<div class="modal-card card" role="dialog">
+    <div class="modal-content">
+        <form #f="ngForm" (ngSubmit)="handleSubmit(f)">
+            <div class="card-body">
+                <div class="card-body-header d-flex align-items-center gap-12">
+                    <a class="avatar avatar-sm" href="javascript:void(0)">
+                        <img [src]="recipientProfile" [alt]="recipientName" class="avatar-img rounded-circle">
+                    </a>
+                    <div class="event-name">
+                        <h3 class="m-0 p-0">{{ messageTo }}</h3>
+                        <span>{{ serviceName }}</span>
+                    </div>
+                </div>
+                <div class="card-body-content">
+                    <textarea class="form-control" ngModel name="message" [placeholder]="l('WriteAMessageHere')" required></textarea>
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-end gap-10 border-top-0">
+                <button type="button" class="btn btn-white" (click)="onCloseModal()">{{ 'Cancel' | localize }}</button>
+                <button type="submit" class="btn btn-primary" [disabled]="!f.valid">{{ 'Send' | localize }}</button>
+            </div>
+        </form>
+    </div>
+</div>

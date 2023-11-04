@@ -1,18 +1,18 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
 import { accountModuleAnimation } from '@shared/animations/routerTransition';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import { ChatService } from '@shared/services/chat.service';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { takeUntil } from 'rxjs/operators';
 import { ActivatedRoute } from '@node_modules/@angular/router';
 import { ServiceDataService } from '@shared/services/service-data.service';
-import {  ChatsServiceProxy, EventDto, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
-import { ChatComposerConversationComponent } from '@shared/components/chat-composer-conversation/chat-composer-conversation.component';
 import { RatingComponent } from '@app/events/_components/rating/rating.component';
 import { ThankYouComponent } from '@app/events/_components/thank-you/thank-you.component';
+import { ServiceChatComponent } from '@shared/modals/service-chat/service-chat.component';
+import { ChatsServiceProxy, EventDto, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-events',
@@ -42,7 +42,7 @@ export class EventsComponent extends  AppComponentBase implements OnInit {
 
   get isAboutTab(): boolean { return this._router.url.includes([`events/${this.id}`, 'about'].join('/')); }
   get isDiscussionTab(): boolean { return this._router.url.includes([`events/${this.id}`, 'discussion'].join('/')); }
-  get eventOwnerId(): number { return this.data?.creatorUserId; }
+  get serviceOwnerId(): number { return this.data?.creatorUser?.id; }
 
   ngOnInit(): void {
     setTimeout(() => this._landingPageService.setIsLoading(false), 2000);
@@ -62,33 +62,39 @@ export class EventsComponent extends  AppComponentBase implements OnInit {
   }
 
   private async openMessageModal(): Promise<void> {
-    const channel = await this._chatsService.getChannelByRecipient(this.eventOwnerId, this.appSession.userId).toPromise();
-    if (channel) {
-      this._chatService.replyingToUser$.next(this.data?.creatorUser);
-      this._chatService.selectedChannel$.next(channel);
-    }
+    try {
+      const channel = await this._chatsService.getChannelByRecipient(this.serviceOwnerId, this.appSession.userId).toPromise();
+      const modalSettings = this.defaultModalSettings as ModalOptions<ServiceChatComponent>;
+      modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-service-chat';
+      modalSettings.initialState = {
+        channel: channel,
+        service: this.data
+      };
+      const modal = this._modalService.show(ServiceChatComponent, modalSettings);
 
-    const modalSettings = this.defaultModalSettings as ModalOptions<ChatComposerConversationComponent>;
-    modalSettings.class = 'modal-lg';
-    modalSettings.initialState = {
-      hasActions: false,
-      hasClose: true,
-      showAttachmentInfo: false,
-      channel: channel,
-      isSearchingUser: false
-    };
-    const modal = this._modalService.show(ChatComposerConversationComponent, modalSettings);
-    modal.content.onCloseClick
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(() => modal.hide());
+      modal.content.onClose.subscribe((): void => {
+        this._modalService.hide();
+      });
+
+      modal.content.onFail.subscribe((): void => {
+        this._modalService.hide();
+        setTimeout(() => this.openMessageModal(), 200);
+      });
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   private getServiceId(): void {
     this._route.paramMap.subscribe(async paramMap => {
       if (paramMap.has('id')) {
-        this.id = paramMap.get('id');
-        this._serviceData.serviceData = await this._eventsService.get(this.id).toPromise();
-        this._serviceData.discussionId = await this._serviceData.getServiceDiscussionId(this.id);
+        try {
+          this.id = paramMap.get('id');
+          this._serviceData.serviceData = await this._eventsService.get(this.id).toPromise();
+          this._serviceData.discussionId = await this._serviceData.getServiceDiscussionId(this.id);
+        } catch (e) {
+          console.error(e);
+        }
       }
     });
   }

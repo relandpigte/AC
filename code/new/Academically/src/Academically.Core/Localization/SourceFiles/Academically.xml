@@ -2033,5 +2033,16 @@
     <!-- Account Settings -->
     <text name="BlockedUsers">Blocked users</text>
     <text name="Unblock">Unblock</text>
+
+    <!-- Service Landing Page -->
+    <text name="MessageTo">Message to {0}</text>
+    <text name="WriteAMessageHere">Write a message here</text>
+    <text name="MessageSent">Message Sent</text>
+    <text name="MessageSentDesc">Thank you for your message. {0} will be in touch soon.</text>
+    <text name="MessageNotSent">Your message did not send</text>
+    <text name="MessageNotSentDesc">Oops, something went wrong. Please try again.</text>
+    <text name="Done">Done</text>
+    <text name="TryAgain">Try again</text>
+    
   </texts>
 </localizationDictionary>
