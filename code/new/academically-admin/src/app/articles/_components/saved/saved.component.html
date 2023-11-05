@@ -24,10 +24,10 @@
         </div>
     </div>
 
-    <ng-container *ngIf="savedTutorials?.length > 0 else noRecords">
+    <ng-container *ngIf="savedArticles?.length > 0 else noRecords">
         <div class="d-flex flex-wrap justify-content-start align-items-start gap-30">
             <app-service-card
-                *ngFor="let s of savedTutorials"
+                *ngFor="let s of savedArticles"
                 [data]="s"
                 [isLoading]="isLoading"
                 (onClick)="handleServiceCardClick($event)"

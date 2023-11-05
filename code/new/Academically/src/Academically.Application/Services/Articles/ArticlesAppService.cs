@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using Abp.Collections.Extensions;
 using Abp.Runtime.Session;
 using Academically.Users.Dto;
+using Academically.Services.Videos.Dto;
 
 namespace Academically.Services.Articles
 {
@@ -336,6 +337,36 @@ namespace Academically.Services.Articles
                                       .AsNoTracking()
                                       .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
                                       .ToListAsync();
+        }
+
+        public async Task<List<ArticleDto>> GetAllSavedArticles(long creatorUserId)
+        {
+            var savedIds = await _savedServiceRepository.GetAll().Where(s => s.CreatorUserId == this.AbpSession.UserId).Select(s => s.ReferenceId).ToListAsync();
+
+            var output = await _articlesRepository.GetAll()
+                .Where(x => savedIds.Contains(x.Id))
+                .Include(c => c.CreatorUser)
+                .Select(e => ObjectMapper.Map<ArticleDto>(e))
+                .ToListAsync();
+
+            foreach (var item in output)
+            {
+                if (item.ThumbnailDocumentId.HasValue)
+                    item.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(item.ThumbnailDocumentId.Value);
+
+                if (item.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    item.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(item.CreatorUser.ProfilePictureDocumentId.Value);
+
+                var purchasers = await _servicePurchasesRepository.GetAll()
+                    .Where(c => c.ReferenceId == item.Id)
+                    .Select(c => ObjectMapper.Map<UserDto>(c.CreatorUser))
+                    .ToListAsync();
+
+                item.IsPurchased = purchasers.Any(u => u.Id == this.AbpSession.UserId);
+
+                item.IsSaved = true;
+            }
+            return output;
         }
     }
 }

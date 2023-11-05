@@ -10,15 +10,16 @@ import { CreateArticleComponent } from './_components/create-article/create-arti
 import { LearningModule } from './_components/learning/learning.module';
 import { DashboardModule } from '@app/dashboard/dashboard.module';
 import { PurchasedComponent } from './_components/purchased/purchased.component';
+import { SavedComponent } from './_components/saved/saved.component';
 import { CreatedComponent } from './_components/created/created.component';
 import { ForYouComponent } from '@app/articles/_components/for-you/for-you.component';
-import { SavedModule } from '@app/articles/_components/learning/saved/saved.module';
 @NgModule({
   declarations: [
     ArticlesComponent,
     ChooseTemplateComponent,
     CreateArticleComponent,
     PurchasedComponent,
+    SavedComponent,
     CreatedComponent,
     ForYouComponent
   ],
@@ -30,7 +31,6 @@ import { SavedModule } from '@app/articles/_components/learning/saved/saved.modu
     TeachingModule,
     LearningModule,
     DashboardModule,
-    SavedModule,
   ],
 })
 export class ArticlesModule { }

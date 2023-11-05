@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Academically.Domain.Enums;
+using Academically.Services.Courses.Dto;
 using Academically.Services.Posts.Dto;
 using Academically.Services.Videos.Dto;
 
@@ -25,6 +26,7 @@ namespace Academically.Services.Videos
         Task UpdateStatusAsync(Guid id, VideoStatus status);
         Task DeleteAsync(Guid id);
         Task<IEnumerable<VideoDto>> GetEnrolledVideosByUser();
+        Task<List<VideoDto>> GetAllSavedTutorials(long creatorUserId);
     }
 }
 
