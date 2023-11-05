@@ -9,6 +9,7 @@ import { ChooseTemplateComponent } from './_components/choose-template/choose-te
 import { CreatedComponent } from './_components/created/created.component';
 import { RequestsComponent } from './_components/requests/requests.component';
 import { PurchasedComponent } from './_components/purchased/purchased.component';
+import { SavedComponent } from './_components/saved/saved.component';
 import { ProgramsModule } from './_components/programs/programs.module';
 import { EventsComponent } from './events.component';
 import { LearningComponent } from './learning/learning.component';
@@ -29,6 +30,7 @@ import { ForYouComponent } from '@app/dashboard/events/_components/for-you/for-y
     TeachingComponent,
     ScheduleComponent,
     PurchasedComponent,
+    SavedComponent,
     ForYouComponent
   ],
   imports: [

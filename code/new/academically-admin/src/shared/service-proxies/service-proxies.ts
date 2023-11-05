@@ -13928,6 +13928,69 @@ export class EventsServiceProxy {
     }
 
     /**
+     * @param creatorUserId (optional) 
+     * @return Success
+     */
+    getAllSavedEvents(creatorUserId: number | undefined): Observable<EventDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Events/GetAllSavedEvents?";
+        if (creatorUserId === null)
+            throw new Error("The parameter 'creatorUserId' cannot be null.");
+        else if (creatorUserId !== undefined)
+            url_ += "creatorUserId=" + encodeURIComponent("" + creatorUserId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllSavedEvents(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllSavedEvents(<any>response_);
+                } catch (e) {
+                    return <Observable<EventDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllSavedEvents(response: HttpResponseBase): Observable<EventDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(EventDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventDto[]>(<any>null);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
