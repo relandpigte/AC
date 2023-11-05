@@ -1,6 +1,6 @@
 import { BehaviorSubject, Subject } from "rxjs";
 import { Utils } from '../helpers/utils';
-import { CommentDto, HubEvent, PostsServiceProxy } from '../service-proxies/service-proxies';
+import { CommentDto, HubEvent, PostSort, PostsServiceProxy } from '../service-proxies/service-proxies';
 import { StateServiceBase, StateUpdate } from './state-base.service';
 
 import * as _ from 'lodash';
@@ -24,18 +24,14 @@ export class CommentsStateService extends StateServiceBase {
     super();
   }
 
-  getAllComments = (sorting?: { pred?: (c: any) => any; direction?: 'desc' | 'asc'; }) =>
-    _.orderBy(
-      Array.from(this.comments.values()),
-      sorting?.pred ?? ((c) => c.creationTime),
-      sorting?.direction ?? 'desc'
-    );
+
+  getAllComments = () => Array.from(this.comments.values());
 
   async loadData(component: any, userId: number) {
     this.loading$.next(true);
     try {
-      const [referenceId, parentId, skip, count] = this.loadArgs;
-      const comments = await this._postsService.getAllCommentsPaged(referenceId, parentId, skip, count).toPromise();
+      const [referenceId, parentId, postSort, notificationId, skip, count] = this.loadArgs;
+      const comments = await this._postsService.getAllCommentsPaged(referenceId, parentId, postSort, notificationId, skip, count).toPromise();
       this.comments = Utils.toMap(comments.items);
       this.totalCommentsCount = comments.totalCount;
     } catch (err) {
@@ -75,5 +71,19 @@ export class CommentsStateService extends StateServiceBase {
   removeComments(comments: CommentDto[]) {
     const removedComments = comments.map(c => c.id);
     this.comments = Utils.toMap([...Array.from(this.comments.values()).filter(c => !removedComments.includes(c.id))]);
+  }
+
+  async updateServiceParams(params: { referenceId: string | undefined, parentId: string | undefined, postSort: PostSort | undefined, notificationId: string | undefined }) {
+    this.loading$.next(true);
+    const existingArgs = this.actionArgs['load'];
+    this.actionArgs['load'] = [params.referenceId, params.parentId, params.postSort, params.notificationId, existingArgs[4], existingArgs[5]];
+    try {
+      const comments = await this._postsService.getAllCommentsPaged(params.referenceId, params.parentId, params.postSort, params.notificationId, existingArgs[4], existingArgs[5]).toPromise();
+      this.comments = Utils.toMap(comments.items);
+      this.totalCommentsCount = comments.totalCount;
+    } catch (err) {
+      console.error(err);
+    }
+    this.loading$.next(false);
   }
 }

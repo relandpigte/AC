@@ -1937,7 +1937,7 @@
 	<text name="Community.Posts.Filtering.Question">Question</text>
 	<text name="Community.Posts.Filtering.Discussion">Discussion</text>
 	<text name="Community.Posts.Sorting.Top">Top</text>
-	<text name="Community.Posts.Sorting.Relevant">Most Relevant</text>
+	<text name="Community.Posts.Sorting.Relevant">Most relevant</text>
 	<text name="Community.Posts.Sorting.Latest">Latest</text>
 	<text name="Community.Posts.Sorting.Replied">Most Replied</text>
 	<text name="Community.Posts.Sorting.Reacted">Most Reacted</text>

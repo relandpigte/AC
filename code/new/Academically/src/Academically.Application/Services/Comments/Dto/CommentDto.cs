@@ -11,6 +11,7 @@ using Academically.Users.Dto;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
+using System.Linq;
 
 namespace Academically.Services.Comments.Dto
 {
@@ -37,7 +38,22 @@ namespace Academically.Services.Comments.Dto
         public IEnumerable<CommentDto> Children { get; set; }
         public IEnumerable<CommentReactionDto> CommentReactions { get; set; }
 
-        // These objects is filled in depending on the type of service attached to the comment
+        [NotMapped]
+        public bool IsFromNotification { get; set; } = false;
+
+        [NotMapped]
+        public bool IsFromFollowing { get; set; } = false;
+
+        [NotMapped]
+        public int ReactionsCount { get; set; }
+
+        [NotMapped]
+        public double RelevantPoints { get { return (this.IsFromNotification ? 99_999 : 0) + (this.IsFromFollowing ? 1 : 0); } }
+
+        [NotMapped]
+        public double ActivityPoints { get { return (this.ReplyCount * 2) + this.ReactionsCount; } }
+
+        // These objects is filled in depending on the type of service attached to the comment [start]
 
         [NotMapped]
         public ArticleDto Article { get; set; }
@@ -53,7 +69,10 @@ namespace Academically.Services.Comments.Dto
 
         [NotMapped]
         public CoachingDto Coaching { get; set; }
-        
+
+        // These objects is filled in depending on the type of service attached to the comment [end]
+
+
         [NotMapped]
         public List<CommentEditHistoryDto> CommentEditHistories { get; set; }
     }

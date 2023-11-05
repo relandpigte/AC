@@ -85,14 +85,28 @@
           <div class="col-auto align-self-center">
             <ng-container *ngIf="!isSidebar">Sort by:</ng-container>
             <div class="btn-group" dropdown>
-              <button id="button-basic" dropdownToggle type="button" class="btn btn-link btn-sm dropdown-toggle font-weight-bold text-gray-800"
-                      aria-controls="dropdown-basic">
-                Most likes<span class="caret"></span>
+              <button id="button-basic" dropdownToggle type="button" class="btn btn-link btn-sm dropdown-toggle font-weight-bold text-gray-800" aria-controls="dropdown-basic">
+                {{ selectedSorting  | localize }}<span class="caret"></span>
               </button>
-              <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
-                  role="menu" aria-labelledby="button-basic">
-                <li role="menuitem"><a class="dropdown-item" href="javascript:void(0)">Most Recent</a></li>
-                <li role="menuitem"><a class="dropdown-item" href="javascript:void(0)">Most Likes <i class="fas fa-check float-right mt-1"></i></a></li>
+              <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+                <li role="menuitem" (click)="handleSortingChange(postSortingEnum.Latest)">
+                  <a class="dropdown-item d-flex justify-content-start align-items-center gap-5" href="javascript:void(0)">
+                    <div>{{ postSortingEnum.Latest  | localize }}</div>
+                    <i *ngIf="isSelectedSorting(postSortingEnum.Latest)" class="fe fe-check"></i>
+                  </a>
+                </li>
+                <li role="menuitem" (click)="handleSortingChange(postSortingEnum.Relevant)">
+                  <a class="dropdown-item d-flex justify-content-start align-items-center gap-5" href="javascript:void(0)">
+                    <div>{{ postSortingEnum.Relevant  | localize }}</div>
+                    <i *ngIf="isSelectedSorting(postSortingEnum.Relevant)" class="fe fe-check"></i>
+                  </a>
+                </li>
+                <li role="menuitem" (click)="handleSortingChange(postSortingEnum.Top)">
+                  <a class="dropdown-item d-flex justify-content-start align-items-center gap-5" href="javascript:void(0)">
+                    <div>{{ postSortingEnum.Top  | localize }} {{ typeName }}</div>
+                    <i *ngIf="isSelectedSorting(postSortingEnum.Top)" class="fe fe-check"></i>
+                  </a>
+                </li>
               </ul>
             </div>
           </div>

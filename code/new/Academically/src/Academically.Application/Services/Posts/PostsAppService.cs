@@ -39,6 +39,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static Amazon.S3.Util.S3EventNotification;
 using Academically.Services.DisciplineTaxonomies.Dto;
+using Amazon.Runtime.Internal;
 
 namespace Academically.Services.Posts
 {
@@ -674,6 +675,7 @@ namespace Academically.Services.Posts
 
         public async Task<PagedResultDto<CommentDto>> GetAllCommentsPagedAsync(PagedCommentResultRequestDto input)
         {
+            var userId = AbpSession.UserId.Value;
             var query = _commentsRepository.GetAll()
                 .WhereIf(!input.ReferenceIdFilter.IsNullOrEmpty(), e => e.ReferenceId == input.ReferenceIdFilter)
                 .WhereIf(!input.ParentIdFilter.HasValue, e => e.ParentId == null)
@@ -688,12 +690,21 @@ namespace Academically.Services.Posts
 
             var totalCount = await query.CountAsync();
             var items = await query
-                .PageBy(input)
                 .Select(e => new
                 {
                     Comment = e,
                     ChildCount = e.Children.Count()
                 })
+                .ToListAsync();
+
+            var targetNotification = await _notificationsRepository.GetAll()
+                .Include(n => n.User)
+                .WhereIf(input.NotificationId.HasValue, n => n.ReferenceId == input.NotificationId.Value)
+                .WhereIf(!input.NotificationId.HasValue, n => false)
+                .SingleOrDefaultAsync();
+
+            var following = await _userFollowersRepository.GetAll()
+                .Where(f => f.CreatorUserId == userId)
                 .ToListAsync();
 
 
@@ -702,8 +713,30 @@ namespace Academically.Services.Posts
             {
                 var comment = ObjectMapper.Map<CommentDto>(commentWithChild.Comment);
                 await FillInService(comment);
+
                 comment.ReplyCount = commentWithChild.ChildCount;
+                comment.ReactionsCount = await this.GetReactionsCountAsync(comment.Id.ToString());
+
                 comments.Add(comment);
+            }
+
+            if (input.ParentIdFilter == null) // if comments are top level, sort differently
+            {
+                if (input.PostSort == PostSort.Top)
+                    comments = comments.OrderByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
+                else if (input.PostSort == PostSort.Relevant)
+                    comments = comments.OrderByDescending(p => p.RelevantPoints).ThenByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
+                else
+                    comments = comments.OrderByDescending(p => p.CreationTime).ToList();
+            }
+            else
+            {
+                if (input.PostSort == PostSort.Top)
+                    comments = comments.OrderBy(p => p.ActivityPoints).ThenBy(p => p.CreationTime).ToList();
+                else if (input.PostSort == PostSort.Relevant)
+                    comments = comments.OrderBy(p => p.RelevantPoints).ThenBy(p => p.ActivityPoints).ThenBy(p => p.CreationTime).ToList();
+                else
+                    comments = comments.OrderBy(p => p.CreationTime).ToList();
             }
 
             return new PagedResultDto<CommentDto>(totalCount, comments);
@@ -739,11 +772,11 @@ namespace Academically.Services.Posts
 
         public async Task<PagedResultDto<CommentDto>> GetAllCommentRepliesAsync(PagedCommentResultRequestDto input)
         {
+            var userId = AbpSession.UserId.Value;
             var query = _commentsRepository.GetAll()
                 .Where(e => e.ParentId == input.ParentIdFilter);
             var totalCount = await query.CountAsync();
             var comments = await query.OrderByDescending(e => e.CreationTime)
-                .PageBy(input)
                 .Include(e => e.CreatorUser)
                 .ThenInclude(e => e.ProfilePictureDocument)
                 .Include(e => e.TaggedUser)
@@ -752,9 +785,40 @@ namespace Academically.Services.Posts
                 .Select(e => ObjectMapper.Map<CommentDto>(e))
                 .ToListAsync();
 
+            var targetNotification = await _notificationsRepository.GetAll()
+                .Include(n => n.User)
+                .WhereIf(input.NotificationId.HasValue, n => n.ReferenceId == input.NotificationId.Value)
+                .WhereIf(!input.NotificationId.HasValue, n => false)
+                .SingleOrDefaultAsync();
+
+            var following = await _userFollowersRepository.GetAll()
+                .Where(f => f.CreatorUserId == userId)
+                .ToListAsync();
+
             foreach (var comment in comments)
             {
                 await FillInService(comment);
+                comment.ReplyCount = comment.Children.Count();
+                comment.ReactionsCount = await this.GetReactionsCountAsync(comment.Id.ToString());
+            }
+
+            if (input.ParentIdFilter == null) // if comments are top level, sort differently
+            {
+                if (input.PostSort == PostSort.Top)
+                    comments = comments.OrderByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
+                else if (input.PostSort == PostSort.Relevant)
+                    comments = comments.OrderByDescending(p => p.RelevantPoints).ThenByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
+                else
+                    comments = comments.OrderByDescending(p => p.CreationTime).ToList();
+            }
+            else
+            {
+                if (input.PostSort == PostSort.Top)
+                    comments = comments.OrderBy(p => p.ActivityPoints).ThenBy(p => p.CreationTime).ToList();
+                else if (input.PostSort == PostSort.Relevant)
+                    comments = comments.OrderBy(p => p.RelevantPoints).ThenBy(p => p.ActivityPoints).ThenBy(p => p.CreationTime).ToList();
+                else
+                    comments = comments.OrderBy(p => p.CreationTime).ToList();
             }
 
             return new PagedResultDto<CommentDto>(totalCount, comments);

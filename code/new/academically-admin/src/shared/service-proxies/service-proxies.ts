@@ -5475,11 +5475,17 @@ export class CommentsServiceProxy {
     /**
      * @param referenceIdFilter (optional) 
      * @param parentIdFilter (optional) 
+     * @param postSort (optional) 0 = Relevant
+    
+    1 = Latest
+    
+    2 = Top
+     * @param notificationId (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAllReplies(referenceIdFilter: string | undefined, parentIdFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CommentDtoPagedResultDto> {
+    getAllReplies(referenceIdFilter: string | undefined, parentIdFilter: string | undefined, postSort: PostSort | undefined, notificationId: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CommentDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Comments/GetAllReplies?";
         if (referenceIdFilter === null)
             throw new Error("The parameter 'referenceIdFilter' cannot be null.");
@@ -5489,6 +5495,14 @@ export class CommentsServiceProxy {
             throw new Error("The parameter 'parentIdFilter' cannot be null.");
         else if (parentIdFilter !== undefined)
             url_ += "ParentIdFilter=" + encodeURIComponent("" + parentIdFilter) + "&";
+        if (postSort === null)
+            throw new Error("The parameter 'postSort' cannot be null.");
+        else if (postSort !== undefined)
+            url_ += "PostSort=" + encodeURIComponent("" + postSort) + "&";
+        if (notificationId === null)
+            throw new Error("The parameter 'notificationId' cannot be null.");
+        else if (notificationId !== undefined)
+            url_ += "NotificationId=" + encodeURIComponent("" + notificationId) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -16341,11 +16355,17 @@ export class PostsServiceProxy {
     /**
      * @param referenceIdFilter (optional) 
      * @param parentIdFilter (optional) 
+     * @param postSort (optional) 0 = Relevant
+    
+    1 = Latest
+    
+    2 = Top
+     * @param notificationId (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAllCommentsPaged(referenceIdFilter: string | undefined, parentIdFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CommentDtoPagedResultDto> {
+    getAllCommentsPaged(referenceIdFilter: string | undefined, parentIdFilter: string | undefined, postSort: PostSort | undefined, notificationId: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CommentDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Posts/GetAllCommentsPaged?";
         if (referenceIdFilter === null)
             throw new Error("The parameter 'referenceIdFilter' cannot be null.");
@@ -16355,6 +16375,14 @@ export class PostsServiceProxy {
             throw new Error("The parameter 'parentIdFilter' cannot be null.");
         else if (parentIdFilter !== undefined)
             url_ += "ParentIdFilter=" + encodeURIComponent("" + parentIdFilter) + "&";
+        if (postSort === null)
+            throw new Error("The parameter 'postSort' cannot be null.");
+        else if (postSort !== undefined)
+            url_ += "PostSort=" + encodeURIComponent("" + postSort) + "&";
+        if (notificationId === null)
+            throw new Error("The parameter 'notificationId' cannot be null.");
+        else if (notificationId !== undefined)
+            url_ += "NotificationId=" + encodeURIComponent("" + notificationId) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -16475,11 +16503,17 @@ export class PostsServiceProxy {
     /**
      * @param referenceIdFilter (optional) 
      * @param parentIdFilter (optional) 
+     * @param postSort (optional) 0 = Relevant
+    
+    1 = Latest
+    
+    2 = Top
+     * @param notificationId (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAllCommentReplies(referenceIdFilter: string | undefined, parentIdFilter: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CommentDtoPagedResultDto> {
+    getAllCommentReplies(referenceIdFilter: string | undefined, parentIdFilter: string | undefined, postSort: PostSort | undefined, notificationId: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CommentDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Posts/GetAllCommentReplies?";
         if (referenceIdFilter === null)
             throw new Error("The parameter 'referenceIdFilter' cannot be null.");
@@ -16489,6 +16523,14 @@ export class PostsServiceProxy {
             throw new Error("The parameter 'parentIdFilter' cannot be null.");
         else if (parentIdFilter !== undefined)
             url_ += "ParentIdFilter=" + encodeURIComponent("" + parentIdFilter) + "&";
+        if (postSort === null)
+            throw new Error("The parameter 'postSort' cannot be null.");
+        else if (postSort !== undefined)
+            url_ += "PostSort=" + encodeURIComponent("" + postSort) + "&";
+        if (notificationId === null)
+            throw new Error("The parameter 'notificationId' cannot be null.");
+        else if (notificationId !== undefined)
+            url_ += "NotificationId=" + encodeURIComponent("" + notificationId) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -36294,6 +36336,11 @@ export class CommentDto implements ICommentDto {
     taggedUser: UserDto;
     children: CommentDto[] | undefined;
     commentReactions: CommentReactionDto[] | undefined;
+    isFromNotification: boolean;
+    isFromFollowing: boolean;
+    reactionsCount: number;
+    readonly relevantPoints: number;
+    readonly activityPoints: number;
     article: ArticleDto;
     event: EventDto;
     course: CourseDto;
@@ -36340,6 +36387,11 @@ export class CommentDto implements ICommentDto {
                 for (let item of _data["commentReactions"])
                     this.commentReactions.push(CommentReactionDto.fromJS(item));
             }
+            this.isFromNotification = _data["isFromNotification"];
+            this.isFromFollowing = _data["isFromFollowing"];
+            this.reactionsCount = _data["reactionsCount"];
+            (<any>this).relevantPoints = _data["relevantPoints"];
+            (<any>this).activityPoints = _data["activityPoints"];
             this.article = _data["article"] ? ArticleDto.fromJS(_data["article"]) : <any>undefined;
             this.event = _data["event"] ? EventDto.fromJS(_data["event"]) : <any>undefined;
             this.course = _data["course"] ? CourseDto.fromJS(_data["course"]) : <any>undefined;
@@ -36390,6 +36442,11 @@ export class CommentDto implements ICommentDto {
             for (let item of this.commentReactions)
                 data["commentReactions"].push(item.toJSON());
         }
+        data["isFromNotification"] = this.isFromNotification;
+        data["isFromFollowing"] = this.isFromFollowing;
+        data["reactionsCount"] = this.reactionsCount;
+        data["relevantPoints"] = this.relevantPoints;
+        data["activityPoints"] = this.activityPoints;
         data["article"] = this.article ? this.article.toJSON() : <any>undefined;
         data["event"] = this.event ? this.event.toJSON() : <any>undefined;
         data["course"] = this.course ? this.course.toJSON() : <any>undefined;
@@ -36432,6 +36489,11 @@ export interface ICommentDto {
     taggedUser: UserDto;
     children: CommentDto[] | undefined;
     commentReactions: CommentReactionDto[] | undefined;
+    isFromNotification: boolean;
+    isFromFollowing: boolean;
+    reactionsCount: number;
+    relevantPoints: number;
+    activityPoints: number;
     article: ArticleDto;
     event: EventDto;
     course: CourseDto;
