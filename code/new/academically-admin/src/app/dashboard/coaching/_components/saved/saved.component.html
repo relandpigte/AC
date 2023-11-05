@@ -1,0 +1,45 @@
+<app-shimmer
+    [isBlock]="true"
+    [show]="isLoading$ | async"
+    [shimmerType]="shimmerType.DashboardSaved"
+    backgroundColor="#f9fbfd"
+></app-shimmer>
+
+<ng-container *ngIf="!(isLoading$ | async)">
+
+    <div class="card custom-card-border search">
+        <div class="card-header border-0">
+            <div class="d-flex align-items-center">
+                <form>
+                    <div class="input-group input-group-flush">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="fe fe-search"></i>
+                            </span>
+                        </div>
+                        <input class="list-search form-control" type="search" name="Search" placeholder="Search" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <ng-container *ngIf="savedCoachings?.length > 0 else noRecords">
+        <div class="d-flex flex-wrap justify-content-start align-items-start gap-30">
+            <app-service-card
+                *ngFor="let s of savedCoachings"
+                [data]="s"
+                [isLoading]="isLoading"
+                (onClick)="handleServiceCardClick($event)"
+                (onActionClick)="handleServiceCardActionClick($event)"
+                (onShareClick)="handleServiceCardShareClick($event)"
+            ></app-service-card>
+        </div>
+    </ng-container>
+
+</ng-container>
+
+
+<ng-template #noRecords>
+    <div class="text-center font-size-sm text-muted w-100">No records to display</div>
+</ng-template>

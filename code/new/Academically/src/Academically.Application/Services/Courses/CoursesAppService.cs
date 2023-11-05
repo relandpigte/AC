@@ -18,6 +18,7 @@ using Academically.Domain.Services.Documents;
 using Academically.Domain.Views;
 using Academically.EntityFrameworkCore.Repositories.Explore;
 using Academically.Extensions;
+using Academically.Services.Coachings.Dto;
 using Academically.Services.Courses.Dto;
 using Academically.Services.Explore.Dto;
 using Academically.Services.Posts.Dto;
@@ -399,6 +400,39 @@ namespace Academically.Services.Courses
                 .ToListAsync();
 
             return await GetCoursesDetailsAsync(courses);
+        }
+
+        public async Task<List<CourseDto>> GetAllSavedCourses(long creatorUserId)
+        {
+            var savedIds = await _savedServiceRepository.GetAll().Where(s => s.CreatorUserId == this.AbpSession.UserId).Select(s => s.ReferenceId).ToListAsync();
+
+            var output = await Repository.GetAll()
+                .Where(x => savedIds.Contains(x.Id))
+                .Include(c => c.CreatorUser)
+                .Select(e => ObjectMapper.Map<CourseDto>(e))
+                .ToListAsync();
+
+            foreach (var item in output)
+            {
+                if (item.ImageDocumentId.HasValue)
+                    item.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(item.ImageDocumentId.Value);
+
+                if (item.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    item.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(item.CreatorUser.ProfilePictureDocumentId.Value);
+
+                var purchasers = await _servicePurchasesRepository.GetAll()
+                    .Where(c => c.ReferenceId == item.Id)
+                    .Select(c => ObjectMapper.Map<UserDto>(c.CreatorUser))
+                    .ToListAsync();
+
+                item.IsPurchased = purchasers.Any(u => u.Id == this.AbpSession.UserId);
+
+                var userRating = await _serviceRatingRepository.FirstOrDefaultAsync(r => r.ServiceId == item.Id && r.CreatorUserId == AbpSession.GetUserId());
+                item.HasReviewed = userRating != null;
+
+                item.IsSaved = true;
+            }
+            return output;
         }
     }
 }

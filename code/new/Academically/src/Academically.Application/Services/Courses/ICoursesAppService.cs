@@ -14,5 +14,6 @@ namespace Academically.Services.Courses
         Task<IEnumerable<AvailableServiceDto>> GetAllCourses();
         Task<IEnumerable<AvailableServiceDto>> GetCoursesByKeyword(string keyword, long? creatorUserId);
         Task<IEnumerable<CourseDto>> GetEnrolledCoursesByUser();
+        Task<List<CourseDto>> GetAllSavedCourses(long creatorUserId);
     }
 }

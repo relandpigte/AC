@@ -209,7 +209,7 @@ export class ForYouComponent extends AppComponentBase implements OnInit {
   }
 
   handleServiceCardClick(coaching: CoachingDto): void {
-    this._router.navigate(['app/course' , coaching.id, 'about']);
+    this._router.navigate(['app/coaching' , coaching.id, 'about']);
   }
 
   handleServiceCardShareClick(service: any): void {
