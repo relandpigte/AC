@@ -16,6 +16,7 @@ import { LearningListComponent } from './_components/learning-list/learning-list
 import { DashboardModule } from '@app/dashboard/dashboard.module';
 import { CreatedComponent } from './_components/created/created.component';
 import { PurchasedComponent } from './_components/purchased/purchased.component';
+import { SavedComponent } from './_components/saved/saved.component';
 import { ForYouComponent } from '@app/dashboard/courses/_components/for-you/for-you.component';
 
 @NgModule({
@@ -32,6 +33,7 @@ import { ForYouComponent } from '@app/dashboard/courses/_components/for-you/for-
     LearningListComponent,
     CreatedComponent,
     PurchasedComponent,
+    SavedComponent,
     ForYouComponent
   ],
   imports: [

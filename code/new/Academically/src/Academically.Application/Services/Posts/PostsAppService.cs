@@ -39,6 +39,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static Amazon.S3.Util.S3EventNotification;
 using Academically.Services.DisciplineTaxonomies.Dto;
+using Amazon.Runtime.Internal;
 
 namespace Academically.Services.Posts
 {
@@ -59,6 +60,8 @@ namespace Academically.Services.Posts
         private readonly IRepository<Event, Guid> _eventRepository;
         private readonly IRepository<Reaction, Guid> _reactionsRepository;
         private readonly IRepository<EntityChange, long> _entityChangeRepository;
+        private readonly IRepository<Notification, Guid> _notificationsRepository;
+        private readonly IRepository<UserFollower, Guid> _userFollowersRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IArticlesAppService _articlesAppService;
         private readonly ICoachingsAppService _coachingsAppService;
@@ -81,6 +84,8 @@ namespace Academically.Services.Posts
             IRepository<Reaction, Guid> reactionsRepository,
             IRepository<Comment, Guid> commentsRepository,
             IRepository<EntityChange, long> entityChangeRepository,
+            IRepository<Notification, Guid> notificationsRepository,
+            IRepository<UserFollower, Guid> userFollowersRepository,
             IDocumentsDomainService documentsDomainService,
             IArticlesAppService articlesAppService,
             ICoachingsAppService coachingsAppService,
@@ -108,6 +113,8 @@ namespace Academically.Services.Posts
             _videoRepository = videoRepository;
             _eventRepository = eventRepository;
             _entityChangeRepository = entityChangeRepository;
+            _notificationsRepository = notificationsRepository;
+            _userFollowersRepository = userFollowersRepository;
         }
 
         public async Task<List<PostDto>> GetAllPosts(PostType? type, Guid? parentId)
@@ -179,6 +186,16 @@ namespace Academically.Services.Posts
             var result = await query.Select(p => ObjectMapper.Map<PostDto>(p))
                                    .ToListAsync();
 
+            var targetNotification = await _notificationsRepository.GetAll()
+                                    .Include(n => n.User)
+                                    .WhereIf(request.NotificationId.HasValue, n => n.ReferenceId == request.NotificationId.Value)
+                                    .WhereIf(!request.NotificationId.HasValue, n => false)
+                                    .SingleOrDefaultAsync();
+
+            var following = await _userFollowersRepository.GetAll()
+                                    .Where(f => f.CreatorUserId == userId)
+                                    .ToListAsync();
+
             foreach (var item in result)
             {
                 if (item.SharedId.HasValue)
@@ -187,6 +204,8 @@ namespace Academically.Services.Posts
                 foreach (var attachment in item.PostAttachments)
                     attachment.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(attachment.DocumentId);
 
+                item.IsFromNotification = targetNotification != null;
+                item.IsFromFollowing = following?.Any(f => f.UserId == item.CreatorUserId) == true;
                 item.CommentsCount = await this.GetCommentsCountAsync(item.Id.ToString());
                 item.SharesCount = await this.GetSharesCountAsync(item.Id.ToString());
                 item.ReactionsCount = await this.GetReactionsCountAsync(item.Id.ToString());
@@ -218,10 +237,15 @@ namespace Academically.Services.Posts
                 foreach (var p in item.Participants) if (p.ProfilePictureDocumentId.HasValue) p.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(p.ProfilePictureDocumentId.Value);
             }
 
-            if (request.PostSort.HasValue && request.PostSort == PostSort.Activity)
-                result = result.OrderByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
-            else
-                result = result.OrderByDescending(p => p.CreationTime).ToList();
+            if (request.PostSort.HasValue)
+            {
+                if (request.PostSort == PostSort.Top)
+                    result = result.OrderByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
+                else if (request.PostSort == PostSort.Relevant)
+                    result = result.OrderByDescending(p => p.RelevantPoints).ThenByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
+                else
+                    result = result.OrderByDescending(p => p.CreationTime).ToList();
+            }
 
             result = result.Skip(request.SkipCount).Take(request.MaxResultCount).ToList();
 
@@ -651,6 +675,7 @@ namespace Academically.Services.Posts
 
         public async Task<PagedResultDto<CommentDto>> GetAllCommentsPagedAsync(PagedCommentResultRequestDto input)
         {
+            var userId = AbpSession.UserId.Value;
             var query = _commentsRepository.GetAll()
                 .WhereIf(!input.ReferenceIdFilter.IsNullOrEmpty(), e => e.ReferenceId == input.ReferenceIdFilter)
                 .WhereIf(!input.ParentIdFilter.HasValue, e => e.ParentId == null)
@@ -665,12 +690,21 @@ namespace Academically.Services.Posts
 
             var totalCount = await query.CountAsync();
             var items = await query
-                .PageBy(input)
                 .Select(e => new
                 {
                     Comment = e,
                     ChildCount = e.Children.Count()
                 })
+                .ToListAsync();
+
+            var targetNotification = await _notificationsRepository.GetAll()
+                .Include(n => n.User)
+                .WhereIf(input.NotificationId.HasValue, n => n.ReferenceId == input.NotificationId.Value)
+                .WhereIf(!input.NotificationId.HasValue, n => false)
+                .SingleOrDefaultAsync();
+
+            var following = await _userFollowersRepository.GetAll()
+                .Where(f => f.CreatorUserId == userId)
                 .ToListAsync();
 
 
@@ -679,8 +713,30 @@ namespace Academically.Services.Posts
             {
                 var comment = ObjectMapper.Map<CommentDto>(commentWithChild.Comment);
                 await FillInService(comment);
+
                 comment.ReplyCount = commentWithChild.ChildCount;
+                comment.ReactionsCount = await this.GetReactionsCountAsync(comment.Id.ToString());
+
                 comments.Add(comment);
+            }
+
+            if (input.ParentIdFilter == null) // if comments are top level, sort differently
+            {
+                if (input.PostSort == PostSort.Top)
+                    comments = comments.OrderByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
+                else if (input.PostSort == PostSort.Relevant)
+                    comments = comments.OrderByDescending(p => p.RelevantPoints).ThenByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
+                else
+                    comments = comments.OrderByDescending(p => p.CreationTime).ToList();
+            }
+            else
+            {
+                if (input.PostSort == PostSort.Top)
+                    comments = comments.OrderBy(p => p.ActivityPoints).ThenBy(p => p.CreationTime).ToList();
+                else if (input.PostSort == PostSort.Relevant)
+                    comments = comments.OrderBy(p => p.RelevantPoints).ThenBy(p => p.ActivityPoints).ThenBy(p => p.CreationTime).ToList();
+                else
+                    comments = comments.OrderBy(p => p.CreationTime).ToList();
             }
 
             return new PagedResultDto<CommentDto>(totalCount, comments);
@@ -716,11 +772,11 @@ namespace Academically.Services.Posts
 
         public async Task<PagedResultDto<CommentDto>> GetAllCommentRepliesAsync(PagedCommentResultRequestDto input)
         {
+            var userId = AbpSession.UserId.Value;
             var query = _commentsRepository.GetAll()
                 .Where(e => e.ParentId == input.ParentIdFilter);
             var totalCount = await query.CountAsync();
             var comments = await query.OrderByDescending(e => e.CreationTime)
-                .PageBy(input)
                 .Include(e => e.CreatorUser)
                 .ThenInclude(e => e.ProfilePictureDocument)
                 .Include(e => e.TaggedUser)
@@ -729,9 +785,40 @@ namespace Academically.Services.Posts
                 .Select(e => ObjectMapper.Map<CommentDto>(e))
                 .ToListAsync();
 
+            var targetNotification = await _notificationsRepository.GetAll()
+                .Include(n => n.User)
+                .WhereIf(input.NotificationId.HasValue, n => n.ReferenceId == input.NotificationId.Value)
+                .WhereIf(!input.NotificationId.HasValue, n => false)
+                .SingleOrDefaultAsync();
+
+            var following = await _userFollowersRepository.GetAll()
+                .Where(f => f.CreatorUserId == userId)
+                .ToListAsync();
+
             foreach (var comment in comments)
             {
                 await FillInService(comment);
+                comment.ReplyCount = comment.Children.Count();
+                comment.ReactionsCount = await this.GetReactionsCountAsync(comment.Id.ToString());
+            }
+
+            if (input.ParentIdFilter == null) // if comments are top level, sort differently
+            {
+                if (input.PostSort == PostSort.Top)
+                    comments = comments.OrderByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
+                else if (input.PostSort == PostSort.Relevant)
+                    comments = comments.OrderByDescending(p => p.RelevantPoints).ThenByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
+                else
+                    comments = comments.OrderByDescending(p => p.CreationTime).ToList();
+            }
+            else
+            {
+                if (input.PostSort == PostSort.Top)
+                    comments = comments.OrderBy(p => p.ActivityPoints).ThenBy(p => p.CreationTime).ToList();
+                else if (input.PostSort == PostSort.Relevant)
+                    comments = comments.OrderBy(p => p.RelevantPoints).ThenBy(p => p.ActivityPoints).ThenBy(p => p.CreationTime).ToList();
+                else
+                    comments = comments.OrderBy(p => p.CreationTime).ToList();
             }
 
             return new PagedResultDto<CommentDto>(totalCount, comments);

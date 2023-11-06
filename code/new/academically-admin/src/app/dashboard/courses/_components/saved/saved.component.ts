@@ -6,7 +6,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { PurchaseServiceComponent } from '@shared/components/purchase-service/purchase-service.component';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
-import { PostsServiceProxy, ServicesServiceProxy, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CourseDto, CoursesServiceProxy, PostsServiceProxy, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 
@@ -16,7 +16,7 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
   styleUrls: ['./saved.component.less']
 })
 export class SavedComponent extends AppComponentBase implements OnInit {
-  savedTutorials: VideoDto[] = [];
+  savedCourses: CourseDto[] = [];
 
   shimmerType = ShimmerType;
 
@@ -25,7 +25,7 @@ export class SavedComponent extends AppComponentBase implements OnInit {
     private _router: Router,
     private _modalService: BsModalService,
     private _dashboardPageService: DashboardPagesService,
-    private _videoService: VideosServiceProxy,
+    private _courseService: CoursesServiceProxy,
     private _postsService: PostsServiceProxy,
     private _servicesService: ServicesServiceProxy
   ) {
@@ -36,21 +36,21 @@ export class SavedComponent extends AppComponentBase implements OnInit {
   get isLoading$() { return this._dashboardPageService.isLoading$; }
 
   ngOnInit(): void {
-    this.loadSavedTutorials();
+    this.loadSavedCourses();
   }
 
-  private loadSavedTutorials(isSilent = false): void {
+  private loadSavedCourses(isSilent = false): void {
     if (!isSilent) this._dashboardPageService.isLoading$.next(true);
-    this._videoService.getAllSavedTutorials(this.userId)
+    this._courseService.getAllSavedCourses(this.userId)
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this._dashboardPageService.isLoading$.next(false)))
       .subscribe(data => {
-        this.savedTutorials = data;
+        this.savedCourses = data;
       });
   }
 
-  handleServiceCardClick(tutorial: VideoDto): void {
-    this._router.navigate(['app/videos/student-portal' , tutorial.id]);
+  handleServiceCardClick(course: CourseDto): void {
+    this._router.navigate(['app/course' , course.id, 'about']);
   }
 
   handleServiceCardShareClick(service: any): void {
@@ -81,7 +81,7 @@ export class SavedComponent extends AppComponentBase implements OnInit {
           await this.onPurchaseClick(data);
           break;
         case 'save':
-          this.loadSavedTutorials(true);
+          this.loadSavedCourses(true);
           break;
       }
     } catch(err) {
@@ -94,13 +94,13 @@ export class SavedComponent extends AppComponentBase implements OnInit {
 
     const purchase = await this._servicesService.getAllPurchases(service.id, this.appSession.userId).toPromise();
     if (purchase?.length) {
-      this._router.navigate(['app/videos/student-portal' , service.id]);
+      this._router.navigate(['app/course' , service.id, 'about']);
     } else {
       const modalSettings = this.defaultModalSettings as ModalOptions<PurchaseServiceComponent>;
       modalSettings.class = 'modal-lg modal-dialog-centered';
       modalSettings.initialState = { serviceId: service.id, data: service};
       const modal = this._modalService.show(PurchaseServiceComponent, modalSettings);
-      modal.content.onPaid.subscribe(() => this._router.navigate(['app/videos/student-portal' , service.id]));
+      modal.content.onPaid.subscribe(() => this._router.navigate(['app/course' , service.id, 'about']));
     }
   }
 

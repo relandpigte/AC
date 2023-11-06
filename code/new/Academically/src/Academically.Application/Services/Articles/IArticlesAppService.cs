@@ -5,6 +5,7 @@ using Abp.Application.Services.Dto;
 using Academically.Domain.Enums;
 using Academically.Services.Articles.Dto;
 using Academically.Services.Posts.Dto;
+using Academically.Services.Videos.Dto;
 
 namespace Academically.Services.Articles
 {
@@ -22,6 +23,7 @@ namespace Academically.Services.Articles
 		Task<IEnumerable<AvailableServiceDto>> GetAllArticles();
 		Task<IEnumerable<AvailableServiceDto>> GetArticlesByKeyword(string keyword, long? creatorUserId);
 		Task<IEnumerable<ArticleDto>> GetEnrolledArticlesByUser();
-	}
+        Task<List<ArticleDto>> GetAllSavedArticles(long creatorUserId);
+    }
 }
 

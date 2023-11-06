@@ -23,7 +23,8 @@ enum PostFiltering {
 }
 
 enum PostSorting {
-  Activity = 'Community.Posts.Sorting.Activity',
+  Top = 'Community.Posts.Sorting.Top',
+  Relevant = 'Community.Posts.Sorting.Relevant',
   Latest = 'Community.Posts.Sorting.Latest'
 }
 
@@ -90,8 +91,10 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
   get isLoading$() { return of(this.isLoadingPosts || !!this.commentContainer?.isLoadingComments || this.isLoading_usersYouMayKnow || this.isLoading_recommendedCourses);}
   get postSort(): PostSort {
     switch(this.selectedSorting) {
-      case PostSorting.Activity:
-        return PostSort.Activity;
+      case PostSorting.Top:
+          return PostSort.Top;
+      case PostSorting.Relevant:
+        return PostSort.Relevant;
       default:
         return PostSort.Latest;
     }
@@ -137,7 +140,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
   }
 
   private async initPostsAppStates() {
-    const appStateConfig: AppStateConfig = { [this.postsStateId]: { load: [undefined, undefined, undefined, this.postSort, 0, MAX_POSTS_TO_LOAD], update: true } };
+    const appStateConfig: AppStateConfig = { [this.postsStateId]: { load: [undefined, undefined, undefined, this.postSort, undefined, 0, MAX_POSTS_TO_LOAD], update: true } };
     const appStateServices: AppStateServices = { [this.postsStateId]: { type: PostsStateService, args: [this.appSession, this._hubService, this._postsService] } };
     await this.pubSubService.start(this, appStateConfig, appStateServices);
     this.postsStateService = this.pubSubService.getStateService<PostsStateService>(this.postsStateId);
@@ -225,7 +228,8 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
       type: this.postTypeFilter,
       parentId: undefined,
       creationTime: undefined,
-      postSort: this.postSort
+      postSort: this.postSort,
+      notificationId: undefined
     });
     this.posts = this.postsStateService.getAllPosts();
     this.totalPostsCount = this.postsStateService.totalPostsCount;
@@ -237,7 +241,8 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
       type: this.postTypeFilter,
       parentId: undefined,
       creationTime: undefined,
-      postSort: this.postSort
+      postSort: this.postSort,
+      notificationId: undefined
     });
     this.posts = this.postsStateService.getAllPosts();
     this.totalPostsCount = this.postsStateService.totalPostsCount;
@@ -251,7 +256,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     // we don't need to display loader when loading more items.
     // this.postsStateService.loading$.next(true);
     const lastPostCreationTime = this.posts?.[this.posts.length - 1]?.creationTime;
-    this._postsService.getAllPostsPaged(undefined, undefined, lastPostCreationTime, this.postSort, 0, MAX_POSTS_TO_LOAD)
+    this._postsService.getAllPostsPaged(undefined, undefined, lastPostCreationTime, this.postSort, undefined, 0, MAX_POSTS_TO_LOAD)
         .subscribe(posts => {
           this.postsStateService.pushMorePosts(posts.items);
           this.posts = this.postsStateService.getAllPosts();

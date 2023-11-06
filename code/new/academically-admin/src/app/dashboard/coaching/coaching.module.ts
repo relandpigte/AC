@@ -15,6 +15,7 @@ import { ScheduleComponent } from './schedule/schedule.component';
 import { CoachingComponent } from './coaching.component';
 import { DashboardModule } from '@app/dashboard/dashboard.module';
 import { PurchasedComponent } from './_components/purchased/purchased.component';
+import { SavedComponent } from './_components/saved/saved.component';
 import { ForYouComponent } from '@app/dashboard/coaching/_components/for-you/for-you.component';
 
 @NgModule({
@@ -29,7 +30,8 @@ import { ForYouComponent } from '@app/dashboard/coaching/_components/for-you/for
     BookingsComponent,
     CreatedComponent,
     PurchasedComponent,
-    ForYouComponent
+    ForYouComponent,
+    SavedComponent
   ],
   imports: [
     CommonModule,

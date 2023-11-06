@@ -391,6 +391,43 @@ namespace Academically.Services.Coachings
             return output;
         }
 
+        public async Task<List<CoachingDto>> GetAllSavedCoaching(long creatorUserId)
+        {
+            var savedIds = await _savedServiceRepository.GetAll().Where(s => s.CreatorUserId == this.AbpSession.UserId).Select(s => s.ReferenceId).ToListAsync();
+
+            var output = await Repository.GetAll()
+                .Where(x => savedIds.Contains(x.Id))
+                .Include(c => c.CreatorUser)
+                .Select(e => ObjectMapper.Map<CoachingDto>(e))
+                .ToListAsync();
+
+            foreach (var item in output)
+            {
+                if (item.ThumbnailDocumentId.HasValue)
+                    item.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(item.ThumbnailDocumentId.Value);
+
+                if (item.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    item.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(item.CreatorUser.ProfilePictureDocumentId.Value);
+
+                item.Purchased = await _servicePurchasesRepository.GetAll()
+                    .Where(c => c.ReferenceId == item.Id)
+                    .Select(c => ObjectMapper.Map<UserDto>(c.CreatorUser))
+                    .ToListAsync();
+
+                foreach (var u in item.Purchased)
+                    if (u.ProfilePictureDocumentId.HasValue)
+                        u.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(u.ProfilePictureDocumentId.Value);
+
+                item.IsPurchased = item.Purchased.Any(u => u.Id == this.AbpSession.UserId);
+
+                var userRating = await _serviceRatingRepository.FirstOrDefaultAsync(r => r.ServiceId == item.Id && r.CreatorUserId == AbpSession.GetUserId());
+                item.HasReviewed = userRating != null;
+
+                item.IsSaved = true;
+            }
+            return output;
+        }
+
         public override async Task<PagedResultDto<CoachingDto>> GetAllAsync(PagedCoachingResultRequestDto input)
         {
             var output = await base.GetAllAsync(input);

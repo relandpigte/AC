@@ -2,7 +2,8 @@
 {
 	public enum PostSort
 	{
-		Activity,
-		Latest
+		Relevant,
+		Latest,
+		Top
 	}
 }

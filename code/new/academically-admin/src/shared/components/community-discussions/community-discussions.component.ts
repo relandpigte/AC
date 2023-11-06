@@ -13,11 +13,12 @@ import { PostTypeReactionGroup } from '@shared/enums/post/reaction-group.enum';
 import { FileUtils } from '@shared/helpers/file-utils';
 import { AddServiceComponent } from '@shared/modals/add-service/add-service.component';
 import { CommentHistoryComponent } from '@shared/modals/comment-history/comment-history.component';
-import { AvailableServiceDto, CommentDto, CommentsServiceProxy, PostType, PostsServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, CommentDto, CommentsServiceProxy, PostSort, PostType, PostsServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
 import { CommentsStateService, MAX_COMMENT_LEVELS, MAX_REPLIES_TO_LOAD } from '@shared/services/comments-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
 import { LinkPreviewResponse, LinkPreviewService } from '@shared/services/link-preview.service';
+import { PostSorting } from '@app/community/discussion/discussion.component';
 
 
 @Component({
@@ -84,6 +85,9 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   private videoExtensions = fileUploadConfiguration.videoExtensions;
   private fileExtensions = fileUploadConfiguration.allowedFileExtensions;
 
+  postSortingEnum = PostSorting;
+  selectedSorting: PostSorting = PostSorting.Latest;
+
   constructor(
     injector: Injector,
     private _cdr: ChangeDetectorRef,
@@ -127,6 +131,16 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   get isShowAddService(): boolean { return this.isTutor; }
   get isPostOwner(): boolean { return this.appSession.userId === this.postCreatorId; }
   get reactionGroup() { return PostTypeReactionGroup[this.postType]; }
+  get postSort(): PostSort {
+    switch (this.selectedSorting) {
+      case PostSorting.Top:
+        return PostSort.Top;
+      case PostSorting.Relevant:
+        return PostSort.Relevant;
+      default:
+        return PostSort.Latest;
+    }
+  }
 
   async ngOnInit(): Promise<void> {
     await this.initCommentsAppStates();
@@ -142,6 +156,10 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     }
   }
 
+  isSelectedSorting(sort: PostSorting): boolean {
+    return this.selectedSorting === sort;
+  }
+
   isUserCanDeleteComment(userId: number): boolean {
     return this.appSession.userId === userId || this.isCurrentUserAdmin || this.isPostOwner;
   }
@@ -152,6 +170,19 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
 
   isCurrentUserCan(userId: number): boolean {
     return this.isUserCanEditComment(userId) || this.isUserCanDeleteComment(userId);
+  }
+
+  async handleSortingChange(sort: PostSorting) {
+    this.selectedSorting = sort;
+    await this.commentsStateService.updateServiceParams({
+        referenceId: this.referenceId,
+        parentId: this.parentId,
+        postSort: this.postSort,
+        notificationId: undefined
+    });
+
+    this.comments = this.commentsStateService.getAllComments();
+    this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
   }
 
   handleDeleteComment(id: string): void {
@@ -165,10 +196,11 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
             this.notify.success(this.l('CommentSuccessfullyDeleted'));
             if (!this.comments.length) {
               this.onDeleteComment.next();
-              this._postsServiceProxy.getAllCommentsPaged(this.referenceId, this.parentId, this.comments.length, MAX_REPLIES_TO_LOAD)
+              this._postsServiceProxy.getAllCommentsPaged(this.referenceId, this.parentId, this.postSort, undefined, this.comments.length, MAX_REPLIES_TO_LOAD)
                 .subscribe(oldComments => {
                   this.commentsStateService.pushMoreComments(oldComments.items);
-                  this.comments = this.commentsStateService.getAllComments({ direction: this.isChild ? 'asc' : 'desc' }).slice(0, 1);
+                  this.comments = this.commentsStateService.getAllComments();
+                  this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
                   this._cdr.detectChanges();
                 });
             }
@@ -241,7 +273,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   private async initCommentsAppStates() {
     const appStateConfig: AppStateConfig = {
       [this.commentsStateId]: {
-        load: [this.referenceId, this.parentId, 0, this.isSidebar ? 5 : 1],
+        load: [this.referenceId, this.parentId, this.postSort, undefined, 0, this.isSidebar ? 5 : 1],
         update: { referenceId: this.referenceId, parentId: this.parentId }
       }
     };
@@ -274,9 +306,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       this._cdr.detectChanges();
     });
 
-    this.comments = this.isChild ?
-      this.level === 2 ? this.commentsStateService.getAllComments({ direction: 'asc' }) : [] :
-      this.commentsStateService.getAllComments({ direction: 'desc' });
+    this.comments = this.commentsStateService.getAllComments();
     this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
     this.showAddComment = !!this.totalCommentsCount;
   }
@@ -285,9 +315,8 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     this.foldSubject$
       .subscribe(() => {
         this.commentsStateService.removeComments(this.comments.slice(1));
-        this.comments = this.isChild ?
-          this.level === 2 ? this.commentsStateService.getAllComments({ direction: 'asc' }) : [] :
-          this.commentsStateService.getAllComments({ direction: 'desc' });
+        this.comments = this.commentsStateService.getAllComments();
+        this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
         this._cdr.detectChanges();
       });
   }
@@ -368,10 +397,11 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   protected onFoldClick(): void {
     this.commentsStateService.loading$.next(true);
     if (!this.isExpanded) {
-      this._postsServiceProxy.getAllCommentsPaged(this.referenceId, this.parentId, this.comments.length, MAX_REPLIES_TO_LOAD)
+      this._postsServiceProxy.getAllCommentsPaged(this.referenceId, this.parentId, this.postSort, undefined, this.comments.length, MAX_REPLIES_TO_LOAD)
         .subscribe(oldComments => {
           this.commentsStateService.pushMoreComments(oldComments.items);
-          this.comments = this.commentsStateService.getAllComments({ direction: this.isChild ? 'asc' : 'desc' });
+          this.comments = this.commentsStateService.getAllComments();
+          this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
           this.commentsStateService.loading$.next(false);
           this._cdr.detectChanges();
         });

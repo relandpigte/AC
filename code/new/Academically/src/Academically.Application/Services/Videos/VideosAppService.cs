@@ -14,6 +14,7 @@ using Academically.Domain.Services.Documents;
 using Academically.Domain.Views;
 using Academically.EntityFrameworkCore.Repositories.Explore;
 using Academically.Extensions;
+using Academically.Services.Courses.Dto;
 using Academically.Services.Events.Dto;
 using Academically.Services.Explore.Dto;
 using Academically.Services.Posts.Dto;
@@ -419,6 +420,36 @@ namespace Academically.Services.Videos
             }
 
             return topVideos;
+        }
+
+        public async Task<List<VideoDto>> GetAllSavedTutorials(long creatorUserId)
+        {
+            var savedIds = await _savedServiceRepository.GetAll().Where(s => s.CreatorUserId == this.AbpSession.UserId).Select(s => s.ReferenceId).ToListAsync();
+
+            var output = await _videosRepository.GetAll()
+                .Where(x => savedIds.Contains(x.Id))
+                .Include(c => c.CreatorUser)
+                .Select(e => ObjectMapper.Map<VideoDto>(e))
+                .ToListAsync();
+
+            foreach (var item in output)
+            {
+                if (item.ThumbnailDocumentId.HasValue)
+                    item.ThumbnailImageUrl = await _documentsDomainService.GetFileUrlAsync(item.ThumbnailDocumentId.Value);
+
+                if (item.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    item.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(item.CreatorUser.ProfilePictureDocumentId.Value);
+
+                var purchasers = await _servicePurchasesRepository.GetAll()
+                    .Where(c => c.ReferenceId == item.Id)
+                    .Select(c => ObjectMapper.Map<UserDto>(c.CreatorUser))
+                    .ToListAsync();
+
+                item.IsPurchased = purchasers.Any(u => u.Id == this.AbpSession.UserId);
+
+                item.IsSaved = true;
+            }
+            return output;
         }
 
     }

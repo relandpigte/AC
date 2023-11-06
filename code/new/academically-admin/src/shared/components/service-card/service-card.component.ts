@@ -407,10 +407,12 @@ import { AppConsts } from '@shared/AppConsts';
         if (this.isSaved) {
           this._savedService.delete(this.data.id).subscribe(() => {
             this.sanitized.isSaved = false;
+            this.onActionClick.emit({ action: 'save', data: this.sanitized });
           });
         } else {
           this._savedService.save(this.data.id).subscribe(() => {
             this.sanitized.isSaved = true;
+            this.onActionClick.emit({ action: 'save', data: this.sanitized });
           });
         }
       }
