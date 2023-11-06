@@ -47,6 +47,7 @@ export class CourseReviewsComponent extends AppComponentBase implements OnInit {
       this.data.hasReviewed = true;
       this._serviceData.serviceData = this.data;
       this._serviceData.serviceRating = await this._ratingService.getUserServiceReview(this.serviceId).toPromise();
+      this._serviceData.serviceOverallRating = await this._ratingService.getServiceRatingsSummary(this.serviceId).toPromise();
     } catch (e) {
       console.error(e);
     }

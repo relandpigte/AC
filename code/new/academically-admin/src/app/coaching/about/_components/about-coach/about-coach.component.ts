@@ -25,8 +25,8 @@ export class AboutCoachComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
-  get profilePictureUrl(): string { return this.appSession.user.profilePictureUrl; }
-  get profileFullName(): string { return `${this.appSession.user.name} ${this.appSession.user.surname}`; }
+  get profilePictureUrl(): string { return this.getProfilePictureUrl(this.data?.creatorUser?.profilePictureDocument); }
+  get profileFullName(): string { return this.data?.creatorUser?.fullName; }
   get profileAboutText() { return this.removeHTMLTags(this.data?.creatorUser?.about); }
   get isLoading$() { return this._landingPageService.isLoading$; }
   get isOwner(): boolean { return this.data?.creatorUserId === this.appSession.userId; }

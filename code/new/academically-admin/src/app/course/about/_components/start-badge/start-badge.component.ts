@@ -28,7 +28,7 @@ export class StartBadgeComponent extends AppComponentBase {
     super(injector);
   }
 
-  get courseId(): string {
+  get serviceId(): string {
     return this.data?.id;
   }
 
@@ -76,7 +76,7 @@ export class StartBadgeComponent extends AppComponentBase {
     if (this.isCompleted) {
       const modalSettings = this.defaultModalSettings;
       modalSettings.class = 'modal-lg modal-dialog-centered';
-      modalSettings.initialState = {serviceId: this.courseId};
+      modalSettings.initialState = {serviceId: this.serviceId};
       const modal = this._modalService.show(RateAndReviewComponent, modalSettings).content;
       modal.onSuccessReview.subscribe(async (): Promise<void> => {
         try {
@@ -84,8 +84,9 @@ export class StartBadgeComponent extends AppComponentBase {
             modalSettings.class = 'modal-sm modal-rating-success modal-dialog-centered';
             this._modalService.show(ThankYouComponent, modalSettings);
           }, 200);
-          this._serviceData.serviceData = await this._courseService.get(this.courseId).toPromise();
-          this._serviceData.serviceRating = await this._ratingService.getUserServiceReview(this.data?.id).toPromise();
+          this._serviceData.serviceData = await this._courseService.get(this.serviceId).toPromise();
+          this._serviceData.serviceRating = await this._ratingService.getUserServiceReview(this.serviceId).toPromise();
+          this._serviceData.serviceOverallRating = await this._ratingService.getServiceRatingsSummary(this.serviceId).toPromise();
         } catch (e) {
           console.error(e);
         }
@@ -95,7 +96,7 @@ export class StartBadgeComponent extends AppComponentBase {
         this._modalService.hide();
       });
     } else {
-      await this._router.navigate(['/app/student-portal', this.courseId, 'learn']);
+      await this._router.navigate(['/app/student-portal', this.serviceId, 'learn']);
     }
   }
 }

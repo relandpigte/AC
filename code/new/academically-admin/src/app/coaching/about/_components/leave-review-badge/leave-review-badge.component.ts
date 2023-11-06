@@ -42,6 +42,7 @@ export class LeaveReviewBadgeComponent extends AppComponentBase {
         }, 200);
         this._serviceData.serviceData = await this._coachingsService.get(this.serviceId).toPromise();
         this._serviceData.serviceRating = await this._ratingService.getUserServiceReview(this.serviceId).toPromise();
+        this._serviceData.serviceOverallRating = await this._ratingService.getServiceRatingsSummary(this.serviceId).toPromise();
       } catch (e) {
         console.error(e);
       }

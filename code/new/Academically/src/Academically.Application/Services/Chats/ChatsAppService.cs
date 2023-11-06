@@ -655,6 +655,8 @@ namespace Academically.Services.Chats
             return eventUsers;
         }
 
+        // TODO: Deleting own message will just update the message for now.
+        // TODO: Deleting other messages will just hide from your interface.
         public async Task<bool> DeleteChannelMessage(Guid channelMessageId)
         {
             var message = await _channelMessageRepository.GetAsync(channelMessageId);

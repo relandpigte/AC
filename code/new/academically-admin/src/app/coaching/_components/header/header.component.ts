@@ -49,8 +49,8 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
     this.themeSettings = _themeSettingsService.getConfiguration();
   }
 
-  get profilePictureUrl(): string { return this.appSession.user.profilePictureUrl; }
-  get profileFullName(): string { return `${this.appSession.user.name} ${this.appSession.user.surname}`; }
+  get profilePictureUrl(): string { return this.getProfilePictureUrl(this.data?.creatorUser?.profilePictureDocument); }
+  get profileFullName(): string { return this.data?.creatorUser?.fullName; }
   get profileCoverPhotoUrl(): string { return this.appSession.user.coverPictureUrl; }
   get coachingTitle(): string { return this.data?.name; }
   get price(): number { return this.data?.price ?? 0; }
