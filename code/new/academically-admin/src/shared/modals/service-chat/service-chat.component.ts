@@ -1,5 +1,6 @@
-import { Component, Injector, Input, OnInit, Output } from '@angular/core';
+import { Component, Injector, Input, Output } from '@angular/core';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { catchError, finalize, takeUntil } from 'rxjs/operators';
 import { NgForm } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 
@@ -9,14 +10,13 @@ import {
   ChatConfirmationType,
   ServiceChatConfirmationComponent
 } from '@shared/modals/service-chat/components/service-chat-confirmation/service-chat-confirmation.component';
-import { catchError, finalize, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-service-chat',
   templateUrl: './service-chat.component.html',
   styleUrls: ['./service-chat.component.less']
 })
-export class ServiceChatComponent extends AppComponentBase implements OnInit {
+export class ServiceChatComponent extends AppComponentBase {
   @Input() service: any;
   @Input() channel: ChannelDto;
   @Output() onFail = new Subject<any>();
@@ -24,7 +24,6 @@ export class ServiceChatComponent extends AppComponentBase implements OnInit {
 
   constructor(
     injector: Injector,
-    private _modalRef: BsModalRef,
     private _chatsService: ChatsServiceProxy,
     private _modalService: BsModalService,
   ) {
@@ -36,9 +35,6 @@ export class ServiceChatComponent extends AppComponentBase implements OnInit {
   get recipientName(): string { return this.recipient.fullName; }
   get messageTo(): string { return this.l('MessageTo', this.recipient?.name); }
   get serviceName(): string { return this.service?.name; }
-
-  ngOnInit(): void {
-  }
 
   async handleSubmit(form: NgForm): Promise<void> {
     this._chatsService.createChannelMessage(
