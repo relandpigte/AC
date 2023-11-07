@@ -266,7 +266,7 @@ namespace Academically.Services.Events
                 if (vid.CreatorUser.ProfilePictureDocumentId.HasValue)
                     vid.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(vid.CreatorUser.ProfilePictureDocumentId.Value);
 
-                var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == vid.Id.ToString());
+                var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == vid.Id.ToString() && s.CreatorUserId == this.AbpSession.UserId);
                 vid.IsSaved = savedService != null;
 
                 var purchasedService = await this._servicePurchasesRepository.FirstOrDefaultAsync(p => p.ReferenceId.ToString() == vid.Id.ToString() && p.CreatorUserId == this.AbpSession.UserId);

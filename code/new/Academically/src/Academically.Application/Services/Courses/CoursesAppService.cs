@@ -274,7 +274,7 @@ namespace Academically.Services.Courses
                 if (studentCourses.Any(x => x.CourseId == course.Id))
                     course.Progress = studentCourses.FirstOrDefault(x => x.CourseId == course.Id)!.Progress;
 
-                var savedService = await _savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == course.Id.ToString());
+                var savedService = await _savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == course.Id.ToString() && s.CreatorUserId == this.AbpSession.UserId);
                 course.IsSaved = savedService != null;
 
                 var purchasedService = await _servicePurchasesRepository.FirstOrDefaultAsync(p => p.ReferenceId.ToString() == course.Id.ToString() && p.CreatorUserId == this.AbpSession.UserId);
