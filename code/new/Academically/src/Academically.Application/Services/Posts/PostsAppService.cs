@@ -703,6 +703,8 @@ namespace Academically.Services.Posts
             foreach (var comment in items)
             {
                 await FillInService(comment);
+                comment.IsFromNotification = targetNotification != null;
+                comment.IsFromFollowing = following?.Any(f => f.UserId == comment.CreatorUserId) == true;
                 comment.ReplyCount = comment.Children.Count();
                 comment.ReactionsCount = await this.GetReactionsCountAsync(comment.Id.ToString());
             }
@@ -773,6 +775,8 @@ namespace Academically.Services.Posts
             foreach (var comment in comments)
             {
                 await FillInService(comment);
+                comment.IsFromNotification = targetNotification != null;
+                comment.IsFromFollowing = following?.Any(f => f.UserId == comment.CreatorUserId) == true;
                 comment.ReplyCount = comment.Children.Count();
                 comment.ReactionsCount = await this.GetReactionsCountAsync(comment.Id.ToString());
             }
