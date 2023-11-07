@@ -174,16 +174,14 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
     this.onProcessNotification.next(type);
   }
 
-  handleDeleteChannelMessage(channelMessageId: string): void {
+  handleDeleteChannelMessage(message: ChannelMessageDto): void {
+    const isOwner = this.currentUserId === message.creatorUserId;
     const options: ModalDialogOptions = {
       title: this.l('DeleteThisMessage'),
       text: this.l('DeleteMessageConfirmation'),
-      btnConfirmText: 'Delete',
-      confirmCb: (): void => {
-        // TODO: delete channel message here.
-        this._chatsService.deleteChannelMessage(channelMessageId)
-          .pipe(takeUntil(this.destroyed$))
-          .subscribe(x => x);
+      btnConfirmText: isOwner ? 'Delete' : 'Delete for me',
+      confirmCb: async (): Promise<void> => {
+        await this._chatsService.deleteChannelMessage(message.id).toPromise();
       }
     };
     this._modalDialogService.showConfirmDialog(options);

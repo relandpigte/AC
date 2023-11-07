@@ -11,9 +11,7 @@ import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { distinctUntilChanged, skip, switchMap, takeUntil } from 'rxjs/operators';
 import { SearchFilterComponent } from './_components/search-filter/search-filter.component';
 import * as _ from 'lodash';
-import {
-  ChatComposerConversationComponent
-} from '@shared/components/chat-composer-conversation/chat-composer-conversation.component';
+import { ChatComposerConversationComponent } from '@shared/components/chat-composer-conversation/chat-composer-conversation.component';
 import { ActivatedRoute } from '@angular/router';
 
 export interface MessageComposeData {

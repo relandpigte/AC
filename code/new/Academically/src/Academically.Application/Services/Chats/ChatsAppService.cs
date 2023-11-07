@@ -59,6 +59,7 @@ namespace Academically.Services.Chats
         private readonly IRepository<UserBlocking, Guid> _userBlockingRepository;
         private readonly RoleManager _roleManager;
         private readonly IRepository<UserFollower, Guid> _userFollowersRepository;
+        private readonly IRepository<ChannelMessageVisibility, Guid> _channelMessageVisibility;
 
         public ChatsAppService(
             IDocumentsDomainService documentsDomainService,
@@ -77,7 +78,8 @@ namespace Academically.Services.Chats
             IRepository<Event, Guid> eventRepository,
             IRepository<UserBlocking, Guid> userBlockingRepository,
             IRepository<UserFollower, Guid> userFollowersRepository,
-            RoleManager roleManager
+            RoleManager roleManager,
+            IRepository<ChannelMessageVisibility, Guid> channelMessageVisibility
         )
         {
             _documentsDomainService = documentsDomainService;
@@ -97,6 +99,7 @@ namespace Academically.Services.Chats
             _userBlockingRepository = userBlockingRepository;
             _roleManager = roleManager;
             _userFollowersRepository = userFollowersRepository;
+            _channelMessageVisibility = channelMessageVisibility;
         }
 
         public async Task<bool> ArchiveChannel(Guid channelId)
@@ -342,7 +345,7 @@ namespace Academically.Services.Chats
                     .WhereIf(referenceId.HasValue, m => m.ReferenceId == referenceId.Value)
                     .Select(m => ObjectMapper.Map<ChannelMessageDto>(m))
                     .ToListAsync();
-
+            
             foreach (var message in messages)
             {
                 if (message.CreatorUser.ProfilePictureDocumentId.HasValue)
@@ -352,6 +355,10 @@ namespace Academically.Services.Chats
                 {
                     attachment.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(attachment.DocumentId);
                 }
+
+                var messageVisibility = await _channelMessageVisibility.FirstOrDefaultAsync(x => x.ChannelMessageId == message.Id && x.CreatorUserId == AbpSession.GetUserId());
+                message.IsHidden = messageVisibility != null;
+                
                 await FillInService(message);
             }
 
@@ -463,6 +470,9 @@ namespace Academically.Services.Chats
             {
                 message.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(message.CreatorUser.ProfilePictureDocumentId.Value);
             }
+            
+            var messageVisibility = await _channelMessageVisibility.FirstOrDefaultAsync(x => x.ChannelMessageId == message.Id && x.CreatorUserId == AbpSession.GetUserId());
+            message!.IsHidden = messageVisibility != null;
             
             await FillInService(message);
             return message;
@@ -655,14 +665,24 @@ namespace Academically.Services.Chats
             return eventUsers;
         }
 
-        // TODO: Deleting own message will just update the message for now.
-        // TODO: Deleting other messages will just hide from your interface.
+        
+        
         public async Task<bool> DeleteChannelMessage(Guid channelMessageId)
         {
             var message = await _channelMessageRepository.GetAsync(channelMessageId);
             if (message == null) return false;
 
-            await _channelMessageRepository.DeleteAsync(message.Id);
+            if (message.CreatorUserId == AbpSession.GetUserId())
+            {
+                // TODO: Deleting own message will just update the message for now.
+                message.Message = "You deleted this message";
+                await _channelMessageRepository.UpdateAsync(message);
+                return true;
+            }
+            
+            message.LastModificationTime = DateTime.Now;
+            await _channelMessageRepository.UpdateAsync(message);
+            await _channelMessageVisibility.InsertAsync(new ChannelMessageVisibility { ChannelMessageId = message.Id });
             return true;
         }
         

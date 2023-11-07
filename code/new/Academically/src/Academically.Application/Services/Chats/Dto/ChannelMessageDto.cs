@@ -44,5 +44,8 @@ namespace Academically.Services.Chats.Dto
 
         [NotMapped]
         public CoachingDto Coaching { get; set; }
+        
+        [NotMapped]
+        public bool IsHidden { get; set; }
     }
 }

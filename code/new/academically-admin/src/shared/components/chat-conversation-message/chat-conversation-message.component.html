@@ -1,4 +1,4 @@
-<div class="d-flex">
+<div *ngIf="!isHidden" class="d-flex">
     <div class="conversation-wrapper d-flex flex-column gap-5" [class.has-reply]="parentMessage" [ngClass]="isSender ? 'sender' : 'recipient'" [class.msg-empty]="!chatMessage">
         <div *ngIf="serviceReference" class="d-flex">
             <app-preview-service-reference [service]="serviceReference"></app-preview-service-reference>
@@ -35,19 +35,19 @@
                                 <span class="fe fe-more-horizontal"></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <div class="dropdown-item cursor-pointer" (click)="handleMessageInfoPopup(data)">Message
-                                    info
+                                <div class="dropdown-item cursor-pointer" (click)="handleMessageInfoPopup(data)">
+                                    Message info
                                 </div>
                                 <div class="dropdown-item cursor-pointer" (click)="handleMessageReply()">Reply</div>
-                                <div class="dropdown-item cursor-pointer" (click)="handleMessageDelete(data.id)">Delete
-                                    message
+                                <div *ngIf="!isDeleted" class="dropdown-item cursor-pointer" (click)="handleMessageDelete(data)">
+                                    Delete message
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="message-content" [class.message-deleted]="isDeleted">
-                    {{ isDeleted ? ('MessageDeleted' | localize) : chatMessage }}
+                    {{ isDeleted ? isDeletedMessage : chatMessage }}
                 </div>
             </div>
         </div>

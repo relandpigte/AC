@@ -35552,6 +35552,7 @@ export class ChannelMessageDto implements IChannelMessageDto {
     course: CourseDto;
     video: VideoDto;
     coaching: CoachingDto;
+    isHidden: boolean;
 
     constructor(data?: IChannelMessageDto) {
         if (data) {
@@ -35592,6 +35593,7 @@ export class ChannelMessageDto implements IChannelMessageDto {
             this.course = _data["course"] ? CourseDto.fromJS(_data["course"]) : <any>undefined;
             this.video = _data["video"] ? VideoDto.fromJS(_data["video"]) : <any>undefined;
             this.coaching = _data["coaching"] ? CoachingDto.fromJS(_data["coaching"]) : <any>undefined;
+            this.isHidden = _data["isHidden"];
         }
     }
 
@@ -35632,6 +35634,7 @@ export class ChannelMessageDto implements IChannelMessageDto {
         data["course"] = this.course ? this.course.toJSON() : <any>undefined;
         data["video"] = this.video ? this.video.toJSON() : <any>undefined;
         data["coaching"] = this.coaching ? this.coaching.toJSON() : <any>undefined;
+        data["isHidden"] = this.isHidden;
         return data; 
     }
 
@@ -35668,6 +35671,7 @@ export interface IChannelMessageDto {
     course: CourseDto;
     video: VideoDto;
     coaching: CoachingDto;
+    isHidden: boolean;
 }
 
 export class ChannelNotificationDto implements IChannelNotificationDto {
