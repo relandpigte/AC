@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnDestroy, OnInit, Output, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { debounceTime, finalize, take, takeUntil } from 'rxjs/operators';
 
 import { SafeUrl } from '@angular/platform-browser';
@@ -19,14 +19,14 @@ import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.servi
 import { StateUpdateType } from '@shared/services/state-base.service';
 import { LinkPreviewResponse, LinkPreviewService } from '@shared/services/link-preview.service';
 import { PostSorting } from '@app/community/discussion/discussion.component';
-
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-community-discussions',
   templateUrl: './community-discussions.component.html',
   styleUrls: ['./community-discussions.component.less']
 })
-export class CommunityDiscussionsComponent extends AppComponentBase implements OnInit, OnChanges {
+export class CommunityDiscussionsComponent extends AppComponentBase implements OnInit, OnDestroy, OnChanges {
   @Input() show = false;
   @Input() showAddComment = false;
   @Input() isChild = false;
@@ -37,6 +37,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   @Input() ctrlEnterToSubmit = false;
   @Input() postCreatorId: number;
   @Input() isSidebar = false;
+  @Input() selectedSorting: PostSorting = PostSorting.Latest;
 
   @Input() foldSubject$ = new Subject();
 
@@ -53,8 +54,8 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   commentsStateService: CommentsStateService;
 
   isPosting = false;
-  isLoadingComments: boolean = true;
-  isUpdatingComment: boolean;
+  isLoadingComments$ = new BehaviorSubject(true);
+  isUpdatingComment$ = new BehaviorSubject(true);
 
   comments: CommentDto[] = [];
   totalCommentsCount: number;
@@ -86,7 +87,6 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   private fileExtensions = fileUploadConfiguration.allowedFileExtensions;
 
   postSortingEnum = PostSorting;
-  selectedSorting: PostSorting = PostSorting.Latest;
 
   constructor(
     injector: Injector,
@@ -142,9 +142,15 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     }
   }
 
+  get stateComments(): CommentDto[] { return this.parentId ? this.commentsStateService.getAllComments() : this.commentsStateService.getAllCommentsReversed(); }
+
   async ngOnInit(): Promise<void> {
     await this.initCommentsAppStates();
     this.initSubscriptions();
+  }
+
+  async ngOnDestroy() {
+    await this.commentsStateService?.stop();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -181,7 +187,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
         notificationId: undefined
     });
 
-    this.comments = this.commentsStateService.getAllComments();
+    this.comments = this.stateComments;
     this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
   }
 
@@ -198,8 +204,8 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
               this.onDeleteComment.next();
               this._postsServiceProxy.getAllCommentsPaged(this.referenceId, this.parentId, this.postSort, undefined, this.comments.length, MAX_REPLIES_TO_LOAD)
                 .subscribe(oldComments => {
-                  this.commentsStateService.pushMoreComments(oldComments.items);
-                  this.comments = this.commentsStateService.getAllComments();
+                  this.commentsStateService.addComments(oldComments.items);
+                  this.comments = this.stateComments;
                   this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
                   this._cdr.detectChanges();
                 });
@@ -237,7 +243,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   protected onEditCommentSubmit(message: HTMLDivElement, comment: CommentDto): void {
     const updated = new CommentDto(comment);
     const body = message.innerHTML?.trim();
-    this.isUpdatingComment = true;
+    this.isUpdatingComment$.next(true);
 
     if (body && body !== updated.body) {
       this._commentServiceProxy.update(
@@ -252,7 +258,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       ).pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
-          this.isUpdatingComment = false;
+          this.isUpdatingComment$.next(false);
         })
       ).subscribe((c: CommentDto) => {
         this.commentEditId = null;
@@ -286,27 +292,25 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     await this.pubSubService.start(this, appStateConfig, appStateServices);
     this.commentsStateService = this.pubSubService.getStateService<CommentsStateService>(this.commentsStateId);
 
-    this.commentsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingComments = loading);
+    this.commentsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingComments$.next(loading));
 
     this.commentsStateService.comments$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
       switch(event.type) {
         case StateUpdateType.Add:
           this.comments = this.isChild ? this.comments.concat(event.data) : [event.data].concat(this.comments);
-          this.totalCommentsCount++;
           break;
         case StateUpdateType.Update:
           this.comments = this.comments.map(c => c.id === event.data.id ? event.data : c);
           break;
         case StateUpdateType.Delete:
           this.comments = this.comments.filter(c => c.id != event.data.id);
-          this.totalCommentsCount--;
           break;
       }
+      this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
       this.onUpdateEmit.emit();
       this._cdr.detectChanges();
     });
-
-    this.comments = this.commentsStateService.getAllComments();
+    this.comments = this.level === 3 || _.isEmpty(this.stateComments) ? [] : [this.parentId ? _.last(this.stateComments) : _.first(this.stateComments)];
     this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
     this.showAddComment = !!this.totalCommentsCount;
   }
@@ -314,10 +318,10 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   private initSubscriptions(): void {
     this.foldSubject$
       .subscribe(() => {
-        this.commentsStateService.removeComments(this.comments.slice(1));
-        this.comments = this.commentsStateService.getAllComments();
+        this.comments = this.level === 3 ? [] : [this.parentId ? _.last(this.stateComments) : _.first(this.stateComments)];
         this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
         this._cdr.detectChanges();
+        this._elRef.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
       });
   }
 
@@ -399,8 +403,8 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     if (!this.isExpanded) {
       this._postsServiceProxy.getAllCommentsPaged(this.referenceId, this.parentId, this.postSort, undefined, this.comments.length, MAX_REPLIES_TO_LOAD)
         .subscribe(oldComments => {
-          this.commentsStateService.pushMoreComments(oldComments.items);
-          this.comments = this.commentsStateService.getAllComments();
+          this.commentsStateService.addComments(oldComments.items);
+          this.comments = this.stateComments;
           this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
           this.commentsStateService.loading$.next(false);
           this._cdr.detectChanges();

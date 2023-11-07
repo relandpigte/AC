@@ -1,12 +1,13 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 
 import { CreateUserTopicDto, DisciplineTaxonomiesServiceProxy, DisciplineTaxonomyDto, UserTopicDto, UserTopicsServiceProxy, UserTopicType } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/app-component-base';
 import { Utils } from '@shared/helpers/utils';
 import { TopicSorting } from '@shared/components/topic/topic.component';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
+import { BehaviorSubject, combineLatest, of } from 'rxjs';
 
 export const NUMBER_OF_TOPICS_TO_LOAD = 50;
 
@@ -26,8 +27,8 @@ export class AllComponent extends AppComponentBase implements OnInit {
 
   forYouTopicsList: DisciplineTaxonomyDto[];
   tailoredTopicsList: { [key: string]: DisciplineTaxonomyDto[] } = {};
-  isLoading_forYouTopicsList = true;
-  isLoading_tailoredTopicsList: { [key:string]: boolean } = {};
+  isLoading_forYouTopicsList$ = new BehaviorSubject<boolean>(false);
+  isLoading_tailoredTopicsList$: { [key:string]: BehaviorSubject<boolean> } = {};
   forYouTopicsListMaxItems: number = 0;
   tailoredTopicsListMaxItems: { [key:string]: number } = {};
 
@@ -46,11 +47,18 @@ export class AllComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
-  get isLoading(): boolean {
-    return this.isLoadingParentTopics ||
-      Object.values(this.isLoading_tailoredTopicsList).some(t => t) || this.isFollowingTopic ||
-      this.isUnfollowingTopic || this.isRemovingTopic || this.isLoading_forYouTopicsList;
+  get loadingSources$() {
+    return [
+      new BehaviorSubject(this.isLoadingParentTopics),
+      new BehaviorSubject(this.isFollowingTopic),
+      new BehaviorSubject(this.isUnfollowingTopic),
+      new BehaviorSubject(this.isRemovingTopic),
+      this.isLoading_forYouTopicsList$,
+      ...(this.isLoading_tailoredTopicsList$ ? Object.values(this.isLoading_tailoredTopicsList$) : [new BehaviorSubject(false)]),
+    ];
   }
+
+  get isLoading$() { return combineLatest(this.loadingSources$).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
 
   ngOnInit(): void {
     this.loadParentTopics();
@@ -154,7 +162,7 @@ export class AllComponent extends AppComponentBase implements OnInit {
         }
       }), {});
     this.tailoredTopicsList = topics.reduce((topics, t) => ({ ...topics, [t.id]: [] }), {});
-    this.isLoading_tailoredTopicsList = topics.reduce((topics, t) => ({ ...topics, [t.id]: false }), {});
+    this.isLoading_tailoredTopicsList$ = topics.reduce((topics, t) => ({ ...topics, [t.id]: new BehaviorSubject(false) }), {});
     this.tailoredTopicsListMaxItems = topics.reduce((topics, t) => ({ ...topics, [t.id]: 0 }), {});
 
     topics.forEach(t => this.loadInfiniteData(
