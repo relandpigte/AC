@@ -34,9 +34,9 @@ export class CommentsStateService extends StateServiceBase {
   async loadData(component: any, userId: number) {
     this.loading$.next(true);
     try {
-      const [referenceId, parentId, postSort, notificationId, skip, count] = this.loadArgs;
-      const comments = await this._postsService.getAllCommentsPaged(referenceId, parentId, postSort, notificationId, skip, count).toPromise();
-      this.comments = Utils.toMap(comments.items.reverse());
+      const [referenceId, parentId, postSort, notificationId, excludingIds, skip, count] = this.loadArgs;
+      const comments = await this._postsService.getAllCommentsPaged(referenceId, parentId, postSort, notificationId, excludingIds, skip, count).toPromise();
+      this.comments = Utils.toMap(comments.items.reverse()); // we are reversing here so that the newest comments are at the bottom (as default), maps are ordered by insertion
       this.totalCommentsCount = comments.totalCount;
     } catch (err) {
       console.error(err);
@@ -46,7 +46,7 @@ export class CommentsStateService extends StateServiceBase {
 
   handleCreatedComments = async (comment: CommentDto) => {
     this.loading$.next(false);
-    this.totalCommentsCount++;
+    this.totalCommentsCount++; // incrementing the total comments count first because the function below triggers the UI to update already
     this.updateFromMap(this.comments, Utils.toObjectMap([comment], (c) => c.id, (c) => c), this.comments$);
     this.loading$.next(false);
   };
@@ -59,7 +59,7 @@ export class CommentsStateService extends StateServiceBase {
 
   handleDeleteComments = async (id: string) => {
     this.loading$.next(false);
-    this.totalCommentsCount--;
+    this.totalCommentsCount--; // decrementing the total comments count first because the function below triggers the UI to update already
     this.updateFromMap(this.comments, { [id]: null }, this.comments$);
     this.loading$.next(false);
   }
@@ -86,7 +86,7 @@ export class CommentsStateService extends StateServiceBase {
   }
 
   addComments(comments: CommentDto[]) {
-    // reverse the comments so that the newest comments are at the bottom (as default)
+    // reverse the comments so that the newest comments are at the bottom (as default), maps are ordered by insertion
     this.comments = Utils.toMap([...comments.reverse(), ...Array.from(this.comments.values())]);
   }
 
@@ -95,13 +95,13 @@ export class CommentsStateService extends StateServiceBase {
     this.comments = Utils.toMap([...Array.from(this.comments.values()).filter(c => !removedComments.includes(c.id))]);
   }
 
-  async updateServiceParams(params: { referenceId: string | undefined, parentId: string | undefined, postSort: PostSort | undefined, notificationId: string | undefined }) {
+  async updateServiceParams(params: { referenceId: string | undefined, parentId: string | undefined, postSort: PostSort | undefined, notificationId: string | undefined, excludingIds: string[] | undefined }) {
     this.loading$.next(true);
     const existingArgs = this.actionArgs['load'];
-    this.actionArgs['load'] = [params.referenceId, params.parentId, params.postSort, params.notificationId, existingArgs[4], existingArgs[5]];
+    this.actionArgs['load'] = [params.referenceId, params.parentId, params.postSort, params.notificationId, params.excludingIds, existingArgs[5], existingArgs[6]];
     try {
-      const comments = await this._postsService.getAllCommentsPaged(params.referenceId, params.parentId, params.postSort, params.notificationId, existingArgs[4], existingArgs[5]).toPromise();
-      // reverse the comments so that the newest comments are at the bottom (as default)
+      const comments = await this._postsService.getAllCommentsPaged(params.referenceId, params.parentId, params.postSort, params.notificationId, params.excludingIds, existingArgs[5], existingArgs[6]).toPromise();
+      // reverse the comments so that the newest comments are at the bottom (as default), maps are ordered by insertion
       this.comments = Utils.toMap(comments.items.reverse());
       this.totalCommentsCount = comments.totalCount;
     } catch (err) {

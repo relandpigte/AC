@@ -200,6 +200,7 @@ export class CommentsComponent extends AppComponentBase implements OnInit {
       comment.id,
       PostSort.Latest,
       undefined,
+      undefined,
       this.skipCount[comment.id],
       count,
     )

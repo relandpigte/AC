@@ -104,7 +104,8 @@ namespace Academically.Services.Comments
         {
             var userId = AbpSession.UserId.Value;
             var query = _commentsRepository.GetAll()
-                .Where(e => e.ParentId == input.ParentIdFilter);
+                .Where(e => e.ParentId == input.ParentIdFilter)
+                .WhereIf(input.ExcludingIds?.Count() > 0, c => !input.ExcludingIds.Any(i => c.Id == i));
             var totalCount = await query.CountAsync();
             var comments = await query.OrderByDescending(e => e.CreationTime)
                 .Include(e => e.CreatorUser)

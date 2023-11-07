@@ -680,6 +680,7 @@ namespace Academically.Services.Posts
                 .WhereIf(!input.ReferenceIdFilter.IsNullOrEmpty(), e => e.ReferenceId == input.ReferenceIdFilter)
                 .WhereIf(!input.ParentIdFilter.HasValue, e => e.ParentId == null)
                 .WhereIf(input.ParentIdFilter.HasValue, e => e.ParentId == input.ParentIdFilter)
+                .WhereIf(input.ExcludingIds?.Count() > 0, c => !input.ExcludingIds.Any(i => c.Id == i))
                 .Include(e => e.Children)
                 .Include(e => e.CreatorUser)
                 .ThenInclude(e => e.ProfilePictureDocument)
@@ -751,7 +752,8 @@ namespace Academically.Services.Posts
         {
             var userId = AbpSession.UserId.Value;
             var query = _commentsRepository.GetAll()
-                .Where(e => e.ParentId == input.ParentIdFilter);
+                .Where(e => e.ParentId == input.ParentIdFilter)
+                .WhereIf(input.ExcludingIds?.Count() > 0, c => !input.ExcludingIds.Any(i => c.Id == i));
             var totalCount = await query.CountAsync();
             var comments = await query.OrderByDescending(e => e.CreationTime)
                 .Include(e => e.CreatorUser)

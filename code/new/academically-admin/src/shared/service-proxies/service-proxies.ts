@@ -5607,11 +5607,12 @@ export class CommentsServiceProxy {
     
     2 = Top
      * @param notificationId (optional) 
+     * @param excludingIds (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAllReplies(referenceIdFilter: string | undefined, parentIdFilter: string | undefined, postSort: PostSort | undefined, notificationId: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CommentDtoPagedResultDto> {
+    getAllReplies(referenceIdFilter: string | undefined, parentIdFilter: string | undefined, postSort: PostSort | undefined, notificationId: string | undefined, excludingIds: string[] | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CommentDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Comments/GetAllReplies?";
         if (referenceIdFilter === null)
             throw new Error("The parameter 'referenceIdFilter' cannot be null.");
@@ -5629,6 +5630,10 @@ export class CommentsServiceProxy {
             throw new Error("The parameter 'notificationId' cannot be null.");
         else if (notificationId !== undefined)
             url_ += "NotificationId=" + encodeURIComponent("" + notificationId) + "&";
+        if (excludingIds === null)
+            throw new Error("The parameter 'excludingIds' cannot be null.");
+        else if (excludingIds !== undefined)
+            excludingIds && excludingIds.forEach(item => { url_ += "ExcludingIds=" + encodeURIComponent("" + item) + "&"; });
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -16669,11 +16674,12 @@ export class PostsServiceProxy {
     
     2 = Top
      * @param notificationId (optional) 
+     * @param excludingIds (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAllCommentsPaged(referenceIdFilter: string | undefined, parentIdFilter: string | undefined, postSort: PostSort | undefined, notificationId: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CommentDtoPagedResultDto> {
+    getAllCommentsPaged(referenceIdFilter: string | undefined, parentIdFilter: string | undefined, postSort: PostSort | undefined, notificationId: string | undefined, excludingIds: string[] | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CommentDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Posts/GetAllCommentsPaged?";
         if (referenceIdFilter === null)
             throw new Error("The parameter 'referenceIdFilter' cannot be null.");
@@ -16691,6 +16697,10 @@ export class PostsServiceProxy {
             throw new Error("The parameter 'notificationId' cannot be null.");
         else if (notificationId !== undefined)
             url_ += "NotificationId=" + encodeURIComponent("" + notificationId) + "&";
+        if (excludingIds === null)
+            throw new Error("The parameter 'excludingIds' cannot be null.");
+        else if (excludingIds !== undefined)
+            excludingIds && excludingIds.forEach(item => { url_ += "ExcludingIds=" + encodeURIComponent("" + item) + "&"; });
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -16817,11 +16827,12 @@ export class PostsServiceProxy {
     
     2 = Top
      * @param notificationId (optional) 
+     * @param excludingIds (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAllCommentReplies(referenceIdFilter: string | undefined, parentIdFilter: string | undefined, postSort: PostSort | undefined, notificationId: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CommentDtoPagedResultDto> {
+    getAllCommentReplies(referenceIdFilter: string | undefined, parentIdFilter: string | undefined, postSort: PostSort | undefined, notificationId: string | undefined, excludingIds: string[] | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CommentDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Posts/GetAllCommentReplies?";
         if (referenceIdFilter === null)
             throw new Error("The parameter 'referenceIdFilter' cannot be null.");
@@ -16839,6 +16850,10 @@ export class PostsServiceProxy {
             throw new Error("The parameter 'notificationId' cannot be null.");
         else if (notificationId !== undefined)
             url_ += "NotificationId=" + encodeURIComponent("" + notificationId) + "&";
+        if (excludingIds === null)
+            throw new Error("The parameter 'excludingIds' cannot be null.");
+        else if (excludingIds !== undefined)
+            excludingIds && excludingIds.forEach(item => { url_ += "ExcludingIds=" + encodeURIComponent("" + item) + "&"; });
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
