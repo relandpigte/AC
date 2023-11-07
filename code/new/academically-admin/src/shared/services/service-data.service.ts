@@ -1,8 +1,15 @@
 import { Injectable } from '@angular/core';
 import { switchMap, take } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
 
-import { CreateServiceDiscussionDto, PostsServiceProxy, PostType, ServiceDiscussionServiceProxy, ServicesType } from '../service-proxies/service-proxies';
-import { BehaviorSubject, Observable } from '@node_modules/rxjs';
+import {
+  CreateServiceDiscussionDto,
+  PostsServiceProxy,
+  PostType,
+  ServiceDiscussionServiceProxy,
+  ServiceRatingSummaryDto,
+  ServicesType
+} from '../service-proxies/service-proxies';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +18,12 @@ export class ServiceDataService {
   public discussionId$: Observable<string>;
   public serviceData$: Observable<any>;
   public serviceRating$: Observable<any>;
+  public serviceOverallRating$: Observable<any>;
 
   private _discussionId: BehaviorSubject<string>;
   private _serviceData: BehaviorSubject<any>;
   private _serviceRating: BehaviorSubject<any>;
+  private _serviceOverallRating: BehaviorSubject<any>;
 
   constructor(
     private _postsService: PostsServiceProxy,
@@ -28,6 +37,9 @@ export class ServiceDataService {
 
     this._serviceRating = new BehaviorSubject<any>(null);
     this.serviceRating$ = this._serviceRating.asObservable();
+
+    this._serviceOverallRating = new BehaviorSubject<ServiceRatingSummaryDto>(null);
+    this.serviceOverallRating$ = this._serviceOverallRating.asObservable();
   }
 
   public set serviceData(value: any) {
@@ -40,6 +52,10 @@ export class ServiceDataService {
 
   public set serviceRating(value: any) {
     this._serviceRating.next(value);
+  }
+
+  public set serviceOverallRating(value: any) {
+    this._serviceOverallRating.next(value);
   }
 
   createServiceDiscussion(serviceId: string, serviceType: ServicesType, userId: number): void {

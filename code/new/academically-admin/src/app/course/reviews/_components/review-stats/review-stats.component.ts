@@ -1,21 +1,20 @@
-import { Component, Injector, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { Component, Injector, Input, OnInit } from '@angular/core';
+import { takeUntil } from 'rxjs/operators';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
 import { ServiceDataService } from '@shared/services/service-data.service';
-import { CourseDto, RatingsServiceProxy, ServiceRatingSummaryDto } from '@shared/service-proxies/service-proxies';
+import { CourseDto, ServiceRatingSummaryDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-review-stats',
   templateUrl: './review-stats.component.html',
   styleUrls: ['./review-stats.component.less']
 })
-export class ReviewStatsComponent extends AppComponentBase implements OnInit, OnChanges {
+export class ReviewStatsComponent extends AppComponentBase implements OnInit {
   shimmerType = ShimmerType;
   courseRatingSummary: ServiceRatingSummaryDto;
-  isSummaryLoading: boolean;
 
   @Input() data: CourseDto;
 
@@ -23,13 +22,12 @@ export class ReviewStatsComponent extends AppComponentBase implements OnInit, On
     injector: Injector,
     private _landingPageService: LandingPagesService,
     private _serviceData: ServiceDataService,
-    private _ratingsService: RatingsServiceProxy
   ) {
     super(injector);
   }
 
   get isLoading$() { return this._landingPageService.isLoading$; }
-  get courseId(): string { return this.data?.id; }
+  get serviceId(): string { return this.data?.id; }
   get tutorId(): number { return this.data?.creatorUser?.id; }
   get totalCommunicationRatings(): number { return this.courseRatingSummary?.totalCommunicationRatings; }
   get totalValueForMoneyRatings(): number { return this.courseRatingSummary?.totalValueForMoneyRatings; }
@@ -44,21 +42,6 @@ export class ReviewStatsComponent extends AppComponentBase implements OnInit, On
 
   ngOnInit(): void {
     this._serviceData.serviceData$.pipe(takeUntil(this.destroyed$)).subscribe(d => this.data = d);
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if ('data' in changes && this.data) {
-      this.getRatingSummary();
-    }
-  }
-
-  private getRatingSummary(): void {
-    this.isSummaryLoading = true;
-    this._ratingsService.getServiceRatingsSummary(this.courseId)
-      .pipe(takeUntil(this.destroyed$))
-      .pipe(finalize(() => this.isSummaryLoading = false))
-      .subscribe(rating => {
-        this.courseRatingSummary = rating;
-      });
+    this._serviceData.serviceOverallRating$.pipe(takeUntil(this.destroyed$)).subscribe(rating => this.courseRatingSummary = rating);
   }
 }
