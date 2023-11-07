@@ -9,6 +9,7 @@ import { ArticleDto, ArticlesServiceProxy, CoachingDto, CoachingsServiceProxy, C
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { PurchaseServiceComponent } from '@shared/components/purchase-service/purchase-service.component';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-explore-for-you',
@@ -25,13 +26,13 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
   recommendedTutorials: VideoDto[] = Array(4).fill([]).map(() => this.generateRandomTutorial()) as VideoDto[];
   newCoachings: CoachingDto[] = Array(4).fill([]).map(() => this.generateRandomCoaching()) as CoachingDto[];
 
-  isLoading_newUsers = true;
-  isLoading_upcomingBroadcasts = true;
-  isLoading_upcomingWorkshops = true;
-  isLoading_recommendedCourses = true;
-  isLoading_newArticles = true;
-  isLoading_recommendedTutorials = true;
-  isLoading_newCoachings = true;
+  isLoading_newUsers$ = new BehaviorSubject(true);
+  isLoading_upcomingBroadcasts$ = new BehaviorSubject(true);
+  isLoading_upcomingWorkshops$ = new BehaviorSubject(true);
+  isLoading_recommendedCourses$ = new BehaviorSubject(true);
+  isLoading_newArticles$ = new BehaviorSubject(true);
+  isLoading_recommendedTutorials$ = new BehaviorSubject(true);
+  isLoading_newCoachings$ = new BehaviorSubject(true);
 
   isLoadingService = false;
 

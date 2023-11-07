@@ -1,19 +1,17 @@
-import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit, ViewChildren } from '@angular/core';
-import { takeUntil } from 'rxjs/operators';
+import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { switchMap, takeUntil } from 'rxjs/operators';
 
+import { Router } from '@angular/router';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CourseDto, CoursesServiceProxy, DateGrains, PostDto, PostsServiceProxy, PostType, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
+import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
+import { CourseDto, CoursesServiceProxy, DateGrains, PostDto, PostSort, PostsServiceProxy, PostType, SharedType, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { MAX_POSTS_TO_LOAD, PostsStateService } from '@shared/services/posts-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
-import { CommunityDiscussionsComponent } from '@shared/components/community-discussions/community-discussions.component';
-import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
+import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { CommunityService } from '../community.service';
-import { SharedType, PostSort } from '@shared/service-proxies/service-proxies';
-import { of } from 'rxjs';
-import { Router } from '@angular/router';
 
 enum PostFiltering {
   All = 'Community.Posts.Filtering.All',
@@ -34,20 +32,22 @@ enum PostSorting {
   styleUrls: ['./following.component.less']
 })
 export class FollowingComponent extends AppComponentBase implements OnInit, OnDestroy {
-  @ViewChildren(CommunityDiscussionsComponent) commentContainer: CommunityDiscussionsComponent;
+  // make all comment loading silent for now
+  // @ViewChildren(CommunityPostCardComponent) postsContainer: CommunityPostCardComponent[];
 
   postsStateService: PostsStateService;
   postsDiscussionsStateServiceMap: PostsStateService[] = [];
 
-  posts: PostDto[] = Array(10).fill([]).map(() => this.generateRandomPost()) as PostDto[];
+  tempPosts: PostDto[] = Array(10).fill([]).map(() => this.generateRandomPost()) as PostDto[];
+  posts: PostDto[] = [];
   totalPostsCount: number;
 
   usersYouMayKnow: UserDto[] = Array(5).fill([]).map(() => this.generateRandomUser()) as UserDto[];
   recommendedCourses: CourseDto[] = Array(4).fill([]).map(() => this.generateRandomCourse()) as CourseDto[];
 
-  isLoading_usersYouMayKnow = true;
-  isLoading_recommendedCourses = true;
-  isLoadingPosts = true;
+  isLoading_usersYouMayKnow$ = new BehaviorSubject(true);
+  isLoading_recommendedCourses$ = new BehaviorSubject(true);
+  isLoadingPosts$ = new BehaviorSubject(true);
 
   usersYouMayKnowMaxItems: number = 0;
   recommendedCoursesMaxItems: number = 0;
@@ -88,7 +88,18 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     }
   }
   get hiddenPostsCount(): number { return this.totalPostsCount - this.posts.length; }
-  get isLoading$() { return of(this.isLoadingPosts || !!this.commentContainer?.isLoadingComments || this.isLoading_usersYouMayKnow || this.isLoading_recommendedCourses);}
+
+  get loadingSources$() {
+    return [
+      this.isLoadingPosts$,
+      this.isLoading_usersYouMayKnow$,
+      this.isLoading_recommendedCourses$,
+      // make all comment loading silent for now
+      // ...(this.postsContainer?.map(p => p.commentsContainer.isLoadingComments$) ?? [new BehaviorSubject(false)]),
+    ];
+  }
+
+  get isLoading$() { return combineLatest(this.loadingSources$).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
   get postSort(): PostSort {
     switch(this.selectedSorting) {
       case PostSorting.Top:
@@ -145,7 +156,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     await this.pubSubService.start(this, appStateConfig, appStateServices);
     this.postsStateService = this.pubSubService.getStateService<PostsStateService>(this.postsStateId);
 
-    this.postsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(isLoading => this.isLoadingPosts = isLoading);
+    this.postsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(isLoading => this.isLoadingPosts$.next(isLoading));
 
     this.postsStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
       if (this.postTypeFilter !== undefined && event.data.type !== this.postTypeFilter) return;

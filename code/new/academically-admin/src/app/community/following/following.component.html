@@ -76,17 +76,27 @@
       </div>
     </div>
 
-    <ng-container *ngFor="let p of posts">
-      <div class="community-content-post">
+    <div class="w-100" [class.hidden]="isLoading$ | async">
+      <div *ngFor="let p of posts" class="community-content-post">
         <app-community-post-card
-          [isLoading]="isLoading$ | async"
+          [isLoading]="false"
           [data]="p"
           [isCommunity]="true"
           (onChildrenUpdate)="handleChildrenUpdate(p)"
           (onSharePost)="handleSharePost($event)"
         ></app-community-post-card>
       </div>
-    </ng-container>
+    </div>
+
+    <div *ngIf="isLoading$ | async" class="community-content-post-veil w-100">
+      <div *ngFor="let p of tempPosts"class="community-content-post">
+        <app-community-post-card
+          [isLoading]="true"
+          [data]="p"
+          [isCommunity]="true"
+        ></app-community-post-card>
+      </div>
+    </div>
 
     <div *ngIf="!(isLoading$ | async) && hiddenPostsCount" class="card community-content-post-load-more" (click)="onLoadMore()">
         <span>Load more...</span>

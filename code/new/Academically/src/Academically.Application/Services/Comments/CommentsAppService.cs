@@ -104,10 +104,10 @@ namespace Academically.Services.Comments
         {
             var userId = AbpSession.UserId.Value;
             var query = _commentsRepository.GetAll()
-                .Where(e => e.ParentId == input.ParentIdFilter);
+                .Where(e => e.ParentId == input.ParentIdFilter)
+                .WhereIf(input.ExcludingIds?.Count() > 0, c => !input.ExcludingIds.Any(i => c.Id == i));
             var totalCount = await query.CountAsync();
             var comments = await query.OrderByDescending(e => e.CreationTime)
-                .PageBy(input)
                 .Include(e => e.CreatorUser)
                     .ThenInclude(e => e.ProfilePictureDocument)
                 .Include(e => e.CommentReactions)
@@ -133,27 +133,15 @@ namespace Academically.Services.Comments
 
             if (input.PostSort.HasValue)
             {
-                if (input.ParentIdFilter == null) // if comments are top level, sort differently
-                {
-                    if (input.PostSort == PostSort.Top)
-                        comments = comments.OrderByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
-                    else if (input.PostSort == PostSort.Relevant)
-                        comments = comments.OrderByDescending(p => p.RelevantPoints).ThenByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
-                    else
-                        comments = comments.OrderByDescending(p => p.CreationTime).ToList();
-                }
+                if (input.PostSort == PostSort.Top)
+                    comments = comments.OrderByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
+                else if (input.PostSort == PostSort.Relevant)
+                    comments = comments.OrderByDescending(p => p.RelevantPoints).ThenByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
                 else
-                {
-                    if (input.PostSort == PostSort.Top)
-                        comments = comments.OrderBy(p => p.ActivityPoints).ThenBy(p => p.CreationTime).ToList();
-                    else if (input.PostSort == PostSort.Relevant)
-                        comments = comments.OrderBy(p => p.RelevantPoints).ThenBy(p => p.ActivityPoints).ThenBy(p => p.CreationTime).ToList();
-                    else
-                        comments = comments.OrderBy(p => p.CreationTime).ToList();
-                }
+                    comments = comments.OrderByDescending(p => p.CreationTime).ToList();
             }
 
-            return new PagedResultDto<CommentDto>(totalCount, comments);
+            return new PagedResultDto<CommentDto>(totalCount, comments.Skip(input.SkipCount).Take(input.MaxResultCount).ToList());
         }
 
         public async Task<int> GetReactionsCountAsync(string referenceId)

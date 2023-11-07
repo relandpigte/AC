@@ -696,10 +696,11 @@ export abstract class AppComponentBase implements OnDestroy {
   }
 
   loadInfiniteData(service: any, functionName: string, args: any[], destinationField: string, opts: { allowLoader?: boolean, destinationFieldKey?: string, callback?: () => void } = { allowLoader: true }): void {
-    opts?.destinationFieldKey ? this[`isLoading_${destinationField}`][opts.destinationFieldKey] : this[`isLoading_${destinationField}`] = opts?.allowLoader && true;
+    const loader = opts?.destinationFieldKey ? this[`isLoading_${destinationField}$`][opts.destinationFieldKey] : this[`isLoading_${destinationField}$`];
+    loader.next(opts?.allowLoader && true)
     service[functionName](...args)
       .pipe(takeUntil(this.destroyed$))
-      .pipe(finalize(() => opts?.destinationFieldKey ? this[`isLoading_${destinationField}`][opts.destinationFieldKey] : this[`isLoading_${destinationField}`] = false))
+      .pipe(finalize(() => loader.next(false)))
       .subscribe(newData => {
         if (opts?.destinationFieldKey) {
           if (this[`${destinationField}MaxItems`][opts.destinationFieldKey] == 0) this[destinationField][opts.destinationFieldKey] = [];

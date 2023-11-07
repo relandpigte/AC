@@ -271,7 +271,7 @@ namespace Academically.Services.Coachings
                 if (coaching.CreatorUser.ProfilePictureDocumentId.HasValue)
                     coaching.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(coaching.CreatorUser.ProfilePictureDocumentId.Value);
 
-                var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == coaching.Id.ToString());
+                var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == coaching.Id.ToString() && s.CreatorUserId == this.AbpSession.UserId);
                 coaching.IsSaved = savedService != null;
 
                 var purchasedService = await this._servicePurchasesRepository.FirstOrDefaultAsync(p => p.ReferenceId.ToString() == coaching.Id.ToString() && p.CreatorUserId == this.AbpSession.UserId);

@@ -261,6 +261,7 @@
                 [level]="level + 1"
                 [postCreatorId]="postCreatorId"
                 [reactionGroup]="reactionGroup"
+                [selectedSorting]="selectedSorting"
                 [foldSubject$]="foldSubject$"
                 (onReplyEmit)="initiateReply($event)"
                 (onUpdateEmit)="onUpdateEmit.emit()"
@@ -354,7 +355,7 @@
         </div>
       </div>
     </div>
-    <ng-container *ngIf="!isChild">
+    <ng-container *ngIf="!isChild && totalCommentsCount > 1">
       <ng-container *ngIf="totalCommentsCount || hasChildren">
         <ng-container *ngIf="!isExpanded && hiddenCommentsCount">
           <div class="discussions-expander cursor-pointer" (click)="onFoldClick()">

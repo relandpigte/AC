@@ -680,22 +680,15 @@ namespace Academically.Services.Posts
                 .WhereIf(!input.ReferenceIdFilter.IsNullOrEmpty(), e => e.ReferenceId == input.ReferenceIdFilter)
                 .WhereIf(!input.ParentIdFilter.HasValue, e => e.ParentId == null)
                 .WhereIf(input.ParentIdFilter.HasValue, e => e.ParentId == input.ParentIdFilter)
+                .WhereIf(input.ExcludingIds?.Count() > 0, c => !input.ExcludingIds.Any(i => c.Id == i))
                 .Include(e => e.Children)
                 .Include(e => e.CreatorUser)
                 .ThenInclude(e => e.ProfilePictureDocument)
                 .Include(e => e.TaggedUser)
                 .ThenInclude(e => e.ProfilePictureDocument)
-                .Include(e => e.CommentReactions)
-                .OrderByDescending(e => e.CreationTime);
+                .Include(e => e.CommentReactions);
 
             var totalCount = await query.CountAsync();
-            var items = await query
-                .Select(e => new
-                {
-                    Comment = e,
-                    ChildCount = e.Children.Count()
-                })
-                .ToListAsync();
 
             var targetNotification = await _notificationsRepository.GetAll()
                 .Include(n => n.User)
@@ -707,39 +700,24 @@ namespace Academically.Services.Posts
                 .Where(f => f.CreatorUserId == userId)
                 .ToListAsync();
 
-
-            var comments = new List<CommentDto>();
-            foreach (var commentWithChild in items)
+            var items = await query.Select(e => ObjectMapper.Map<CommentDto>(e)).ToListAsync();
+            foreach (var comment in items)
             {
-                var comment = ObjectMapper.Map<CommentDto>(commentWithChild.Comment);
                 await FillInService(comment);
-
-                comment.ReplyCount = commentWithChild.ChildCount;
+                comment.IsFromNotification = targetNotification != null;
+                comment.IsFromFollowing = following?.Any(f => f.UserId == comment.CreatorUserId) == true;
+                comment.ReplyCount = comment.Children.Count();
                 comment.ReactionsCount = await this.GetReactionsCountAsync(comment.Id.ToString());
-
-                comments.Add(comment);
             }
 
-            if (input.ParentIdFilter == null) // if comments are top level, sort differently
-            {
-                if (input.PostSort == PostSort.Top)
-                    comments = comments.OrderByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
-                else if (input.PostSort == PostSort.Relevant)
-                    comments = comments.OrderByDescending(p => p.RelevantPoints).ThenByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
-                else
-                    comments = comments.OrderByDescending(p => p.CreationTime).ToList();
-            }
+            if (input.PostSort == PostSort.Top)
+                items = items.OrderByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
+            else if (input.PostSort == PostSort.Relevant)
+                items = items.OrderByDescending(p => p.RelevantPoints).ThenByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
             else
-            {
-                if (input.PostSort == PostSort.Top)
-                    comments = comments.OrderBy(p => p.ActivityPoints).ThenBy(p => p.CreationTime).ToList();
-                else if (input.PostSort == PostSort.Relevant)
-                    comments = comments.OrderBy(p => p.RelevantPoints).ThenBy(p => p.ActivityPoints).ThenBy(p => p.CreationTime).ToList();
-                else
-                    comments = comments.OrderBy(p => p.CreationTime).ToList();
-            }
+                items = items.OrderByDescending(p => p.CreationTime).ToList();
 
-            return new PagedResultDto<CommentDto>(totalCount, comments);
+            return new PagedResultDto<CommentDto>(totalCount, items.Skip(input.SkipCount).Take(input.MaxResultCount).ToList());
         }
 
         public async Task<IEnumerable<CommentDto>> GetAllCommentAsync(string referenceId)
@@ -774,7 +752,8 @@ namespace Academically.Services.Posts
         {
             var userId = AbpSession.UserId.Value;
             var query = _commentsRepository.GetAll()
-                .Where(e => e.ParentId == input.ParentIdFilter);
+                .Where(e => e.ParentId == input.ParentIdFilter)
+                .WhereIf(input.ExcludingIds?.Count() > 0, c => !input.ExcludingIds.Any(i => c.Id == i));
             var totalCount = await query.CountAsync();
             var comments = await query.OrderByDescending(e => e.CreationTime)
                 .Include(e => e.CreatorUser)
@@ -798,30 +777,20 @@ namespace Academically.Services.Posts
             foreach (var comment in comments)
             {
                 await FillInService(comment);
+                comment.IsFromNotification = targetNotification != null;
+                comment.IsFromFollowing = following?.Any(f => f.UserId == comment.CreatorUserId) == true;
                 comment.ReplyCount = comment.Children.Count();
                 comment.ReactionsCount = await this.GetReactionsCountAsync(comment.Id.ToString());
             }
 
-            if (input.ParentIdFilter == null) // if comments are top level, sort differently
-            {
-                if (input.PostSort == PostSort.Top)
-                    comments = comments.OrderByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
-                else if (input.PostSort == PostSort.Relevant)
-                    comments = comments.OrderByDescending(p => p.RelevantPoints).ThenByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
-                else
-                    comments = comments.OrderByDescending(p => p.CreationTime).ToList();
-            }
+            if (input.PostSort == PostSort.Top)
+                comments = comments.OrderByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
+            else if (input.PostSort == PostSort.Relevant)
+                comments = comments.OrderByDescending(p => p.RelevantPoints).ThenByDescending(p => p.ActivityPoints).ThenByDescending(p => p.CreationTime).ToList();
             else
-            {
-                if (input.PostSort == PostSort.Top)
-                    comments = comments.OrderBy(p => p.ActivityPoints).ThenBy(p => p.CreationTime).ToList();
-                else if (input.PostSort == PostSort.Relevant)
-                    comments = comments.OrderBy(p => p.RelevantPoints).ThenBy(p => p.ActivityPoints).ThenBy(p => p.CreationTime).ToList();
-                else
-                    comments = comments.OrderBy(p => p.CreationTime).ToList();
-            }
+                comments = comments.OrderByDescending(p => p.CreationTime).ToList();
 
-            return new PagedResultDto<CommentDto>(totalCount, comments);
+            return new PagedResultDto<CommentDto>(totalCount, comments.Skip(input.SkipCount).Take(input.MaxResultCount).ToList());
         }
 
         public async Task<int> GetCommentsCountAsync(string referenceId)

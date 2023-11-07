@@ -1,6 +1,6 @@
 <div class="container-fluid all-topics d-flex flex-column flex-nowrap p-0 pb-5">
     <div class="all-topics-content flex-grow-1">
-        <ng-container [ngSwitch]="isLoading">
+        <ng-container [ngSwitch]="isLoading$ | async">
             <ng-container *ngSwitchCase="true">
                 <div class="d-flex flex-row overflow-hidden">
                     <div class="p-3 mb-4 mr-4 border bg-white rounded" [ngStyle]="{'max-width.px': 262, 'height.px': 87, 'width.%': 100}">
@@ -85,12 +85,12 @@
 
     <div class="all-topics-content flex-grow-1">
         <div class="row align-items-center" [style.marginTop.px]="40" [style.marginBottom.px]="25" [style.minHeight.px]="28">
-            <div *ngIf="!isLoading" class="col d-flex flex-wrap align-items-center justify-content-between">
+            <div *ngIf="!isLoading$ | async" class="col d-flex flex-wrap align-items-center justify-content-between">
               <span class="all-topics-content-header">For you</span>
               <span class="all-topics-content-view-all cursor-pointer" [routerLink]="['events']">View All</span>
             </div>
         </div>
-        <ng-container [ngSwitch]="isLoading">
+        <ng-container [ngSwitch]="isLoading$ | async">
             <ng-container *ngSwitchCase="true">
                 <div class="d-flex flex-row flex-nowrap justify-content-end align-items-center gap-29 mb-4" [style.overflow]="'hidden'">
                     <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
@@ -181,7 +181,7 @@
                     [itemWidth]="240"
                     [itemSpacing]="20"
                     [isAutoFit]="true"
-                    [isLoading]="isLoading_forYouTopicsList"
+                    [isLoading]="isLoading_forYouTopicsList$ | async"
                     [items]="forYouTopics"
                     [maxItems]="forYouTopicsListMaxItems"
                     [isInfiteScroll]="true"
@@ -192,7 +192,7 @@
         </ng-container>
     </div>
 
-    <ng-container *ngIf="isLoading">
+    <ng-container *ngIf="isLoading$ | async">
         <div class="all-topics-content flex-grow-1 mt-6" *ngFor="let i of [].constructor(3); even as isEven">
             <div class="d-flex flex-row flex-nowrap justify-content-{{ isEven ? 'start' : 'end' }} align-items-center gap-29 mb-4" [style.overflow]="'hidden'">
                 <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
@@ -285,7 +285,7 @@
               <span class="all-topics-content-view-all cursor-pointer" (click)="handleViewAllTopicsClick(t.key)">View All</span>
             </div>
         </div>
-        <ng-container [ngSwitch]="isLoading_tailoredTopicsList[t.key]">
+        <ng-container [ngSwitch]="isLoading_tailoredTopicsList$[t.key] | async">
             <ng-container *ngSwitchCase="true">
                 <div class="d-flex flex-row flex-nowrap justify-content-start align-items-center gap-29 mb-4" [style.overflow]="'hidden'">
                     <div class="d-flex flex-column justify-content-center align-items-center gap-10 px-4 border rounded bg-white">
@@ -376,7 +376,7 @@
                     [itemWidth]="240"
                     [itemSpacing]="20"
                     [isAutoFit]="true"
-                    [isLoading]="isLoading_tailoredTopicsList[t.key]"
+                    [isLoading]="isLoading_tailoredTopicsList$[t.key] | async"
                     [items]="t.value.items"
                     [maxItems]="tailoredTopicsListMaxItems[t.key]"
                     [isInfiteScroll]="true"

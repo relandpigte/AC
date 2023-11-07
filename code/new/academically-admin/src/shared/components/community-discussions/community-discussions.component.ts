@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnDestroy, OnInit, Output, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { debounceTime, finalize, take, takeUntil } from 'rxjs/operators';
 
 import { SafeUrl } from '@angular/platform-browser';
@@ -19,14 +19,14 @@ import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.servi
 import { StateUpdateType } from '@shared/services/state-base.service';
 import { LinkPreviewResponse, LinkPreviewService } from '@shared/services/link-preview.service';
 import { PostSorting } from '@app/community/discussion/discussion.component';
-
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-community-discussions',
   templateUrl: './community-discussions.component.html',
   styleUrls: ['./community-discussions.component.less']
 })
-export class CommunityDiscussionsComponent extends AppComponentBase implements OnInit, OnChanges {
+export class CommunityDiscussionsComponent extends AppComponentBase implements OnInit, OnDestroy, OnChanges {
   @Input() show = false;
   @Input() showAddComment = false;
   @Input() isChild = false;
@@ -37,6 +37,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   @Input() ctrlEnterToSubmit = false;
   @Input() postCreatorId: number;
   @Input() isSidebar = false;
+  @Input() selectedSorting: PostSorting = PostSorting.Latest;
 
   @Input() foldSubject$ = new Subject();
 
@@ -53,8 +54,8 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   commentsStateService: CommentsStateService;
 
   isPosting = false;
-  isLoadingComments: boolean = true;
-  isUpdatingComment: boolean;
+  isLoadingComments$ = new BehaviorSubject(true);
+  isUpdatingComment$ = new BehaviorSubject(true);
 
   comments: CommentDto[] = [];
   totalCommentsCount: number;
@@ -86,7 +87,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   private fileExtensions = fileUploadConfiguration.allowedFileExtensions;
 
   postSortingEnum = PostSorting;
-  selectedSorting: PostSorting = PostSorting.Latest;
+  recentlyAddedComments: CommentDto[] = []; // this will contain recently added comments to be used for folding
 
   constructor(
     injector: Injector,
@@ -142,9 +143,15 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     }
   }
 
+  get stateComments(): CommentDto[] { return this.parentId ? this.commentsStateService.getAllComments() : this.commentsStateService.getAllCommentsReversed(); }
+
   async ngOnInit(): Promise<void> {
     await this.initCommentsAppStates();
     this.initSubscriptions();
+  }
+
+  async ngOnDestroy() {
+    await this.commentsStateService?.stop();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -178,10 +185,11 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
         referenceId: this.referenceId,
         parentId: this.parentId,
         postSort: this.postSort,
-        notificationId: undefined
+        notificationId: undefined,
+        excludingIds: undefined
     });
 
-    this.comments = this.commentsStateService.getAllComments();
+    this.comments = this.stateComments;
     this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
   }
 
@@ -196,10 +204,10 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
             this.notify.success(this.l('CommentSuccessfullyDeleted'));
             if (!this.comments.length) {
               this.onDeleteComment.next();
-              this._postsServiceProxy.getAllCommentsPaged(this.referenceId, this.parentId, this.postSort, undefined, this.comments.length, MAX_REPLIES_TO_LOAD)
+              this._postsServiceProxy.getAllCommentsPaged(this.referenceId, this.parentId, this.postSort, undefined, undefined, this.comments.length, MAX_REPLIES_TO_LOAD)
                 .subscribe(oldComments => {
-                  this.commentsStateService.pushMoreComments(oldComments.items);
-                  this.comments = this.commentsStateService.getAllComments();
+                  this.commentsStateService.addComments(oldComments.items); // add the old comments retrieved from the server to the list
+                  this.comments = this.stateComments;
                   this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
                   this._cdr.detectChanges();
                 });
@@ -237,7 +245,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   protected onEditCommentSubmit(message: HTMLDivElement, comment: CommentDto): void {
     const updated = new CommentDto(comment);
     const body = message.innerHTML?.trim();
-    this.isUpdatingComment = true;
+    this.isUpdatingComment$.next(true);
 
     if (body && body !== updated.body) {
       this._commentServiceProxy.update(
@@ -252,7 +260,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       ).pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
-          this.isUpdatingComment = false;
+          this.isUpdatingComment$.next(false);
         })
       ).subscribe((c: CommentDto) => {
         this.commentEditId = null;
@@ -273,7 +281,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   private async initCommentsAppStates() {
     const appStateConfig: AppStateConfig = {
       [this.commentsStateId]: {
-        load: [this.referenceId, this.parentId, this.postSort, undefined, 0, this.isSidebar ? 5 : 1],
+        load: [this.referenceId, this.parentId, this.postSort, undefined, undefined, 0, this.isSidebar ? MAX_REPLIES_TO_LOAD : 1],
         update: { referenceId: this.referenceId, parentId: this.parentId }
       }
     };
@@ -286,27 +294,30 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     await this.pubSubService.start(this, appStateConfig, appStateServices);
     this.commentsStateService = this.pubSubService.getStateService<CommentsStateService>(this.commentsStateId);
 
-    this.commentsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingComments = loading);
+    this.commentsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingComments$.next(loading));
 
     this.commentsStateService.comments$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
       switch(event.type) {
         case StateUpdateType.Add:
           this.comments = this.isChild ? this.comments.concat(event.data) : [event.data].concat(this.comments);
-          this.totalCommentsCount++;
+          this.recentlyAddedComments.push(event.data); // keep tabs of the recently added comment
           break;
         case StateUpdateType.Update:
           this.comments = this.comments.map(c => c.id === event.data.id ? event.data : c);
           break;
         case StateUpdateType.Delete:
           this.comments = this.comments.filter(c => c.id != event.data.id);
-          this.totalCommentsCount--;
           break;
       }
+      this.totalCommentsCount = this.commentsStateService.totalCommentsCount; // we need to get the updated total comments count from the state
       this.onUpdateEmit.emit();
       this._cdr.detectChanges();
     });
 
-    this.comments = this.commentsStateService.getAllComments();
+    // if this is level 1, we need to get the first comment from the state to display
+    // if this is level 2, we need to get the last comment from the state to display
+    // if this is level 3, no comments should be displayed
+    this.comments = this.level === 3 || _.isEmpty(this.stateComments) ? [] : [this.parentId ? _.last(this.stateComments) : _.first(this.stateComments)];
     this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
     this.showAddComment = !!this.totalCommentsCount;
   }
@@ -314,10 +325,11 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   private initSubscriptions(): void {
     this.foldSubject$
       .subscribe(() => {
-        this.commentsStateService.removeComments(this.comments.slice(1));
-        this.comments = this.commentsStateService.getAllComments();
+        this.commentsStateService.removeComments(this.comments.slice(1)); // we need to remove all comments except the first one to reset the state
+        this.comments = this.stateComments;
         this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
         this._cdr.detectChanges();
+        this._elRef.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' }); // focusing back to the post to avoid the screen to remain in the scrolled part
       });
   }
 
@@ -396,16 +408,18 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
 
   protected onFoldClick(): void {
     this.commentsStateService.loading$.next(true);
-    if (!this.isExpanded) {
-      this._postsServiceProxy.getAllCommentsPaged(this.referenceId, this.parentId, this.postSort, undefined, this.comments.length, MAX_REPLIES_TO_LOAD)
+    if (!this.isExpanded) { // if the comments are not expanded, we need to get the rest of the comments from the server
+      const excludingIds = this.recentlyAddedComments.map(c => c.id); // exclude these ids from pagination because they are already added in the list (to avoid duplicates), they are ignoring the selected sorting
+      const skip = this.comments.length - this.recentlyAddedComments.length; // we should start skipping from the last retrieved comments from the server minus the recently added comments
+      this._postsServiceProxy.getAllCommentsPaged(this.referenceId, this.parentId, this.postSort, undefined, excludingIds, skip, MAX_REPLIES_TO_LOAD)
         .subscribe(oldComments => {
-          this.commentsStateService.pushMoreComments(oldComments.items);
-          this.comments = this.commentsStateService.getAllComments();
+          this.commentsStateService.addComments(oldComments.items);
+          this.comments = this.stateComments;
           this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
           this.commentsStateService.loading$.next(false);
           this._cdr.detectChanges();
         });
-    } else {
+    } else { // if all the comments are expanded, we need to remove all comments except the first one to reset the state; see foldSubject$ subscription
       this.commentsStateService.loading$.next(false);
       this.foldSubject$.next();
       this.selectedService = null;

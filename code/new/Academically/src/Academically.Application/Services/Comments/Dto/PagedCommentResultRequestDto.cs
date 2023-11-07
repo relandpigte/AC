@@ -10,5 +10,6 @@ namespace Academically.Services.Comments.Dto
         public Guid? ParentIdFilter { get; set; }
         public PostSort? PostSort { get; set; }
         public Guid? NotificationId { get; set; }
+        public Guid[] ExcludingIds { get; set; }
     }
 }
