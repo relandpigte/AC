@@ -176,6 +176,7 @@ namespace Academically.Services.Posts
                                    .Include(p => p.PostNotification)
                                    .Where(p => !p.IsDeleted)
                                    .Where(p => !p.IsHidden)
+                                   .Where(p => !p.IsServiceDiscussion)
                                    .Where(p => !userHiddenPost.Contains(p.Id))
                                    .WhereIf(request.Type.HasValue, p => p.Type == request.Type)
                                    .WhereIf(request.ParentId.HasValue, p => p.ParentId == request.ParentId)
@@ -922,6 +923,20 @@ namespace Academically.Services.Posts
             }
 
             return result;
+        }
+
+        public async Task<List<Guid>> GetAllCurrentUserDiscussions()
+        {
+            var currentUserId = AbpSession.GetUserId();
+            var userHiddenPost = await _postVisibilityRepository.GetAll()
+                .Where(w => w.IsHidden && w.CreatorUserId == currentUserId)
+                .Select(s => s.PostId)
+                .ToListAsync();
+            return await _postRepository.GetAll()
+                .Where(p => !p.IsHidden && !p.IsServiceDiscussion && !userHiddenPost.Contains(p.Id))
+                .Where(p => p.Type == PostType.Discussion && p.CreatorUserId == currentUserId)
+                .Select(p => p.Id)
+                .ToListAsync();
         }
 
         private async Task FillInService(CommentDto comment)

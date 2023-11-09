@@ -179,10 +179,13 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     this.posts = this.postsStateService.getAllPosts();
     this.totalPostsCount = this.postsStateService.totalPostsCount;
 
-    const postIds = new Set([...this.posts.map(p => p.parentId).filter(x => x)]);
-    for (const postId of postIds) {
-      await this.initDiscussionAppState(postId);
-    }
+    this._postsService.getAllCurrentUserDiscussions()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(async (postIds): Promise<void> => {
+        for (const postId of postIds) {
+          await this.initDiscussionAppState(postId);
+        }
+      });
   }
 
   private async initDiscussionAppState(discussionId: string): Promise<void> {

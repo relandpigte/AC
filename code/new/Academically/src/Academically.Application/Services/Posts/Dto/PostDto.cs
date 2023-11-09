@@ -30,6 +30,7 @@ namespace Academically.Services.Posts.Dto
         public SharedType? SharedType { get; set; }
         public ServicesType? SharedServiceType { get; set; }
         public bool IsPublic { get; set; }
+        public bool IsServiceDiscussion { get; set; }
 
         [NotMapped]
         public bool IsFromNotification { get; set; } = false;

@@ -3,10 +3,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { ChatService } from '@shared/services/chat.service';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
-import { ServiceDataService } from '@shared/services/service-data.service';
 import { CoachingDto } from '@shared/service-proxies/service-proxies';
-import { pipe } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-coach-badge',
@@ -26,8 +23,8 @@ export class CoachBadgeComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
-  get profilePictureUrl(): string { return this.appSession.user.profilePictureUrl; }
-  get profileFullName(): string { return `${this.appSession.user.name} ${this.appSession.user.surname}`; }
+  get profilePictureUrl(): string { return this.getProfilePictureUrl(this.data?.creatorUser?.profilePictureDocument); }
+  get profileFullName(): string { return this.data?.creatorUser?.fullName; }
   get isLoading$() { return this._landingPageService.isLoading$; }
   get ownerName(): string { return this.data?.creatorUser?.fullName; }
 

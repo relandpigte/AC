@@ -21,6 +21,7 @@ namespace Academically.Services.Posts.Dto
         public IEnumerable<Guid> Topics { get; set; }
         public IEnumerable<string> NewTopics { get; set; }
         public IEnumerable<IFormFile> Attachments { get; set; }
+        public bool IsServiceDiscussion { get; set; }
     }
 }
 

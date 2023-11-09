@@ -15902,9 +15902,10 @@ export class PostsServiceProxy {
      * @param topics (optional) 
      * @param newTopics (optional) 
      * @param attachments (optional) 
+     * @param isServiceDiscussion (optional) 
      * @return Success
      */
-    create(title: string | undefined, content: string | undefined, spaceId: string | undefined, type: PostType | undefined, parentId: string | undefined, sharedId: string | undefined, sharedType: SharedType | undefined, sharedServiceType: ServicesType | undefined, topics: string[] | undefined, newTopics: string[] | undefined, attachments: FileParameter[] | undefined): Observable<string> {
+    create(title: string | undefined, content: string | undefined, spaceId: string | undefined, type: PostType | undefined, parentId: string | undefined, sharedId: string | undefined, sharedType: SharedType | undefined, sharedServiceType: ServicesType | undefined, topics: string[] | undefined, newTopics: string[] | undefined, attachments: FileParameter[] | undefined, isServiceDiscussion: boolean | undefined): Observable<string> {
         let url_ = this.baseUrl + "/api/services/app/Posts/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -15953,6 +15954,10 @@ export class PostsServiceProxy {
             // do nothing
         } else
             attachments.forEach(item_ => content_.append("Attachments", item_.data, item_.fileName ? item_.fileName : "Attachments") );
+        if (isServiceDiscussion === null || isServiceDiscussion === undefined) {
+            // do nothing
+        } else
+            content_.append("IsServiceDiscussion", isServiceDiscussion.toString());
 
         let options_ : any = {
             body: content_,
@@ -17394,6 +17399,64 @@ export class PostsServiceProxy {
             }));
         }
         return _observableOf<PostDto[]>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getAllCurrentUserDiscussions(): Observable<string[]> {
+        let url_ = this.baseUrl + "/api/services/app/Posts/GetAllCurrentUserDiscussions";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllCurrentUserDiscussions(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllCurrentUserDiscussions(<any>response_);
+                } catch (e) {
+                    return <Observable<string[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<string[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllCurrentUserDiscussions(response: HttpResponseBase): Observable<string[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(item);
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<string[]>(<any>null);
     }
 }
 
@@ -47302,6 +47365,7 @@ export class PostDto implements IPostDto {
     sharedType: SharedType;
     sharedServiceType: ServicesType;
     isPublic: boolean;
+    isServiceDiscussion: boolean;
     isFromNotification: boolean;
     isFromFollowing: boolean;
     commentsCount: number;
@@ -47354,6 +47418,7 @@ export class PostDto implements IPostDto {
             this.sharedType = _data["sharedType"];
             this.sharedServiceType = _data["sharedServiceType"];
             this.isPublic = _data["isPublic"];
+            this.isServiceDiscussion = _data["isServiceDiscussion"];
             this.isFromNotification = _data["isFromNotification"];
             this.isFromFollowing = _data["isFromFollowing"];
             this.commentsCount = _data["commentsCount"];
@@ -47434,6 +47499,7 @@ export class PostDto implements IPostDto {
         data["sharedType"] = this.sharedType;
         data["sharedServiceType"] = this.sharedServiceType;
         data["isPublic"] = this.isPublic;
+        data["isServiceDiscussion"] = this.isServiceDiscussion;
         data["isFromNotification"] = this.isFromNotification;
         data["isFromFollowing"] = this.isFromFollowing;
         data["commentsCount"] = this.commentsCount;
@@ -47514,6 +47580,7 @@ export interface IPostDto {
     sharedType: SharedType;
     sharedServiceType: ServicesType;
     isPublic: boolean;
+    isServiceDiscussion: boolean;
     isFromNotification: boolean;
     isFromFollowing: boolean;
     commentsCount: number;
