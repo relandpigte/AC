@@ -79,6 +79,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
 
   linkPreviewTrigger$: Subject<string> = new Subject();
   childLinkPreviewTrigger$: Subject<string> = new Subject();
+  isHoveringDropzone: boolean;
 
   allowedExtensions: string[] = [];
   private maxFileSize = fileUploadConfiguration.maxFileSize;
@@ -145,6 +146,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
 
   get stateComments(): CommentDto[] { return this.parentId ? this.commentsStateService.getAllComments() : this.commentsStateService.getAllCommentsReversed(); }
 
+  get uploadAllowedExt(): string[] { return [...this.imageExtensions, ...this.fileExtensions, ...this.videoExtensions]; }
   async ngOnInit(): Promise<void> {
     await this.initCommentsAppStates();
     this.initSubscriptions();
@@ -159,6 +161,19 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       if ('show' in changes && changes?.show?.previousValue !== changes?.show?.currentValue) {
         if (this.show) this.doAddComment();
         else this.foldSubject$.next();
+      }
+    }
+  }
+
+  onFileUploadChange(files: FileList, isChild = false): void {
+    const file = files[0];
+    if (FileUtils.validateFile(this, [file], this.maxFileSize, 1, this.allowedExtensions)) {
+      if (isChild) {
+        this.childFileAttachment = file;
+        this.sanitizedChildAttachmentUrl = FileUtils.getSanitizedFileUrl(this, file);
+      } else {
+        this.fileAttachment = file;
+        this.sanitizedAttachmentUrl = FileUtils.getSanitizedFileUrl(this, file);
       }
     }
   }
