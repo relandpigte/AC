@@ -199,4 +199,6 @@
 	<include file="ddml-new/ddml.2023-10-29-99-alter-serviceratings-table.xml" />
 	<include file="ddml-new/ddml.2023-10-29-99-alter-courseratings-table.xml" />
 	<include file="ddml-new/ddml.2023-10-29-99-alter-eventratings-table.xml" />
+	<include file="ddml-new/ddml.2023-11-07-98-create-channel-message-visibility-table.xml" />
+	<include file="ddml-new/ddml.2023-11-09-99-alter-post-table.xml" />
 </databaseChangeLog>

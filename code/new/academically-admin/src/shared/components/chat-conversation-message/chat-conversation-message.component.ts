@@ -18,7 +18,7 @@ export class ChatConversationMessageComponent extends AppComponentBase implement
 
   @Output() onReplyClick: EventEmitter<ChannelMessageDto> = new EventEmitter();
   @Output() onMessageInfoClick: Subject<ChannelMessageDto> = new Subject<ChannelMessageDto>();
-  @Output() onDeleteMessage: Subject<string> = new Subject<string>();
+  @Output() onDeleteMessage = new Subject<ChannelMessageDto>();
 
   serviceReference: AvailableServiceDto;
   fileAttachment: File;
@@ -36,7 +36,9 @@ export class ChatConversationMessageComponent extends AppComponentBase implement
   get chatMessage(): string { return this.data?.message; }
   get parentMessage(): ChannelMessageDto { return this.data?.parent; }
   get isSender(): boolean { return this.data?.creatorUserId.toString() === this.appSession.userId.toString(); }
-  get isDeleted(): boolean { return this.data?.isDeleted; }
+  get isDeleted(): boolean { return this.data?.message === this.l('MessageDeleted'); }
+  get isDeletedMessage(): string { return this.isSender ? this.l('MessageDeleted') : this.l('MessageWasDeleted'); }
+  get isHidden(): boolean { return this.data?.isHidden && this.data?.creatorUserId !== this.currentUserId; }
 
   async ngOnInit(): Promise<void> {
     await this.getServiceReference();
@@ -51,8 +53,8 @@ export class ChatConversationMessageComponent extends AppComponentBase implement
     this.onReplyClick.emit(this.data);
   }
 
-  handleMessageDelete(channelMessageId: string): void {
-    this.onDeleteMessage.next(channelMessageId);
+  handleMessageDelete(message: ChannelMessageDto): void {
+    this.onDeleteMessage.next(message);
   }
 
   hasAttachedService(message: ChannelMessageDto): boolean {

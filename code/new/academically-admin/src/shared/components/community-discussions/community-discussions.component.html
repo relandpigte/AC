@@ -14,14 +14,14 @@
             </div>
 
             <div class="col p-0 ms-n2">
-              <div class="d-flex text-area-container" [ngClass]="{'display-hint': addCommentEl.value !== ''}">
+              <div class="d-flex text-area-container" dropzone (dropped)="onFileUploadChange($event, false)" [ngClass]="{'display-hint': addCommentEl.value !== ''}">
                 <div class="col d-flex align-items-center p-0 ms-n2">
                   <!-- Reply Textarea | START -->
                   <form autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit(addCommentEl)" class="comment-box flex-grow-1">
-                  <textarea #addCommentEl id="message" name="message" (keydown)="onMessageKeydown($event, form, { el: addCommentEl, isChild: false })"
-                            class="form-control form-control-flush" placeholder="Leave a comment..." [maxLength]="500"
-                            style="overflow: hidden; overflow-wrap: break-word; height: 41px;"
-                  ></textarea>
+                    <textarea #addCommentEl name="message" (keydown)="onMessageKeydown($event, form, { el: addCommentEl, isChild: false })"
+                              class="form-control form-control-flush" placeholder="Leave a comment..." [maxLength]="500"
+                              style="overflow: hidden; overflow-wrap: break-word; height: 41px;"
+                    ></textarea>
                   </form>
                   <!-- Reply Textarea | END -->
                 </div>
@@ -182,7 +182,7 @@
               </ng-container>
 
               <ng-container *ngIf="commentEditId === comment.id">
-                <div class="d-flex text-area-container" [ngClass]="{'display-hint': editCommentReply.innerHTML.length || taggedPerson || (commentEditId && editCommentReply.innerHTML.length)}" [style.margin-bottom.px]="15">
+                <div dropzone (dropped)="onFileUploadChange($event, true)" class="d-flex text-area-container" [ngClass]="{'display-hint': editCommentReply.innerHTML.length || taggedPerson || (commentEditId && editCommentReply.innerHTML.length)}" [style.margin-bottom.px]="15">
                   <div class="col d-flex align-items-center p-0 ms-n2 h-sroll h-sroll-hidden">
                     <!-- Reply Textarea | START -->
                     <form #editReplyForm="ngForm" class="comment-box flex-grow-1 d-flex flex-column" autocomplete="off" (ngSubmit)="onEditCommentSubmit(editCommentReply, comment)">
@@ -277,7 +277,7 @@
                   <!-- Avatar | END -->
                 </div>
                 <div class="col p-0 ms-n2">
-                  <div class="d-flex text-area-container" [ngClass]="{'display-hint': addReplyEl.innerHTML.length || taggedPerson}">
+                  <div dropzone (dropped)="onFileUploadChange($event, true)" class="d-flex text-area-container" [ngClass]="{'display-hint': addReplyEl.innerHTML.length || taggedPerson}">
                     <div class="col d-flex align-items-center p-0 ms-n2 h-sroll h-sroll-hidden">
                       <!-- Reply Textarea | START -->
                       <form autocomplete="off" #replyForm="ngForm" (ngSubmit)="onFormSubmit(addReplyEl, comment.id)" class="comment-box flex-grow-1 d-flex flex-column">

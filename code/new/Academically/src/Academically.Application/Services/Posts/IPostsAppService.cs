@@ -20,5 +20,6 @@ namespace Academically.Services.Posts
         Task<AvailableServiceDto> GetAvailableService(Guid id);
         Task CreatePostNotification(CreatePostNotificationDto input);
         Task DeletePostNotification(DeletePostNotificationDto input);
+        Task<List<Guid>> GetAllCurrentUserDiscussions();
     }
 }

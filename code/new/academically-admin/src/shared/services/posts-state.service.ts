@@ -70,7 +70,8 @@ export class PostsStateService extends StateServiceBase {
     return (
       (!type || post.type === type) &&
       (!parentId || post.parentId === parentId) &&
-      (!creationTime || post.creationTime.isBefore(creationTime))
+      (!creationTime || post.creationTime.isBefore(creationTime)) &&
+      (!post.isServiceDiscussion)
     );
   }
 

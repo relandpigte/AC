@@ -91,9 +91,8 @@ import { EventQuestionsComponent } from '@shared/components/event-questions/even
 import { EventQuestionsComposerComponent } from '@shared/components/event-questions-composer/event-questions-composer.component';
 import { NotificationCardComponent } from '@shared/components/notification-card/notification-card.component';
 import { ServiceChatComponent } from '@shared/modals/service-chat/service-chat.component';
-import {
-  ServiceChatConfirmationComponent
-} from '@shared/modals/service-chat/components/service-chat-confirmation/service-chat-confirmation.component';
+import { ServiceChatConfirmationComponent } from '@shared/modals/service-chat/components/service-chat-confirmation/service-chat-confirmation.component';
+import { DropzoneDirective } from './directives/dropzone.directive';
 
 @NgModule({
   declarations: [
@@ -163,7 +162,8 @@ import {
     EventQuestionsComposerComponent,
     NotificationCardComponent,
     ServiceChatComponent,
-    ServiceChatConfirmationComponent
+    ServiceChatConfirmationComponent,
+    DropzoneDirective
   ],
   imports: [
     CommonModule,

@@ -157,7 +157,8 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
       this.model.sharedServiceType,
       this.model.topics,
       this.model.newTopics,
-      [this.model.file].filter(x => x).map(f => FileUtils.getFileParameter(f))
+      [this.model.file].filter(x => x).map(f => FileUtils.getFileParameter(f)),
+      false
     ).pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isCreating = false))
       .subscribe(_ => {
