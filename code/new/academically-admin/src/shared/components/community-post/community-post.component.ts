@@ -15,6 +15,7 @@ import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-d
 import { UserFollowingService } from '@shared/services/user-following.service';
 import { CommunityDiscussionsComponent } from '../community-discussions/community-discussions.component';
 import { PostsStateService } from '@shared/services/posts-state.service';
+import { PostSorting } from '@app/community/discussion/discussion.component';
 
 enum SubscribeType {
     subscribe = 'Subscribe',
@@ -38,6 +39,7 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     @Input() canOverrideOwner: boolean;
     @Input() reactionGroup: ReactionGroup = ReactionGroup.Emotions;
     @Input() isCommunity: boolean;
+    @Input() notificationId: string;
 
     @Output() refresh = new EventEmitter();
     @Output() onUpdate = new EventEmitter();
@@ -58,6 +60,8 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     showMore = false;
     showUnfollow = false;
 
+    selectedSorting: PostSorting = PostSorting.Latest;
+
     isLoadingSubscriberIds = false;
 
     subscriberIds: number[] = [];
@@ -73,6 +77,8 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
     ) {
         super(injector);
     }
+
+    @Input() set sorting(sorting: PostSorting) { this.selectedSorting = sorting ?? PostSorting.Latest; }
 
     get shimmerType() { return ShimmerType; }
     get isShowMore(): boolean { return this.description?.length > this.showMoreLimit; }

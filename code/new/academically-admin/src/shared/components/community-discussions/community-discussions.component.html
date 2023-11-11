@@ -138,7 +138,7 @@
             <div class="col p-0 ms-n2">
               <!-- Comment Body | START -->
               <ng-container *ngIf="!commentEditId || commentEditId !== comment.id">
-                <div class="comment-body">
+                <div class="comment-body" [class.highlighted]="comment.isFromNotification">
                   <div class="row gap-10 m-0">
                     <div class="col-auto p-0">
                       <h5 class="comment-title">{{ comment.creatorUser.fullName }}</h5>
@@ -261,7 +261,8 @@
                 [level]="level + 1"
                 [postCreatorId]="postCreatorId"
                 [reactionGroup]="reactionGroup"
-                [selectedSorting]="selectedSorting"
+                [notificationId]="notificationId"
+                [sorting]="selectedSorting"
                 [foldSubject$]="foldSubject$"
                 (onReplyEmit)="initiateReply($event)"
                 (onUpdateEmit)="onUpdateEmit.emit()"

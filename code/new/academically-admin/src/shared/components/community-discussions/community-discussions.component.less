@@ -88,6 +88,16 @@
 
     .comment-body {
       padding: 10px;
+      border: 1px solid transparent;
+      -webkit-transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+      -moz-transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+      -ms-transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+      -o-transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+      transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+      &.highlighted {
+        border: 1px solid #2C7BE5;
+      }
     }
 
     .text-count {
@@ -239,6 +249,16 @@
 
   &-body {
     padding: 14px 16px;
+    border: 1px solid transparent;
+    -webkit-transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+    -moz-transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+    -ms-transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+    -o-transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+    &.highlighted {
+      border: 1px solid #2C7BE5;
+    }
   }
 
   &-time{

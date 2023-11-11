@@ -29,6 +29,7 @@ namespace Academically.Services.Notifications
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IRepository<Notification, Guid> _notificationsRepository;
         private readonly IRepository<NotificationUser, Guid> _notificationUsersRepository;
+        private readonly IRepository<NotificationSource, Guid> _notificationSourcesRepository;
         private readonly IRepository<Post, Guid> _postsRepository;
         private readonly IRepository<Comment, Guid> _commentsRepository;
         private readonly IRepository<User, long> _usersRepository;
@@ -41,6 +42,7 @@ namespace Academically.Services.Notifications
             IDocumentsDomainService documentsDomainService,
             IRepository<Notification, Guid> notificationsRepository,
             IRepository<NotificationUser, Guid> notificationUsersRepository,
+            IRepository<NotificationSource, Guid> notificationSourcesRepository,
             IRepository<Post, Guid> postsRepository,
             IRepository<Comment, Guid> commentsRepository,
             IRepository<User, long> usersRepository,
@@ -51,6 +53,7 @@ namespace Academically.Services.Notifications
             _documentsDomainService = documentsDomainService;
             _notificationsRepository = notificationsRepository;
             _notificationUsersRepository = notificationUsersRepository;
+            _notificationSourcesRepository = notificationSourcesRepository;
             _postsRepository = postsRepository;
             _commentsRepository = commentsRepository;
             _usersRepository = usersRepository;
@@ -90,6 +93,7 @@ namespace Academically.Services.Notifications
                 .Include(n => n.User)
                 .Include(n => n.Actors)
                     .ThenInclude(a => a.User)
+                .Include(n => n.Sources)
                 .Where(n => n.Id.ToString() == notificationId)
                 .Select(n => ObjectMapper.Map<NotificationDto>(n))
                 .FirstOrDefaultAsync();
@@ -147,6 +151,7 @@ namespace Academically.Services.Notifications
                 .Include(n => n.User)
                 .Include(n => n.Actors)
                     .ThenInclude(a => a.User)
+                .Include(n => n.Sources)
                 .OrderByDescending(n => n.CreationTime)
                 .Where(n => n.UserId == AbpSession.UserId.Value)
                 .Where(n => n.IsDeleted == false)
@@ -180,6 +185,7 @@ namespace Academically.Services.Notifications
                 .Include(n => n.User)
                 .Include(n => n.Actors)
                     .ThenInclude(a => a.User)
+                .Include(n => n.Sources)
                 .OrderByDescending(n => n.CreationTime)
                 .Where(n => n.UserId == input.UserId)
                 .Where(n => n.IsDeleted == false)
@@ -212,6 +218,15 @@ namespace Academically.Services.Notifications
                 });
             }
 
+            if (latestUserNotification.Sources == null || !latestUserNotification.Sources.Any(s => s.ReferenceId == input.SourceId))
+            {
+                await this._notificationSourcesRepository.InsertAsync(new NotificationSource()
+                {
+                    ReferenceId = input.SourceId,
+                    NotificationId = latestUserNotification.Id
+                });
+            }
+
             latestUserNotification.ReadTime = null;
             latestUserNotification.LastModifierUserId = input.ActorId;
             latestUserNotification.LastModificationTime = Clock.Now;
@@ -223,6 +238,7 @@ namespace Academically.Services.Notifications
                 .Include(n => n.User)
                 .Include(n => n.Actors)
                     .ThenInclude(a => a.User)
+                .Include(n => n.Sources)
                 .Where(n => n.Id.ToString() == notificationId)
                 .FirstOrDefaultAsync();
 
@@ -238,6 +254,7 @@ namespace Academically.Services.Notifications
                 .Include(n => n.User)
                 .Include(n => n.Actors)
                     .ThenInclude(a => a.User)
+                .Include(n => n.Sources)
                 .Where(n => n.Id.ToString() == notificationId)
                 .FirstOrDefaultAsync();
 

@@ -48,7 +48,7 @@ namespace Academically.Services.Comments.Dto
         public int ReactionsCount { get; set; }
 
         [NotMapped]
-        public double RelevantPoints { get { return (this.IsFromNotification ? 99_999 : 0) + (this.IsFromFollowing ? 1 : 0); } }
+        public double RelevantPoints { get { return (this.IsFromNotification ? 99_999 : 0) + (this.IsFromFollowing ? 1 : 0) + Children.Sum(c => c.RelevantPoints); } }
 
         [NotMapped]
         public double ActivityPoints { get { return (this.ReplyCount * 2) + this.ReactionsCount; } }

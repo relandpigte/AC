@@ -37,6 +37,7 @@ namespace Academically.Events
                 Action = NotificationAction.Review,
                 Target = getNotificationTarget(eventData.Entity.ServiceType.Value),
                 ReferenceId = eventData.Entity.ServiceId,
+                SourceId = eventData.Entity.Id,
                 Url = getServiceUrl(eventData.Entity.ServiceType.Value, eventData.Entity.ServiceId)
             });
         }

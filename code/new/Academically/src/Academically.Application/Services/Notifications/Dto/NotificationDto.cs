@@ -22,6 +22,7 @@ namespace Academically.Services.Notifications.Dto
         public virtual UserDto User { get; set; }
         public virtual UserDto CreatorUser { get; set; }
         public virtual ICollection<NotificationUserDto> Actors { get; set; }
+        public virtual ICollection<NotificationSourceDto> Sources { get; set; }
 
         [NotMapped]
         public string FormattedNotification { get; set; }

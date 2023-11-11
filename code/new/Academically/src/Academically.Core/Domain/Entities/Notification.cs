@@ -24,6 +24,7 @@ namespace Academically.Domain.Entities
 		public virtual User User { get; set; }
 
         public virtual ICollection<NotificationUser> Actors { get; set; }
+        public virtual ICollection<NotificationSource> Sources { get; set; }
     }
 }
 

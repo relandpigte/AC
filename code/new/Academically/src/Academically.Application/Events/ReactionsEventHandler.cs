@@ -71,16 +71,19 @@ namespace Academically.Events
 
             var post = await this._postsAppService.GetAsync(new Guid(reaction.ReferenceId));
             var comment = await this._commentsAppService.GetAsync(new Guid(reaction.ReferenceId));
+            var url = "app/community/post/";
 
             if (post != null)
             {
                 referenceId = post.Id;
                 userId = post.CreatorUserId.GetValueOrDefault();
+                url += post.Id;
             }
             else if (comment != null)
             {
                 referenceId = comment.Id;
                 userId = comment.CreatorUserId.GetValueOrDefault();
+                url += comment.ReferenceId;
             }
 
             await _notificationsAppService.Create(new CreateNotificationDto
@@ -90,7 +93,8 @@ namespace Academically.Events
                 Action = await this.getNotificationAction(reaction.Type),
                 Target = await this.getNotificationTarget(post, comment),
                 ReferenceId = referenceId,
-                Url = $"app/community/post/{referenceId}"
+                SourceId = referenceId,
+                Url = url
             });
         }
 

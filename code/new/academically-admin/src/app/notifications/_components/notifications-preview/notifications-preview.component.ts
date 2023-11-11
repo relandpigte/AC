@@ -119,7 +119,7 @@ export class NotificationsPreviewComponent extends AppComponentBase implements O
       });
       this._router.navigate([path], { queryParams });
     } else {
-      this._router.navigate([path]);
+      this._router.navigate([path], { queryParams: { n: notification.id } });
     }
   }
 

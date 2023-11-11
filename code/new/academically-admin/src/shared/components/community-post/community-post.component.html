@@ -156,6 +156,8 @@
         [referenceId]="data?.id"
         [postType]="data?.type"
         [postCreatorId]="data?.creatorUserId"
+        [notificationId]="notificationId"
+        [sorting]="selectedSorting"
         (onUpdateEmit)="handleCommentUpdates()"
         (onDeleteComment)="doToggleComments()"
     ></app-community-discussions>

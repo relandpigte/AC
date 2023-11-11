@@ -1,9 +1,17 @@
 <div class="post container-fluid">
     <div class="row">
-        <div *ngFor="let p of posts"  class="post-content col">
+        <div class="post-content col">
             <app-community-post-card
-                [isLoading]="isLoading"
-                [data]="p"
+                *ngIf="isLoading"
+                [isLoading]="true"
+                [data]="tempPost"
+            ></app-community-post-card>
+            <app-community-post-card
+                *ngIf="!isLoading"
+                [isLoading]="false"
+                [data]="post"
+                [notificationId]="notificationId"
+                [sorting]="notificationId ? PostSorting.Relevant : PostSorting.Latest"
                 (onSharePost)="handleSharePost($event)"
             ></app-community-post-card>
         </div>

@@ -157,6 +157,7 @@ namespace Academically.Events
                 Action = await this.getNotificationAction(post, comment),
                 Target = await this.getNotificationTarget(post, comment),
                 ReferenceId = referenceId,
+                SourceId = commentEvent.Id,
                 Url = ""
             });
         }

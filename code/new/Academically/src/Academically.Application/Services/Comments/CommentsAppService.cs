@@ -116,7 +116,7 @@ namespace Academically.Services.Comments
 
             var targetNotification = await _notificationsRepository.GetAll()
                 .Include(n => n.User)
-                .WhereIf(input.NotificationId.HasValue, n => n.ReferenceId == input.NotificationId.Value)
+                .WhereIf(input.NotificationId.HasValue, n => n.Id == input.NotificationId.Value)
                 .WhereIf(!input.NotificationId.HasValue, n => false)
                 .SingleOrDefaultAsync();
 

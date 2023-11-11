@@ -117,6 +117,9 @@ namespace Academically.Services.Posts
             _userFollowersRepository = userFollowersRepository;
         }
 
+        // blueprint for recursive anonymous function
+        private delegate void RelevantSetter(CommentDto comment);
+
         public async Task<List<PostDto>> GetAllPosts(PostType? type, Guid? parentId)
         {
             var userId = AbpSession.UserId.Value;
@@ -205,7 +208,7 @@ namespace Academically.Services.Posts
                 foreach (var attachment in item.PostAttachments)
                     attachment.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(attachment.DocumentId);
 
-                item.IsFromNotification = targetNotification != null;
+                item.IsFromNotification = targetNotification != null && targetNotification.Sources.Any(s => s.ReferenceId == item.Id);
                 item.IsFromFollowing = following?.Any(f => f.UserId == item.CreatorUserId) == true;
                 item.CommentsCount = await this.GetCommentsCountAsync(item.Id.ToString());
                 item.SharesCount = await this.GetSharesCountAsync(item.Id.ToString());
@@ -683,6 +686,8 @@ namespace Academically.Services.Posts
                 .WhereIf(input.ParentIdFilter.HasValue, e => e.ParentId == input.ParentIdFilter)
                 .WhereIf(input.ExcludingIds?.Count() > 0, c => !input.ExcludingIds.Any(i => c.Id == i))
                 .Include(e => e.Children)
+                    .ThenInclude(c => c.Children)
+                        .ThenInclude(c => c.Children)
                 .Include(e => e.CreatorUser)
                 .ThenInclude(e => e.ProfilePictureDocument)
                 .Include(e => e.TaggedUser)
@@ -692,8 +697,8 @@ namespace Academically.Services.Posts
             var totalCount = await query.CountAsync();
 
             var targetNotification = await _notificationsRepository.GetAll()
-                .Include(n => n.User)
-                .WhereIf(input.NotificationId.HasValue, n => n.ReferenceId == input.NotificationId.Value)
+                .Include(n => n.Sources)
+                .WhereIf(input.NotificationId.HasValue, n => n.Id == input.NotificationId.Value)
                 .WhereIf(!input.NotificationId.HasValue, n => false)
                 .SingleOrDefaultAsync();
 
@@ -702,11 +707,18 @@ namespace Academically.Services.Posts
                 .ToListAsync();
 
             var items = await query.Select(e => ObjectMapper.Map<CommentDto>(e)).ToListAsync();
+
+            RelevantSetter rs = null;
+            rs = delegate (CommentDto comment) {
+                comment.IsFromNotification = targetNotification != null && targetNotification.Sources.Any(s => s.ReferenceId == comment.Id);
+                comment.IsFromFollowing = following?.Any(f => f.UserId == comment.CreatorUserId) == true;
+                foreach (var item in comment.Children) rs(item);
+            };
+
             foreach (var comment in items)
             {
                 await FillInService(comment);
-                comment.IsFromNotification = targetNotification != null;
-                comment.IsFromFollowing = following?.Any(f => f.UserId == comment.CreatorUserId) == true;
+                rs(comment);
                 comment.ReplyCount = comment.Children.Count();
                 comment.ReactionsCount = await this.GetReactionsCountAsync(comment.Id.ToString());
             }
@@ -767,7 +779,7 @@ namespace Academically.Services.Posts
 
             var targetNotification = await _notificationsRepository.GetAll()
                 .Include(n => n.User)
-                .WhereIf(input.NotificationId.HasValue, n => n.ReferenceId == input.NotificationId.Value)
+                .WhereIf(input.NotificationId.HasValue, n => n.Id == input.NotificationId.Value)
                 .WhereIf(!input.NotificationId.HasValue, n => false)
                 .SingleOrDefaultAsync();
 
@@ -778,7 +790,7 @@ namespace Academically.Services.Posts
             foreach (var comment in comments)
             {
                 await FillInService(comment);
-                comment.IsFromNotification = targetNotification != null;
+                comment.IsFromNotification = targetNotification != null && targetNotification.Sources.Any(s => s.ReferenceId == comment.Id);
                 comment.IsFromFollowing = following?.Any(f => f.UserId == comment.CreatorUserId) == true;
                 comment.ReplyCount = comment.Children.Count();
                 comment.ReactionsCount = await this.GetReactionsCountAsync(comment.Id.ToString());

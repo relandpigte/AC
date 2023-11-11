@@ -130,6 +130,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<UserStatusLog> UserStatusLogs { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<NotificationUser> NotificationUsers { get; set; }
+        public virtual DbSet<NotificationSource> NotificationSources { get; set; }
         public virtual DbSet<ServiceDiscussion> ServiceDiscussion { get; set; }
         public virtual DbSet<ServiceRating> ServiceRatings { get; set; }
         public virtual DbSet<ServiceRatingArea> ServiceRatingAreas { get; set; }

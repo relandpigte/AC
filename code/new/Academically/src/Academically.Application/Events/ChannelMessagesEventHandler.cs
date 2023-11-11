@@ -58,6 +58,7 @@ namespace Academically.Events
                 Action = NotificationAction.Chat,
                 Target = NotificationTarget.Chat,
                 ReferenceId = channelMessageDto.ChannelId,
+                SourceId = channelMessageDto.Id,
                 Url = $"app/chat?channel={channelMessageDto.ChannelId}"
             });
         }

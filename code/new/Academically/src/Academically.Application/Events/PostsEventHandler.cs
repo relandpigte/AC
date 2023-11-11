@@ -65,6 +65,7 @@ namespace Academically.Events
                     Action = NotificationAction.Post,
                     Target = NotificationTarget.Post,
                     ReferenceId = post.Id,
+                    SourceId = post.Id,
                     Url = ""
                 });
             }

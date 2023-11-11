@@ -11,6 +11,7 @@ namespace Academically.Services.Notifications.Dto
         public NotificationAction Action { get; set; }
         public NotificationTarget Target { get; set; }
         public Guid ReferenceId { get; set; }
+        public Guid SourceId { get; set; }
         public string Url { get; set; }
     }
 }

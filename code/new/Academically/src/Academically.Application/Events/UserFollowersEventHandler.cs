@@ -36,7 +36,8 @@ namespace Academically.Events
                 ActorId = currentUserId,
                 Action = NotificationAction.Follow,
                 Target = NotificationTarget.User,
-                ReferenceId = eventData.Entity.Id
+                ReferenceId = eventData.Entity.Id,
+                SourceId = eventData.Entity.Id,
             });
         }
 

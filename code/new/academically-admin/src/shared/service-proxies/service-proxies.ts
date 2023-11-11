@@ -39922,6 +39922,7 @@ export class CreateNotificationDto implements ICreateNotificationDto {
     action: NotificationAction;
     target: NotificationTarget;
     referenceId: string;
+    sourceId: string;
     url: string | undefined;
 
     constructor(data?: ICreateNotificationDto) {
@@ -39948,6 +39949,7 @@ export class CreateNotificationDto implements ICreateNotificationDto {
             this.action = _data["action"];
             this.target = _data["target"];
             this.referenceId = _data["referenceId"];
+            this.sourceId = _data["sourceId"];
             this.url = _data["url"];
         }
     }
@@ -39974,6 +39976,7 @@ export class CreateNotificationDto implements ICreateNotificationDto {
         data["action"] = this.action;
         data["target"] = this.target;
         data["referenceId"] = this.referenceId;
+        data["sourceId"] = this.sourceId;
         data["url"] = this.url;
         return data; 
     }
@@ -40000,6 +40003,7 @@ export interface ICreateNotificationDto {
     action: NotificationAction;
     target: NotificationTarget;
     referenceId: string;
+    sourceId: string;
     url: string | undefined;
 }
 
@@ -46765,6 +46769,7 @@ export class NotificationDto implements INotificationDto {
     user: UserDto;
     creatorUser: UserDto;
     actors: NotificationUserDto[] | undefined;
+    sources: NotificationSourceDto[] | undefined;
     formattedNotification: string | undefined;
 
     constructor(data?: INotificationDto) {
@@ -46798,6 +46803,11 @@ export class NotificationDto implements INotificationDto {
                 this.actors = [] as any;
                 for (let item of _data["actors"])
                     this.actors.push(NotificationUserDto.fromJS(item));
+            }
+            if (Array.isArray(_data["sources"])) {
+                this.sources = [] as any;
+                for (let item of _data["sources"])
+                    this.sources.push(NotificationSourceDto.fromJS(item));
             }
             this.formattedNotification = _data["formattedNotification"];
         }
@@ -46833,6 +46843,11 @@ export class NotificationDto implements INotificationDto {
             for (let item of this.actors)
                 data["actors"].push(item.toJSON());
         }
+        if (Array.isArray(this.sources)) {
+            data["sources"] = [];
+            for (let item of this.sources)
+                data["sources"].push(item.toJSON());
+        }
         data["formattedNotification"] = this.formattedNotification;
         return data; 
     }
@@ -46863,6 +46878,7 @@ export interface INotificationDto {
     user: UserDto;
     creatorUser: UserDto;
     actors: NotificationUserDto[] | undefined;
+    sources: NotificationSourceDto[] | undefined;
     formattedNotification: string | undefined;
 }
 
@@ -46873,6 +46889,61 @@ export enum NotificationSeverity {
     Warn = 2,
     Error = 3,
     Fatal = 4,
+}
+
+export class NotificationSourceDto implements INotificationSourceDto {
+    id: string;
+    notificationId: string;
+    referenceId: string;
+    notification: NotificationDto;
+
+    constructor(data?: INotificationSourceDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.notificationId = _data["notificationId"];
+            this.referenceId = _data["referenceId"];
+            this.notification = _data["notification"] ? NotificationDto.fromJS(_data["notification"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): NotificationSourceDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new NotificationSourceDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["notificationId"] = this.notificationId;
+        data["referenceId"] = this.referenceId;
+        data["notification"] = this.notification ? this.notification.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): NotificationSourceDto {
+        const json = this.toJSON();
+        let result = new NotificationSourceDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface INotificationSourceDto {
+    id: string;
+    notificationId: string;
+    referenceId: string;
+    notification: NotificationDto;
 }
 
 /** 0 = Post 1 = Answer 2 = Question 3 = Reply 4 = Comment 5 = Chat 6 = Article 7 = Broadcast 8 = Coaching 9 = Course 10 = Tutorial 11 = Workshop 12 = User */
