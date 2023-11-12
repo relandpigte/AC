@@ -138,16 +138,19 @@ namespace Academically.Events
 
             var post = await this._postsAppService.GetAsync(new Guid(commentEvent.ReferenceId));
             var comment = commentEvent.ParentId.HasValue ? await this._commentsAppService.GetAsync(commentEvent.ParentId.Value) : null;
+            var url = "app/community/post/";
 
             if (comment != null)
             {
                 referenceId = comment.Id;
                 userId = comment.CreatorUserId.GetValueOrDefault();
+                url += comment.ReferenceId;
             }
             else if (post != null)
             {
                 referenceId = post.Id;
                 userId = post.CreatorUserId.GetValueOrDefault();
+                url += post.Id;
             }
 
             await this._notificationsAppService.Create(new CreateNotificationDto()
@@ -158,7 +161,7 @@ namespace Academically.Events
                 Target = await this.getNotificationTarget(post, comment),
                 ReferenceId = referenceId,
                 SourceId = commentEvent.Id,
-                Url = ""
+                Url = url
             });
         }
 

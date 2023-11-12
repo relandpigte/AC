@@ -355,7 +355,13 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     // if this is level 1, we need to get the first comment from the state to display
     // if this is level 2, we need to get the last comment from the state to display
     // if this is level 3, no comments should be displayed (except if level 3 contains an item relevant to the notification)
-    this.comments = (this.level === 3 && this.stateComments.every(c => !c.isFromNotification)) || _.isEmpty(this.stateComments) ? [] : [this.parentId ? _.last(this.stateComments) : _.first(this.stateComments)];
+    if ((this.level === 3 && this.stateComments.every(c => !c.isFromNotification)) || _.isEmpty(this.stateComments))
+      this.comments = [];
+    else {
+      if (this.notificationId) this.comments = this.stateComments;
+      else this.comments = [this.parentId ? _.last(this.stateComments) : _.first(this.stateComments)];
+    }
+
     this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
     this.showAddComment = !!this.totalCommentsCount;
   }

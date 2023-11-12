@@ -730,7 +730,12 @@ namespace Academically.Services.Posts
             else
                 items = items.OrderByDescending(p => p.CreationTime).ToList();
 
-            return new PagedResultDto<CommentDto>(totalCount, items.Skip(input.SkipCount).Take(input.MaxResultCount).ToList());
+            // we should calculate 'take' based from the matched comments that are RELEVANT TO THE NOTIFICATION; otherwise just use the input 'take'
+            // this checking should only apply when sorting by RELEVANT
+            var relevantComments = items.Count(i => i.RelevantPoints >= 99_999);
+            var take = input.MaxResultCount;
+            if (input.PostSort == PostSort.Relevant && input.NotificationId.HasValue && take < relevantComments) take = relevantComments;
+            return new PagedResultDto<CommentDto>(totalCount, items.Skip(input.SkipCount).Take(take).ToList());
         }
 
         public async Task<IEnumerable<CommentDto>> GetAllCommentAsync(string referenceId)
