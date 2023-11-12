@@ -191,8 +191,8 @@ namespace Academically.Services.Posts
                                    .ToListAsync();
 
             var targetNotification = await _notificationsRepository.GetAll()
-                                    .Include(n => n.User)
-                                    .WhereIf(request.NotificationId.HasValue, n => n.ReferenceId == request.NotificationId.Value)
+                                    .Include(n => n.Sources)
+                                    .WhereIf(request.NotificationId.HasValue, n => n.Id == request.NotificationId.Value)
                                     .WhereIf(!request.NotificationId.HasValue, n => false)
                                     .SingleOrDefaultAsync();
 

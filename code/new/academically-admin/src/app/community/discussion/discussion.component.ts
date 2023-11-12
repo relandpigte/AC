@@ -69,6 +69,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
     selectedSorting: PostSorting = PostSorting.Latest;
 
     id: string;
+    notificationId: string;
 
     constructor(
         injector: Injector,
@@ -126,19 +127,31 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
           default:
             return PostSort.Latest;
         }
-      }
+    }
 
     async ngOnInit(): Promise<void> {
         this.isLoadingPost = true;
-        try {
-            await this.initDiscussion();
-            await this.initPostsAppStates();
-            await this.loadOtherInfo();
-        } catch (err) {
-            console.error(err);
-        }
-        this.isLoadingPost = false;
-        this._cdr.detectChanges();
+        this._route.queryParamMap
+            .subscribe(async query => {
+                this.isLoadingPost = true;
+                this.notificationId = query.get('n');
+
+                if (this.notificationId) this.selectedSorting = PostSorting.Relevant;
+
+                try {
+                    await this.initDiscussion();
+                    await this.initPostsAppStates();
+                    await this.loadOtherInfo();
+                } catch (err) {
+                    console.error(err);
+                }
+                this.isLoadingPost = false;
+                this._cdr.detectChanges();
+            },
+            (err) => {
+                console.error(`Error occurred while loading the discussion: ${err}`);
+                this.isLoadingPost = false;
+            });
     }
 
     ngOnDestroy() {
@@ -209,7 +222,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
     private async initPostsAppStates() {
         const appStateConfig: AppStateConfig = {
             [this.postsStateId]: {
-                load: [undefined, this.discussionId, undefined, this.postSort, undefined, 0, MAX_POSTS_TO_LOAD],
+                load: [undefined, this.discussionId, undefined, this.postSort, this.notificationId ?? undefined, 0, MAX_POSTS_TO_LOAD],
                 update: { postId: this.discussionId }
             }
         };

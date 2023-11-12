@@ -1532,6 +1532,12 @@ each(range(1px, 30px, 1), {
   100%{background-position:0% 50%}
 }
 
+@keyframes outline-highlight {
+  0% { outline: 1px solid #2C7BE5; }
+  75% { outline: 1px solid #2C7BE5; }
+  100% { outline: 1px solid transparent; }
+}
+
 .box {
   &-shimmer {
     &-bar {
@@ -1659,4 +1665,10 @@ each(range(1px, 30px, 1), {
   .modal-content {
     width: auto !important;
   }
+}
+
+.anim-outline-highlighted {
+  animation: outline-highlight;
+  animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+  animation-duration: 2.6s;
 }

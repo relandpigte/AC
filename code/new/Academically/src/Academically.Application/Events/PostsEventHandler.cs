@@ -66,7 +66,7 @@ namespace Academically.Events
                     Target = NotificationTarget.Post,
                     ReferenceId = post.Id,
                     SourceId = post.Id,
-                    Url = ""
+                    Url = $"app/community/discussion/{discussion.Id}"
                 });
             }
         }

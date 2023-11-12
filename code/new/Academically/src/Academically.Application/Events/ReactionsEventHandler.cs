@@ -71,19 +71,28 @@ namespace Academically.Events
 
             var post = await this._postsAppService.GetAsync(new Guid(reaction.ReferenceId));
             var comment = await this._commentsAppService.GetAsync(new Guid(reaction.ReferenceId));
-            var url = "app/community/post/";
+            var url = "";
+            var postUrl = "app/community/post/";
+            var discussionUrl = "app/community/discussion/";
 
             if (post != null)
             {
                 referenceId = post.Id;
                 userId = post.CreatorUserId.GetValueOrDefault();
-                url += post.Id;
+                if (post.Parent != null && post.Parent.Type == PostType.Discussion)
+                    url = $"{discussionUrl}{post.ParentId}";
+                else
+                    url = $"{postUrl}{post.Id}";
             }
             else if (comment != null)
             {
                 referenceId = comment.Id;
                 userId = comment.CreatorUserId.GetValueOrDefault();
-                url += comment.ReferenceId;
+                var parentPost = await this._postsAppService.GetAsync(new Guid(comment.ReferenceId));
+                if (parentPost != null && parentPost.Parent != null && parentPost.Parent.Type == PostType.Discussion)
+                    url = $"{discussionUrl}{parentPost.ParentId}";
+                else
+                    url = $"{postUrl}{comment.ReferenceId}";
             }
 
             await _notificationsAppService.Create(new CreateNotificationDto

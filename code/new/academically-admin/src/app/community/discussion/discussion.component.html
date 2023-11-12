@@ -65,54 +65,56 @@
     </div>
     <div class="discussion-content d-flex flex-row flex-nowrap p-0">
         <div class="discussion-content-left flex-grow-1">
-            <app-community-composer [isLoading]="isLoading"  [showBottomActions]="false" (onQuickPostClick)="handleAddPost()"></app-community-composer>
+            <ng-container>
+                <app-community-composer [isLoading]="isLoading"  [showBottomActions]="false" (onQuickPostClick)="handleAddPost()"></app-community-composer>
 
-            <div class="discussion-controls d-flex flex-row justify-content-between" [style.marginBottom.px]="10" [class.loading]="isLoading">
-                <div class="discussion-controls-left d-flex align-items-end">
-                    <div class="discussion-controls-left-posts-count">
-                        {{ postsCount }} posts
+                <div  class="discussion-controls d-flex flex-row justify-content-between" [style.marginBottom.px]="10" [class.loading]="isLoading">
+                    <div class="discussion-controls-left d-flex align-items-end">
+                        <div class="discussion-controls-left-posts-count">
+                            {{ postsCount }} posts
+                        </div>
                     </div>
-                </div>
-                <div class="discussion-controls-right d-flex flex-row align-items-center gap-10">
-                    Sort by:
-                    <div class="dropdown">
-                        <a href="#" class="dropdown-ellipses dropdown-toggle d-flex flex-row align-items-center gap-5" role="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{ selectedSorting | localize }} <span class="fe fe-chevron-down"></span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-left" [style.marginTop.px]="10">
+                    <div class="discussion-controls-right d-flex flex-row align-items-center gap-10">
+                        Sort by:
+                        <div class="dropdown">
+                            <a href="#" class="dropdown-ellipses dropdown-toggle d-flex flex-row align-items-center gap-5" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{ selectedSorting | localize }} <span class="fe fe-chevron-down"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-left" [style.marginTop.px]="10">
 
-                            <div
-                                class="dropdown-item cursor-pointer d-flex justify-content-between"
-                                [class.selected]="isSelectedSorting(postSortingEnum.Latest)"
-                                (click)="handleSortingChange(postSortingEnum.Latest)"
-                            >
-                                <div>{{ postSortingEnum.Latest  | localize }}</div>
-                                <i *ngIf="isSelectedSorting(postSortingEnum.Latest)" class="fe fe-check"></i>
+                                <div
+                                    class="dropdown-item cursor-pointer d-flex justify-content-between"
+                                    [class.selected]="isSelectedSorting(postSortingEnum.Latest)"
+                                    (click)="handleSortingChange(postSortingEnum.Latest)"
+                                >
+                                    <div>{{ postSortingEnum.Latest  | localize }}</div>
+                                    <i *ngIf="isSelectedSorting(postSortingEnum.Latest)" class="fe fe-check"></i>
+                                </div>
+
+                                <div
+                                    class="dropdown-item cursor-pointer d-flex justify-content-between"
+                                    [class.selected]="isSelectedSorting(postSortingEnum.Relevant)"
+                                    (click)="handleSortingChange(postSortingEnum.Relevant)"
+                                >
+                                    <div>{{ postSortingEnum.Relevant  | localize }}</div>
+                                    <i *ngIf="isSelectedSorting(postSortingEnum.Relevant)" class="fe fe-check"></i>
+                                </div>
+
+                                <div
+                                    class="dropdown-item cursor-pointer d-flex justify-content-between"
+                                    [class.selected]="isSelectedSorting(postSortingEnum.Top)"
+                                    (click)="handleSortingChange(postSortingEnum.Top)"
+                                >
+                                    <div>{{ postSortingEnum.Top  | localize }}</div>
+                                    <i *ngIf="isSelectedSorting(postSortingEnum.Top)" class="fe fe-check"></i>
+                                </div>
+
                             </div>
-
-                            <div
-                                class="dropdown-item cursor-pointer d-flex justify-content-between"
-                                [class.selected]="isSelectedSorting(postSortingEnum.Relevant)"
-                                (click)="handleSortingChange(postSortingEnum.Relevant)"
-                            >
-                                <div>{{ postSortingEnum.Relevant  | localize }}</div>
-                                <i *ngIf="isSelectedSorting(postSortingEnum.Relevant)" class="fe fe-check"></i>
-                            </div>
-
-                            <div
-                                class="dropdown-item cursor-pointer d-flex justify-content-between"
-                                [class.selected]="isSelectedSorting(postSortingEnum.Top)"
-                                (click)="handleSortingChange(postSortingEnum.Top)"
-                            >
-                                <div>{{ postSortingEnum.Top  | localize }}</div>
-                                <i *ngIf="isSelectedSorting(postSortingEnum.Top)" class="fe fe-check"></i>
-                            </div>
-
                         </div>
                     </div>
                 </div>
-            </div>
+            </ng-container>
 
             <div *ngFor="let p of children" class="discussion-content-post">
                 <app-community-post-card
@@ -120,6 +122,8 @@
                     [isLoading]="isLoading"
                     [data]="p"
                     [canOverrideOwner]="true"
+                    [sorting]="selectedSorting"
+                    [notificationId]="notificationId"
                     (onChildrenUpdate)="handleChildrenUpdate(p)"
                 ></app-community-post-card>
             </div>

@@ -91,8 +91,6 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   postSortingEnum = PostSorting;
   recentlyAddedComments: CommentDto[] = []; // this will contain recently added comments to be used for folding
 
-  COMMENT_HIGHLIGHT_DURATION = 2_000; // 2 seconds
-
   constructor(
     injector: Injector,
     private _cdr: ChangeDetectorRef,
@@ -159,7 +157,6 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
 
   ngAfterViewInit(): void {
     this.scrollToMiddleHighlightedComment();
-    setTimeout(() => this.removeHighlightsInComments(), this.COMMENT_HIGHLIGHT_DURATION);
   }
 
   async ngOnDestroy() {
@@ -319,7 +316,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   private async initCommentsAppStates() {
     const appStateConfig: AppStateConfig = {
       [this.commentsStateId]: {
-        load: [this.referenceId, this.parentId, this.postSort, this.notificationId, undefined, 0, this.isSidebar ? MAX_REPLIES_TO_LOAD : 1],
+        load: [this.referenceId, this.parentId, this.postSort, this.notificationId ?? undefined, undefined, 0, this.isSidebar ? MAX_REPLIES_TO_LOAD : 1],
         update: { referenceId: this.referenceId, parentId: this.parentId }
       }
     };
@@ -455,7 +452,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
     if (!this.isExpanded) { // if the comments are not expanded, we need to get the rest of the comments from the server
       const excludingIds = this.recentlyAddedComments.map(c => c.id); // exclude these ids from pagination because they are already added in the list (to avoid duplicates), they are ignoring the selected sorting
       const skip = this.comments.length - this.recentlyAddedComments.length; // we should start skipping from the last retrieved comments from the server minus the recently added comments
-      this._postsServiceProxy.getAllCommentsPaged(this.referenceId, this.parentId, this.postSort, this.notificationId, excludingIds, skip, MAX_REPLIES_TO_LOAD)
+      this._postsServiceProxy.getAllCommentsPaged(this.referenceId, this.parentId, this.postSort, this.notificationId ?? undefined, excludingIds, skip, MAX_REPLIES_TO_LOAD)
         .subscribe(oldComments => {
           this.commentsStateService.addComments(oldComments.items);
           this.comments = this.stateComments;
