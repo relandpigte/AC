@@ -5,7 +5,7 @@
       <span class="badge bg-primary unread-count" *ngIf="unreadCount">{{ unreadCount }}</span>
     </span>
     </a>
-    <div class="dropdown-menu dropdown-menu-card dropdown-menu-right">
+    <div class="dropdown-menu dropdown-menu-card dropdown-menu-right" [style.z-index]="999999">
         <ng-container *ngTemplateOutlet="modalHeader">
         </ng-container>
         <div class="card-body notifications-container">

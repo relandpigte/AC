@@ -116,7 +116,7 @@
                 </div>
             </ng-container>
 
-            <div *ngFor="let p of children" class="discussion-content-post">
+            <div *ngFor="let p of children; index as i" class="discussion-content-post">
                 <app-community-post-card
                     *ngIf="!p.isHidden && !p.isDeleted"
                     [isLoading]="isLoading"
@@ -126,6 +126,10 @@
                     [notificationId]="notificationId"
                     (onChildrenUpdate)="handleChildrenUpdate(p)"
                 ></app-community-post-card>
+
+                <div *ngIf="i === 0 && !!notificationId" class="discussion-inline-separator d-flex align-items-center text-center">
+                    <span class="flex-grow-1">{{ 'OtherPosts' | localize }}</span>
+                </div>
             </div>
 
             <div *ngIf="hiddenChildrenCount" class="card discussion-content-post-load-more" (click)="onLoadMore()">

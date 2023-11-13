@@ -2045,5 +2045,7 @@
     <text name="Done">Done</text>
     <text name="TryAgain">Try again</text>
     
+    <!-- Discussion Posts Page -->
+    <text name="OtherPosts">Other posts</text>
   </texts>
 </localizationDictionary>

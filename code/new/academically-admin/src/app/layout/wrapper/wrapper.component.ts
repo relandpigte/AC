@@ -7,15 +7,14 @@ import { SidebarSize } from '@shared/enums/theme-settings/sidebar-size.enum';
 import { IThemeSetting } from '@shared/interfaces/theme-setting.interface';
 import { ThemeManagerService } from '@shared/services/theme-manager.service';
 import { BehaviorSubject } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
+import { TitleCasePipe } from '@angular/common';
 import { WrapperService } from '@shared/services/wrapper.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { NotificationsStateService } from '@shared/services/notifications-state.service';
-import { takeUntil } from '@node_modules/rxjs/operators';
 import { StateUpdateType } from '@shared/services/state-base.service';
-import { CommentsServiceProxy, NotificationDto, NotificationsServiceProxy, PostsServiceProxy } from '@shared/service-proxies/service-proxies';
-import { TitleCasePipe } from '@node_modules/@angular/common';
 import { HubService } from '@app/_shared/services/hub.service';
+import { CommentsServiceProxy, NotificationDto, NotificationsServiceProxy, PostsServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-wrapper',
@@ -88,10 +87,13 @@ export class WrapperComponent extends AppComponentBase implements OnInit, OnDest
     this.notificationsStateService = this.pubSubService.getStateService<NotificationsStateService>('notifs');
     this.notificationsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingList$.next(loading));
     this.notificationsStateService.notifications$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
+      if (event.data.readTime !== undefined) return;
       switch (event.type) {
         case StateUpdateType.Add:
         case StateUpdateType.Update:
-          if (this.timer) clearTimeout(this.timer);
+          if (this.timer) {
+            clearTimeout(this.timer);
+          }
           this.notification = event.data;
           this.timer = setTimeout((): void => this.notification = null, 10_000);
           break;

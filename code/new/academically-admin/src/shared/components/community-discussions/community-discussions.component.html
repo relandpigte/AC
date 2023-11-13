@@ -19,8 +19,9 @@
                   <!-- Reply Textarea | START -->
                   <form autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit(addCommentEl)" class="comment-box flex-grow-1">
                     <textarea #addCommentEl name="message" (keydown)="onMessageKeydown($event, form, { el: addCommentEl, isChild: false })"
-                              class="form-control form-control-flush" placeholder="Leave a comment..." [maxLength]="500"
+                              class="form-control form-control-flush text-nowrap" placeholder="Leave a comment..." [maxLength]="500"
                               style="overflow: hidden; overflow-wrap: break-word; height: 41px;"
+                              [style.margin-top.px]="!!addCommentEl.value.length ? -15 : 0"
                     ></textarea>
                   </form>
                   <!-- Reply Textarea | END -->
