@@ -3,7 +3,7 @@ import { finalize, takeUntil } from '@node_modules/rxjs/operators';
 import { Router } from '@angular/router';
 
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
-import { ArticleDto, ArticlesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, ArticlesServiceProxy, ArticleStatus } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
@@ -42,6 +42,22 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
 
   async nav(url: string, id: string): Promise<void> {
     await this.router.navigate([url , id]);
+  }
+
+  handleArchive(id: string): void {
+    this._articlesService.updateStatus(id, ArticleStatus.Archived)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((): void => {
+        this.notify.success(this.l('SavedSuccessfully'));
+        const data = this.draftArticles.find(x => x.id === id);
+        if (!data) {
+          return;
+        }
+
+        this.draftArticles = this.draftArticles?.filter(x => x.id !== id);
+        data.status = ArticleStatus.Archived;
+        this.archivedArticles.push(data);
+      });
   }
 
   onDeleteClick(id: string): void {

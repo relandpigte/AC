@@ -3,7 +3,7 @@ import { finalize, takeUntil } from 'rxjs/operators';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
-import { VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
+import { VideoDto, VideosServiceProxy, VideoStatus } from '@shared/service-proxies/service-proxies';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 
 @Component({
@@ -32,6 +32,22 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
 
   ngOnInit(): void {
     this.loadVideos();
+  }
+
+  handleArchive(id: string): void {
+    this._videoService.updateStatus(id, VideoStatus.Archived)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((): void => {
+        this.notify.success(this.l('SavedSuccessfully'));
+        const data = this.draftVideos.find(x => x.id === id);
+        if (!data) {
+          return;
+        }
+
+        this.draftVideos = this.draftVideos?.filter(x => x.id !== id);
+        data.status = VideoStatus.Archived;
+        this.archiveVideos.push(data);
+      });
   }
 
   private loadVideos(): void {

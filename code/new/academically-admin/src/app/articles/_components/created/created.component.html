@@ -50,7 +50,7 @@
                     [data]="data"
                     [isLoading]="isLoading$ | async"
                     [isCreator]="isTutor"
-                    (onDelete)="onDeleteClick(data.id)"
+                    (onDelete)="onDeleteClick($event)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>
@@ -62,7 +62,8 @@
                     [data]="data"
                     [isLoading]="isLoading$ | async"
                     [isCreator]="isTutor"
-                    (onDelete)="onDeleteClick(data.id)"
+                    (onDelete)="onDeleteClick($event)"
+                    (onArchive)="handleArchive($event)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>
@@ -74,7 +75,7 @@
                     [data]="data"
                     [isLoading]="isLoading$ | async"
                     [isCreator]="isTutor"
-                    (onDelete)="onDeleteClick(data.id)"
+                    (onDelete)="onDeleteClick($event)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>

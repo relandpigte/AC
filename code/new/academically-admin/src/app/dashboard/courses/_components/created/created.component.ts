@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
-import { CourseDto, CoursesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CourseDto, CoursesServiceProxy, CourseStatus } from '@shared/service-proxies/service-proxies';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { finalize, takeUntil } from 'rxjs/operators';
 
@@ -31,6 +31,22 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
 
   ngOnInit(): void {
     this.initCreatedCourses();
+  }
+
+  handleArchive(id: string): void {
+    this._coursesService.updateStatus(id, CourseStatus.Archived)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((): void => {
+        this.notify.success(this.l('SavedSuccessfully'));
+        const data = this.draftCourses.find(x => x.id === id);
+        if (!data) {
+          return;
+        }
+
+        this.draftCourses = this.draftCourses?.filter(x => x.id !== id);
+        data.status = CourseStatus.Archived;
+        this.archiveCourses.push(data);
+      });
   }
 
   private initCreatedCourses(): void {

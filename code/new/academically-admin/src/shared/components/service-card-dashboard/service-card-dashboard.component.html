@@ -189,12 +189,23 @@
                             {{ 'Overview' | localize }}
                         </a>
                        <ng-container *ngIf="isCreator">
+                           <a href="javascript:void(0)" class="dropdown-item" (click)="handlePublish(id)">
+                               {{ 'Publish' | localize }}
+                           </a>
                            <a href="javascript:void(0)" class="dropdown-item" (click)="handleEdit(id)">
                                {{ 'Edit' | localize }}
                            </a>
                            <a href="javascript:void(0)" class="dropdown-item" (click)="handleDelete(id)">
                                {{ 'Delete' | localize }}
                            </a>
+                          <ng-container *ngIf="!isEvent">
+                              <a *ngIf="isDraft" href="javascript:void(0)" class="dropdown-item" (click)="handleArchive(id)">
+                                  {{ 'Archive' | localize }}
+                              </a>
+                              <a *ngIf="isArchive" href="javascript:void(0)" class="dropdown-item" (click)="handleUnArchive(id)">
+                                  {{ 'Unarchive' | localize }}
+                              </a>
+                          </ng-container>
                        </ng-container>
                     </div>
                 </div>

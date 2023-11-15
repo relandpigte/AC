@@ -61,6 +61,7 @@
                     [data]="data"
                     [isLoading]="isLoading$ | async"
                     [isCreator]="isTutor"
+                    (onArchive)="handleArchive($event)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>

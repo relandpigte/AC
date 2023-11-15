@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
-import { CoachingDto, CoachingsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CoachingDto, CoachingsServiceProxy, CoachingStatus } from '@shared/service-proxies/service-proxies';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { finalize, takeUntil } from '@node_modules/rxjs/operators';
 
@@ -33,6 +33,22 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
 
   ngOnInit(): void {
     this.loadCoaching();
+  }
+
+  handleArchive(id: string): void {
+    this._coachingService.updateStatus(id, CoachingStatus.Archived)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((): void => {
+        this.notify.success(this.l('SavedSuccessfully'));
+        const data = this.draftCoachings.find(x => x.id === id);
+        if (!data) {
+          return;
+        }
+
+        this.draftCoachings = this.draftCoachings?.filter(x => x.id !== id);
+        data.status = CoachingStatus.Archived;
+        this.archiveCoachings.push(data);
+      });
   }
 
   private loadCoaching(): void {
