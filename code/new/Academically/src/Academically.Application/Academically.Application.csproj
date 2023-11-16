@@ -61,7 +61,6 @@
     <Folder Include="Services\TutorApplications\Dto\" />
     <Folder Include="Users\Dto\NewFolder\" />
     <Folder Include="Services\UserAvailabilities\" />
-    <Folder Include="Services\UserAvailabilities\Dto\" />
     <Folder Include="Services\Currencies\" />
     <Folder Include="Services\Currencies\Dto\" />
     <Folder Include="Services\CourseSections\" />

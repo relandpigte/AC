@@ -190,6 +190,12 @@
             padding: 0;
             margin: 0;
 
+            &.form-group.disabled {
+                opacity: 0.6;
+                cursor: default;
+                pointer-events: none;
+            }
+
             .title {
                 color: #12263F;
                 display: block;
@@ -235,6 +241,10 @@
                     font-style: normal;
                     font-weight: 400;
                     padding: 8px 10px;
+
+                    &.selected {
+                        color: #12263F;
+                    }
                 }
 
                 &-menu {

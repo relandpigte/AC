@@ -27,7 +27,13 @@
     </div>
 
     <div class="card-body flex-grow-1" [loader]="isLoading">
-      <app-schedules [userAvailabilities]="userAvailabilities" [type]="activeTab" (modelChanged)="handleModelChanged($event)"></app-schedules>
+      <app-schedules
+          [userAvailabilities]="userAvailabilities"
+          [userAvailabilitySettings]="userAvailabilitySettings"
+          [type]="activeTab"
+          (modelChanged)="handleModelChanged($event)"
+          (settingsChanged)="handleSettingsChanged($event)"
+      ></app-schedules>
     </div>
     <abp-modal-footer [isLoading]="isLoading" [cancelDisabled]="isLoading" [saveDisabled]="isLoading || !isModelValid"
       (onCancelClick)="onCloseClick()">

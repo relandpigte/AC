@@ -138,6 +138,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<ServicePurchase> ServicePurchases { get; set; }
         public virtual DbSet<EventRating> EventRatings { get; set; }
         public virtual DbSet<ChannelMessageVisibility> ChannelMessageVisibility { get; set; }
+        public virtual DbSet<UserAvailabilitySetting> UserAvailabilitySettings { get; set; }
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
         {

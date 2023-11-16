@@ -14,9 +14,9 @@ import {
   TimeZonesServiceProxy,
   UserDto,
   UserAvailabilitiesServiceProxy,
-  UserAvailabilityDto
+  UserAvailabilityDto,
+  UserAvailabilitySettingDto
 } from '@shared/service-proxies/service-proxies';
-import { AppSessionService } from '@shared/session/app-session.service';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
@@ -62,6 +62,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
   calendarEvents: CalendarEventDto[] = [];
   calendarEventsTemp: CalendarEventDto[] = [];
   userAvailabilities: UserAvailabilityDto[] = [];
+  userAvailabilitySettings: UserAvailabilitySettingDto;
   isTutorCalendarUser = false;
 
   CalendarView = CalendarView;
@@ -182,6 +183,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
     modalSettings.class = 'modal-schedule';
     modalSettings.initialState = {
       userAvailabilities: this.userAvailabilities,
+      userAvailabilitySettings: this.userAvailabilitySettings
     };
     const modal = this._modalService.show(CreateEditSchedulesComponent, modalSettings).content;
     modal.modelSaved
@@ -190,6 +192,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
       )
       .subscribe(() => {
         this.getUserAvailabilities();
+        this.getUserAvailabilitySettings();
       });
   }
 
@@ -252,6 +255,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
   private refreshClick(): void {
     this.getCalendarEvents();
     this.getUserAvailabilities();
+    this.getUserAvailabilitySettings();
   }
 
   private showCreateEditBlockOutModal(model?: CalendarEventDto): void {
@@ -305,6 +309,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
         this.user = user;
         this.isTutorCalendarUser = this.user.roleNames.includes('Tutor');
         this.getUserAvailabilities();
+        this.getUserAvailabilitySettings();
       });
   }
 
@@ -477,5 +482,14 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
   private addMinutesPadding(minutes: number, isEnd = false): number {
     const minutesPadding = minutes % 60 === 0 ? 60 : 30;
     return isEnd ? minutes + minutesPadding : minutes - minutesPadding;
+  }
+
+  private getUserAvailabilitySettings(): void {
+    if (!this.isTutorCalendarUser) {
+      return;
+    }
+    this._userAvailabilitiesService.getAvailabilitySettings()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(settings => this.userAvailabilitySettings = settings);
   }
 }

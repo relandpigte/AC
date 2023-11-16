@@ -129,30 +129,34 @@
                     <label class="title">{{ 'BookingIntervals' | localize }}</label>
                     <span class="sub-title">{{ 'BookingIntervalsDesc' | localize }}</span>
                     <div class="dropdown">
-                        <a href="javascript:void(0)" class="dropdown-ellipses dropdown-toggle d-flex justify-content-between align-items-center h-100" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Select <span class="fe fe-chevron-down"></span>
+                        <a href="javascript:void(0)"
+                           class="dropdown-ellipses dropdown-toggle d-flex justify-content-between align-items-center h-100"
+                           role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                           [class.selected]="!!userAvailabilitySettings.bookingIntervals"
+                        >
+                            {{ userAvailabilitySettings.bookingIntervals ? userAvailabilitySettings.bookingIntervals + ' mins' : 'Select' }} <span class="fe fe-chevron-down"></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right custom-card-shadow">
                             <div class="dropdown-item-container">
-                                <div *ngFor="let booking of settingTimeSelections" class="dropdown-item cursor-pointer d-flex justify-content-end">
+                                <div *ngFor="let booking of settingTimeSelections" class="dropdown-item cursor-pointer d-flex justify-content-end" (click)="userAvailabilitySettings.bookingIntervals = booking.value">
                                     {{ booking.label }}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col form-group">
+                <div class="col form-group" [class.disabled]="!userAvailabilitySettings.isMaximumBookingPerDay">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
                             <label class="title" for="maximum-bookings">{{ 'MaximumBookings' | localize }}</label>
                             <span class="sub-title">{{ 'MaximumBookingsDesc' | localize }}</span>
                         </div>
                         <div class="custom-control custom-switch ml-auto">
-                            <input type="checkbox" class="custom-control-input" id="maximum-bookings-input" checked/>
+                            <input [(ngModel)]="userAvailabilitySettings.isMaximumBookingPerDay" type="checkbox" class="custom-control-input" id="maximum-bookings-input" [checked]="userAvailabilitySettings.isMaximumBookingPerDay"/>
                             <label class="custom-control-label" for="maximum-bookings-input"></label>
                         </div>
                     </div>
-                    <input type="text" id="maximum-bookings" class="form-control" placeholder="Input">
+                    <input [(ngModel)]="userAvailabilitySettings.maximumBookingPerDay" type="number" id="maximum-bookings" class="form-control" placeholder="Input">
                 </div>
             </div>
             <div class="settings-separator row"></div>
@@ -163,46 +167,55 @@
                 </div>
             </div>
             <div class="row d-flex gap-15">
-                <div class="col form-group">
+                <div class="col form-group" [class.disabled]="!userAvailabilitySettings.isPaddingBeforeBooking">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
                             <label class="title" for="maximum-bookings">{{ 'BeforeBooking' | localize }}</label>
                         </div>
                         <div class="custom-control custom-switch ml-auto">
-                            <input type="checkbox" class="custom-control-input" id="before-booking" checked/>
+                            <input [(ngModel)]="userAvailabilitySettings.isPaddingBeforeBooking" type="checkbox" class="custom-control-input" id="before-booking" [checked]="userAvailabilitySettings.isPaddingBeforeBooking"/>
                             <label class="custom-control-label" for="before-booking"></label>
                         </div>
                     </div>
                     <div class="dropdown">
-                        <a href="javascript:void(0)" class="dropdown-ellipses dropdown-toggle d-flex justify-content-between align-items-center h-100" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Select <span class="fe fe-chevron-down"></span>
+                        <a
+                            href="javascript:void(0)"
+                            class="dropdown-ellipses dropdown-toggle d-flex justify-content-between align-items-center h-100"
+                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            [class.selected]="!!userAvailabilitySettings.paddingBeforeBooking"
+                        >
+                            {{ userAvailabilitySettings.paddingBeforeBooking ? userAvailabilitySettings.paddingBeforeBooking + ' mins' : 'Select' }} <span class="fe fe-chevron-down"></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right custom-card-shadow">
                             <div class="dropdown-item-container">
-                                <div *ngFor="let booking of settingTimeSelections" class="dropdown-item cursor-pointer d-flex justify-content-end">
+                                <div *ngFor="let booking of settingTimeSelections" class="dropdown-item cursor-pointer d-flex justify-content-end" (click)="userAvailabilitySettings.paddingBeforeBooking = booking.value">
                                     {{ booking.label }}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col form-group">
+                <div class="col form-group" [class.disabled]="!userAvailabilitySettings.isPaddingAfterBooking">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
                             <label class="title" for="maximum-bookings">{{ 'AfterBooking' | localize }}</label>
                         </div>
                         <div class="custom-control custom-switch ml-auto">
-                            <input type="checkbox" class="custom-control-input" id="after-booking" checked/>
+                            <input [(ngModel)]="userAvailabilitySettings.isPaddingAfterBooking" type="checkbox" class="custom-control-input" id="after-booking" [checked]="userAvailabilitySettings.isPaddingAfterBooking"/>
                             <label class="custom-control-label" for="after-booking"></label>
                         </div>
                     </div>
                     <div class="dropdown">
-                        <a href="javascript:void(0)" class="dropdown-ellipses dropdown-toggle d-flex justify-content-between align-items-center h-100" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Select <span class="fe fe-chevron-down"></span>
+                        <a href="javascript:void(0)"
+                           class="dropdown-ellipses dropdown-toggle d-flex justify-content-between align-items-center h-100"
+                           role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                           [class.selected]="!!userAvailabilitySettings.paddingAfterBooking"
+                        >
+                            {{ userAvailabilitySettings.paddingAfterBooking ? userAvailabilitySettings.paddingAfterBooking + ' mins' : 'Select' }} <span class="fe fe-chevron-down"></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right custom-card-shadow">
                             <div class="dropdown-item-container">
-                                <div *ngFor="let booking of settingTimeSelections" class="dropdown-item cursor-pointer d-flex justify-content-end">
+                                <div *ngFor="let booking of settingTimeSelections" class="dropdown-item cursor-pointer d-flex justify-content-end" (click)="userAvailabilitySettings.paddingAfterBooking = booking.value">
                                     {{ booking.label }}
                                 </div>
                             </div>
@@ -212,26 +225,30 @@
             </div>
             <div class="settings-separator row"></div>
             <div class="row d-flex gap-15">
-                <div class="col form-group">
+                <div class="col form-group" [class.disabled]="!userAvailabilitySettings.isMinimumBookingNotice">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
                             <label class="title">{{ 'MinimumBookingNotice' | localize }}</label>
                             <span class="sub-title">{{ 'MinimumBookingNoticeDesc' | localize }}</span>
                         </div>
                         <div class="custom-control custom-switch ml-auto">
-                            <input type="checkbox" class="custom-control-input" id="minimum-booking" checked/>
+                            <input [(ngModel)]="userAvailabilitySettings.isMinimumBookingNotice" type="checkbox" class="custom-control-input" id="minimum-booking" [checked]="userAvailabilitySettings.isMinimumBookingNotice"/>
                             <label class="custom-control-label" for="minimum-booking"></label>
                         </div>
                     </div>
                     <div class="d-flex gap-10">
-                        <input type="text" class="form-control booking-input" placeholder="Input">
+                        <input [(ngModel)]="userAvailabilitySettings.minimumBookingNotice" type="text" class="form-control booking-input" placeholder="Input">
                         <div class="dropdown flex-grow-1">
-                            <a href="javascript:void(0)" class="dropdown-ellipses dropdown-toggle d-flex justify-content-between align-items-center h-100" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Select <span class="fe fe-chevron-down"></span>
+                            <a href="javascript:void(0)"
+                               class="dropdown-ellipses dropdown-toggle d-flex justify-content-between align-items-center h-100"
+                               role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                               [class.selected]="!!userAvailabilitySettings.minimumBookingNoticeUnit"
+                            >
+                                {{ userAvailabilitySettings.minimumBookingNoticeUnit ? AvailabilityUnit[userAvailabilitySettings.minimumBookingNoticeUnit] : 'Select' }} <span class="fe fe-chevron-down"></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right custom-card-shadow booking-dropdown">
                                 <div class="dropdown-item-container">
-                                    <div *ngFor="let booking of settingTimeNoticePeriod" class="dropdown-item cursor-pointer d-flex">
+                                    <div *ngFor="let booking of settingTimeNoticePeriod" class="dropdown-item cursor-pointer d-flex" (click)="userAvailabilitySettings.minimumBookingNoticeUnit = booking.value">
                                         {{ booking.label }}
                                     </div>
                                 </div>
@@ -239,26 +256,30 @@
                         </div>
                     </div>
                 </div>
-                <div class="col form-group">
+                <div class="col form-group" [class.disabled]="!userAvailabilitySettings.isMaximumAdvanceNotice">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
                             <label class="title" for="maximum-bookings">{{ 'MaximumAdvanceNotice' | localize }}</label>
                             <span class="sub-title">{{ 'MaximumAdvanceNoticeDesc' | localize }}</span>
                         </div>
                         <div class="custom-control custom-switch ml-auto">
-                            <input type="checkbox" class="custom-control-input" id="maximum-booking" checked/>
+                            <input [(ngModel)]="userAvailabilitySettings.isMaximumAdvanceNotice" type="checkbox" class="custom-control-input" id="maximum-booking" [checked]="userAvailabilitySettings.isMaximumAdvanceNotice"/>
                             <label class="custom-control-label" for="maximum-booking"></label>
                         </div>
                     </div>
                     <div class="d-flex gap-10">
-                        <input type="text" class="form-control booking-input" placeholder="Input">
+                        <input [(ngModel)]="userAvailabilitySettings.maximumAdvanceNotice" type="text" class="form-control booking-input" placeholder="Input">
                         <div class="dropdown flex-grow-1">
-                            <a href="javascript:void(0)" class="dropdown-ellipses dropdown-toggle d-flex justify-content-between align-items-center h-100" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Select <span class="fe fe-chevron-down"></span>
+                            <a href="javascript:void(0)"
+                               class="dropdown-ellipses dropdown-toggle d-flex justify-content-between align-items-center h-100"
+                               role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                               [class.selected]="!!userAvailabilitySettings.maximumAdvanceNoticeUnit"
+                            >
+                                {{ userAvailabilitySettings.maximumAdvanceNoticeUnit ? AvailabilityUnit[userAvailabilitySettings.maximumAdvanceNoticeUnit] : 'Select' }} <span class="fe fe-chevron-down"></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right custom-card-shadow booking-dropdown">
                                 <div class="dropdown-item-container">
-                                    <div *ngFor="let booking of settingTimeNoticePeriod" class="dropdown-item cursor-pointer d-flex">
+                                    <div *ngFor="let booking of settingTimeNoticePeriod" class="dropdown-item cursor-pointer d-flex" (click)="userAvailabilitySettings.maximumAdvanceNoticeUnit = booking.value">
                                         {{ booking.label }}
                                     </div>
                                 </div>
@@ -273,12 +294,16 @@
                     <label class="title">{{ 'WeekStartDay' | localize }}</label>
                     <span class="sub-title">{{ 'WeekStartDayDesc' | localize }}</span>
                     <div class="dropdown">
-                        <a href="javascript:void(0)" class="dropdown-ellipses dropdown-toggle d-flex justify-content-between align-items-center h-100" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Select <span class="fe fe-chevron-down"></span>
+                        <a href="javascript:void(0)"
+                           class="dropdown-ellipses dropdown-toggle d-flex justify-content-between align-items-center h-100"
+                           role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                           [class.selected]="!!userAvailabilitySettings.weekStartDay"
+                        >
+                            {{ userAvailabilitySettings.weekStartDay ? DayOfWeek[userAvailabilitySettings.weekStartDay] : 'Select' }} <span class="fe fe-chevron-down"></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right custom-card-shadow week-dropdown">
                             <div class="dropdown-item-container">
-                                <div *ngFor="let dayOfWeek of DayOfWeek | enumToArray | keyvalue" class="dropdown-item cursor-pointer d-flex">
+                                <div *ngFor="let dayOfWeek of DayOfWeek | enumToArray | keyvalue" class="dropdown-item cursor-pointer d-flex" (click)="userAvailabilitySettings.weekStartDay = dayOfWeek.key">
                                     {{ dayOfWeek.value }}
                                 </div>
                             </div>

@@ -28938,6 +28938,113 @@ export class UserAvailabilitiesServiceProxy {
         }
         return _observableOf<void>(<any>null);
     }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    saveAvailabilitySettings(body: UserAvailabilitySettingDto | undefined): Observable<UserAvailabilitySetting> {
+        let url_ = this.baseUrl + "/api/services/app/UserAvailabilities/SaveAvailabilitySettings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSaveAvailabilitySettings(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSaveAvailabilitySettings(<any>response_);
+                } catch (e) {
+                    return <Observable<UserAvailabilitySetting>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserAvailabilitySetting>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSaveAvailabilitySettings(response: HttpResponseBase): Observable<UserAvailabilitySetting> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserAvailabilitySetting.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserAvailabilitySetting>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getAvailabilitySettings(): Observable<UserAvailabilitySetting> {
+        let url_ = this.baseUrl + "/api/services/app/UserAvailabilities/GetAvailabilitySettings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAvailabilitySettings(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAvailabilitySettings(<any>response_);
+                } catch (e) {
+                    return <Observable<UserAvailabilitySetting>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserAvailabilitySetting>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAvailabilitySettings(response: HttpResponseBase): Observable<UserAvailabilitySetting> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserAvailabilitySetting.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserAvailabilitySetting>(<any>null);
+    }
 }
 
 @Injectable()
@@ -34310,6 +34417,13 @@ export interface IAutoAuthenticateModel {
 /** 0 = Event */
 export enum AutoAuthenticateType {
     Event = 0,
+}
+
+/** 1 = Minutes 2 = Hours 3 = Days */
+export enum AvailabilityUnit {
+    Minutes = 1,
+    Hours = 2,
+    Days = 3,
 }
 
 export class AvailableServiceDto implements IAvailableServiceDto {
@@ -57092,6 +57206,212 @@ export interface IUserAvailabilityDto {
     startTime: string | undefined;
     endTime: string | undefined;
     specificDate: moment.Moment | undefined;
+}
+
+export class UserAvailabilitySetting implements IUserAvailabilitySetting {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    bookingIntervals: number;
+    isMaximumBookingPerDay: boolean;
+    maximumBookingPerDay: number;
+    isPaddingBeforeBooking: boolean;
+    paddingBeforeBooking: number;
+    isPaddingAfterBooking: boolean;
+    paddingAfterBooking: number;
+    isMinimumBookingNotice: boolean;
+    minimumBookingNotice: number;
+    minimumBookingNoticeUnit: AvailabilityUnit;
+    isMaximumAdvanceNotice: boolean;
+    maximumAdvanceNotice: number;
+    maximumAdvanceNoticeUnit: AvailabilityUnit;
+    weekStartDay: DayOfWeek;
+    creatorUser: User;
+
+    constructor(data?: IUserAvailabilitySetting) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.bookingIntervals = _data["bookingIntervals"];
+            this.isMaximumBookingPerDay = _data["isMaximumBookingPerDay"];
+            this.maximumBookingPerDay = _data["maximumBookingPerDay"];
+            this.isPaddingBeforeBooking = _data["isPaddingBeforeBooking"];
+            this.paddingBeforeBooking = _data["paddingBeforeBooking"];
+            this.isPaddingAfterBooking = _data["isPaddingAfterBooking"];
+            this.paddingAfterBooking = _data["paddingAfterBooking"];
+            this.isMinimumBookingNotice = _data["isMinimumBookingNotice"];
+            this.minimumBookingNotice = _data["minimumBookingNotice"];
+            this.minimumBookingNoticeUnit = _data["minimumBookingNoticeUnit"];
+            this.isMaximumAdvanceNotice = _data["isMaximumAdvanceNotice"];
+            this.maximumAdvanceNotice = _data["maximumAdvanceNotice"];
+            this.maximumAdvanceNoticeUnit = _data["maximumAdvanceNoticeUnit"];
+            this.weekStartDay = _data["weekStartDay"];
+            this.creatorUser = _data["creatorUser"] ? User.fromJS(_data["creatorUser"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UserAvailabilitySetting {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserAvailabilitySetting();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["bookingIntervals"] = this.bookingIntervals;
+        data["isMaximumBookingPerDay"] = this.isMaximumBookingPerDay;
+        data["maximumBookingPerDay"] = this.maximumBookingPerDay;
+        data["isPaddingBeforeBooking"] = this.isPaddingBeforeBooking;
+        data["paddingBeforeBooking"] = this.paddingBeforeBooking;
+        data["isPaddingAfterBooking"] = this.isPaddingAfterBooking;
+        data["paddingAfterBooking"] = this.paddingAfterBooking;
+        data["isMinimumBookingNotice"] = this.isMinimumBookingNotice;
+        data["minimumBookingNotice"] = this.minimumBookingNotice;
+        data["minimumBookingNoticeUnit"] = this.minimumBookingNoticeUnit;
+        data["isMaximumAdvanceNotice"] = this.isMaximumAdvanceNotice;
+        data["maximumAdvanceNotice"] = this.maximumAdvanceNotice;
+        data["maximumAdvanceNoticeUnit"] = this.maximumAdvanceNoticeUnit;
+        data["weekStartDay"] = this.weekStartDay;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): UserAvailabilitySetting {
+        const json = this.toJSON();
+        let result = new UserAvailabilitySetting();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserAvailabilitySetting {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    bookingIntervals: number;
+    isMaximumBookingPerDay: boolean;
+    maximumBookingPerDay: number;
+    isPaddingBeforeBooking: boolean;
+    paddingBeforeBooking: number;
+    isPaddingAfterBooking: boolean;
+    paddingAfterBooking: number;
+    isMinimumBookingNotice: boolean;
+    minimumBookingNotice: number;
+    minimumBookingNoticeUnit: AvailabilityUnit;
+    isMaximumAdvanceNotice: boolean;
+    maximumAdvanceNotice: number;
+    maximumAdvanceNoticeUnit: AvailabilityUnit;
+    weekStartDay: DayOfWeek;
+    creatorUser: User;
+}
+
+export class UserAvailabilitySettingDto implements IUserAvailabilitySettingDto {
+    bookingIntervals: number;
+    isMaximumBookingPerDay: boolean;
+    maximumBookingPerDay: number;
+    isPaddingBeforeBooking: boolean;
+    paddingBeforeBooking: number;
+    isPaddingAfterBooking: boolean;
+    paddingAfterBooking: number;
+    isMinimumBookingNotice: boolean;
+    minimumBookingNotice: number;
+    minimumBookingNoticeUnit: AvailabilityUnit;
+    isMaximumAdvanceNotice: boolean;
+    maximumAdvanceNotice: number;
+    maximumAdvanceNoticeUnit: AvailabilityUnit;
+    weekStartDay: DayOfWeek;
+
+    constructor(data?: IUserAvailabilitySettingDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.bookingIntervals = _data["bookingIntervals"];
+            this.isMaximumBookingPerDay = _data["isMaximumBookingPerDay"];
+            this.maximumBookingPerDay = _data["maximumBookingPerDay"];
+            this.isPaddingBeforeBooking = _data["isPaddingBeforeBooking"];
+            this.paddingBeforeBooking = _data["paddingBeforeBooking"];
+            this.isPaddingAfterBooking = _data["isPaddingAfterBooking"];
+            this.paddingAfterBooking = _data["paddingAfterBooking"];
+            this.isMinimumBookingNotice = _data["isMinimumBookingNotice"];
+            this.minimumBookingNotice = _data["minimumBookingNotice"];
+            this.minimumBookingNoticeUnit = _data["minimumBookingNoticeUnit"];
+            this.isMaximumAdvanceNotice = _data["isMaximumAdvanceNotice"];
+            this.maximumAdvanceNotice = _data["maximumAdvanceNotice"];
+            this.maximumAdvanceNoticeUnit = _data["maximumAdvanceNoticeUnit"];
+            this.weekStartDay = _data["weekStartDay"];
+        }
+    }
+
+    static fromJS(data: any): UserAvailabilitySettingDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserAvailabilitySettingDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["bookingIntervals"] = this.bookingIntervals;
+        data["isMaximumBookingPerDay"] = this.isMaximumBookingPerDay;
+        data["maximumBookingPerDay"] = this.maximumBookingPerDay;
+        data["isPaddingBeforeBooking"] = this.isPaddingBeforeBooking;
+        data["paddingBeforeBooking"] = this.paddingBeforeBooking;
+        data["isPaddingAfterBooking"] = this.isPaddingAfterBooking;
+        data["paddingAfterBooking"] = this.paddingAfterBooking;
+        data["isMinimumBookingNotice"] = this.isMinimumBookingNotice;
+        data["minimumBookingNotice"] = this.minimumBookingNotice;
+        data["minimumBookingNoticeUnit"] = this.minimumBookingNoticeUnit;
+        data["isMaximumAdvanceNotice"] = this.isMaximumAdvanceNotice;
+        data["maximumAdvanceNotice"] = this.maximumAdvanceNotice;
+        data["maximumAdvanceNoticeUnit"] = this.maximumAdvanceNoticeUnit;
+        data["weekStartDay"] = this.weekStartDay;
+        return data; 
+    }
+
+    clone(): UserAvailabilitySettingDto {
+        const json = this.toJSON();
+        let result = new UserAvailabilitySettingDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserAvailabilitySettingDto {
+    bookingIntervals: number;
+    isMaximumBookingPerDay: boolean;
+    maximumBookingPerDay: number;
+    isPaddingBeforeBooking: boolean;
+    paddingBeforeBooking: number;
+    isPaddingAfterBooking: boolean;
+    paddingAfterBooking: number;
+    isMinimumBookingNotice: boolean;
+    minimumBookingNotice: number;
+    minimumBookingNoticeUnit: AvailabilityUnit;
+    isMaximumAdvanceNotice: boolean;
+    maximumAdvanceNotice: number;
+    maximumAdvanceNoticeUnit: AvailabilityUnit;
+    weekStartDay: DayOfWeek;
 }
 
 export class UserBlocking implements IUserBlocking {

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { AutoSaveComponentBase } from '@shared/auto-save-component-base';
-import { DayOfWeek, UserAvailabilityDto } from '@shared/service-proxies/service-proxies';
+import { AvailabilityUnit, DayOfWeek, UserAvailabilityDto, UserAvailabilitySettingDto } from '@shared/service-proxies/service-proxies';
 import { ScheduleType } from '../create-edit-schedules.component';
 
 import * as _ from 'lodash';
@@ -14,17 +14,19 @@ import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 })
 export class SchedulesComponent extends AutoSaveComponentBase implements OnInit, OnChanges {
     @Input() userAvailabilities: UserAvailabilityDto[] = [];
+    @Input() userAvailabilitySettings: UserAvailabilitySettingDto;
     @Input() type: ScheduleType = ScheduleType.DEFAULT;
 
     @Output() modelChanged: EventEmitter<any> = new EventEmitter();
+    @Output() settingsChanged = new EventEmitter<UserAvailabilitySettingDto>();
 
     timeSelections: { label: string; value: Date }[] = [];
 
     settingTimeSelections: { label: string; value: number; }[] = [];
-    settingTimeNoticePeriod: { label: string; value: string; }[] = [
-        { label: 'Minutes', value: 'minutes'},
-        { label: 'Hours', value: 'hours'},
-        { label: 'Days', value: 'days'}
+    settingTimeNoticePeriod: { label: string; value: AvailabilityUnit; }[] = [
+        { label: 'Minutes', value: AvailabilityUnit.Minutes},
+        { label: 'Hours', value: AvailabilityUnit.Hours},
+        { label: 'Days', value: AvailabilityUnit.Days}
     ];
 
     models: {
@@ -44,11 +46,10 @@ export class SchedulesComponent extends AutoSaveComponentBase implements OnInit,
     DayOfWeek = DayOfWeek;
     ScheduleType = ScheduleType;
     datePickerConfig: BsDatepickerConfig;
-
     nowValue: number;
-
     newDateDpValue: Date;
 
+    protected readonly AvailabilityUnit = AvailabilityUnit;
     constructor(
         injector: Injector
     ) {
@@ -211,7 +212,7 @@ export class SchedulesComponent extends AutoSaveComponentBase implements OnInit,
 
     private initChangesDetector(): void {
         this.intervalMs = 100;
-        this.modelToSave = this.models;
+        this.modelToSave = [this.models, this.userAvailabilitySettings];
         this.initAutoSave(this.changesDetected);
     }
 
@@ -253,6 +254,7 @@ export class SchedulesComponent extends AutoSaveComponentBase implements OnInit,
             };
         });
         this.modelChanged.next(this.models);
+        this.settingsChanged.next(this.userAvailabilitySettings);
     }
 
     addAvailability(day: number): void {
@@ -340,5 +342,4 @@ export class SchedulesComponent extends AutoSaveComponentBase implements OnInit,
     removeCustomAvailability(day: number): void {
         delete this.models[day];
     }
-
 }

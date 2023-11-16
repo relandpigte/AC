@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Runtime.Session;
 using Academically.Authorization;
 using Academically.Domain.Entities;
 using Academically.Extensions;
 using Academically.Services.UserAvailabilities.Dto;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Academically.Services.UserAvailabilities
@@ -15,12 +18,15 @@ namespace Academically.Services.UserAvailabilities
     public class UserAvailabilitiesAppService : AcademicallyAppServiceBase, IUserAvailabilitiesAppService
     {
         private readonly IRepository<UserAvailability, Guid> _userAvailabilitiesRepository;
+        private readonly IRepository<UserAvailabilitySetting, Guid> _userAvailabilitySettingRepository;
 
         public UserAvailabilitiesAppService(
-            IRepository<UserAvailability, Guid> userAvailabilitiesRepository
+            IRepository<UserAvailability, Guid> userAvailabilitiesRepository,
+            IRepository<UserAvailabilitySetting, Guid> userAvailabilitySettingRepository
         )
         {
             _userAvailabilitiesRepository = userAvailabilitiesRepository;
+            _userAvailabilitySettingRepository = userAvailabilitySettingRepository;
         }
 
         public async Task<IEnumerable<UserAvailabilityDto>> GetAll(int userId)
@@ -58,6 +64,21 @@ namespace Academically.Services.UserAvailabilities
                 preservedIds.Add(created.Id);
             }
             await _userAvailabilitiesRepository.DeleteAsync(a => !preservedIds.Contains(a.Id));
+        }
+
+        public async Task<UserAvailabilitySetting> SaveAvailabilitySettingsAsync(UserAvailabilitySettingDto input)
+        {
+            var availabilitySetting = await GetAvailabilitySettings() ?? new UserAvailabilitySetting();
+
+            ObjectMapper.Map(input, availabilitySetting);
+            return await _userAvailabilitySettingRepository.InsertOrUpdateAsync(availabilitySetting);
+        }
+        
+        public async Task<UserAvailabilitySetting> GetAvailabilitySettings()
+        {
+            return await _userAvailabilitySettingRepository.GetAll()
+                .Where(x => x.CreatorUserId == AbpSession.GetUserId())
+                .SingleOrDefaultAsync();
         }
     }
 }
