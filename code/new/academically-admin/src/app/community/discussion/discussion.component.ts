@@ -60,6 +60,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
     isLoadingSubscriberIds = true;
     isLoadingRelatedDiscussions = true;
     isUpdatingSubscribers = false;
+    isFreshFromLoad = true;
 
     postFilteringEnum = PostFiltering;
     postSortingEnum = PostSorting;
@@ -305,7 +306,9 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
         const modal = this._modalService.show(UpsertPostComponent, modalSettings).content;
         modal.onPostCreated
             .pipe(takeUntil(this.destroyed$))
-            .subscribe(() => {});
+            .subscribe(() => {
+                this.isFreshFromLoad = false;
+            });
     }
 
     navigateBack(): void {
@@ -350,13 +353,14 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
     }
 
     async handleSortingChange(sort: PostSorting) {
+        this.isFreshFromLoad = false;
         this.selectedSorting = sort;
         await this.postsStateService.updateServiceParams({
             type: undefined,
             parentId: this.discussionId,
             creationTime: undefined,
             postSort: this.postSort,
-            notificationId: undefined
+            notificationId: this.notificationId ?? undefined,
         });
 
         this.children = this.postsStateService.getAllPosts();
