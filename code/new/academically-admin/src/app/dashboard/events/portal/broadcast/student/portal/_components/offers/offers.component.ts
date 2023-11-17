@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, Input } from '@angular/core';
+import { Component, OnInit, Injector, Input, OnDestroy } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { PortalService } from '../../_services/portal.service';
 import { takeUntil } from 'rxjs/operators';
@@ -16,7 +16,7 @@ export enum OffersTabs { Queued, Open, Closed, Purchased }
   templateUrl: './offers.component.html',
   styleUrls: ['./offers.component.less']
 })
-export class OffersComponent extends AppComponentBase implements OnInit {
+export class OffersComponent extends AppComponentBase implements OnInit, OnDestroy {
   offersStateService: ServiceOffersStateService;
   @Input() referenceId: string;
 
@@ -50,6 +50,10 @@ export class OffersComponent extends AppComponentBase implements OnInit {
 
   async ngOnInit() {
     await this.initOffersAppStates();
+  }
+
+  async ngOnDestroy() {
+    await this.offersStateService?.stop();
   }
 
   private async initOffersAppStates() {

@@ -40,6 +40,7 @@ using Microsoft.EntityFrameworkCore;
 using static Amazon.S3.Util.S3EventNotification;
 using Academically.Services.DisciplineTaxonomies.Dto;
 using Amazon.Runtime.Internal;
+using Abp.Collections.Extensions;
 
 namespace Academically.Services.Posts
 {
@@ -209,6 +210,7 @@ namespace Academically.Services.Posts
                     attachment.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(attachment.DocumentId);
 
                 item.IsFromNotification = targetNotification != null && targetNotification.Sources.Any(s => s.ReferenceId == item.Id);
+                item.HasCommentFromNotification = targetNotification != null && targetNotification.ReferenceId == item.Id;
                 item.IsFromFollowing = following?.Any(f => f.UserId == item.CreatorUserId) == true;
                 item.CommentsCount = await this.GetCommentsCountAsync(item.Id.ToString());
                 item.SharesCount = await this.GetSharesCountAsync(item.Id.ToString());
@@ -386,7 +388,7 @@ namespace Academically.Services.Posts
             return result;
         }
 
-        public async Task<PostDto> GetAsync(Guid id, bool includeEditHistory = false, bool includeHiddenPosts = false)
+        public async Task<PostDto> GetAsync(Guid id, Guid? notificationId = null, bool includeEditHistory = false, bool includeHiddenPosts = false)
         {
             var userId = AbpSession.UserId.Value;
             var userHiddenPost = _postVisibilityRepository.GetAll()
@@ -446,6 +448,15 @@ namespace Academically.Services.Posts
             foreach (var p in result.Participants) if (p.ProfilePictureDocumentId.HasValue) p.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(p.ProfilePictureDocumentId.Value);
 
             await FillInShared(result);
+
+            var targetNotification = await _notificationsRepository.GetAll()
+                .Include(n => n.Sources)
+                .WhereIf(notificationId != null, n => n.Id == notificationId)
+                .WhereIf(notificationId == null, n => false)
+                .SingleOrDefaultAsync();
+
+            result.IsFromNotification = targetNotification != null && targetNotification.Sources.Any(s => s.ReferenceId == result.Id);
+            result.HasCommentFromNotification = targetNotification != null && targetNotification.ReferenceId == result.Id;
             result.CommentsCount = await this.GetCommentsCountAsync(result.Id.ToString());
             result.SharesCount = await this.GetSharesCountAsync(result.Id.ToString());
             result.ReactionsCount = await this.GetReactionsCountAsync(result.Id.ToString());
@@ -1006,7 +1017,7 @@ namespace Academically.Services.Posts
 
             if (post.SharedType == SharedType.Post)
             {
-                post.SharedPost = await GetAsync(post.SharedId.Value, false);
+                post.SharedPost = await GetAsync(post.SharedId.Value, null, false);
             }
             else
             {

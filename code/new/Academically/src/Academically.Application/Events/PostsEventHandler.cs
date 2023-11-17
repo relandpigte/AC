@@ -36,14 +36,14 @@ namespace Academically.Events
 
         public async Task HandleEventAsync(EntityCreatedEventData<Post> eventData)
         {
-            var postDto = await _postsAppService.GetAsync(eventData.Entity.Id, false, true);
+            var postDto = await _postsAppService.GetAsync(eventData.Entity.Id, null, false, true);
             await _hubManager.NotifyUsersForPostCreated(postDto);
             await this.SendUserNotifications(postDto);
         }
 
         public async Task HandleEventAsync(EntityUpdatedEventData<Post> eventData)
         {
-            var postDto = await _postsAppService.GetAsync(eventData.Entity.Id, false, true);
+            var postDto = await _postsAppService.GetAsync(eventData.Entity.Id, null, false, true);
             await _hubManager.NotifyUsersForPostUpdated(postDto);
             await this.SendUserNotifications(postDto);
         }

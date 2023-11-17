@@ -64,10 +64,12 @@ export class WrapperComponent extends AppComponentBase implements OnInit, OnDest
     this._cdr.detectChanges();
   }
 
-  ngOnDestroy(): void {
+  async ngOnDestroy() {
     if (this.timer) {
       clearTimeout(this.timer);
     }
+
+    await this.notificationsStateService?.stop();
   }
 
   private async initNotificationAppStates(): Promise<void> {

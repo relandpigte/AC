@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
@@ -24,7 +24,7 @@ import { UserAvatarStateService } from '@shared/services/user-avatar-state.servi
   templateUrl: './chat-conversation.component.html',
   styleUrls: ['./chat-conversation.component.less']
 })
-export class ChatConversationComponent extends AppComponentBase implements OnInit, OnChanges {
+export class ChatConversationComponent extends AppComponentBase implements OnInit, OnChanges, OnDestroy {
   channelMessagesStateService: ChannelMessagesStateService;
   userAvatarStateService: UserAvatarStateService;
 
@@ -156,6 +156,11 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
       this.totalChannelMessagesCount = this.channelMessagesStateService.totalChannelMessagesCount;
       if (this.selectedMatchedChannel) this.initSearchResults();
     }
+  }
+
+  async ngOnDestroy() {
+    await this.userAvatarStateService?.stop();
+    await this.userAvatarStateService?.stop();
   }
 
   handleBackToChannelsList(): void {

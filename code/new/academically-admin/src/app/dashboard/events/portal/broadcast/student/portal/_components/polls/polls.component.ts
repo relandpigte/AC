@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, Injector, ViewChild, ElementRef, Input, OnDestroy } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { PortalService } from '../../_services/portal.service';
 import { PollTab, PortalPollService } from './_services/portal-poll.service';
@@ -23,7 +23,7 @@ export enum PollSignalAction {
   templateUrl: './polls.component.html',
   styleUrls: ['./polls.component.less']
 })
-export class PollsComponent extends AppComponentBase implements OnInit {
+export class PollsComponent extends AppComponentBase implements OnInit, OnDestroy {
   eventPollsStateService: EventPollsStateService;
   @Input() referenceId: string;
   @ViewChild('queueNav') queueNav: ElementRef;
@@ -61,6 +61,10 @@ export class PollsComponent extends AppComponentBase implements OnInit {
 
   async ngOnInit() {
     await this.initPollsAppStates();
+  }
+
+  async ngOnDestroy() {
+    await this.eventPollsStateService?.stop();
   }
 
   get pollsStateId(): string { return 'polls-event'; }

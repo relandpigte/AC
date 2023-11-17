@@ -48,7 +48,7 @@ export class EditHistoryComponent extends AppComponentBase implements OnInit {
   }
 
   private async initPost() {
-    this.post = await this._postsService.get(this.id, true, true).toPromise();
+    this.post = await this._postsService.get(this.id, undefined, true, true).toPromise();
   }
 
   private buildPostHistory(): void {

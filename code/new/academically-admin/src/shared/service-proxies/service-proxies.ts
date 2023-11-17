@@ -16080,16 +16080,21 @@ export class PostsServiceProxy {
 
     /**
      * @param id (optional) 
+     * @param notificationId (optional) 
      * @param includeEditHistory (optional) 
      * @param includeHiddenPosts (optional) 
      * @return Success
      */
-    get(id: string | undefined, includeEditHistory: boolean | undefined, includeHiddenPosts: boolean | undefined): Observable<PostDto> {
+    get(id: string | undefined, notificationId: string | undefined, includeEditHistory: boolean | undefined, includeHiddenPosts: boolean | undefined): Observable<PostDto> {
         let url_ = this.baseUrl + "/api/services/app/Posts/Get?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
         else if (id !== undefined)
             url_ += "id=" + encodeURIComponent("" + id) + "&";
+        if (notificationId === null)
+            throw new Error("The parameter 'notificationId' cannot be null.");
+        else if (notificationId !== undefined)
+            url_ += "notificationId=" + encodeURIComponent("" + notificationId) + "&";
         if (includeEditHistory === null)
             throw new Error("The parameter 'includeEditHistory' cannot be null.");
         else if (includeEditHistory !== undefined)
@@ -47553,6 +47558,7 @@ export class PostDto implements IPostDto {
     isServiceDiscussion: boolean;
     isFromNotification: boolean;
     isFromFollowing: boolean;
+    hasCommentFromNotification: boolean;
     commentsCount: number;
     sharesCount: number;
     reactionsCount: number;
@@ -47606,6 +47612,7 @@ export class PostDto implements IPostDto {
             this.isServiceDiscussion = _data["isServiceDiscussion"];
             this.isFromNotification = _data["isFromNotification"];
             this.isFromFollowing = _data["isFromFollowing"];
+            this.hasCommentFromNotification = _data["hasCommentFromNotification"];
             this.commentsCount = _data["commentsCount"];
             this.sharesCount = _data["sharesCount"];
             this.reactionsCount = _data["reactionsCount"];
@@ -47687,6 +47694,7 @@ export class PostDto implements IPostDto {
         data["isServiceDiscussion"] = this.isServiceDiscussion;
         data["isFromNotification"] = this.isFromNotification;
         data["isFromFollowing"] = this.isFromFollowing;
+        data["hasCommentFromNotification"] = this.hasCommentFromNotification;
         data["commentsCount"] = this.commentsCount;
         data["sharesCount"] = this.sharesCount;
         data["reactionsCount"] = this.reactionsCount;
@@ -47768,6 +47776,7 @@ export interface IPostDto {
     isServiceDiscussion: boolean;
     isFromNotification: boolean;
     isFromFollowing: boolean;
+    hasCommentFromNotification: boolean;
     commentsCount: number;
     sharesCount: number;
     reactionsCount: number;

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, Input, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import {
   AvailableServiceDto,
@@ -26,7 +26,7 @@ import { ElementRef } from '@node_modules/@angular/core';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.less']
 })
-export class ChatComponent extends AppComponentBase implements OnInit {
+export class ChatComponent extends AppComponentBase implements OnInit, OnDestroy {
   @Input() referenceId: string;
 
   @ViewChild('privateTab', { read: ElementRef }) privateTab: ElementRef<HTMLAnchorElement>;
@@ -130,6 +130,10 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     this.getEventUsers();
     this.getBlockedUsersIds();
     this.getCurrentUserBlockers();
+  }
+
+  async ngOnDestroy() {
+      await this.channelsStateService?.stop();
   }
 
   handleAddRecipient(user: UserDto): void {

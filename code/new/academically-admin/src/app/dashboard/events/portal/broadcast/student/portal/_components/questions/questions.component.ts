@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, Input, OnDestroy, OnInit } from '@angular/core';
 import { skip, takeUntil } from 'rxjs/operators';
 import { AppComponentBase } from '@shared/app-component-base';
 import { PortalService } from '../../_services/portal.service';
@@ -16,7 +16,7 @@ import { HubConnection } from '@aspnet/signalr';
   templateUrl: './questions.component.html',
   styleUrls: ['./questions.component.less']
 })
-export class QuestionsComponent extends AppComponentBase implements OnInit {
+export class QuestionsComponent extends AppComponentBase implements OnInit, OnDestroy {
   @Input() referenceId: string;
 
   event: EventDto;
@@ -54,6 +54,10 @@ export class QuestionsComponent extends AppComponentBase implements OnInit {
   async ngOnInit(): Promise<void> {
     await this.initQuestionsAppStates();
     await this.questionsReactionsSubscriptions();
+  }
+
+  async ngOnDestroy() {
+    await this.eventQuestionStateService?.stop();
   }
 
   handleTabClick(channelType: number): void {

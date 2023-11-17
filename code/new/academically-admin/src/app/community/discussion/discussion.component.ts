@@ -154,8 +154,8 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
             });
     }
 
-    ngOnDestroy() {
-        this.pubSubService.stop();
+    async ngOnDestroy() {
+        await this.postsStateService?.stop();
     }
 
     handleDeleteDiscussion(): void {
@@ -215,7 +215,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
     }
 
     private async initDiscussion() {
-        this.discussion = await this._postsService.get(this.id, false, false).toPromise();
+        this.discussion = await this._postsService.get(this.id, this.notificationId ?? undefined, false, false).toPromise();
         this.discussionTopics = this.discussion?.postTopics?.map?.(t => t.disciplineTaxonomy);
     }
 

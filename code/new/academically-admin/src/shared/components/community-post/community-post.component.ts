@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import * as moment from 'moment';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { takeUntil } from 'rxjs/operators';
@@ -27,7 +27,7 @@ enum SubscribeType {
     templateUrl: './community-post.component.html',
     styleUrls: ['./community-post.component.scss']
 })
-export class CommunityPostCardComponent extends AppComponentBase implements OnChanges, OnInit {
+export class CommunityPostCardComponent extends AppComponentBase implements OnChanges, OnInit, OnDestroy {
     readonly showMoreLimit: number = 255;
 
     @Input() data: any;
@@ -127,6 +127,10 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
             .subscribe((change) => {
                 if (change > 0) this.showUnfollow = true;
             });
+    }
+
+    async ngOnDestroy() {
+        await this.postsStateService?.stop();
     }
 
     async ngOnChanges(changes: SimpleChanges) {

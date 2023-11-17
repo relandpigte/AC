@@ -87,7 +87,7 @@
             <ng-container *ngIf="!isSidebar">Sort by:</ng-container>
             <div class="btn-group" dropdown>
               <button id="button-basic" dropdownToggle type="button" class="btn btn-link btn-sm dropdown-toggle font-weight-bold text-gray-800" aria-controls="dropdown-basic">
-                {{ selectedSorting  | localize }}<span class="caret"></span>
+                {{ selectedSorting  | localize }}<span *ngIf="selectedSorting === postSortingEnum.Top">  {{ typeName }}</span><span class="caret"></span>
               </button>
               <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
                 <li role="menuitem" (click)="handleSortingChange(postSortingEnum.Latest)">

@@ -64,10 +64,12 @@ export class ChatRecipientComponent extends AppComponentBase implements OnChange
     await this.initUserAvatarAppState();
   }
 
-  ngOnDestroy(): void {
+  async ngOnDestroy() {
     if (this.timer) {
       clearInterval(this.timer); // Clean up the timer when the component is destroyed
     }
+
+    await this.userAvatarStateService?.stop();
   }
 
   ngOnChanges(changes: SimpleChanges): void {

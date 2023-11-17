@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { HubService } from '@app/_shared/services/hub.service';
 import { PostFiltering, PostSorting, SubscribeType } from '@app/community/discussion/discussion.component';
 import { AppComponentBase } from '@shared/app-component-base';
@@ -19,7 +19,7 @@ import { ServiceDataService } from '@shared/services/service-data.service';
   templateUrl: './discussion.component.html',
   styleUrls: ['./discussion.component.less']
 })
-export class EventsDiscussionComponent extends AppComponentBase implements OnInit {
+export class EventsDiscussionComponent extends AppComponentBase implements OnInit, OnDestroy {
   postsStateService: PostsStateService;
 
   id: string;
@@ -94,6 +94,10 @@ export class EventsDiscussionComponent extends AppComponentBase implements OnIni
 
     this.isLoadingPost = false;
     this._cdr.detectChanges();
+  }
+
+  async ngOnDestroy() {
+    await this.postsStateService?.stop();
   }
 
   isSelectedSorting(sort: PostSorting): boolean {

@@ -181,8 +181,10 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     await this.initLiveAnsweringQuestion();
   }
 
-  ngOnDestroy(): void {
+  async ngOnDestroy() {
     console.log('exit event');
+    await this.pollsStateService?.stop();
+    await this.offersStateService?.stop();
     // this.disconnectTrack(this.presenterStream);
     // this.disconnectTrack(this.attendeeStream);
   }

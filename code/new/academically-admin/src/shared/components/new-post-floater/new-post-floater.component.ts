@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, Injector, Input, OnInit, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Injector, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { PostsStateService } from '@shared/services/posts-state.service';
@@ -10,7 +10,7 @@ import { takeUntil } from 'rxjs/operators';
     styleUrls: ['./new-post-floater.component.less'],
     animations: [appModuleAnimation()]
 })
-export class NewPostFloaterComponent extends AppComponentBase implements OnInit, AfterViewInit {
+export class NewPostFloaterComponent extends AppComponentBase implements OnInit, OnDestroy, AfterViewInit {
     @Input() parentContainer: any;
 
     postsStateService: PostsStateService;
@@ -33,6 +33,10 @@ export class NewPostFloaterComponent extends AppComponentBase implements OnInit,
                 this.isShown = !!this.postsStateService.newPosts?.size;
                 this.repositionFloater();
             });
+    }
+
+    async ngOnDestroy() {
+        await this.postsStateService?.stop();
     }
 
     ngAfterViewInit(): void {

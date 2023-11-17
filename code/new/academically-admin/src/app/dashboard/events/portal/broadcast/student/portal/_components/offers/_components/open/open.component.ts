@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, Input, OnDestroy, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ServiceOfferDto, ServiceOfferStatus, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
@@ -17,7 +17,7 @@ import { ServiceOffersService } from '@shared/services/service-offers.service';
   templateUrl: './open.component.html',
   styleUrls: ['./open.component.less']
 })
-export class OpenComponent extends AppComponentBase implements OnInit {
+export class OpenComponent extends AppComponentBase implements OnInit, OnDestroy {
   offersStateService: ServiceOffersStateService;
   @Input() referenceId: string;
   @Input() isHost = false;
@@ -43,6 +43,10 @@ export class OpenComponent extends AppComponentBase implements OnInit {
 
   async ngOnInit() {
     await this.initOffersAppStates();
+  }
+
+  async ngOnDestroy() {
+     await this.offersStateService?.stop();
   }
 
   private async initOffersAppStates() {

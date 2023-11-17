@@ -31,6 +31,8 @@ export class PostsStateService extends StateServiceBase {
     [pageType.discussion]: 'getAllPostsPaged',
   };
 
+  hub: any;
+
   constructor(
     private _appSession: AppSessionService,
     private _hubService: HubService,
@@ -118,8 +120,8 @@ export class PostsStateService extends StateServiceBase {
     this.newPosts = new Map();
   }
 
-  async updateServiceParams(params: { type: PostType | undefined, parentId: string | undefined, creationTime: moment.Moment | undefined, postSort: PostSort | undefined, notificationId: string | undefined }) {
-    this.loading$.next(true);
+  async updateServiceParams(params: { type: PostType | undefined, parentId: string | undefined, creationTime: moment.Moment | undefined, postSort: PostSort | undefined, notificationId: string | undefined }, isSilent = false) {
+    this.loading$.next(!isSilent);
     const existingArgs = this.actionArgs['load'];
     this.actionArgs['load'] = [params.type, params.parentId, params.creationTime, params.postSort, params.notificationId, existingArgs[5], existingArgs[6]];
     try {
@@ -145,12 +147,21 @@ export class PostsStateService extends StateServiceBase {
     this.posts = Utils.toMap([...Array.from(this.posts.values()).filter(p => !removedPosts.includes(p.id))]);
   }
 
+  async stop() {
+    await super.stop();
+    if (this.hub) {
+        this.hub.off(HubEvent[HubEvent.PostCreated], this.handleNewPosts);
+        this.hub.off(HubEvent[HubEvent.PostUpdated], this.handleUpdatePosts);
+        this.hub.off(HubEvent[HubEvent.PostDeleted], this.handleDeletePosts);
+    }
+  }
+
   protected async setupSubscriptions(component: any, userId: number) {
     try {
-      const hub = await this._hubService.getPostsHub(...this.updateArgs);
-      hub.on(HubEvent[HubEvent.PostCreated], this.handleNewPosts);
-      hub.on(HubEvent[HubEvent.PostUpdated], this.handleUpdatePosts);
-      hub.on(HubEvent[HubEvent.PostDeleted], this.handleDeletePosts);
+      this.hub = await this._hubService.getPostsHub(...this.updateArgs);
+      this.hub.on(HubEvent[HubEvent.PostCreated], this.handleNewPosts);
+      this.hub.on(HubEvent[HubEvent.PostUpdated], this.handleUpdatePosts);
+      this.hub.on(HubEvent[HubEvent.PostDeleted], this.handleDeletePosts);
     } catch (err) {
       console.error(err);
     }

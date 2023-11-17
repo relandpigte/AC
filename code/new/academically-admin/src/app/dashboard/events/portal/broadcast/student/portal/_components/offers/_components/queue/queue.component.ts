@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, Input, OnDestroy, OnInit } from '@angular/core';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ServiceOfferDto, ServiceOfferStatus, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
@@ -16,7 +16,7 @@ import { ServiceOffersService } from '@shared/services/service-offers.service';
   templateUrl: './queue.component.html',
   styleUrls: ['./queue.component.less']
 })
-export class QueueComponent extends AppComponentBase implements OnInit {
+export class QueueComponent extends AppComponentBase implements OnInit, OnDestroy {
   offersStateService: ServiceOffersStateService;
   @Input() referenceId: string;
   @Input() isHost = false;
@@ -41,6 +41,10 @@ export class QueueComponent extends AppComponentBase implements OnInit {
 
   async ngOnInit() {
     await this.initOffersAppStates();
+  }
+
+  async ngOnDestroy() {
+    await this.offersStateService?.stop();
   }
 
   private async initOffersAppStates() {

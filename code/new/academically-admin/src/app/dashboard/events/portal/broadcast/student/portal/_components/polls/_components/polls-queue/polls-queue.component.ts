@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Injector, Input, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { EventPollsServiceProxy, EventPollDto, EventDto, EventPollStatus } from '@shared/service-proxies/service-proxies';
 import { PortalService } from '@app/dashboard/events/portal/broadcast/student/portal/_services/portal.service';
@@ -18,7 +18,7 @@ import { StateUpdateType } from '@shared/services/state-base.service';
   templateUrl: './polls-queue.component.html',
   styleUrls: ['./polls-queue.component.less']
 })
-export class PollsQueueComponent extends AppComponentBase implements OnInit {
+export class PollsQueueComponent extends AppComponentBase implements OnInit, OnDestroy {
   pollsStateService: EventPollsStateService;
   @Input() referenceId: string;
   @Input() isHost = false;
@@ -49,6 +49,10 @@ export class PollsQueueComponent extends AppComponentBase implements OnInit {
 
   async ngOnInit() {
     await this.initPollsAppStates();
+  }
+
+  async ngOnDestroy() {
+    await this.pollsStateService?.stop();
   }
 
   private async initPollsAppStates() {

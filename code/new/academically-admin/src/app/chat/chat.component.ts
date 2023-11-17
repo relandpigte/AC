@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { HubService } from '@app/_shared/services/hub.service';
 import { SearchUsersComponent } from '@app/chat/_components/search-users/search-users.component';
 import { AppComponentBase } from '@shared/app-component-base';
@@ -24,7 +24,7 @@ export interface MessageComposeData {
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.less']
 })
-export class ChatComponent extends AppComponentBase implements OnInit {
+export class ChatComponent extends AppComponentBase implements OnInit, OnDestroy {
   channelsStateService: ChannelsStateService;
   replyingTo: ChannelMessageDto;
   channelId: string;
@@ -162,6 +162,10 @@ export class ChatComponent extends AppComponentBase implements OnInit {
     this.getCurrentUserBlockers();
     this.getAllMutedChannelByUser();
     this.setChannelFromNotification();
+  }
+
+  async ngOnDestroy() {
+      this.channelsStateService?.stop();
   }
 
   handleOnComposeMessage(): void {

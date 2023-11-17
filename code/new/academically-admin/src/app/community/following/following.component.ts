@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit, ViewChildren } from '@angular/core';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { switchMap, takeUntil } from 'rxjs/operators';
 
@@ -12,6 +12,7 @@ import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.servi
 import { StateUpdateType } from '@shared/services/state-base.service';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { CommunityService } from '../community.service';
+import { CommunityPostCardComponent } from '@shared/components/community-post/community-post.component';
 
 enum PostFiltering {
   All = 'Community.Posts.Filtering.All',
@@ -32,8 +33,7 @@ enum PostSorting {
   styleUrls: ['./following.component.less']
 })
 export class FollowingComponent extends AppComponentBase implements OnInit, OnDestroy {
-  // make all comment loading silent for now
-  // @ViewChildren(CommunityPostCardComponent) postsContainer: CommunityPostCardComponent[];
+  @ViewChildren(CommunityPostCardComponent) postsContainer: CommunityPostCardComponent[];
 
   postsStateService: PostsStateService;
   postsDiscussionsStateServiceMap: PostsStateService[] = [];
@@ -94,12 +94,21 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
       this.isLoadingPosts$,
       this.isLoading_usersYouMayKnow$,
       this.isLoading_recommendedCourses$,
-      // make all comment loading silent for now
-      // ...(this.postsContainer?.map(p => p.commentsContainer.isLoadingComments$) ?? [new BehaviorSubject(false)]),
     ];
   }
 
-  get isLoading$() { return combineLatest(this.loadingSources$).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
+  get isLoading$() {
+    return combineLatest(this.loadingSources$)
+      .pipe(
+        switchMap(loaders =>
+          combineLatest([ of(loaders.some(l => l)), ...(this.postsContainer?.map(p => p.commentsContainer.isLoading$) ?? [of(false)]) ])
+        )
+      )
+      .pipe(
+        switchMap(loaders => of(loaders.some(l => l)))
+      );
+  }
+
   get postSort(): PostSort {
     switch(this.selectedSorting) {
       case PostSorting.Top:
@@ -119,12 +128,12 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     this.isLoading$.pipe(takeUntil(this.destroyed$)).subscribe(isLoading => this._communityService.setIsLoading(isLoading));
   }
 
-  ngOnDestroy() {
-    this.pubSubService.stop();
+  async ngOnDestroy() {
+    await this.postsStateService?.stop();
   }
 
   handleSharePost(post: PostDto): void {
-    this._postsService.get(post.id, false, false)
+    this._postsService.get(post.id, undefined, false, false)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(post => {
         const modalSettings = this.defaultModalSettings as ModalOptions<UpsertPostComponent>;
@@ -244,7 +253,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
       creationTime: undefined,
       postSort: this.postSort,
       notificationId: undefined
-    });
+    }, true);
     this.posts = this.postsStateService.getAllPosts();
     this.totalPostsCount = this.postsStateService.totalPostsCount;
   }
@@ -257,7 +266,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
       creationTime: undefined,
       postSort: this.postSort,
       notificationId: undefined
-    });
+    }, true);
     this.posts = this.postsStateService.getAllPosts();
     this.totalPostsCount = this.postsStateService.totalPostsCount;
   }

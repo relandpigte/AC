@@ -95,8 +95,8 @@ export class CommentsStateService extends StateServiceBase {
     this.comments = Utils.toMap([...Array.from(this.comments.values()).filter(c => !removedComments.includes(c.id))]);
   }
 
-  async updateServiceParams(params: { referenceId: string | undefined, parentId: string | undefined, postSort: PostSort | undefined, notificationId: string | undefined, excludingIds: string[] | undefined }) {
-    this.loading$.next(true);
+  async updateServiceParams(params: { referenceId: string | undefined, parentId: string | undefined, postSort: PostSort | undefined, notificationId: string | undefined, excludingIds: string[] | undefined }, isSilent = false) {
+    this.loading$.next(!isSilent);
     const existingArgs = this.actionArgs['load'];
     this.actionArgs['load'] = [params.referenceId, params.parentId, params.postSort, params.notificationId, params.excludingIds, existingArgs[5], existingArgs[6]];
     try {

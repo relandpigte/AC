@@ -2,8 +2,8 @@ import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, 
 import { NgForm } from '@angular/forms';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { debounceTime, finalize, take, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, Subject, combineLatest, of } from 'rxjs';
+import { debounceTime, finalize, switchMap, take, takeUntil } from 'rxjs/operators';
 
 import { SafeUrl } from '@angular/platform-browser';
 import { HubService } from '@app/_shared/services/hub.service';
@@ -54,8 +54,8 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   commentsStateService: CommentsStateService;
 
   isPosting = false;
-  isLoadingComments$ = new BehaviorSubject(true);
-  isUpdatingComment$ = new BehaviorSubject(true);
+  isLoadingComments$ = new BehaviorSubject(false);
+  isUpdatingComment$ = new BehaviorSubject(false);
 
   comments: CommentDto[] = [];
   totalCommentsCount: number;
@@ -116,6 +116,19 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   }
 
   @Input() set sorting(sorting: PostSorting) { this.selectedSorting = sorting ?? PostSorting.Latest; }
+
+  get loadingSources$(): BehaviorSubject<boolean>[] { return [ this.isLoadingComments$, this.isUpdatingComment$ ]; }
+  get isLoading$() {
+    return combineLatest(this.loadingSources$)
+      .pipe(
+        switchMap(loaders =>
+          combineLatest([ of(loaders.some(l => l)), ...(this.childDiscussions.map(c => c.isLoading$) ?? [of(false)]) ])
+        )
+      )
+      .pipe(
+        switchMap(loaders => of(loaders.some(l => l)))
+      );
+  }
 
   get commentsStateId(): string { return `comments-${this.referenceId}-${this.parentId}`; }
   get typeName(): string {
@@ -222,7 +235,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
         postSort: this.postSort,
         notificationId: undefined,
         excludingIds: undefined
-    });
+    }, true);
 
     this.comments = this.stateComments;
     this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
@@ -366,7 +379,9 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   private initSubscriptions(): void {
     this.foldSubject$
       .subscribe(() => {
-        this.commentsStateService.removeComments(this.comments.slice(1)); // we need to remove all comments except the first one to reset the state
+        // we need to remove all comments except the first one to reset the state
+        const commentsToRemove = this.parentId ? this.comments.slice(0, -1) : this.comments.slice(1);
+        this.commentsStateService.removeComments(commentsToRemove);
         this.comments = this.stateComments;
         this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
         this._cdr.detectChanges();
@@ -448,7 +463,6 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   }
 
   protected onFoldClick(): void {
-    this.commentsStateService.loading$.next(true);
     if (!this.isExpanded) { // if the comments are not expanded, we need to get the rest of the comments from the server
       const excludingIds = this.recentlyAddedComments.map(c => c.id); // exclude these ids from pagination because they are already added in the list (to avoid duplicates), they are ignoring the selected sorting
       const skip = this.comments.length - this.recentlyAddedComments.length; // we should start skipping from the last retrieved comments from the server minus the recently added comments
@@ -457,11 +471,9 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
           this.commentsStateService.addComments(oldComments.items);
           this.comments = this.stateComments;
           this.totalCommentsCount = this.commentsStateService.totalCommentsCount;
-          this.commentsStateService.loading$.next(false);
           this._cdr.detectChanges();
         });
     } else { // if all the comments are expanded, we need to remove all comments except the first one to reset the state; see foldSubject$ subscription
-      this.commentsStateService.loading$.next(false);
       this.foldSubject$.next();
       this.selectedService = null;
       this.selectedServiceForChild = null;

@@ -1,5 +1,5 @@
 import { TitleCasePipe } from '@angular/common';
-import { ChangeDetectorRef, Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppConsts } from '@shared/AppConsts';
@@ -19,7 +19,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./notifications-preview.component.less'],
   providers: [ TitleCasePipe ]
 })
-export class NotificationsPreviewComponent extends AppComponentBase implements OnInit {
+export class NotificationsPreviewComponent extends AppComponentBase implements OnInit, OnDestroy {
   notificationsStateService: NotificationsStateService;
 
   isLoadingList$ = new BehaviorSubject<boolean>(true);
@@ -50,6 +50,10 @@ export class NotificationsPreviewComponent extends AppComponentBase implements O
 
   async ngOnInit() {
     await this.initNotificationAppStates();
+  }
+
+  async ngOnDestroy() {
+    await this.notificationsStateService?.stop();
   }
 
   private async initNotificationAppStates() {
