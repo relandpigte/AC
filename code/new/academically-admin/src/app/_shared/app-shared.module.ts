@@ -20,6 +20,13 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { QuillModule } from 'ngx-quill';
 import { CalendarModule } from 'primeng/calendar';
 import { CarouselModule } from 'primeng/carousel';
+import { FullCalendarModule } from '@fullcalendar/angular';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import listPlugin from '@fullcalendar/list';
+import bootstrapPlugin from '@fullcalendar/bootstrap';
+import interactionPlugin from '@fullcalendar/interaction';
+import rrulePlugin from '@fullcalendar/rrule';
 
 import { DateFormatPipe } from './pipes/date-format.pipe';
 import { EnumToArrayPipe } from './pipes/enum-to-array.pipe';
@@ -93,6 +100,17 @@ import { NotificationCardComponent } from '@shared/components/notification-card/
 import { ServiceChatComponent } from '@shared/modals/service-chat/service-chat.component';
 import { ServiceChatConfirmationComponent } from '@shared/modals/service-chat/components/service-chat-confirmation/service-chat-confirmation.component';
 import { DropzoneDirective } from './directives/dropzone.directive';
+import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
+import { BookingTakenComponent } from '@shared/components/booking-service/components/booking-taken/booking-taken.component';
+
+FullCalendarModule.registerPlugins([
+  dayGridPlugin,
+  timeGridPlugin,
+  listPlugin,
+  bootstrapPlugin,
+  interactionPlugin,
+  rrulePlugin,
+]);
 
 @NgModule({
   declarations: [
@@ -163,7 +181,9 @@ import { DropzoneDirective } from './directives/dropzone.directive';
     NotificationCardComponent,
     ServiceChatComponent,
     ServiceChatConfirmationComponent,
-    DropzoneDirective
+    DropzoneDirective,
+    BookingServiceComponent,
+    BookingTakenComponent
   ],
   imports: [
     CommonModule,
@@ -189,7 +209,8 @@ import { DropzoneDirective } from './directives/dropzone.directive';
     PickerModule,
     EmojiModule,
     RouterModule,
-    NgPipesModule
+    NgPipesModule,
+    FullCalendarModule
   ],
   exports: [
     SharedModule,
@@ -275,7 +296,9 @@ import { DropzoneDirective } from './directives/dropzone.directive';
     EventQuestionsComposerComponent,
     NotificationCardComponent,
     ServiceChatComponent,
-    ServiceChatConfirmationComponent
+    ServiceChatConfirmationComponent,
+    BookingServiceComponent,
+    BookingTakenComponent
   ],
 })
 export class AppSharedModule { }

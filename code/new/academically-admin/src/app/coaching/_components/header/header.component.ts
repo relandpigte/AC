@@ -4,7 +4,6 @@ import { takeUntil } from 'rxjs/operators';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 
 import { AppComponentBase } from '@shared/app-component-base';
-import { PurchaseServiceComponent } from '@shared/components/purchase-service/purchase-service.component';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { NavigationPosition } from '@shared/enums/theme-settings/navigation-position.enum';
 import { IThemeSetting } from '@shared/interfaces/theme-setting.interface';
@@ -13,13 +12,8 @@ import { ServiceDataService } from '@shared/services/service-data.service';
 import { ThemeManagerService } from '@shared/services/theme-manager.service';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { AppConsts } from '@shared/AppConsts';
-import {
-  CoachingDto,
-  PostsServiceProxy,
-  SavedServicesServiceProxy,
-  SharedType,
-  UserDto
-} from '@shared/service-proxies/service-proxies';
+import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
+import { CoachingDto, PostsServiceProxy, SavedServicesServiceProxy, SharedType, UserDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-header',
@@ -64,20 +58,24 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
     this._serviceData.serviceData$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(async data => {
+        if (!data) {
+          return;
+        }
         this.data = data;
         this.isSaved = this.data?.isSaved;
       });
   }
 
   onPurchaseClick(): void {
-    if (this.isPurchased) { return; }
+    if (this.isPurchased) {
+      return;
+    }
+    const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
+    modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
+    modalSettings.initialState = { data: this.data };
+    const purchaseModal = this._modalService.show(BookingServiceComponent, modalSettings);
 
-    const modalSettings = this.defaultModalSettings as ModalOptions<PurchaseServiceComponent>;
-    modalSettings.class = 'modal-lg modal-dialog-centered';
-    modalSettings.initialState = { serviceId: this.serviceId, data: this.data };
-    const modal = this._modalService.show(PurchaseServiceComponent, modalSettings);
-
-    modal.content.onPaid.subscribe((): void => {
+    purchaseModal.content.onPaid.subscribe((): void => {
       this.data.isPurchased = true;
       this._serviceData.serviceData = this.data;
     });

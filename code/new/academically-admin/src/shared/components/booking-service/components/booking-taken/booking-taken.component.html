@@ -1,0 +1,12 @@
+<div class="card-body booking">
+    <div class="booking-taken text-center">
+        <img class="booking-taken-img" src="assets/img/service/booking/icon-alert.svg" alt="Booking taken">
+        <div class="booking-taken-title">{{ 'TimeSlotUnavailable' | localize }}</div>
+        <div class="booking-taken-message">{{ 'ChooseTimeSlot' | localize }}</div>
+        <div class="booking-taken-button">
+            <button type="button" class="btn btn-primary w-100p" (click)="handleClose()">
+                {{ 'Okay' | localize }}
+            </button>
+        </div>
+    </div>
+</div>

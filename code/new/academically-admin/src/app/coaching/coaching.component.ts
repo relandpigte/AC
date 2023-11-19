@@ -1,5 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { accountModuleAnimation } from '@shared/animations/routerTransition';
@@ -46,8 +47,9 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
   get serviceOwnerId(): number { return this.data?.creatorUser?.id; }
 
   ngOnInit(): void {
+    this.id = this._route.snapshot.paramMap.get('id');
     setTimeout(() => this._landingPageService.setIsLoading(false), 2000);
-    this.getServiceId();
+    this.initServiceData();
   }
 
   private async openMessageModal(): Promise<void> {
@@ -60,11 +62,9 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
         service: this.data
       };
       const modal = this._modalService.show(ServiceChatComponent, modalSettings);
-
       modal.content.onClose.subscribe((): void => {
         this._modalService.hide();
       });
-
       modal.content.onFail.subscribe((): void => {
         this._modalService.hide();
         setTimeout(() => this.openMessageModal(), 200);
@@ -74,15 +74,19 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
     }
   }
 
-  private getServiceId(): void {
-    this._route.paramMap.subscribe(async paramMap => {
-      if (paramMap.has('id')) {
-        this.id = paramMap.get('id');
-        this._serviceData.serviceData = await this._coachingService.get(this.id).toPromise();
-        this._serviceData.discussionId = await this._serviceData.getServiceDiscussionId(this.id);
-        this._serviceData.serviceRating = await this._ratingService.getUserServiceReview(this.id).toPromise();
-        this._serviceData.serviceOverallRating = await this._ratingService.getServiceRatingsSummary(this.id).toPromise();
-      }
-    });
+  private initServiceData(): void {
+    forkJoin([
+      this._coachingService.get(this.id),
+      this._serviceData.getServiceDiscussionId(this.id),
+      this._ratingService.getUserServiceReview(this.id),
+      this._ratingService.getServiceRatingsSummary(this.id)
+    ])
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(([coaching, discussionId, rating, overallRating]): void => {
+        this._serviceData.serviceData = coaching;
+        this._serviceData.discussionId = discussionId;
+        this._serviceData.serviceRating = rating;
+        this._serviceData.serviceOverallRating = overallRating;
+      });
   }
 }
