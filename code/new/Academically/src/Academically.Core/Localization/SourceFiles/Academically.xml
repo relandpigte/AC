@@ -711,6 +711,17 @@
     <text name="AddBooking">Add Booking</text>
     <text name="Bookings">Bookings</text>
     <text name="Booking">Booking</text>
+    <text name="TimeSlotUnavailable">This time slot no longer exists</text>
+    <text name="ChooseTimeSlot">Please choose a different time</text>
+    <text name="PaypalPaymentText">Click continue to proceed to the PayPal login screen.</text>
+    <text name="WechatPaymentText">Please open your Wechat and scan the code to finish the payment.</text>
+    <text name="AlipayPaymentText">Please open your Alipay and scan the code to finish the payment.</text>
+    <text name="BookingSuccessful">Booking successful</text>
+    <text name="SessionAddedToSchedule">The session has been added to your schedule</text>
+    <text name="PaymentUnsuccessful">Payment unsuccessful</text>
+    <text name="CheckPaymentAndTryAgain">Please check your payment information and try again</text>
+    <text name="GoToSchedule">Go to schedule</text>
+    
     <text name="ServiceWizardStep3Subtitle">Understanding the type of work you're looking for helps us ask all the right questions.</text>
     <text name="ServiceWizardStep3Title">Next, tell us what level you're working at</text>
     <text name="ServiceWizardStep2Subtitle">Understanding the type of work you're looking for helps us ask all the right questions.</text>
@@ -1859,7 +1870,9 @@
 	<text name="CoachingRequests">Coaching Requests</text>
 	<text name="CoachingPrograms">Coaching Programs</text>
 	<text name="DeleteCoachingConfirmationMessage">Are you sure you want to delete this coaching?</text>
-	<text name="Coaching.Composer.Placeholder">Ask question before the coaching start...</text>
+    <text name="Coaching.Composer.Placeholder">Ask question before the coaching start...</text>
+    <text name="BookASession">Book a session</text>
+    <text name="Steps">Steps {0} of {1}</text>
 	<!-- Workshop -->
 	<text name="NewWorkshop">New Workshop</text>
 	<text name="CreateWorkshop">Create Workshop</text>

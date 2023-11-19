@@ -15,6 +15,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 })
 export class AbpModalHeaderComponent extends AppComponentBase {
   @Input() title: string;
+  @Input() hideClose = false;
 
   @Output() onCloseClick = new EventEmitter<number>();
 
