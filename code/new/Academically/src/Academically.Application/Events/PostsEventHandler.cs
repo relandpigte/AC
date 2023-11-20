@@ -64,7 +64,7 @@ namespace Academically.Events
                     ActorId = post.CreatorUserId.Value,
                     Action = NotificationAction.Post,
                     Target = NotificationTarget.Post,
-                    ReferenceId = post.Id,
+                    ReferenceId = discussion.Id,
                     SourceId = post.Id,
                     Url = $"app/community/discussion/{discussion.Id}"
                 });

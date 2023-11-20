@@ -313,7 +313,7 @@ namespace Academically.Services.Notifications
 
             if (await this.NotificationHasObject(notification))
             {
-                var obj = await this.FormatObject(references);
+                var obj = await this.FormatObject(notification);
                 if (!string.IsNullOrEmpty(obj))
                 {
                     formatted.Add(": ");
@@ -541,7 +541,7 @@ namespace Academically.Services.Notifications
         private async Task<string> FormatLocation(NotificationReferencesDto references)
         {
             var service = references.Service;
-            var referencePost = references.ParentPost?.Parent ?? references.Post?.Parent;
+            var referencePost = references.ParentPost?.Parent ?? references.Post?.Parent ?? references.Post;
             string location = null;
             if (service != null)
             {
@@ -562,13 +562,29 @@ namespace Academically.Services.Notifications
             return location;
         }
 
-        private async Task<string> FormatObject(NotificationReferencesDto references)
+        private async Task<string> FormatObject(NotificationDto notification)
         {
+            if (notification.Sources.Count() != 1) return null;
+
+            var source = notification.Sources.FirstOrDefault();
+
+            if (source == null) return null;
+
+            var post = await this._postsRepository.GetAll()
+               .Include(p => p.Parent)
+               .Where(p => p.Id == source.ReferenceId)
+               .FirstOrDefaultAsync();
+
+            var comment = await this._commentsRepository.GetAll()
+                .Include(p => p.Parent)
+                .Where(p => p.Id == source.ReferenceId)
+                .FirstOrDefaultAsync();
+
             string obj = null;
-            if (references.Post != null)
-                obj = $"{references.Post.Title ?? references.Post.Content}";
-            else if (references.Comment != null)
-                obj = $"{references.Comment.Body}";
+            if (post != null)
+                obj = $"{post.Title ?? post.Content}";
+            else if (comment != null)
+                obj = $"{comment.Body}";
             return obj;
         }
 
