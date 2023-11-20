@@ -25,6 +25,7 @@ using Academically.Web.Host.Hubs;
 using Academically.Hubs;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Academically.Web.Host.Startup
 {
@@ -65,11 +66,17 @@ namespace Academically.Web.Host.Startup
             IdentityRegistrar.Register(services);
             AuthConfigurer.Configure(services, _appConfiguration);
 
-            services.AddSignalR()
-                .AddNewtonsoftJsonProtocol(opts =>
-                {
-                    opts.PayloadSerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                });
+            services.AddSignalR(hubOptions =>
+            {
+                hubOptions.ClientTimeoutInterval = TimeSpan.FromMinutes(30);
+                hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(15);
+                hubOptions.HandshakeTimeout = TimeSpan.FromMinutes(2);
+                hubOptions.EnableDetailedErrors = true;
+            })
+            .AddNewtonsoftJsonProtocol(opts =>
+            {
+                opts.PayloadSerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
 
 
             // Configure CORS for angular2 UI

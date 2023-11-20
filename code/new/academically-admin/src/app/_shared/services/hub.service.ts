@@ -99,7 +99,8 @@ export class HubService {
         let path = abp.appPath + `signalr-${hubName}Hub`;
         if (queryParam) path += "?" + queryParam;
         await abp.signalr.startConnection(path, (connection: any) => {
-          connection.serverTimeoutInMilliseconds = 120_000; // 2 minutes
+          connection.serverTimeoutInMilliseconds = 1_800_000; // 30 minutes
+          connection
           resolve(connection);
         }).then(connection => {
           if (callback) {
