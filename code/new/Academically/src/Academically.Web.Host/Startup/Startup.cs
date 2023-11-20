@@ -68,10 +68,11 @@ namespace Academically.Web.Host.Startup
 
             services.AddSignalR(hubOptions =>
             {
-                hubOptions.ClientTimeoutInterval = TimeSpan.FromMinutes(30);
-                hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(15);
-                hubOptions.HandshakeTimeout = TimeSpan.FromMinutes(2);
-                hubOptions.EnableDetailedErrors = true;
+                // disable this for now
+                // hubOptions.ClientTimeoutInterval = TimeSpan.FromMinutes(30);
+                // hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(15);
+                // hubOptions.HandshakeTimeout = TimeSpan.FromMinutes(2);
+                // hubOptions.EnableDetailedErrors = true;
             })
             .AddNewtonsoftJsonProtocol(opts =>
             {
