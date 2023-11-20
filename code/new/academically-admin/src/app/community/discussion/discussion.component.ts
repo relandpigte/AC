@@ -1,22 +1,23 @@
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit } from '@angular/core';
-import * as _ from 'lodash';
 import { ActivatedRoute, Router } from '@angular/router';
-import { finalize, takeUntil } from 'rxjs/operators';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import * as _ from 'lodash';
 import * as moment from 'moment';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { debounceTime, distinctUntilChanged, finalize, takeUntil } from 'rxjs/operators';
 
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
-import { DisciplineTaxonomyDto, PostDto, PostSort, PostsServiceProxy, PostType, SharedType, UserDto } from '@shared/service-proxies/service-proxies';
+import { AppConsts } from '@shared/AppConsts';
+import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
+import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
+import { DisciplineTaxonomyDto, NotificationAction, NotificationDto, NotificationsServiceProxy, NotificationTarget, PostDto, PostSort, PostsServiceProxy, PostType, SharedType, UserDto } from '@shared/service-proxies/service-proxies';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { MAX_POSTS_TO_LOAD, PostsStateService } from '@shared/services/posts-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
-import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
-import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { UserFollowingService } from '@shared/services/user-following.service';
-import { AppConsts } from '@shared/AppConsts';
-import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { combineLatest } from 'rxjs';
 
 export enum PostFiltering {
     All = 'Community.Posts.Filtering.All',
@@ -61,13 +62,17 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
     isLoadingRelatedDiscussions = true;
     isUpdatingSubscribers = false;
     isFreshFromLoad = true;
+    isComposerDisplayed = true;
 
     postFilteringEnum = PostFiltering;
     postSortingEnum = PostSorting;
     subscribeType = SubscribeType;
+    shimmerType = ShimmerType;
 
     selectedFiltering: PostFiltering = PostFiltering.All;
     selectedSorting: PostSorting = PostSorting.Latest;
+
+    notification: NotificationDto;
 
     id: string;
     notificationId: string;
@@ -82,10 +87,10 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
         private _modalDialogService: ModalDialogService,
         private _hubService: HubService,
         private _postsService: PostsServiceProxy,
-        private _userFollowingService: UserFollowingService
+        private _userFollowingService: UserFollowingService,
+        private _notificationsService: NotificationsServiceProxy
     ) {
         super(injector);
-        this.id = this._route.snapshot.params.id;
     }
 
     get postsStateId(): string { return `posts-${this.discussionId}`; }
@@ -114,7 +119,6 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
     get participantsCount(): number { return this.participants?.length ?? 0 + 1; }
     get postsCount(): number { return this.children?.length ?? 0; }
     get hiddenChildrenCount(): number { return this.totalChildrenCount - this.children.length; }
-    get shimmerType() { return ShimmerType; }
     get postDate(): string {
         const time = moment(this.discussion?.creationTime);
         return this.convertMomentToPostDateAgo(time);
@@ -132,27 +136,34 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
 
     async ngOnInit(): Promise<void> {
         this.isLoadingPost = true;
-        this._route.queryParamMap
-            .subscribe(async query => {
-                this.isLoadingPost = true;
-                this.notificationId = query.get('n');
+        combineLatest([
+            this._route.params,
+            this._route.queryParamMap
+        ])
+        .pipe(debounceTime(100)) // debounced so that params and queryparams have time to trigger their events
+        .pipe(distinctUntilChanged()) // values should be distinct to avoid unnecessary calls
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(async ([params, query]) => {
+            this.isLoadingPost = true;
+            this.id = params.id;
+            this.notificationId = query.get('n');
 
-                if (this.notificationId) this.selectedSorting = PostSorting.Relevant;
+            try {
+                await this.retrieveNotification();
+                await this.initDiscussion();
+                await this.initPostsAppStates();
+                await this.loadOtherInfo();
+            } catch (err) {
+                console.error(err);
+            }
 
-                try {
-                    await this.initDiscussion();
-                    await this.initPostsAppStates();
-                    await this.loadOtherInfo();
-                } catch (err) {
-                    console.error(err);
-                }
-                this.isLoadingPost = false;
-                this._cdr.detectChanges();
-            },
-            (err) => {
-                console.error(`Error occurred while loading the discussion: ${err}`);
-                this.isLoadingPost = false;
-            });
+            this.isLoadingPost = false;
+            this._cdr.detectChanges();
+        },
+        (err) => {
+            console.error(`Error occurred while loading the discussion: ${err}`);
+            this.isLoadingPost = false;
+        });
     }
 
     async ngOnDestroy() {
@@ -215,15 +226,41 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
         window.open(url, '_blank');
     }
 
+    private async retrieveNotification() {
+        // reset displaying the composer
+        this.isComposerDisplayed = true;
+
+        if (!this.notificationId) return;
+        // let's retrieve the notification
+        this.notification = await this._notificationsService.get(this.notificationId).toPromise();
+
+        if (!this.notification) return;
+        // let's set the sorting based on the notification
+        this.selectedSorting = PostSorting.Relevant;
+
+        // let's hide the composer when the notification is not related to the post; i.e. new comment/reply or reaction to comment/reply
+        const {action, target} = this.notification;
+        if (action === NotificationAction.Like || action === NotificationAction.React) {
+            if (target !== NotificationTarget.Post && target !== NotificationTarget.Question) {
+                this.isComposerDisplayed = false;
+            }
+        } else if (action === NotificationAction.Comment || action === NotificationAction.Reply || action === NotificationAction.Answer) {
+            this.isComposerDisplayed = false;
+        }
+    }
+
     private async initDiscussion() {
         this.discussion = await this._postsService.get(this.id, this.notificationId ?? undefined, false, false).toPromise();
         this.discussionTopics = this.discussion?.postTopics?.map?.(t => t.disciplineTaxonomy);
     }
 
     private async initPostsAppStates() {
+        await this.postsStateService?.stop();
+
         const appStateConfig: AppStateConfig = {
             [this.postsStateId]: {
-                load: [undefined, this.discussionId, undefined, this.postSort, this.notificationId ?? undefined, 0, MAX_POSTS_TO_LOAD],
+                // if composer is displayed, load other posts; otherwise load only one that is related to the notification (refer to the last item in the 'load' array)
+                load: [undefined, this.discussionId, undefined, this.postSort, this.notificationId ?? undefined, 0, this.isComposerDisplayed ? MAX_POSTS_TO_LOAD : 1],
                 update: { postId: this.discussionId }
             }
         };

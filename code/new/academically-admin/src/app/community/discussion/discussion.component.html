@@ -65,7 +65,7 @@
     </div>
     <div class="discussion-content d-flex flex-row flex-nowrap p-0">
         <div class="discussion-content-left flex-grow-1">
-            <ng-container>
+            <ng-container *ngIf="isComposerDisplayed">
                 <app-community-composer [isLoading]="isLoading"  [showBottomActions]="false" (onQuickPostClick)="handleAddPost()"></app-community-composer>
 
                 <div  class="discussion-controls d-flex flex-row justify-content-between" [style.marginBottom.px]="10" [class.loading]="isLoading">
@@ -127,20 +127,23 @@
                     (onChildrenUpdate)="handleChildrenUpdate(p)"
                 ></app-community-post-card>
 
-                <div *ngIf="isFreshFromLoad && p.isFromNotification && children[i+1]?.isFromNotification === false" class="discussion-inline-separator d-flex align-items-center text-center">
+                <div *ngIf="!isLoading && isFreshFromLoad && p.isFromNotification && children[i+1]?.isFromNotification === false" class="discussion-inline-separator d-flex align-items-center text-center">
                     <span class="flex-grow-1">{{ 'OtherPosts' | localize }}</span>
                 </div>
             </div>
 
-            <div *ngIf="hiddenChildrenCount" class="card discussion-content-post-load-more" (click)="onLoadMore()">
-                <span>Load more...</span>
-            </div>
+            <ng-container *ngIf="!isLoading && isComposerDisplayed">
+                <div *ngIf="hiddenChildrenCount" class="card discussion-content-post-load-more" (click)="onLoadMore()">
+                    <span>Load more...</span>
+                </div>
 
-            <div class="discussion-content-post end d-flex flex-row justify-content-center align-items-center" [style.marginTop.px]="40" [style.marginBottom.px]="20">
-                <div class="left"></div>
-                <div class="discussion-content-post-no-more flex-grow-1 d-flex justify-content-center align-items-center">No more posts</div>
-                <div class="right"></div>
-            </div>
+                <div class="discussion-content-post end d-flex flex-row justify-content-center align-items-center" [style.marginTop.px]="40" [style.marginBottom.px]="20">
+                    <div class="left"></div>
+                    <div class="discussion-content-post-no-more flex-grow-1 d-flex justify-content-center align-items-center">No more posts</div>
+                    <div class="right"></div>
+                </div>
+            </ng-container>
+
         </div>
         <div class="community-content-right d-none d-lg-block" [style.marginLeft.px]="24">
             <div *ngIf="participants?.length">
