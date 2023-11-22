@@ -170,6 +170,11 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
         await this.postsStateService?.stop();
     }
 
+    async onTitleClick(): Promise<void> {
+        await this.handleSortingChange(PostSorting.Latest);
+        await this._router.navigate(['/app/community/discussion/', this.id]);
+    }
+
     handleDeleteDiscussion(): void {
         const options: ModalDialogOptions = {
             title: this.l('AreYouSure'),

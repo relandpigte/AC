@@ -21,7 +21,7 @@
                 <span [tooltip]="discussion?.creationTime ? convertMomentToPostDateFormat(discussion.creationTime) : ''">{{ postDate }}</span>
                 <span *ngIf="isEdited" class="post-heading-edited ml-1" role="button" (click)="goToHistory()">· Edited</span>
             </div>
-            <div *ngIf="discussionTitle" class="discussion-info-header" [innerHTML]="discussionTitle"></div>
+            <div *ngIf="discussionTitle" class="discussion-info-header cursor-pointer" (click)="onTitleClick()" [innerHTML]="discussionTitle"></div>
             <div *ngIf="discussionDescription" class="discussion-info-description" [innerHTML]="discussionDescription" [style.marginTop.px]="10"></div>
             <div *ngIf="discussionTopics && discussionTopics.length"  class="discussion-info-topics d-flex flex-wrap flex-row gap-5" [style.marginTop.px]="10">
                 <div *ngFor="let topic of discussionTopics" class="discussion-info-topics-item cursor-pointer">#{{ topic.name }}</div>
