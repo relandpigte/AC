@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 
 import { RateAndReviewComponent } from '../rate-and-review/rate-and-review.component';
 import { AppComponentBase } from '@shared/app-component-base';
+import { ArticleStatus, ArticleType, CoachingStatus, CourseStatus, EventStatus, UserDto } from '@shared/service-proxies/service-proxies';
 import {
   DefaultServiceCardActions,
   DefaultServiceCardOptions,
@@ -22,14 +23,6 @@ import {
   ServiceCardStatus,
   ServiceCardType
 } from '@shared/models/service-card.model';
-import {
-  ArticleStatus,
-  ArticleType,
-  CoachingStatus,
-  CourseStatus,
-  EventStatus,
-  UserDto
-} from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-service-card-dashboard',
@@ -42,12 +35,9 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   @Input() isCreator: boolean;
   @Input() options: ServiceCardOptions;
   @Input() actions: ServiceCardButton[];
-
   @Input() isPast: boolean;
   @Input() isCancelled: boolean;
-
   @Input() additionalData: any = {};
-
   @Input() isOverview: boolean;
 
   @Output() onDelete = new Subject<any>();
@@ -58,6 +48,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   @Output() onUnArchive = new Subject<any>();
   @Output() onClickAction = new Subject<any>();
   @Output() onReviewAction = new Subject<any>();
+  @Output() onRedirection = new Subject<any>();
 
   sanitized: ServiceCard;
   sanitizedOptions: ServiceCardOptions;
@@ -207,6 +198,10 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         this.handleOnReview(serviceId);
         break;
     }
+  }
+
+  handleRedirection(e: any): void {
+    this.onRedirection.next(e);
   }
 
   private setInitValues(): void {

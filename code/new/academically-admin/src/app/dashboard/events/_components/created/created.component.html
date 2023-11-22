@@ -56,6 +56,7 @@
                     [isLoading]="isLoading"
                     [isCreator]="isTutor"
                     (onClickAction)="handleJoinClick($event)"
+                    (onRedirection)="onRedirection($event, data.id)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>

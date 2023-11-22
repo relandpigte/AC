@@ -1,4 +1,4 @@
-<div [class]="'card ' + cardType" [ngClass]="{ 'overview-page': isOverview }" [class.archive]="isArchive || isExpired || isPast || isCancelled">
+<div [class]="'cursor-pointer card ' + cardType" [ngClass]="{ 'overview-page': isOverview }" [class.archive]="isArchive || isExpired || isPast || isCancelled" (click)="handleRedirection($event)">
     <div class="card-body">
         <div class="d-flex" [ngSwitch]="cardType">
 

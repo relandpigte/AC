@@ -51,6 +51,7 @@
                     [isLoading]="isLoading$ | async"
                     [isCreator]="isTutor"
                     (onDelete)="onDeleteClick($event)"
+                    (onRedirection)="onRedirection($event, data.id)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>
@@ -64,6 +65,7 @@
                     [isCreator]="isTutor"
                     (onDelete)="onDeleteClick($event)"
                     (onArchive)="handleArchive($event)"
+                    (onRedirection)="onRedirection($event, data.id)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>
@@ -76,6 +78,7 @@
                     [isLoading]="isLoading$ | async"
                     [isCreator]="isTutor"
                     (onDelete)="onDeleteClick($event)"
+                    (onRedirection)="onRedirection($event, data.id)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>
