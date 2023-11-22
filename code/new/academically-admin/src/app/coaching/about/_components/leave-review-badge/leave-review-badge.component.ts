@@ -1,5 +1,6 @@
-import { Component, Injector, Input } from '@angular/core';
+import { Component, Injector, Input, Output } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { Subject } from 'rxjs';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import { RateAndReviewComponent } from '@shared/components/rate-and-review/rate-and-review.component';
@@ -14,6 +15,7 @@ import { CoachingDto, CoachingsServiceProxy, RatingsServiceProxy } from '@shared
 })
 export class LeaveReviewBadgeComponent extends AppComponentBase {
   @Input() data: CoachingDto;
+  @Output() onPurchase = new Subject<any>();
 
   constructor(
     injector: Injector,
@@ -51,5 +53,9 @@ export class LeaveReviewBadgeComponent extends AppComponentBase {
     modal.onClose.subscribe((): void => {
       this._modalService.hide();
     });
+  }
+
+  handlePurchase(): void {
+    this.onPurchase.next();
   }
 }

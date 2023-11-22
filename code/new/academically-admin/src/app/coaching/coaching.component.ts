@@ -10,6 +10,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { ChatService } from '@shared/services/chat.service';
 import { ServiceDataService } from '@shared/services/service-data.service';
 import { ServiceChatComponent } from '@shared/modals/service-chat/service-chat.component';
+import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
 import { ChatsServiceProxy, CoachingDto, CoachingsServiceProxy, RatingsServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
@@ -50,6 +51,13 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
     this.id = this._route.snapshot.paramMap.get('id');
     setTimeout(() => this._landingPageService.setIsLoading(false), 2000);
     this.initServiceData();
+  }
+
+  onPurchase(): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
+    modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
+    modalSettings.initialState = { data: this.data };
+    this._modalService.show(BookingServiceComponent, modalSettings);
   }
 
   private async openMessageModal(): Promise<void> {
