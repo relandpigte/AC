@@ -5,7 +5,13 @@ import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
-import { VideoDto, VideosServiceProxy, VideoStatus } from '@shared/service-proxies/service-proxies';
+import {
+  CoachingDto,
+  CoachingStatus,
+  VideoDto,
+  VideosServiceProxy,
+  VideoStatus
+} from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-created',
@@ -18,6 +24,12 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
   archiveVideos: VideoDto[] = [];
   shimmerType = ShimmerType;
 
+  readonly VideoStatus = VideoStatus;
+  protected readonly fns = {
+    [VideoStatus.Draft]: 'draftVideos',
+    [VideoStatus.Published]: 'activeVideos',
+    [VideoStatus.Archived]: 'archiveVideos'
+  };
   constructor(
     injector: Injector,
     private _dashboardPageService: DashboardPagesService,
@@ -45,19 +57,19 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
     await this._router.navigate(['app/videos/student-portal', id, 'portal']);
   }
 
-  handleArchive(id: string): void {
-    this._videoService.updateStatus(id, VideoStatus.Archived)
+  onUpdateStatus(data: VideoDto, changeToStatus: VideoStatus): void {
+    const { id, status } = data;
+    const service = this[this.fns[status]]?.find(x => x.id === id);
+    if (!service) {
+      return;
+    }
+    this._videoService.updateStatus(id, changeToStatus)
       .pipe(takeUntil(this.destroyed$))
       .subscribe((): void => {
         this.notify.success(this.l('SavedSuccessfully'));
-        const data = this.draftVideos.find(x => x.id === id);
-        if (!data) {
-          return;
-        }
-
-        this.draftVideos = this.draftVideos?.filter(x => x.id !== id);
-        data.status = VideoStatus.Archived;
-        this.archiveVideos.push(data);
+        this[this.fns[status]] = this[this.fns[status]]?.filter(x => x.id !== id);
+        service.status = changeToStatus;
+        this[this.fns[changeToStatus]].push(service);
       });
   }
 
@@ -72,4 +84,6 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
         this.archiveVideos = videos?.items.filter(a => a.status === 2);
       });
   }
+
+  protected readonly CoachingStatus = CoachingStatus;
 }

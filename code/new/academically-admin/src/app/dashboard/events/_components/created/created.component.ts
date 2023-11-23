@@ -5,7 +5,13 @@ import * as moment from 'moment';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
-import { EventDto, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
+import {
+  CoachingDto,
+  CoachingStatus,
+  EventDto,
+  EventsServiceProxy,
+  EventStatus
+} from '@shared/service-proxies/service-proxies';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 
 @Component({
@@ -22,6 +28,11 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
   isLoading = true;
   shimmerType = ShimmerType;
 
+  readonly EventStatus = EventStatus;
+  protected readonly fns = {
+    [EventStatus.Draft]: 'draftEvents',
+    [EventStatus.Published]: 'upcomingEvents',
+  };
   constructor(
     injector: Injector,
     private _dashboardPageService: DashboardPagesService,
@@ -43,6 +54,22 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
 
   async handleJoinClick(id: string): Promise<void> {
     await this._router.navigate(['app/dashboard/events/portal/broadcast/student', id, 'portal']);
+  }
+
+  onUpdateStatus(data: EventDto, changeToStatus: EventStatus): void {
+    const { id, status } = data;
+    const service = this[this.fns[status]]?.find(x => x.id === id);
+    if (!service) {
+      return;
+    }
+    this._eventsService.updateStatus(id, changeToStatus)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((): void => {
+        this.notify.success(this.l('SavedSuccessfully'));
+        this[this.fns[status]] = this[this.fns[status]]?.filter(x => x.id !== id);
+        service.status = changeToStatus;
+        this[this.fns[changeToStatus]].push(service);
+      });
   }
 
   async onRedirection(e: any, id: string): Promise<void> {
@@ -75,4 +102,6 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
         this.draftEvents = events?.items?.filter(e => e.status === 0);
       });
   }
+
+  protected readonly CoachingStatus = CoachingStatus;
 }

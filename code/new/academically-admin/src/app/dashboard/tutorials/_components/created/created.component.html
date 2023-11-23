@@ -50,7 +50,7 @@
                     [data]="data"
                     [isLoading]="isLoading$ | async"
                     [isCreator]="isTutor"
-                    (onRedirection)="onRedirection($event, data.id)"
+                    (onUnpublish)="onUpdateStatus($event, VideoStatus.Draft)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>
@@ -62,7 +62,8 @@
                     [data]="data"
                     [isLoading]="isLoading$ | async"
                     [isCreator]="isTutor"
-                    (onArchive)="handleArchive($event)"
+                    (onArchive)="onUpdateStatus($event, VideoStatus.Archived)"
+                    (onPublish)="onUpdateStatus($event, VideoStatus.Published)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>
@@ -74,6 +75,7 @@
                     [data]="data"
                     [isLoading]="isLoading$ | async"
                     [isCreator]="isTutor"
+                    (onUnArchive)="onUpdateStatus($event, VideoStatus.Draft)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>

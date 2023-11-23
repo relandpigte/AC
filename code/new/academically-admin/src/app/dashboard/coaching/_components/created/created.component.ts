@@ -14,9 +14,14 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
   activeCoachings: CoachingDto[] = [];
   draftCoachings: CoachingDto[] = [];
   archiveCoachings: CoachingDto[] = [];
-
   shimmerType = ShimmerType;
 
+  readonly CoachingStatus = CoachingStatus;
+  protected readonly fns = {
+    [CoachingStatus.Draft]: 'draftCoachings',
+    [CoachingStatus.Published]: 'activeCoachings',
+    [CoachingStatus.Archived]: 'archiveCoachings'
+  };
   constructor(
     injector: Injector,
     private _dashboardPageService: DashboardPagesService,
@@ -35,19 +40,19 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
     this.loadCoaching();
   }
 
-  handleArchive(id: string): void {
-    this._coachingService.updateStatus(id, CoachingStatus.Archived)
+  onUpdateStatus(data: CoachingDto, changeToStatus: CoachingStatus): void {
+    const { id, status } = data;
+    const service = this[this.fns[status]]?.find(x => x.id === id);
+    if (!service) {
+      return;
+    }
+    this._coachingService.updateStatus(id, changeToStatus)
       .pipe(takeUntil(this.destroyed$))
       .subscribe((): void => {
         this.notify.success(this.l('SavedSuccessfully'));
-        const data = this.draftCoachings.find(x => x.id === id);
-        if (!data) {
-          return;
-        }
-
-        this.draftCoachings = this.draftCoachings?.filter(x => x.id !== id);
-        data.status = CoachingStatus.Archived;
-        this.archiveCoachings.push(data);
+        this[this.fns[status]] = this[this.fns[status]]?.filter(x => x.id !== id);
+        service.status = changeToStatus;
+        this[this.fns[changeToStatus]].push(service);
       });
   }
 

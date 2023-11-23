@@ -189,9 +189,14 @@
                             {{ 'Overview' | localize }}
                         </a>
                        <ng-container *ngIf="isCreator">
-                           <a href="javascript:void(0)" class="dropdown-item" (click)="handlePublish(id)">
-                               {{ 'Publish' | localize }}
-                           </a>
+                          <ng-container *ngIf="!isArchive">
+                              <a *ngIf="isDraft" href="javascript:void(0)" class="dropdown-item" (click)="handlePublish(data)">
+                                  {{ 'Publish' | localize }}
+                              </a>
+                              <a *ngIf="!isDraft" href="javascript:void(0)" class="dropdown-item" (click)="handleUnpublish(data)">
+                                  {{ 'Unpublish' | localize }}
+                              </a>
+                          </ng-container>
                            <a href="javascript:void(0)" class="dropdown-item" (click)="handleEdit(id)">
                                {{ 'Edit' | localize }}
                            </a>
@@ -199,10 +204,10 @@
                                {{ 'Delete' | localize }}
                            </a>
                           <ng-container *ngIf="!isEvent">
-                              <a *ngIf="isDraft" href="javascript:void(0)" class="dropdown-item" (click)="handleArchive(id)">
+                              <a *ngIf="isDraft" href="javascript:void(0)" class="dropdown-item" (click)="handleArchive(data)">
                                   {{ 'Archive' | localize }}
                               </a>
-                              <a *ngIf="isArchive" href="javascript:void(0)" class="dropdown-item" (click)="handleUnArchive(id)">
+                              <a *ngIf="isArchive" href="javascript:void(0)" class="dropdown-item" (click)="handleUnArchive(data)">
                                   {{ 'Unarchive' | localize }}
                               </a>
                           </ng-container>

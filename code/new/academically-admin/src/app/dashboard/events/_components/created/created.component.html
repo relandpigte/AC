@@ -57,6 +57,7 @@
                     [isCreator]="isTutor"
                     (onClickAction)="handleJoinClick($event)"
                     (onRedirection)="onRedirection($event, data.id)"
+                    (onUnpublish)="onUpdateStatus($event, EventStatus.Draft)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>
@@ -68,6 +69,7 @@
                     [data]="data"
                     [isLoading]="isLoading"
                     [isCreator]="isTutor"
+                    (onUnpublish)="onUpdateStatus($event, EventStatus.Draft)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>
@@ -90,6 +92,7 @@
                     [data]="data"
                     [isLoading]="isLoading"
                     [isCreator]="isTutor"
+                    (onPublish)="onUpdateStatus($event, EventStatus.Published)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>

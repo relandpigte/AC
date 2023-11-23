@@ -3,10 +3,15 @@ import { finalize, takeUntil } from '@node_modules/rxjs/operators';
 import { Router } from '@angular/router';
 
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
-import { ArticleDto, ArticlesServiceProxy, ArticleStatus } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
+import {
+  ArticleDto,
+  ArticlesServiceProxy,
+  ArticleStatus,
+  CoachingStatus
+} from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-created',
@@ -21,6 +26,12 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
   isLoading = true;
   shimmerType = ShimmerType;
 
+  readonly ArticleStatus = ArticleStatus;
+  protected readonly fns = {
+    [ArticleStatus.Draft]: 'draftArticles',
+    [ArticleStatus.Published]: 'activeArticles',
+    [ArticleStatus.Archived]: 'archivedArticles'
+  };
   constructor(
     injector: Injector,
     private _articlesService: ArticlesServiceProxy,
@@ -44,19 +55,19 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
     await this.router.navigate([url , id]);
   }
 
-  handleArchive(id: string): void {
-    this._articlesService.updateStatus(id, ArticleStatus.Archived)
+  onUpdateStatus(data: ArticleDto, changeToStatus: ArticleStatus): void {
+    const { id, status } = data;
+    const service = this[this.fns[status]]?.find(x => x.id === id);
+    if (!service) {
+      return;
+    }
+    this._articlesService.updateStatus(id, changeToStatus)
       .pipe(takeUntil(this.destroyed$))
       .subscribe((): void => {
         this.notify.success(this.l('SavedSuccessfully'));
-        const data = this.draftArticles.find(x => x.id === id);
-        if (!data) {
-          return;
-        }
-
-        this.draftArticles = this.draftArticles?.filter(x => x.id !== id);
-        data.status = ArticleStatus.Archived;
-        this.archivedArticles.push(data);
+        this[this.fns[status]] = this[this.fns[status]]?.filter(x => x.id !== id);
+        service.status = changeToStatus;
+        this[this.fns[changeToStatus]].push(service);
       });
   }
 

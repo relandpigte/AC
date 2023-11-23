@@ -44,6 +44,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   @Output() onOverView = new Subject<any>();
   @Output() onEdit = new Subject<any>();
   @Output() onPublish = new Subject<any>();
+  @Output() onUnpublish = new Subject<any>();
   @Output() onArchive = new Subject<any>();
   @Output() onUnArchive = new Subject<any>();
   @Output() onClickAction = new Subject<any>();
@@ -162,16 +163,20 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     this.onEdit.next(id);
   }
 
-  handlePublish(id: string): void {
-    this.onPublish.next(id);
+  handlePublish(data: any): void {
+    this.onPublish.next(data);
   }
 
-  handleArchive(id: string):  void {
-    this.onArchive.next(id);
+  handleUnpublish(data: any): void {
+    this.onUnpublish.next(data);
   }
 
-  handleUnArchive(id: string):  void {
-    this.onUnArchive.next(id);
+  handleArchive(data: any):  void {
+    this.onArchive.next(data);
+  }
+
+  handleUnArchive(data: any):  void {
+    this.onUnArchive.next(data);
   }
 
   handleOnReview(serviceId: string): void {

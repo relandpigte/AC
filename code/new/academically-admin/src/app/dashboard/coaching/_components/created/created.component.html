@@ -51,6 +51,7 @@
                     [data]="data"
                     [isLoading]="isLoading$ | async"
                     [isCreator]="isTutor"
+                    (onUnpublish)="onUpdateStatus($event, CoachingStatus.Draft)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>
@@ -62,7 +63,8 @@
                     [data]="data"
                     [isLoading]="isLoading$ | async"
                     [isCreator]="isTutor"
-                    (onArchive)="handleArchive($event)"
+                    (onArchive)="onUpdateStatus($event, CoachingStatus.Archived)"
+                    (onPublish)="onUpdateStatus($event, CoachingStatus.Published)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>
@@ -74,6 +76,7 @@
                     [data]="data"
                     [isLoading]="isLoading$ | async"
                     [isCreator]="isTutor"
+                    (onUnArchive)="onUpdateStatus($event, CoachingStatus.Draft)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>
