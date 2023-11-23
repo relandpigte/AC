@@ -7,7 +7,7 @@
             <span aria-hidden="true"><img src="assets/img/x.svg" alt="Close"></span>
         </button>
     </div>
-    <div class="card-body notification-body d-flex gap-10">
+    <div class="card-body notification-body d-flex gap-10 cursor-pointer" (click)="onNotificationClick()">
         <div class="notification-avatar avatar avatar-sm">
             <img *ngIf="getDominantUser(notification); else avatarPlaceHolderTemplate" class="avatar-img rounded-circle"
                  [src]="getDominantUser(notification).profilePictureUrl" alt="...">

@@ -89,7 +89,9 @@ export class WrapperComponent extends AppComponentBase implements OnInit, OnDest
     this.notificationsStateService = this.pubSubService.getStateService<NotificationsStateService>('notifs');
     this.notificationsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingList$.next(loading));
     this.notificationsStateService.notifications$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
-      if (event.data.readTime !== undefined) return;
+      if (event.data.readTime !== undefined) {
+        return;
+      }
       switch (event.type) {
         case StateUpdateType.Add:
         case StateUpdateType.Update:
@@ -97,7 +99,7 @@ export class WrapperComponent extends AppComponentBase implements OnInit, OnDest
             clearTimeout(this.timer);
           }
           this.notification = event.data;
-          this.timer = setTimeout((): void => this.notification = null, 10_000);
+          this.timer = setTimeout((): void => this.notification = null, 5_000);
           break;
       }
       this._cdr.detectChanges();
