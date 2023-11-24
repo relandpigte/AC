@@ -1,245 +1,231 @@
 <div class="modal-card card" [loader]="isLoading$ | async">
-    <abp-modal-header [title]="'BookASession' | localize" [hideClose]="true"></abp-modal-header>
-    <div class="card-body d-flex flex-column justify-content-start align-items-start w-100">
-        <ng-container [ngSwitch]="step">
-            <ng-container *ngSwitchCase="1">
-                <div class="booking-schedule d-flex flex-grow-1 w-100p">
-                    <div class="booking-left-content flex-shrink-0 border-right d-flex flex-column">
-                        <full-calendar #calendar [options]="calendarOptions"></full-calendar>
-                        <div class="booking-left-content-timezone d-flex align-items-center mt-auto">
-                            <img src="assets/img/service/booking/icon-globe.svg" alt="Timezone">
-                            <span class="timezone">UK, Iremand, Lisbon Time</span>
-                            <span class="change-timezone">{{ 'Change' | localize | titlecase }}</span>
-                        </div>
-                    </div>
-                    <div class="booking-right-content ml-auto">
-                        <div class="booking-coach-details d-flex align-items-center border-bottom">
-                            <div class="avatar avatar-lg flex-shrink-0">
-                                <img [src]="coachAvatar" [alt]="coachName" class="avatar-img rounded-circle"/>
-                            </div>
-                            <div class="owner">
-                                <h3>{{ coachingTitle | titlecase }}</h3>
-                                <span class="name">{{ coachName }}</span>
-                                <span class="duration d-flex gap-6">
-                                    <img src="assets/img/service/booking/icon-duration-2.svg" alt="Duration">
-                                    <span>2 hours</span>
-                                </span>
-                            </div>
-                            <div class="price ml-auto">
-                                ￡16.99
-                            </div>
-                        </div>
-                        <div class="booking-right-content-schedules">
-                            <div class="booking-schedules booking-right-content-schedules-morning">
-                                <h3>{{ 'Morning' | localize | uppercase }}</h3>
-                                <div class="booking-schedules-lists d-flex align-items-center flex-wrap gap-10">
-                                    <div class="item active">9:00</div>
-                                    <div class="item" (click)="onScheduleTaken()">9:30</div>
-                                    <div class="item">10:00</div>
-                                    <div class="item">10:30</div>
-                                    <div class="item">11:00</div>
-                                    <div class="item">11:30</div>
-                                </div>
-                            </div>
-                            <div class="booking-schedules booking-right-content-schedules-afternoon">
-                                <h3>{{ 'Afternoon' | localize | uppercase }}</h3>
-                                <div class="booking-schedules-lists d-flex align-items-center flex-wrap gap-10">
-                                    <div class="item">12:00</div>
-                                    <div class="item">12:30</div>
-                                    <div class="item">13:00</div>
-                                    <div class="item">13:30</div>
-                                    <div class="item">14:00</div>
-                                    <div class="item">14:30</div>
-                                    <div class="item">15:00</div>
-                                </div>
-                            </div>
-                            <div class="booking-schedules booking-right-content-schedules-evening">
-                                <h3>{{ 'Evening' | localize | uppercase }}</h3>
-                                <div class="booking-schedules-lists d-flex align-items-center flex-wrap gap-10">
-                                    <div class="item">16:00</div>
-                                    <div class="item">16:30</div>
-                                    <div class="item">17:00</div>
-                                    <div class="item">17:30</div>
-                                    <div class="item">18:00</div>
-                                    <div class="item">18:30</div>
-                                    <div class="item">19:00</div>
-                                    <div class="item">19:30</div>
-                                    <div class="item">20:00</div>
-                                    <div class="item">20:30</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+  <abp-modal-header [title]="'BookASession' | localize" [hideClose]="true"></abp-modal-header>
+  <div class="card-body d-flex flex-column justify-content-start align-items-start w-100">
+    <ng-container [ngSwitch]="step">
+      <ng-container *ngSwitchCase="1">
+        <div class="booking-schedule d-flex flex-grow-1 w-100p">
+          <div class="booking-left-content flex-shrink-0 border-right d-flex flex-column">
+            <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+            <div class="booking-left-content-timezone d-flex align-items-center mt-auto">
+              <img src="assets/img/service/booking/icon-globe.svg" alt="Timezone">
+              <span class="timezone">UK, Iremand, Lisbon Time</span>
+              <span class="change-timezone">{{ 'Change' | localize | titlecase }}</span>
+            </div>
+          </div>
+          <div class="booking-right-content ml-auto">
+            <div class="booking-coach-details d-flex align-items-center border-bottom">
+              <div class="avatar avatar-lg flex-shrink-0">
+                <img [src]="coachAvatar" [alt]="coachName" class="avatar-img rounded-circle"/>
+              </div>
+              <div class="owner">
+                <h3>{{ coachingTitle | titlecase }}</h3>
+                <span class="name">{{ coachName }}</span>
+                <div class="duration d-flex gap-6">
+                  <img src="assets/img/service/booking/icon-duration-2.svg" alt="Duration">
+                  <span>30 mins</span>
                 </div>
-            </ng-container>
-            <ng-container *ngSwitchCase="2">
-                <div class="booking-schedule d-flex flex-grow-1 w-100p">
-                    <div class="booking-left-content flex-shrink-0 border-right d-flex flex-column">
-                        <div class="booking-results">
-                            <div class="booking-coach-details d-flex align-items-center">
-                                <div class="avatar avatar-lg flex-shrink-0">
-                                    <img [src]="coachAvatar" [alt]="coachName" class="avatar-img rounded-circle"/>
-                                </div>
-                                <div class="owner">
-                                    <h3>{{ coachingTitle | titlecase }}</h3>
-                                    <span class="name">{{ coachName }}</span>
-                                </div>
-                            </div>
-                            <div class="booking-details">
-                                <div class="booking-details-duration d-flex align-items-start gap-6">
-                                    <img src="assets/img/service/booking/icon-duration.svg" alt="Timezone">
-                                    <span class="timezone">2 hours</span>
-                                </div>
-                                <div class="booking-details-schedule d-flex align-items-start gap-6">
-                                    <img src="assets/img/service/booking/icon-calendar.svg" alt="Timezone">
-                                    <span class="timezone">16:00am - 18:00pm, Wednesday, February 16, 2024</span>
-                                </div>
-                                <div class="booking-details-timezone d-flex align-items-start gap-6">
-                                    <img src="assets/img/service/booking/icon-globe.svg" alt="Timezone">
-                                    <span class="timezone">UK, Iremand, Lisbon Time</span>
-                                </div>
-                                <div class="separator"></div>
-                                <div class="booking-breakdown-price d-flex align-items-center">
-                                    <span>Original Price</span>
-                                    <span class="ml-auto">￡16.99</span>
-                                </div>
-                                <div class="booking-breakdown-discount d-flex align-items-center">
-                                    <span>Discount</span>
-                                    <span class="ml-auto">-￡0.00</span>
-                                </div>
-                                <div class="booking-breakdown-total d-flex align-items-center">
-                                    <span class="font-weight-bold">Total</span>
-                                    <span class="ml-auto font-weight-bold text-primary">￡16.99</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="booking-right-content ml-auto">
-                        <div class="booking-payment">
-                            <h3 class="booking-payment-title required">Payment method</h3>
-                            <div class="booking-payment-select d-flex align-items-center gap-16">
-                                <div *ngFor="let payment of PaymentMethod | enumToArray | keyvalue"
-                                     class="d-flex align-items-center justify-content-center"
-                                     [class.selected]="payment.key == defaultPaymentMethod"
-                                     (click)="defaultPaymentMethod = PaymentMethod[payment.value]"
-                                >
-                                    {{ paymentMethodNames[payment.key] }}
-                                </div>
-                            </div>
-
-                            <div class="booking-payment-selected" [ngSwitch]="defaultPaymentMethod">
-                                <ng-container *ngSwitchCase="PaymentMethod.CreditCard">
-                                    <div class="booking-payment-credit">
-                                        <form class="booking-payment-form">
-                                            <div class="form-group">
-                                                <label class="required">Name on card</label>
-                                                <input type="text" class="form-control" name="nameOnCard" placeholder="Marry Potter" ngModel required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="required">Card number</label>
-                                                <input type="text" class="form-control" name="cardNumber" [mask]="'0000 0000 0000 0000'" placeholder="0000 0000 0000 0000" ngModel required>
-                                            </div>
-                                            <div class="d-flex gap-16 w-100">
-                                                <div class="form-group flex-grow-1">
-                                                    <label class="required">Expiration date</label>
-                                                    <input type="text" class="form-control" name="expirationDate" [mask]="'00/00'" placeholder="MM/YY" ngModel required>
-                                                </div>
-                                                <div class="form-group flex-grow-1">
-                                                    <label class="required">Security number</label>
-                                                    <input type="text" class="form-control" name="securityNumber" [mask]="'000'" placeholder="000" ngModel required>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </ng-container>
-                                <ng-container *ngSwitchCase="PaymentMethod.Paypal">
-                                    <div class="booking-payment-paypal w-100 text-center">
-                                        {{ 'PaypalPaymentText' | localize }}
-                                    </div>
-                                </ng-container>
-                                <ng-container *ngSwitchCase="PaymentMethod.WeChat">
-                                    <div class="booking-payment-wechat w-100 text-center d-flex flex-column gap-24">
-                                        {{ 'WechatPaymentText' | localize }}
-                                        <div>
-                                            <img src="assets/img/service/booking/wechat.svg" alt="">
-                                        </div>
-                                    </div>
-                                </ng-container>
-                                <ng-container *ngSwitchDefault>
-                                    <div class="booking-payment-alipay w-100 text-center d-flex flex-column gap-24">
-                                        {{ 'AlipayPaymentText' | localize }}
-                                        <div>
-                                            <img src="assets/img/service/booking/alipay.svg" alt="">
-                                        </div>
-                                    </div>
-                                </ng-container>
-                            </div>
-                        </div>
-                    </div>
+              </div>
+              <div class="price ml-auto">
+                {{ servicePrice | currency : 'GBP' }}
+              </div>
+            </div>
+            <div class="booking-right-content-schedules">
+              <ng-container *ngIf="!!selectedSchedule else noSchedule">
+                <div class="booking-schedules booking-right-content-schedules-morning">
+                  <h3>{{ 'Morning' | localize | uppercase }}</h3>
+                  <div class="booking-schedules-lists d-flex align-items-center flex-wrap gap-10">
+                    <div class="item" [class.active]="time === selectedTime" *ngFor="let time of selectedSessions.morning" (click)="onSelectTime(time)">{{ time }}</div>
+                  </div>
                 </div>
-            </ng-container>
-            <ng-container *ngSwitchCase="3">
-                <div class="booking-schedule d-flex justify-content-center flex-grow-1 w-100p">
-                    <div class="booking-confirmation d-flex flex-column gap-24">
-                        <div [ngSwitch]="paymentStatus" class="booking-confirmation-header text-center">
-                            <ng-container *ngSwitchCase="PaymentStatus.Success">
-                                <img src="assets/img/service/booking/icon-successful.svg" alt="">
-                                <h3 class="title">{{ 'BookingSuccessful' | localize }}</h3>
-                                <span class="description">{{ 'SessionAddedToSchedule' | localize }}</span>
-                                <div class="booking-confirmation-buttons d-flex gap-10 align-items-center justify-content-center">
-                                    <button type="button" class="btn btn-outline-secondary">{{ 'GoToSchedule' | localize }}</button>
-                                    <button type="button" class="btn btn-primary" (click)="onCloseModal()">{{ 'Close' | localize }}</button>
-                                </div>
-                            </ng-container>
-                            <ng-container *ngSwitchCase="PaymentStatus.Fail">
-                                <img src="assets/img/service/booking/icon-unsuccessful.svg" alt="">
-                                <h3 class="title">{{ 'PaymentUnsuccessful' | localize }}</h3>
-                                <span class="description">{{ 'CheckPaymentAndTryAgain' | localize }}</span>
-                                <div class="booking-confirmation-buttons d-flex gap-10 align-items-center justify-content-center">
-                                    <button type="button" class="btn btn-outline-secondary" (click)="onCloseModal()">{{ 'Cancel' | localize }}</button>
-                                    <button type="button" class="btn btn-primary" (click)="onSteps(1)">{{ 'TryAgain' | localize }}</button>
-                                </div>
-                            </ng-container>
-                        </div>
-                        <div class="booking-confirmation-details border">
-                            <div class="booking-results">
-                                <div class="booking-coach-details d-flex align-items-center">
-                                    <div class="avatar avatar-lg flex-shrink-0">
-                                        <img [src]="coachAvatar" [alt]="coachName" class="avatar-img rounded-circle"/>
-                                    </div>
-                                    <div class="owner">
-                                        <h3>{{ coachingTitle | titlecase }}</h3>
-                                        <span class="name">{{ coachName }}</span>
-                                    </div>
-                                </div>
-                                <div class="booking-details">
-                                    <div class="booking-details-duration d-flex align-items-start gap-6">
-                                        <img src="assets/img/service/booking/icon-duration.svg" alt="Timezone">
-                                        <span class="timezone">2 hours</span>
-                                    </div>
-                                    <div class="booking-details-schedule d-flex align-items-start gap-6">
-                                        <img src="assets/img/service/booking/icon-calendar.svg" alt="Timezone">
-                                        <span class="timezone">16:00am - 18:00pm, Wednesday, February 16, 2024</span>
-                                    </div>
-                                    <div class="booking-details-timezone d-flex align-items-start gap-6">
-                                        <img src="assets/img/service/booking/icon-globe.svg" alt="Timezone">
-                                        <span class="timezone">UK, Iremand, Lisbon Time</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="booking-schedules booking-right-content-schedules-afternoon">
+                  <h3>{{ 'Afternoon' | localize | uppercase }}</h3>
+                  <div class="booking-schedules-lists d-flex align-items-center flex-wrap gap-10">
+                    <div class="item" [class.active]="time === selectedTime" *ngFor="let time of selectedSessions.afternoon" (click)="onSelectTime(time)">{{ time }}</div>
+                  </div>
                 </div>
-            </ng-container>
-        </ng-container>
-    </div>
-    <div *ngIf="step !== 3" class="card-footer d-flex justify-content-end align-items-center gap-10">
-        <div class="card-footer-steps text-uppercase mr-auto">
-            {{ l('Steps', step, 2) }}
+                <div class="booking-schedules booking-right-content-schedules-evening">
+                  <h3>{{ 'Evening' | localize | uppercase }}</h3>
+                  <div class="booking-schedules-lists d-flex align-items-center flex-wrap gap-10">
+                    <div class="item" [class.active]="time === selectedTime" *ngFor="let time of selectedSessions.evening" (click)="onSelectTime(time)">{{ time }}</div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
         </div>
-        <button type="button" class="btn btn-outline-secondary" (click)="onCloseModal()">{{ 'Cancel' | localize }}</button>
-        <button *ngIf="step === 1" type="button" class="btn btn-primary" (click)="onSteps(2)">{{ 'Continue' | localize }}</button>
-        <button *ngIf="step === 2 && defaultPaymentMethod === PaymentMethod.Paypal" type="button" class="btn btn-primary" (click)="onProcessPayment()">{{ 'Continue' | localize }}</button>
-        <button *ngIf="step === 2 && defaultPaymentMethod === PaymentMethod.CreditCard" type="button" class="btn btn-primary" (click)="onProcessPayment()">{{ 'Pay' | localize }}</button>
+      </ng-container>
+      <ng-container *ngSwitchCase="2">
+        <div class="booking-schedule d-flex flex-grow-1 w-100p">
+          <div class="booking-left-content flex-shrink-0 border-right d-flex flex-column">
+            <div class="booking-results">
+              <div class="booking-coach-details d-flex align-items-center">
+                <div class="avatar avatar-lg flex-shrink-0">
+                  <img [src]="coachAvatar" [alt]="coachName" class="avatar-img rounded-circle"/>
+                </div>
+                <div class="owner">
+                  <h3>{{ coachingTitle | titlecase }}</h3>
+                  <span class="name">{{ coachName }}</span>
+                </div>
+              </div>
+              <div class="booking-details">
+                <div class="booking-details-duration d-flex align-items-start gap-6">
+                  <img src="assets/img/service/booking/icon-duration.svg" alt="Timezone">
+                  <span class="timezone">30 mins</span>
+                </div>
+                <div class="booking-details-schedule d-flex align-items-start gap-6">
+                  <img src="assets/img/service/booking/icon-calendar.svg" alt="Timezone">
+                  <span class="timezone">{{ bookingSchedule }}</span>
+                </div>
+                <div class="booking-details-timezone d-flex align-items-start gap-6">
+                  <img src="assets/img/service/booking/icon-globe.svg" alt="Timezone">
+                  <span class="timezone">UK, Iremand, Lisbon Time</span>
+                </div>
+                <div class="separator"></div>
+                <div class="booking-breakdown-price d-flex align-items-center">
+                  <span>Original Price</span>
+                  <span class="ml-auto">{{ servicePrice | currency : 'GBP' }}</span>
+                </div>
+                <div class="booking-breakdown-discount d-flex align-items-center">
+                  <span>Discount</span>
+                  <span class="ml-auto">-￡0.00</span>
+                </div>
+                <div class="booking-breakdown-total d-flex align-items-center">
+                  <span class="font-weight-bold">Total</span>
+                  <span class="ml-auto font-weight-bold text-primary">{{ servicePrice | currency : 'GBP' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="booking-right-content ml-auto">
+            <div class="booking-payment">
+              <h3 class="booking-payment-title required">Payment method</h3>
+              <div class="booking-payment-select d-flex align-items-center gap-16">
+                <div *ngFor="let payment of PaymentMethod | enumToArray | keyvalue"
+                     class="d-flex align-items-center justify-content-center"
+                     [class.selected]="payment.key == defaultPaymentMethod"
+                     (click)="defaultPaymentMethod = PaymentMethod[payment.value]"
+                >
+                  {{ paymentMethodNames[payment.key] }}
+                </div>
+              </div>
+
+              <div class="booking-payment-selected" [ngSwitch]="defaultPaymentMethod">
+                <ng-container *ngSwitchCase="PaymentMethod.CreditCard">
+                  <div class="booking-payment-credit">
+                    <form class="booking-payment-form">
+                      <div class="form-group">
+                        <label class="required">Name on card</label>
+                        <input type="text" class="form-control" name="nameOnCard" placeholder="Marry Potter" ngModel required>
+                      </div>
+                      <div class="form-group">
+                        <label class="required">Card number</label>
+                        <input type="text" class="form-control" name="cardNumber" [mask]="'0000 0000 0000 0000'" placeholder="0000 0000 0000 0000" ngModel required>
+                      </div>
+                      <div class="d-flex gap-16 w-100">
+                        <div class="form-group flex-grow-1">
+                          <label class="required">Expiration date</label>
+                          <input type="text" class="form-control" name="expirationDate" [mask]="'00/00'" placeholder="MM/YY" ngModel required>
+                        </div>
+                        <div class="form-group flex-grow-1">
+                          <label class="required">Security number</label>
+                          <input type="text" class="form-control" name="securityNumber" [mask]="'000'" placeholder="000" ngModel required>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="PaymentMethod.Paypal">
+                  <div class="booking-payment-paypal w-100 text-center">
+                    {{ 'PaypalPaymentText' | localize }}
+                  </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="PaymentMethod.WeChat">
+                  <div class="booking-payment-wechat w-100 text-center d-flex flex-column gap-24">
+                    {{ 'WechatPaymentText' | localize }}
+                    <div>
+                      <img src="assets/img/service/booking/wechat.svg" alt="">
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                  <div class="booking-payment-alipay w-100 text-center d-flex flex-column gap-24">
+                    {{ 'AlipayPaymentText' | localize }}
+                    <div>
+                      <img src="assets/img/service/booking/alipay.svg" alt="">
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="3">
+        <div class="booking-schedule d-flex justify-content-center flex-grow-1 w-100p">
+          <div class="booking-confirmation d-flex flex-column gap-24">
+            <div [ngSwitch]="paymentStatus" class="booking-confirmation-header text-center">
+              <ng-container *ngSwitchCase="PaymentStatus.Success">
+                <img src="assets/img/service/booking/icon-successful.svg" alt="">
+                <h3 class="title">{{ 'BookingSuccessful' | localize }}</h3>
+                <span class="description">{{ 'SessionAddedToSchedule' | localize }}</span>
+                <div class="booking-confirmation-buttons d-flex gap-10 align-items-center justify-content-center">
+                  <button type="button" class="btn btn-outline-secondary">{{ 'GoToSchedule' | localize }}</button>
+                  <button type="button" class="btn btn-primary" (click)="onCloseModal()">{{ 'Close' | localize }}</button>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="PaymentStatus.Fail">
+                <img src="assets/img/service/booking/icon-unsuccessful.svg" alt="">
+                <h3 class="title">{{ 'PaymentUnsuccessful' | localize }}</h3>
+                <span class="description">{{ 'CheckPaymentAndTryAgain' | localize }}</span>
+                <div class="booking-confirmation-buttons d-flex gap-10 align-items-center justify-content-center">
+                  <button type="button" class="btn btn-outline-secondary" (click)="onCloseModal()">{{ 'Cancel' | localize }}</button>
+                  <button type="button" class="btn btn-primary" (click)="onSteps(1)">{{ 'TryAgain' | localize }}</button>
+                </div>
+              </ng-container>
+            </div>
+            <div class="booking-confirmation-details border">
+              <div class="booking-results">
+                <div class="booking-coach-details d-flex align-items-center">
+                  <div class="avatar avatar-lg flex-shrink-0">
+                    <img [src]="coachAvatar" [alt]="coachName" class="avatar-img rounded-circle"/>
+                  </div>
+                  <div class="owner">
+                    <h3>{{ coachingTitle | titlecase }}</h3>
+                    <span class="name">{{ coachName }}</span>
+                  </div>
+                </div>
+                <div class="booking-details">
+                  <div class="booking-details-duration d-flex align-items-start gap-6">
+                    <img src="assets/img/service/booking/icon-duration.svg" alt="Timezone">
+                    <span class="timezone">30 mins</span>
+                  </div>
+                  <div class="booking-details-schedule d-flex align-items-start gap-6">
+                    <img src="assets/img/service/booking/icon-calendar.svg" alt="Timezone">
+                    <span class="timezone">{{ bookingSchedule }}</span>
+                  </div>
+                  <div class="booking-details-timezone d-flex align-items-start gap-6">
+                    <img src="assets/img/service/booking/icon-globe.svg" alt="Timezone">
+                    <span class="timezone">UK, Iremand, Lisbon Time</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+  <div *ngIf="step !== 3" class="card-footer d-flex justify-content-end align-items-center gap-10">
+    <div class="card-footer-steps text-uppercase mr-auto">
+      {{ l('Steps', step, 2) }}
     </div>
+    <button type="button" class="btn btn-outline-secondary" (click)="onCloseModal()">{{ 'Cancel' | localize }}</button>
+    <button *ngIf="step === 1" [disabled]="!isValidFirstStep" class="btn btn-primary" (click)="onSteps(2)">{{ 'Continue' | localize }}</button>
+    <button *ngIf="step === 2 && defaultPaymentMethod === PaymentMethod.Paypal" type="button" class="btn btn-primary" (click)="onProcessPayment()">{{ 'Continue' | localize }}</button>
+    <button *ngIf="step === 2 && defaultPaymentMethod === PaymentMethod.CreditCard" type="button" class="btn btn-primary" (click)="onProcessPayment()">{{ 'Pay' | localize }}</button>
+  </div>
 </div>
+
+<ng-template #noSchedule>
+  <div class="text-center w-100 text-muted p-2">{{ 'NoScheduleAvailable' | localize }}</div>
+</ng-template>

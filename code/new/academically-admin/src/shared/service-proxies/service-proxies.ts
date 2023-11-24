@@ -23285,6 +23285,186 @@ export class ServicesServiceProxy {
      * @param body (optional) 
      * @return Success
      */
+    saveBooking(body: CreateServiceBookingDto | undefined): Observable<ServiceBookingDto> {
+        let url_ = this.baseUrl + "/api/services/app/Services/SaveBooking";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSaveBooking(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSaveBooking(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceBookingDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceBookingDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSaveBooking(response: HttpResponseBase): Observable<ServiceBookingDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServiceBookingDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceBookingDto>(<any>null);
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @param ownerId (optional) 
+     * @return Success
+     */
+    getAllBookings(referenceId: string | undefined, ownerId: number | undefined): Observable<ServiceBookingDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetAllBookings?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        if (ownerId === null)
+            throw new Error("The parameter 'ownerId' cannot be null.");
+        else if (ownerId !== undefined)
+            url_ += "ownerId=" + encodeURIComponent("" + ownerId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllBookings(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllBookings(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceBookingDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceBookingDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllBookings(response: HttpResponseBase): Observable<ServiceBookingDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(ServiceBookingDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceBookingDto[]>(<any>null);
+    }
+
+    /**
+     * @param bookingId (optional) 
+     * @return Success
+     */
+    getBooking(bookingId: string | undefined): Observable<ServiceBookingDto> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetBooking?";
+        if (bookingId === null)
+            throw new Error("The parameter 'bookingId' cannot be null.");
+        else if (bookingId !== undefined)
+            url_ += "bookingId=" + encodeURIComponent("" + bookingId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetBooking(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetBooking(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceBookingDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceBookingDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetBooking(response: HttpResponseBase): Observable<ServiceBookingDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServiceBookingDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceBookingDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
     upsertServiceOffer(body: CreateServiceOfferDto | undefined): Observable<ServiceOfferDto> {
         let url_ = this.baseUrl + "/api/services/app/Services/UpsertServiceOffer";
         url_ = url_.replace(/[?&]$/, "");
@@ -28864,6 +29044,69 @@ export class UserAvailabilitiesServiceProxy {
     }
 
     protected processGetAll(response: HttpResponseBase): Observable<UserAvailabilityDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(UserAvailabilityDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserAvailabilityDto[]>(<any>null);
+    }
+
+    /**
+     * @param userId (optional) 
+     * @return Success
+     */
+    getAvailabilitiesByUser(userId: number | undefined): Observable<UserAvailabilityDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/UserAvailabilities/GetAvailabilitiesByUser?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAvailabilitiesByUser(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAvailabilitiesByUser(<any>response_);
+                } catch (e) {
+                    return <Observable<UserAvailabilityDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserAvailabilityDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAvailabilitiesByUser(response: HttpResponseBase): Observable<UserAvailabilityDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -40379,6 +40622,61 @@ export interface ICreateRoleDto {
     grantedPermissions: string[] | undefined;
 }
 
+export class CreateServiceBookingDto implements ICreateServiceBookingDto {
+    referenceId: string;
+    bookingDateTime: moment.Moment;
+    ownerId: number;
+    type: ServicesType;
+
+    constructor(data?: ICreateServiceBookingDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.referenceId = _data["referenceId"];
+            this.bookingDateTime = _data["bookingDateTime"] ? moment(_data["bookingDateTime"].toString()) : <any>undefined;
+            this.ownerId = _data["ownerId"];
+            this.type = _data["type"];
+        }
+    }
+
+    static fromJS(data: any): CreateServiceBookingDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateServiceBookingDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["referenceId"] = this.referenceId;
+        data["bookingDateTime"] = this.bookingDateTime ? this.bookingDateTime.toISOString() : <any>undefined;
+        data["ownerId"] = this.ownerId;
+        data["type"] = this.type;
+        return data; 
+    }
+
+    clone(): CreateServiceBookingDto {
+        const json = this.toJSON();
+        let result = new CreateServiceBookingDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateServiceBookingDto {
+    referenceId: string;
+    bookingDateTime: moment.Moment;
+    ownerId: number;
+    type: ServicesType;
+}
+
 export class CreateServiceDiscussionDto implements ICreateServiceDiscussionDto {
     serviceId: string;
     serviceType: number;
@@ -50517,6 +50815,69 @@ export interface IService2Dto {
     parentId: string | undefined;
     parentIdMap: string | undefined;
     description: string | undefined;
+}
+
+export class ServiceBookingDto implements IServiceBookingDto {
+    referenceId: string;
+    bookingDateTime: moment.Moment;
+    ownerId: number;
+    rescheduleReason: string | undefined;
+    type: ServicesType;
+    creatorUserId: number;
+
+    constructor(data?: IServiceBookingDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.referenceId = _data["referenceId"];
+            this.bookingDateTime = _data["bookingDateTime"] ? moment(_data["bookingDateTime"].toString()) : <any>undefined;
+            this.ownerId = _data["ownerId"];
+            this.rescheduleReason = _data["rescheduleReason"];
+            this.type = _data["type"];
+            this.creatorUserId = _data["creatorUserId"];
+        }
+    }
+
+    static fromJS(data: any): ServiceBookingDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServiceBookingDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["referenceId"] = this.referenceId;
+        data["bookingDateTime"] = this.bookingDateTime ? this.bookingDateTime.toISOString() : <any>undefined;
+        data["ownerId"] = this.ownerId;
+        data["rescheduleReason"] = this.rescheduleReason;
+        data["type"] = this.type;
+        data["creatorUserId"] = this.creatorUserId;
+        return data; 
+    }
+
+    clone(): ServiceBookingDto {
+        const json = this.toJSON();
+        let result = new ServiceBookingDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IServiceBookingDto {
+    referenceId: string;
+    bookingDateTime: moment.Moment;
+    ownerId: number;
+    rescheduleReason: string | undefined;
+    type: ServicesType;
+    creatorUserId: number;
 }
 
 /** 1 = LastItem 2 = SpecificDate 3 = Immediate */

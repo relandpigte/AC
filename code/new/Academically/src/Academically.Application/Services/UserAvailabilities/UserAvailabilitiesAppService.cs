@@ -29,7 +29,7 @@ namespace Academically.Services.UserAvailabilities
             _userAvailabilitySettingRepository = userAvailabilitySettingRepository;
         }
 
-        public async Task<IEnumerable<UserAvailabilityDto>> GetAll(int userId)
+        public async Task<IEnumerable<UserAvailabilityDto>> GetAll(long userId)
         {
             var userAvailabilities = await _userAvailabilitiesRepository.GetAll()
                 .Where(e => e.UserId == userId)
@@ -50,6 +50,14 @@ namespace Academically.Services.UserAvailabilities
                 }
             }
             return userAvailabilities;
+        }
+        
+        public async Task<IEnumerable<UserAvailabilityDto>> GetAvailabilitiesByUser(long userId)
+        {
+            return await _userAvailabilitiesRepository.GetAll()
+                .Where(x => x.UserId == userId)
+                .Select(e => ObjectMapper.Map<UserAvailabilityDto>(e))
+                .ToListAsync();
         }
 
         [AbpAuthorize(PermissionNames.Pages_Calendar_Schedules)]

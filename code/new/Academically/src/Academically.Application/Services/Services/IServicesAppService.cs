@@ -5,6 +5,7 @@ using Academically.Services.UserServices.Dto;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Academically.Domain.Entities;
 
 namespace Academically.Services.Services
 {
@@ -24,7 +25,9 @@ namespace Academically.Services.Services
         Task<ServicePurchaseDto> GetPurchase(Guid id);
         Task<IEnumerable<ServicePurchaseDto>> GetAllPurchases(Guid? referenceId, long? userId);
         Task<ServicePurchaseDto> SavePurchase(CreateServicePurchaseDto input);
-
+        Task<ServiceBookingDto> SaveBooking(CreateServiceBookingDto input);
+        Task<IEnumerable<ServiceBookingDto>> GetAllBookings(Guid referenceId, long ownerId);
+        Task<ServiceBookingDto> GetBookingAsync(Guid bookingId);
 
         // service offers
         Task<ServiceOfferDto> UpsertServiceOffer(CreateServiceOfferDto input);

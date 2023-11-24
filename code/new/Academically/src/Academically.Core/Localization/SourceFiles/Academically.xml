@@ -2043,6 +2043,7 @@
     <text name="ExploreMore">Explore more</text>
     <text name="CoachingReviewMessage">Thank you for your review. Your response has been sent to the coach.</text>
     <text name="YourSessionReview">Your review for this session</text>
+    <text name="NoScheduleAvailable">No schedule available</text>
     
     <!-- Account Settings -->
     <text name="BlockedUsers">Blocked users</text>

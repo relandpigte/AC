@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Academically.Services.StudentCourses;
 
@@ -26,6 +27,7 @@ namespace Academically.Services.Services
         private readonly IPostsAppService _postsAppService;
         private readonly IHubManager _hubManager;
         private readonly IStudentCoursesAppService _studentCoursesAppService;
+        private readonly IRepository<ServiceBooking, Guid> _serviceBooking;
 
         private readonly List<Service2Dto> StaticServiceLevels = new List<Service2Dto>
             {
@@ -88,7 +90,8 @@ namespace Academically.Services.Services
             IRepository<ServiceOffer, Guid> serviceOffersRepository,
             IPostsAppService postsAppService,
             IHubManager hubManager,
-            IStudentCoursesAppService studentCoursesAppService
+            IStudentCoursesAppService studentCoursesAppService,
+            IRepository<ServiceBooking, Guid> serviceBooking
             )
         {
             _servicesRepository = servicesRepository;
@@ -99,6 +102,7 @@ namespace Academically.Services.Services
             _postsAppService = postsAppService;
             _hubManager = hubManager;
             _studentCoursesAppService = studentCoursesAppService;
+            _serviceBooking = serviceBooking;
         }
 
         public async Task<IEnumerable<ServiceDto>> GetCategories()
@@ -241,6 +245,30 @@ namespace Academically.Services.Services
 
             await CreateStudentServiceRecords(created.ReferenceId.Value, created.Type.Value);
             return await this.GetPurchase(created.Id);
+        }
+        
+        public async Task<ServiceBookingDto> SaveBooking(CreateServiceBookingDto input)
+        {
+            var serviceBooking = ObjectMapper.Map<ServiceBooking>(input);
+            var service = await _serviceBooking.InsertAsync(serviceBooking);
+            return ObjectMapper.Map<ServiceBookingDto>(service);
+        }
+
+        public async Task<IEnumerable<ServiceBookingDto>> GetAllBookings(Guid referenceId, long ownerId)
+        {
+            return await _serviceBooking.GetAll()
+                .Where(x => x.OwnerId == ownerId)
+                .Where(x => x.ReferenceId == referenceId)
+                .Select(x => ObjectMapper.Map<ServiceBookingDto>(x))
+                .ToListAsync();
+        }
+
+        public async Task<ServiceBookingDto> GetBookingAsync(Guid bookingId)
+        {
+            return await _serviceBooking.GetAll()
+                .Where(x => x.Id == bookingId)
+                .Select(x => ObjectMapper.Map<ServiceBookingDto>(x))
+                .SingleOrDefaultAsync();
         }
 
         private async Task CreateStudentServiceRecords(Guid id, ServicesType type)

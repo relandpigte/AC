@@ -203,4 +203,5 @@
 	<include file="ddml-new/ddml.2023-11-09-99-alter-post-table.xml" />
 	<include file="ddml-new/ddml.2023-11-11-01-create-notification-sources-table.xml" />
 	<include file="ddml-new/ddml.2023-11-16-02-create-user-availability-settings-table.xml" />
+	<include file="ddml-new/ddml.2023-11-24-01-create-service-booking-table.xml" />
 </databaseChangeLog>

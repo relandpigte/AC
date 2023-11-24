@@ -13,7 +13,10 @@ import { ThemeManagerService } from '@shared/services/theme-manager.service';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { AppConsts } from '@shared/AppConsts';
 import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
-import { CoachingDto, PostsServiceProxy, SavedServicesServiceProxy, SharedType, UserDto } from '@shared/service-proxies/service-proxies';
+import {
+  CoachingDto, PostsServiceProxy, SavedServicesServiceProxy, ServiceBookingDto, ServicesServiceProxy, SharedType,
+  UserAvailabilitiesServiceProxy, UserAvailabilityDto, UserDto
+} from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-header',
@@ -25,6 +28,8 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
   user: UserDto;
   themeSettings: IThemeSetting;
   NavigationPosition = NavigationPosition;
+  userAvailabilities: UserAvailabilityDto[] = [];
+  serviceBookings: ServiceBookingDto[] = [];
 
   shimmerType = ShimmerType;
   isSaved: boolean;
@@ -37,7 +42,9 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
     private _serviceData: ServiceDataService,
     private _clipboard: Clipboard,
     private _postsService: PostsServiceProxy,
-    private _savedService: SavedServicesServiceProxy
+    private _savedService: SavedServicesServiceProxy,
+    private _userAvailabilitiesService: UserAvailabilitiesServiceProxy,
+    private _servicesService: ServicesServiceProxy
   ) {
     super(injector);
     this.themeSettings = _themeSettingsService.getConfiguration();
@@ -49,21 +56,13 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
   get coachingTitle(): string { return this.data?.name; }
   get price(): number { return this.data?.price ?? 0; }
   get serviceId(): string { return this.data?.id; }
-  get serviceOwner(): number { return this.data?.creatorUserId; }
+  get serviceOwnerId(): number { return this.data?.creatorUserId; }
   get isPurchased(): boolean { return this.data?.isPurchased; }
 
   get isLoading$() { return this._landingPageService.isLoading$; }
 
   ngOnInit(): void {
-    this._serviceData.serviceData$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(async data => {
-        if (!data) {
-          return;
-        }
-        this.data = data;
-        this.isSaved = this.data?.isSaved;
-      });
+    this.initServiceData();
   }
 
   onPurchaseClick(): void {
@@ -72,18 +71,22 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
     }
     const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
     modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
-    modalSettings.initialState = { data: this.data };
+    modalSettings.initialState = { data: this.data, userAvailabilities: this.userAvailabilities, serviceBookings: this.serviceBookings };
     const purchaseModal = this._modalService.show(BookingServiceComponent, modalSettings);
 
     purchaseModal.content.onPaid.subscribe((): void => {
       this.data.isPurchased = true;
       this._serviceData.serviceData = this.data;
     });
+
+    purchaseModal.content.onSavedBooking.subscribe((booking): void => {
+      this.serviceBookings.push(booking);
+    });
   }
 
   handleShareClick(e: Event): void {
     e.stopPropagation();
-    this._postsService.getAvailableServiceByUser(this.serviceId, this.serviceOwner)
+    this._postsService.getAvailableServiceByUser(this.serviceId, this.serviceOwnerId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(service => {
         const modalSettings = this.defaultModalSettings as ModalOptions<UpsertPostComponent>;
@@ -119,5 +122,35 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
     } else {
       this._savedService.save(this.data.id).subscribe(() => this.isSaved = true);
     }
+  }
+
+  private initUserAvailabilities(): void {
+    this._userAvailabilitiesService.getAll(this.serviceOwnerId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(availabilities => {
+        this.userAvailabilities = availabilities;
+      });
+  }
+
+  private initServiceData(): void {
+    this._serviceData.serviceData$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(async data => {
+        if (!data) {
+          return;
+        }
+        this.data = data;
+        this.isSaved = this.data?.isSaved;
+        this.initServiceBookings();
+        this.initUserAvailabilities();
+      });
+  }
+
+  private initServiceBookings(): void {
+    this._servicesService.getAllBookings(this.serviceId, this.serviceOwnerId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(bookings => {
+        this.serviceBookings = bookings;
+      });
   }
 }
