@@ -5,6 +5,7 @@ import { AvailableServiceDto, CoachingDto, CoachingsServiceProxy } from '@shared
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-purchased',
@@ -20,6 +21,7 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
 
   constructor(
     injector: Injector,
+    private _router: Router,
     private _dashboardPageService: DashboardPagesService,
     private _coachingService: CoachingsServiceProxy
   ) {
@@ -51,5 +53,9 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
       .subscribe(data => {
         this.upcomingCoachings = data;
       });
+  }
+
+  async onRedirection(coaching: CoachingDto): Promise<void> {
+    this._router.navigate(['app/coaching' , coaching.id, 'about']);
   }
 }

@@ -51,6 +51,7 @@
                     [data]="data"
                     [additionalData]="additionalData"
                     [isLoading]="isLoading$ | async"
+                    (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>
@@ -63,6 +64,7 @@
                     [additionalData]="additionalData"
                     [isPast]="true"
                     [isLoading]="isLoading$ | async"
+                    (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>
@@ -75,6 +77,7 @@
                     [isCancelled]="true"
                     [additionalData]="additionalData"
                     [isLoading]="isLoading$ | async"
+                    (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>

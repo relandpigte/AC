@@ -106,13 +106,8 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
     this._modalDialogService.showConfirmDialog(options);
   }
 
-  async onRedirection(e: any, id: string): Promise<void> {
-    const tags = ['I', 'A'];
-    if (tags.includes(e.target.tagName)) {
-      return;
-    }
-
-    await this.router.navigate(['app/articles/student-portal', id, 'portal']);
+  async onRedirection(article: ArticleDto): Promise<void> {
+    this.router.navigate(['/app/articles/student-portal', article.id]);
   }
 
   private loadArticles(): void {

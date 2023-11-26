@@ -157,35 +157,51 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     this.onDelete.next(id);
   }
 
-  handleOverView(id: string): void {
+  handleOverView(evt: any, id: string): void {
+    evt.preventDefault();
+    evt.stopPropagation();
     this.onOverView.next(id);
   }
 
-  handleEdit(): void {
+  handleEdit(evt: any): void {
+    evt.preventDefault();
+    evt.stopPropagation();
     this.onEdit.next(this.data);
   }
 
-  handleDuplicate(id: string): void {
+  handleDuplicate(evt: any, id: string): void {
+    evt.preventDefault();
+    evt.stopPropagation();
     this.onDuplicate.next(id);
   }
 
-  handlePublish(data: any): void {
+  handlePublish(evt: any, data: any): void {
+    evt.preventDefault();
+    evt.stopPropagation();
     this.onPublish.next(data);
   }
 
-  handleUnpublish(data: any): void {
+  handleUnpublish(evt: any, data: any): void {
+    evt.preventDefault();
+    evt.stopPropagation();
     this.onUnpublish.next(data);
   }
 
-  handleArchive(data: any):  void {
+  handleArchive(evt: any, data: any):  void {
+    evt.preventDefault();
+    evt.stopPropagation();
     this.onArchive.next(data);
   }
 
-  handleUnArchive(data: any):  void {
+  handleUnArchive(evt: any, data: any):  void {
+    evt.preventDefault();
+    evt.stopPropagation();
     this.onUnArchive.next(data);
   }
 
-  handleOnReview(serviceId: string): void {
+  handleOnReview(evt: any, serviceId: string): void {
+    evt.preventDefault();
+    evt.stopPropagation();
     if (this.onReviewAction.observers.length > 0) {
       this.onReviewAction.next(serviceId);
     } else {
@@ -200,19 +216,23 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     }
   }
 
-  handleClickAction(serviceId: string, action: ServiceCardButton): void {
+  handleClickAction(evt: any, serviceId: string, action: ServiceCardButton): void {
+    evt.preventDefault();
+    evt.stopPropagation();
     switch (action.type) {
       case 'join':
         this.onClickAction.next(serviceId);
         break;
       case 'review':
-        this.handleOnReview(serviceId);
+        this.handleOnReview(evt, serviceId);
         break;
     }
   }
 
-  handleRedirection(e: any): void {
-    this.onRedirection.next(e);
+  handleRedirection(evt: any): void {
+    evt.preventDefault();
+    evt.stopPropagation();
+    this.onRedirection.next(this.data);
   }
 
   private setInitValues(): void {

@@ -53,7 +53,7 @@
                     (onEdit)="onEditClick($event)"
                     (onDuplicate)="onDuplicateClick($event)"
                     (onDelete)="onDeleteClick($event)"
-                    (onRedirection)="onRedirection($event, data.id)"
+                    (onRedirection)="onRedirection($event)"
                     (onUnpublish)="onUpdateStatus($event, ArticleStatus.Draft)"
                 ></app-service-card-dashboard>
             </ng-container>
@@ -69,7 +69,7 @@
                     (onEdit)="onEditClick($event)"
                     (onDuplicate)="onDuplicateClick($event)"
                     (onDelete)="onDeleteClick($event)"
-                    (onRedirection)="onRedirection($event, data.id)"
+                    (onRedirection)="onRedirection($event)"
                     (onArchive)="onUpdateStatus($event, ArticleStatus.Archived)"
                     (onPublish)="onUpdateStatus($event, ArticleStatus.Published)"
                 ></app-service-card-dashboard>
@@ -86,7 +86,7 @@
                     (onEdit)="onEditClick($event)"
                     (onDuplicate)="onDuplicateClick($event)"
                     (onDelete)="onDeleteClick($event)"
-                    (onRedirection)="onRedirection($event, data.id)"
+                    (onRedirection)="onRedirection($event)"
                     (onUnArchive)="onUpdateStatus($event, ArticleStatus.Draft)"
                 ></app-service-card-dashboard>
             </ng-container>

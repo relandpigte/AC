@@ -4,6 +4,7 @@ import { ArticleDto, ArticlesServiceProxy } from '@shared/service-proxies/servic
 import { finalize, takeUntil } from '@node_modules/rxjs/operators';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-purchased', templateUrl: './purchased.component.html', styleUrls: ['./purchased.component.less']
@@ -18,6 +19,7 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
 
   constructor(
     injector: Injector,
+    private _router: Router,
     private _articlesService: ArticlesServiceProxy,
     private _dashboardPageService: DashboardPagesService
   ) {
@@ -41,5 +43,9 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
       .subscribe(articles => {
         this.allArticles = articles;
       });
+  }
+
+  async onRedirection(article: ArticleDto): Promise<void> {
+    this._router.navigate(['/app/articles/student-portal', article.id]);
   }
 }

@@ -6,6 +6,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { AppConsts } from '@shared/AppConsts';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -21,6 +22,7 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
 
   constructor(
     injector: Injector,
+    private _router: Router,
     private _dashboardPageService: DashboardPagesService,
     private _coursesService: CoursesServiceProxy
   ) {
@@ -53,5 +55,9 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
         this.todoCourses = courses.filter(c => c.progress < 100);
         this.completedCourses = courses.filter(c => c.progress === 100);
       });
+  }
+
+  async onRedirection(course: CourseDto): Promise<void> {
+    this._router.navigate(['app/course' , course.id, 'about']);
   }
 }

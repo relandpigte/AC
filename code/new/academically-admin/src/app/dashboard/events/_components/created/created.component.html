@@ -59,7 +59,7 @@
                     (onDuplicate)="onDuplicateClick($event)"
                     (onDelete)="onDeleteClick($event)"
                     (onClickAction)="handleJoinClick($event)"
-                    (onRedirection)="onRedirection($event, data.id)"
+                    (onRedirection)="onRedirection($event)"
                     (onUnpublish)="onUpdateStatus($event, EventStatus.Draft)"
                 ></app-service-card-dashboard>
             </ng-container>
@@ -76,6 +76,7 @@
                     (onDuplicate)="onDuplicateClick($event)"
                     (onDelete)="onDeleteClick($event)"
                     (onUnpublish)="onUpdateStatus($event, EventStatus.Draft)"
+                    (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>
@@ -90,6 +91,7 @@
                     (onEdit)="onEditClick($event)"
                     (onDuplicate)="onDuplicateClick($event)"
                     (onDelete)="onDeleteClick($event)"
+                    (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>
@@ -105,6 +107,7 @@
                     (onDuplicate)="onDuplicateClick($event)"
                     (onDelete)="onDeleteClick($event)"
                     (onPublish)="onUpdateStatus($event, EventStatus.Published)"
+                    (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>

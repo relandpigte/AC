@@ -6,6 +6,7 @@ import { VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-pr
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-purchased',
@@ -21,6 +22,7 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
 
   constructor(
     injector: Injector,
+    private _router: Router,
     private _dashboardPageService: DashboardPagesService,
     private _videoService: VideosServiceProxy
   ) {
@@ -44,5 +46,9 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
       .subscribe(videos => {
         this.tutorials = videos;
       });
+  }
+
+  async onRedirection(tutorial: VideoDto): Promise<void> {
+    this._router.navigate(['app/videos/student-portal' , tutorial.id]);
   }
 }

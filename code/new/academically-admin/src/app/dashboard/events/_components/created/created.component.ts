@@ -120,13 +120,8 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
       });
   }
 
-  async onRedirection(e: any, id: string): Promise<void> {
-    const tags = ['I', 'A'];
-    if (tags.includes(e.target.tagName)) {
-      return;
-    }
-
-    await this.handleJoinClick(id);
+  async onRedirection(event: EventDto): Promise<void> {
+    this._router.navigate(['app/events' , event.id, 'about']);
   }
 
   private initEvents(): void {

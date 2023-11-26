@@ -50,6 +50,7 @@
                     *ngFor="let data of tutorials"
                     [data]="data"
                     [isLoading]="isLoading$ | async"
+                    (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>
@@ -60,6 +61,7 @@
                     *ngFor="let data of unwatchedTutorials"
                     [data]="data"
                     [isLoading]="isLoading$ | async"
+                    (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>
@@ -70,6 +72,7 @@
                     *ngFor="let data of watchedTutorials"
                     [data]="data"
                     [isLoading]="isLoading$ | async"
+                    (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>

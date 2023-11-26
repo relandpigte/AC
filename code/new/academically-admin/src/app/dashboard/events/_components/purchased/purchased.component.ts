@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
-import { EventDto, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { EventCategory, EventDto, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
 
 
 @Component({
@@ -52,5 +52,9 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
         this.upcomingEvents = events?.filter(e => moment().isBefore(e.eventDateTime) && e.status !== 0);
         this.pastEvents = events?.filter(e => moment().isAfter(e.eventDateTime));
       });
+  }
+
+  async onRedirection(event: EventDto): Promise<void> {
+    this._router.navigate(['app/events' , event.id, 'about']);
   }
 }
