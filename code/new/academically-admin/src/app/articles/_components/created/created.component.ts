@@ -14,6 +14,8 @@ import {
   CoachingStatus
 } from '@shared/service-proxies/service-proxies';
 
+type CreatedTab = 'active' | 'draft' | 'archived';
+
 @Component({
   selector: 'app-created',
   templateUrl: './created.component.html',
@@ -33,6 +35,9 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
     [ArticleStatus.Published]: 'activeArticles',
     [ArticleStatus.Archived]: 'archivedArticles'
   };
+
+  activeTab: CreatedTab = 'active';
+
   constructor(
     injector: Injector,
     private _articlesService: ArticlesServiceProxy,

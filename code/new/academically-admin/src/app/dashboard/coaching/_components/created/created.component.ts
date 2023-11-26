@@ -7,6 +7,8 @@ import { finalize, takeUntil } from '@node_modules/rxjs/operators';
 import { Router } from '@angular/router';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
+type CreatedTab = 'active' | 'draft' | 'archived';
+
 @Component({
   selector: 'app-created',
   templateUrl: './created.component.html',
@@ -24,6 +26,9 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
     [CoachingStatus.Published]: 'activeCoachings',
     [CoachingStatus.Archived]: 'archiveCoachings'
   };
+
+  activeTab: CreatedTab = 'active';
+
   constructor(
     injector: Injector,
     private _router: Router,

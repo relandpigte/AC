@@ -17,6 +17,8 @@ import {
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
+type CreatedTab = 'upcoming' | 'past' | 'draft' | 'cancelled';
+
 @Component({
   selector: 'app-created',
   templateUrl: './created.component.html',
@@ -36,6 +38,9 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
     [EventStatus.Draft]: 'draftEvents',
     [EventStatus.Published]: 'upcomingEvents',
   };
+
+  activeTab: CreatedTab = 'upcoming';
+
   constructor(
     injector: Injector,
     private _dashboardPageService: DashboardPagesService,

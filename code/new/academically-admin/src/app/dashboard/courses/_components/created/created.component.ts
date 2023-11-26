@@ -13,6 +13,8 @@ import { DashboardPagesService } from '@shared/services/dashboard-pages.service'
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { finalize, takeUntil } from 'rxjs/operators';
 
+type CreatedTab = 'active' | 'draft' | 'archived';
+
 @Component({
   selector: 'app-created',
   templateUrl: './created.component.html',
@@ -30,6 +32,9 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
     [CourseStatus.Published]: 'activeCourses',
     [CourseStatus.Archived]: 'archiveCourses'
   };
+
+  activeTab: CreatedTab = 'active';
+
   constructor(
     injector: Injector,
     private _router: Router,

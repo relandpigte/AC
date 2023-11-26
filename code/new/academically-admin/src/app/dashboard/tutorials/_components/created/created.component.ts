@@ -15,6 +15,8 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
+type CreatedTab = 'active' | 'draft' | 'archived';
+
 @Component({
   selector: 'app-created',
   templateUrl: './created.component.html',
@@ -32,6 +34,9 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
     [VideoStatus.Published]: 'activeVideos',
     [VideoStatus.Archived]: 'archiveVideos'
   };
+
+  activeTab: CreatedTab = 'active';
+
   constructor(
     injector: Injector,
     private _modalDialogService: ModalDialogService,

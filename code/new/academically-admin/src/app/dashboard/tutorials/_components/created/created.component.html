@@ -22,17 +22,17 @@
                 <div class="search-nav d-flex ml-auto">
                     <ul class="nav nav-tabs nav-tabs-sm border-0">
                         <li class="nav-item">
-                            <a href="#active-videos" class="nav-link active" data-toggle="tab" role="tab">
+                            <a href="javascript: void(0);" class="nav-link" [class.active]="activeTab === 'active'" data-toggle="tab" role="tab" (click)="activeTab = 'active'">
                                 Active <span class="badge badge-pill badge-light">{{ totalActiveVideos }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#draft-videos" class="nav-link" data-toggle="tab" role="tab">
+                            <a href="javascript: void(0);" class="nav-link" [class.active]="activeTab === 'draft'" data-toggle="tab" role="tab" (click)="activeTab = 'draft'">
                                 Draft <span class="badge badge-pill badge-light">{{ totalDraftVideos }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#archived-videos" class="nav-link" data-toggle="tab" role="tab">
+                            <a href="javascript: void(0);" class="nav-link" [class.active]="activeTab === 'archived'" data-toggle="tab" role="tab" (click)="activeTab = 'archived'">
                                 Archived <span class="badge badge-pill badge-light">{{ totalArchivedVideos }}</span>
                             </a>
                         </li>
@@ -43,7 +43,7 @@
     </div>
 
     <div class="tab-content">
-        <div class="tab-pane fade show active" id="active-videos" role="tabpanel">
+        <div class="tab-pane fade" [ngClass]="{'show active' : activeTab === 'active'}" id="active-videos" role="tabpanel">
             <ng-container *ngIf="activeVideos?.length else noRecords">
                 <app-service-card-dashboard
                     *ngFor="let data of activeVideos"
@@ -58,7 +58,7 @@
             </ng-container>
         </div>
 
-        <div class="tab-pane fade" id="draft-videos" role="tabpanel">
+        <div class="tab-pane fade" [ngClass]="{'show active' : activeTab === 'draft'}" id="draft-videos" role="tabpanel">
             <ng-container *ngIf="draftVideos?.length else noRecords">
                 <app-service-card-dashboard
                     *ngFor="let data of draftVideos"
@@ -74,7 +74,7 @@
             </ng-container>
         </div>
 
-        <div class="tab-pane fade" id="archived-videos" role="tabpanel">
+        <div class="tab-pane fade" [ngClass]="{'show active' : activeTab === 'archived'}" id="archived-videos" role="tabpanel">
             <ng-container *ngIf="archiveVideos?.length else noRecords">
                 <app-service-card-dashboard
                     *ngFor="let data of archiveVideos"
