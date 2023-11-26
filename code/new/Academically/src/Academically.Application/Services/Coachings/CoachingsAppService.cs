@@ -450,5 +450,17 @@ namespace Academically.Services.Coachings
             }
             return output;
         }
+
+        public async Task<CoachingDto> Duplicate(Guid id)
+        {
+            var existing = await Repository.GetAll()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            existing.Id = Guid.NewGuid();
+
+            var created = await Repository.InsertAsync(existing);
+            return ObjectMapper.Map<CoachingDto>(created);
+        }
     }
 }

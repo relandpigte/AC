@@ -1,4 +1,5 @@
 import { Component, Injector, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import {
@@ -9,6 +10,7 @@ import {
   CourseStatus
 } from '@shared/service-proxies/service-proxies';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { finalize, takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -30,6 +32,8 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
   };
   constructor(
     injector: Injector,
+    private _router: Router,
+    private _modalDialogService: ModalDialogService,
     private _dashboardPageService: DashboardPagesService,
     private _coursesService: CoursesServiceProxy
   ) {
@@ -44,6 +48,36 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
     this.initCreatedCourses();
   }
+
+  onEditClick(id: string) {
+    this._router.navigate(['/app/courses', id]);
+  }
+
+  onDuplicateClick(id: string) {
+    this._coursesService.duplicate(id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(() => {
+        this.initCreatedCourses();
+        this.notify.success(this.l('Generics.SuccessfullyDuplicated'));
+      });
+  }
+
+  onDeleteClick(id: string): void {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('Generics.DeleteConfirmationMessageWithType', ['course']),
+      confirmCb: (): void => {
+        this._coursesService.delete(id)
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(() => {
+            this.initCreatedCourses();
+            this.notify.success(this.l('SuccessfullyDeleted'));
+          });
+      }
+    };
+    this._modalDialogService.showConfirmDialog(options);
+  }
+
 
   onUpdateStatus(data: CourseDto, changeToStatus: CourseStatus): void {
     const { id, status } = data;

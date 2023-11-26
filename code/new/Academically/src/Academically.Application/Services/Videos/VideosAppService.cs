@@ -14,6 +14,7 @@ using Academically.Domain.Services.Documents;
 using Academically.Domain.Views;
 using Academically.EntityFrameworkCore.Repositories.Explore;
 using Academically.Extensions;
+using Academically.Services.Coachings.Dto;
 using Academically.Services.Courses.Dto;
 using Academically.Services.Events.Dto;
 using Academically.Services.Explore.Dto;
@@ -450,6 +451,18 @@ namespace Academically.Services.Videos
                 item.IsSaved = true;
             }
             return output;
+        }
+
+        public async Task<VideoDto> Duplicate(Guid id)
+        {
+            var existing = await _videosRepository.GetAll()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            existing.Id = Guid.NewGuid();
+
+            var created = await _videosRepository.InsertAsync(existing);
+            return ObjectMapper.Map<VideoDto>(created);
         }
 
     }

@@ -27,6 +27,7 @@ namespace Academically.Services.Videos
         Task DeleteAsync(Guid id);
         Task<IEnumerable<VideoDto>> GetEnrolledVideosByUser();
         Task<List<VideoDto>> GetAllSavedTutorials(long creatorUserId);
+        Task<VideoDto> Duplicate(Guid id);
     }
 }
 

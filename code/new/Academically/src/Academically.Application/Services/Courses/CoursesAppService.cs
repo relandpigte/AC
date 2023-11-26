@@ -434,5 +434,28 @@ namespace Academically.Services.Courses
             }
             return output;
         }
+
+        public async Task<CourseDto> Duplicate(Guid id)
+        {
+            var existing = await Repository.GetAll()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            existing.Id = Guid.NewGuid();
+            var created = await Repository.InsertAsync(existing);
+
+            var existingSections = await _courseSectionRepository.GetAll()
+                .AsNoTracking()
+                .Where(s => s.CourseId == id).
+                ToListAsync();
+            foreach (var section in existingSections)
+            {
+                section.Id = Guid.NewGuid();
+                section.CourseId = created.Id;
+                await this._courseSectionRepository.InsertAsync(section);
+            }
+
+            return ObjectMapper.Map<CourseDto>(created);
+        }
     }
 }

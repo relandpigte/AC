@@ -43,6 +43,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   @Output() onDelete = new Subject<any>();
   @Output() onOverView = new Subject<any>();
   @Output() onEdit = new Subject<any>();
+  @Output() onDuplicate = new Subject<any>();
   @Output() onPublish = new Subject<any>();
   @Output() onUnpublish = new Subject<any>();
   @Output() onArchive = new Subject<any>();
@@ -100,6 +101,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   }
   get isDraft(): boolean {return this.sanitized?.status?.type === 'draft'; }
   get isArchive(): boolean { return this.sanitized?.status?.type === 'archived'; }
+  get isPublished(): boolean { return this.sanitized?.status?.type === 'published'; }
   get isExpired(): boolean { return this.sanitized?.dates?.startDate?.isBefore(moment()); }
   get isUpcoming(): boolean { return this.sanitized?.dates?.startDate?.isAfter(moment()); }
   get hasReviewed(): boolean { return this.data?.hasReviewed; }
@@ -161,6 +163,10 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
 
   handleEdit(id: string): void {
     this.onEdit.next(id);
+  }
+
+  handleDuplicate(id: string): void {
+    this.onDuplicate.next(id);
   }
 
   handlePublish(data: any): void {

@@ -4,6 +4,8 @@ import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { CoachingDto, CoachingsServiceProxy, CoachingStatus } from '@shared/service-proxies/service-proxies';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { finalize, takeUntil } from '@node_modules/rxjs/operators';
+import { Router } from '@angular/router';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 @Component({
   selector: 'app-created',
@@ -24,6 +26,8 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
   };
   constructor(
     injector: Injector,
+    private _router: Router,
+    private _modalDialogService: ModalDialogService,
     private _dashboardPageService: DashboardPagesService,
     private _coachingService: CoachingsServiceProxy
   ) {
@@ -38,6 +42,35 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
 
   ngOnInit(): void {
     this.loadCoaching();
+  }
+
+  onEditClick(id: string) {
+    this._router.navigate(['/app/dashboard/coaching', id]);
+  }
+
+  onDuplicateClick(id: string) {
+    this._coachingService.duplicate(id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(() => {
+        this.loadCoaching();
+        this.notify.success(this.l('Generics.SuccessfullyDuplicated'));
+      });
+  }
+
+  onDeleteClick(id: string): void {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('Generics.DeleteConfirmationMessageWithType', ['coaching']),
+      confirmCb: (): void => {
+        this._coachingService.delete(id)
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(() => {
+            this.loadCoaching();
+            this.notify.success(this.l('SuccessfullyDeleted'));
+          });
+      }
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   onUpdateStatus(data: CoachingDto, changeToStatus: CoachingStatus): void {

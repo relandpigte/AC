@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Application.Services;
+using Academically.Services.Coachings.Dto;
 using Academically.Services.Courses.Dto;
 using Academically.Services.Posts.Dto;
 
@@ -15,5 +16,6 @@ namespace Academically.Services.Courses
         Task<IEnumerable<AvailableServiceDto>> GetCoursesByKeyword(string keyword, long? creatorUserId);
         Task<IEnumerable<CourseDto>> GetEnrolledCoursesByUser();
         Task<List<CourseDto>> GetAllSavedCourses(long creatorUserId);
+        Task<CourseDto> Duplicate(Guid id);
     }
 }

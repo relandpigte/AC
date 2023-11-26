@@ -24,5 +24,6 @@ namespace Academically.Services.Coachings
         Task<IEnumerable<AvailableServiceDto>> GetCoachingSchedule(long? creatorUserId, ScheduledServiceType? type);
         Task<List<CoachingDto>> GetAllPurchasedCoaching(long creatorUserId);
         Task<List<CoachingDto>> GetAllSavedCoaching(long creatorUserId);
+        Task<CoachingDto> Duplicate(Guid id);
     }
 }

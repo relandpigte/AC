@@ -12,6 +12,7 @@ import {
   VideosServiceProxy,
   VideoStatus
 } from '@shared/service-proxies/service-proxies';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 @Component({
   selector: 'app-created',
@@ -32,6 +33,7 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
   };
   constructor(
     injector: Injector,
+    private _modalDialogService: ModalDialogService,
     private _dashboardPageService: DashboardPagesService,
     private _videoService: VideosServiceProxy,
     private _router: Router
@@ -56,6 +58,36 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
 
     await this._router.navigate(['app/videos/student-portal', id, 'portal']);
   }
+
+  onEditClick(id: string) {
+    this._router.navigate(['/app/videos', id]);
+  }
+
+  onDuplicateClick(id: string) {
+    this._videoService.duplicate(id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(() => {
+        this.loadVideos();
+        this.notify.success(this.l('Generics.SuccessfullyDuplicated'));
+      });
+  }
+
+  onDeleteClick(id: string): void {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('Generics.DeleteConfirmationMessageWithType', ['tutorial']),
+      confirmCb: (): void => {
+        this._videoService.delete(id)
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(() => {
+            this.loadVideos();
+            this.notify.success(this.l('SuccessfullyDeleted'));
+          });
+      }
+    };
+    this._modalDialogService.showConfirmDialog(options);
+  }
+
 
   onUpdateStatus(data: VideoDto, changeToStatus: VideoStatus): void {
     const { id, status } = data;

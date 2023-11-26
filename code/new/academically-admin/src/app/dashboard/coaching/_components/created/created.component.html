@@ -51,6 +51,9 @@
                     [data]="data"
                     [isLoading]="isLoading$ | async"
                     [isCreator]="isTutor"
+                    (onEdit)="onEditClick($event)"
+                    (onDuplicate)="onDuplicateClick($event)"
+                    (onDelete)="onDeleteClick($event)"
                     (onUnpublish)="onUpdateStatus($event, CoachingStatus.Draft)"
                 ></app-service-card-dashboard>
             </ng-container>
@@ -63,6 +66,9 @@
                     [data]="data"
                     [isLoading]="isLoading$ | async"
                     [isCreator]="isTutor"
+                    (onEdit)="onEditClick($event)"
+                    (onDuplicate)="onDuplicateClick($event)"
+                    (onDelete)="onDeleteClick($event)"
                     (onArchive)="onUpdateStatus($event, CoachingStatus.Archived)"
                     (onPublish)="onUpdateStatus($event, CoachingStatus.Published)"
                 ></app-service-card-dashboard>
@@ -76,6 +82,9 @@
                     [data]="data"
                     [isLoading]="isLoading$ | async"
                     [isCreator]="isTutor"
+                    (onEdit)="onEditClick($event)"
+                    (onDuplicate)="onDuplicateClick($event)"
+                    (onDelete)="onDeleteClick($event)"
                     (onUnArchive)="onUpdateStatus($event, CoachingStatus.Draft)"
                 ></app-service-card-dashboard>
             </ng-container>
