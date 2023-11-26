@@ -12,7 +12,9 @@
                 <div class="col col-sm-12">
                     <ng-container *ngIf="isAboutTab">
                         <app-review-badge [rating]="rating" (onPurchase)="onPurchase()"></app-review-badge>
-                        <app-leave-review-badge [data]="data" (onPurchase)="onPurchase()"></app-leave-review-badge>
+                        <app-join-badge [data]="data" (onCancel)="onCancel()" (onPurchase)="onPurchase()"></app-join-badge>
+                        <!-- app-leave-review-badge IS MERGED TO app-join-badge -->
+                        <!-- <app-leave-review-badge [data]="data" (onPurchase)="onPurchase()"></app-leave-review-badge> -->
                         <app-about-coach [data]="data" ></app-about-coach>
                         <app-about-related-coaching [data]="data"></app-about-related-coaching>
                     </ng-container>

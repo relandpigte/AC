@@ -53,6 +53,17 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
     this.initServiceData();
   }
 
+  onCancel(): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
+    modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
+    modalSettings.initialState = { data: this.data, isCancellation: true };
+    const modal = this._modalService.show(BookingServiceComponent, modalSettings);
+
+    modal.content.onCancelledBooking.subscribe((): void => {
+      this.data.isCancelled = true;
+    });
+  }
+
   onPurchase(): void {
     const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
     modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';

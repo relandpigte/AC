@@ -317,6 +317,45 @@
         }
     }
 
+    &-cancellation {
+        padding: 0 24px 20px;
+
+        &-title {
+            font-weight: 600;
+            font-size: 15px;
+            color: #12263F;
+        }
+
+        &-reason {
+            &-textarea {
+                height: 0;
+                padding: 11px 15px;
+                border-radius: 6px;
+                border: 1px solid #E4EBF6 !important;
+                overflow-wrap: anywhere;
+                white-space: pre-wrap;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+
+            &-length {
+                color: #B1C2D9;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 22px;
+            }
+        }
+
+        .required {
+            &:after {
+                content: "*";
+                color: #E00000;
+                margin-left: 6px;
+            }
+        }
+    }
+
     &-payment {
         padding: 0 24px 20px;
 

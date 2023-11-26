@@ -1,0 +1,43 @@
+<div *ngIf="isPurchased && !hasReviewed && !(isLoading$ | async)" class="card custom-card-border custom-card-shadow">
+    <div class="card-body">
+        <ng-container *ngIf="eventCancelled" [ngTemplateOutlet]="cancelledEvent"></ng-container>
+        <ng-container *ngIf="!eventCancelled">
+            <ng-container *ngIf="!eventFinished" [ngTemplateOutlet]="activeEvent"></ng-container>
+            <ng-container *ngIf="eventFinished" [ngTemplateOutlet]="rateEvent"></ng-container>
+        </ng-container>
+    </div>
+</div>
+
+<ng-template #activeEvent>
+    <div class="schedule">
+        <h6 class="schedule-title text-center">{{ 'TimeToStart' | localize | uppercase }}</h6>
+        <span class="schedule-countdown d-block w-100 text-center">{{ countdown }}</span>
+        <span class="schedule-timeline text-uppercase d-block w-100 text-center">{{ timeline }}</span>
+        <button class="btn btn-primary w-100" (click)="handleJoinClick()">{{ 'Join' | localize }}</button>
+        <div class="d-flex justify-content-center align-items-center gap-10" [style.marginTop.px]="10">
+            <button class="btn btn-light w-50" (click)="handleCancelClick()">{{ 'Cancel' | localize }}</button>
+            <button class="btn btn-light w-50" (click)="handleRescheduleClick()">{{ 'Reschedule' | localize }}</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #cancelledEvent>
+    <div class="review-body-details d-flex justify-content-center align-items-center p-0">
+        <h6 class="review-body-details-text text-center text-uppercase" [style.marginTop.px]="55" [style.marginBottom.px]="55">{{ 'YOU CANCELLED THIS SESSION' | localize }}</h6>
+    </div>
+    <div class="review-button d-flex flex-column justify-content-center align-items-center gap-10 w-100">
+        <button class="btn btn-primary w-100" (click)="handlePurchase()">{{ 'PurchaseAgain' | localize }}</button>
+        <button class="btn btn-light w-100" (click)="handleExploreMore()">{{ 'Explore more' | localize }}</button>
+    </div>
+</ng-template>
+
+<ng-template #rateEvent>
+    <div class="review-body-details">
+        <img class="mx-auto d-block" src="assets/img/events/completed-icon.svg" alt="Leave review">
+        <h6 class="review-body-details-text text-center text-uppercase">{{ 'AttendedSession' | localize }}</h6>
+    </div>
+    <div class="review-button d-flex flex-column justify-content-center align-items-center gap-10 w-100">
+        <button class="btn btn-primary w-100" (click)="handleLeaveReview()">{{ 'LeaveReview' | localize }}</button>
+        <button class="btn btn-light w-100" (click)="handlePurchase()">{{ 'PurchaseAgain' | localize }}</button>
+    </div>
+</ng-template>

@@ -12,7 +12,7 @@ import { AboutRelatedCoachingComponent } from './_components/about-related-coach
 import { IntroductionModule } from '@app/profile/introduction/introduction.module';
 import { LeaveReviewBadgeComponent } from './_components/leave-review-badge/leave-review-badge.component';
 import { ReviewBadgeComponent } from '@app/coaching/about/_components/review-badge/review-badge.component';
-
+import { JoinBadgeComponent } from '@app/coaching/about/_components/join-badge/join-badge.component';
 @NgModule({
   declarations: [
     CoachingAboutComponent,
@@ -21,13 +21,15 @@ import { ReviewBadgeComponent } from '@app/coaching/about/_components/review-bad
     AboutCoachComponent,
     AboutRelatedCoachingComponent,
     LeaveReviewBadgeComponent,
-    ReviewBadgeComponent
+    ReviewBadgeComponent,
+    JoinBadgeComponent
   ],
   exports: [
     AboutCoachComponent,
     AboutRelatedCoachingComponent,
     LeaveReviewBadgeComponent,
-    ReviewBadgeComponent
+    ReviewBadgeComponent,
+    JoinBadgeComponent
   ],
   imports: [
     CommonModule,

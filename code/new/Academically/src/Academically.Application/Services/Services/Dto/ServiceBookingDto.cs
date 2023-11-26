@@ -12,6 +12,8 @@ public class ServiceBookingDto
     public DateTime BookingDateTime { get; set; }
     public long OwnerId { get; set; }
     public string RescheduleReason { get; set; }
+    public string CancellationReason { get; set; }
+    public DateTime? CancellationTime { get; set; }
     public ServicesType? Type { get; set; }
     public long CreatorUserId { get; set; }
 }

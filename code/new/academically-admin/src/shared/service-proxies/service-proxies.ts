@@ -23562,6 +23562,62 @@ export class ServicesServiceProxy {
     }
 
     /**
+     * @param body (optional) 
+     * @return Success
+     */
+    cancelBooking(body: CancelServiceBookingDto | undefined): Observable<ServiceBookingDto> {
+        let url_ = this.baseUrl + "/api/services/app/Services/CancelBooking";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCancelBooking(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCancelBooking(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceBookingDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceBookingDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCancelBooking(response: HttpResponseBase): Observable<ServiceBookingDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServiceBookingDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceBookingDto>(<any>null);
+    }
+
+    /**
      * @param referenceId (optional) 
      * @param ownerId (optional) 
      * @return Success
@@ -23664,6 +23720,62 @@ export class ServicesServiceProxy {
     }
 
     protected processGetBooking(response: HttpResponseBase): Observable<ServiceBookingDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServiceBookingDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceBookingDto>(<any>null);
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @return Success
+     */
+    getBookingByReferenceId(referenceId: string | undefined): Observable<ServiceBookingDto> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetBookingByReferenceId?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetBookingByReferenceId(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetBookingByReferenceId(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceBookingDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceBookingDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetBookingByReferenceId(response: HttpResponseBase): Observable<ServiceBookingDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -35762,6 +35874,57 @@ export enum CallingConventions {
     ExplicitThis = 64,
 }
 
+export class CancelServiceBookingDto implements ICancelServiceBookingDto {
+    referenceId: string;
+    cancellationReason: string | undefined;
+    cancellationTime: moment.Moment;
+
+    constructor(data?: ICancelServiceBookingDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.referenceId = _data["referenceId"];
+            this.cancellationReason = _data["cancellationReason"];
+            this.cancellationTime = _data["cancellationTime"] ? moment(_data["cancellationTime"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CancelServiceBookingDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CancelServiceBookingDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["referenceId"] = this.referenceId;
+        data["cancellationReason"] = this.cancellationReason;
+        data["cancellationTime"] = this.cancellationTime ? this.cancellationTime.toISOString() : <any>undefined;
+        return data; 
+    }
+
+    clone(): CancelServiceBookingDto {
+        const json = this.toJSON();
+        let result = new CancelServiceBookingDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICancelServiceBookingDto {
+    referenceId: string;
+    cancellationReason: string | undefined;
+    cancellationTime: moment.Moment;
+}
+
 export class ChangeNotificationSettingsDto implements IChangeNotificationSettingsDto {
     isNewBookingEnabled: boolean;
 
@@ -36541,6 +36704,7 @@ export class CoachingDto implements ICoachingDto {
     isPurchased: boolean;
     purchased: UserDto[] | undefined;
     hasReviewed: boolean;
+    isCancelled: boolean;
 
     constructor(data?: ICoachingDto) {
         if (data) {
@@ -36652,6 +36816,7 @@ export class CoachingDto implements ICoachingDto {
                     this.purchased.push(UserDto.fromJS(item));
             }
             this.hasReviewed = _data["hasReviewed"];
+            this.isCancelled = _data["isCancelled"];
         }
     }
 
@@ -36763,6 +36928,7 @@ export class CoachingDto implements ICoachingDto {
                 data["purchased"].push(item.toJSON());
         }
         data["hasReviewed"] = this.hasReviewed;
+        data["isCancelled"] = this.isCancelled;
         return data; 
     }
 
@@ -36866,6 +37032,7 @@ export interface ICoachingDto {
     isPurchased: boolean;
     purchased: UserDto[] | undefined;
     hasReviewed: boolean;
+    isCancelled: boolean;
 }
 
 export class CoachingDtoPagedResultDto implements ICoachingDtoPagedResultDto {
@@ -51102,6 +51269,8 @@ export class ServiceBookingDto implements IServiceBookingDto {
     bookingDateTime: moment.Moment;
     ownerId: number;
     rescheduleReason: string | undefined;
+    cancellationReason: string | undefined;
+    cancellationTime: moment.Moment | undefined;
     type: ServicesType;
     creatorUserId: number;
 
@@ -51120,6 +51289,8 @@ export class ServiceBookingDto implements IServiceBookingDto {
             this.bookingDateTime = _data["bookingDateTime"] ? moment(_data["bookingDateTime"].toString()) : <any>undefined;
             this.ownerId = _data["ownerId"];
             this.rescheduleReason = _data["rescheduleReason"];
+            this.cancellationReason = _data["cancellationReason"];
+            this.cancellationTime = _data["cancellationTime"] ? moment(_data["cancellationTime"].toString()) : <any>undefined;
             this.type = _data["type"];
             this.creatorUserId = _data["creatorUserId"];
         }
@@ -51138,6 +51309,8 @@ export class ServiceBookingDto implements IServiceBookingDto {
         data["bookingDateTime"] = this.bookingDateTime ? this.bookingDateTime.toISOString() : <any>undefined;
         data["ownerId"] = this.ownerId;
         data["rescheduleReason"] = this.rescheduleReason;
+        data["cancellationReason"] = this.cancellationReason;
+        data["cancellationTime"] = this.cancellationTime ? this.cancellationTime.toISOString() : <any>undefined;
         data["type"] = this.type;
         data["creatorUserId"] = this.creatorUserId;
         return data; 
@@ -51156,6 +51329,8 @@ export interface IServiceBookingDto {
     bookingDateTime: moment.Moment;
     ownerId: number;
     rescheduleReason: string | undefined;
+    cancellationReason: string | undefined;
+    cancellationTime: moment.Moment | undefined;
     type: ServicesType;
     creatorUserId: number;
 }

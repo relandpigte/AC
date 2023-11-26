@@ -117,5 +117,8 @@ namespace Academically.Services.Coachings.Dto
         
         [NotMapped]
         public bool HasReviewed { get; set; }
+
+        [NotMapped]
+        public bool IsCancelled { get; set; }
     }
 }

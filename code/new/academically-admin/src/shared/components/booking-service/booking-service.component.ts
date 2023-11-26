@@ -11,9 +11,11 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { BookingTakenComponent } from '@shared/components/booking-service/components/booking-taken/booking-taken.component';
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 import {
+  CancelServiceBookingDto,
   CreateServiceBookingDto, CreateServicePurchaseDto, ServiceBookingDto, ServicePurchaseDto,
   ServicesServiceProxy, ServicesType, UserAvailabilityDto
 } from '@shared/service-proxies/service-proxies';
+import { NgForm } from '@angular/forms';
 
 enum PaymentMethod {
   CreditCard,
@@ -50,12 +52,17 @@ interface SelectedSchedule {
 })
 export class BookingServiceComponent extends AppComponentBase implements OnInit {
   @ViewChild('calendar') calendarComponent: FullCalendarComponent;
+  @ViewChild('cancellationReasonEl') cancellationReasonEl: any;
   @Input() data: any;
   @Input() userAvailabilities: UserAvailabilityDto[] = [];
   @Input() serviceBookings: ServiceBookingDto[] = [];
+  @Input() existingBookingId: string;
+  @Input() isCancellation = false;
   @Output() onPaid = new Subject<ServicePurchaseDto>();
   @Output() onSavedBooking = new Subject<ServiceBookingDto>();
+  @Output() onCancelledBooking = new Subject<ServiceBookingDto>();
 
+  isLoadingInfo$ = new BehaviorSubject<boolean>(false);
   isSubmitting$ = new BehaviorSubject<boolean>(false);
 
   step = 1;
@@ -68,6 +75,9 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   selectedSessions: SelectedSession;
   selectedDate: string;
   selectedTime: string;
+
+  existingBooking: ServiceBookingDto;
+  cancellationReason: string;
 
   readonly PaymentMethod = PaymentMethod;
   readonly PaymentStatus = PaymentStatus;
@@ -82,22 +92,49 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
     super(injector);
   }
 
-  get isLoading$() { return combineLatest([this.isSubmitting$]).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
+  get isLoading$() { return combineLatest([this.isLoadingInfo$, this.isSubmitting$]).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
   get coachAvatar(): string { return this.getProfilePictureUrl(this.data?.creatorUser?.profilePictureDocument); }
   get coachName(): string { return this.data?.creatorUser?.fullName; }
+  get coachFirstName(): string { return this.data?.creatorUser?.firstName; }
   get coachUserId(): number { return this.data?.creatorUserId; }
   get coachingTitle(): string { return this.data?.name; }
   get serviceId(): string { return this.data?.id; }
   get servicePrice(): string { return this.data?.price; }
+  get cancellationPrice(): number { return 0; }
   get isValidFirstStep(): boolean { return !!this.selectedTime && !!this.selectedDate; }
+  get isBookingCancelled(): boolean { return !!this.data?.cancellationTime; }
   get bookingSchedule(): string {
     const bookingDate = moment(`${this.selectedDate} ${this.selectedTime}`);
     return `${moment(bookingDate).format('HH:mm a')} - ${moment(bookingDate).add(30, 'minutes').format('HH:mm a')}, ${moment(bookingDate).format('dddd, MMMM DD, YYYY')}`;
   }
+  get existingBookingSchedule(): string {
+    const bookingDate = this.existingBooking?.bookingDateTime;
+    return `${moment(bookingDate).format('HH:mm a')} - ${moment(bookingDate).add(30, 'minutes').format('HH:mm a')}, ${moment(bookingDate).format('dddd, MMMM DD, YYYY')}`;
+  }
   get bookingDates(): string[] { return this.serviceBookings?.map(e => e.bookingDateTime)?.map(d => moment(d).format('YYYY-MM-DD')); }
+
+  get totalSteps(): number {
+    if (this.isCancellation) return 1;
+    return 2;
+  }
+
+  get cancellationReasonValue(): string { return this.cancellationReasonEl?.nativeElement?.innerHTML?.trim(); }
+  get cancellationReasonLength(): number { return this.cancellationReasonValue?.length || 0; }
 
   ngOnInit(): void {
     this.initCalendar();
+    this.retrieveBookingToCancel();
+  }
+
+  private retrieveBookingToCancel(): void {
+    if (!this.isCancellation) return;
+    this.isLoadingInfo$.next(true);
+    this._servicesService.getBookingByReferenceId(this.data.id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(existingBooking => {
+        this.existingBooking = existingBooking;
+        this.isLoadingInfo$.next(false);
+      });
   }
 
   onCloseModal(): void {
@@ -113,6 +150,23 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   onSteps(nextStep: number): void {
     this.step = nextStep;
     this._crd.detectChanges();
+  }
+
+  onProcessCancellation(): void {
+    this.isSubmitting$.next(true);
+
+    this._servicesService.cancelBooking(CancelServiceBookingDto.fromJS({
+        referenceId: this.data.id,
+        cancellationReason: this.cancellationReasonValue,
+        cancellationTime: moment()
+      }))
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((x): void => {
+        this.data = { ...this.data, ...x };
+        this.step = 3; // force footer to hide
+        this.onCancelledBooking.next(x);
+        this.isSubmitting$.next(false);
+      });
   }
 
   onProcessPayment(): void {

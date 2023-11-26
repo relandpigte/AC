@@ -33,6 +33,7 @@ namespace Academically.Services.Coachings
         private readonly IRepository<ServicePurchase, Guid> _servicePurchasesRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IRepository<ServiceRating, Guid> _serviceRatingRepository;
+        private readonly IRepository<ServiceBooking, Guid> _serviceBooking;
 
         public CoachingsAppService(
             RoleManager roleManager,
@@ -43,7 +44,8 @@ namespace Academically.Services.Coachings
             IRepository<ServicePurchase, Guid> servicePurchasesRepository,
             IDocumentsDomainService documentsDomainService,
             IExploreRepository exploreRepository,
-            IRepository<ServiceRating, Guid> serviceRatingRepository
+            IRepository<ServiceRating, Guid> serviceRatingRepository,
+            IRepository<ServiceBooking, Guid> serviceBooking
             ) : base(repository)
         {
             LocalizationSourceName = AcademicallyConsts.LocalizationSourceName;
@@ -55,6 +57,7 @@ namespace Academically.Services.Coachings
             _servicePurchasesRepository = servicePurchasesRepository;
             _documentsDomainService = documentsDomainService;
             _serviceRatingRepository = serviceRatingRepository;
+            _serviceBooking = serviceBooking;
         }
 
         protected override IQueryable<Coaching> CreateFilteredQuery(PagedCoachingResultRequestDto input)
@@ -110,6 +113,13 @@ namespace Academically.Services.Coachings
             
             var userRating = await _serviceRatingRepository.FirstOrDefaultAsync(r => r.ServiceId == result.Id && r.CreatorUserId == AbpSession.GetUserId());
             result.HasReviewed = userRating != null;
+
+            var latestBooking = await _serviceBooking.GetAll()
+                .Where(b => b.ReferenceId == input.Id)
+                .Where(b => b.CreatorUserId == this.AbpSession.UserId)
+                .OrderByDescending(b => b.CreationTime)
+                .FirstOrDefaultAsync();
+            result.IsCancelled = latestBooking != null && latestBooking.CancellationTime != null;
             
             return result;
         }

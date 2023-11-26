@@ -14,6 +14,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Academically.Services.StudentCourses;
+using Amazon.S3.Model;
 
 namespace Academically.Services.Services
 {
@@ -254,6 +255,22 @@ namespace Academically.Services.Services
             return ObjectMapper.Map<ServiceBookingDto>(service);
         }
 
+        public async Task<ServiceBookingDto> CancelBooking(CancelServiceBookingDto input)
+        {
+            var existing = await _serviceBooking.GetAll()
+                .Where(s => s.ReferenceId == input.ReferenceId)
+                .Where(s => s.CreatorUserId == this.AbpSession.UserId)
+                .SingleOrDefaultAsync();
+
+            if (existing != null)
+            {
+                existing.CancellationReason = input.CancellationReason;
+                existing.CancellationTime = input.CancellationTime;
+            }
+
+            return ObjectMapper.Map<ServiceBookingDto>(existing);
+        }
+
         public async Task<IEnumerable<ServiceBookingDto>> GetAllBookings(Guid referenceId, long ownerId)
         {
             return await _serviceBooking.GetAll()
@@ -269,6 +286,15 @@ namespace Academically.Services.Services
                 .Where(x => x.Id == bookingId)
                 .Select(x => ObjectMapper.Map<ServiceBookingDto>(x))
                 .SingleOrDefaultAsync();
+        }
+
+        public async Task<ServiceBookingDto> GetBookingByReferenceId(Guid referenceId)
+        {
+            return await _serviceBooking.GetAll()
+               .Where(x => x.CreatorUserId == this.AbpSession.UserId)
+               .Where(x => x.ReferenceId == referenceId)
+               .Select(x => ObjectMapper.Map<ServiceBookingDto>(x))
+               .SingleOrDefaultAsync();
         }
 
         private async Task CreateStudentServiceRecords(Guid id, ServicesType type)
