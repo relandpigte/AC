@@ -49,8 +49,8 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
     this.initCreatedCourses();
   }
 
-  onEditClick(id: string) {
-    this._router.navigate(['/app/courses', id]);
+  onEditClick(data: CourseDto) {
+    this._router.navigate(['/app/courses', data.id]);
   }
 
   onDuplicateClick(id: string) {

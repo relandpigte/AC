@@ -10,7 +10,8 @@ import {
   CoachingStatus,
   VideoDto,
   VideosServiceProxy,
-  VideoStatus
+  VideoStatus,
+  VideoType
 } from '@shared/service-proxies/service-proxies';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
@@ -59,8 +60,8 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
     await this._router.navigate(['app/videos/student-portal', id, 'portal']);
   }
 
-  onEditClick(id: string) {
-    this._router.navigate(['/app/videos', id]);
+  onEditClick(data: VideoDto) {
+    this._router.navigate(['/app/videos' + (data?.type === VideoType.VideoSeries ? '/video-series' : ''), data.id]);
   }
 
   onDuplicateClick(id: string) {

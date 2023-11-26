@@ -368,6 +368,18 @@ namespace Academically.Services.Articles
             }
             return output;
         }
+
+        public async Task<ArticleDto> Duplicate(Guid id)
+        {
+            var existing = await _articlesRepository.GetAll()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            existing.Id = Guid.NewGuid();
+
+            var created = await _articlesRepository.InsertAsync(existing);
+            return ObjectMapper.Map<ArticleDto>(created);
+        }
     }
 }
 

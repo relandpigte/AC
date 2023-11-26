@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Academically.Domain.Enums;
+using Academically.Services.Coachings.Dto;
 using Academically.Services.Courses.Dto;
 using Academically.Services.Events.Dto;
 using Academically.Services.Posts.Dto;
@@ -36,5 +37,6 @@ namespace Academically.Services.Events
         Task UpdateAutoAdmit(Guid id, bool autoAdmitAttendees);
         Task<IEnumerable<EventDto>> GetEnrolledEventsByUser();
         Task<List<EventDto>> GetAllSavedEvents(long creatorUserId);
+        Task<EventDto> Duplicate(Guid id);
     }
 }

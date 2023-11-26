@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
-import { CoachingDto, CoachingsServiceProxy, CoachingStatus } from '@shared/service-proxies/service-proxies';
+import { CoachingDto, CoachingsServiceProxy, CoachingStatus, CoachingType } from '@shared/service-proxies/service-proxies';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { finalize, takeUntil } from '@node_modules/rxjs/operators';
 import { Router } from '@angular/router';
@@ -44,8 +44,8 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
     this.loadCoaching();
   }
 
-  onEditClick(id: string) {
-    this._router.navigate(['/app/dashboard/coaching', id]);
+  onEditClick(data: CoachingDto) {
+    this._router.navigate(['/app/dashboard/coaching' + (data?.type === CoachingType.Series ? '/series' : ''), data.id]);
   }
 
   onDuplicateClick(id: string) {

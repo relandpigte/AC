@@ -197,7 +197,7 @@
                                   {{ 'Unpublish' | localize }}
                               </a>
                           </ng-container>
-                           <a *ngIf="!isPublished" href="javascript:void(0)" class="dropdown-item" (click)="handleEdit(id)">
+                           <a *ngIf="!isPublished" href="javascript:void(0)" class="dropdown-item" (click)="handleEdit()">
                                {{ 'Edit' | localize }}
                            </a>
                            <a href="javascript:void(0)" class="dropdown-item" (click)="handleDuplicate(id)">

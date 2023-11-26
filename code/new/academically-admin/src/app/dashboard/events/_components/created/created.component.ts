@@ -8,11 +8,14 @@ import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import {
   CoachingDto,
   CoachingStatus,
+  EventCategory,
   EventDto,
   EventsServiceProxy,
-  EventStatus
+  EventStatus,
+  EventType
 } from '@shared/service-proxies/service-proxies';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 @Component({
   selector: 'app-created',
@@ -37,7 +40,8 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
     injector: Injector,
     private _dashboardPageService: DashboardPagesService,
     private _eventsService: EventsServiceProxy,
-    private _router: Router
+    private _router: Router,
+    private _modalDialogService: ModalDialogService
   ) {
     super(injector);
   }
@@ -54,6 +58,45 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
 
   async handleJoinClick(id: string): Promise<void> {
     await this._router.navigate(['app/dashboard/events/portal/broadcast/student', id, 'portal']);
+  }
+
+  onEditClick(data: EventDto) {
+    const eventCategory = () => {
+      if (data.category === EventCategory.Broadcast) return '/broadcast';
+      return '/workshop';
+    }
+
+    const eventType = () => {
+      if (data.type === EventType.Series) return '/series';
+      return '';
+    }
+
+    this._router.navigate([`/app/dashboard/events${eventCategory()}${eventType()}`, data.id]);
+  }
+
+  onDuplicateClick(id: string) {
+    this._eventsService.duplicate(id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(() => {
+        this.initEvents();
+        this.notify.success(this.l('Generics.SuccessfullyDuplicated'));
+      });
+  }
+
+  onDeleteClick(id: string): void {
+    const options: ModalDialogOptions = {
+      title: this.l('AreYouSure'),
+      text: this.l('Generics.DeleteConfirmationMessageWithType', ['event']),
+      confirmCb: (): void => {
+        this._eventsService.delete(id)
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(() => {
+            this.initEvents();
+            this.notify.success(this.l('SuccessfullyDeleted'));
+          });
+      }
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   onUpdateStatus(data: EventDto, changeToStatus: EventStatus): void {

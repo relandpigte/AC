@@ -55,6 +55,9 @@
                     [data]="data"
                     [isLoading]="isLoading"
                     [isCreator]="isTutor"
+                    (onEdit)="onEditClick($event)"
+                    (onDuplicate)="onDuplicateClick($event)"
+                    (onDelete)="onDeleteClick($event)"
                     (onClickAction)="handleJoinClick($event)"
                     (onRedirection)="onRedirection($event, data.id)"
                     (onUnpublish)="onUpdateStatus($event, EventStatus.Draft)"
@@ -69,6 +72,9 @@
                     [data]="data"
                     [isLoading]="isLoading"
                     [isCreator]="isTutor"
+                    (onEdit)="onEditClick($event)"
+                    (onDuplicate)="onDuplicateClick($event)"
+                    (onDelete)="onDeleteClick($event)"
                     (onUnpublish)="onUpdateStatus($event, EventStatus.Draft)"
                 ></app-service-card-dashboard>
             </ng-container>
@@ -81,6 +87,9 @@
                     [data]="data"
                     [isLoading]="isLoading"
                     [isCreator]="isTutor"
+                    (onEdit)="onEditClick($event)"
+                    (onDuplicate)="onDuplicateClick($event)"
+                    (onDelete)="onDeleteClick($event)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>
@@ -92,6 +101,9 @@
                     [data]="data"
                     [isLoading]="isLoading"
                     [isCreator]="isTutor"
+                    (onEdit)="onEditClick($event)"
+                    (onDuplicate)="onDuplicateClick($event)"
+                    (onDelete)="onDeleteClick($event)"
                     (onPublish)="onUpdateStatus($event, EventStatus.Published)"
                 ></app-service-card-dashboard>
             </ng-container>

@@ -10,6 +10,7 @@ import {
   ArticleDto,
   ArticlesServiceProxy,
   ArticleStatus,
+  ArticleType,
   CoachingStatus
 } from '@shared/service-proxies/service-proxies';
 
@@ -71,6 +72,19 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
       });
   }
 
+  onEditClick(data: ArticleDto) {
+    this.router.navigate(['/app/articles' + (data?.type === ArticleType.ArticleSeries ? '/article-series' : ''), data.id]);
+  }
+
+  onDuplicateClick(id: string) {
+    this._articlesService.duplicate(id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(() => {
+        this.loadArticles();
+        this.notify.success(this.l('Generics.SuccessfullyDuplicated'));
+      });
+  }
+
   onDeleteClick(id: string): void {
     const options: ModalDialogOptions = {
       title: this.l('AreYouSure'),
@@ -79,6 +93,7 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
         this._articlesService.delete(id)
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
+            this.loadArticles();
             this.notify.success(this.l('SuccessfullyDeleted'));
           });
       }

@@ -21,6 +21,7 @@ using Academically.Domain.Services.Documents;
 using Academically.Domain.Views;
 using Academically.EntityFrameworkCore.Repositories.Explore;
 using Academically.Extensions;
+using Academically.Services.Coachings.Dto;
 using Academically.Services.Courses.Dto;
 using Academically.Services.Events.Dto;
 using Academically.Services.Events.Enums;
@@ -746,6 +747,18 @@ namespace Academically.Services.Events
                 item.IsSaved = true;
             }
             return output;
+        }
+
+        public async Task<EventDto> Duplicate(Guid id)
+        {
+            var existing = await Repository.GetAll()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            existing.Id = Guid.NewGuid();
+
+            var created = await Repository.InsertAsync(existing);
+            return ObjectMapper.Map<EventDto>(created);
         }
     }
 }

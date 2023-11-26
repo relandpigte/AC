@@ -24,6 +24,7 @@ namespace Academically.Services.Articles
 		Task<IEnumerable<AvailableServiceDto>> GetArticlesByKeyword(string keyword, long? creatorUserId);
 		Task<IEnumerable<ArticleDto>> GetEnrolledArticlesByUser();
         Task<List<ArticleDto>> GetAllSavedArticles(long creatorUserId);
+        Task<ArticleDto> Duplicate(Guid id);
     }
 }
 

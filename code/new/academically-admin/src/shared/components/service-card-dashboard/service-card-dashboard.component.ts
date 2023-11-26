@@ -161,8 +161,8 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     this.onOverView.next(id);
   }
 
-  handleEdit(id: string): void {
-    this.onEdit.next(id);
+  handleEdit(): void {
+    this.onEdit.next(this.data);
   }
 
   handleDuplicate(id: string): void {
