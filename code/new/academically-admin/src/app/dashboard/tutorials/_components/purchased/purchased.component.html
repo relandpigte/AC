@@ -50,7 +50,9 @@
                     *ngFor="let data of tutorials"
                     [data]="data"
                     [isLoading]="isLoading$ | async"
-                    (onPurchase)="onPurchaseClick($event)"
+                    (onRearrangeSession)="onRearrangeSessionClick($event)"
+                    (onCancelSession)="onCancelSessionClick($event)"
+                    (onRepurchase)="onRepurchaseClick($event)"
                     (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>
@@ -62,7 +64,9 @@
                     *ngFor="let data of unwatchedTutorials"
                     [data]="data"
                     [isLoading]="isLoading$ | async"
-                    (onPurchase)="onPurchaseClick($event)"
+                    (onRearrangeSession)="onRearrangeSessionClick($event)"
+                    (onCancelSession)="onCancelSessionClick($event)"
+                    (onRepurchase)="onRepurchaseClick($event)"
                     (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>
@@ -74,7 +78,9 @@
                     *ngFor="let data of watchedTutorials"
                     [data]="data"
                     [isLoading]="isLoading$ | async"
-                    (onPurchase)="onPurchaseClick($event)"
+                    (onRearrangeSession)="onRearrangeSessionClick($event)"
+                    (onCancelSession)="onCancelSessionClick($event)"
+                    (onRepurchase)="onRepurchaseClick($event)"
                     (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>

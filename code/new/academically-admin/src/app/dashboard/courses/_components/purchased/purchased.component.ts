@@ -9,6 +9,7 @@ import { AppConsts } from '@shared/AppConsts';
 import { Router } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _router: Router,
+    private _modalDialogService: ModalDialogService,
     private _modalService: BsModalService,
     private _dashboardPageService: DashboardPagesService,
     private _coursesService: CoursesServiceProxy
@@ -60,7 +62,26 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
       });
   }
 
-  onPurchaseClick(course: CourseDto): void {
+  onRearrangeSessionClick(course: CourseDto): void {
+  }
+
+  onCancelSessionClick(course: CourseDto): void {
+    const options: ModalDialogOptions = {
+      title: this.l('Bookings.Cancellation.Confirm.Title'),
+      text: this.l('Bookings.Cancellation.Confirm.Subtitle'),
+      confirmCb: (): void => {
+        const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
+        modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
+        modalSettings.initialState = { data: course, isCancellation: true };
+        const purchaseModal = this._modalService.show(BookingServiceComponent, modalSettings);
+
+        purchaseModal.content.onPaid.subscribe((): void => this.initCourses());
+      }
+    };
+    this._modalDialogService.showConfirmDialog(options);
+  }
+
+  onRepurchaseClick(course: CourseDto): void {
     const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
     modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
     modalSettings.initialState = { data: course };

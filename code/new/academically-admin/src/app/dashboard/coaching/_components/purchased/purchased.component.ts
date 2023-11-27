@@ -8,7 +8,7 @@ import { DashboardPagesService } from '@shared/services/dashboard-pages.service'
 import { Router } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
-import { forkJoin } from 'rxjs';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 @Component({
   selector: 'app-purchased',
@@ -25,6 +25,7 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _router: Router,
+    private _modalDialogService: ModalDialogService,
     private _dashboardPageService: DashboardPagesService,
     private _coachingService: CoachingsServiceProxy,
     private _modalService: BsModalService,
@@ -63,7 +64,26 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
     this._router.navigate(['app/coaching' , coaching.id, 'about']);
   }
 
-  onPurchaseClick(coaching: CoachingDto): void {
+  onRearrangeSessionClick(coaching: CoachingDto): void {
+  }
+
+  onCancelSessionClick(coaching: CoachingDto): void {
+    const options: ModalDialogOptions = {
+      title: this.l('Bookings.Cancellation.Confirm.Title'),
+      text: this.l('Bookings.Cancellation.Confirm.Subtitle'),
+      confirmCb: (): void => {
+        const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
+        modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
+        modalSettings.initialState = { data: coaching, isCancellation: true };
+        const purchaseModal = this._modalService.show(BookingServiceComponent, modalSettings);
+
+        purchaseModal.content.onPaid.subscribe((): void => this.loadPurchasedCoaching());
+      }
+    };
+    this._modalDialogService.showConfirmDialog(options);
+  }
+
+  onRepurchaseClick(coaching: CoachingDto): void {
     const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
     modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
     modalSettings.initialState = { data: coaching };

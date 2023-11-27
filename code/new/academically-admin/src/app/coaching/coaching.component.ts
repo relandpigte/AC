@@ -12,6 +12,7 @@ import { ServiceDataService } from '@shared/services/service-data.service';
 import { ServiceChatComponent } from '@shared/modals/service-chat/service-chat.component';
 import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
 import { ChatsServiceProxy, CoachingDto, CoachingsServiceProxy, RatingsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 @Component({
   selector: 'app-coaching',
@@ -28,6 +29,7 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
     injector: Injector,
     private _landingPageService: LandingPagesService,
     private _chatService: ChatService,
+    private _modalDialogService: ModalDialogService,
     private _modalService: BsModalService,
     private _route: ActivatedRoute,
     private _router: Router,
@@ -54,14 +56,21 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
   }
 
   onCancel(): void {
-    const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
-    modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
-    modalSettings.initialState = { data: this.data, isCancellation: true };
-    const modal = this._modalService.show(BookingServiceComponent, modalSettings);
+    const options: ModalDialogOptions = {
+      title: this.l('Bookings.Cancellation.Confirm.Title'),
+      text: this.l('Bookings.Cancellation.Confirm.Subtitle'),
+      confirmCb: (): void => {
+        const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
+        modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
+        modalSettings.initialState = { data: this.data, isCancellation: true };
+        const modal = this._modalService.show(BookingServiceComponent, modalSettings);
 
-    modal.content.onCancelledBooking.subscribe((): void => {
-      this.data.isCancelled = true;
-    });
+        modal.content.onCancelledBooking.subscribe((): void => {
+          this.data.isCancelled = true;
+        });
+      }
+    };
+    this._modalDialogService.showConfirmDialog(options);
   }
 
   onPurchase(): void {

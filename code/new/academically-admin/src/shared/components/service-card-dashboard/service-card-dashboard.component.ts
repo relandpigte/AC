@@ -55,7 +55,9 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   @Output() onUnpublish = new Subject<any>();
   @Output() onArchive = new Subject<any>();
   @Output() onUnArchive = new Subject<any>();
-  @Output() onPurchase = new Subject<any>();
+  @Output() onRepurchase = new Subject<any>();
+  @Output() onRearrangeSession = new Subject<any>();
+  @Output() onCancelSession = new Subject<any>();
   @Output() onClickAction = new Subject<any>();
   @Output() onReviewAction = new Subject<any>();
   @Output() onRedirection = new Subject<any>();
@@ -152,7 +154,9 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     return inProgress?.courseSection?.name;
   }
 
-  get canPurchase(): boolean { return this.onPurchase.observers.length > 0; }
+  get canRepurchase(): boolean { return this.onRepurchase.observers.length > 0; }
+  get canRearrangeSession(): boolean { return this.onRearrangeSession.observers.length > 0; }
+  get canCancelSession(): boolean { return this.onCancelSession.observers.length > 0; }
 
   ngOnChanges(changes: SimpleChanges) {
     if ('data' in changes && this.data) {
@@ -226,10 +230,22 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     }
   }
 
-  handlePurchase(evt: any, data: any):  void {
+  handleRepurchase(evt: any, data: any):  void {
     evt.preventDefault();
     evt.stopPropagation();
-    this.onPurchase.next(data);
+    this.onRepurchase.next(data);
+  }
+
+  handleRearrangeSession(evt: any, data: any):  void {
+    evt.preventDefault();
+    evt.stopPropagation();
+    this.onRearrangeSession.next(data);
+  }
+
+  handleCancelSession(evt: any, data: any):  void {
+    evt.preventDefault();
+    evt.stopPropagation();
+    this.onCancelSession.next(data);
   }
 
   handleClickAction(evt: any, serviceId: string, action: ServiceCardButton): void {

@@ -9,6 +9,7 @@ import { DashboardPagesService } from '@shared/services/dashboard-pages.service'
 import { EventCategory, EventDto, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
 
   constructor(
     injector: Injector,
+    private _modalDialogService: ModalDialogService,
     private _modalService: BsModalService,
     private _dashboardPageService: DashboardPagesService,
     private _eventsService: EventsServiceProxy,
@@ -57,7 +59,26 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
       });
   }
 
-  onPurchaseClick(event: EventDto): void {
+  onRearrangeSessionClick(event: EventDto): void {
+  }
+
+  onCancelSessionClick(event: EventDto): void {
+    const options: ModalDialogOptions = {
+      title: this.l('Bookings.Cancellation.Confirm.Title'),
+      text: this.l('Bookings.Cancellation.Confirm.Subtitle'),
+      confirmCb: (): void => {
+        const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
+        modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
+        modalSettings.initialState = { data: event, isCancellation: true };
+        const purchaseModal = this._modalService.show(BookingServiceComponent, modalSettings);
+
+        purchaseModal.content.onPaid.subscribe((): void => this.initStudentEvents());
+      }
+    };
+    this._modalDialogService.showConfirmDialog(options);
+  }
+
+  onRepurchaseClick(event: EventDto): void {
     const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
     modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
     modalSettings.initialState = { data: event };

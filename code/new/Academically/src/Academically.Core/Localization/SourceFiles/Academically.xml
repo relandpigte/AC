@@ -2063,5 +2063,9 @@
     
     <!-- Discussion Posts Page -->
     <text name="OtherPosts">Other posts</text>
+	  
+	<!-- Bookings -->
+	<text name="Bookings.Cancellation.Confirm.Title">Cancel this session?</text>
+	<text name="Bookings.Cancellation.Confirm.Subtitle">If you are sure to cancel this session, this is an irreversible action</text>
   </texts>
 </localizationDictionary>

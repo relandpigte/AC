@@ -188,8 +188,18 @@
                             {{ 'Overview' | localize }}
                         </a>
                         <ng-container *ngIf="!isCreator">
-                            <ng-container *ngIf="canPurchase">
-                                <a href="javascript:void(0)" class="dropdown-item" (click)="handlePurchase($event, data)">
+                            <ng-container *ngIf="canRearrangeSession">
+                                <a href="javascript:void(0)" class="dropdown-item" (click)="handleRearrangeSession($event, data)">
+                                    {{ 'Rearrange session' | localize }}
+                                </a>
+                            </ng-container>
+                            <ng-container *ngIf="canCancelSession">
+                                <a href="javascript:void(0)" class="dropdown-item" (click)="handleCancelSession($event, data)">
+                                    {{ 'Cancel session' | localize }}
+                                </a>
+                            </ng-container>
+                            <ng-container *ngIf="canRepurchase">
+                                <a href="javascript:void(0)" class="dropdown-item" (click)="handleRepurchase($event, data)">
                                     {{ 'Purchase another' | localize }}
                                 </a>
                             </ng-container>
