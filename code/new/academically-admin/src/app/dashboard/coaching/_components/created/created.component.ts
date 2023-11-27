@@ -62,12 +62,12 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
       });
   }
 
-  onDeleteClick(data: CoachingDto): void {
+  onDeleteClick(id: string): void {
     const options: ModalDialogOptions = {
       title: this.l('AreYouSure'),
       text: this.l('Generics.DeleteConfirmationMessageWithType', ['coaching']),
       confirmCb: (): void => {
-        this._coachingService.delete(data.id)
+        this._coachingService.delete(id)
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
             this.loadCoaching();

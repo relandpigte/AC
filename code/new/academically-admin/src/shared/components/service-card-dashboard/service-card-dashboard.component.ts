@@ -167,7 +167,9 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     }
   }
 
-  handleDelete(id: string): void {
+  handleDelete(evt: any, id: string): void {
+    evt.preventDefault();
+    evt.stopPropagation();
     this.onDelete.next(id);
   }
 
