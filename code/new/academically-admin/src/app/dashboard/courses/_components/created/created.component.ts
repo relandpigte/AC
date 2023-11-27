@@ -114,5 +114,9 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
       });
   }
 
+  async onRedirection(course: CourseDto): Promise<void> {
+    this._router.navigate(['app/course' , course.id, 'about']);
+  }
+
   protected readonly CoachingStatus = CoachingStatus;
 }

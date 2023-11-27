@@ -56,13 +56,8 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
     this.loadVideos();
   }
 
-  async onRedirection(e: any, id: string): Promise<void> {
-    const tags = ['I', 'A'];
-    if (tags.includes(e.target.tagName)) {
-      return;
-    }
-
-    await this._router.navigate(['app/videos/student-portal', id, 'portal']);
+  async onRedirection(tutorial: VideoDto): Promise<void> {
+    this._router.navigate(['app/videos/student-portal' , tutorial.id]);
   }
 
   onEditClick(data: VideoDto) {

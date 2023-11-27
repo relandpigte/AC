@@ -62,12 +62,12 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
       });
   }
 
-  onDeleteClick(id: string): void {
+  onDeleteClick(data: CoachingDto): void {
     const options: ModalDialogOptions = {
       title: this.l('AreYouSure'),
       text: this.l('Generics.DeleteConfirmationMessageWithType', ['coaching']),
       confirmCb: (): void => {
-        this._coachingService.delete(id)
+        this._coachingService.delete(data.id)
           .pipe(takeUntil(this.destroyed$))
           .subscribe(() => {
             this.loadCoaching();
@@ -104,5 +104,9 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
         this.draftCoachings = coachings?.items.filter(a => a.status === 0);
         this.archiveCoachings = coachings?.items.filter(a => a.status === 2);
       });
+  }
+
+  async onRedirection(coaching: CoachingDto): Promise<void> {
+    this._router.navigate(['app/coaching' , coaching.id, 'about']);
   }
 }

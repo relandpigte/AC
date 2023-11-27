@@ -55,6 +55,7 @@
                     (onDuplicate)="onDuplicateClick($event)"
                     (onDelete)="onDeleteClick($event)"
                     (onUnpublish)="onUpdateStatus($event, CoachingStatus.Draft)"
+                    (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>
@@ -71,6 +72,7 @@
                     (onDelete)="onDeleteClick($event)"
                     (onArchive)="onUpdateStatus($event, CoachingStatus.Archived)"
                     (onPublish)="onUpdateStatus($event, CoachingStatus.Published)"
+                    (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>
@@ -86,6 +88,7 @@
                     (onDuplicate)="onDuplicateClick($event)"
                     (onDelete)="onDeleteClick($event)"
                     (onUnArchive)="onUpdateStatus($event, CoachingStatus.Draft)"
+                    (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>
         </div>
