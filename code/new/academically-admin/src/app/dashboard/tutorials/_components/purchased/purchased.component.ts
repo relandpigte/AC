@@ -7,6 +7,8 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { Router } from '@angular/router';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
 
 @Component({
   selector: 'app-purchased',
@@ -23,6 +25,7 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _router: Router,
+    private _modalService: BsModalService,
     private _dashboardPageService: DashboardPagesService,
     private _videoService: VideosServiceProxy
   ) {
@@ -46,6 +49,15 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
       .subscribe(videos => {
         this.tutorials = videos;
       });
+  }
+
+  onPurchaseClick(tutorial: VideoDto): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
+    modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
+    modalSettings.initialState = { data: tutorial };
+    const purchaseModal = this._modalService.show(BookingServiceComponent, modalSettings);
+
+    purchaseModal.content.onPaid.subscribe((): void => this.initTutorials());
   }
 
   async onRedirection(tutorial: VideoDto): Promise<void> {

@@ -7,6 +7,8 @@ import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { AppConsts } from '@shared/AppConsts';
 import { Router } from '@angular/router';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
 
 
 @Component({
@@ -23,6 +25,7 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _router: Router,
+    private _modalService: BsModalService,
     private _dashboardPageService: DashboardPagesService,
     private _coursesService: CoursesServiceProxy
   ) {
@@ -55,6 +58,15 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
         this.todoCourses = courses.filter(c => c.progress < 100);
         this.completedCourses = courses.filter(c => c.progress === 100);
       });
+  }
+
+  onPurchaseClick(course: CourseDto): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
+    modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
+    modalSettings.initialState = { data: course };
+    const purchaseModal = this._modalService.show(BookingServiceComponent, modalSettings);
+
+    purchaseModal.content.onPaid.subscribe((): void => this.initCourses());
   }
 
   async onRedirection(course: CourseDto): Promise<void> {

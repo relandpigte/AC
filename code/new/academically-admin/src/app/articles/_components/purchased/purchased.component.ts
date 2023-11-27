@@ -5,6 +5,8 @@ import { finalize, takeUntil } from '@node_modules/rxjs/operators';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { Router } from '@angular/router';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
 
 @Component({
   selector: 'app-purchased', templateUrl: './purchased.component.html', styleUrls: ['./purchased.component.less']
@@ -20,6 +22,7 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private _router: Router,
+    private _modalService: BsModalService,
     private _articlesService: ArticlesServiceProxy,
     private _dashboardPageService: DashboardPagesService
   ) {
@@ -43,6 +46,15 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
       .subscribe(articles => {
         this.allArticles = articles;
       });
+  }
+
+  onPurchaseClick(article: ArticleDto): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
+    modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
+    modalSettings.initialState = { data: article };
+    const purchaseModal = this._modalService.show(BookingServiceComponent, modalSettings);
+
+    purchaseModal.content.onPaid.subscribe((): void => this.loadArticles());
   }
 
   async onRedirection(article: ArticleDto): Promise<void> {

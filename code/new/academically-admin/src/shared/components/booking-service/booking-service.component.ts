@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { ChangeDetectorRef, Component, ElementRef, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { BehaviorSubject, combineLatest, of, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, forkJoin, of, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { CalendarOptions, FullCalendarComponent } from '@fullcalendar/angular';
@@ -13,7 +13,7 @@ import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 import {
   CancelServiceBookingDto,
   CreateServiceBookingDto, CreateServicePurchaseDto, ServiceBookingDto, ServicePurchaseDto,
-  ServicesServiceProxy, ServicesType, UserAvailabilityDto
+  ServicesServiceProxy, ServicesType, UserAvailabilitiesServiceProxy, UserAvailabilityDto
 } from '@shared/service-proxies/service-proxies';
 import { NgForm } from '@angular/forms';
 
@@ -87,6 +87,7 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
     private _modal: BsModalRef,
     private _modalService: BsModalService,
     private _servicesService: ServicesServiceProxy,
+    private _userAvailabilitiesService: UserAvailabilitiesServiceProxy,
     private _crd: ChangeDetectorRef
   ) {
     super(injector);
@@ -123,7 +124,29 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
 
   ngOnInit(): void {
     this.initCalendar();
+    this.initServiceOwnerDetails();
     this.retrieveBookingToCancel();
+  }
+
+  private initServiceOwnerDetails(): void {
+    let calls = [];
+    if (this.userAvailabilities?.length)
+      calls.push(of([]));
+    else
+      calls.push(this._userAvailabilitiesService.getAll(this.data.creatorUserId));
+
+
+    if (this.serviceBookings?.length)
+      calls.push(of([]));
+    else
+      calls.push(this._servicesService.getAllBookings(this.data.id, this.data.creatorUserId));
+
+    forkJoin(calls)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(([availabilities, bookings]) => {
+        this.userAvailabilities = availabilities as UserAvailabilityDto[];
+        this.serviceBookings = bookings as ServiceBookingDto[];
+      });
   }
 
   private retrieveBookingToCancel(): void {
@@ -279,7 +302,7 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
 
     const selectedSchedule = _.minBy(selectedSchedules, 'startTime');
     const breaks = _.filter(selectedSchedules, x => x.id !== selectedSchedule.id);
-    if (!selectedSchedule.isAvailable) {
+    if (!selectedSchedule?.isAvailable) {
       this.selectedSchedule = null;
       return;
     }

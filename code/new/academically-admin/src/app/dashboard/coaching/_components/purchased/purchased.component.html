@@ -51,6 +51,7 @@
                     [data]="data"
                     [additionalData]="additionalData"
                     [isLoading]="isLoading$ | async"
+                    (onPurchase)="onPurchaseClick($event)"
                     (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>
@@ -64,6 +65,7 @@
                     [additionalData]="additionalData"
                     [isPast]="true"
                     [isLoading]="isLoading$ | async"
+                    (onPurchase)="onPurchase($event)"
                     (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>
@@ -77,6 +79,7 @@
                     [isCancelled]="true"
                     [additionalData]="additionalData"
                     [isLoading]="isLoading$ | async"
+                    (onPurchase)="onPurchase($event)"
                     (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>

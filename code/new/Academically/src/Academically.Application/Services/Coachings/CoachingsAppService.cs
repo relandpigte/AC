@@ -377,7 +377,8 @@ namespace Academically.Services.Coachings
             var output = await Repository.GetAll()
                 .Where(w => w.ParentId == null && w.Visible.Value && w.Status == CoachingStatus.Published)
                 .Where(x => purchases.Contains(x.Id))
-                .Include(c => c.CreatorUser)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.ProfilePictureDocument)
                 .Select(e => ObjectMapper.Map<CoachingDto>(e))
                 .ToListAsync();
             

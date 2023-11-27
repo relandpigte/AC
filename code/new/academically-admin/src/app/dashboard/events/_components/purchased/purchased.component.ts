@@ -7,6 +7,8 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { EventCategory, EventDto, EventsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
 
 
 @Component({
@@ -23,6 +25,7 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
 
   constructor(
     injector: Injector,
+    private _modalService: BsModalService,
     private _dashboardPageService: DashboardPagesService,
     private _eventsService: EventsServiceProxy,
     private _router: Router
@@ -52,6 +55,15 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
         this.upcomingEvents = events?.filter(e => moment().isBefore(e.eventDateTime) && e.status !== 0);
         this.pastEvents = events?.filter(e => moment().isAfter(e.eventDateTime));
       });
+  }
+
+  onPurchaseClick(event: EventDto): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
+    modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
+    modalSettings.initialState = { data: event };
+    const purchaseModal = this._modalService.show(BookingServiceComponent, modalSettings);
+
+    purchaseModal.content.onPaid.subscribe((): void => this.initStudentEvents());
   }
 
   async onRedirection(event: EventDto): Promise<void> {

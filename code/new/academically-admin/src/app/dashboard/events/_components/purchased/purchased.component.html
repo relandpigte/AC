@@ -53,6 +53,7 @@
                     [data]="data"
                     (onClickAction)="handleJoinClick($event)"
                     [isLoading]="isLoading$ | async"
+                    (onPurchase)="onPurchaseClick($event)"
                     (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>
@@ -64,6 +65,7 @@
                     *ngFor="let data of pastEvents"
                     [data]="data"
                     [isLoading]="isLoading$ | async"
+                    (onPurchase)="onPurchaseClick($event)"
                     (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>
@@ -75,6 +77,7 @@
                     *ngFor="let data of cancelledEvents"
                     [data]="data"
                     [isLoading]="isLoading$ | async"
+                    (onPurchase)="onPurchaseClick($event)"
                     (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>

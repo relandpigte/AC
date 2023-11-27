@@ -49,6 +49,7 @@
                     *ngFor="let data of allArticles"
                     [data]="data"
                     [isLoading]="isLoading$ | async"
+                    (onPurchase)="onPurchaseClick($event)"
                     (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>
@@ -60,6 +61,7 @@
                     *ngFor="let data of unreadArticles"
                     [data]="data"
                     [isLoading]="isLoading$ | async"
+                    (onPurchase)="onPurchaseClick($event)"
                     (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>
@@ -71,6 +73,7 @@
                     *ngFor="let data of readArticles"
                     [data]="data"
                     [isLoading]="isLoading$ | async"
+                    (onPurchase)="onPurchaseClick($event)"
                     (onRedirection)="onRedirection($event)"
                 ></app-service-card-dashboard>
             </ng-container>

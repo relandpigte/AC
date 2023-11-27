@@ -52,6 +52,7 @@
                         *ngFor="let data of allCourses"
                         [data]="data"
                         [isLoading]="isLoading$ | async"
+                        (onPurchase)="onPurchaseClick($event)"
                         (onClickAction)="handleRedirectToCourse($event)"
                         (onRedirection)="onRedirection($event)"
                     ></app-service-card-dashboard>
@@ -64,6 +65,7 @@
                         *ngFor="let data of todoCourses"
                         [data]="data"
                         [isLoading]="isLoading$ | async"
+                        (onPurchase)="onPurchaseClick($event)"
                         (onClickAction)="handleRedirectToCourse($event)"
                         (onRedirection)="onRedirection($event)"
                     ></app-service-card-dashboard>
@@ -76,6 +78,7 @@
                         *ngFor="let data of completedCourses"
                         [data]="data"
                         [isLoading]="isLoading$ | async"
+                        (onPurchase)="onPurchaseClick($event)"
                         (onClickAction)="handleRedirectToCourse($event)"
                         (onRedirection)="onRedirection($event)"
                     ></app-service-card-dashboard>

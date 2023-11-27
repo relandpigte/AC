@@ -24,6 +24,13 @@ import {
   ServiceCardType
 } from '@shared/models/service-card.model';
 
+// classes of elements that won't allow triggering onRedirection event
+const ISOLATED_CLICK_CLASSES = [
+  'dropdown-toggle',
+  'dropdown-item',
+  'dropdown-toggle-icon'
+]
+
 @Component({
   selector: 'app-service-card-dashboard',
   templateUrl: './service-card-dashboard.component.html',
@@ -48,6 +55,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   @Output() onUnpublish = new Subject<any>();
   @Output() onArchive = new Subject<any>();
   @Output() onUnArchive = new Subject<any>();
+  @Output() onPurchase = new Subject<any>();
   @Output() onClickAction = new Subject<any>();
   @Output() onReviewAction = new Subject<any>();
   @Output() onRedirection = new Subject<any>();
@@ -144,6 +152,8 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     return inProgress?.courseSection?.name;
   }
 
+  get canPurchase(): boolean { return this.onPurchase.observers.length > 0; }
+
   ngOnChanges(changes: SimpleChanges) {
     if ('data' in changes && this.data) {
       const { options, service } = ServiceCardUtils.getSanitizeServiceData(this.data, {}, [], false);
@@ -216,6 +226,12 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     }
   }
 
+  handlePurchase(evt: any, data: any):  void {
+    evt.preventDefault();
+    evt.stopPropagation();
+    this.onPurchase.next(data);
+  }
+
   handleClickAction(evt: any, serviceId: string, action: ServiceCardButton): void {
     evt.preventDefault();
     evt.stopPropagation();
@@ -230,6 +246,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   }
 
   handleRedirection(evt: any): void {
+    if (ISOLATED_CLICK_CLASSES.some(c => evt.target.classList.contains(c))) return;
     evt.preventDefault();
     evt.stopPropagation();
     this.onRedirection.next(this.data);

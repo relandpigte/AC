@@ -1,11 +1,14 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { finalize, takeUntil } from 'rxjs/operators';
 
-import { AvailableServiceDto, CoachingDto, CoachingsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, CoachingDto, CoachingsServiceProxy, ServiceBookingDto, ServicesServiceProxy, UserAvailabilitiesServiceProxy, UserAvailabilityDto } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { Router } from '@angular/router';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-purchased',
@@ -23,7 +26,8 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
     injector: Injector,
     private _router: Router,
     private _dashboardPageService: DashboardPagesService,
-    private _coachingService: CoachingsServiceProxy
+    private _coachingService: CoachingsServiceProxy,
+    private _modalService: BsModalService,
   ) {
     super(injector);
   }
@@ -57,5 +61,14 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
 
   async onRedirection(coaching: CoachingDto): Promise<void> {
     this._router.navigate(['app/coaching' , coaching.id, 'about']);
+  }
+
+  onPurchaseClick(coaching: CoachingDto): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
+    modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
+    modalSettings.initialState = { data: coaching };
+    const purchaseModal = this._modalService.show(BookingServiceComponent, modalSettings);
+
+    purchaseModal.content.onPaid.subscribe((): void => this.loadPurchasedCoaching());
   }
 }
