@@ -46,6 +46,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   @Input() isCancelled: boolean;
   @Input() additionalData: any = {};
   @Input() isOverview: boolean;
+  @Input() isBooking: boolean;
 
   @Output() onDelete = new Subject<any>();
   @Output() onOverView = new Subject<any>();
@@ -142,7 +143,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   get coachingStudentAvatarSrc(): string { return this.sanitized?.booking?.student?.avatar?.src ?? 'assets/img/anonymous.png'; }
   get coachingDuration(): string { return humanizeDuration(this.sanitized?.booking?.durationInSec ?? 60000); }
   get serviceStatus(): number { return this.data?.status; }
-  get isCourseStarted(): boolean { return this.sanitized?.progress > 0 && this.sanitized?.progress < 100 }
+  get isCourseStarted(): boolean { return this.sanitized?.progress > 0 && this.sanitized?.progress < 100; }
   get isCourseCompleted(): boolean { return this.sanitized?.progress === 100; }
   get currentLesson(): string {
     const course = this.data?.studentCourses?.find(x => x.creatorUserId === this.currentUserId);
