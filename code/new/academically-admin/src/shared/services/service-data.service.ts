@@ -15,21 +15,23 @@ import {
   providedIn: 'root'
 })
 export class ServiceDataService {
-  public discussionId$: Observable<string>;
+  public discussionId$: Observable<any>;
   public serviceData$: Observable<any>;
   public serviceRating$: Observable<any>;
   public serviceOverallRating$: Observable<any>;
+  public serviceBooking$: Observable<any>;
 
-  private _discussionId: BehaviorSubject<string>;
+  private _discussionId: BehaviorSubject<any>;
   private _serviceData: BehaviorSubject<any>;
   private _serviceRating: BehaviorSubject<any>;
   private _serviceOverallRating: BehaviorSubject<any>;
+  private _serviceBooking: BehaviorSubject<any>;
 
   constructor(
     private _postsService: PostsServiceProxy,
     private _serviceDiscussion: ServiceDiscussionServiceProxy
   ) {
-    this._discussionId = new BehaviorSubject<string>(null);
+    this._discussionId = new BehaviorSubject<any>(null);
     this.discussionId$ = this._discussionId.asObservable();
 
     this._serviceData = new BehaviorSubject<any>(null);
@@ -38,15 +40,18 @@ export class ServiceDataService {
     this._serviceRating = new BehaviorSubject<any>(null);
     this.serviceRating$ = this._serviceRating.asObservable();
 
-    this._serviceOverallRating = new BehaviorSubject<ServiceRatingSummaryDto>(null);
+    this._serviceOverallRating = new BehaviorSubject<any>(null);
     this.serviceOverallRating$ = this._serviceOverallRating.asObservable();
+
+    this._serviceBooking = new BehaviorSubject<any>(null);
+    this.serviceBooking$ = this._serviceBooking.asObservable();
   }
 
   public set serviceData(value: any) {
     this._serviceData.next(value);
   }
 
-  public set discussionId(value: string) {
+  public set discussionId(value: any) {
     this._discussionId.next(value);
   }
 
@@ -56,6 +61,10 @@ export class ServiceDataService {
 
   public set serviceOverallRating(value: any) {
     this._serviceOverallRating.next(value);
+  }
+
+  public set serviceBooking(value: any) {
+    this._serviceBooking.next(value);
   }
 
   createServiceDiscussion(serviceId: string, serviceType: ServicesType, userId: number): void {

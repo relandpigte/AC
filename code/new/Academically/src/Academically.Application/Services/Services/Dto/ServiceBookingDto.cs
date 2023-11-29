@@ -1,4 +1,5 @@
 using System;
+using Abp.Application.Services.Dto;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using AutoMapper;
@@ -6,7 +7,7 @@ using AutoMapper;
 namespace Academically.Services.Services.Dto;
 
 [AutoMap(typeof(ServiceBooking))]
-public class ServiceBookingDto
+public class ServiceBookingDto : EntityDto<Guid>
 {
     public Guid ReferenceId { get; set; }
     public DateTime BookingDateTime { get; set; }

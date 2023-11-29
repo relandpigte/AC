@@ -79,8 +79,8 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
       this._serviceData.serviceData = this.data;
     });
 
-    purchaseModal.content.onSavedBooking.subscribe((booking): void => {
-      this.serviceBookings.push(booking);
+    purchaseModal.content.onSavedBooking.subscribe(booking => {
+      this._serviceData.serviceBooking = booking;
     });
   }
 

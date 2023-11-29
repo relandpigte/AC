@@ -1,9 +1,10 @@
 import { Component, Injector, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 
 import { AppComponentBase } from '@shared/app-component-base';
-import { CoachingDto, CoachingStatus } from '@shared/service-proxies/service-proxies';
+import { CoachingDto, CoachingStatus, ServiceBookingDto } from '@shared/service-proxies/service-proxies';
 import { Subject } from 'rxjs';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
@@ -22,6 +23,7 @@ enum timeline {
 })
 export class JoinBadgeComponent extends AppComponentBase implements OnInit, OnChanges, OnDestroy {
   @Input() data: CoachingDto;
+  @Input() booking: ServiceBookingDto;
   @Output() onReview = new Subject<CoachingDto>();
   @Output() onPurchase = new Subject<CoachingDto>();
   @Output() onCancel = new Subject<CoachingDto>();
@@ -53,7 +55,7 @@ export class JoinBadgeComponent extends AppComponentBase implements OnInit, OnCh
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if ('data' in changes && this.data) {
+    if ('booking' in changes && !_.isEmpty(this.booking)) {
       this.initJoinBadge();
       this.initCountDown();
     }
@@ -84,14 +86,11 @@ export class JoinBadgeComponent extends AppComponentBase implements OnInit, OnCh
   }
 
   private initJoinBadge(): void {
-    const eventDateTime = moment().add(Math.floor(Math.random() * 10), 'days')
-      .add(Math.floor(Math.random() * 24), 'hours')
-      .add(Math.floor(Math.random() * 60), 'minutes')
-      .add(Math.floor(Math.random() * 60), 'seconds');
-    const days = eventDateTime.diff(moment(), 'days');
-    const hours = eventDateTime.diff(moment(), 'hours');
-    const minutes = eventDateTime.diff(moment(), 'minutes');
-    const seconds = eventDateTime.diff(moment(), 'seconds');
+    const bookedDate = moment(this.booking?.bookingDateTime);
+    const days = moment(bookedDate).diff(moment(), 'days');
+    const hours = moment(bookedDate).diff(moment(), 'hours');
+    const minutes = moment(bookedDate).diff(moment(), 'minutes');
+    const seconds = moment(bookedDate).diff(moment(), 'seconds');
 
     if (days > 0) {
       this.countdown = days;

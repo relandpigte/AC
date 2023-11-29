@@ -1875,6 +1875,8 @@
     <text name="Coaching.Composer.Placeholder">Ask question before the coaching start...</text>
     <text name="BookASession">Book a session</text>
     <text name="Steps">Steps {0} of {1}</text>
+    <text name="SessionRescheduled">Session rescheduled</text>
+    <text name="SessionUpdated">The session has been updated in your schedule</text>
 	<!-- Workshop -->
 	<text name="NewWorkshop">New Workshop</text>
 	<text name="CreateWorkshop">Create Workshop</text>

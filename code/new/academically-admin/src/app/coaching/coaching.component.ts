@@ -11,8 +11,11 @@ import { ChatService } from '@shared/services/chat.service';
 import { ServiceDataService } from '@shared/services/service-data.service';
 import { ServiceChatComponent } from '@shared/modals/service-chat/service-chat.component';
 import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
-import { ChatsServiceProxy, CoachingDto, CoachingsServiceProxy, RatingsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import {
+  ChatsServiceProxy, CoachingDto, CoachingsServiceProxy, RatingsServiceProxy, ServiceBookingDto,
+  ServicesServiceProxy, UserAvailabilitiesServiceProxy, UserAvailabilityDto
+} from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-coaching',
@@ -25,6 +28,10 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
   data: CoachingDto;
   rating: number;
 
+  booking: ServiceBookingDto;
+  userAvailabilities: UserAvailabilityDto[] = [];
+  serviceBookings: ServiceBookingDto[] = [];
+
   constructor(
     injector: Injector,
     private _landingPageService: LandingPagesService,
@@ -36,18 +43,22 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
     private _coachingService: CoachingsServiceProxy,
     private _serviceData: ServiceDataService,
     private _ratingService: RatingsServiceProxy,
-    private _chatsService: ChatsServiceProxy
+    private _chatsService: ChatsServiceProxy,
+    private _userAvailabilitiesService: UserAvailabilitiesServiceProxy,
+    private _servicesService: ServicesServiceProxy
   ) {
     super(injector);
     this._chatService.openChat$.subscribe(() => this.openMessageModal());
     this._serviceData.serviceData$.pipe(takeUntil(this.destroyed$)).subscribe(d => this.data = d);
     this._serviceData.serviceRating$.pipe(takeUntil(this.destroyed$)).subscribe(r => this.rating = r);
+    this._serviceData.serviceBooking$.pipe(takeUntil(this.destroyed$)).subscribe(b => this.booking = b);
   }
 
   get isAboutTab(): boolean { return this._router.url.includes([`coaching/${this.id}`, 'about'].join('/')); }
   get isDiscussionTab(): boolean { return this._router.url.includes([`coaching/${this.id}`, 'discussion'].join('/')); }
   get isReviewsTab(): boolean { return this._router.url.includes([`coaching/${this.id}`, 'reviews'].join('/')); }
   get serviceOwnerId(): number { return this.data?.creatorUser?.id; }
+  get serviceId(): string { return this.data?.id; }
 
   ngOnInit(): void {
     this.id = this._route.snapshot.paramMap.get('id');
@@ -76,8 +87,36 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
   onPurchase(): void {
     const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
     modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
-    modalSettings.initialState = { data: this.data };
-    this._modalService.show(BookingServiceComponent, modalSettings);
+    modalSettings.initialState = {
+      data: this.data,
+      userAvailabilities: this.userAvailabilities,
+      serviceBookings: this.serviceBookings
+    };
+    const modal = this._modalService.show(BookingServiceComponent, modalSettings);
+
+    modal.content.onSavedBooking.subscribe(booking => {
+      this._serviceData.serviceBooking = booking;
+      this.data.isCancelled = false;
+      this._serviceData.serviceData = this.data;
+    });
+  }
+
+  onReschedule(): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
+    modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
+    modalSettings.initialState = {
+      data: this.data,
+      userAvailabilities: this.userAvailabilities,
+      serviceBookings: this.serviceBookings,
+      rescheduleBooking: this.booking
+    };
+    const modal = this._modalService.show(BookingServiceComponent, modalSettings);
+
+    modal.content.onSavedBooking.subscribe(booking => {
+      this._serviceData.serviceBooking = booking;
+      this.data.isCancelled = false;
+      this._serviceData.serviceData = this.data;
+    });
   }
 
   private async openMessageModal(): Promise<void> {
@@ -107,14 +146,34 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
       this._coachingService.get(this.id),
       this._serviceData.getServiceDiscussionId(this.id),
       this._ratingService.getUserServiceReview(this.id),
-      this._ratingService.getServiceRatingsSummary(this.id)
+      this._ratingService.getServiceRatingsSummary(this.id),
+      this._servicesService.getBookingDetails(this.id, this.currentUserId)
     ])
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(([coaching, discussionId, rating, overallRating]): void => {
+      .subscribe(([coaching, discussionId, rating, overallRating, booking]): void => {
         this._serviceData.serviceData = coaching;
         this._serviceData.discussionId = discussionId;
         this._serviceData.serviceRating = rating;
         this._serviceData.serviceOverallRating = overallRating;
+        this._serviceData.serviceBooking = booking;
+        this.initUserAvailabilities();
+        this.initServiceBookings();
+      });
+  }
+
+  private initUserAvailabilities(): void {
+    this._userAvailabilitiesService.getAll(this.serviceOwnerId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(availabilities => {
+        this.userAvailabilities = availabilities;
+      });
+  }
+
+  private initServiceBookings(): void {
+    this._servicesService.getAllBookings(this.serviceId, this.serviceOwnerId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(bookings => {
+        this.serviceBookings = bookings;
       });
   }
 }

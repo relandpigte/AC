@@ -23562,6 +23562,67 @@ export class ServicesServiceProxy {
     }
 
     /**
+     * @param referenceId (optional) 
+     * @param userId (optional) 
+     * @return Success
+     */
+    getBookingDetails(referenceId: string | undefined, userId: number | undefined): Observable<ServiceBookingDto> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetBookingDetails?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetBookingDetails(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetBookingDetails(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceBookingDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceBookingDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetBookingDetails(response: HttpResponseBase): Observable<ServiceBookingDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServiceBookingDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceBookingDto>(<any>null);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
@@ -41070,10 +41131,13 @@ export interface ICreateRoleDto {
 }
 
 export class CreateServiceBookingDto implements ICreateServiceBookingDto {
+    id: string | undefined;
     referenceId: string;
     bookingDateTime: moment.Moment;
     ownerId: number;
+    rescheduleReason: string | undefined;
     type: ServicesType;
+    creatorUserId: number | undefined;
 
     constructor(data?: ICreateServiceBookingDto) {
         if (data) {
@@ -41086,10 +41150,13 @@ export class CreateServiceBookingDto implements ICreateServiceBookingDto {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.referenceId = _data["referenceId"];
             this.bookingDateTime = _data["bookingDateTime"] ? moment(_data["bookingDateTime"].toString()) : <any>undefined;
             this.ownerId = _data["ownerId"];
+            this.rescheduleReason = _data["rescheduleReason"];
             this.type = _data["type"];
+            this.creatorUserId = _data["creatorUserId"];
         }
     }
 
@@ -41102,10 +41169,13 @@ export class CreateServiceBookingDto implements ICreateServiceBookingDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["referenceId"] = this.referenceId;
         data["bookingDateTime"] = this.bookingDateTime ? this.bookingDateTime.toISOString() : <any>undefined;
         data["ownerId"] = this.ownerId;
+        data["rescheduleReason"] = this.rescheduleReason;
         data["type"] = this.type;
+        data["creatorUserId"] = this.creatorUserId;
         return data; 
     }
 
@@ -41118,10 +41188,13 @@ export class CreateServiceBookingDto implements ICreateServiceBookingDto {
 }
 
 export interface ICreateServiceBookingDto {
+    id: string | undefined;
     referenceId: string;
     bookingDateTime: moment.Moment;
     ownerId: number;
+    rescheduleReason: string | undefined;
     type: ServicesType;
+    creatorUserId: number | undefined;
 }
 
 export class CreateServiceDiscussionDto implements ICreateServiceDiscussionDto {
@@ -51265,6 +51338,7 @@ export interface IService2Dto {
 }
 
 export class ServiceBookingDto implements IServiceBookingDto {
+    id: string;
     referenceId: string;
     bookingDateTime: moment.Moment;
     ownerId: number;
@@ -51285,6 +51359,7 @@ export class ServiceBookingDto implements IServiceBookingDto {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.referenceId = _data["referenceId"];
             this.bookingDateTime = _data["bookingDateTime"] ? moment(_data["bookingDateTime"].toString()) : <any>undefined;
             this.ownerId = _data["ownerId"];
@@ -51305,6 +51380,7 @@ export class ServiceBookingDto implements IServiceBookingDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["referenceId"] = this.referenceId;
         data["bookingDateTime"] = this.bookingDateTime ? this.bookingDateTime.toISOString() : <any>undefined;
         data["ownerId"] = this.ownerId;
@@ -51325,6 +51401,7 @@ export class ServiceBookingDto implements IServiceBookingDto {
 }
 
 export interface IServiceBookingDto {
+    id: string;
     referenceId: string;
     bookingDateTime: moment.Moment;
     ownerId: number;

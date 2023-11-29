@@ -251,8 +251,17 @@ namespace Academically.Services.Services
         public async Task<ServiceBookingDto> SaveBooking(CreateServiceBookingDto input)
         {
             var serviceBooking = ObjectMapper.Map<ServiceBooking>(input);
-            var service = await _serviceBooking.InsertAsync(serviceBooking);
+            var service = await _serviceBooking.InsertOrUpdateAsync(serviceBooking);
             return ObjectMapper.Map<ServiceBookingDto>(service);
+        }
+        
+        public async Task<ServiceBookingDto> GetBookingDetails(Guid referenceId, long userId)
+        {
+            return await _serviceBooking.GetAll()
+                .Where(x => x.CreatorUserId == userId)
+                .Where(x => x.ReferenceId == referenceId)
+                .Select(x => ObjectMapper.Map<ServiceBookingDto>(x))
+                .FirstOrDefaultAsync();
         }
 
         public async Task<ServiceBookingDto> CancelBooking(CancelServiceBookingDto input)
