@@ -1,12 +1,13 @@
 import { Component, Injector, Input, Output } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { Subject } from 'rxjs';
+import * as moment from 'moment';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import { RateAndReviewComponent } from '@shared/components/rate-and-review/rate-and-review.component';
 import { ServiceDataService } from '@shared/services/service-data.service';
 import { ThankYouComponent } from '@app/coaching/_components/thank-you/thank-you.component';
-import { CoachingDto, CoachingsServiceProxy, RatingsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CoachingDto, CoachingsServiceProxy, RatingsServiceProxy, ServiceBookingDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-leave-review-badge',
@@ -15,6 +16,7 @@ import { CoachingDto, CoachingsServiceProxy, RatingsServiceProxy } from '@shared
 })
 export class LeaveReviewBadgeComponent extends AppComponentBase {
   @Input() data: CoachingDto;
+  @Input() booking: ServiceBookingDto;
   @Output() onPurchase = new Subject<any>();
 
   constructor(
@@ -30,6 +32,7 @@ export class LeaveReviewBadgeComponent extends AppComponentBase {
   get isPurchased(): boolean { return this.data?.isPurchased; }
   get hasReviewed(): boolean { return this.data?.hasReviewed; }
   get serviceId(): string { return this.data?.id; }
+  get eventFinished(): boolean { return moment().isAfter(this.booking?.bookingDateTime); }
 
   handleLeaveReview(): void {
     const modalSettings = this.defaultModalSettings;

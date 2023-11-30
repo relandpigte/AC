@@ -6,6 +6,7 @@ import { switchMap, takeUntil } from 'rxjs/operators';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { CalendarOptions, FullCalendarComponent } from '@fullcalendar/angular';
 import { DateClickArg } from '@fullcalendar/interaction';
+import { Router } from '@angular/router';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import { BookingTakenComponent } from '@shared/components/booking-service/components/booking-taken/booking-taken.component';
@@ -15,7 +16,6 @@ import {
   CreateServiceBookingDto, CreateServicePurchaseDto, ServiceBookingDto, ServicePurchaseDto,
   ServicesServiceProxy, ServicesType, UserAvailabilitiesServiceProxy, UserAvailabilityDto
 } from '@shared/service-proxies/service-proxies';
-import { NgForm } from '@angular/forms';
 
 enum PaymentMethod {
   CreditCard,
@@ -25,7 +25,8 @@ enum PaymentMethod {
 }
 enum PaymentStatus {
   Fail,
-  Success
+  Success,
+  Reschedule
 }
 
 interface SelectedSession {
@@ -56,6 +57,7 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   @Input() data: any;
   @Input() userAvailabilities: UserAvailabilityDto[] = [];
   @Input() serviceBookings: ServiceBookingDto[] = [];
+  @Input() rescheduleBooking: ServiceBookingDto;
   @Input() existingBookingId: string;
   @Input() isCancellation = false;
   @Output() onPaid = new Subject<ServicePurchaseDto>();
@@ -75,12 +77,14 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   selectedSessions: SelectedSession;
   selectedDate: string;
   selectedTime: string;
+  rescheduleReason: string;
 
   existingBooking: ServiceBookingDto;
   cancellationReason: string;
 
   readonly PaymentMethod = PaymentMethod;
   readonly PaymentStatus = PaymentStatus;
+  private readonly rescheduleReasonTextLimit = 150;
   constructor(
     injector: Injector,
     private _elRef: ElementRef,
@@ -88,7 +92,8 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
     private _modalService: BsModalService,
     private _servicesService: ServicesServiceProxy,
     private _userAvailabilitiesService: UserAvailabilitiesServiceProxy,
-    private _crd: ChangeDetectorRef
+    private _crd: ChangeDetectorRef,
+    private _router: Router
   ) {
     super(injector);
   }
@@ -102,7 +107,6 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   get serviceId(): string { return this.data?.id; }
   get servicePrice(): string { return this.data?.price; }
   get cancellationPrice(): number { return 0; }
-  get isValidFirstStep(): boolean { return !!this.selectedTime && !!this.selectedDate; }
   get isBookingCancelled(): boolean { return !!this.data?.cancellationTime; }
   get bookingSchedule(): string {
     const bookingDate = moment(`${this.selectedDate} ${this.selectedTime}`);
@@ -115,49 +119,43 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   get bookingDates(): string[] { return this.serviceBookings?.map(e => e.bookingDateTime)?.map(d => moment(d).format('YYYY-MM-DD')); }
 
   get totalSteps(): number {
-    if (this.isCancellation) return 1;
+    if (this.isCancellation) {
+      return 1;
+    }
     return 2;
+  }
+  get isValidFirstStep(): boolean {
+    const { bookingDateTime } = this.rescheduleBooking || {};
+    const currentTime = bookingDateTime?.format('HH:mm');
+    if (_.isEmpty(this.rescheduleBooking)) {
+      return !!this.selectedTime && !!this.selectedDate;
+    } else {
+      return !!this.selectedTime && !!this.selectedDate && (currentTime !== this.selectedTime ||
+        !moment(bookingDateTime).isSame(moment(this.selectedDate), 'date'));
+    }
   }
 
   get cancellationReasonValue(): string { return this.cancellationReasonEl?.nativeElement?.innerHTML?.trim(); }
   get cancellationReasonLength(): number { return this.cancellationReasonValue?.length || 0; }
 
+  get stepOne(): boolean { return this.step === 1 && !this.isCancellation; }
+  get stepOneCancellation(): boolean { return this.step === 1 && this.isCancellation; }
+  get step2Reschedule(): boolean { return this.step === 2 && !_.isEmpty(this.rescheduleBooking) && !this.isCancellation; }
+  get step2Paypal(): boolean {
+    return this.step === 2 && this.defaultPaymentMethod === PaymentMethod.Paypal && _.isEmpty(this.rescheduleBooking);
+  }
+  get step2CC(): boolean {
+    return this.step === 2 && this.defaultPaymentMethod === PaymentMethod.CreditCard && _.isEmpty(this.rescheduleBooking);
+  }
+  get rescheduleReasonLimit(): string { return `${this.rescheduleReason?.length ?? 0}/${this.rescheduleReasonTextLimit}`; }
+  get isMorningSessionAvailable(): boolean { return !_.isEmpty(this.selectedSessions?.morning); }
+  get isAfternoonSessionAvailable(): boolean { return !_.isEmpty(this.selectedSessions?.afternoon); }
+  get isEveningSessionAvailable(): boolean { return !_.isEmpty(this.selectedSessions?.evening); }
+
   ngOnInit(): void {
     this.initCalendar();
-    this.initServiceOwnerDetails();
     this.retrieveBookingToCancel();
-  }
-
-  private initServiceOwnerDetails(): void {
-    let calls = [];
-    if (this.userAvailabilities?.length)
-      calls.push(of([]));
-    else
-      calls.push(this._userAvailabilitiesService.getAll(this.data.creatorUserId));
-
-
-    if (this.serviceBookings?.length)
-      calls.push(of([]));
-    else
-      calls.push(this._servicesService.getAllBookings(this.data.id, this.data.creatorUserId));
-
-    forkJoin(calls)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(([availabilities, bookings]) => {
-        this.userAvailabilities = availabilities as UserAvailabilityDto[];
-        this.serviceBookings = bookings as ServiceBookingDto[];
-      });
-  }
-
-  private retrieveBookingToCancel(): void {
-    if (!this.isCancellation) return;
-    this.isLoadingInfo$.next(true);
-    this._servicesService.getBookingByReferenceId(this.data.id)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(existingBooking => {
-        this.existingBooking = existingBooking;
-        this.isLoadingInfo$.next(false);
-      });
+    // this.initServiceOwnerDetails();
   }
 
   onCloseModal(): void {
@@ -192,6 +190,22 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
       });
   }
 
+  timeSelectionClass(time: string): string {
+    return (this.selectedTime === time) ? 'active' : '';
+  }
+
+  isCurrentBookingTime(time: string): boolean {
+    const { bookingDateTime } = this.rescheduleBooking || {};
+    const currentTime = bookingDateTime?.format('HH:mm');
+    return currentTime === time && moment(bookingDateTime).isSame(moment(`${this.selectedDate} ${this.selectedTime}`), 'date');
+  }
+
+  onProcessReschedule(): void {
+    this.onSteps(3);
+    this.paymentStatus = PaymentStatus.Reschedule;
+    this.saveBooking();
+  }
+
   onProcessPayment(): void {
     this.onSteps(3);
     switch (this.defaultPaymentMethod) {
@@ -217,20 +231,39 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
     this.selectedTime = time;
   }
 
+  async gotoSchedule(): Promise<void> {
+    this.onCloseModal();
+    await this._router.navigate(['app/calendar']);
+  }
+
   private handleDateClick(info: DateClickArg): void {
+    if (moment(info.date).isBefore(moment(), 'date')) {
+      this.selectedSchedule = null;
+      return;
+    }
     const dayGrid = this._elRef.nativeElement.querySelectorAll('.fc-daygrid-day');
     _.each(dayGrid, (day: HTMLDivElement): void => {
       day.classList.remove('active');
     });
     info.dayEl.classList.add('active');
     this.initAvailabilitySchedule(info.date);
+
   }
 
   private dayCellClassNamesCallback(info: any): string {
     const currentDate = moment(info.date).format('YYYY-MM-DD');
-    if (moment().isSame(moment(currentDate), 'day')) {
-      this.initAvailabilitySchedule(info.date);
-      return this.bookingDates.includes(currentDate) ? 'active with-events' : 'active';
+    if (this.rescheduleBooking) {
+      const { bookingDateTime } = this.rescheduleBooking || {};
+      this.selectedTime = bookingDateTime?.format('HH:mm');
+      if (moment(bookingDateTime).isSame(moment(currentDate), 'day')) {
+        this.initAvailabilitySchedule(new Date(bookingDateTime?.toString()));
+        return this.bookingDates.includes(currentDate) ? 'active with-events' : 'active';
+      }
+    } else {
+      if (moment().isSame(moment(currentDate), 'day')) {
+        this.initAvailabilitySchedule(info.date);
+        return this.bookingDates.includes(currentDate) ? 'active with-events' : 'active';
+      }
     }
     if (this.bookingDates.includes(currentDate)) {
       return 'with-events';
@@ -274,12 +307,20 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
 
   private saveBooking(): void {
     this.isSubmitting$.next(true);
-    const booking = CreateServiceBookingDto.fromJS({
-      bookingDateTime: moment(`${this.selectedDate} ${this.selectedTime}`).format('YYYY-MM-DD HH:mm:ss'),
-      ownerId: this.coachUserId,
-      type: ServicesType.Coaching,
-      referenceId: this.serviceId
-    });
+    let booking = new CreateServiceBookingDto();
+    if (!_.isEmpty(this.rescheduleBooking)) {
+      booking.init(this.rescheduleBooking);
+      booking.bookingDateTime = moment(`${this.selectedDate} ${this.selectedTime}`);
+      booking.creatorUserId = this.currentUserId;
+      booking.rescheduleReason = this.rescheduleReason;
+    } else {
+      booking = CreateServiceBookingDto.fromJS({
+        bookingDateTime: moment(`${this.selectedDate} ${this.selectedTime}`),
+        ownerId: this.coachUserId,
+        type: ServicesType.Coaching,
+        referenceId: this.serviceId
+      });
+    }
     this._servicesService.saveBooking(booking)
       .pipe(takeUntil(this.destroyed$))
       .subscribe((x): void => {
@@ -292,6 +333,12 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
     let selectedSchedules = _.filter(this.userAvailabilities, x => x.dayOfWeek === moment(date).day());
     this.selectedDate = moment(date).format('YYYY-MM-DD');
     this.selectedTime = null;
+    if (!_.isEmpty(this.bookingSchedule)) {
+      const { bookingDateTime } = this.rescheduleBooking || {};
+      if (moment(bookingDateTime).isSame(moment(this.selectedDate), 'date')) {
+        this.selectedTime = bookingDateTime?.format('HH:mm');
+      }
+    }
     const selectedCustomSchedules = _.filter(
       this.userAvailabilities,
       x => x.specificDate && x.specificDate.isSame(moment(date), 'date')
@@ -360,5 +407,37 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
       return currentTime >= breakStart && currentTime <= breakEnd;
     });
     return !_.isEmpty(breakTime);
+  }
+
+  private initServiceOwnerDetails(): void {
+    let calls = [];
+    if (this.userAvailabilities?.length)
+      calls.push(of([]));
+    else
+      calls.push(this._userAvailabilitiesService.getAll(this.data.creatorUserId));
+
+
+    if (this.serviceBookings?.length)
+      calls.push(of([]));
+    else
+      calls.push(this._servicesService.getAllBookings(this.data.id, this.data.creatorUserId));
+
+    forkJoin(calls)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(([availabilities, bookings]) => {
+        this.userAvailabilities = availabilities as UserAvailabilityDto[];
+        this.serviceBookings = bookings as ServiceBookingDto[];
+      });
+  }
+
+  private retrieveBookingToCancel(): void {
+    if (!this.isCancellation) return;
+    this.isLoadingInfo$.next(true);
+    this._servicesService.getBookingByReferenceId(this.data.id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(existingBooking => {
+        this.existingBooking = existingBooking;
+        this.isLoadingInfo$.next(false);
+      });
   }
 }

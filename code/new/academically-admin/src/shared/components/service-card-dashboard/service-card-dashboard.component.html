@@ -184,9 +184,9 @@
                         <i class="fe fe-more-vertical dropdown-toggle-icon"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a href="javascript:void(0)" class="dropdown-item" (click)="handleOverView($event, id)">
+                        <!--a href="javascript:void(0)" class="dropdown-item" (click)="handleOverView($event, id)">
                             {{ 'Overview' | localize }}
-                        </a>
+                        </a-->
                         <ng-container *ngIf="!isCreator">
                             <ng-container *ngIf="canRearrangeSession">
                                 <a href="javascript:void(0)" class="dropdown-item" (click)="handleRearrangeSession($event, data)">
@@ -205,31 +205,41 @@
                             </ng-container>
                         </ng-container>
                        <ng-container *ngIf="isCreator">
-                          <ng-container *ngIf="!isArchive">
-                              <a *ngIf="isDraft" href="javascript:void(0)" class="dropdown-item" (click)="handlePublish($event, data)">
-                                  {{ 'Publish' | localize }}
-                              </a>
-                              <a *ngIf="!isDraft" href="javascript:void(0)" class="dropdown-item" (click)="handleUnpublish($event, data)">
-                                  {{ 'Unpublish' | localize }}
-                              </a>
-                          </ng-container>
-                           <a *ngIf="!isPublished" href="javascript:void(0)" class="dropdown-item" (click)="handleEdit($event)">
-                               {{ 'Edit' | localize }}
-                           </a>
-                           <a href="javascript:void(0)" class="dropdown-item" (click)="handleDuplicate($event, id)">
-                                {{ 'Duplicate' | localize }}
-                           </a>
-                           <a *ngIf="!isPublished" href="javascript:void(0)" class="dropdown-item" (click)="handleDelete($event, id)">
-                               {{ 'Delete' | localize }}
-                           </a>
-                          <ng-container *ngIf="!isEvent">
-                              <a *ngIf="isDraft" href="javascript:void(0)" class="dropdown-item" (click)="handleArchive($event, data)">
-                                  {{ 'Archive' | localize }}
-                              </a>
-                              <a *ngIf="isArchive" href="javascript:void(0)" class="dropdown-item" (click)="handleUnArchive($event, data)">
-                                  {{ 'Unarchive' | localize }}
-                              </a>
-                          </ng-container>
+                           <ng-container *ngIf="isBooking">
+                               <a href="javascript:void(0)" class="dropdown-item">
+                                   {{ 'Cancel session' | localize }}
+                               </a>
+                               <a href="javascript:void(0)" class="dropdown-item">
+                                   {{ 'Request reschedule' | localize }}
+                               </a>
+                           </ng-container>
+                           <ng-container *ngIf="!isBooking">
+                               <ng-container *ngIf="!isArchive">
+                                   <a *ngIf="isDraft" href="javascript:void(0)" class="dropdown-item" (click)="handlePublish($event, data)">
+                                       {{ 'Publish' | localize }}
+                                   </a>
+                                   <a *ngIf="!isDraft" href="javascript:void(0)" class="dropdown-item" (click)="handleUnpublish($event, data)">
+                                       {{ 'Unpublish' | localize }}
+                                   </a>
+                               </ng-container>
+                               <a *ngIf="!isPublished" href="javascript:void(0)" class="dropdown-item" (click)="handleEdit($event)">
+                                   {{ 'Edit' | localize }}
+                               </a>
+                               <a href="javascript:void(0)" class="dropdown-item" (click)="handleDuplicate($event, id)">
+                                   {{ 'Duplicate' | localize }}
+                               </a>
+                               <a *ngIf="!isPublished && !learners" href="javascript:void(0)" class="dropdown-item" (click)="handleDelete($event, id)">
+                                   {{ 'Delete' | localize }}
+                               </a>
+                               <ng-container *ngIf="!isEvent">
+                                   <a *ngIf="isDraft && learners" href="javascript:void(0)" class="dropdown-item" (click)="handleArchive($event, data)">
+                                       {{ 'Archive' | localize }}
+                                   </a>
+                                   <a *ngIf="isArchive && learners" href="javascript:void(0)" class="dropdown-item" (click)="handleUnArchive($event, data)">
+                                       {{ 'Unarchive' | localize }}
+                                   </a>
+                               </ng-container>
+                           </ng-container>
                        </ng-container>
                     </div>
                 </div>

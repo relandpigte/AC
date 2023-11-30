@@ -239,8 +239,44 @@
                         color: white;
                         cursor: pointer;
                     }
+
+                    &.current {
+                        border: 1px solid #2C7BE5;
+                        color: #2C7BE5;
+
+                        &.active,
+                        &:hover,
+                        &:active,
+                        &:focus {
+                            border: 1px solid #2C7BE5;
+                            background-color: #FFFFFF;
+                            color: #2C7BE5;
+                            font-weight: normal;
+                        }
+                    }
                 }
             }
+        }
+    }
+
+    &-reschedule {
+        padding-inline: 24px;
+
+        .required {
+            &:after {
+                content: "*";
+                color: #E00000;
+                margin-left: 6px;
+            }
+        }
+
+        textarea {
+            margin-block: 8px;
+            height: 320px;
+        }
+
+        .form-text {
+            font-size: 14px;
         }
     }
 

@@ -36,22 +36,22 @@
               </div>
               <div class="booking-right-content-schedules">
                 <ng-container *ngIf="!!selectedSchedule else noSchedule">
-                  <div class="booking-schedules booking-right-content-schedules-morning">
+                  <div *ngIf="isMorningSessionAvailable" class="booking-schedules booking-right-content-schedules-morning">
                     <h3>{{ 'Morning' | localize | uppercase }}</h3>
                     <div class="booking-schedules-lists d-flex align-items-center flex-wrap gap-10">
-                      <div class="item" [class.active]="time === selectedTime" *ngFor="let time of selectedSessions.morning" (click)="onSelectTime(time)">{{ time }}</div>
+                      <div class="item" [class.current]="isCurrentBookingTime(time)" [class]="timeSelectionClass(time)" *ngFor="let time of selectedSessions.morning" (click)="onSelectTime(time)">{{ time }}</div>
                     </div>
                   </div>
-                  <div class="booking-schedules booking-right-content-schedules-afternoon">
+                  <div *ngIf="isAfternoonSessionAvailable" class="booking-schedules booking-right-content-schedules-afternoon">
                     <h3>{{ 'Afternoon' | localize | uppercase }}</h3>
                     <div class="booking-schedules-lists d-flex align-items-center flex-wrap gap-10">
-                      <div class="item" [class.active]="time === selectedTime" *ngFor="let time of selectedSessions.afternoon" (click)="onSelectTime(time)">{{ time }}</div>
+                      <div class="item" [class.current]="isCurrentBookingTime(time)" [class]="timeSelectionClass(time)" *ngFor="let time of selectedSessions.afternoon" (click)="onSelectTime(time)">{{ time }}</div>
                     </div>
                   </div>
-                  <div class="booking-schedules booking-right-content-schedules-evening">
+                  <div *ngIf="isEveningSessionAvailable" class="booking-schedules booking-right-content-schedules-evening">
                     <h3>{{ 'Evening' | localize | uppercase }}</h3>
                     <div class="booking-schedules-lists d-flex align-items-center flex-wrap gap-10">
-                      <div class="item" [class.active]="time === selectedTime" *ngFor="let time of selectedSessions.evening" (click)="onSelectTime(time)">{{ time }}</div>
+                      <div class="item" [class.current]="isCurrentBookingTime(time)" [class]="timeSelectionClass(time)" *ngFor="let time of selectedSessions.evening" (click)="onSelectTime(time)">{{ time }}</div>
                     </div>
                   </div>
                 </ng-container>
@@ -85,81 +85,86 @@
                     <img src="assets/img/service/booking/icon-globe.svg" alt="Timezone">
                     <span class="timezone">UK, Iremand, Lisbon Time</span>
                   </div>
-                  <div class="separator"></div>
-                  <div class="booking-breakdown-price d-flex align-items-center">
-                    <span>Original Price</span>
-                    <span class="ml-auto">{{ servicePrice | currency : 'GBP' }}</span>
-                  </div>
-                  <div class="booking-breakdown-discount d-flex align-items-center">
-                    <span>Discount</span>
-                    <span class="ml-auto">-￡0.00</span>
-                  </div>
-                  <div class="booking-breakdown-total d-flex align-items-center">
-                    <span class="font-weight-bold">Total</span>
-                    <span class="ml-auto font-weight-bold text-primary">{{ servicePrice | currency : 'GBP' }}</span>
-                  </div>
+                  <ng-container *ngIf="!rescheduleBooking">
+                    <div class="separator"></div>
+                    <div class="booking-breakdown-price d-flex align-items-center">
+                      <span>Original Price</span>
+                      <span class="ml-auto">{{ servicePrice | currency : 'GBP' }}</span>
+                    </div>
+                    <div class="booking-breakdown-discount d-flex align-items-center">
+                      <span>Discount</span>
+                      <span class="ml-auto">-￡0.00</span>
+                    </div>
+                    <div class="booking-breakdown-total d-flex align-items-center">
+                      <span class="font-weight-bold">Total</span>
+                      <span class="ml-auto font-weight-bold text-primary">{{ servicePrice | currency : 'GBP' }}</span>
+                    </div>
+                  </ng-container>
+
                 </div>
               </div>
             </div>
             <div class="booking-right-content ml-auto">
               <div class="booking-payment">
-                <h3 class="booking-payment-title required">Payment method</h3>
-                <div class="booking-payment-select d-flex align-items-center gap-16">
-                  <div *ngFor="let payment of PaymentMethod | enumToArray | keyvalue"
-                       class="d-flex align-items-center justify-content-center"
-                       [class.selected]="payment.key == defaultPaymentMethod"
-                       (click)="defaultPaymentMethod = PaymentMethod[payment.value]"
-                  >
-                    {{ paymentMethodNames[payment.key] }}
+                <div *ngIf="!rescheduleBooking else rescheduleTemplate" class="booking-payment">
+                  <h3 class="booking-payment-title required">Payment method</h3>
+                  <div class="booking-payment-select d-flex align-items-center gap-16">
+                    <div *ngFor="let payment of PaymentMethod | enumToArray | keyvalue"
+                         class="d-flex align-items-center justify-content-center"
+                         [class.selected]="payment.key == defaultPaymentMethod"
+                         (click)="defaultPaymentMethod = PaymentMethod[payment.value]"
+                    >
+                      {{ paymentMethodNames[payment.key] }}
+                    </div>
                   </div>
-                </div>
 
-                <div class="booking-payment-selected" [ngSwitch]="defaultPaymentMethod">
-                  <ng-container *ngSwitchCase="PaymentMethod.CreditCard">
-                    <div class="booking-payment-credit">
-                      <form class="booking-payment-form">
-                        <div class="form-group">
-                          <label class="required">Name on card</label>
-                          <input type="text" class="form-control" name="nameOnCard" placeholder="Marry Potter" ngModel required>
-                        </div>
-                        <div class="form-group">
-                          <label class="required">Card number</label>
-                          <input type="text" class="form-control" name="cardNumber" [mask]="'0000 0000 0000 0000'" placeholder="0000 0000 0000 0000" ngModel required>
-                        </div>
-                        <div class="d-flex gap-16 w-100">
-                          <div class="form-group flex-grow-1">
-                            <label class="required">Expiration date</label>
-                            <input type="text" class="form-control" name="expirationDate" [mask]="'00/00'" placeholder="MM/YY" ngModel required>
+                  <div class="booking-payment-selected" [ngSwitch]="defaultPaymentMethod">
+                    <ng-container *ngSwitchCase="PaymentMethod.CreditCard">
+                      <div class="booking-payment-credit">
+                        <form class="booking-payment-form">
+                          <div class="form-group">
+                            <label class="required">Name on card</label>
+                            <input type="text" class="form-control" name="nameOnCard" placeholder="Marry Potter" ngModel required>
                           </div>
-                          <div class="form-group flex-grow-1">
-                            <label class="required">Security number</label>
-                            <input type="text" class="form-control" name="securityNumber" [mask]="'000'" placeholder="000" ngModel required>
+                          <div class="form-group">
+                            <label class="required">Card number</label>
+                            <input type="text" class="form-control" name="cardNumber" [mask]="'0000 0000 0000 0000'" placeholder="0000 0000 0000 0000" ngModel required>
                           </div>
+                          <div class="d-flex gap-16 w-100">
+                            <div class="form-group flex-grow-1">
+                              <label class="required">Expiration date</label>
+                              <input type="text" class="form-control" name="expirationDate" [mask]="'00/00'" placeholder="MM/YY" ngModel required>
+                            </div>
+                            <div class="form-group flex-grow-1">
+                              <label class="required">Security number</label>
+                              <input type="text" class="form-control" name="securityNumber" [mask]="'000'" placeholder="000" ngModel required>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="PaymentMethod.Paypal">
+                      <div class="booking-payment-paypal w-100 text-center">
+                        {{ 'PaypalPaymentText' | localize }}
+                      </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="PaymentMethod.WeChat">
+                      <div class="booking-payment-wechat w-100 text-center d-flex flex-column gap-24">
+                        {{ 'WechatPaymentText' | localize }}
+                        <div>
+                          <img src="assets/img/service/booking/wechat.svg" alt="">
                         </div>
-                      </form>
-                    </div>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="PaymentMethod.Paypal">
-                    <div class="booking-payment-paypal w-100 text-center">
-                      {{ 'PaypalPaymentText' | localize }}
-                    </div>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="PaymentMethod.WeChat">
-                    <div class="booking-payment-wechat w-100 text-center d-flex flex-column gap-24">
-                      {{ 'WechatPaymentText' | localize }}
-                      <div>
-                        <img src="assets/img/service/booking/wechat.svg" alt="">
                       </div>
-                    </div>
-                  </ng-container>
-                  <ng-container *ngSwitchDefault>
-                    <div class="booking-payment-alipay w-100 text-center d-flex flex-column gap-24">
-                      {{ 'AlipayPaymentText' | localize }}
-                      <div>
-                        <img src="assets/img/service/booking/alipay.svg" alt="">
+                    </ng-container>
+                    <ng-container *ngSwitchDefault>
+                      <div class="booking-payment-alipay w-100 text-center d-flex flex-column gap-24">
+                        {{ 'AlipayPaymentText' | localize }}
+                        <div>
+                          <img src="assets/img/service/booking/alipay.svg" alt="">
+                        </div>
                       </div>
-                    </div>
-                  </ng-container>
+                    </ng-container>
+                  </div>
                 </div>
               </div>
             </div>
@@ -187,6 +192,16 @@
                     <button type="button" class="btn btn-primary" (click)="onSteps(1)">{{ 'TryAgain' | localize }}</button>
                   </div>
                 </ng-container>
+                <ng-container *ngSwitchCase="PaymentStatus.Reschedule">
+                  <img src="assets/img/service/booking/icon-successful.svg" alt="">
+                  <h3 class="title">{{ 'SessionRescheduled' | localize }}</h3>
+                  <span class="description">{{ 'SessionUpdated' | localize }}</span>
+                  <div class="booking-confirmation-buttons d-flex gap-10 align-items-center justify-content-center">
+                    <button type="button" class="btn btn-outline-secondary" (click)="gotoSchedule()">{{ 'GoToSchedule' | localize }}</button>
+                    <button type="button" class="btn btn-primary" (click)="onCloseModal()">{{ 'Close' | localize }}</button>
+                  </div>
+                </ng-container>
+
               </div>
               <div class="booking-confirmation-details border">
                 <div class="booking-results">
@@ -226,15 +241,26 @@
       {{ l('Steps', step, totalSteps) }}
     </div>
     <button type="button" class="btn btn-outline-secondary" (click)="onCloseModal()">{{ 'Cancel' | localize }}</button>
-    <button *ngIf="step === 1 && !isCancellation" [disabled]="!isValidFirstStep" class="btn btn-primary" (click)="onSteps(2)">{{ 'Continue' | localize }}</button>
-    <button *ngIf="step === 1 && isCancellation" class="btn btn-primary" (click)="onProcessCancellation()">{{ 'Confirm' | localize }}</button>
-    <button *ngIf="step === 2 && defaultPaymentMethod === PaymentMethod.Paypal" type="button" class="btn btn-primary" (click)="onProcessPayment()">{{ 'Continue' | localize }}</button>
-    <button *ngIf="step === 2 && defaultPaymentMethod === PaymentMethod.CreditCard" type="button" class="btn btn-primary" (click)="onProcessPayment()">{{ 'Pay' | localize }}</button>
+    <button *ngIf="stepOne" [disabled]="!isValidFirstStep" class="btn btn-primary" (click)="onSteps(2)">{{ 'Continue' | localize }}</button>
+    <button *ngIf="stepOneCancellation" class="btn btn-primary" (click)="onProcessCancellation()">{{ 'Confirm' | localize }}</button>
+    <button *ngIf="step2Reschedule" [disabled]="!rescheduleReason?.length" type="button" class="btn btn-primary" (click)="onProcessReschedule()">{{ 'Reschedule' | localize }}</button>
+    <button *ngIf="step2Paypal" type="button" class="btn btn-primary" (click)="onProcessPayment()">{{ 'Continue' | localize }}</button>
+    <button *ngIf="step2CC" type="button" class="btn btn-primary" (click)="onProcessPayment()">{{ 'Pay' | localize }}</button>
   </div>
 </div>
 
 <ng-template #noSchedule>
   <div class="text-center w-100 text-muted p-2">{{ 'NoScheduleAvailable' | localize }}</div>
+</ng-template>
+
+<ng-template #rescheduleTemplate>
+  <div class="booking-reschedule">
+    <div class="form-group">
+      <label class="required">Reason for rescheduling</label>
+      <textarea class="form-control" [maxlength]="150" [(ngModel)]="rescheduleReason" placeholder="Start typing your reason for rescheduling"></textarea>
+      <span class="form-text text-muted text-right">{{ rescheduleReasonLimit }}</span>
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #cancelBookingResults>

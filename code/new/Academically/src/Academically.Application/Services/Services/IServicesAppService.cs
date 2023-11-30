@@ -30,6 +30,7 @@ namespace Academically.Services.Services
         Task<IEnumerable<ServiceBookingDto>> GetAllBookings(Guid referenceId, long ownerId);
         Task<ServiceBookingDto> GetBookingAsync(Guid bookingId);
         Task<ServiceBookingDto> GetBookingByReferenceId(Guid referenceId);
+        Task<ServiceBookingDto> GetBookingDetails(Guid referenceId, long userId);
 
         // service offers
         Task<ServiceOfferDto> UpsertServiceOffer(CreateServiceOfferDto input);
