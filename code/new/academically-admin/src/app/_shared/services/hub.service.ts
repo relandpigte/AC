@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { AppConsts } from '@shared/AppConsts';
 import { Utils } from '@shared/helpers/utils';
 
@@ -8,6 +9,10 @@ import { Utils } from '@shared/helpers/utils';
 export class HubService {
 
   constructor() { }
+
+  public getCommonHub(): Promise<any> {
+    return this.getHub();
+  }
 
   public getSessionsHub(): Promise<any> {
     return this.getHub('sessions');
@@ -93,21 +98,18 @@ export class HubService {
   }
 
 
-  private getHub(hubName: string, queryParam?: string, callback?: (connection?: any) => void): Promise<any> {
-    const promise = new Promise(async (resolve, reject) => {
-      jQuery.getScript(AppConsts.appBaseUrl + '/assets/abp/abp.signalr-client.js', async () => {
-        let path = abp.appPath + `signalr-${hubName}Hub`;
-        if (queryParam) path += "?" + queryParam;
-        await abp.signalr.startConnection(path, (connection: any) => {
-          // disable this for now
-          // connection.serverTimeoutInMilliseconds = 1_800_000; // 30 minutes
-          resolve(connection);
-        }).then(connection => {
-          if (callback) {
-            callback(connection);
-          }
-        });
-      });
+  private getHub(hubName?: string, queryParam?: string, callback?: (connection?: any) => void): Promise<HubConnection> {
+    const promise = new Promise<HubConnection>(async (resolve, reject) => {
+      let path = `${AppConsts.remoteServiceBaseUrl}/signalr${hubName ? `-${hubName}Hub` : ''}`;
+      if (queryParam) path += "?" + queryParam;
+
+      const hub = new HubConnectionBuilder()
+        .withUrl(path)
+        .build();
+      hub.serverTimeoutInMilliseconds = 240000;
+      resolve(hub);
+
+      if (callback) callback(hub);
     });
     return promise;
   }

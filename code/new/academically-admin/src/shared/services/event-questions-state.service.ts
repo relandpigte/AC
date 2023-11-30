@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HubConnection } from '@aspnet/signalr';
-import { StateServiceBase, StateUpdate } from './state-base.service';
-import { HubEvent, QuestionDto, QuestionsServiceProxy } from '../service-proxies/service-proxies';
-import { BehaviorSubject, Subject } from '@node_modules/rxjs';
 import { HubService } from '@app/_shared/services/hub.service';
+import { BehaviorSubject, Subject } from '@node_modules/rxjs';
 import { Utils } from '@shared/helpers/utils';
+import { HubEvent, QuestionDto, QuestionsServiceProxy } from '../service-proxies/service-proxies';
+import { StateServiceBase, StateUpdate } from './state-base.service';
 
 export enum questionType {
   all = 'all'
 }
+
+const EVENT_QUESTIONS_HUB_NAME = 'eventQuestionsHub';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,6 @@ export class EventQuestionsStateService extends StateServiceBase {
   questions$: Subject<StateUpdate<QuestionDto>> = new Subject();
   loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
-  hub: HubConnection;
   type: questionType = questionType.all;
   fns = { [questionType.all]: 'getAll' };
 
@@ -73,19 +73,21 @@ export class EventQuestionsStateService extends StateServiceBase {
 
   async stop(): Promise<void> {
     await super.stop();
-    if (this.hub) {
-      this.hub.off(HubEvent[HubEvent.QuestionCreated], this.handleUpsertQuestion);
-      this.hub.off(HubEvent[HubEvent.QuestionUpdated], this.handleUpsertQuestion);
-      this.hub.off(HubEvent[HubEvent.QuestionDeleted], this.handleDeleteQuestion);
+    if (this.getHub(EVENT_QUESTIONS_HUB_NAME)) {
+      this.getHub(EVENT_QUESTIONS_HUB_NAME).off(HubEvent[HubEvent.QuestionCreated], this.handleUpsertQuestion);
+      this.getHub(EVENT_QUESTIONS_HUB_NAME).off(HubEvent[HubEvent.QuestionUpdated], this.handleUpsertQuestion);
+      this.getHub(EVENT_QUESTIONS_HUB_NAME).off(HubEvent[HubEvent.QuestionDeleted], this.handleDeleteQuestion);
+      this.stopHubConnection(EVENT_QUESTIONS_HUB_NAME);
     }
   }
 
   protected async setupSubscriptions(component: any, userId: number): Promise<any> {
     try {
-      this.hub = await this._hubService.getQuestionsHub(...this.updateArgs);
-      this.hub.on(HubEvent[HubEvent.QuestionCreated], this.handleUpsertQuestion);
-      this.hub.on(HubEvent[HubEvent.QuestionUpdated], this.handleUpsertQuestion);
-      this.hub.on(HubEvent[HubEvent.QuestionDeleted], this.handleDeleteQuestion);
+      this.addHub(EVENT_QUESTIONS_HUB_NAME, await this._hubService.getQuestionsHub(...this.updateArgs));
+      this.getHub(EVENT_QUESTIONS_HUB_NAME).on(HubEvent[HubEvent.QuestionCreated], this.handleUpsertQuestion);
+      this.getHub(EVENT_QUESTIONS_HUB_NAME).on(HubEvent[HubEvent.QuestionUpdated], this.handleUpsertQuestion);
+      this.getHub(EVENT_QUESTIONS_HUB_NAME).on(HubEvent[HubEvent.QuestionDeleted], this.handleDeleteQuestion);
+      this.startHubConnection(EVENT_QUESTIONS_HUB_NAME);
     } catch (err) {
       console.error(err);
     }

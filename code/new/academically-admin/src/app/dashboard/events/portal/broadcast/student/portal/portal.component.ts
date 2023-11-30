@@ -20,7 +20,6 @@ import { HubService } from '@app/_shared/services/hub.service';
 import { PortalService } from './_services/portal.service';
 import { SelectedMachineDevice } from './_components/device-settings/device-settings.component';
 import * as _ from 'lodash';
-import { HubConnection } from '@aspnet/signalr';
 import { ShareVideosComponent } from './_components/share-videos/share-videos.component';
 import * as rtc from 'rtc-lib';
 import { PollSignalAction } from './_components/polls/polls.component';
@@ -32,6 +31,7 @@ import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.servi
 import { ServiceOffersService } from '@shared/services/service-offers.service';
 import { EventPollsStateService, pollsType } from '@shared/services/event-polls-state.service';
 import { PollComponent } from './_components/polls/_components/poll/poll.component';
+import { SignalData } from '@shared/app-hub-base';
 
 enum SignalAction {
   StartEvent,
@@ -44,23 +44,7 @@ enum SignalAction {
   PingHost,
 }
 
-class SignalData<TObject> {
-  action: SignalAction;
-  data: string;
-
-  constructor(action?: SignalAction, data?: TObject) {
-    this.action = action;
-    if (data !== undefined) {
-      this.data = JSON.stringify(data);
-    } else {
-      this.data = '';
-    }
-  }
-
-  public getDataObject(): TObject {
-    return JSON.parse(this.data) as TObject;
-  }
-}
+const EVENT_SESSIONS_HUB_NAME = 'eventSessionsHub';
 
 @Component({
   selector: 'app-portal',
@@ -81,7 +65,6 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
   selectedPoll: EventPollDto;
 
   liveQuestion: QuestionDto;
-  answeringLiveQuestion: HubConnection;
 
   model = new EventDto;
   room: rtc.Room;
@@ -144,7 +127,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
         const userIds = this.allEventUsers
           .filter(e => e.user.id !== this.eventUser.user.id)
           .map(e => e.user.id);
-        await this.sendSignal(userIds, new SignalData(SignalAction.AdmitGuest, response));
+        await this.sendSignal(EVENT_SESSIONS_HUB_NAME, userIds, new SignalData(SignalAction.AdmitGuest, response));
       }
     });
 
@@ -182,7 +165,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
   }
 
   async ngOnDestroy() {
-    console.log('exit event');
+    super.ngOnDestroy();
     await this.pollsStateService?.stop();
     await this.offersStateService?.stop();
     // this.disconnectTrack(this.presenterStream);
@@ -190,11 +173,11 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
   }
 
   async handleLiveAnswering(question: QuestionDto): Promise<void> {
-    await this.answeringLiveQuestion.invoke('answerLiveQuestion', question);
+    await this.getHub(EVENT_SESSIONS_HUB_NAME).invoke('answerLiveQuestion', question);
   }
 
   async handleEndLiveAnswering(question: QuestionDto): Promise<void> {
-    await this.answeringLiveQuestion.invoke('endAnswerLiveQuestion', question);
+    await this.getHub(EVENT_SESSIONS_HUB_NAME).invoke('endAnswerLiveQuestion', question);
   }
 
   private async initOffersAppStates() {
@@ -300,11 +283,11 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
       const userIds = this.allEventUsers
         .filter(e => e.user.id !== this.eventUser.user.id)
         .map(e => e.user.id);
-      this.sendSignal(userIds, new SignalData(SignalAction.LobbyEntered, this.eventUser));
+      this.sendSignal(EVENT_SESSIONS_HUB_NAME, userIds, new SignalData(SignalAction.LobbyEntered, this.eventUser));
     } else {
       this.attendees.push(this.eventUser);
       if (!this.model.autoAdmitAttendees) {
-        this.sendSignal([this.host.user.id], new SignalData(SignalAction.LobbyEntered, this.eventUser));
+        this.sendSignal(EVENT_SESSIONS_HUB_NAME, [this.host.user.id], new SignalData(SignalAction.LobbyEntered, this.eventUser));
       }
     }
   }
@@ -313,7 +296,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     this.eventStarting = true;
     await this.joinRoom();
     const userIds = this.allEventUsers.map(e => e.user.id);
-    this.sendSignal(userIds, new SignalData(SignalAction.StartEvent));
+    this.sendSignal(EVENT_SESSIONS_HUB_NAME, userIds, new SignalData(SignalAction.StartEvent));
   }
 
   async onEndEventClick(): Promise<void> {
@@ -322,7 +305,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
       text: this.l('EndEventConfirmation'),
       confirmCb: async () => {
         const userIds = this.allEventUsers.map(e => e.user.id);
-        this.sendSignal(userIds, new SignalData(SignalAction.EndEvent));
+        this.sendSignal(EVENT_SESSIONS_HUB_NAME, userIds, new SignalData(SignalAction.EndEvent));
       }
     };
     this._modalDialogService.showConfirmDialog(options);
@@ -362,7 +345,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
       this.eventJoined = true;
     } else {
       this.waiting = true;
-      await this.sendSignal([this.host.user.id], new SignalData(SignalAction.GuestJoined, this.eventUser));
+      await this.sendSignal(EVENT_SESSIONS_HUB_NAME, [this.host.user.id], new SignalData(SignalAction.GuestJoined, this.eventUser));
     }
   }
 
@@ -375,13 +358,13 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     const userIds = this.allEventUsers
       .filter(e => e.user.id !== this.eventUser.user.id)
       .map(e => e.user.id);
-    await this.sendSignal(userIds, new SignalData(SignalAction.AutoAdmitChange, this.model.autoAdmitAttendees));
+    await this.sendSignal(EVENT_SESSIONS_HUB_NAME, userIds, new SignalData(SignalAction.AutoAdmitChange, this.model.autoAdmitAttendees));
   }
 
   private async initHub(): Promise<void> {
-    this.hub = await this._hubService.getEventSessionsHub(() => {
+    this.addHub = await this._hubService.getEventSessionsHub(() => {
       this.hubConnected = true;
-      this._portalService.hub = this.hub;
+      this._portalService.hub = this.getHub(EVENT_SESSIONS_HUB_NAME);
       this.initRoom();
       this.handleHubEvents();
     });
@@ -441,7 +424,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
   }
 
   private handleHubEvents(): void {
-    this.receiveSignal(async (sSignalData: string) => {
+    this.receiveSignal(EVENT_SESSIONS_HUB_NAME, async (sSignalData: string) => {
       let modal: BsModalRef;
       const signalData = new SignalData();
       Object.assign(signalData, JSON.parse(sSignalData));
@@ -503,7 +486,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
             this._portalService.lobbyUser = lobbyUser;
           } else {
             if (!this.model.autoAdmitAttendees && this.inLobby) {
-              this.sendSignal([this.host.user.id], new SignalData(SignalAction.LobbyEntered, this.eventUser));
+              this.sendSignal(EVENT_SESSIONS_HUB_NAME, [this.host.user.id], new SignalData(SignalAction.LobbyEntered, this.eventUser));
             }
           }
           break;
@@ -527,7 +510,7 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     const userIds = this.allEventUsers
       .filter(e => e.user.id !== this.eventUser.user.id)
       .map(e => e.user.id);
-    await this.sendSignal(userIds, new SignalData(SignalAction.JoinEvent, this.eventUser));
+    await this.sendSignal(EVENT_SESSIONS_HUB_NAME, userIds, new SignalData(SignalAction.JoinEvent, this.eventUser));
     await this.room.connect();
   }
 
@@ -585,15 +568,16 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
   }
 
   private async initLiveAnsweringQuestion(): Promise<void> {
-    this.answeringLiveQuestion = await this._hubService.getAnsweringLiveQuestionHub();
-    this.answeringLiveQuestion.on(HubEvent[HubEvent.AnsweringLiveQuestion], (question: QuestionDto) => {
+    this.addHub(EVENT_SESSIONS_HUB_NAME, await this._hubService.getAnsweringLiveQuestionHub());
+    this.getHub(EVENT_SESSIONS_HUB_NAME).on(HubEvent[HubEvent.AnsweringLiveQuestion], (question: QuestionDto) => {
       this.liveQuestion = question;
     });
 
-    this.answeringLiveQuestion.on(HubEvent[HubEvent.EndAnsweringLiveQuestion], (question: QuestionDto) => {
+    this.getHub(EVENT_SESSIONS_HUB_NAME).on(HubEvent[HubEvent.EndAnsweringLiveQuestion], (question: QuestionDto) => {
       this.liveQuestion = null;
       this.createQuestion(question);
     });
+    this.startHubConnection(EVENT_SESSIONS_HUB_NAME);
   }
 
   private createQuestion(question: QuestionDto): void {

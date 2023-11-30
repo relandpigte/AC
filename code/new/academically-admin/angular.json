@@ -19,17 +19,7 @@
             "polyfills": "src/polyfills.ts",
             "assets": [
               "src/assets",
-              "src/favicon.ico",
-              {
-                "glob": "abp.signalr.js",
-                "input": "node_modules/abp-web-resources/Abp/Framework/scripts/libs",
-                "output": "/assets/abp"
-              },
-              {
-                "glob": "abp.signalr-client.js",
-                "input": "node_modules/abp-web-resources/Abp/Framework/scripts/libs",
-                "output": "/assets/abp"
-              }
+              "src/favicon.ico"
             ],
             "styles": [
               "node_modules/famfamfam-flags/dist/sprite/famfamfam-flags.css",
@@ -56,7 +46,6 @@
             ],
             "scripts": [
               "node_modules/moment/min/moment.min.js",
-              "node_modules/@aspnet/signalr/dist/browser/signalr.min.js",
               "node_modules/sweetalert2/dist/sweetalert2.js",
               "src/assets/freeze-ui/freeze-ui.js",
               "node_modules/push.js/bin/push.min.js",
@@ -191,17 +180,7 @@
             "polyfills": "src/polyfills.ts",
             "assets": [
               "src/assets",
-              "src/favicon.ico",
-              {
-                "glob": "abp.signalr.js",
-                "input": "node_modules/abp-web-resources/Abp/Framework/scripts/libs",
-                "output": "/assets/abp"
-              },
-              {
-                "glob": "abp.signalr-client.js",
-                "input": "node_modules/abp-web-resources/Abp/Framework/scripts/libs",
-                "output": "/assets/abp"
-              }
+              "src/favicon.ico"
             ],
             "styles": [
               "node_modules/famfamfam-flags/dist/sprite/famfamfam-flags.css",
@@ -212,7 +191,6 @@
             ],
             "scripts": [
               "node_modules/moment/min/moment.min.js",
-              "node_modules/@aspnet/signalr/dist/browser/signalr.min.js",
               "node_modules/sweetalert2/dist/sweetalert2.js",
               "src/assets/freeze-ui/freeze-ui.js",
               "node_modules/push.js/bin/push.min.js",

@@ -7,15 +7,13 @@ import { StateServiceBase, StateUpdate } from './state-base.service';
 export enum channelMessagesType {
     all = 'all'
 }
-
+const CHANNEL_MESSAGES_HUB_NAME = 'channelMessagesHub';
 export class ChannelMessagesStateService extends StateServiceBase {
     channelMessages: Map<string, ChannelMessageDto> = new Map();
     totalChannelMessagesCount: number;
 
     channelMessages$: Subject<StateUpdate<ChannelMessageDto>> = new Subject();
     loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
-
-    hub: any;
 
     type: channelMessagesType;
     fns = {
@@ -45,19 +43,21 @@ export class ChannelMessagesStateService extends StateServiceBase {
 
     async stop() {
         super.stop();
-        if (this.hub) {
-            this.hub.off(HubEvent[HubEvent.ChannelMessageCreated], this.handleUpsertChannelMessages);
-            this.hub.off(HubEvent[HubEvent.ChannelMessageUpdated], this.handleUpsertChannelMessages);
-            this.hub.off(HubEvent[HubEvent.ChannelMessageDeleted], this.handleDeleteChannelMessages);
+        if (this.getHub(CHANNEL_MESSAGES_HUB_NAME)) {
+            this.getHub(CHANNEL_MESSAGES_HUB_NAME).off(HubEvent[HubEvent.ChannelMessageCreated], this.handleUpsertChannelMessages);
+            this.getHub(CHANNEL_MESSAGES_HUB_NAME).off(HubEvent[HubEvent.ChannelMessageUpdated], this.handleUpsertChannelMessages);
+            this.getHub(CHANNEL_MESSAGES_HUB_NAME).off(HubEvent[HubEvent.ChannelMessageDeleted], this.handleDeleteChannelMessages);
+            this.stopHubConnection(CHANNEL_MESSAGES_HUB_NAME);
         }
     }
 
     protected async setupSubscriptions(component: any, userId: number) {
         try {
-            this.hub = await this._hubService.getChannelMessagesHub(...this.updateArgs);
-            this.hub.on(HubEvent[HubEvent.ChannelMessageCreated], this.handleUpsertChannelMessages);
-            this.hub.on(HubEvent[HubEvent.ChannelMessageUpdated], this.handleUpsertChannelMessages);
-            this.hub.on(HubEvent[HubEvent.ChannelMessageDeleted], this.handleDeleteChannelMessages);
+            this.addHub(CHANNEL_MESSAGES_HUB_NAME, await this._hubService.getChannelMessagesHub(...this.updateArgs));
+            this.getHub(CHANNEL_MESSAGES_HUB_NAME).on(HubEvent[HubEvent.ChannelMessageCreated], this.handleUpsertChannelMessages);
+            this.getHub(CHANNEL_MESSAGES_HUB_NAME).on(HubEvent[HubEvent.ChannelMessageUpdated], this.handleUpsertChannelMessages);
+            this.getHub(CHANNEL_MESSAGES_HUB_NAME).on(HubEvent[HubEvent.ChannelMessageDeleted], this.handleDeleteChannelMessages);
+            this.startHubConnection(CHANNEL_MESSAGES_HUB_NAME);
         } catch (err) {
             console.error(err);
         }

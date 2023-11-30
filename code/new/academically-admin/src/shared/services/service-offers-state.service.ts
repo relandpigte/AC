@@ -12,14 +12,14 @@ export enum offersType {
     closed = 'closed'
 }
 
+const SERVICE_OFFERS_HUB_NAME = 'serviceOffersHub';
+
 export class ServiceOffersStateService extends StateServiceBase {
     offers: Map<string, ServiceOfferDto> = new Map();
     totalOffersCount: number;
 
     offers$: Subject<StateUpdate<ServiceOfferDto>> = new Subject();
     loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
-
-    hub: any;
 
     type: offersType = offersType.queued;
     fns = {
@@ -55,23 +55,25 @@ export class ServiceOffersStateService extends StateServiceBase {
 
     async stop() {
         super.stop();
-        if (this.hub) {
-            this.hub.off(HubEvent[HubEvent.ServiceOfferCreated], this.handleUpsertOffers);
-            this.hub.off(HubEvent[HubEvent.ServiceOfferUpdated], this.handleUpsertOffers);
-            this.hub.off(HubEvent[HubEvent.ServiceOfferDeleted], this.handleDeleteOffers);
-            this.hub.off(HubEvent[HubEvent.ServiceOfferLaunched], this.handleLaunchedOffers);
-            this.hub.off(HubEvent[HubEvent.ServiceOfferClosed], this.handleClosedOffers);
+        if (this.getHub(SERVICE_OFFERS_HUB_NAME)) {
+            this.getHub(SERVICE_OFFERS_HUB_NAME).off(HubEvent[HubEvent.ServiceOfferCreated], this.handleUpsertOffers);
+            this.getHub(SERVICE_OFFERS_HUB_NAME).off(HubEvent[HubEvent.ServiceOfferUpdated], this.handleUpsertOffers);
+            this.getHub(SERVICE_OFFERS_HUB_NAME).off(HubEvent[HubEvent.ServiceOfferDeleted], this.handleDeleteOffers);
+            this.getHub(SERVICE_OFFERS_HUB_NAME).off(HubEvent[HubEvent.ServiceOfferLaunched], this.handleLaunchedOffers);
+            this.getHub(SERVICE_OFFERS_HUB_NAME).off(HubEvent[HubEvent.ServiceOfferClosed], this.handleClosedOffers);
+            this.stopHubConnection(SERVICE_OFFERS_HUB_NAME);
         }
     }
 
     protected async setupSubscriptions(component: any, userId: number) {
         try {
-            this.hub = await this._hubService.getServiceOffersHub(...this.updateArgs);
-            this.hub.on(HubEvent[HubEvent.ServiceOfferCreated], this.handleUpsertOffers);
-            this.hub.on(HubEvent[HubEvent.ServiceOfferUpdated], this.handleUpsertOffers);
-            this.hub.on(HubEvent[HubEvent.ServiceOfferDeleted], this.handleDeleteOffers);
-            this.hub.on(HubEvent[HubEvent.ServiceOfferLaunched], this.handleLaunchedOffers);
-            this.hub.on(HubEvent[HubEvent.ServiceOfferClosed], this.handleClosedOffers);
+            this.addHub(SERVICE_OFFERS_HUB_NAME, await this._hubService.getServiceOffersHub(...this.updateArgs));
+            this.getHub(SERVICE_OFFERS_HUB_NAME).on(HubEvent[HubEvent.ServiceOfferCreated], this.handleUpsertOffers);
+            this.getHub(SERVICE_OFFERS_HUB_NAME).on(HubEvent[HubEvent.ServiceOfferUpdated], this.handleUpsertOffers);
+            this.getHub(SERVICE_OFFERS_HUB_NAME).on(HubEvent[HubEvent.ServiceOfferDeleted], this.handleDeleteOffers);
+            this.getHub(SERVICE_OFFERS_HUB_NAME).on(HubEvent[HubEvent.ServiceOfferLaunched], this.handleLaunchedOffers);
+            this.getHub(SERVICE_OFFERS_HUB_NAME).on(HubEvent[HubEvent.ServiceOfferClosed], this.handleClosedOffers);
+            this.startHubConnection(SERVICE_OFFERS_HUB_NAME);
         } catch (err) {
             console.error(err);
         }

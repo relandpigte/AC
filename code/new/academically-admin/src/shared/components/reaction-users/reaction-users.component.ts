@@ -35,8 +35,6 @@ export class ReactionUsersComponent extends AppComponentBase implements OnInit {
         }
     }
 
-    get currentUserId() { return this.appSession.userId; }
-
     private initReactionCounts(): void {
         this.reactions.forEach(r => this.reactionCounts[r.type] = (this.reactionCounts[r.type] ?? 0) + 1);
     }

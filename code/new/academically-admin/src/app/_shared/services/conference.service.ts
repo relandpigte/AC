@@ -1,47 +1,45 @@
-import { Injectable, EventEmitter, ElementRef } from '@angular/core';
-import { HubConnection } from '@aspnet/signalr';
-import { HubService } from './hub.service';
+import { EventEmitter, Injectable, Injector, OnDestroy } from '@angular/core';
+import { AppHubBase, SignalData } from '@shared/app-hub-base';
 import { UserDto } from '@shared/service-proxies/service-proxies';
 import { environment } from 'environments/environment';
+import { HubService } from './hub.service';
 
 enum StreamTrackType {
   Audio = 'audio',
   Video = 'video',
 }
 
-class SignalData {
-  action: string;
-  data: string;
-
-  constructor(action: string, data: string) {
-    this.action = action;
-    this.data = data;
-  }
-}
+const EVENT_SESSIONS_HUB_NAME = 'eventSessionsHub';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ConferenceService {
+export class ConferenceService extends AppHubBase implements OnDestroy {
   public userJoined = new EventEmitter<UserDto>();
   public conferenceUsers: UserDto[] = [];
 
-  private eventSessionsHub: HubConnection;
   private peerConnections: RTCPeerConnection[] = [];
 
   constructor(
     private _hubService: HubService,
-  ) { }
+  ) {
+    super();
+  }
+
+  ngOnDestroy(): void {
+    super.ngOnDestroy();
+  }
 
   async initHub(callback?: () => void): Promise<void> {
-    this.eventSessionsHub = await this._hubService.getEventSessionsHub(async () => {
+    this.addHub(EVENT_SESSIONS_HUB_NAME, await this._hubService.getEventSessionsHub(async () => {
       if (callback) {
         callback();
       }
 
-      console.log('initHub callback');
-      this.eventSessionsHub.on('receiveSignal', async (sSignalData: string) => {
-        const signalData = JSON.parse(sSignalData) as SignalData;
+      this.receiveSignal(EVENT_SESSIONS_HUB_NAME, async (sSignalData: string) => {
+        const signalData = new SignalData();
+        Object.assign(signalData, JSON.parse(sSignalData));
+
         console.log('handling receiveSignal');
         console.log(sSignalData);
 
@@ -68,7 +66,7 @@ export class ConferenceService {
 
         }
       });
-    });
+    }));
   }
 
   async initWebRTC(index: number): Promise<void> {
@@ -137,24 +135,11 @@ export class ConferenceService {
     videoEl.srcObject = videoStream;
   }
 
-  async sendSignal<TObject>(userIds: number[], signalData: SignalData, callback?: () => void): Promise<void> {
-    console.log('invoking sendSignal');
-    console.log(userIds);
-    console.log(signalData);
-    const sSignalData = JSON.stringify(signalData);
-    await this.eventSessionsHub.invoke('sendSignal', userIds, sSignalData)
-      .then(() => {
-        if (callback) {
-          callback();
-        }
-      });
-  }
-
   async joinConference(userIds: number[], user: UserDto): Promise<void> {
     console.log('joinConference');
     const signalData = new SignalData('userJoined', JSON.stringify(user));
     this.conferenceUsers.push(user);
-    this.sendSignal(userIds, signalData);
+    await this.sendSignal(EVENT_SESSIONS_HUB_NAME, userIds, signalData);
   }
 
   async createOffers(peerId: number, userIds: number[]): Promise<void> {
@@ -162,13 +147,13 @@ export class ConferenceService {
       console.log(event.candidate);
       if (event && event.candidate) {
         const iceData = new SignalData('ice-candidate', JSON.stringify(event.candidate.toJSON()));
-        await this.sendSignal(userIds, iceData);
+        await this.sendSignal(EVENT_SESSIONS_HUB_NAME, userIds, iceData);
       }
     };
 
     const offerDescription = await this.peerConnections[peerId].createOffer();
     await this.peerConnections[peerId].setLocalDescription(offerDescription);
     const signalData = new SignalData('offer', JSON.stringify(offerDescription));
-    await this.sendSignal(userIds, signalData);
+    await this.sendSignal(EVENT_SESSIONS_HUB_NAME, userIds, signalData);
   }
 }

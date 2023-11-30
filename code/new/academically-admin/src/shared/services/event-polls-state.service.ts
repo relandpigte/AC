@@ -14,14 +14,13 @@ export enum pollsType {
     results = 'results'
 }
 
+const EVENT_POLLS_HUB_NAME = 'eventPollsHub';
 export class EventPollsStateService extends StateServiceBase {
     polls: Map<string, EventPollDto> = new Map();
     totalPollsCount: number;
 
     polls$: Subject<StateUpdate<EventPollDto>> = new Subject();
     loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
-
-    hub: any;
 
     type: pollsType = pollsType.queued;
     fns = {
@@ -59,25 +58,27 @@ export class EventPollsStateService extends StateServiceBase {
 
     async stop() {
         super.stop();
-        if (this.hub) {
-            this.hub.off(HubEvent[HubEvent.EventPollCreated], this.handleUpsertPolls);
-            this.hub.off(HubEvent[HubEvent.EventPollUpdated], this.handleUpsertPolls);
-            this.hub.off(HubEvent[HubEvent.EventPollDeleted], this.handleDeletePolls);
-            this.hub.off(HubEvent[HubEvent.EventPollLaunched], this.handleLaunchedPolls);
-            this.hub.off(HubEvent[HubEvent.EventPollClosed], this.handleClosedPolls);
-            this.hub.off(HubEvent[HubEvent.EventPollShared], this.handleSharedPolls);
+        if (this.getHub(EVENT_POLLS_HUB_NAME)) {
+            this.getHub(EVENT_POLLS_HUB_NAME).off(HubEvent[HubEvent.EventPollCreated], this.handleUpsertPolls);
+            this.getHub(EVENT_POLLS_HUB_NAME).off(HubEvent[HubEvent.EventPollUpdated], this.handleUpsertPolls);
+            this.getHub(EVENT_POLLS_HUB_NAME).off(HubEvent[HubEvent.EventPollDeleted], this.handleDeletePolls);
+            this.getHub(EVENT_POLLS_HUB_NAME).off(HubEvent[HubEvent.EventPollLaunched], this.handleLaunchedPolls);
+            this.getHub(EVENT_POLLS_HUB_NAME).off(HubEvent[HubEvent.EventPollClosed], this.handleClosedPolls);
+            this.getHub(EVENT_POLLS_HUB_NAME).off(HubEvent[HubEvent.EventPollShared], this.handleSharedPolls);
+            this.stopHubConnection(EVENT_POLLS_HUB_NAME);
         }
     }
 
     protected async setupSubscriptions(component: any, userId: number) {
         try {
-            this.hub = await this._hubService.getEventPollsHub(...this.updateArgs);
-            this.hub.on(HubEvent[HubEvent.EventPollCreated], this.handleUpsertPolls);
-            this.hub.on(HubEvent[HubEvent.EventPollUpdated], this.handleUpsertPolls);
-            this.hub.on(HubEvent[HubEvent.EventPollDeleted], this.handleDeletePolls);
-            this.hub.on(HubEvent[HubEvent.EventPollLaunched], this.handleLaunchedPolls);
-            this.hub.on(HubEvent[HubEvent.EventPollClosed], this.handleClosedPolls);
-            this.hub.on(HubEvent[HubEvent.EventPollShared], this.handleSharedPolls);
+            this.addHub(EVENT_POLLS_HUB_NAME, await this._hubService.getEventPollsHub(...this.updateArgs));
+            this.getHub(EVENT_POLLS_HUB_NAME).on(HubEvent[HubEvent.EventPollCreated], this.handleUpsertPolls);
+            this.getHub(EVENT_POLLS_HUB_NAME).on(HubEvent[HubEvent.EventPollUpdated], this.handleUpsertPolls);
+            this.getHub(EVENT_POLLS_HUB_NAME).on(HubEvent[HubEvent.EventPollDeleted], this.handleDeletePolls);
+            this.getHub(EVENT_POLLS_HUB_NAME).on(HubEvent[HubEvent.EventPollLaunched], this.handleLaunchedPolls);
+            this.getHub(EVENT_POLLS_HUB_NAME).on(HubEvent[HubEvent.EventPollClosed], this.handleClosedPolls);
+            this.getHub(EVENT_POLLS_HUB_NAME).on(HubEvent[HubEvent.EventPollShared], this.handleSharedPolls);
+            this.startHubConnection(EVENT_POLLS_HUB_NAME);
         } catch (err) {
             console.error(err);
         }

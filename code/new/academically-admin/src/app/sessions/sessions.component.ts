@@ -19,6 +19,7 @@ import { environment } from 'environments/environment';
 import { HubService } from '@app/_shared/services/hub.service';
 import { ScreenRecorderService } from '@app/_shared/services/screen-recorder.service';
 import { takeUntil } from 'rxjs/operators';
+import { HubConnection } from '@microsoft/signalr';
 
 enum SessionState {
   Initializing,
@@ -40,6 +41,9 @@ class ConversationModel {
   userName: string;
   message: string;
 }
+
+const SESSIONS_HUB_NAME = 'sessionsHub';
+const CONVERSATIONS_HUB_NAME = 'conversationsHub';
 
 @Component({
   selector: 'app-sessions',
@@ -78,10 +82,10 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
   isRemoteScreenSharingAllowed = false;
   isRecording = false;
 
-  sessionsHub: any;
-  conversationsHub: any;
-
   isLoading = false;
+
+  get sessionsHub(): HubConnection { return this.getHub(SESSIONS_HUB_NAME); }
+  get conversationsHub(): HubConnection { return this.getHub(CONVERSATIONS_HUB_NAME); }
 
   constructor(
     injector: Injector,
@@ -121,8 +125,8 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
 
   async ngOnInit(): Promise<void> {
     this.isLoading = true;
-    this.conversationsHub = await this._hubService.getConversationsHub();
     await this.initializeWebRTC();
+    await this.initializeConversationsHub();
     await this.initializeSessionsHub();
   }
 
@@ -292,8 +296,12 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
     }
   }
 
+  private async initializeConversationsHub(): Promise<void> {
+    this.addHub(CONVERSATIONS_HUB_NAME, await this._hubService.getConversationsHub());
+  }
+
   private async initializeSessionsHub(): Promise<void> {
-    this.sessionsHub = await this._hubService.getSessionsHub();
+    this.addHub(SESSIONS_HUB_NAME, await this._hubService.getSessionsHub());
 
     this.sessionsHub.on('startSession', async () => {
       console.log('startSession');
@@ -366,6 +374,8 @@ export class SessionsComponent extends AppComponentBase implements OnInit, After
       }
       this.isScreenSharingAllowed = false;
     });
+
+    this.startHubConnection(SESSIONS_HUB_NAME);
 
     const userCalendarEvent = _.first(_.filter(this.calendarEvent.userCalendarEvents, e => e.userId !== this.appSession.userId));
 

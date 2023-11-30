@@ -9,13 +9,14 @@ export enum userStatusType {
   all = 'all',
 }
 
+const USER_AVATAR_HUB_NAME = 'userAvatarHub';
+
 export class UserAvatarStateService extends StateServiceBase {
   userStatusLog: Map<string, UserStatusLogDto> = new Map();
 
   userStatusLog$: Subject<StateUpdate<UserStatusLogDto>> = new Subject<StateUpdate<UserStatusLogDto>>();
   loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
-  hub: any;
   type: userStatusType;
   fns = {
     [userStatusType.all]: 'getAllUserStatusLogs'
@@ -55,15 +56,17 @@ export class UserAvatarStateService extends StateServiceBase {
 
   async stop(): Promise<void> {
     super.stop();
-    if (this.hub) {
-      this.hub.off(HubEvent[HubEvent.NewUserLoggedIn], this.handleNewLoggedInUsers);
+    if (this.getHub(USER_AVATAR_HUB_NAME)) {
+      this.getHub(USER_AVATAR_HUB_NAME).off(HubEvent[HubEvent.NewUserLoggedIn], this.handleNewLoggedInUsers);
+      this.stopHubConnection(USER_AVATAR_HUB_NAME);
     }
   }
 
   protected async setupSubscriptions(component: any, userId: number): Promise<any> {
     try {
-      this.hub = await this._hubService.getNewUserStatusLogHub(...this.updateArgs);
-      this.hub.on(HubEvent[HubEvent.NewUserLoggedIn], this.handleNewLoggedInUsers);
+      this.addHub(USER_AVATAR_HUB_NAME, await this._hubService.getNewUserStatusLogHub(...this.updateArgs));
+      this.getHub(USER_AVATAR_HUB_NAME).on(HubEvent[HubEvent.NewUserLoggedIn], this.handleNewLoggedInUsers);
+      this.startHubConnection(USER_AVATAR_HUB_NAME);
     } catch (err) {
       console.error(err);
     }

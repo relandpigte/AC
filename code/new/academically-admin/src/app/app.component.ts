@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { SignalRAspNetCoreHelper } from '@shared/helpers/SignalRAspNetCoreHelper';
 import { LayoutStoreService } from '@shared/layout/layout-store.service';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { PostsServiceProxy, SharedType, UserStatus } from '@shared/service-proxies/service-proxies';
@@ -43,8 +42,6 @@ export class AppComponent extends AppComponentBase implements OnInit, OnDestroy 
 
   ngOnInit(): void {
     this.renderer.addClass(document.body, 'sidebar-mini');
-
-    SignalRAspNetCoreHelper.initSignalR();
 
     abp.event.on('abp.notifications.received', (userNotification) => {
       abp.notifications.showUiNotifyForUserNotification(userNotification, { timer: 10000 });

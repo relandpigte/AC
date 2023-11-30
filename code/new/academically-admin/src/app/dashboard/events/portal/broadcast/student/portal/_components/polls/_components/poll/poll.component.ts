@@ -1,8 +1,8 @@
 import { Component, Injector, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { CreateEditPollComponent } from '@app/dashboard/events/details/broadcast/single/resources/_components/create-edit-poll/create-edit-poll.component';
 import { PortalService } from '@app/dashboard/events/portal/broadcast/student/portal/_services/portal.service';
-import { AppComponentBase, SignalData } from '@shared/app-component-base';
-import { Utils } from '@shared/helpers/utils';
+import { AppComponentBase } from '@shared/app-component-base';
+import { SignalData } from '@shared/app-hub-base';
 import { EventPollAnswerDto, EventPollDto, EventPollQuestionDto, EventPollQuestionOptionDto, EventPollQuestionType, EventPollStatus, EventPollsServiceProxy, UpsertEventPollAnswerDto, UserDto } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
@@ -33,6 +33,8 @@ export interface PollInitOptions {
 export interface PollChartOptions {
   disableAnimation?: boolean;
 }
+
+const POLLS_HUB_NAME = 'pollsHub';
 
 @Component({
   selector: 'app-poll',
@@ -67,7 +69,7 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
 
     this.pipeDestroy(this._portalService.hub$, hub => {
       if (hub) {
-        this.hub = hub;
+        this.addHub(POLLS_HUB_NAME, hub);
         this.handleHubEvent();
       }
     });
@@ -147,7 +149,7 @@ export class PollComponent extends AppComponentBase implements OnInit, OnChanges
   }
 
   private handleHubEvent(): void {
-    this.receiveSignal(async (sSignalData: string) => {
+    this.receiveSignal(POLLS_HUB_NAME, async (sSignalData: string) => {
       if (this.poll) {
         const signalData = new SignalData();
         Object.assign(signalData, JSON.parse(sSignalData));

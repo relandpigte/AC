@@ -8,6 +8,7 @@ import { HubService } from '@app/_shared/services/hub.service';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import { AppSessionService } from '@shared/session/app-session.service';
+import { Injector } from '@angular/core';
 
 export const MAX_POSTS_TO_LOAD = 15;
 
@@ -16,6 +17,7 @@ export enum pageType {
     discussion = 'discussion'
 }
 
+const POSTS_HUB_NAME = 'postsHub';
 export class PostsStateService extends StateServiceBase {
   posts: Map<string, PostDto> = new Map();
   newPosts: Map<string, PostDto> = new Map();
@@ -30,8 +32,6 @@ export class PostsStateService extends StateServiceBase {
     [pageType.all]: 'getAllPostsPaged',
     [pageType.discussion]: 'getAllPostsPaged',
   };
-
-  hub: any;
 
   constructor(
     private _appSession: AppSessionService,
@@ -149,19 +149,21 @@ export class PostsStateService extends StateServiceBase {
 
   async stop() {
     await super.stop();
-    if (this.hub) {
-        this.hub.off(HubEvent[HubEvent.PostCreated], this.handleNewPosts);
-        this.hub.off(HubEvent[HubEvent.PostUpdated], this.handleUpdatePosts);
-        this.hub.off(HubEvent[HubEvent.PostDeleted], this.handleDeletePosts);
+    if (this.getHub(POSTS_HUB_NAME)) {
+        this.getHub(POSTS_HUB_NAME).off(HubEvent[HubEvent.PostCreated], this.handleNewPosts);
+        this.getHub(POSTS_HUB_NAME).off(HubEvent[HubEvent.PostUpdated], this.handleUpdatePosts);
+        this.getHub(POSTS_HUB_NAME).off(HubEvent[HubEvent.PostDeleted], this.handleDeletePosts);
+        this.stopHubConnection(POSTS_HUB_NAME);
     }
   }
 
   protected async setupSubscriptions(component: any, userId: number) {
     try {
-      this.hub = await this._hubService.getPostsHub(...this.updateArgs);
-      this.hub.on(HubEvent[HubEvent.PostCreated], this.handleNewPosts);
-      this.hub.on(HubEvent[HubEvent.PostUpdated], this.handleUpdatePosts);
-      this.hub.on(HubEvent[HubEvent.PostDeleted], this.handleDeletePosts);
+      this.addHub(POSTS_HUB_NAME, await this._hubService.getPostsHub(...this.updateArgs));
+      this.getHub(POSTS_HUB_NAME).on(HubEvent[HubEvent.PostCreated], this.handleNewPosts);
+      this.getHub(POSTS_HUB_NAME).on(HubEvent[HubEvent.PostUpdated], this.handleUpdatePosts);
+      this.getHub(POSTS_HUB_NAME).on(HubEvent[HubEvent.PostDeleted], this.handleDeletePosts);
+      this.startHubConnection(POSTS_HUB_NAME);
     } catch (err) {
       console.error(err);
     }

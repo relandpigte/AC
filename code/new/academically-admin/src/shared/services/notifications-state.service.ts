@@ -9,14 +9,13 @@ export enum notificationsType {
     all = 'all',
 }
 
+const NOTIFICATIONS_HUB_NAME = 'notificationsHub';
 export class NotificationsStateService extends StateServiceBase {
     notifications: Map<string, NotificationDto> = new Map();
     totalNotificationsCount: number;
 
     notifications$: Subject<StateUpdate<NotificationDto>> = new Subject();
     loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
-
-    hub: any;
 
     type: notificationsType = notificationsType.all;
     fns = {
@@ -50,19 +49,21 @@ export class NotificationsStateService extends StateServiceBase {
 
     async stop() {
         super.stop();
-        if (this.hub) {
-            this.hub.off(HubEvent[HubEvent.NotificationCreated], this.handleUpsertNotifications);
-            this.hub.off(HubEvent[HubEvent.NotificationUpdated], this.handleUpsertNotifications);
-            this.hub.off(HubEvent[HubEvent.NotificationDeleted], this.handleDeleteNotifications);
+        if (this.getHub(NOTIFICATIONS_HUB_NAME)) {
+            this.getHub(NOTIFICATIONS_HUB_NAME).off(HubEvent[HubEvent.NotificationCreated], this.handleUpsertNotifications);
+            this.getHub(NOTIFICATIONS_HUB_NAME).off(HubEvent[HubEvent.NotificationUpdated], this.handleUpsertNotifications);
+            this.getHub(NOTIFICATIONS_HUB_NAME).off(HubEvent[HubEvent.NotificationDeleted], this.handleDeleteNotifications);
+            this.stopHubConnection(NOTIFICATIONS_HUB_NAME);
         }
     }
 
     protected async setupSubscriptions(component: any, userId: number) {
         try {
-            this.hub = await this._hubService.getNotificationsHub(...this.updateArgs);
-            this.hub.on(HubEvent[HubEvent.NotificationCreated], this.handleUpsertNotifications);
-            this.hub.on(HubEvent[HubEvent.NotificationUpdated], this.handleUpsertNotifications);
-            this.hub.on(HubEvent[HubEvent.NotificationDeleted], this.handleDeleteNotifications);
+            this.addHub(NOTIFICATIONS_HUB_NAME, await this._hubService.getNotificationsHub(...this.updateArgs));
+            this.getHub(NOTIFICATIONS_HUB_NAME).on(HubEvent[HubEvent.NotificationCreated], this.handleUpsertNotifications);
+            this.getHub(NOTIFICATIONS_HUB_NAME).on(HubEvent[HubEvent.NotificationUpdated], this.handleUpsertNotifications);
+            this.getHub(NOTIFICATIONS_HUB_NAME).on(HubEvent[HubEvent.NotificationDeleted], this.handleDeleteNotifications);
+            this.startHubConnection(NOTIFICATIONS_HUB_NAME);
         } catch (err) {
             console.error(err);
         }

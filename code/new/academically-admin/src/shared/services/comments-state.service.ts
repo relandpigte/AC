@@ -1,23 +1,19 @@
+import { HubService } from '@app/_shared/services/hub.service';
 import { BehaviorSubject, Subject } from "rxjs";
 import { Utils } from '../helpers/utils';
 import { CommentDto, HubEvent, PostSort, PostsServiceProxy } from '../service-proxies/service-proxies';
 import { StateServiceBase, StateUpdate } from './state-base.service';
 
-import * as _ from 'lodash';
-
-import { HubService } from '@app/_shared/services/hub.service';
-
 export const MAX_REPLIES_TO_LOAD = 5;
 export const MAX_COMMENT_LEVELS = 3;
 
+const COMMENTS_HUB_NAME = 'commentsHub';
 export class CommentsStateService extends StateServiceBase {
   comments: Map<string, CommentDto> = new Map();
   totalCommentsCount: number;
 
   comments$: Subject<StateUpdate<CommentDto>> = new Subject();
   loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
-
-  hub: any;
 
   constructor(
     private _hubService: HubService,
@@ -66,19 +62,21 @@ export class CommentsStateService extends StateServiceBase {
 
   async stop() {
     await super.stop();
-    if (this.hub) {
-        this.hub.off(HubEvent[HubEvent.CommentCreated], this.handleCreatedComments);
-        this.hub.off(HubEvent[HubEvent.CommentUpdated], this.handleUpdateComments);
-        this.hub.off(HubEvent[HubEvent.CommentDeleted], this.handleDeleteComments);
+    if (this.getHub(COMMENTS_HUB_NAME)) {
+        this.getHub(COMMENTS_HUB_NAME).off(HubEvent[HubEvent.CommentCreated], this.handleCreatedComments);
+        this.getHub(COMMENTS_HUB_NAME).off(HubEvent[HubEvent.CommentUpdated], this.handleUpdateComments);
+        this.getHub(COMMENTS_HUB_NAME).off(HubEvent[HubEvent.CommentDeleted], this.handleDeleteComments);
+        this.stopHubConnection(COMMENTS_HUB_NAME);
     }
   }
 
   protected async setupSubscriptions(component: any, userId: number) {
     try {
-      this.hub = await this._hubService.getCommentsHub(...this.updateArgs);
-      this.hub.on(HubEvent[HubEvent.CommentCreated], this.handleCreatedComments);
-      this.hub.on(HubEvent[HubEvent.CommentUpdated], this.handleUpdateComments);
-      this.hub.on(HubEvent[HubEvent.CommentDeleted], this.handleDeleteComments);
+      this.addHub(COMMENTS_HUB_NAME, await this._hubService.getCommentsHub(...this.updateArgs));
+      this.getHub(COMMENTS_HUB_NAME).on(HubEvent[HubEvent.CommentCreated], this.handleCreatedComments);
+      this.getHub(COMMENTS_HUB_NAME).on(HubEvent[HubEvent.CommentUpdated], this.handleUpdateComments);
+      this.getHub(COMMENTS_HUB_NAME).on(HubEvent[HubEvent.CommentDeleted], this.handleDeleteComments);
+      this.startHubConnection(COMMENTS_HUB_NAME);
     } catch (err) {
       console.error(err);
     }

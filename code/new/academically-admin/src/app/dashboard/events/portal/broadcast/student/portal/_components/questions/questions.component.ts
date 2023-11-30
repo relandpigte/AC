@@ -9,7 +9,6 @@ import { EventQuestionsStateService, questionType } from '@shared/services/event
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
 import { HubService } from '@app/_shared/services/hub.service';
-import { HubConnection } from '@aspnet/signalr';
 
 @Component({
   selector: 'app-sidebar-questions',

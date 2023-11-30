@@ -1,5 +1,6 @@
+import { AppHubBase } from '@shared/app-hub-base';
 import { Subject, Subscription } from 'rxjs';
-import { AppStateActionNames, AppStateFeatures} from './pub-sub.service';
+import { AppStateActionNames, AppStateFeatures } from './pub-sub.service';
 
 export interface StateUpdate<T> {
     data: T;
@@ -14,7 +15,7 @@ export enum StateUpdateType {
     Silent = 'silent'
 }
 
-export abstract class StateServiceBase {
+export abstract class StateServiceBase extends AppHubBase {
     private subscriptions: Subscription[] = [];
     actionArgs: { [key in AppStateActionNames]?: any };
     features?: AppStateFeatures;

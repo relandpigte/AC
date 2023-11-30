@@ -1,6 +1,7 @@
 import { ThrowStmt } from '@angular/compiler';
 import { Component, OnInit, Injector, Input, Output, EventEmitter, ViewChild, Renderer2 } from '@angular/core';
 import { DocumentUploaderComponent } from '@app/_shared/components/document-uploader/document-uploader.component';
+import { HubConnection } from '@microsoft/signalr';
 import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { ConversationDto, UserDto, ConversationsServiceProxy, FileParameter, DocumentDto, DocumentsServiceProxy, ConversationDocumentDto } from '@shared/service-proxies/service-proxies';
@@ -19,7 +20,7 @@ export class ConversationComponent extends AppComponentBase implements OnInit {
   @Input() conversationGroupId: string;
   @Input() user: UserDto = new UserDto();
   @Input() otherUser: UserDto = new UserDto();
-  @Input() conversationsHub: any;
+  @Input() conversationsHub: HubConnection;
   @Output() conversationUpdated = new EventEmitter<ConversationDto>();
 
   @ViewChild('documentUploader') documentUploaderComponent: DocumentUploaderComponent;
@@ -86,6 +87,8 @@ export class ConversationComponent extends AppComponentBase implements OnInit {
       this.conversations.find(e => e.id === conversationId).conversationDocuments = documents;
       this.conversations = _.clone(this.conversations);
     });
+
+    this.startCustomHubConnection(this.conversationsHub);
 
     this.conversations = await this._conversationsService.getAll(this.projectId).toPromise();
     this.isConversationsLoading = false;

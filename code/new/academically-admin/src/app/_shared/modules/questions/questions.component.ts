@@ -1,11 +1,13 @@
 import { AfterViewInit, Component, Injector, Input, OnInit } from '@angular/core';
 import { HubService } from '@app/_shared/services/hub.service';
-import { HubConnection } from '@aspnet/signalr';
 import { AppComponentBase } from '@shared/app-component-base';
+import { SignalData } from '@shared/app-hub-base';
 import { QuestionDto, QuestionReactionDto, QuestionsServiceProxy, ReactionType } from '@shared/service-proxies/service-proxies';
 import * as _ from 'lodash';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { CustomAction, QuestionAction, QuestionSignalData } from './_model/questions.model';
+
+const QUESTIONS_HUB_NAME = 'questionsHub';
 
 @Component({
   selector: 'app-questions',
@@ -31,7 +33,6 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
   isReplying: boolean[] = [];
   loadedReplyCount: number[] = [];
 
-  questionsHub: HubConnection;
   hubConnected: boolean;
 
   private _maxRepliesToLoad = 3;
@@ -45,6 +46,7 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
   }
 
   get userId(): number { return this.appSession.userId; }
+  get signalRecpients(): number[] { return [this.hostId].concat(this.attendeeIds ?? []).filter(i => i !== this.userId); }
 
   async ngOnInit(): Promise<void> {
     await this.initHub();
@@ -92,7 +94,8 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
       .pipe(takeUntil(this.destroyed$))
       .subscribe(async response => {
         question.questionReactions.push(response);
-        await this.sendQuestionSignal(new QuestionSignalData(QuestionAction.Upvoted, question));
+        const questionData = new SignalData(QuestionAction.Upvoted, JSON.stringify(question.toJSON()));
+        await this.sendSignal(QUESTIONS_HUB_NAME, this.signalRecpients, questionData);
       });
   }
 
@@ -103,7 +106,8 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
         .pipe(takeUntil(this.destroyed$))
         .subscribe(async (): Promise<void> => {
           question.questionReactions.splice(index, 1);
-          await this.sendQuestionSignal(new QuestionSignalData(QuestionAction.Downvoted, question));
+          const questionData = new SignalData(QuestionAction.Downvoted, JSON.stringify(question.toJSON()));
+          await this.sendSignal(QUESTIONS_HUB_NAME, this.signalRecpients, questionData);
         });
     }
   }
@@ -113,9 +117,9 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
   }
 
   private async initHub(): Promise<void> {
-    this.questionsHub = await this._hubService.getQuestionsHub(() => {
+    this.addHub(QUESTIONS_HUB_NAME, await this._hubService.getQuestionsHub(() => {
       this.hubConnected = true;
-      this.questionsHub.on('receiveSignal', async (strData: string) => {
+      this.receiveSignal(QUESTIONS_HUB_NAME, async (strData: string) => {
         const data = new QuestionSignalData();
         Object.assign(data, JSON.parse(strData));
 
@@ -142,7 +146,7 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
         }
 
       });
-    });
+    }));
   }
 
   private addQuestionToParent(list: QuestionDto[], question: QuestionDto): void {
@@ -178,7 +182,7 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
             this.isLoading = false;
           }),
         )
-        .subscribe(response => {
+        .subscribe(async response => {
           this.notify.success(this.l('SuccessfullySubmitted'));
           this.newQuestion = new QuestionDto();
           response.questionReactions = [];
@@ -188,7 +192,8 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
           this.loadedReplyCount[response.id] = 0;
           this.newReply[this.questions.length-1] = new QuestionDto();
 
-          this.sendQuestionSignal(new QuestionSignalData(QuestionAction.Created, response));
+          const questionData = new SignalData(QuestionAction.Created, JSON.stringify(response.toJSON()));
+          await this.sendSignal(QUESTIONS_HUB_NAME, this.signalRecpients, questionData);
         });
     }
   }
@@ -206,7 +211,7 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
             this.isLoading = false;
           }),
         )
-        .subscribe(response => {
+        .subscribe(async response => {
           this.notify.success(this.l('SuccessfullySubmitted'));
           this.newReply[replyIndex] = new QuestionDto();
           response.questionReactions = [];
@@ -215,7 +220,9 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
           parent.replyCount++;
           this.loadedReplyCount[parent.id]++;
           this.isReplying = [];
-          this.sendQuestionSignal(new QuestionSignalData(QuestionAction.Replied, response));
+
+          const questionData = new SignalData(QuestionAction.Replied, JSON.stringify(response.toJSON()));
+          await this.sendSignal(QUESTIONS_HUB_NAME, this.signalRecpients, questionData);
         });
     }
   }
@@ -261,11 +268,5 @@ export class QuestionsComponent extends AppComponentBase implements OnInit, Afte
         }
         this.loadedReplyCount[question.id] += response.items.length;
       });
-  }
-
-  private async sendQuestionSignal(data: QuestionSignalData, callback?: () => void): Promise<void> {
-    const sSignalData = JSON.stringify(data);
-    const ids = [this.hostId].concat(this.attendeeIds ?? []).filter(i => i !== this.userId);
-    await this.questionsHub.invoke('sendSignal', ids, sSignalData).then(() => { if (callback) callback(); });
   }
 }

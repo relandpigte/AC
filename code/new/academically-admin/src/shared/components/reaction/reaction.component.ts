@@ -1,19 +1,20 @@
-import { Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ReactionColorClass, ReactionFeatherIcons, ReactionGroup, ReactionIcons, ReactionLabels, ReactionTypes } from '@shared/enums/post/reaction-group.enum';
-import { HubEvent, NotificationsServiceProxy, ReactionDto, ReactionType, ReactionsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { HubEvent, ReactionDto, ReactionType, ReactionsServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, of, timer } from 'rxjs';
 import { debounce, distinctUntilChanged, filter, takeUntil } from 'rxjs/operators';
 import { ReactionUsersComponent } from '../reaction-users/reaction-users.component';
 
+const REACTIONS_HUB_NAME = 'reactionsHub';
 @Component({
     selector: 'app-reaction',
     templateUrl: './reaction.component.html',
     styleUrls: ['./reaction.component.scss']
 })
-export class ReactionComponent extends AppComponentBase implements OnInit {
+export class ReactionComponent extends AppComponentBase implements OnInit, OnDestroy {
     @ViewChild('reactionAction') reactionAction: ElementRef<HTMLElement>;
     @ViewChild('popover') popover: ElementRef<HTMLElement>;
 
@@ -54,7 +55,6 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
         private _modalService: BsModalService,
         private _reactionsService: ReactionsServiceProxy,
         private _hubService: HubService,
-        private _notificationsService: NotificationsServiceProxy
     ) {
         super(injector);
 
@@ -72,11 +72,25 @@ export class ReactionComponent extends AppComponentBase implements OnInit {
         this.subscribeToReactions();
     }
 
+    ngOnDestroy(): void {
+        this.unsubscribeToReactions();
+        this.destroyed$.next();
+        this.destroyed$.complete();
+    }
+
+    async unsubscribeToReactions() {
+        this.getHub(REACTIONS_HUB_NAME).off(HubEvent[HubEvent.ReactionCreated], () => this.getAllReactionCounts());
+        this.getHub(REACTIONS_HUB_NAME).off(HubEvent[HubEvent.ReactionUpdated], () => this.getAllReactionCounts());
+        this.getHub(REACTIONS_HUB_NAME).off(HubEvent[HubEvent.ReactionDeleted], () => this.getAllReactionCounts());
+        this.stopHubConnection(REACTIONS_HUB_NAME);
+    }
+
     async subscribeToReactions() {
-        const hub = await this._hubService.getReactionsHub({ 'referenceId': this.referenceId });
-        hub.on(HubEvent[HubEvent.ReactionCreated], () => this.getAllReactionCounts());
-        hub.on(HubEvent[HubEvent.ReactionUpdated], () => this.getAllReactionCounts());
-        hub.on(HubEvent[HubEvent.ReactionDeleted], () => this.getAllReactionCounts());
+        this.addHub(REACTIONS_HUB_NAME, await this._hubService.getReactionsHub({ 'referenceId': this.referenceId }));
+        this.getHub(REACTIONS_HUB_NAME).on(HubEvent[HubEvent.ReactionCreated], () => this.getAllReactionCounts());
+        this.getHub(REACTIONS_HUB_NAME).on(HubEvent[HubEvent.ReactionUpdated], () => this.getAllReactionCounts());
+        this.getHub(REACTIONS_HUB_NAME).on(HubEvent[HubEvent.ReactionDeleted], () => this.getAllReactionCounts());
+        this.startHubConnection(REACTIONS_HUB_NAME);
     }
 
     async getAllReactionCounts() {

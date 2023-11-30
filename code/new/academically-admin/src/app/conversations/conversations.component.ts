@@ -5,7 +5,9 @@ import { ProjectsServiceProxy, ProjectDto, ConversationsServiceProxy, Conversati
 import { takeUntil, finalize } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { HubService } from '@app/_shared/services/hub.service';
+import { HubConnection } from '@microsoft/signalr';
 
+const CONVERSATIONS_HUB_NAME = 'conversationsHub';
 @Component({
   selector: 'app-conversations',
   templateUrl: './conversations.component.html',
@@ -19,9 +21,10 @@ export class ConversationsComponent extends AppComponentBase implements OnInit {
   selectedConversationGroup: ConversationGroupDto;
   users: UserDto[] = [];
   otherUsers: UserDto[] = [];
-  conversationsHub: any;
 
   isLoading = false;
+
+  get conversationsHub(): HubConnection { return this.getHub(CONVERSATIONS_HUB_NAME); }
 
   constructor(
     injector: Injector,
@@ -32,8 +35,8 @@ export class ConversationsComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
-  ngOnInit(): void {
-    this.initializeConversationsHub();
+  async ngOnInit(): Promise<void> {
+    await this.initializeConversationsHub();
     this.getProjects();
     this.getConversationGroups();
   }
@@ -52,10 +55,8 @@ export class ConversationsComponent extends AppComponentBase implements OnInit {
     this.selectedConversationGroup.lastConversationMessage = conversation.message;
   }
 
-  private initializeConversationsHub(): void {
-    this._hubService.getConversationsHub().then(hub => {
-      this.conversationsHub = hub;
-    });
+  private async initializeConversationsHub() {
+    this.addHub(CONVERSATIONS_HUB_NAME, await this._hubService.getConversationsHub());
   }
 
   private getProjects(): void {

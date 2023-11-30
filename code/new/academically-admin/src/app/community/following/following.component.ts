@@ -58,8 +58,6 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
   selectedFiltering: PostFiltering = PostFiltering.All;
   selectedSorting: PostSorting = PostSorting.Latest;
 
-  postsHub: any;
-
   constructor(
     injector: Injector,
     private _router: Router,

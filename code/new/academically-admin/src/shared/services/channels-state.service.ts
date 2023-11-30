@@ -13,14 +13,13 @@ export enum channelsType {
     reference = 'reference'
 }
 
+const CHANNEL_HUB_NAME = 'channelsHub';
 export class ChannelsStateService extends StateServiceBase {
     channels: Map<string, ChannelDto> = new Map();
     totalChannelsCount: number;
 
     channels$: Subject<StateUpdate<ChannelDto>> = new Subject();
     loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
-
-    hub: any;
 
     type: channelsType = channelsType.inbox;
     fns = {
@@ -56,29 +55,31 @@ export class ChannelsStateService extends StateServiceBase {
 
     async stop() {
         super.stop();
-        if (this.hub) {
-            this.hub.off(HubEvent[HubEvent.ChannelMessageCreated], this.handleUpsertChannels);
-            this.hub.off(HubEvent[HubEvent.ChannelMessageUpdated], this.handleUpsertChannels);
-            this.hub.off(HubEvent[HubEvent.ChannelMessageDeleted], this.handleDeleteChannels);
-            this.hub.off(HubEvent[HubEvent.ChannelArchive], this.handleUpsertChannels);
-            this.hub.off(HubEvent[HubEvent.ChannelUnarchive], this.handleUpsertChannels);
+        if (this.getHub(CHANNEL_HUB_NAME)) {
+            this.getHub(CHANNEL_HUB_NAME).off(HubEvent[HubEvent.ChannelMessageCreated], this.handleUpsertChannels);
+            this.getHub(CHANNEL_HUB_NAME).off(HubEvent[HubEvent.ChannelMessageUpdated], this.handleUpsertChannels);
+            this.getHub(CHANNEL_HUB_NAME).off(HubEvent[HubEvent.ChannelMessageDeleted], this.handleDeleteChannels);
+            this.getHub(CHANNEL_HUB_NAME).off(HubEvent[HubEvent.ChannelArchive], this.handleUpsertChannels);
+            this.getHub(CHANNEL_HUB_NAME).off(HubEvent[HubEvent.ChannelUnarchive], this.handleUpsertChannels);
             if (this.features?.typing) {
-                this.hub.off(HubEvent[HubEvent.ChannelMemberTyping], this.handleChannelMemberTyping);
+                this.getHub(CHANNEL_HUB_NAME).off(HubEvent[HubEvent.ChannelMemberTyping], this.handleChannelMemberTyping);
             }
+            this.stopHubConnection(CHANNEL_HUB_NAME);
         }
     }
 
     protected async setupSubscriptions(component: any, userId: number) {
         try {
-            this.hub = await this._hubService.getChannelsHub(...this.updateArgs);
-            this.hub.on(HubEvent[HubEvent.ChannelMessageCreated], this.handleUpsertChannels);
-            this.hub.on(HubEvent[HubEvent.ChannelMessageUpdated], this.handleUpsertChannels);
-            this.hub.on(HubEvent[HubEvent.ChannelMessageDeleted], this.handleDeleteChannels);
-            this.hub.on(HubEvent[HubEvent.ChannelArchive], this.handleUpsertChannels);
-            this.hub.on(HubEvent[HubEvent.ChannelUnarchive], this.handleUpsertChannels);
+            this.addHub(CHANNEL_HUB_NAME, await this._hubService.getChannelsHub(...this.updateArgs));
+            this.getHub(CHANNEL_HUB_NAME).on(HubEvent[HubEvent.ChannelMessageCreated], this.handleUpsertChannels);
+            this.getHub(CHANNEL_HUB_NAME).on(HubEvent[HubEvent.ChannelMessageUpdated], this.handleUpsertChannels);
+            this.getHub(CHANNEL_HUB_NAME).on(HubEvent[HubEvent.ChannelMessageDeleted], this.handleDeleteChannels);
+            this.getHub(CHANNEL_HUB_NAME).on(HubEvent[HubEvent.ChannelArchive], this.handleUpsertChannels);
+            this.getHub(CHANNEL_HUB_NAME).on(HubEvent[HubEvent.ChannelUnarchive], this.handleUpsertChannels);
             if (this.features?.typing) {
-                this.hub.on(HubEvent[HubEvent.ChannelMemberTyping], this.handleChannelMemberTyping);
+                this.getHub(CHANNEL_HUB_NAME).on(HubEvent[HubEvent.ChannelMemberTyping], this.handleChannelMemberTyping);
             }
+            this.startHubConnection(CHANNEL_HUB_NAME);
         } catch (err) {
             console.error(err);
         }
