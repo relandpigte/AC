@@ -17,14 +17,16 @@ import {
 export class ServiceDataService {
   public discussionId$: Observable<any>;
   public serviceData$: Observable<any>;
-  public serviceRating$: Observable<any>;
-  public serviceOverallRating$: Observable<any>;
+  public serviceReview$: Observable<any>;
+  public serviceReviewStats$: Observable<any>;
+  public serviceReviewOverallStats$: Observable<any>;
   public serviceBooking$: Observable<any>;
 
   private _discussionId: BehaviorSubject<any>;
   private _serviceData: BehaviorSubject<any>;
-  private _serviceRating: BehaviorSubject<any>;
-  private _serviceOverallRating: BehaviorSubject<any>;
+  private _serviceReview: BehaviorSubject<any>;
+  private _serviceReviewStats: BehaviorSubject<any>;
+  private _serviceReviewOverallStats: BehaviorSubject<any>;
   private _serviceBooking: BehaviorSubject<any>;
 
   constructor(
@@ -37,14 +39,17 @@ export class ServiceDataService {
     this._serviceData = new BehaviorSubject<any>(null);
     this.serviceData$ = this._serviceData.asObservable();
 
-    this._serviceRating = new BehaviorSubject<any>(null);
-    this.serviceRating$ = this._serviceRating.asObservable();
+    this._serviceReview = new BehaviorSubject<any>(null);
+    this.serviceReview$ = this._serviceReview.asObservable();
 
-    this._serviceOverallRating = new BehaviorSubject<any>(null);
-    this.serviceOverallRating$ = this._serviceOverallRating.asObservable();
+    this._serviceReviewStats = new BehaviorSubject<any>(null);
+    this.serviceReviewStats$ = this._serviceReviewStats.asObservable();
 
     this._serviceBooking = new BehaviorSubject<any>(null);
     this.serviceBooking$ = this._serviceBooking.asObservable();
+
+    this._serviceReviewOverallStats = new BehaviorSubject<any>(null);
+    this.serviceReviewOverallStats$ = this._serviceReviewOverallStats.asObservable();
   }
 
   public set serviceData(value: any) {
@@ -55,12 +60,16 @@ export class ServiceDataService {
     this._discussionId.next(value);
   }
 
-  public set serviceRating(value: any) {
-    this._serviceRating.next(value);
+  public set serviceReview(value: any) {
+    this._serviceReview.next(value);
   }
 
-  public set serviceOverallRating(value: any) {
-    this._serviceOverallRating.next(value);
+  public set serviceReviewStats(value: any) {
+    this._serviceReviewStats.next(value);
+  }
+
+  public set serviceReviewOverallStats(value: any) {
+    this._serviceReviewOverallStats.next(value);
   }
 
   public set serviceBooking(value: any) {

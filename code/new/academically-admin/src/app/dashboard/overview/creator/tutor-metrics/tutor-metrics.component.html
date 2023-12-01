@@ -58,9 +58,11 @@
                 <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.DashboardOverviewStats"></app-shimmer>
                 <div class="row align-items-center">
                     <div class="col">
-                        <h6 class="text-uppercase text-muted mb-2">{{ 'OverallPositiveReviews' | localize }}</h6>
-                        <span class="h2 mb-0 align-middle">{{ positiveReviews  }}%</span>
-                        <span class="badge badge-soft-success ml-2">{{ totalReviews }} {{ 'Reviews' | localize }}</span>
+                        <h6 class="text-uppercase text-muted mb-2">{{ 'OverallReview' | localize }}</h6>
+                        <div class="d-flex align-items-center gap-10">
+                            <app-star-rating-review [actualRating]="userOverallRating"></app-star-rating-review>
+                            <span class="h2 mb-0 align-middle">{{ userOverallRating | number : '1.1-1' }}/5</span>
+                        </div>
                     </div>
                     <div class="col-auto">
                         <span class="h2 fe fe-star text-muted mb-0"></span>

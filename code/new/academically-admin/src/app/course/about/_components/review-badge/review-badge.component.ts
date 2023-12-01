@@ -1,6 +1,6 @@
 import { Component, Injector, Input } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CourseDto } from '@shared/service-proxies/service-proxies';
+import { CourseDto, ServiceReviewDto, ServiceReviewStats } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-review-badge',
@@ -8,7 +8,7 @@ import { CourseDto } from '@shared/service-proxies/service-proxies';
   styleUrls: ['./review-badge.component.less']
 })
 export class ReviewBadgeComponent extends AppComponentBase {
-  @Input() rating: number;
+  @Input() review: ServiceReviewDto;
   @Input() data: CourseDto;
 
   constructor(injector: Injector) {
@@ -16,4 +16,5 @@ export class ReviewBadgeComponent extends AppComponentBase {
   }
 
   get hasReviewed(): boolean { return this.data?.hasReviewed; }
+  get rating(): number { return this.review?.rating; }
 }

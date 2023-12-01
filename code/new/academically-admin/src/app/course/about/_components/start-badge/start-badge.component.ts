@@ -1,12 +1,9 @@
-import { Component, Injector, Input } from '@angular/core';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { Component, Injector, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 
 import { AppComponentBase } from '@shared/app-component-base';
-import { RateAndReviewComponent } from '@shared/components/rate-and-review/rate-and-review.component';
-import { CourseDto, CoursesServiceProxy, RatingsServiceProxy } from '@shared/service-proxies/service-proxies';
-import { ServiceDataService } from '@shared/services/service-data.service';
-import { ThankYouComponent } from '@app/course/_components/thank-you/thank-you.component';
+import { CourseDto} from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-start-badge',
@@ -15,42 +12,21 @@ import { ThankYouComponent } from '@app/course/_components/thank-you/thank-you.c
 })
 export class StartBadgeComponent extends AppComponentBase {
   @Input() data: CourseDto;
-  @Input() rating: number;
+  @Output() onReview = new Subject<any>();
 
   constructor(
     injector: Injector,
-    private _router: Router,
-    private _modalService: BsModalService,
-    private _serviceData: ServiceDataService,
-    private _ratingService: RatingsServiceProxy,
-    private _courseService: CoursesServiceProxy
+    private _router: Router
   ) {
     super(injector);
   }
 
-  get serviceId(): string {
-    return this.data?.id;
-  }
-
-  get hasReviewed(): boolean {
-    return this.data?.hasReviewed;
-  }
-
-  get serviceThumbnail(): string {
-    return this.data?.courseImageUrl || 'assets/img/cover-photos/cp-1.jpeg';
-  }
-
-  get progress(): number {
-    return this.data?.progress;
-  }
-
-  get isCompleted(): boolean {
-    return this.data?.progress === 100;
-  }
-
-  get isPurchased(): boolean {
-    return this.data?.isPurchased;
-  }
+  get serviceId(): string { return this.data?.id; }
+  get hasReviewed(): boolean { return this.data?.hasReviewed; }
+  get serviceThumbnail(): string { return this.data?.courseImageUrl || 'assets/img/cover-photos/cp-1.jpeg'; }
+  get progress(): number { return this.data?.progress; }
+  get isCompleted(): boolean { return this.data?.progress === 100; }
+  get isPurchased(): boolean { return this.data?.isPurchased; }
 
   get startButton(): string {
     switch (this.progress) {
@@ -74,27 +50,7 @@ export class StartBadgeComponent extends AppComponentBase {
 
   async handleStartCourse(): Promise<void> {
     if (this.isCompleted) {
-      const modalSettings = this.defaultModalSettings;
-      modalSettings.class = 'modal-lg modal-dialog-centered';
-      modalSettings.initialState = {serviceId: this.serviceId};
-      const modal = this._modalService.show(RateAndReviewComponent, modalSettings).content;
-      modal.onSuccessReview.subscribe(async (): Promise<void> => {
-        try {
-          setTimeout(() => {
-            modalSettings.class = 'modal-sm modal-rating-success modal-dialog-centered';
-            this._modalService.show(ThankYouComponent, modalSettings);
-          }, 200);
-          this._serviceData.serviceData = await this._courseService.get(this.serviceId).toPromise();
-          this._serviceData.serviceRating = await this._ratingService.getUserServiceReview(this.serviceId).toPromise();
-          this._serviceData.serviceOverallRating = await this._ratingService.getServiceRatingsSummary(this.serviceId).toPromise();
-        } catch (e) {
-          console.error(e);
-        }
-      });
-
-      modal.onClose.subscribe((): void => {
-        this._modalService.hide();
-      });
+      this.onReview.next(this.data);
     } else {
       await this._router.navigate(['/app/student-portal', this.serviceId, 'learn']);
     }

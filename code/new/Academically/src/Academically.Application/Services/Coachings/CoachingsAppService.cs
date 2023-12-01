@@ -34,6 +34,7 @@ namespace Academically.Services.Coachings
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IRepository<ServiceRating, Guid> _serviceRatingRepository;
         private readonly IRepository<ServiceBooking, Guid> _serviceBooking;
+        private readonly IRepository<ServiceReview, Guid> _serviceRepository;
 
         public CoachingsAppService(
             RoleManager roleManager,
@@ -45,7 +46,8 @@ namespace Academically.Services.Coachings
             IDocumentsDomainService documentsDomainService,
             IExploreRepository exploreRepository,
             IRepository<ServiceRating, Guid> serviceRatingRepository,
-            IRepository<ServiceBooking, Guid> serviceBooking
+            IRepository<ServiceBooking, Guid> serviceBooking,
+            IRepository<ServiceReview, Guid> serviceRepository
             ) : base(repository)
         {
             LocalizationSourceName = AcademicallyConsts.LocalizationSourceName;
@@ -58,6 +60,7 @@ namespace Academically.Services.Coachings
             _documentsDomainService = documentsDomainService;
             _serviceRatingRepository = serviceRatingRepository;
             _serviceBooking = serviceBooking;
+            _serviceRepository = serviceRepository;
         }
 
         protected override IQueryable<Coaching> CreateFilteredQuery(PagedCoachingResultRequestDto input)
@@ -111,7 +114,7 @@ namespace Academically.Services.Coachings
             var savedService = await _savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == result.Id.ToString());
             result.IsSaved = savedService != null;
             
-            var userRating = await _serviceRatingRepository.FirstOrDefaultAsync(r => r.ServiceId == result.Id && r.CreatorUserId == AbpSession.GetUserId());
+            var userRating = await _serviceRepository.FirstOrDefaultAsync(r => r.ReferenceId == result.Id && r.CreatorUserId == AbpSession.GetUserId());
             result.HasReviewed = userRating != null;
 
             var latestBooking = await _serviceBooking.GetAll()

@@ -13,6 +13,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Abp.Runtime.Session;
+using Academically.Domain.Services.Documents;
+using Academically.Extensions;
 using Academically.Services.StudentCourses;
 using Amazon.S3.Model;
 
@@ -29,6 +32,8 @@ namespace Academically.Services.Services
         private readonly IHubManager _hubManager;
         private readonly IStudentCoursesAppService _studentCoursesAppService;
         private readonly IRepository<ServiceBooking, Guid> _serviceBooking;
+        private readonly IRepository<ServiceReview, Guid> _serviceReviewRepository;
+        private readonly IDocumentsDomainService _documentsDomainService;
 
         private readonly List<Service2Dto> StaticServiceLevels = new List<Service2Dto>
             {
@@ -92,7 +97,9 @@ namespace Academically.Services.Services
             IPostsAppService postsAppService,
             IHubManager hubManager,
             IStudentCoursesAppService studentCoursesAppService,
-            IRepository<ServiceBooking, Guid> serviceBooking
+            IRepository<ServiceBooking, Guid> serviceBooking,
+            IRepository<ServiceReview, Guid> serviceReviewRepository,
+            IDocumentsDomainService documentsDomainService
             )
         {
             _servicesRepository = servicesRepository;
@@ -104,6 +111,8 @@ namespace Academically.Services.Services
             _hubManager = hubManager;
             _studentCoursesAppService = studentCoursesAppService;
             _serviceBooking = serviceBooking;
+            _serviceReviewRepository = serviceReviewRepository;
+            _documentsDomainService = documentsDomainService;
         }
 
         public async Task<IEnumerable<ServiceDto>> GetCategories()
@@ -429,6 +438,77 @@ namespace Academically.Services.Services
                 return ObjectMapper.Map<ServiceOfferDto>(offer);
             }
             return null;
+        }
+
+        public async Task<IEnumerable<ServiceReviewDto>> GetServiceReviews(Guid referenceId)
+        {
+            var reviews =  await _serviceReviewRepository.GetAll()
+                .Where(x => x.ReferenceId == referenceId)
+                .Include(x => x.CreatorUser)
+                .Select(x => ObjectMapper.Map<ServiceReviewDto>(x))
+                .ToListAsync();
+
+            return await GetServiceReviewDetails(reviews);
+        }
+
+        public async Task<ServiceReview> SaveServiceReview(CreateServiceReviewDto input)
+        {
+            var serviceReview = ObjectMapper.Map<ServiceReview>(input);
+            return await _serviceReviewRepository.InsertAsync(serviceReview);
+        }
+
+        public async Task<ServiceReviewDto> GetUserReview(Guid referenceId)
+        {
+            return await _serviceReviewRepository.GetAll()
+                .Where(x => x.ReferenceId == referenceId)
+                .Where(x => x.CreatorUserId == AbpSession.GetUserId())
+                .Select(x => ObjectMapper.Map<ServiceReviewDto>(x))
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<ServiceReviewStats> GetServiceReviewStats(Guid referenceId)
+        {
+            var reviews = _serviceReviewRepository.GetAll()
+                .Where(x => x.ReferenceId == referenceId);
+            
+            var reviewStats = new ServiceReviewStats
+            {
+                TotalReviews = await reviews.CountAsync()
+            };
+
+            if (reviewStats.TotalReviews.Equals(0)) return reviewStats;
+            var oneStars = (await reviews.CountAsync(x => x.Rating == 1)).ToDecimal();
+            var twoStars = (await reviews.CountAsync(x => x.Rating == 2)).ToDecimal();
+            var threeStars = (await reviews.CountAsync(x => x.Rating == 3)).ToDecimal();
+            var fourStars = (await reviews.CountAsync(x => x.Rating == 4)).ToDecimal();
+            var fiveStars = (await reviews.CountAsync(x => x.Rating == 5)).ToDecimal();
+            var sumRatings = (await reviews.SumAsync(x => x.Rating)).ToDecimal();
+
+            reviewStats.OneStars = Math.Round(oneStars / reviewStats.TotalReviews * 100);
+            reviewStats.TwoStars = Math.Round(twoStars / reviewStats.TotalReviews * 100);
+            reviewStats.ThreeStars = Math.Round(threeStars / reviewStats.TotalReviews * 100);
+            reviewStats.FourStars = Math.Round(fourStars / reviewStats.TotalReviews * 100);
+            reviewStats.FiveStars = Math.Round(fiveStars / reviewStats.TotalReviews * 100);
+            reviewStats.OverallRatings = Math.Round(sumRatings / reviewStats.TotalReviews, 1);
+            return reviewStats;
+        }
+
+        public async Task<decimal> GetUserServicesOverallReviews(long userId)
+        {
+            var reviews = await _serviceReviewRepository.GetAll()
+                .Where(x => x.ServiceOwnerId == userId)
+                .ToListAsync();
+
+            return reviews.Sum(x => x.Rating).ToDecimal() / reviews.Count;
+        }
+        
+        private async Task<List<ServiceReviewDto>> GetServiceReviewDetails(List<ServiceReviewDto> reviews)
+        {
+            foreach (var review in reviews.Where(review => review.CreatorUser.ProfilePictureDocumentId.HasValue))
+            {
+                review.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(review.CreatorUser.ProfilePictureDocumentId.Value);
+            }
+            return reviews;
         }
     }
 }

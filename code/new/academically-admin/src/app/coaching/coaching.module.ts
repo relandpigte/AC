@@ -9,13 +9,11 @@ import { HeaderComponent } from './_components/header/header.component';
 import { CoachingAboutModule } from '@app/coaching/about/about.module';
 import { CoachingDiscussionModule } from './discussion/discussion.module';
 import { CoachingReviewsModule } from '@app/coaching/reviews/reviews.module';
-import { ThankYouComponent } from '@app/coaching/_components/thank-you/thank-you.component';
 
 @NgModule({
   declarations: [
     CoachingComponent,
-    HeaderComponent,
-    ThankYouComponent
+    HeaderComponent
   ],
   imports: [
     CommonModule,

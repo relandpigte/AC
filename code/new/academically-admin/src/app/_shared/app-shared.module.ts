@@ -102,6 +102,9 @@ import { ServiceChatConfirmationComponent } from '@shared/modals/service-chat/co
 import { DropzoneDirective } from './directives/dropzone.directive';
 import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
 import { BookingTakenComponent } from '@shared/components/booking-service/components/booking-taken/booking-taken.component';
+import { LeaveReviewComponent } from '@shared/modals/leave-review/leave-review.component';
+import { LeaveReviewConfirmationComponent } from '@shared/modals/leave-review-confirmation/leave-review-confirmation.component';
+import { ServiceReviewStatsComponent } from '@shared/components/service-review-stats/service-review-stats.component';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -183,7 +186,10 @@ FullCalendarModule.registerPlugins([
     ServiceChatConfirmationComponent,
     DropzoneDirective,
     BookingServiceComponent,
-    BookingTakenComponent
+    BookingTakenComponent,
+    LeaveReviewComponent,
+    LeaveReviewConfirmationComponent,
+    ServiceReviewStatsComponent
   ],
   imports: [
     CommonModule,
@@ -298,7 +304,10 @@ FullCalendarModule.registerPlugins([
     ServiceChatComponent,
     ServiceChatConfirmationComponent,
     BookingServiceComponent,
-    BookingTakenComponent
+    BookingTakenComponent,
+    LeaveReviewComponent,
+    LeaveReviewConfirmationComponent,
+    ServiceReviewStatsComponent
   ],
 })
 export class AppSharedModule { }

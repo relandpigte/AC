@@ -11,8 +11,8 @@
             <div class="row">
                 <div class="col col-sm-12">
                     <ng-container *ngIf="isAboutTab">
-                        <app-review-badge [rating]="rating" (onPurchase)="onPurchase()"></app-review-badge>
-                        <app-join-badge [data]="data" [booking]="booking" (onCancel)="onCancel()" (onPurchase)="onPurchase()" (onReschedule)="onReschedule()"></app-join-badge>
+                        <app-review-badge [review]="review" (onPurchase)="onPurchase()"></app-review-badge>
+                        <app-join-badge [data]="data" [booking]="booking" (onCancel)="onCancel()" (onPurchase)="onPurchase()" (onReschedule)="onReschedule()" (onReview)="onReview($event)"></app-join-badge>
                         <!-- app-leave-review-badge IS MERGED TO app-join-badge -->
                         <!-- <app-leave-review-badge [data]="data" (onPurchase)="onPurchase()"></app-leave-review-badge> -->
                         <app-about-coach [data]="data" ></app-about-coach>
@@ -24,7 +24,7 @@
                         <app-about-related-coaching [data]="data" ></app-about-related-coaching>
                     </ng-container>
                     <ng-container *ngIf="isReviewsTab">
-                        <app-review-stats [data]="data"></app-review-stats>
+                        <app-service-review-stats></app-service-review-stats>
                     </ng-container>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 <div *ngIf="isCompleted && !hasReviewed" class="reviews-inline">
-    <app-rate-and-review [serviceId]="serviceId" (onSuccessReview)="handleSuccessReview()" [inline]="true"></app-rate-and-review>
+    <app-leave-review [data]="data" [inline]="true"></app-leave-review>
     <div class="reviews-inline-separator d-flex align-items-center text-center">
         <span class="flex-grow-1">{{ 'OtherReviews' | localize }}</span>
     </div>
@@ -11,7 +11,7 @@
     <div class="reviews-controls d-flex flex-row justify-content-between w-100">
         <div class="reviews-controls-left d-flex align-items-end">
             <div class="reviews-controls-left-posts-count">
-                {{ totalServiceRatings }} reviews
+                {{ totalReviews }} reviews
             </div>
         </div>
         <div class="reviews-controls-right d-flex flex-row align-items-center gap-10">
@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <div *ngIf="!!totalServiceRatings" class="reviews-content w-100">
-        <app-service-review-card *ngFor="let review of serviceRatings" [review]="review"></app-service-review-card>
+    <div *ngIf="!!totalReviews" class="reviews-content w-100">
+        <app-service-review-card *ngFor="let review of reviews" [review]="review"></app-service-review-card>
     </div>
 </div>

@@ -5,12 +5,14 @@ import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 
 @Component({
-  selector: 'app-thank-you',
-  templateUrl: './thank-you.component.html',
-  styleUrls: ['./thank-you.component.less']
+  selector: 'app-leave-review-confirmation',
+  templateUrl: './leave-review-confirmation.component.html',
+  styleUrls: ['./leave-review-confirmation.component.less']
 })
-export class ThankYouComponent extends AppComponentBase {
-  @Input() serviceId: string;
+export class LeaveReviewConfirmationComponent extends AppComponentBase {
+  @Input() reviewURL: string;
+  @Input() title: string;
+  @Input() subTitle: string;
 
   constructor(
     injector: Injector,
@@ -26,6 +28,6 @@ export class ThankYouComponent extends AppComponentBase {
 
   async handleGoToReviews(): Promise<void> {
     this._modal.hide();
-    await this._router.navigate(['app/course', this.serviceId, 'reviews']);
+    await this._router.navigate([this.reviewURL]);
   }
 }

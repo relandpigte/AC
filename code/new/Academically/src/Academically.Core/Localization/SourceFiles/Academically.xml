@@ -2000,6 +2000,7 @@
     <text name="OverallPositiveReviews">Overalll Positive Reviews</text>
     <text name="MyStudents">My students</text>
     <text name="FinishedTutorial">Congratulations! You've finished this tutorial.</text>
+    <text name="OverallReview">Overall review</text>
     
     <!-- Chat -->
     <text name="WriteAMessage">Write a message</text>

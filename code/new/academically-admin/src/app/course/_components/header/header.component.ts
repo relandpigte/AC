@@ -114,6 +114,7 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
     modal.content.onPaid.subscribe((): void => {
       this.data.isPurchased = true;
       this._serviceData.serviceData = this.data;
+      console.warn(this.data);
     });
   }
 }
