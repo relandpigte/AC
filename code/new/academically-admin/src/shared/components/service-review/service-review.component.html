@@ -26,18 +26,7 @@
         <div class="review-rating-container d-flex gap-10 align-items-center">
             <app-star-rating-review [actualRating]="userRatingValue"></app-star-rating-review>
             <div class="rating-badge d-flex gap-10">
-                <span class="label">{{ userRatingValue }}/5</span>
-                <ng-container [ngSwitch]="experienceType">
-                    <span *ngSwitchCase="ratingExperienceType.Positive" class="badge badge-soft-success rounded-pill d-flex align-items-center">
-                        <i class="fe fe-plus mr-1"></i>Positive
-                    </span>
-                    <span *ngSwitchCase="ratingExperienceType.Neutral" class="badge badge-soft-secondary rounded-pill d-flex align-items-center">
-                        <i class="fas fa-circle neutral-icon-font mr-1"></i>Neutral
-                    </span>
-                    <span *ngSwitchCase="ratingExperienceType.Negative" class="badge badge-soft-danger rounded-pill d-flex align-items-center">
-                        <i class="fe fe-minus mr-1"></i>Negative
-                    </span>
-                </ng-container>
+                <span class="label">{{ userRatingValue | number : '1.1-1' }}/5.0</span>
             </div>
         </div>
         <div class="review-content d-flex flex-column">

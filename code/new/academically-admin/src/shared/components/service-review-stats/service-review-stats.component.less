@@ -1,0 +1,57 @@
+.card {
+  &-body {
+    padding: 0;
+  }
+}
+
+.review {
+  &-stats {
+    padding: 20px 20px 24px;
+    font-size: 15px;
+
+    &-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    &-rating {
+      margin-bottom: 4px;
+
+      .rating {
+        color: #6E84A3;
+      }
+    }
+
+    &-total {
+      margin-bottom: 30px;
+      font-size: 14px;
+      color: #3B516C;
+    }
+
+    &-individual-rating {
+      & > div {
+        margin-top: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #3B516C;
+
+        &:first-child {
+          margin-top: 0;
+        }
+
+        .percentage {
+          text-align: right;
+        }
+
+        .progress {
+          height: 8px;
+
+          &-bar {
+            background-color: #F5D83E;
+          }
+        }
+      }
+    }
+  }
+}

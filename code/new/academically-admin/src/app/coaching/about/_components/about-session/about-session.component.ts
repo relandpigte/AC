@@ -5,7 +5,7 @@ import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ServiceDataService } from '@shared/services/service-data.service';
-import { CoachingDto, ServiceRatingSummaryDto } from '@shared/service-proxies/service-proxies';
+import { CoachingDto, ServiceRatingSummaryDto, ServiceReviewStats } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-about-session',
@@ -16,7 +16,7 @@ export class AboutSessionComponent extends AppComponentBase implements OnInit {
   @Input() data: CoachingDto;
 
   shimmerType = ShimmerType;
-  coachingRatingSummary: ServiceRatingSummaryDto;
+  reviewStats: ServiceReviewStats;
 
   constructor(
     injector: Injector,
@@ -29,9 +29,9 @@ export class AboutSessionComponent extends AppComponentBase implements OnInit {
   get isLoading$() { return this._landingPageService.isLoading$; }
   get description(): string { return this.data?.description; }
   get serviceId(): string { return this.data?.id; }
-  get totalRatingPercentage(): number { return this.coachingRatingSummary?.totalRatingPercentage; }
+  get totalRatingPercentage(): number { return this.reviewStats?.overallRatings ?? 0; }
 
   ngOnInit(): void {
-    this._serviceData.serviceOverallRating$.pipe(takeUntil(this.destroyed$)).subscribe(rating => this.coachingRatingSummary = rating);
+    this._serviceData.serviceReviewStats$.pipe(takeUntil(this.destroyed$)).subscribe(rating => this.reviewStats = rating);
   }
 }

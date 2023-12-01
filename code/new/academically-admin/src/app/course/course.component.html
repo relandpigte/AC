@@ -11,13 +11,13 @@
             <div class="row">
                 <div class="col col-sm-12">
                     <ng-container *ngIf="isAboutTab || isDiscussionTab">
-                        <app-review-badge [data]="data" [rating]="rating"></app-review-badge>
-                        <app-start-badge [data]="data" [rating]="rating"></app-start-badge>
+                        <app-review-badge [data]="data" [review]="review"></app-review-badge>
+                        <app-start-badge [data]="data" (onReview)="onReview($event)"></app-start-badge>
                         <app-instructor-badge [data]="data"></app-instructor-badge>
                         <app-related-courses [data]="data"></app-related-courses>
                     </ng-container>
                     <ng-container *ngIf="isReviewsTab">
-                        <app-review-stats [data]="data"></app-review-stats>
+                        <app-service-review-stats></app-service-review-stats>
                     </ng-container>
                 </div>
             </div>

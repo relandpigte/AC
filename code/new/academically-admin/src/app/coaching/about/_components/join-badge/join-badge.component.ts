@@ -108,6 +108,10 @@ export class JoinBadgeComponent extends AppComponentBase implements OnInit, OnCh
       this.countdown = seconds;
       this.timeline = timeline.seconds;
       return;
+    } else {
+      this.countdown = 0;
+      this.timeline = timeline.seconds;
+      return;
     }
   }
 

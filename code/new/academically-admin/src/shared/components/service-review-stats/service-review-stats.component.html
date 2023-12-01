@@ -1,0 +1,56 @@
+<div class="card custom-card-border custom-card-shadow">
+  <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.LandingRightReview"></app-shimmer>
+
+  <div class="card-body">
+    <div class="review-stats">
+      <div class="review-stats-title">Customer reviews</div>
+      <div class="review-stats-rating d-flex align-items-center">
+        <div class="stars">
+          <app-star-rating-review [actualRating]="overallRatings"></app-star-rating-review>
+        </div>
+        <div class="rating">{{ overallRatings | number : '1.1-1' }}/5.0</div>
+      </div>
+      <div class="review-stats-total">
+        {{ totalReviews }} reviews
+      </div>
+
+      <div class="review-stats-individual-rating">
+        <div class="five-star d-flex align-items-center gap-10">
+          <div class="label">5 star</div>
+          <div class="progress flex-grow-1">
+            <div class="progress-bar" role="progressbar" [style.width.%]="fiveStars"></div>
+          </div>
+          <div class="percentage flex-shrink-0">{{ fiveStars }}%</div>
+        </div>
+        <div class="four-star d-flex align-items-center gap-10">
+          <div class="label">4 star</div>
+          <div class="progress flex-grow-1">
+            <div class="progress-bar" role="progressbar" [style.width.%]="fourStars"></div>
+          </div>
+          <div class="percentage flex-shrink-0">{{ fourStars }}%</div>
+        </div>
+        <div class="three-star d-flex align-items-center gap-10">
+          <div class="label">3 star</div>
+          <div class="progress flex-grow-1">
+            <div class="progress-bar" role="progressbar" [style.width.%]="threeStars"></div>
+          </div>
+          <div class="percentage flex-shrink-0">{{ threeStars }}%</div>
+        </div>
+        <div class="two-star d-flex align-items-center gap-10">
+          <div class="label">2 star</div>
+          <div class="progress flex-grow-1">
+            <div class="progress-bar" role="progressbar" [style.width.%]="twoStars"></div>
+          </div>
+          <div class="percentage flex-shrink-0">{{ twoStars }}%</div>
+        </div>
+        <div class="one-star d-flex align-items-center gap-10">
+          <div class="label">1 star</div>
+          <div class="progress flex-grow-1">
+            <div class="progress-bar" role="progressbar" [style.width.%]="oneStars"></div>
+          </div>
+          <div class="percentage flex-shrink-0">{{ oneStars }}%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -2,6 +2,7 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { accountModuleAnimation } from '@shared/animations/routerTransition';
 import { takeUntil } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import { ChatService } from '@shared/services/chat.service';
@@ -9,7 +10,9 @@ import { LandingPagesService } from '@shared/services/landing-pages.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ServiceDataService } from '@shared/services/service-data.service';
 import { ServiceChatComponent } from '@shared/modals/service-chat/service-chat.component';
-import { ChatsServiceProxy, CourseDto, CoursesServiceProxy, RatingsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ChatsServiceProxy, CourseDto, CoursesServiceProxy, RatingsServiceProxy, ServiceReviewDto, ServiceReviewStats, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { LeaveReviewComponent } from '@shared/modals/leave-review/leave-review.component';
+import { LeaveReviewConfirmationComponent } from '@shared/modals/leave-review-confirmation/leave-review-confirmation.component';
 
 @Component({
   selector: 'app-course',
@@ -20,7 +23,7 @@ import { ChatsServiceProxy, CourseDto, CoursesServiceProxy, RatingsServiceProxy 
 export class CourseComponent extends  AppComponentBase implements OnInit {
   id: string;
   data: CourseDto;
-  rating: number;
+  review: ServiceReviewDto;
 
   constructor(
     injector: Injector,
@@ -32,22 +35,47 @@ export class CourseComponent extends  AppComponentBase implements OnInit {
     private _serviceData: ServiceDataService,
     private _courseService: CoursesServiceProxy,
     private _chatsService: ChatsServiceProxy,
-    private _ratingService: RatingsServiceProxy
+    private _servicesService: ServicesServiceProxy
   ) {
     super(injector);
     this._chatService.openChat$.subscribe(() => this.openMessageModal());
-    this._serviceData.serviceData$.pipe(takeUntil(this.destroyed$)).subscribe(d => this.data = d);
-    this._serviceData.serviceRating$.pipe(takeUntil(this.destroyed$)).subscribe(r => this.rating = r);
+    this._serviceData.serviceData$.pipe(takeUntil(this.destroyed$)).subscribe(x => this.data = x);
+    this._serviceData.serviceReview$.pipe(takeUntil(this.destroyed$)).subscribe(x => this.review = x);
   }
 
   get isAboutTab(): boolean { return this._router.url.includes([`course/${this.id}`, 'about'].join('/')); }
   get isDiscussionTab(): boolean { return this._router.url.includes([`course/${this.id}`, 'discussion'].join('/')); }
   get isReviewsTab(): boolean { return this._router.url.includes([`course/${this.id}`, 'reviews'].join('/')); }
   get serviceOwnerId(): number { return this.data?.creatorUser?.id; }
+  get serviceId(): string { return this.data?.id; }
 
   ngOnInit(): void {
     setTimeout(() => this._landingPageService.setIsLoading(false), 2000);
-    this.getServiceId();
+    this.initServiceData();
+  }
+
+  onReview(data: any): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<LeaveReviewComponent>;
+    modalSettings.class = 'modal-sm modal-dialog-centered modal-service-rating';
+    modalSettings.initialState = { data };
+    const modal = this._modalService.show(LeaveReviewComponent, modalSettings);
+
+    modal.content.onCloseModal.subscribe((): void => {
+      this._modalService.hide();
+    });
+
+    modal.content.onReviewSuccess.subscribe((): void => {
+      setTimeout((): void => {
+        const modalConfirmationSettings = this.defaultModalSettings as ModalOptions<LeaveReviewConfirmationComponent>;
+        modalConfirmationSettings.class = 'modal-sm modal-rating-success modal-dialog-centered';
+        modalConfirmationSettings.initialState = {
+          reviewURL: `app/course/${this.serviceId}/reviews`,
+          title: this.l('ReviewSubmitted'),
+          subTitle: this.l('ThankYouForReviewing')
+        };
+        this._modalService.show(LeaveReviewConfirmationComponent, modalSettings);
+      }, 200);
+    });
   }
 
   private async openMessageModal(): Promise<void> {
@@ -74,18 +102,23 @@ export class CourseComponent extends  AppComponentBase implements OnInit {
     }
   }
 
-  private getServiceId(): void {
+  private initServiceData(): void {
     this._route.paramMap.subscribe(async paramMap => {
       if (paramMap.has('id')) {
-        try {
-          this.id = paramMap.get('id');
-          this._serviceData.serviceData = await this._courseService.get(this.id).toPromise();
-          this._serviceData.discussionId = await this._serviceData.getServiceDiscussionId(this.id);
-          this._serviceData.serviceRating = await this._ratingService.getUserServiceReview(this.id).toPromise();
-          this._serviceData.serviceOverallRating = await this._ratingService.getServiceRatingsSummary(this.id).toPromise();
-        } catch (e) {
-          console.error(e);
-        }
+        this.id = paramMap.get('id');
+        forkJoin([
+          this._courseService.get(this.id),
+          this._serviceData.getServiceDiscussionId(this.id),
+          this._servicesService.getUserReview(this.id),
+          this._servicesService.getServiceReviewStats(this.id),
+        ])
+          .pipe(takeUntil(this.destroyed$))
+          .subscribe(([course, discussionId, review, reviewStats]): void => {
+            this._serviceData.serviceData = course;
+            this._serviceData.discussionId = discussionId ;
+            this._serviceData.serviceReview = review;
+            this._serviceData.serviceReviewStats = reviewStats;
+          });
       }
     });
   }

@@ -42,8 +42,7 @@ namespace Academically.Services.Courses
         private readonly IRepository<SavedService, Guid> _savedServiceRepository;
         private readonly IRepository<ServicePurchase, Guid> _servicePurchasesRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
-        private readonly IExploreRepository _exploreRepository;
-        private readonly IRepository<ServiceRating, Guid> _serviceRatingRepository;
+        private readonly IRepository<ServiceReview, Guid> _serviceReviewRepository;
 
         public CoursesAppService(
             IRepository<Course, Guid> coursesRepository,
@@ -57,22 +56,20 @@ namespace Academically.Services.Courses
             IRepository<SavedService, Guid> savedServiceRepository,
             IRepository<ServicePurchase, Guid> servicePurchasesRepository,
             IDocumentsDomainService documentsDomainService,
-            IExploreRepository exploreRepository,
-            IRepository<ServiceRating, Guid> serviceRatingRepository
+            IRepository<ServiceReview, Guid> serviceReviewRepository
             ) : base(coursesRepository)
         {
             _ratingRepository = ratingRepository;
             _studentCourseRepository = studentCourseRepository;
             _courseSectionRepository = courseSectionRepository;
             _documentsDomainService = documentsDomainService;
-            _exploreRepository = exploreRepository;
             _studentCourseSectionRepository = studentCourseSectionRepository;
             _courseRatingAreaRepository = courseRatingAreaRepository;
             _courseConversationRepository = courseConversationRepository;
             _courseConversationReactionRepository = courseConversationReactionRepository;
             _savedServiceRepository = savedServiceRepository;
             _servicePurchasesRepository = servicePurchasesRepository;
-            _serviceRatingRepository = serviceRatingRepository;
+            _serviceReviewRepository = serviceReviewRepository;
         }
 
         public override async Task<CourseDto> GetAsync(EntityDto<Guid> input)
@@ -115,8 +112,8 @@ namespace Academically.Services.Courses
             var savedService = await _savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == output.Id.ToString());
             output.IsSaved = savedService != null;
             
-            var userRating = await _serviceRatingRepository.FirstOrDefaultAsync(r => r.ServiceId == output.Id && r.CreatorUserId == AbpSession.GetUserId());
-            output.HasReviewed = userRating != null;
+            var serviceReview = await _serviceReviewRepository.FirstOrDefaultAsync(r => r.ReferenceId == output.Id && r.CreatorUserId == AbpSession.GetUserId());
+            output.HasReviewed = serviceReview != null;
                 
             return output;
         }
@@ -268,8 +265,8 @@ namespace Academically.Services.Courses
                 course.Lessons = courseSections.Count(x => x.Type == CourseSectionType.Lesson && course.Id == x.CourseId && x.ParentId == null);
                 course.Units = courseSections.Count(x => x.Type == CourseSectionType.Unit && course.Id == x.CourseId && x.ParentId == null);
 
-                var userRating = await _serviceRatingRepository.FirstOrDefaultAsync(r => r.ServiceId == course.Id && r.CreatorUserId == AbpSession.GetUserId());
-                course.HasReviewed = userRating != null;
+                var serviceReview = await _serviceReviewRepository.FirstOrDefaultAsync(r => r.ReferenceId == course.Id && r.CreatorUserId == AbpSession.GetUserId());
+                course.HasReviewed = serviceReview != null;
 
                 if (studentCourses.Any(x => x.CourseId == course.Id))
                     course.Progress = studentCourses.FirstOrDefault(x => x.CourseId == course.Id)!.Progress;
@@ -427,8 +424,8 @@ namespace Academically.Services.Courses
 
                 item.IsPurchased = purchasers.Any(u => u.Id == this.AbpSession.UserId);
 
-                var userRating = await _serviceRatingRepository.FirstOrDefaultAsync(r => r.ServiceId == item.Id && r.CreatorUserId == AbpSession.GetUserId());
-                item.HasReviewed = userRating != null;
+                var serviceReview = await _serviceReviewRepository.FirstOrDefaultAsync(r => r.ReferenceId == item.Id && r.CreatorUserId == AbpSession.GetUserId());
+                item.HasReviewed = serviceReview != null;
 
                 item.IsSaved = true;
             }

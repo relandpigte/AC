@@ -5,7 +5,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
 import { ServiceDataService } from '@shared/services/service-data.service';
-import { CourseDto, RatingExperienceType, RatingsServiceProxy, ServiceRatingDto } from '@shared/service-proxies/service-proxies';
+import { CourseDto, RatingExperienceType, ServiceRatingDto, ServiceReviewDto, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-reviews',
@@ -15,17 +15,14 @@ import { CourseDto, RatingExperienceType, RatingsServiceProxy, ServiceRatingDto 
 export class CourseReviewsComponent extends AppComponentBase implements OnInit {
   data: CourseDto;
   shimmerType = ShimmerType;
-
-  RatingExperienceType = RatingExperienceType;
-  serviceRatings: ServiceRatingDto[];
-  totalServiceRatings: number;
+  reviews: ServiceReviewDto[];
+  totalReviews: number;
 
   constructor(
     injector: Injector,
     private _landingPageService: LandingPagesService,
-    private _ratingsService: RatingsServiceProxy,
     private _serviceData: ServiceDataService,
-    private _ratingService: RatingsServiceProxy
+    private _servicesService: ServicesServiceProxy
   ) {
     super(injector);
   }
@@ -38,27 +35,16 @@ export class CourseReviewsComponent extends AppComponentBase implements OnInit {
   ngOnInit(): void {
     this._serviceData.serviceData$.pipe(takeUntil(this.destroyed$)).subscribe(d => {
       this.data = d;
-      this.getCourseRatings();
+      this.getServiceReviews();
     });
   }
 
-  async handleSuccessReview(): Promise<void> {
-    try {
-      this.data.hasReviewed = true;
-      this._serviceData.serviceData = this.data;
-      this._serviceData.serviceRating = await this._ratingService.getUserServiceReview(this.serviceId).toPromise();
-      this._serviceData.serviceOverallRating = await this._ratingService.getServiceRatingsSummary(this.serviceId).toPromise();
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  private getCourseRatings(): void {
-    this._ratingsService.getServiceRatings(this.serviceId, undefined, undefined)
+  private getServiceReviews(): void {
+    this._servicesService.getServiceReviews(this.serviceId)
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((result): void => {
-        this.serviceRatings = result.items;
-        this.totalServiceRatings = result.totalCount;
+      .subscribe(reviews => {
+        this.reviews = reviews;
+        this.totalReviews = reviews?.length ?? 0;
       });
   }
 }

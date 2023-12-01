@@ -38,5 +38,11 @@ namespace Academically.Services.Services
         Task<ServiceOfferDto> GetServiceOffer(Guid Id);
         Task<ServiceOfferDto> LaunchOffer(Guid Id);
         Task<ServiceOfferDto> CloseOffer(Guid Id);
+        
+        // Service reviews
+        Task<IEnumerable<ServiceReviewDto>> GetServiceReviews(Guid referenceId);
+        Task<ServiceReview> SaveServiceReview(CreateServiceReviewDto input);
+        Task<ServiceReviewDto> GetUserReview(Guid referenceId);
+        Task<ServiceReviewStats> GetServiceReviewStats(Guid referenceId);
     }
 }

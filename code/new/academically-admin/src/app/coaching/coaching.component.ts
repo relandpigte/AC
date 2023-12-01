@@ -12,8 +12,10 @@ import { ServiceDataService } from '@shared/services/service-data.service';
 import { ServiceChatComponent } from '@shared/modals/service-chat/service-chat.component';
 import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { LeaveReviewComponent } from '@shared/modals/leave-review/leave-review.component';
+import { LeaveReviewConfirmationComponent } from '@shared/modals/leave-review-confirmation/leave-review-confirmation.component';
 import {
-  ChatsServiceProxy, CoachingDto, CoachingsServiceProxy, RatingsServiceProxy, ServiceBookingDto,
+  ChatsServiceProxy, CoachingDto, CoachingsServiceProxy, ServiceBookingDto, ServiceReviewDto, ServiceReviewStats,
   ServicesServiceProxy, UserAvailabilitiesServiceProxy, UserAvailabilityDto
 } from '@shared/service-proxies/service-proxies';
 
@@ -26,7 +28,7 @@ import {
 export class CoachingComponent extends  AppComponentBase implements OnInit {
   id: string;
   data: CoachingDto;
-  rating: number;
+  review: ServiceReviewDto;
 
   booking: ServiceBookingDto;
   userAvailabilities: UserAvailabilityDto[] = [];
@@ -42,16 +44,15 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
     private _router: Router,
     private _coachingService: CoachingsServiceProxy,
     private _serviceData: ServiceDataService,
-    private _ratingService: RatingsServiceProxy,
     private _chatsService: ChatsServiceProxy,
     private _userAvailabilitiesService: UserAvailabilitiesServiceProxy,
     private _servicesService: ServicesServiceProxy
   ) {
     super(injector);
     this._chatService.openChat$.subscribe(() => this.openMessageModal());
-    this._serviceData.serviceData$.pipe(takeUntil(this.destroyed$)).subscribe(d => this.data = d);
-    this._serviceData.serviceRating$.pipe(takeUntil(this.destroyed$)).subscribe(r => this.rating = r);
-    this._serviceData.serviceBooking$.pipe(takeUntil(this.destroyed$)).subscribe(b => this.booking = b);
+    this._serviceData.serviceData$.pipe(takeUntil(this.destroyed$)).subscribe(x => this.data = x);
+    this._serviceData.serviceBooking$.pipe(takeUntil(this.destroyed$)).subscribe(x => this.booking = x);
+    this._serviceData.serviceReview$.pipe(takeUntil(this.destroyed$)).subscribe(x => this.review = x);
   }
 
   get isAboutTab(): boolean { return this._router.url.includes([`coaching/${this.id}`, 'about'].join('/')); }
@@ -119,6 +120,30 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
     });
   }
 
+  onReview(data: any): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<LeaveReviewComponent>;
+    modalSettings.class = 'modal-sm modal-dialog-centered modal-service-rating';
+    modalSettings.initialState = { data };
+    const modal = this._modalService.show(LeaveReviewComponent, modalSettings);
+
+    modal.content.onCloseModal.subscribe((): void => {
+      this._modalService.hide();
+    });
+
+    modal.content.onReviewSuccess.subscribe((): void => {
+      setTimeout((): void => {
+        const modalConfirmationSettings = this.defaultModalSettings as ModalOptions<LeaveReviewConfirmationComponent>;
+        modalConfirmationSettings.class = 'modal-sm modal-rating-success modal-dialog-centered';
+        modalConfirmationSettings.initialState = {
+          reviewURL: `app/coaching/${this.serviceId}/reviews`,
+          title: this.l('ReviewSubmitted'),
+          subTitle: this.l('CoachingReviewMessage')
+        };
+        this._modalService.show(LeaveReviewConfirmationComponent, modalSettings);
+      }, 200);
+    });
+  }
+
   private async openMessageModal(): Promise<void> {
     try {
       const channel = await this._chatsService.getChannelByRecipient(this.serviceOwnerId, this.appSession.userId).toPromise();
@@ -145,16 +170,16 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
     forkJoin([
       this._coachingService.get(this.id),
       this._serviceData.getServiceDiscussionId(this.id),
-      this._ratingService.getUserServiceReview(this.id),
-      this._ratingService.getServiceRatingsSummary(this.id),
+      this._servicesService.getUserReview(this.id),
+      this._servicesService.getServiceReviewStats(this.id),
       this._servicesService.getBookingDetails(this.id, this.currentUserId)
     ])
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(([coaching, discussionId, rating, overallRating, booking]): void => {
+      .subscribe(([coaching, discussionId, review, reviewStats, booking]): void => {
         this._serviceData.serviceData = coaching;
         this._serviceData.discussionId = discussionId;
-        this._serviceData.serviceRating = rating;
-        this._serviceData.serviceOverallRating = overallRating;
+        this._serviceData.serviceReview = review;
+        this._serviceData.serviceReviewStats = reviewStats;
         this._serviceData.serviceBooking = booking;
         this.initUserAvailabilities();
         this.initServiceBookings();

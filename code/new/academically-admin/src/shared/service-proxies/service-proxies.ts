@@ -24158,6 +24158,293 @@ export class ServicesServiceProxy {
         }
         return _observableOf<ServiceOfferDto>(<any>null);
     }
+
+    /**
+     * @param referenceId (optional) 
+     * @return Success
+     */
+    getServiceReviews(referenceId: string | undefined): Observable<ServiceReviewDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetServiceReviews?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetServiceReviews(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetServiceReviews(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceReviewDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceReviewDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetServiceReviews(response: HttpResponseBase): Observable<ServiceReviewDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(ServiceReviewDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceReviewDto[]>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    saveServiceReview(body: CreateServiceReviewDto | undefined): Observable<ServiceReview> {
+        let url_ = this.baseUrl + "/api/services/app/Services/SaveServiceReview";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSaveServiceReview(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSaveServiceReview(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceReview>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceReview>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSaveServiceReview(response: HttpResponseBase): Observable<ServiceReview> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServiceReview.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceReview>(<any>null);
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @return Success
+     */
+    getUserReview(referenceId: string | undefined): Observable<ServiceReviewDto> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetUserReview?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetUserReview(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetUserReview(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceReviewDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceReviewDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetUserReview(response: HttpResponseBase): Observable<ServiceReviewDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServiceReviewDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceReviewDto>(<any>null);
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @return Success
+     */
+    getServiceReviewStats(referenceId: string | undefined): Observable<ServiceReviewStats> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetServiceReviewStats?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetServiceReviewStats(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetServiceReviewStats(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceReviewStats>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceReviewStats>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetServiceReviewStats(response: HttpResponseBase): Observable<ServiceReviewStats> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServiceReviewStats.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceReviewStats>(<any>null);
+    }
+
+    /**
+     * @param userId (optional) 
+     * @return Success
+     */
+    getUserServicesOverallReviews(userId: number | undefined): Observable<number> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetUserServicesOverallReviews?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetUserServicesOverallReviews(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetUserServicesOverallReviews(<any>response_);
+                } catch (e) {
+                    return <Observable<number>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetUserServicesOverallReviews(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number>(<any>null);
+    }
 }
 
 @Injectable()
@@ -41536,6 +41823,65 @@ export interface ICreateServiceRatingDto {
     serviceRatingAreas: CreateServiceRatingAreaDto[] | undefined;
 }
 
+export class CreateServiceReviewDto implements ICreateServiceReviewDto {
+    referenceId: string;
+    rating: number;
+    comments: string | undefined;
+    serviceOwnerId: number;
+    serviceType: ServicesType;
+
+    constructor(data?: ICreateServiceReviewDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.referenceId = _data["referenceId"];
+            this.rating = _data["rating"];
+            this.comments = _data["comments"];
+            this.serviceOwnerId = _data["serviceOwnerId"];
+            this.serviceType = _data["serviceType"];
+        }
+    }
+
+    static fromJS(data: any): CreateServiceReviewDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateServiceReviewDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["referenceId"] = this.referenceId;
+        data["rating"] = this.rating;
+        data["comments"] = this.comments;
+        data["serviceOwnerId"] = this.serviceOwnerId;
+        data["serviceType"] = this.serviceType;
+        return data; 
+    }
+
+    clone(): CreateServiceReviewDto {
+        const json = this.toJSON();
+        let result = new CreateServiceReviewDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateServiceReviewDto {
+    referenceId: string;
+    rating: number;
+    comments: string | undefined;
+    serviceOwnerId: number;
+    serviceType: ServicesType;
+}
+
 export class CreateStudentEventDto implements ICreateStudentEventDto {
     eventId: string;
     saveOnly: boolean;
@@ -52153,6 +52499,215 @@ export interface IServiceRatingSummaryDto {
     totalPunctualityRatings: number;
     totalProfessionalismsRating: number;
     totalKnowledgeRatings: number;
+}
+
+export class ServiceReview implements IServiceReview {
+    id: string;
+    creatorUserId: number | undefined;
+    referenceId: string;
+    rating: number;
+    comments: string | undefined;
+    serviceOwnerId: number;
+    serviceType: ServicesType;
+    creationTime: moment.Moment;
+    creatorUser: User;
+
+    constructor(data?: IServiceReview) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creatorUserId = _data["creatorUserId"];
+            this.referenceId = _data["referenceId"];
+            this.rating = _data["rating"];
+            this.comments = _data["comments"];
+            this.serviceOwnerId = _data["serviceOwnerId"];
+            this.serviceType = _data["serviceType"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUser = _data["creatorUser"] ? User.fromJS(_data["creatorUser"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ServiceReview {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServiceReview();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creatorUserId"] = this.creatorUserId;
+        data["referenceId"] = this.referenceId;
+        data["rating"] = this.rating;
+        data["comments"] = this.comments;
+        data["serviceOwnerId"] = this.serviceOwnerId;
+        data["serviceType"] = this.serviceType;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): ServiceReview {
+        const json = this.toJSON();
+        let result = new ServiceReview();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IServiceReview {
+    id: string;
+    creatorUserId: number | undefined;
+    referenceId: string;
+    rating: number;
+    comments: string | undefined;
+    serviceOwnerId: number;
+    serviceType: ServicesType;
+    creationTime: moment.Moment;
+    creatorUser: User;
+}
+
+export class ServiceReviewDto implements IServiceReviewDto {
+    referenceId: string;
+    rating: number;
+    comments: string | undefined;
+    serviceOwnerId: number;
+    serviceType: ServicesType;
+    creationTime: moment.Moment;
+    creatorUser: UserDto;
+
+    constructor(data?: IServiceReviewDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.referenceId = _data["referenceId"];
+            this.rating = _data["rating"];
+            this.comments = _data["comments"];
+            this.serviceOwnerId = _data["serviceOwnerId"];
+            this.serviceType = _data["serviceType"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ServiceReviewDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServiceReviewDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["referenceId"] = this.referenceId;
+        data["rating"] = this.rating;
+        data["comments"] = this.comments;
+        data["serviceOwnerId"] = this.serviceOwnerId;
+        data["serviceType"] = this.serviceType;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): ServiceReviewDto {
+        const json = this.toJSON();
+        let result = new ServiceReviewDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IServiceReviewDto {
+    referenceId: string;
+    rating: number;
+    comments: string | undefined;
+    serviceOwnerId: number;
+    serviceType: ServicesType;
+    creationTime: moment.Moment;
+    creatorUser: UserDto;
+}
+
+export class ServiceReviewStats implements IServiceReviewStats {
+    oneStars: number;
+    twoStars: number;
+    threeStars: number;
+    fourStars: number;
+    fiveStars: number;
+    totalReviews: number;
+    overallRatings: number;
+
+    constructor(data?: IServiceReviewStats) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.oneStars = _data["oneStars"];
+            this.twoStars = _data["twoStars"];
+            this.threeStars = _data["threeStars"];
+            this.fourStars = _data["fourStars"];
+            this.fiveStars = _data["fiveStars"];
+            this.totalReviews = _data["totalReviews"];
+            this.overallRatings = _data["overallRatings"];
+        }
+    }
+
+    static fromJS(data: any): ServiceReviewStats {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServiceReviewStats();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["oneStars"] = this.oneStars;
+        data["twoStars"] = this.twoStars;
+        data["threeStars"] = this.threeStars;
+        data["fourStars"] = this.fourStars;
+        data["fiveStars"] = this.fiveStars;
+        data["totalReviews"] = this.totalReviews;
+        data["overallRatings"] = this.overallRatings;
+        return data; 
+    }
+
+    clone(): ServiceReviewStats {
+        const json = this.toJSON();
+        let result = new ServiceReviewStats();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IServiceReviewStats {
+    oneStars: number;
+    twoStars: number;
+    threeStars: number;
+    fourStars: number;
+    fiveStars: number;
+    totalReviews: number;
+    overallRatings: number;
 }
 
 /** 0 = CalendarEvents 1 = ProjectOffers 2 = Projects 3 = CourseSections 4 = Courses */
