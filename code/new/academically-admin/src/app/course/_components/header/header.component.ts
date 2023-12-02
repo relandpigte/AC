@@ -10,9 +10,9 @@ import { ThemeManagerService } from '@shared/services/theme-manager.service';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
 import { ServiceDataService } from '@shared/services/service-data.service';
-import { PurchaseServiceComponent } from '@shared/components/purchase-service/purchase-service.component';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { AppConsts } from '@shared/AppConsts';
+import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
 import { CourseDto, PostsServiceProxy, SavedServicesServiceProxy, SharedType, UserDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
@@ -103,18 +103,18 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
     }
   }
 
-  public onPurchaseClick(): void {
+  onPurchase(data: CourseDto, isPurchase?: boolean): void {
     if (this.isPurchased) {
       return;
     }
-    const modalSettings = this.defaultModalSettings as ModalOptions<PurchaseServiceComponent>;
-    modalSettings.class = 'modal-lg modal-dialog-centered';
-    modalSettings.initialState = { serviceId: this.data.id, data: this.data };
-    const modal = this._modalService.show(PurchaseServiceComponent, modalSettings);
-    modal.content.onPaid.subscribe((): void => {
+    const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
+    modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
+    modalSettings.initialState = { data, isPurchase, title: 'Purchase course' };
+    const purchaseModal = this._modalService.show(BookingServiceComponent, modalSettings);
+
+    purchaseModal.content.onPaid.subscribe((): void => {
       this.data.isPurchased = true;
       this._serviceData.serviceData = this.data;
-      console.warn(this.data);
     });
   }
 }

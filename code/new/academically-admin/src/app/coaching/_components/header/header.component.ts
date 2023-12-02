@@ -71,7 +71,12 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
     }
     const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
     modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
-    modalSettings.initialState = { data: this.data, userAvailabilities: this.userAvailabilities, serviceBookings: this.serviceBookings };
+    modalSettings.initialState = {
+      data: this.data,
+      title: this.l('BookASession'),
+      userAvailabilities: this.userAvailabilities,
+      serviceBookings: this.serviceBookings
+    };
     const purchaseModal = this._modalService.show(BookingServiceComponent, modalSettings);
 
     purchaseModal.content.onPaid.subscribe((): void => {

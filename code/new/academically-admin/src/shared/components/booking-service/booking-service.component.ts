@@ -16,6 +16,7 @@ import {
   CreateServiceBookingDto, CreateServicePurchaseDto, ServiceBookingDto, ServicePurchaseDto,
   ServicesServiceProxy, ServicesType, UserAvailabilitiesServiceProxy, UserAvailabilityDto
 } from '@shared/service-proxies/service-proxies';
+import { ServiceCardType } from '@shared/models/service-card.model';
 
 enum PaymentMethod {
   CreditCard,
@@ -55,11 +56,13 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   @ViewChild('calendar') calendarComponent: FullCalendarComponent;
   @ViewChild('cancellationReasonEl') cancellationReasonEl: any;
   @Input() data: any;
+  @Input() title: string;
   @Input() userAvailabilities: UserAvailabilityDto[] = [];
   @Input() serviceBookings: ServiceBookingDto[] = [];
   @Input() rescheduleBooking: ServiceBookingDto;
   @Input() existingBookingId: string;
   @Input() isCancellation = false;
+  @Input() isPurchase = false;
   @Output() onPaid = new Subject<ServicePurchaseDto>();
   @Output() onSavedBooking = new Subject<ServiceBookingDto>();
   @Output() onCancelledBooking = new Subject<ServiceBookingDto>();
@@ -81,6 +84,9 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
 
   existingBooking: ServiceBookingDto;
   cancellationReason: string;
+  service: any;
+  paymentSuccessTitle: string;
+  paymentSuccessMessage: string;
 
   readonly PaymentMethod = PaymentMethod;
   readonly PaymentStatus = PaymentStatus;
@@ -103,7 +109,7 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   get coachName(): string { return this.data?.creatorUser?.fullName; }
   get coachFirstName(): string { return this.data?.creatorUser?.firstName; }
   get coachUserId(): number { return this.data?.creatorUserId; }
-  get coachingTitle(): string { return this.data?.name; }
+  get serviceName(): string { return this.data?.name; }
   get serviceId(): string { return this.data?.id; }
   get servicePrice(): string { return this.data?.price; }
   get cancellationPrice(): number { return 0; }
@@ -137,25 +143,22 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
 
   get cancellationReasonValue(): string { return this.cancellationReasonEl?.nativeElement?.innerHTML?.trim(); }
   get cancellationReasonLength(): number { return this.cancellationReasonValue?.length || 0; }
-
   get stepOne(): boolean { return this.step === 1 && !this.isCancellation; }
   get stepOneCancellation(): boolean { return this.step === 1 && this.isCancellation; }
   get step2Reschedule(): boolean { return this.step === 2 && !_.isEmpty(this.rescheduleBooking) && !this.isCancellation; }
-  get step2Paypal(): boolean {
-    return this.step === 2 && this.defaultPaymentMethod === PaymentMethod.Paypal && _.isEmpty(this.rescheduleBooking);
-  }
-  get step2CC(): boolean {
-    return this.step === 2 && this.defaultPaymentMethod === PaymentMethod.CreditCard && _.isEmpty(this.rescheduleBooking);
-  }
+  get step2Paypal(): boolean { return this.step === 2 && this.defaultPaymentMethod === PaymentMethod.Paypal && _.isEmpty(this.rescheduleBooking); }
+  get step2CC(): boolean { return this.step === 2 && this.defaultPaymentMethod === PaymentMethod.CreditCard && _.isEmpty(this.rescheduleBooking); }
   get rescheduleReasonLimit(): string { return `${this.rescheduleReason?.length ?? 0}/${this.rescheduleReasonTextLimit}`; }
   get isMorningSessionAvailable(): boolean { return !_.isEmpty(this.selectedSessions?.morning); }
   get isAfternoonSessionAvailable(): boolean { return !_.isEmpty(this.selectedSessions?.afternoon); }
   get isEveningSessionAvailable(): boolean { return !_.isEmpty(this.selectedSessions?.evening); }
+  get serviceType(): ServiceCardType { return this.service?.type; }
 
   ngOnInit(): void {
     this.initCalendar();
     this.retrieveBookingToCancel();
-    // this.initServiceOwnerDetails();
+    this.initPurchase();
+    this.initService();
   }
 
   onCloseModal(): void {
@@ -208,6 +211,7 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
 
   onProcessPayment(): void {
     this.onSteps(3);
+    this.initPaymentSuccessMessages();
     switch (this.defaultPaymentMethod) {
       case PaymentMethod.CreditCard:
         this.paymentStatus = PaymentStatus.Fail;
@@ -215,7 +219,9 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
       case PaymentMethod.Paypal:
         this.paymentStatus = PaymentStatus.Success;
         this.savePurchase();
-        this.saveBooking();
+        if (!this.isPurchase) {
+          this.saveBooking();
+        }
         break;
       case PaymentMethod.Alipay:
         break;
@@ -271,6 +277,9 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   }
 
   private initCalendar(): void {
+    if (this.isPurchase || this.isCancellation) {
+      return;
+    }
     this.calendarOptions = {
       initialView: 'dayGridMonth',
       height: 'auto',
@@ -439,5 +448,46 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
         this.existingBooking = existingBooking;
         this.isLoadingInfo$.next(false);
       });
+  }
+
+  private initPurchase(): void {
+    if (!this.isPurchase) {
+      return;
+    }
+    this.step = 2;
+  }
+
+  private initService(): void {
+    const { service } = ServiceCardUtils.getSanitizeServiceData(this.data, {}, [], false);
+    this.service = service;
+  }
+
+  private initPaymentSuccessMessages(): void {
+    switch (this.serviceType) {
+      case 'coaching':
+        this.paymentSuccessTitle = this.l('BookingSuccessful');
+        this.paymentSuccessMessage = this.l('SessionAddedToSchedule');
+        break;
+      case 'course':
+        this.paymentSuccessTitle = 'Purchase successful';
+        this.paymentSuccessMessage = 'The course has been added to your dashboard';
+        break;
+      case 'article':
+        this.paymentSuccessTitle = 'Purchase successful';
+        this.paymentSuccessMessage = 'The article has been added to your dashboard';
+        break;
+      case 'workshop':
+        this.paymentSuccessTitle = 'Purchase successful';
+        this.paymentSuccessMessage = 'The workshop has been added to your dashboard';
+        break;
+      case 'broadcast':
+        this.paymentSuccessTitle = 'Purchase successful';
+        this.paymentSuccessMessage = 'The broadcast has been added to your dashboard';
+        break;
+      case 'tutorial':
+        this.paymentSuccessTitle = 'Purchase successful';
+        this.paymentSuccessMessage = 'The tutorial has been added to your dashboard';
+        break;
+    }
   }
 }

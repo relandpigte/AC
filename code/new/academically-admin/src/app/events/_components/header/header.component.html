@@ -23,7 +23,7 @@
                     <h1 class="header-title">{{ eventTitle | titlecase }}</h1>
                 </div>
                 <div class="col-12 col-md-auto mt-2 mt-md-0 mb-md-3 d-flex">
-                    <button class="btn btn-primary d-block d-md-inline-block custom-button-width" (click)="onPurchaseClick()" [class.btn-disabled]="isPurchased">
+                    <button class="btn btn-primary d-block d-md-inline-block custom-button-width" (click)="onPurchase(data, true)" [class.btn-disabled]="isPurchased">
                         {{ isPurchased ? 'Purchased' : price | currency: 'GBP' }}
                     </button>
                     <button class="btn btn-light d-block d-md-inline-block custom-button-width" (click)="handleSaveClick()" [class.btn-disabled]="isSaved">

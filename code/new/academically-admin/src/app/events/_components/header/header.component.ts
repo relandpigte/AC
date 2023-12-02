@@ -14,10 +14,12 @@ import { PurchaseServiceComponent } from '@shared/components/purchase-service/pu
 import { AppConsts } from '@shared/AppConsts';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import {
+  CourseDto,
   EventCategory, EventDto, EventsServiceProxy,
   PostsServiceProxy, SavedServicesServiceProxy,
   SharedType, UserDto
 } from '@shared/service-proxies/service-proxies';
+import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
 
 @Component({
   selector: 'app-header',
@@ -66,15 +68,16 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
       });
   }
 
-  onPurchaseClick(): void {
+  onPurchase(data: EventDto, isPurchase?: boolean): void {
     if (this.isPurchased) {
       return;
     }
-    const modalSettings = this.defaultModalSettings as ModalOptions<PurchaseServiceComponent>;
-    modalSettings.class = 'modal-lg modal-dialog-centered';
-    modalSettings.initialState = { serviceId: this.data.id, data: this.data };
-    const modal = this._modalService.show(PurchaseServiceComponent, modalSettings);
-    modal.content.onPaid.subscribe(async () => {
+    const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
+    modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
+    modalSettings.initialState = { data, isPurchase, title: `Purchase ${this.eventCategoryName.toLowerCase()}` };
+    const purchaseModal = this._modalService.show(BookingServiceComponent, modalSettings);
+
+    purchaseModal.content.onPaid.subscribe((): void => {
       this.data.isPurchased = true;
       this._serviceData.serviceData = this.data;
     });
