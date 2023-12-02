@@ -18,6 +18,7 @@ using Academically.Domain.Services.Documents;
 using Academically.Extensions;
 using Academically.Services.StudentCourses;
 using Amazon.S3.Model;
+using Castle.MicroKernel.ModelBuilder.Descriptors;
 
 namespace Academically.Services.Services
 {
@@ -213,11 +214,23 @@ namespace Academically.Services.Services
         {
             var purchases = this._servicePurchasesRepository.GetAll()
                 .Include(p => p.CreatorUser)
+                    .ThenInclude(x => x.ProfilePictureDocumentId)
                 .WhereIf(referenceId.HasValue, p => p.ReferenceId == referenceId.Value)
                 .WhereIf(userId.HasValue, p => p.CreatorUserId == userId.Value)
                 .Select(p => ObjectMapper.Map<ServicePurchaseDto>(p))
                 .ToList();
             return purchases;
+        }
+
+        public async Task<ServicePurchaseDto> GetPurchasedByReference(Guid referenceId)
+        {
+            return await _servicePurchasesRepository.GetAll()
+                .Include(p => p.CreatorUser)
+                    .ThenInclude(x => x.ProfilePictureDocumentId)
+                .Where(x => x.ReferenceId == referenceId)
+                .Where( x => x.CreatorUserId == AbpSession.GetUserId())
+                .Select(x => ObjectMapper.Map<ServicePurchaseDto>(x))
+                .FirstOrDefaultAsync();
         }
         
         public async Task<ServicePurchaseDto> SavePurchase(CreateServicePurchaseDto input)
@@ -269,6 +282,7 @@ namespace Academically.Services.Services
             return await _serviceBooking.GetAll()
                 .Where(x => x.CreatorUserId == userId)
                 .Where(x => x.ReferenceId == referenceId)
+                .OrderByDescending(x => x.BookingDateTime)
                 .Select(x => ObjectMapper.Map<ServiceBookingDto>(x))
                 .FirstOrDefaultAsync();
         }

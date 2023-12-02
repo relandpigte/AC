@@ -23450,6 +23450,62 @@ export class ServicesServiceProxy {
     }
 
     /**
+     * @param referenceId (optional) 
+     * @return Success
+     */
+    getPurchasedByReference(referenceId: string | undefined): Observable<ServicePurchaseDto> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetPurchasedByReference?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPurchasedByReference(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPurchasedByReference(<any>response_);
+                } catch (e) {
+                    return <Observable<ServicePurchaseDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServicePurchaseDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetPurchasedByReference(response: HttpResponseBase): Observable<ServicePurchaseDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServicePurchaseDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServicePurchaseDto>(<any>null);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
@@ -37053,6 +37109,7 @@ export class CoachingDto implements ICoachingDto {
     purchased: UserDto[] | undefined;
     hasReviewed: boolean;
     isCancelled: boolean;
+    serviceBooking: ServiceBookingDto;
 
     constructor(data?: ICoachingDto) {
         if (data) {
@@ -37165,6 +37222,7 @@ export class CoachingDto implements ICoachingDto {
             }
             this.hasReviewed = _data["hasReviewed"];
             this.isCancelled = _data["isCancelled"];
+            this.serviceBooking = _data["serviceBooking"] ? ServiceBookingDto.fromJS(_data["serviceBooking"]) : <any>undefined;
         }
     }
 
@@ -37277,6 +37335,7 @@ export class CoachingDto implements ICoachingDto {
         }
         data["hasReviewed"] = this.hasReviewed;
         data["isCancelled"] = this.isCancelled;
+        data["serviceBooking"] = this.serviceBooking ? this.serviceBooking.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -37381,6 +37440,7 @@ export interface ICoachingDto {
     purchased: UserDto[] | undefined;
     hasReviewed: boolean;
     isCancelled: boolean;
+    serviceBooking: ServiceBookingDto;
 }
 
 export class CoachingDtoPagedResultDto implements ICoachingDtoPagedResultDto {

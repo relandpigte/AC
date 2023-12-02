@@ -13,11 +13,11 @@ using Academically.Authorization.Users;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
-using Academically.EntityFrameworkCore.Repositories.Explore;
 using Academically.Extensions;
 using Academically.Services.Coachings.Dto;
 using Academically.Services.Explore.Dto;
 using Academically.Services.Posts.Dto;
+using Academically.Services.Services.Dto;
 using Academically.Users.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -32,9 +32,9 @@ namespace Academically.Services.Coachings
         private readonly IRepository<SavedService, Guid> _savedServiceRepository;
         private readonly IRepository<ServicePurchase, Guid> _servicePurchasesRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
-        private readonly IRepository<ServiceRating, Guid> _serviceRatingRepository;
         private readonly IRepository<ServiceBooking, Guid> _serviceBooking;
-        private readonly IRepository<ServiceReview, Guid> _serviceRepository;
+        private readonly IRepository<ServiceReview, Guid> _serviceReviewRepository;
+        private readonly IRepository<ServiceBooking, Guid> _serviceBookingRepository;
 
         public CoachingsAppService(
             RoleManager roleManager,
@@ -44,10 +44,9 @@ namespace Academically.Services.Coachings
             IRepository<SavedService, Guid> savedServiceRepository,
             IRepository<ServicePurchase, Guid> servicePurchasesRepository,
             IDocumentsDomainService documentsDomainService,
-            IExploreRepository exploreRepository,
-            IRepository<ServiceRating, Guid> serviceRatingRepository,
             IRepository<ServiceBooking, Guid> serviceBooking,
-            IRepository<ServiceReview, Guid> serviceRepository
+            IRepository<ServiceReview, Guid> serviceReviewRepository,
+            IRepository<ServiceBooking, Guid> serviceBookingRepository
             ) : base(repository)
         {
             LocalizationSourceName = AcademicallyConsts.LocalizationSourceName;
@@ -58,9 +57,9 @@ namespace Academically.Services.Coachings
             _savedServiceRepository = savedServiceRepository;
             _servicePurchasesRepository = servicePurchasesRepository;
             _documentsDomainService = documentsDomainService;
-            _serviceRatingRepository = serviceRatingRepository;
             _serviceBooking = serviceBooking;
-            _serviceRepository = serviceRepository;
+            _serviceReviewRepository = serviceReviewRepository;
+            _serviceBookingRepository = serviceBookingRepository;
         }
 
         protected override IQueryable<Coaching> CreateFilteredQuery(PagedCoachingResultRequestDto input)
@@ -114,8 +113,8 @@ namespace Academically.Services.Coachings
             var savedService = await _savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == result.Id.ToString());
             result.IsSaved = savedService != null;
             
-            var userRating = await _serviceRepository.FirstOrDefaultAsync(r => r.ReferenceId == result.Id && r.CreatorUserId == AbpSession.GetUserId());
-            result.HasReviewed = userRating != null;
+            var serviceReview = await _serviceReviewRepository.FirstOrDefaultAsync(r => r.ReferenceId == result.Id && r.CreatorUserId == AbpSession.GetUserId());
+            result.HasReviewed = serviceReview != null;
 
             var latestBooking = await _serviceBooking.GetAll()
                 .Where(b => b.ReferenceId == input.Id)
@@ -396,11 +395,18 @@ namespace Academically.Services.Coachings
                     if (u.ProfilePictureDocumentId.HasValue)
                         u.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(u.ProfilePictureDocumentId.Value);
                 
-                var userRating = await _serviceRatingRepository.FirstOrDefaultAsync(r => r.ServiceId == item.Id && r.CreatorUserId == AbpSession.GetUserId());
-                item.HasReviewed = userRating != null;
+                var serviceReview = await _serviceReviewRepository.FirstOrDefaultAsync(r => r.ReferenceId == item.Id && r.CreatorUserId == AbpSession.GetUserId());
+                item.HasReviewed = serviceReview != null;
                 
                 var savedService = await _savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == item.Id.ToString());
                 item.IsSaved = savedService != null;
+                
+                item.ServiceBooking = await _serviceBookingRepository.GetAll()
+                    .Where(x => x.CreatorUserId == AbpSession.GetUserId())
+                    .Where(x => x.ReferenceId == item.Id)
+                    .OrderByDescending(x => x.BookingDateTime)
+                    .Select(x => ObjectMapper.Map<ServiceBookingDto>(x))
+                    .FirstOrDefaultAsync();
             }
             return output;
         }
@@ -434,8 +440,8 @@ namespace Academically.Services.Coachings
 
                 item.IsPurchased = item.Purchased.Any(u => u.Id == this.AbpSession.UserId);
 
-                var userRating = await _serviceRatingRepository.FirstOrDefaultAsync(r => r.ServiceId == item.Id && r.CreatorUserId == AbpSession.GetUserId());
-                item.HasReviewed = userRating != null;
+                var serviceReview = await _serviceReviewRepository.FirstOrDefaultAsync(r => r.ReferenceId == item.Id && r.CreatorUserId == AbpSession.GetUserId());
+                item.HasReviewed = serviceReview != null;
 
                 item.IsSaved = true;
             }
@@ -456,8 +462,8 @@ namespace Academically.Services.Coachings
                     if (u.ProfilePictureDocumentId.HasValue)
                         u.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(u.ProfilePictureDocumentId.Value);
                 
-                var userRating = await _serviceRatingRepository.FirstOrDefaultAsync(r => r.ServiceId == item.Id && r.CreatorUserId == AbpSession.GetUserId());
-                item.HasReviewed = userRating != null;
+                var serviceReview = await _serviceReviewRepository.FirstOrDefaultAsync(r => r.ReferenceId == item.Id && r.CreatorUserId == AbpSession.GetUserId());
+                item.HasReviewed = serviceReview != null;
                 
                 var savedService = await _savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == item.Id.ToString());
                 item.IsSaved = savedService != null;

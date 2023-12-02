@@ -8,7 +8,7 @@ import { Subject } from 'rxjs';
 
 import { RateAndReviewComponent } from '../rate-and-review/rate-and-review.component';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ArticleStatus, ArticleType, CoachingStatus, CourseStatus, EventStatus, UserDto } from '@shared/service-proxies/service-proxies';
+import { ArticleStatus, ArticleType, CoachingStatus, CourseStatus, EventStatus, ServiceBookingDto, ServicesServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
 import {
   DefaultServiceCardActions,
   DefaultServiceCardOptions,
@@ -23,13 +23,14 @@ import {
   ServiceCardStatus,
   ServiceCardType
 } from '@shared/models/service-card.model';
+import { takeUntil } from 'rxjs/operators';
 
 // classes of elements that won't allow triggering onRedirection event
 const ISOLATED_CLICK_CLASSES = [
   'dropdown-toggle',
   'dropdown-item',
   'dropdown-toggle-icon'
-]
+];
 
 @Component({
   selector: 'app-service-card-dashboard',
@@ -66,13 +67,15 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   sanitized: ServiceCard;
   sanitizedOptions: ServiceCardOptions;
   sanitizedActions: ServiceCardButton[];
+  booking: ServiceBookingDto;
 
   ArticleStatus = ArticleStatus;
   ArticleType = ArticleType;
 
   constructor(
     injector: Injector,
-    private _modalService: BsModalService
+    private _modalService: BsModalService,
+    private _servicesService: ServicesServiceProxy
   ) {
     super(injector);
   }
@@ -259,7 +262,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
         this.onClickAction.next(serviceId);
         break;
       case 'review':
-        this.handleOnReview(evt, serviceId);
+        this.onReviewAction.next(this.data);
         break;
     }
   }

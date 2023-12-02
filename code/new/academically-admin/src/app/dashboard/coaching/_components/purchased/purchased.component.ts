@@ -1,14 +1,17 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { finalize, takeUntil } from 'rxjs/operators';
+import * as moment from 'moment';
+import { Router } from '@angular/router';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 
-import { AvailableServiceDto, CoachingDto, CoachingsServiceProxy, ServiceBookingDto, ServicesServiceProxy, UserAvailabilitiesServiceProxy, UserAvailabilityDto } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
-import { Router } from '@angular/router';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { LeaveReviewComponent } from '@shared/modals/leave-review/leave-review.component';
+import { LeaveReviewConfirmationComponent } from '@shared/modals/leave-review-confirmation/leave-review-confirmation.component';
+import { CoachingDto, CoachingsServiceProxy } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-purchased',
@@ -50,14 +53,28 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
     this.loadPurchasedCoaching();
   }
 
-  private loadPurchasedCoaching(): void {
-    this._dashboardPageService.isLoading$.next(true);
-    this._coachingService.getAllPurchasedCoaching(this.userId)
-      .pipe(takeUntil(this.destroyed$))
-      .pipe(finalize(() => this._dashboardPageService.isLoading$.next(false)))
-      .subscribe(data => {
-        this.upcomingCoachings = data;
-      });
+  onReview(data: any): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<LeaveReviewComponent>;
+    modalSettings.class = 'modal-sm modal-dialog-centered modal-service-rating';
+    modalSettings.initialState = { data };
+    const modal = this._modalService.show(LeaveReviewComponent, modalSettings);
+
+    modal.content.onCloseModal.subscribe((): void => {
+      this._modalService.hide();
+    });
+
+    modal.content.onReviewSuccess.subscribe((): void => {
+      setTimeout((): void => {
+        const modalConfirmationSettings = this.defaultModalSettings as ModalOptions<LeaveReviewConfirmationComponent>;
+        modalConfirmationSettings.class = 'modal-sm modal-rating-success modal-dialog-centered';
+        modalConfirmationSettings.initialState = {
+          reviewURL: `app/coaching/${data.id}/reviews`,
+          title: this.l('ReviewSubmitted'),
+          subTitle: this.l('CoachingReviewMessage')
+        };
+        this._modalService.show(LeaveReviewConfirmationComponent, modalSettings);
+      }, 200);
+    });
   }
 
   async onRedirection(coaching: CoachingDto): Promise<void> {
@@ -90,5 +107,16 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
     const purchaseModal = this._modalService.show(BookingServiceComponent, modalSettings);
 
     purchaseModal.content.onPaid.subscribe((): void => this.loadPurchasedCoaching());
+  }
+
+  private loadPurchasedCoaching(): void {
+    this._dashboardPageService.isLoading$.next(true);
+    this._coachingService.getAllPurchasedCoaching(this.userId)
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this._dashboardPageService.isLoading$.next(false)))
+      .subscribe(data => {
+        this.upcomingCoachings = data?.filter(x => moment(x.serviceBooking?.bookingDateTime).isAfter(moment()));
+        this.pastCoachings = data?.filter(x => moment(x.serviceBooking?.bookingDateTime).isBefore(moment()));
+      });
   }
 }

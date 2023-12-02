@@ -10,6 +10,7 @@ using Academically.Users.Dto;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Academically.Services.Services.Dto;
 
 namespace Academically.Services.Coachings.Dto
 {
@@ -120,5 +121,8 @@ namespace Academically.Services.Coachings.Dto
 
         [NotMapped]
         public bool IsCancelled { get; set; }
+        
+        [NotMapped]
+        public ServiceBookingDto ServiceBooking { get; set; }
     }
 }
