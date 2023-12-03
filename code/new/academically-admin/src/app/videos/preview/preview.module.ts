@@ -13,6 +13,7 @@ import { CommentsComponent } from './_components/comments/comments.component';
 import { RelatedComponent } from './_components/home/related/related.component';
 import { SeriesVideosComponent } from './_components/home/series-videos/series-videos.component';
 import { QuestionsComponent } from './_components/questions/questions.component';
+import { ReviewsComponent } from './_components/reviews/reviews.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { QuestionsComponent } from './_components/questions/questions.component'
     RelatedComponent,
     SeriesVideosComponent,
     QuestionsComponent,
+    ReviewsComponent
   ],
   imports: [
     CommonModule,

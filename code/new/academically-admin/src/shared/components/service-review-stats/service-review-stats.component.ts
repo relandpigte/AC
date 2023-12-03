@@ -12,6 +12,8 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./service-review-stats.component.less']
 })
 export class ServiceReviewStatsComponent extends AppComponentBase implements OnInit {
+  @Input() hasBorders = true;
+
   data: ServiceReviewStats;
   shimmerType = ShimmerType;
 

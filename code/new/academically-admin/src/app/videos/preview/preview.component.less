@@ -20,6 +20,22 @@
     min-width: 64px;
   }
 
+  .video {
+    &-complete {
+      position: absolute;
+      left: 50%;
+      bottom: 43px;
+      transform: translateX(-50%);
+      z-index: 101;
+
+      .btn {
+        height: 34px;
+        min-width: 295px;
+        max-width: 90%;
+      }
+    }
+  }
+
   .video-container {
     position  : absolute;
     height    : calc(100% - 73px);

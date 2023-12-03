@@ -53,8 +53,11 @@
       </div>
       <video #videoEl *ngIf="shouldShowVideo" width="100%" height="100%" controls autoplay playsinline>
       </video>
+      <div class="video-complete">
+        <button class="btn btn-primary d-flex justify-content-center align-items-center cursor-pointer" (click)="onMarkAsComplete()">{{ 'Mark as complete' | localize }}</button>
+      </div>
     </div>
   </div>
 
-  <app-sidebar [hidden]="isSidebarHidden"></app-sidebar>
+  <app-sidebar #sideBar [hidden]="isSidebarHidden"></app-sidebar>
 </div>

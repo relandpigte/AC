@@ -15,6 +15,7 @@ import { CreateServiceReviewDto, EventCategory, ServicesServiceProxy, ServicesTy
 export class LeaveReviewComponent extends AppComponentBase {
   @Input() data: any;
   @Input() inline: boolean;
+  @Input() placeholder: string;
   @Output() onReviewSuccess = new Subject<any>();
   @Output() onCloseModal = new Subject<any>();
 

@@ -18,7 +18,7 @@
       <div class="col">
         <div class="form-group rating-comment">
           <label for="comments" class="sr-only">Comment</label>
-          <textarea class="form-control" [(ngModel)]="model.comments" id="comments" name="comments" placeholder="{{ 'EventExperience' | localize : data.name }}"></textarea>
+          <textarea class="form-control" [(ngModel)]="model.comments" id="comments" name="comments" [placeholder]="placeholder || ('EventExperience' | localize : data.name)"></textarea>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-<div class="card custom-card-border custom-card-shadow">
+<div class="card" [ngClass]="{ 'custom-card-border custom-card-shadow': hasBorders, 'border-0 shadow-none': !hasBorders }">
   <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.LandingRightReview"></app-shimmer>
 
   <div class="card-body">

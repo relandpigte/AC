@@ -214,7 +214,7 @@ namespace Academically.Services.Services
         {
             var purchases = this._servicePurchasesRepository.GetAll()
                 .Include(p => p.CreatorUser)
-                    .ThenInclude(x => x.ProfilePictureDocumentId)
+                    .ThenInclude(x => x.ProfilePictureDocument)
                 .WhereIf(referenceId.HasValue, p => p.ReferenceId == referenceId.Value)
                 .WhereIf(userId.HasValue, p => p.CreatorUserId == userId.Value)
                 .Select(p => ObjectMapper.Map<ServicePurchaseDto>(p))
@@ -468,6 +468,7 @@ namespace Academically.Services.Services
         public async Task<ServiceReview> SaveServiceReview(CreateServiceReviewDto input)
         {
             var serviceReview = ObjectMapper.Map<ServiceReview>(input);
+            serviceReview.CreationTime = Clock.Now;
             return await _serviceReviewRepository.InsertAsync(serviceReview);
         }
 
@@ -477,7 +478,7 @@ namespace Academically.Services.Services
                 .Where(x => x.ReferenceId == referenceId)
                 .Where(x => x.CreatorUserId == AbpSession.GetUserId())
                 .Select(x => ObjectMapper.Map<ServiceReviewDto>(x))
-                .FirstOrDefaultAsync();
+                .SingleOrDefaultAsync();
         }
 
         public async Task<ServiceReviewStats> GetServiceReviewStats(Guid referenceId)

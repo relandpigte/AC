@@ -1985,13 +1985,18 @@
     <text name="CompletedEvent">You’ve completed this {0}</text>
     <text name="LeaveReview">Leave review</text>
     <text name="LeaveRating">Leave a rating</text>
-    <text name="OverallRate">Overall, how would you rate {0}</text>
+    <text name="OverallRate">Overall, how would you rate {0}?</text>
     <text name="EventExperience">Tell us about your experience of {0}</text>
     <text name="YourEventRating">Your rating for this {0}</text>
     <text name="RatingSubmitted">Rating submitted</text>
     <text name="ThankYouForRating">Thank you for your rating. Your response has been sent to the organiser.</text>
-
-    <!-- Dashboard -->
+	  
+	<!-- Reviews -->
+	<text name="Reviews.ShareYourThoughts">Share your thoughts on {0}</text>
+	<text name="Reviews.Submitted.Title">Review submitted</text>
+	<text name="Reviews.Submitted.Body">Thank you for your review. Your response has been sent to the {0}.</text>
+	  
+	  <!-- Dashboard -->
     <text name="DashboardForYou">For you</text>
     <text name="CurrentLearning">Current learning</text>
     <text name="RecentlyCreated">Recently created</text>

@@ -1,4 +1,4 @@
-import { Component, Injector, Input } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, Output } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Router } from '@angular/router';
 
@@ -13,6 +13,15 @@ export class LeaveReviewConfirmationComponent extends AppComponentBase {
   @Input() reviewURL: string;
   @Input() title: string;
   @Input() subTitle: string;
+  @Input() hasGoToReviews: boolean = true;
+  @Input() hasDone: boolean = true;
+
+  @Output() onGoToReviews = new EventEmitter<any>();
+  @Output() onDone = new EventEmitter<any>();
+
+  get hasActionButtons(): boolean { return this.hasGoToReviews || this.hasDone; }
+  get isDefaultGoToReviews(): boolean { return this.onGoToReviews.observers?.length === 0; }
+  get isDefaultDone(): boolean { return this.onDone.observers?.length === 0; }
 
   constructor(
     injector: Injector,
@@ -28,6 +37,19 @@ export class LeaveReviewConfirmationComponent extends AppComponentBase {
 
   async handleGoToReviews(): Promise<void> {
     this._modal.hide();
-    await this._router.navigate([this.reviewURL]);
+    if (this.isDefaultGoToReviews && this.reviewURL) {
+      await this._router.navigate([this.reviewURL]);
+    } else if (this.onGoToReviews.observers.length > 0) {
+      this.onGoToReviews.emit();
+    }
+  }
+
+  async handleDone(): Promise<void> {
+    this._modal.hide();
+    if (this.isDefaultDone) {
+      return;
+    } else if (this.onDone.observers.length > 0) {
+      this.onDone.emit();
+    }
   }
 }

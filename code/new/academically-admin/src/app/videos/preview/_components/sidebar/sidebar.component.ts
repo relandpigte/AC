@@ -49,4 +49,9 @@ export class SidebarComponent implements OnInit {
   onMenuItemClick(menuItem: MenuItem): void {
     this.activeMenuItem = menuItem;
   }
+
+  setMenuItemClick(name: string): void {
+    const menuItem = this.menuItems.find(x => x.name.toLowerCase() === name.toLowerCase());
+    this.activeMenuItem = menuItem;
+  }
 }
