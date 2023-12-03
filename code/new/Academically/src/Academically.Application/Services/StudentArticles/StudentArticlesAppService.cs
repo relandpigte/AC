@@ -3,6 +3,7 @@ using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
 using Academically.Services.StudentArticles.Dto;
+using Academically.Services.StudentVideos.Dto;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -18,10 +19,11 @@ namespace Academically.Services.StudentArticles
         {
             _studentArticlesRepository = studentArticlesRepository;
         }
-        public async Task CreateAsync(StudentArticleDto input)
+        public async Task<GetStudentArticleDto> CreateAsync(StudentArticleDto input)
         {
             var studentArticle = ObjectMapper.Map<StudentArticle>(input);
             await _studentArticlesRepository.InsertAsync(studentArticle);
+            return ObjectMapper.Map<GetStudentArticleDto>(studentArticle);
         }
 
         public async Task DeleteAsync(Guid id)

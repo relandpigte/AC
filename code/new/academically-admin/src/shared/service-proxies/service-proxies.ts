@@ -24995,7 +24995,7 @@ export class StudentArticlesServiceProxy {
      * @param body (optional) 
      * @return Success
      */
-    create(body: StudentArticleDto | undefined): Observable<void> {
+    create(body: StudentArticleDto | undefined): Observable<GetStudentArticleDto> {
         let url_ = this.baseUrl + "/api/services/app/StudentArticles/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -25007,6 +25007,7 @@ export class StudentArticlesServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
             })
         };
 
@@ -25017,14 +25018,14 @@ export class StudentArticlesServiceProxy {
                 try {
                     return this.processCreate(<any>response_);
                 } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
+                    return <Observable<GetStudentArticleDto>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<void>><any>_observableThrow(response_);
+                return <Observable<GetStudentArticleDto>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCreate(response: HttpResponseBase): Observable<void> {
+    protected processCreate(response: HttpResponseBase): Observable<GetStudentArticleDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -25033,14 +25034,17 @@ export class StudentArticlesServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetStudentArticleDto.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(<any>null);
+        return _observableOf<GetStudentArticleDto>(<any>null);
     }
 
     /**

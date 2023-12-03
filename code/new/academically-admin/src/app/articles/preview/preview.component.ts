@@ -1,6 +1,6 @@
 import { Component, OnInit, Injector, Input, ViewChild, ElementRef } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { VideoDto, VideosServiceProxy, VideoType, GetStudentVideoDto, StudentVideosServiceProxy, PricingType, ServicesServiceProxy, ServiceReviewDto } from '@shared/service-proxies/service-proxies';
+import { VideoDto, VideosServiceProxy, VideoType, GetStudentVideoDto, StudentVideosServiceProxy, PricingType, ServicesServiceProxy, ServiceReviewDto, GetStudentArticleDto, ArticleDto, ArticleType, ArticlesServiceProxy, StudentArticlesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Location } from '@angular/common';
@@ -25,16 +25,17 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
   @ViewChild('videoEl') videoEl: ElementRef;
   @ViewChild(SidebarComponent) sidebar: SidebarComponent;
 
+  private _id: string;
+
+  model = new ArticleDto();
+  studentArticle = new GetStudentArticleDto();
+  ownReview: ServiceReviewDto;
   thumbnailUrl: string;
 
-  model = new VideoDto();
-  VideoType = VideoType;
   isSidebarHidden = false;
   isPreview = false;
-  studentVideo = new GetStudentVideoDto();
-  ownReview: ServiceReviewDto;
 
-  private _id: string;
+  ArticleType = ArticleType;
 
   constructor(
     injector: Injector,
@@ -43,9 +44,9 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
     private _modalService: BsModalService,
     private _location: Location,
     private _uploadService: UploadService,
-    private _videosService: VideosServiceProxy,
+    private _articlesService: ArticlesServiceProxy,
     private _previewService: PreviewService,
-    private _studentVideosService: StudentVideosServiceProxy,
+    private _studentArticlesService: StudentArticlesServiceProxy,
     private _servicesService: ServicesServiceProxy,
     private _serviceData: ServiceDataService
   ) {
@@ -56,11 +57,12 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
         this.id = paramMap.get('id');
       }
     });
-    this._previewService.studentVideo$
+
+    this._previewService.studentArticle$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         if (response) {
-          this.studentVideo = response;
+          this.studentArticle = response;
         }
       });
   }
@@ -68,11 +70,15 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
   @Input() set id(value: string) {
     this._id = value;
     this._previewService.preview = this.isPreview;
-    this.getVideo();
+    this.getArticle();
   }
 
-  get shouldShowVideo(): boolean {
-    return this.isPreview || this.model.pricingType === PricingType.Free || (!this.isPreview && !_.isEmpty(this.studentVideo));
+  get articleId(): string {
+    return this.model.id;
+  }
+
+  get shouldShowArticle(): boolean {
+    return this.isPreview || this.model.pricingType === PricingType.Free || (!this.isPreview && !_.isEmpty(this.studentArticle));
   }
 
   ngOnInit(): void {
@@ -86,38 +92,32 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
     }
   }
 
-  private getVideo(): void {
+  private getArticle(): void {
     forkJoin([
-      this._videosService.get(this._id),
+      this._articlesService.get(this._id),
       this._servicesService.getUserReview(this._id),
       this._servicesService.getServiceReviewStats(this._id),
     ])
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(([video, review, reviewStats]) => {
-        this.model = video;
+      .subscribe(([article, review, reviewStats]) => {
+        this.model = article;
         this.ownReview = review;
 
-        this._previewService.video = video;
+        this._previewService.article = article;
         this._serviceData.serviceReview = review;
         this._serviceData.serviceReviewStats = reviewStats;
-        this.thumbnailUrl = this._uploadService.getFileUrl(video.thumbnailDocument);
+        this.thumbnailUrl = this._uploadService.getFileUrl(article.thumbnailDocument);
         if (!this.isPreview) {
-          this.getStudentVideo();
+          this.getStudentArticle();
         }
-        setTimeout(() => {
-          const video = (this.videoEl.nativeElement as HTMLVideoElement);
-          video.src = this._uploadService.getFileUrl(this.model.document);
-          video.load();
-          video.play();
-        });
       });
   }
 
-  private getStudentVideo(): void {
-    this._studentVideosService.getByVideo(this.model.id)
+  private getStudentArticle(): void {
+    this._studentArticlesService.getByArticle(this.model.id)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
-        this.studentVideo = response;
+        this.studentArticle = response;
       });
   }
 

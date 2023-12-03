@@ -1,0 +1,30 @@
+<div class="reviews d-flex flex-column justify-content-start align-items-center gap-10">
+    <app-service-review-stats class="w-100" [hasBorders]="false"></app-service-review-stats>
+    <ng-container *ngIf="reviews?.length">
+        <div class="reviews-controls d-flex justify-content-between align-items-center w-100">
+            <div class="reviews-controls-sort dropdown">
+                <a href="#" class="dropdown-ellipses dropdown-toggle d-flex flex-row align-items-center gap-5" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ 'Latest' | localize }} <span class="fe fe-chevron-down"></span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-left" [style.margin-top.px]="10">
+                    <div class="dropdown-item cursor-pointer d-flex justify-content-between">
+                        <div>{{ 'Latest' | localize }}</div>
+                        <i *ngIf="false" class="fe fe-check"></i>
+                    </div>
+                    <div class="dropdown-item cursor-pointer d-flex justify-content-between">
+                        <div>{{ 'Date' | localize }}</div>
+                        <i *ngIf="false" class="fe fe-check"></i>
+                    </div>
+                </div>
+            </div>
+
+            <select class="reviews-controls-filter">
+                <option value="1">All stars</option>
+            </select>
+        </div>
+        <div class="reviews-list d-flex flex-column justify-content-start align-items-center gap-10 w-100">
+            <app-service-review-card *ngFor="let review of reviews" [review]="review" class="w-100"></app-service-review-card>
+        </div>
+    </ng-container>
+</div>

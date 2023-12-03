@@ -1,0 +1,59 @@
+::ng-deep {
+    app-service-review-card {
+        .review {
+            &-container {
+                padding: 17px 15px 15px !important;
+            }
+
+            &-heading {
+                &-avatar {
+                    width: 36px !important;
+                    height:36px !important;
+                    margin-right: 10px !important;
+
+                    .avatar {
+                        img {
+                            width: 36px !important;
+                            height:36px !important;
+                        }
+                    }
+                }
+            }
+
+            &-rating {
+                &-container {
+                    margin: 11px 0 15px 0 !important;
+                }
+            }
+        }
+    }
+}
+
+.reviews {
+    &-controls {
+        padding: 0 20px;
+
+        &-sort {
+            .dropdown {
+                &-toggle,
+                &-toggle .fe {
+                    font-weight: 600;
+                    font-size: 13px;
+                    line-height: 20px;
+                    color: #12263F;
+                }
+            }
+        }
+
+        &-filter {
+            border: 1px solid #E3EBF6;
+            color: #3B516C;
+            border-radius: 4px;
+            padding: 3px 5px;
+        }
+    }
+
+    &-list {
+        padding: 0 20px;
+    }
+}

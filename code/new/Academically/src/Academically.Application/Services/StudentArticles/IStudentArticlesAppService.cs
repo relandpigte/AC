@@ -10,7 +10,7 @@ namespace Academically.Services.StudentArticles
     {
 		Task<PagedResultDto<StudentArticleDto>> GetAllAsync(GetAllStudentArticleDto input);
 		Task<GetStudentArticleDto> GetByArticleAsync(Guid articleId);
-		Task CreateAsync(StudentArticleDto input);
+		Task<GetStudentArticleDto> CreateAsync(StudentArticleDto input);
 		Task DeleteAsync(Guid id);
 	}
 }

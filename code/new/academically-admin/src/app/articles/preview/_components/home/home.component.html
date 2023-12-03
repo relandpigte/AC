@@ -1,0 +1,86 @@
+<ng-container *ngIf="model.parent && model.parent.id">
+  <div class="p-3">
+    <div class="row align-items-center">
+      <div class="col">
+        <h6 class="header-pretitle">{{ 'VideoSeries' | localize }}</h6>
+        <h3 class="header-title">
+          {{ model.parent.name }}
+        </h3>
+      </div>
+      <div *ngIf="model.parent.pricingType !== PricingType.Free" class="col-auto">
+        <button *ngIf="!parentStudentVideo || !parentStudentVideo.id else checkTemplate" [disabled]="preview"
+          class="btn btn-sm btn-primary" (click)="onPurchaseClick(model.parent)">
+          &#163;{{ model.parent.price }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <hr class="m-0 p-0">
+</ng-container>
+<div class="p-3" *ngIf="model.creatorUser">
+  <div class="row align-items-center">
+    <div class="col-auto">
+      <a href="#!" class="avatar avatar-sm">
+        <img [src]="getProfilePictureUrl(model.creatorUser.profilePictureDocument)" alt="..."
+          class="avatar-img rounded-circle">
+      </a>
+    </div>
+    <div class="col ml-n2">
+      <h4 class="m-0 p-0">{{ model.creatorUser.fullName }}</h4>
+    </div>
+    <div *ngIf="appSession.userId !== model.creatorUser.id" class="col-auto">
+      <button *ngIf="!userFollower || !userFollower.id else unfollowTemplate" class="btn btn-sm btn-outline-primary"
+        (click)="onFollowClick()">
+        {{ 'Follow' | localize }}
+      </button>
+      <ng-template #unfollowTemplate>
+        <button class="btn btn-sm btn-outline-success" (click)="onUnfollowClick()">
+          {{ 'Unfollow' | localize }}
+        </button>
+      </ng-template>
+    </div>
+  </div>
+</div>
+<hr class="m-0 p-0">
+<div class="p-3">
+  <div class="d-flex align-items-center justify-content-between">
+    <h4 class="p-0 m-0">{{ model.name }}</h4>
+    <ng-container
+      *ngIf="model.pricingType !== PricingType.Free && ((!studentArticle || !studentArticle.id) || (studentArticle && studentArticle.id && studentArticle.saveOnly))">
+      <button *ngIf="!studentVideo || !studentVideo.id || studentVideo.saveOnly else checkTemplate" [disabled]="preview"
+        class="btn btn-sm btn-primary" (click)="onPurchaseClick(model)">
+        &#163;{{ model.price }}
+      </button>
+    </ng-container>
+  </div>
+  <p *ngIf="model.description" class="pt-1 m-0 small">{{ model.description }}</p>
+  <div class="row small text-muted text-center mx-2 mt-2">
+    <div class="col p-0 no-wrap">
+      <a [class.text-success]="isLiked" href="#!like" (click)="$event.preventDefault(); onLikeClick()">
+        <i class="fe fe-thumbs-up"></i> {{ likeCount }}
+      </a>
+    </div>
+    <div class="col-auto p-0 ">|</div>
+    <div class="col p-0 no-wrap">
+      <i class="fe fe-share-2"></i> {{ 'Share' }}
+    </div>
+    <ng-container *ngIf="!preview && (!studentArticle.id || (studentArticle && studentArticle.saveOnly))">
+      <div class="col-auto p-0 ">|</div>
+      <div class="col p-0 no-wrap">
+        <a *ngIf="!studentVideo || !studentVideo.id else unsaveVideoTemplate" href="#!save"
+          (click)="$event.preventDefault(); onSaveClick()">
+          <i class="fe fe-bookmark"></i> {{ 'Save' }}
+        </a>
+        <ng-template #unsaveVideoTemplate>
+          <a href="#!save" (click)="$event.preventDefault(); onUnsaveClick()" class="text-success">
+            <i class="fe fe-bookmark"></i> {{ 'Unsave' }}
+          </a>
+        </ng-template>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #checkTemplate>
+  <i class="fe fe-check p-2"></i>
+</ng-template>

@@ -50,6 +50,21 @@ import { ArticlesComponent } from './articles.component';
           ),
       },
       {
+        path: 'preview',
+        data: { permission: 'Pages.Articles' },
+        canActivate: [AppRouteGuard],
+        canActivateChild: [AppRouteGuard],
+        children: [
+          {
+            path: ':id',
+            loadChildren: () =>
+              import('@app/articles/preview/preview.module').then(
+                (m) => m.PreviewModule
+              ),
+          },
+        ],
+      },
+      {
         path: 'tutor-portal',
         data: { permission: 'Pages.Videos' },
         canActivate: [AppRouteGuard],
