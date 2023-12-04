@@ -8,12 +8,14 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class PortalComponent implements OnInit {
   articleId: string;
+  tab: string;
 
   constructor(
     route: ActivatedRoute,
   ) {
-    route.parent.parent.parent.paramMap.subscribe(paramMap => {
+    route.paramMap.subscribe(paramMap => {
       this.articleId = paramMap.get('article-id');
+      this.tab = paramMap.get('tab');
     });
   }
 

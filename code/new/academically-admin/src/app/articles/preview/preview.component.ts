@@ -6,8 +6,9 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
 import { LeaveReviewConfirmationComponent } from '@shared/modals/leave-review-confirmation/leave-review-confirmation.component';
 import { LeaveReviewComponent } from '@shared/modals/leave-review/leave-review.component';
-import { ArticleDto, ArticleType, ArticlesServiceProxy, GetStudentArticleDto, ServiceReviewDto, ServicesServiceProxy, StudentArticlesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, ArticleType, ArticlesServiceProxy, GetStudentArticleDto, PricingType, ServiceReviewDto, ServicesServiceProxy, StudentArticlesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { ServiceDataService } from '@shared/services/service-data.service';
+import * as _ from 'lodash';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { forkJoin } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -71,13 +72,20 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
     this.getArticle();
   }
 
+  @Input() set tab(tab: string) {
+    if (tab) {
+      setTimeout(() => {
+        this.sidebar.setMenuItemClick(tab);
+      });
+    }
+  }
+
   get articleId(): string {
     return this.model.id;
   }
 
   get shouldShowArticle(): boolean {
-    return false;
-    // return this.isPreview || this.model.pricingType === PricingType.Free || (!this.isPreview && !_.isEmpty(this.studentArticle));
+    return this.isPreview || this.model.pricingType === PricingType.Free || (!this.isPreview && !_.isEmpty(this.studentArticle));
   }
 
   ngOnInit(): void {
@@ -143,7 +151,7 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
         modalConfirmationSettings.class = 'modal-sm modal-rating-success modal-dialog-centered';
         modalConfirmationSettings.initialState = {
           title: this.l('Reviews.Submitted.Title'),
-          subTitle: this.l('Reviews.Submitted.Body', ['tutor']),
+          subTitle: this.l('Reviews.Submitted.Body', ['author']),
           hasGoToReviews: false,
         };
         const modal = this._modalService.show(LeaveReviewConfirmationComponent, modalSettings);

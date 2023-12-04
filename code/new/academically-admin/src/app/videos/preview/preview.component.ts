@@ -71,6 +71,14 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
     this.getVideo();
   }
 
+  @Input() set tab(tab: string) {
+    if (tab) {
+      setTimeout(() => {
+        this.sidebar.setMenuItemClick(tab);
+      });
+    }
+  }
+
   get shouldShowVideo(): boolean {
     return this.isPreview || this.model.pricingType === PricingType.Free || (!this.isPreview && !_.isEmpty(this.studentVideo));
   }

@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { LeaveReviewComponent } from '@shared/modals/leave-review/leave-review.component';
+import { LeaveReviewConfirmationComponent } from '@shared/modals/leave-review-confirmation/leave-review-confirmation.component';
 
 @Component({
   selector: 'app-purchased',
@@ -83,5 +85,35 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
 
   async onRedirection(tutorial: VideoDto): Promise<void> {
     this._router.navigate(['app/videos/student-portal' , tutorial.id]);
+  }
+
+  onReviewAction(data: any): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<LeaveReviewComponent>;
+    modalSettings.class = 'modal-sm modal-dialog-centered modal-service-rating';
+    modalSettings.initialState = {
+      data,
+      placeholder: this.l('Reviews.ShareYourThoughts', [data.name])
+    };
+    const modal = this._modalService.show(LeaveReviewComponent, modalSettings);
+
+    modal.content.onCloseModal.subscribe((): void => {
+      this._modalService.hide();
+    });
+
+    modal.content.onReviewSuccess.subscribe((): void => {
+      setTimeout((): void => {
+        const modalConfirmationSettings = this.defaultModalSettings as ModalOptions<LeaveReviewConfirmationComponent>;
+        modalConfirmationSettings.class = 'modal-sm modal-rating-success modal-dialog-centered';
+        modalConfirmationSettings.initialState = {
+          reviewURL: `/app/videos/student-portal/${data.id}/portal/reviews`,
+          title: this.l('Reviews.Submitted.Title'),
+          subTitle: this.l('Reviews.Submitted.Body', ['tutor']),
+        };
+        const modal = this._modalService.show(LeaveReviewConfirmationComponent, modalSettings);
+        modal.content.onDone.subscribe((): void => {
+          this.initTutorials();
+        });
+      }, 200);
+    });
   }
 }

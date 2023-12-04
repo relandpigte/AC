@@ -8,13 +8,12 @@ import { PortalComponent } from './portal.component';
     RouterModule.forChild([
       {
         path: '',
-        children: [
-          {
-            path: '',
-            component: PortalComponent,
-          },
-        ],
-      }
+        component: PortalComponent,
+      },
+      {
+        path: ':tab',
+        component: PortalComponent,
+      },
     ]),
   ],
   exports: [

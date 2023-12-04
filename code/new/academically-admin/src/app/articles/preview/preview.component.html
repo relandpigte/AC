@@ -49,12 +49,14 @@
     <div class="article-container">
       <div *ngIf="!shouldShowArticle" class="article-overlay">
         <h1>{{ 'Generics.BuyThis.Title' | localize: ('article' | titlecase)}}</h1>
-        <p>{{ 'Generics.BuyThis.Subitle' | localize: 'article' }}</p>
+        <p>{{ 'Generics.BuyThis.Subtitle' | localize: 'article' }}</p>
       </div>
-      <app-lesson-preview *ngIf="shouldShowArticle" [id]="articleId"></app-lesson-preview>
-      <div class="article-complete">
-        <button class="btn btn-primary d-flex justify-content-center align-items-center cursor-pointer" (click)="onMarkAsComplete()">{{ 'Mark as complete' | localize }}</button>
-      </div>
+      <ng-container *ngIf="shouldShowArticle">
+        <app-lesson-preview [id]="articleId"></app-lesson-preview>
+        <div class="article-complete">
+          <button class="btn btn-primary d-flex justify-content-center align-items-center cursor-pointer" (click)="onMarkAsComplete()">{{ 'Mark as complete' | localize }}</button>
+        </div>
+      </ng-container>
     </div>
   </div>
 

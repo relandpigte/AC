@@ -219,15 +219,15 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
     this.onUnArchive.next(data);
   }
 
-  handleOnReview(evt: any, serviceId: string): void {
+  handleOnReview(evt: any, data: any): void {
     evt.preventDefault();
     evt.stopPropagation();
     if (this.onReviewAction.observers.length > 0) {
-      this.onReviewAction.next(serviceId);
+      this.onReviewAction.next(data);
     } else {
       const modalSettings = this.defaultModalSettings;
       modalSettings.class = 'modal-lg modal-dialog-centered';
-      modalSettings.initialState = {serviceId};
+      modalSettings.initialState = { serviceId: data.id };
       const modal = this._modalService.show(RateAndReviewComponent, modalSettings).content;
 
       modal.onClose.subscribe((): void => {
