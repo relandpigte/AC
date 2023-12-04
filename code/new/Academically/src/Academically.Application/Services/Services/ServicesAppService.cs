@@ -478,7 +478,7 @@ namespace Academically.Services.Services
                 .Where(x => x.ReferenceId == referenceId)
                 .Where(x => x.CreatorUserId == AbpSession.GetUserId())
                 .Select(x => ObjectMapper.Map<ServiceReviewDto>(x))
-                .SingleOrDefaultAsync();
+                .FirstOrDefaultAsync();
         }
 
         public async Task<ServiceReviewStats> GetServiceReviewStats(Guid referenceId)

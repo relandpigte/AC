@@ -1839,6 +1839,13 @@
 	<text name="Generics.Reactions.Downvote">Downvote</text>
 	<text name="Generics.SuccessfullyDuplicated">Successfully duplicated!</text>
 	<text name="Generics.DeleteConfirmationMessageWithType">Are you sure you want to delete this {0}?</text>
+	<text name="Generics.BuyThis.Title">Buy this {0}</text>
+	<text name="Generics.BuyThis.Subtitle">Please buy this {0} first in order to view it.</text>
+	<text name="Generics.Purchase.Single.ConfirmationMessage">Are you sure you want to purchase this {0}?</text>
+	<text name="Generics.Purchase.Series.ConfirmationMessage">Are you sure you want to purchase this {0} series?</text>
+	<text name="Generics.Purchase.Single.SuccessMessage">The {0} was successfully purchased.</text>
+	<text name="Generics.Purchase.Series.SuccessMessage">The {0} series was successfully purchased.</text>
+	<!-- Article -->
 	<!-- Course -->
 	<text name="CoursePreview">Course preview</text>
 	<text name="PublishCourseConfirmationMessage">Are you sure you want to publish this course?</text>

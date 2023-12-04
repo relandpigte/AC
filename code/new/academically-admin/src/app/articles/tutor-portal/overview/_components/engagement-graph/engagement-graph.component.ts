@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
-import { TutorPortalService } from '@app/videos/tutor-portal/_services/tutor-portal.service';
+import { TutorPortalService } from '@app/articles/tutor-portal/_services/tutor-portal.service';
 import { AppComponentBase } from '@shared/app-component-base';
-import { VideoDto } from '@shared/service-proxies/service-proxies';
+import { ArticleDto } from '@shared/service-proxies/service-proxies';
 import * as moment from 'moment';
 
 enum ChartType {
@@ -18,7 +18,7 @@ export class EngagementGraphComponent extends AppComponentBase implements OnInit
   chartSettings: any = {};
   chartDataset: any[] = [];
 
-  model = new VideoDto();
+  model = new ArticleDto();
   ChartType = ChartType;
   currentChartType = ChartType.Attention;
   constructor(
@@ -27,7 +27,7 @@ export class EngagementGraphComponent extends AppComponentBase implements OnInit
   ) {
     super(injector);
     this.setChartSettings();
-    this._tutorPortalService.video$.subscribe(response => {
+    this._tutorPortalService.article$.subscribe(response => {
       this.model = response;
     });
   }

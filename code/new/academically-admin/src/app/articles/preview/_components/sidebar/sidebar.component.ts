@@ -19,7 +19,7 @@ class MenuItem {
 export class SidebarComponent implements OnInit {
   @Input() hidden = false;
 
-  videoId: string;
+  articleId: string;
   MenuItem = MenuItem;
   menuItems: MenuItem[] = [];
   activeMenuItem: MenuItem;
@@ -37,8 +37,8 @@ export class SidebarComponent implements OnInit {
     this.activeMenuItem = this.menuItems[0];
     route.paramMap.subscribe(paramMap => {
       if (paramMap.has('id')) {
-        this.videoId = paramMap.get('id');
-        console.log(this.videoId);
+        this.articleId = paramMap.get('id');
+        console.log(this.articleId);
       }
     });
   }

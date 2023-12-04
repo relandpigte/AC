@@ -1,19 +1,18 @@
-import { Component, OnInit, Injector, Input, ViewChild, ElementRef } from '@angular/core';
-import { AppComponentBase } from '@shared/app-component-base';
-import { VideoDto, VideosServiceProxy, VideoType, GetStudentVideoDto, StudentVideosServiceProxy, PricingType, ServicesServiceProxy, ServiceReviewDto, GetStudentArticleDto, ArticleDto, ArticleType, ArticlesServiceProxy, StudentArticlesServiceProxy } from '@shared/service-proxies/service-proxies';
-import { ActivatedRoute, Router } from '@angular/router';
-import { takeUntil } from 'rxjs/operators';
 import { Location } from '@angular/common';
+import { Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UploadService } from '@app/_shared/services/upload.service';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { PreviewService } from './_services/preview.service';
-import * as _ from 'lodash';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { LeaveReviewComponent } from '@shared/modals/leave-review/leave-review.component';
+import { AppComponentBase } from '@shared/app-component-base';
 import { LeaveReviewConfirmationComponent } from '@shared/modals/leave-review-confirmation/leave-review-confirmation.component';
+import { LeaveReviewComponent } from '@shared/modals/leave-review/leave-review.component';
+import { ArticleDto, ArticleType, ArticlesServiceProxy, GetStudentArticleDto, ServiceReviewDto, ServicesServiceProxy, StudentArticlesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { ServiceDataService } from '@shared/services/service-data.service';
-import { SidebarComponent } from './_components/sidebar/sidebar.component';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { forkJoin } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { SidebarComponent } from './_components/sidebar/sidebar.component';
+import { PreviewService } from './_services/preview.service';
 
 @Component({
   selector: 'app-preview',
@@ -22,7 +21,6 @@ import { forkJoin } from 'rxjs';
   animations: [appModuleAnimation()],
 })
 export class PreviewComponent extends AppComponentBase implements OnInit {
-  @ViewChild('videoEl') videoEl: ElementRef;
   @ViewChild(SidebarComponent) sidebar: SidebarComponent;
 
   private _id: string;
@@ -78,7 +76,8 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
   }
 
   get shouldShowArticle(): boolean {
-    return this.isPreview || this.model.pricingType === PricingType.Free || (!this.isPreview && !_.isEmpty(this.studentArticle));
+    return false;
+    // return this.isPreview || this.model.pricingType === PricingType.Free || (!this.isPreview && !_.isEmpty(this.studentArticle));
   }
 
   ngOnInit(): void {
@@ -88,7 +87,7 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
     if (this.isPreview) {
       this._location.back();
     } else {
-      this._router.navigate(['/app/home/videos']);
+      this._router.navigate(['/app/explore/articles']);
     }
   }
 

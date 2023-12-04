@@ -118,8 +118,8 @@ export class HomeComponent extends AppComponentBase implements OnInit {
   }
 
   onPurchaseClick(article: ArticleDto): void {
-    const confirmationMessageLocale = article.type === ArticleType.SingleArticle ? 'PurchaseVideoConfirmationMessage' : 'PurchaseVideoSeriesConfirmationMessage';
-    this.message.confirm(this.l(confirmationMessageLocale), undefined,
+    const confirmationMessageLocale = article.type === ArticleType.SingleArticle ? 'Generics.Purchase.Single.ConfirmationMessage' : 'Generics.Purchase.Series.ConfirmationMessage';
+    this.message.confirm(this.l(confirmationMessageLocale, ['article']), undefined,
       (result => {
         if (result) {
           const studentArticle = new StudentArticleDto();
@@ -137,8 +137,8 @@ export class HomeComponent extends AppComponentBase implements OnInit {
                 this.parentStudentArticle = response;
                 this.getStudentArticle();
               }
-              const messageLocale = article.type === ArticleType.SingleArticle ? 'VideoPurchaseSuccessMessage' : 'VideoSeriesPurchaseSuccessMessage';
-              this.notify.success(this.l(messageLocale));
+              const messageLocale = article.type === ArticleType.SingleArticle ? 'Generics.Purchase.Single.SuccessMessage' : 'Generics.Purchase.Series.SuccessMessage';
+              this.notify.success(this.l(messageLocale, ['article']));
             });
         }
       }));

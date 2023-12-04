@@ -66,7 +66,7 @@ import { ArticlesComponent } from './articles.component';
       },
       {
         path: 'tutor-portal',
-        data: { permission: 'Pages.Videos' },
+        data: { permission: 'Pages.Articles' },
         canActivate: [AppRouteGuard],
         canActivateChild: [AppRouteGuard],
         children: [

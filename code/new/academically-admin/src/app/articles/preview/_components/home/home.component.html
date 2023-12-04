@@ -2,13 +2,13 @@
   <div class="p-3">
     <div class="row align-items-center">
       <div class="col">
-        <h6 class="header-pretitle">{{ 'VideoSeries' | localize }}</h6>
+        <h6 class="header-pretitle">{{ 'ArticleSeries' | localize }}</h6>
         <h3 class="header-title">
           {{ model.parent.name }}
         </h3>
       </div>
       <div *ngIf="model.parent.pricingType !== PricingType.Free" class="col-auto">
-        <button *ngIf="!parentStudentVideo || !parentStudentVideo.id else checkTemplate" [disabled]="preview"
+        <button *ngIf="!parentStudentArticle || !parentStudentArticle.id else checkTemplate" [disabled]="preview"
           class="btn btn-sm btn-primary" (click)="onPurchaseClick(model.parent)">
           &#163;{{ model.parent.price }}
         </button>
@@ -47,7 +47,7 @@
     <h4 class="p-0 m-0">{{ model.name }}</h4>
     <ng-container
       *ngIf="model.pricingType !== PricingType.Free && ((!studentArticle || !studentArticle.id) || (studentArticle && studentArticle.id && studentArticle.saveOnly))">
-      <button *ngIf="!studentVideo || !studentVideo.id || studentVideo.saveOnly else checkTemplate" [disabled]="preview"
+      <button *ngIf="!studentArticle || !studentArticle.id || studentArticle.saveOnly else checkTemplate" [disabled]="preview"
         class="btn btn-sm btn-primary" (click)="onPurchaseClick(model)">
         &#163;{{ model.price }}
       </button>
@@ -67,11 +67,11 @@
     <ng-container *ngIf="!preview && (!studentArticle.id || (studentArticle && studentArticle.saveOnly))">
       <div class="col-auto p-0 ">|</div>
       <div class="col p-0 no-wrap">
-        <a *ngIf="!studentVideo || !studentVideo.id else unsaveVideoTemplate" href="#!save"
+        <a *ngIf="!studentArticle || !studentArticle.id else unsaveArticleTemplate" href="#!save"
           (click)="$event.preventDefault(); onSaveClick()">
           <i class="fe fe-bookmark"></i> {{ 'Save' }}
         </a>
-        <ng-template #unsaveVideoTemplate>
+        <ng-template #unsaveArticleTemplate>
           <a href="#!save" (click)="$event.preventDefault(); onUnsaveClick()" class="text-success">
             <i class="fe fe-bookmark"></i> {{ 'Unsave' }}
           </a>

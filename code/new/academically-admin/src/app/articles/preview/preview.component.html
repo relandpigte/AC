@@ -48,8 +48,8 @@
     </nav>
     <div class="article-container">
       <div *ngIf="!shouldShowArticle" class="article-overlay">
-        <h1 class="text-info">{{ 'BuyThisVideo' | localize }}</h1>
-        <p class="text-info">{{ 'BuyThisVideoWarningMessage' | localize }}</p>
+        <h1>{{ 'Generics.BuyThis.Title' | localize: ('article' | titlecase)}}</h1>
+        <p>{{ 'Generics.BuyThis.Subitle' | localize: 'article' }}</p>
       </div>
       <app-lesson-preview *ngIf="shouldShowArticle" [id]="articleId"></app-lesson-preview>
       <div class="article-complete">

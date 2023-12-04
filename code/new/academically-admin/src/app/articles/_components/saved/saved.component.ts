@@ -6,7 +6,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { PurchaseServiceComponent } from '@shared/components/purchase-service/purchase-service.component';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
-import { ArticleDto, ArticlesServiceProxy, PostsServiceProxy, ServicesServiceProxy, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, ArticlesServiceProxy, PostsServiceProxy, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 

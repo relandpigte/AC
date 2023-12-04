@@ -165,7 +165,6 @@ export class ForYouComponent extends AppComponentBase implements OnInit {
         if (groupedArticles) {
           Object.keys(groupedArticles).forEach(label => {
             const [startDate] = label.split(' - ');
-            console.log('Popular Videos ----> ', groupedArticles[label]);
             if (label == 'Popular') {
               if (currentCount == 0) {
                 this.popular = groupedArticles[label];

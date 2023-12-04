@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ArticleDto, VideoDto } from '@shared/service-proxies/service-proxies';
+import { ArticleDto } from '@shared/service-proxies/service-proxies';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({

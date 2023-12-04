@@ -31,7 +31,7 @@ export class LandingPageComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initVideo();
+    this.initArticle();
   }
 
   onBuyNowClick(): void {
@@ -53,7 +53,7 @@ export class LandingPageComponent extends AppComponentBase implements OnInit {
       });
   }
 
-  private initVideo(): void {
+  private initArticle(): void {
     this._articlesService.get(this.id)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(a => this.article = a);
