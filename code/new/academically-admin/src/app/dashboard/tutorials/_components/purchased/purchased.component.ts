@@ -13,6 +13,12 @@ import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-d
 import { LeaveReviewComponent } from '@shared/modals/leave-review/leave-review.component';
 import { LeaveReviewConfirmationComponent } from '@shared/modals/leave-review-confirmation/leave-review-confirmation.component';
 
+enum PurchasedTabs {
+  All = 'all',
+  Unwatched = 'unwatched',
+  Watched = 'watched'
+}
+
 @Component({
   selector: 'app-purchased',
   templateUrl: './purchased.component.html',
@@ -23,6 +29,9 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
   unwatchedTutorials: VideoDto[] = [];
   watchedTutorials: VideoDto[] = [];
 
+  selectedTab: PurchasedTabs  = PurchasedTabs.All;
+
+  purchasedTabs = PurchasedTabs;
   shimmerType = ShimmerType;
 
   constructor(

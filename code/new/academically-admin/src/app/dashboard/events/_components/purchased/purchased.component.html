@@ -26,17 +26,17 @@
             <div class="search-nav d-flex ml-auto">
                 <ul class="nav nav-tabs nav-tabs-sm border-0">
                     <li class="nav-item">
-                        <a href="#upcoming-events" class="nav-link active" data-toggle="tab" role="tab">
+                        <a href="#upcoming-events" class="nav-link" [class.active]="selectedTab === purchasedTabs.Upcoming" (click)="selectedTab = purchasedTabs.Upcoming" data-toggle="tab" role="tab">
                             Upcoming <span class="badge badge-pill badge-light">{{ totalUpcomingEvents }}</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#past-events" class="nav-link" data-toggle="tab" role="tab">
+                        <a href="#past-events" class="nav-link" [class.active]="selectedTab === purchasedTabs.Past" (click)="selectedTab = purchasedTabs.Past" data-toggle="tab" role="tab">
                             Past <span class="badge badge-pill badge-light">{{ totalPastEvents }}</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#cancelled-events" class="nav-link" data-toggle="tab" role="tab">
+                        <a href="#cancelled-events" class="nav-link" [class.active]="selectedTab === purchasedTabs.Cancelled" (click)="selectedTab = purchasedTabs.Cancelled" data-toggle="tab" role="tab">
                             Cancelled <span class="badge badge-pill badge-light">{{ totalCancelledEvents }}</span>
                         </a>
                     </li>
@@ -46,7 +46,7 @@
     </div>
 
     <div class="tab-content">
-        <div class="tab-pane fade show active" id="upcoming-events" role="tabpanel">
+        <div class="tab-pane fade" [ngClass]="{ 'show active': selectedTab === purchasedTabs.Upcoming }" id="upcoming-events" role="tabpanel">
             <ng-container *ngIf="!!totalUpcomingEvents else noRecords">
                 <app-service-card-dashboard
                     *ngFor="let data of upcomingEvents"
@@ -62,7 +62,7 @@
             </ng-container>
         </div>
 
-        <div class="tab-pane fade" id="past-events" role="tabpanel">
+        <div class="tab-pane fade" [ngClass]="{ 'show active': selectedTab === purchasedTabs.Past }" id="past-events" role="tabpanel">
             <ng-container *ngIf="!!totalPastEvents else noRecords">
                 <app-service-card-dashboard
                     *ngFor="let data of pastEvents"
@@ -77,7 +77,7 @@
             </ng-container>
         </div>
 
-        <div class="tab-pane fade" id="cancelled-events" role="tabpanel">
+        <div class="tab-pane fade" [ngClass]="{ 'show active': selectedTab === purchasedTabs.Cancelled }" id="cancelled-events" role="tabpanel">
             <ng-container *ngIf="!!totalCancelledEvents else noRecords">
                 <app-service-card-dashboard
                     *ngFor="let data of cancelledEvents"

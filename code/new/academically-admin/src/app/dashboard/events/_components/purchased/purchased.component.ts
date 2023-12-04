@@ -13,6 +13,11 @@ import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-d
 import { LeaveReviewComponent } from '@shared/modals/leave-review/leave-review.component';
 import { LeaveReviewConfirmationComponent } from '@shared/modals/leave-review-confirmation/leave-review-confirmation.component';
 
+enum PurchasedTabs {
+  Upcoming = 'upcoming',
+  Past = 'past',
+  Cancelled = 'cancelled'
+}
 
 @Component({
   selector: 'app-purchased',
@@ -24,6 +29,9 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
   pastEvents: EventDto[] = [];
   cancelledEvents: EventDto[] = [];
 
+  selectedTab: PurchasedTabs  = PurchasedTabs.Upcoming;
+
+  purchasedTabs = PurchasedTabs;
   shimmerType = ShimmerType;
 
   constructor(
