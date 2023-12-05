@@ -74,7 +74,7 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
       confirmCb: (): void => {
         const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
         modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
-        modalSettings.initialState = { data: this.data, isCancellation: true };
+        modalSettings.initialState = { data: this.data, isCancellation: true, title: this.l('CancelSession') };
         const modal = this._modalService.show(BookingServiceComponent, modalSettings);
 
         modal.content.onCancelledBooking.subscribe((): void => {
@@ -91,7 +91,8 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
     modalSettings.initialState = {
       data: this.data,
       userAvailabilities: this.userAvailabilities,
-      serviceBookings: this.serviceBookings
+      serviceBookings: this.serviceBookings,
+      title: this.l('BookASession'),
     };
     const modal = this._modalService.show(BookingServiceComponent, modalSettings);
 
@@ -109,7 +110,8 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
       data: this.data,
       userAvailabilities: this.userAvailabilities,
       serviceBookings: this.serviceBookings,
-      rescheduleBooking: this.booking
+      rescheduleBooking: this.booking,
+      title: this.l('RescheduleSession'),
     };
     const modal = this._modalService.show(BookingServiceComponent, modalSettings);
 

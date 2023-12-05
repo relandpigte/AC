@@ -1881,6 +1881,7 @@
 	<text name="DeleteCoachingConfirmationMessage">Are you sure you want to delete this coaching?</text>
     <text name="Coaching.Composer.Placeholder">Ask question before the coaching start...</text>
     <text name="BookASession">Book a session</text>
+    <text name="RescheduleSession">Reschedule session</text>
     <text name="Steps">Steps {0} of {1}</text>
     <text name="SessionRescheduled">Session rescheduled</text>
     <text name="SessionUpdated">The session has been updated in your schedule</text>
