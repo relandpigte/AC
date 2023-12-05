@@ -63,10 +63,10 @@ export class JoinBadgeComponent extends AppComponentBase implements OnInit, OnCh
 
   private initJoinBadge(): void {
     const eventDateTime = moment(this.data?.eventDateTime);
-    const days = eventDateTime.diff(moment(), 'days');
-    const hours = eventDateTime.diff(moment(), 'hours');
-    const minutes = eventDateTime.diff(moment(), 'minutes');
-    const seconds = eventDateTime.diff(moment(), 'seconds');
+    const days = moment(eventDateTime).diff(moment(), 'days');
+    const hours = moment(eventDateTime).diff(moment(), 'hours');
+    const minutes = moment(eventDateTime).diff(moment(), 'minutes');
+    const seconds = moment(eventDateTime).diff(moment(), 'seconds');
 
     if (days > 0) {
       this.countdown = days;
@@ -82,6 +82,10 @@ export class JoinBadgeComponent extends AppComponentBase implements OnInit, OnCh
       return;
     } else if (seconds > 0) {
       this.countdown = seconds;
+      this.timeline = timeline.seconds;
+      return;
+    } else {
+      this.countdown = 0;
       this.timeline = timeline.seconds;
       return;
     }

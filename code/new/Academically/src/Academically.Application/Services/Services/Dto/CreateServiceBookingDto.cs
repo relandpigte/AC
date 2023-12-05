@@ -7,7 +7,7 @@ using Academically.Domain.Enums;
 namespace Academically.Services.Services.Dto;
 
 [AutoMapTo(typeof(ServiceBooking))]
-public class CreateServiceBookingDto: EntityDto<Guid?>
+public class CreateServiceBookingDto: CreationAuditedEntityDto<Guid>
 {
     public Guid ReferenceId { get; set; }
     public DateTime BookingDateTime { get; set; }
