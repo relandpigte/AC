@@ -1,22 +1,28 @@
 import { Component, Injector, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, forkJoin, of } from 'rxjs';
+import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 
-import { VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
-import { AppComponentBase } from '@shared/app-component-base';
-import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
-import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { Router } from '@angular/router';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { AppComponentBase } from '@shared/app-component-base';
 import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
-import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
-import { LeaveReviewComponent } from '@shared/modals/leave-review/leave-review.component';
+import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { LeaveReviewConfirmationComponent } from '@shared/modals/leave-review-confirmation/leave-review-confirmation.component';
+import { LeaveReviewComponent } from '@shared/modals/leave-review/leave-review.component';
+import { ServiceBookingDto, ServicesServiceProxy, UserAvailabilitiesServiceProxy, UserAvailabilityDto, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
+import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 
 enum PurchasedTabs {
   All = 'all',
   Unwatched = 'unwatched',
   Watched = 'watched'
+}
+
+interface BookingInfo {
+  booking: ServiceBookingDto;
+  tutorAvailabilities: UserAvailabilityDto[];
+  tutorBookings: ServiceBookingDto[];
 }
 
 @Component({
@@ -34,18 +40,24 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
   purchasedTabs = PurchasedTabs;
   shimmerType = ShimmerType;
 
+  isLoadingBookings$ = new BehaviorSubject<boolean>(false);
+
+  bookingInfo: Map<string, BookingInfo> = new Map();
+
   constructor(
     injector: Injector,
     private _router: Router,
     private _modalDialogService: ModalDialogService,
     private _modalService: BsModalService,
     private _dashboardPageService: DashboardPagesService,
-    private _videoService: VideosServiceProxy
+    private _videoService: VideosServiceProxy,
+    private _servicesService: ServicesServiceProxy,
+    private _userAvailabilitiesService: UserAvailabilitiesServiceProxy,
   ) {
     super(injector);
   }
 
-  get isLoading$(): Observable<boolean> { return this._dashboardPageService.isLoading$; }
+  get isLoading$() { return combineLatest([this._dashboardPageService.isLoading$]).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
   get totalTutorials(): number { return this.tutorials?.length; }
   get totalUnwatchedTutorials(): number { return this.unwatchedTutorials?.length; }
   get totalWatchedTutorials(): number { return this.watchedTutorials?.length; }
@@ -64,7 +76,41 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
       });
   }
 
+  private initServiceData(tutorial: VideoDto, callback: (bookingInfo: BookingInfo) => void): void {
+    forkJoin([
+      this._servicesService.getBookingDetails(tutorial.id, this.currentUserId),
+      this._userAvailabilitiesService.getAll(tutorial.creatorUserId),
+      this._servicesService.getAllBookings(tutorial.id, tutorial.creatorUserId)
+    ])
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(([booking, tutorAvailabilities, tutorBookings]): void => {
+      this.bookingInfo.set(tutorial.id.toString(), {
+        booking, tutorAvailabilities, tutorBookings
+      });
+      callback.call(this, { booking, tutorAvailabilities, tutorBookings });
+    });
+  }
+
   onRearrangeSessionClick(tutorial: VideoDto): void {
+    const openRearrangingModal = ({ booking, tutorAvailabilities, tutorBookings }) => {
+      const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
+      modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
+      modalSettings.initialState = {
+        data: tutorial,
+        rescheduleBooking: booking,
+        userAvailabilities: tutorAvailabilities,
+        serviceBookings: tutorBookings,
+      };
+      const modal = this._modalService.show(BookingServiceComponent, modalSettings);
+      modal.content.onSavedBooking.subscribe(() => this.initTutorials());
+    }
+
+    if (this.bookingInfo.has(tutorial.id.toString())) {
+      const bookingInfo = this.bookingInfo.get(tutorial.id.toString());
+      openRearrangingModal(bookingInfo);
+    } else {
+      this.initServiceData(tutorial, openRearrangingModal);
+    }
   }
 
   onCancelSessionClick(tutorial: VideoDto): void {

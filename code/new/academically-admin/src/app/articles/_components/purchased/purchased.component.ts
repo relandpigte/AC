@@ -1,20 +1,27 @@
 import { Component, Injector, OnInit } from '@angular/core';
-import { AppComponentBase } from '@shared/app-component-base';
-import { ArticleDto, ArticlesServiceProxy } from '@shared/service-proxies/service-proxies';
-import { finalize, takeUntil } from '@node_modules/rxjs/operators';
-import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
-import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { Router } from '@angular/router';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { finalize, switchMap, takeUntil } from '@node_modules/rxjs/operators';
+import { AppComponentBase } from '@shared/app-component-base';
 import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
-import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
-import { LeaveReviewComponent } from '@shared/modals/leave-review/leave-review.component';
+import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { LeaveReviewConfirmationComponent } from '@shared/modals/leave-review-confirmation/leave-review-confirmation.component';
+import { LeaveReviewComponent } from '@shared/modals/leave-review/leave-review.component';
+import { ArticleDto, ArticlesServiceProxy, CoachingDto, ServiceBookingDto, ServicesServiceProxy, UserAvailabilitiesServiceProxy, UserAvailabilityDto } from '@shared/service-proxies/service-proxies';
+import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { BehaviorSubject, combineLatest, forkJoin, of } from 'rxjs';
 
 enum PurchasedTabs {
   All = 'all',
   Unread = 'unread',
   Read = 'read'
+}
+
+interface BookingInfo {
+  booking: ServiceBookingDto;
+  tutorAvailabilities: UserAvailabilityDto[];
+  tutorBookings: ServiceBookingDto[];
 }
 
 @Component({
@@ -26,11 +33,14 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
   readArticles: ArticleDto[] = [];
 
   isLoading = true;
+  isLoadingBookings$ = new BehaviorSubject<boolean>(false);
 
   selectedTab: PurchasedTabs  = PurchasedTabs.All;
 
   purchasedTabs = PurchasedTabs;
   shimmerType = ShimmerType;
+
+  bookingInfo: Map<string, BookingInfo> = new Map();
 
   constructor(
     injector: Injector,
@@ -38,12 +48,14 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
     private _modalDialogService: ModalDialogService,
     private _modalService: BsModalService,
     private _articlesService: ArticlesServiceProxy,
-    private _dashboardPageService: DashboardPagesService
+    private _dashboardPageService: DashboardPagesService,
+    private _servicesService: ServicesServiceProxy,
+    private _userAvailabilitiesService: UserAvailabilitiesServiceProxy,
   ) {
     super(injector);
   }
 
-  get isLoading$() { return this._dashboardPageService.isLoading$; }
+  get isLoading$() { return combineLatest([this._dashboardPageService.isLoading$]).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
   get totalArticles(): number { return this.allArticles?.length; }
   get totalUnreadArticles(): number { return this.unreadArticles?.length; }
   get totalReadArticles(): number { return this.readArticles?.length; }
@@ -62,7 +74,41 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
       });
   }
 
+  private initServiceData(article: ArticleDto, callback: (bookingInfo: BookingInfo) => void): void {
+    forkJoin([
+      this._servicesService.getBookingDetails(article.id, this.currentUserId),
+      this._userAvailabilitiesService.getAll(article.creatorUser.id),
+      this._servicesService.getAllBookings(article.id, article.creatorUser.id)
+    ])
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(([booking, tutorAvailabilities, tutorBookings]): void => {
+      this.bookingInfo.set(article.id.toString(), {
+        booking, tutorAvailabilities, tutorBookings
+      });
+      callback.call(this, { booking, tutorAvailabilities, tutorBookings });
+    });
+  }
+
   onRearrangeSessionClick(article: ArticleDto): void {
+    const openRearrangingModal = ({ booking, tutorAvailabilities, tutorBookings }) => {
+      const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
+      modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
+      modalSettings.initialState = {
+        data: article,
+        rescheduleBooking: booking,
+        userAvailabilities: tutorAvailabilities,
+        serviceBookings: tutorBookings,
+      };
+      const modal = this._modalService.show(BookingServiceComponent, modalSettings);
+      modal.content.onSavedBooking.subscribe(() => this.loadArticles());
+    }
+
+    if (this.bookingInfo.has(article.id.toString())) {
+      const bookingInfo = this.bookingInfo.get(article.id.toString());
+      openRearrangingModal(bookingInfo);
+    } else {
+      this.initServiceData(article, openRearrangingModal);
+    }
   }
 
   onCancelSessionClick(article: ArticleDto): void {

@@ -1,5 +1,5 @@
 import { Component, Injector, OnInit } from '@angular/core';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 import * as moment from 'moment';
 import { Router } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
@@ -11,7 +11,14 @@ import { BookingServiceComponent } from '@shared/components/booking-service/book
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { LeaveReviewComponent } from '@shared/modals/leave-review/leave-review.component';
 import { LeaveReviewConfirmationComponent } from '@shared/modals/leave-review-confirmation/leave-review-confirmation.component';
-import { CoachingDto, CoachingsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CoachingDto, CoachingsServiceProxy, ServiceBookingDto, ServicesServiceProxy, UserAvailabilitiesServiceProxy, UserAvailabilityDto } from '@shared/service-proxies/service-proxies';
+import { BehaviorSubject, combineLatest, forkJoin, of } from 'rxjs';
+
+interface BookingInfo {
+  booking: ServiceBookingDto;
+  tutorAvailabilities: UserAvailabilityDto[];
+  tutorBookings: ServiceBookingDto[];
+}
 
 @Component({
   selector: 'app-purchased',
@@ -23,7 +30,11 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
   pastCoachings: CoachingDto[] = [];
   cancelledCoachings: CoachingDto[] = [];
 
+  isLoadingBookings$ = new BehaviorSubject<boolean>(false);
+
   shimmerType = ShimmerType;
+
+  bookingInfo: Map<string, BookingInfo> = new Map();
 
   constructor(
     injector: Injector,
@@ -31,13 +42,15 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
     private _modalDialogService: ModalDialogService,
     private _dashboardPageService: DashboardPagesService,
     private _coachingService: CoachingsServiceProxy,
+    private _servicesService: ServicesServiceProxy,
+    private _userAvailabilitiesService: UserAvailabilitiesServiceProxy,
     private _modalService: BsModalService,
   ) {
     super(injector);
   }
 
   get userId(): number { return this.appSession.userId; }
-  get isLoading$() { return this._dashboardPageService.isLoading$; }
+  get isLoading$() { return combineLatest([this._dashboardPageService.isLoading$]).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
   get totalUpcomingCoaching(): number { return this.upcomingCoachings?.length; }
   get totalPastCoaching(): number { return this.pastCoachings?.length; }
   get totalCancelledCoaching(): number { return this.cancelledCoachings?.length; }
@@ -81,7 +94,41 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
     this._router.navigate(['app/coaching' , coaching.id, 'about']);
   }
 
+  private initServiceData(coaching: CoachingDto, callback: (bookingInfo: BookingInfo) => void): void {
+    forkJoin([
+      this._servicesService.getBookingDetails(coaching.id, this.currentUserId),
+      this._userAvailabilitiesService.getAll(coaching.creatorUserId),
+      this._servicesService.getAllBookings(coaching.id, coaching.creatorUserId)
+    ])
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(([booking, tutorAvailabilities, tutorBookings]): void => {
+      this.bookingInfo.set(coaching.id.toString(), {
+        booking, tutorAvailabilities, tutorBookings
+      });
+      callback.call(this, { booking, tutorAvailabilities, tutorBookings });
+    });
+  }
+
   onRearrangeSessionClick(coaching: CoachingDto): void {
+    const openRearrangingModal = ({ booking, tutorAvailabilities, tutorBookings }) => {
+      const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
+      modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
+      modalSettings.initialState = {
+        data: coaching,
+        rescheduleBooking: booking,
+        userAvailabilities: tutorAvailabilities,
+        serviceBookings: tutorBookings,
+      };
+      const modal = this._modalService.show(BookingServiceComponent, modalSettings);
+      modal.content.onSavedBooking.subscribe(() => this.loadPurchasedCoaching());
+    }
+
+    if (this.bookingInfo.has(coaching.id.toString())) {
+      const bookingInfo = this.bookingInfo.get(coaching.id.toString());
+      openRearrangingModal(bookingInfo);
+    } else {
+      this.initServiceData(coaching, openRearrangingModal);
+    }
   }
 
   onCancelSessionClick(coaching: CoachingDto): void {
