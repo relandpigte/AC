@@ -50,12 +50,14 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
     private _serviceData: ServiceDataService
   ) {
     super(injector);
+
     route.paramMap.subscribe(paramMap => {
-      if (paramMap.has('id')) {
+      if (paramMap.has('video-id')) {
         this.isPreview = true;
-        this.id = paramMap.get('id');
+        this.id = paramMap.get('video-id');
       }
     });
+
     this._previewService.studentVideo$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {

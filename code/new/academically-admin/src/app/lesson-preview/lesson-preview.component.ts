@@ -48,7 +48,6 @@ export class LessonPreviewComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
-    document.body.style.backgroundColor = '#FFFFFF';
     this._pageBuilderService.previewOnly = true;
   }
 
