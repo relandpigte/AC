@@ -1,7 +1,7 @@
-<div class="reviews d-flex flex-column justify-content-start align-items-center gap-10">
+<div class="reviews d-flex flex-column justify-content-start align-items-center">
     <app-service-review-stats class="w-100" [hasBorders]="false"></app-service-review-stats>
     <ng-container *ngIf="reviews?.length">
-        <div class="reviews-controls d-flex justify-content-between align-items-center w-100">
+        <div class="reviews-controls d-flex justify-content-between align-items-center w-100" [style.marginBottom.px]="10">
             <div class="reviews-controls-sort dropdown">
                 <a href="#" class="dropdown-ellipses dropdown-toggle d-flex flex-row align-items-center gap-5" role="button"
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -23,7 +23,7 @@
                 <option value="1">All stars</option>
             </select>
         </div>
-        <div class="reviews-list d-flex flex-column justify-content-start align-items-center gap-10 w-100">
+        <div class="reviews-list d-flex flex-column justify-content-start align-items-center gap-15 w-100">
             <app-service-review-card *ngFor="let review of reviews" [review]="review" class="w-100"></app-service-review-card>
         </div>
     </ng-container>
