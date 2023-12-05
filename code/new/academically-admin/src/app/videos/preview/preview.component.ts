@@ -92,7 +92,7 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
     if (this.isPreview) {
       this._location.back();
     } else {
-      this._router.navigate(['/app/home/videos']);
+      this._router.navigate(['/app/explore/tutorials']);
     }
   }
 
