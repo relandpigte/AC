@@ -5,11 +5,13 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { ArticleDto, ArticlesServiceProxy, CoachingDto, CoachingsServiceProxy, CourseDto, CoursesServiceProxy, DateGrains, EventCategory, EventDto, EventsServiceProxy, PostsServiceProxy, ServicesServiceProxy, SharedType, UserDto, UserServiceProxy, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, ArticlesServiceProxy, CoachingDto, CoachingsServiceProxy, CourseDto, CoursesServiceProxy, DateGrains, EventCategory, EventDto, EventsServiceProxy, PostsServiceProxy, ServiceBookingDto, ServicesServiceProxy, SharedType, UserAvailabilitiesServiceProxy, UserAvailabilityDto, UserDto, UserServiceProxy, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { PurchaseServiceComponent } from '@shared/components/purchase-service/purchase-service.component';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { BehaviorSubject } from 'rxjs';
+import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
+import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 
 @Component({
   selector: 'app-explore-for-you',
@@ -56,7 +58,8 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
     private _coachingsService: CoachingsServiceProxy,
     private _postsService: PostsServiceProxy,
     private _servicesService: ServicesServiceProxy,
-    private _dashboardPagesService: DashboardPagesService
+    private _dashboardPagesService: DashboardPagesService,
+    private _userAvailabilitiesService: UserAvailabilitiesServiceProxy
   ) {
     super(injector);
   }
@@ -171,18 +174,23 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
     }
   }
 
-  private async onPurchaseClick(service: any) {
-    if (!service) return;
-
-    const purchase = await this._servicesService.getAllPurchases(service.id, this.appSession.userId).toPromise();
+  private async onPurchaseClick(data: any) {
+    if (!data) {
+      return;
+    }
+    const purchase = await this._servicesService.getAllPurchases(data.id, this.appSession.userId).toPromise();
     if (purchase?.length) {
-      this.redirectToServiceLandingPage(service)
+      this.redirectToServiceLandingPage(data);
     } else {
-      const modalSettings = this.defaultModalSettings as ModalOptions<PurchaseServiceComponent>;
-      modalSettings.class = 'modal-lg modal-dialog-centered';
-      modalSettings.initialState = { serviceId: service.id, data: service};
-      const modal = this._modalService.show(PurchaseServiceComponent, modalSettings);
-      modal.content.onPaid.subscribe(() => this.redirectToServiceLandingPage(service));
+      const title = ServiceCardUtils.getCardType(data) === 'coaching' ? this.l('BookASession') : `Purchase ${ServiceCardUtils.getCardType(data)}`;
+      const userAvailabilities = await this._userAvailabilitiesService.getAll(data.creatorUserId).toPromise();
+      const serviceBookings = await this._servicesService.getAllBookings(data.id, data.creatorUserId).toPromise();
+      const isPurchase = ServiceCardUtils.getCardType(data) !== 'coaching';
+      const modalSettings = this.defaultModalSettings as ModalOptions<BookingServiceComponent>;
+      modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-booking';
+      modalSettings.initialState = { data, isPurchase, title, userAvailabilities, serviceBookings };
+      const modal = this._modalService.show(BookingServiceComponent, modalSettings);
+      modal.content.onPaid.subscribe(() => this.redirectToServiceLandingPage(data));
     }
   }
 
@@ -197,5 +205,4 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
     else if (service instanceof CourseDto) this.handleCourseServiceCardClick(service);
     else if (service instanceof VideoDto) this.handleTutorialServiceCardClick(service);
   }
-
 }

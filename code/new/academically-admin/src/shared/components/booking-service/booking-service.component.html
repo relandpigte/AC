@@ -76,6 +76,8 @@
                 <ng-container *ngSwitchCase="'course'" [ngTemplateOutlet]="courseTemplate" [ngTemplateOutletContext]="{ pricing: true }"></ng-container>
                 <ng-container *ngSwitchCase="'broadcast'" [ngTemplateOutlet]="eventTemplate" [ngTemplateOutletContext]="{ pricing: true }"></ng-container>
                 <ng-container *ngSwitchCase="'workshop'" [ngTemplateOutlet]="eventTemplate" [ngTemplateOutletContext]="{ pricing: true }"></ng-container>
+                <ng-container *ngSwitchCase="'article'" [ngTemplateOutlet]="articleTemplate" [ngTemplateOutletContext]="{ pricing: true }"></ng-container>
+                <ng-container *ngSwitchCase="'tutorial'" [ngTemplateOutlet]="tutorialTemplate" [ngTemplateOutletContext]="{ pricing: true }"></ng-container>
               </div>
             </div>
             <div class="booking-right-content ml-auto">
@@ -183,6 +185,8 @@
                   <ng-container *ngSwitchCase="'course'" [ngTemplateOutlet]="courseTemplate" [ngTemplateOutletContext]="{ pricing: false }"></ng-container>
                   <ng-container *ngSwitchCase="'broadcast'" [ngTemplateOutlet]="eventTemplate" [ngTemplateOutletContext]="{ pricing: false }"></ng-container>
                   <ng-container *ngSwitchCase="'workshop'" [ngTemplateOutlet]="eventTemplate" [ngTemplateOutletContext]="{ pricing: false }"></ng-container>
+                  <ng-container *ngSwitchCase="'article'" [ngTemplateOutlet]="articleTemplate" [ngTemplateOutletContext]="{ pricing: false }"></ng-container>
+                  <ng-container *ngSwitchCase="'tutorial'" [ngTemplateOutlet]="tutorialTemplate" [ngTemplateOutletContext]="{ pricing: false }"></ng-container>
                 </div>
               </div>
             </div>
@@ -414,6 +418,45 @@
     <div class="booking-details-timezone d-flex align-items-start gap-6">
       <img src="assets/img/service/booking/icon-globe.svg" alt="Timezone">
       <span class="timezone">UK, Iremand, Lisbon Time</span>
+    </div>
+    <ng-container *ngIf="pricing" [ngTemplateOutlet]="priceDetails"></ng-container>
+  </div>
+</ng-template>
+
+<ng-template #articleTemplate let-pricing="pricing">
+  <div class="booking-owner-details d-flex align-items-start gap-16">
+    <div class="owner flex-grow-1">
+      <h3>{{ serviceName | titlecase }}</h3>
+      <span class="name">{{ coachName }}</span>
+    </div>
+  </div>
+  <div class="booking-details">
+    <div class="booking-details-duration d-flex align-items-start gap-6">
+      <img src="assets/img/service/booking/icon-duration.svg" alt="Timezone">
+      <span class="timezone">4 mins read</span>
+    </div>
+    <ng-container *ngIf="pricing" [ngTemplateOutlet]="priceDetails"></ng-container>
+  </div>
+</ng-template>
+
+<ng-template #tutorialTemplate let-pricing="pricing">
+  <div class="booking-owner-details d-flex align-items-start gap-16">
+    <div class="flex-shrink-0 tutorial-thumbnail">
+      <img src="assets/img/service/booking/service-image-placeholder.png" alt="..." class="rounded"/>
+    </div>
+    <div class="owner flex-grow-1">
+      <h3>{{ serviceName | titlecase }}</h3>
+      <span class="name">{{ coachName }}</span>
+    </div>
+  </div>
+  <div class="booking-details">
+    <div class="booking-details-schedule d-flex align-items-start gap-6">
+      <img src="assets/img/service/booking/icon-video.svg" alt="Video">
+      <span class="timezone">10 Videos</span>
+    </div>
+    <div class="booking-details-duration d-flex align-items-start gap-6">
+      <img src="assets/img/service/booking/icon-duration.svg" alt="Timezone">
+      <span class="timezone">4 hrs 21 mins</span>
     </div>
     <ng-container *ngIf="pricing" [ngTemplateOutlet]="priceDetails"></ng-container>
   </div>
