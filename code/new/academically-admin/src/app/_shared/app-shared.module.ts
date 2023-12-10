@@ -105,6 +105,7 @@ import { BookingTakenComponent } from '@shared/components/booking-service/compon
 import { LeaveReviewComponent } from '@shared/modals/leave-review/leave-review.component';
 import { LeaveReviewConfirmationComponent } from '@shared/modals/leave-review-confirmation/leave-review-confirmation.component';
 import { ServiceReviewStatsComponent } from '@shared/components/service-review-stats/service-review-stats.component';
+import { ServiceNotificationPopupComponent } from '@shared/components/service-notification-popup/service-notification-popup.component';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -189,7 +190,8 @@ FullCalendarModule.registerPlugins([
     BookingTakenComponent,
     LeaveReviewComponent,
     LeaveReviewConfirmationComponent,
-    ServiceReviewStatsComponent
+    ServiceReviewStatsComponent,
+    ServiceNotificationPopupComponent
   ],
   imports: [
     CommonModule,
@@ -307,7 +309,8 @@ FullCalendarModule.registerPlugins([
     BookingTakenComponent,
     LeaveReviewComponent,
     LeaveReviewConfirmationComponent,
-    ServiceReviewStatsComponent
+    ServiceReviewStatsComponent,
+    ServiceNotificationPopupComponent
   ],
 })
 export class AppSharedModule { }
