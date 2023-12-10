@@ -1,0 +1,15 @@
+<div *ngIf="toggleShow" class="card service-notification">
+  <div class="card-body">
+    <a class="service-popup-close" (click)="onServicePopupClose($event)"><img src="assets/img/service/close-icon.svg" alt="Close"></a>
+    <div class="service-notification-content d-flex align-items-center gap-10">
+      <div class="avatar service-image flex-shrink-0">
+        <img src="assets/img/service/event-placeholder.png" alt="..." class="avatar-img rounded-circle">
+      </div>
+      <div class="service-details d-flex flex-column gap-2">
+        <div class="service-details-schedule">STARTING IN 15 MINUTES</div>
+        <div class="service-details-title">Fundamentals of science and me...</div>
+        <div class="service-details-info">Coaching with Jingying Chai</div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -81,7 +81,7 @@
               </div>
             </div>
             <div class="booking-right-content ml-auto">
-              <div class="booking-payment">
+              <div *ngIf="!isServiceFree else freeServiceTemplate" class="booking-payment">
                 <div *ngIf="!rescheduleBooking else rescheduleTemplate">
                   <h3 class="booking-payment-title required">Payment method</h3>
                   <div class="booking-payment-select d-flex align-items-center gap-16">
@@ -459,5 +459,21 @@
       <span class="timezone">4 hrs 21 mins</span>
     </div>
     <ng-container *ngIf="pricing" [ngTemplateOutlet]="priceDetails"></ng-container>
+  </div>
+</ng-template>
+
+<ng-template #freeServiceTemplate>
+  <div class="free-service h-100p d-flex flex-column align-items-center justify-content-center">
+    <ng-container [ngSwitch]="serviceType">
+      <ng-container *ngSwitchCase="'coaching'">
+        <h4>{{ 'FreeServiceTitle' | localize : 'session' }}</h4>
+        <p>{{ 'ConfirmBookingText' | localize }}</p>
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        <h4>{{ 'FreeServiceTitle' | localize : serviceType }}</h4>
+        <p>{{ 'ConfirmCompletePurchase' | localize }}</p>
+      </ng-container>
+    </ng-container>
+
   </div>
 </ng-template>
