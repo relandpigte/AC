@@ -111,7 +111,7 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   get coachUserId(): number { return this.data?.creatorUserId; }
   get serviceName(): string { return this.data?.name; }
   get serviceId(): string { return this.data?.id; }
-  get servicePrice(): string { return this.data?.price; }
+  get servicePrice(): string { return this.data?.price ?? 0; }
   get cancellationPrice(): number { return 0; }
   get isBookingCancelled(): boolean { return !!this.data?.cancellationTime; }
   get bookingSchedule(): string {
@@ -153,6 +153,7 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   get isAfternoonSessionAvailable(): boolean { return !_.isEmpty(this.selectedSessions?.afternoon); }
   get isEveningSessionAvailable(): boolean { return !_.isEmpty(this.selectedSessions?.evening); }
   get serviceType(): ServiceCardType { return this.service?.type; }
+  get isServiceFree(): boolean { return Number(this.servicePrice) === 0; }
 
   ngOnInit(): void {
     this.initCalendar();
@@ -212,6 +213,14 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   onProcessPayment(): void {
     this.onSteps(3);
     this.initPaymentSuccessMessages();
+    if (this.isServiceFree) {
+      this.savePurchase();
+      if (!this.isPurchase) {
+        this.saveBooking();
+      }
+      this.paymentStatus = PaymentStatus.Success;
+      return;
+    }
     switch (this.defaultPaymentMethod) {
       case PaymentMethod.CreditCard:
         this.paymentStatus = PaymentStatus.Fail;

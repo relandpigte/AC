@@ -2076,6 +2076,9 @@
     <text name="MessageNotSentDesc">Oops, something went wrong. Please try again.</text>
     <text name="Done">Done</text>
     <text name="TryAgain">Try again</text>
+    <text name="FreeServiceTitle">This {0} is free</text>
+    <text name="ConfirmBookingText">Click confirm to secure your booking</text>
+    <text name="ConfirmCompletePurchase">Click confirm to complete purchase</text>
     
     <!-- Discussion Posts Page -->
     <text name="OtherPosts">Other posts</text>
