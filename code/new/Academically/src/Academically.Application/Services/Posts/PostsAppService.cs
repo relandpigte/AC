@@ -419,7 +419,7 @@ namespace Academically.Services.Posts
 
             if (includeEditHistory)
             {
-                result.PostEditHistories = await GetEditHistory(post);
+                result.PostEditHistories = await GetEditHistory(result);
             }
 
             foreach (var attachment in result.PostAttachments)
@@ -462,6 +462,83 @@ namespace Academically.Services.Posts
             result.ReactionsCount = await this.GetReactionsCountAsync(result.Id.ToString());
 
             return result;
+        }
+
+        public async Task<List<PostDto>> GetByIds(List<Guid> ids, Guid? notificationId = null, bool includeEditHistory = false, bool includeHiddenPosts = false)
+        {
+            var userId = AbpSession.UserId.Value;
+            var userHiddenPost = _postVisibilityRepository.GetAll()
+                                                          .Where(w => w.IsHidden && w.CreatorUserId == userId)
+                                                          .Select(s => s.PostId).ToList();
+            var posts = await _postRepository.GetAll()
+                        .Include(p => p.CreatorUser)
+                            .ThenInclude(u => u.ProfilePictureDocument)
+                        .Include(p => p.Parent)
+                        .Include(p => p.Children)
+                            .ThenInclude(p => p.CreatorUser)
+                        .Include(p => p.PostAttachments)
+                            .ThenInclude(a => a.Document)
+                        .Include(p => p.PostTopics)
+                            .ThenInclude(t => t.DisciplineTaxonomy)
+                        .Include(p => p.PostNotification)
+                        .Where(p => ids.Any(i => i == p.Id))
+                        .WhereIf(!includeHiddenPosts, e => e.IsHidden == false && !userHiddenPost.Contains(e.Id))
+                        .Select(p => ObjectMapper.Map<PostDto>(p))
+                        .ToListAsync();
+            
+            foreach(var post in posts)
+            {
+                if (post.CreatorUser?.ProfilePictureDocument != null)
+                {
+                    post.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(post.CreatorUser.ProfilePictureDocumentId.Value);
+                }
+
+                if (includeEditHistory)
+                {
+                    post.PostEditHistories = await GetEditHistory(post);
+                }
+
+                foreach (var attachment in post.PostAttachments)
+                {
+                    attachment.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(attachment.DocumentId);
+                }
+
+                var participants = new List<UserDto>();
+                if (post.Children.Any())
+                {
+                    participants.AddRange(post.Children.Where(c => c.CreatorUser != null).OrderByDescending(c => c.CreationTime).Select(s => ObjectMapper.Map<UserDto>(s.CreatorUser)));
+                }
+                var commentsParticipant = await _commentsRepository.GetAll()
+                        .Where(w => w.ReferenceId == post.Id.ToString())
+                        .Include(c => c.CreatorUser)
+                        .Include(c => c.TaggedUser)
+                        .Select(s => ObjectMapper.Map<UserDto>(s.CreatorUser))
+                        .ToListAsync();
+
+                if (commentsParticipant.Any())
+                {
+                    participants.AddRange(commentsParticipant);
+                }
+
+                post.Participants = participants.GroupBy(g => g.Id).ToList().Select(s => s.FirstOrDefault());
+                foreach (var p in post.Participants) if (p.ProfilePictureDocumentId.HasValue) p.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(p.ProfilePictureDocumentId.Value);
+
+                await FillInShared(post);
+
+                var targetNotification = await _notificationsRepository.GetAll()
+                    .Include(n => n.Sources)
+                    .WhereIf(notificationId != null, n => n.Id == notificationId)
+                    .WhereIf(notificationId == null, n => false)
+                    .SingleOrDefaultAsync();
+
+                post.IsFromNotification = targetNotification != null && targetNotification.Sources.Any(s => s.ReferenceId == post.Id);
+                post.HasCommentFromNotification = targetNotification != null && targetNotification.ReferenceId == post.Id;
+                post.CommentsCount = await this.GetCommentsCountAsync(post.Id.ToString());
+                post.SharesCount = await this.GetSharesCountAsync(post.Id.ToString());
+                post.ReactionsCount = await this.GetReactionsCountAsync(post.Id.ToString());
+            }
+
+            return posts;
         }
 
         public async Task<PostDto> UpdateAsync(UpdatePostDto input)
@@ -1076,7 +1153,7 @@ namespace Academically.Services.Posts
             }
         }
 
-        private async Task<List<PostEditHistoryDto>> GetEditHistory(Post post)
+        private async Task<List<PostEditHistoryDto>> GetEditHistory(PostDto post)
         {
             var entityChanges = await _entityChangeRepository.GetAll()
                 .Include(x => x.PropertyChanges)

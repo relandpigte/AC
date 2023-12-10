@@ -202,7 +202,7 @@ namespace Academically.Services.Notifications
                 .Where(n => n.ReadTime == null)
                 .Where(n => n.Action == input.Action)
                 .Where(n => n.Target == input.Target)
-                .Where(n => n.ReferenceId == input.ReferenceId)
+                .Where(n => (n.ReferenceId == input.ReferenceId) || n.Action == NotificationAction.Create || n.Action == NotificationAction.Ask || n.Action == NotificationAction.Start)
                 .FirstOrDefault();
 
             if (latestUserNotification == null)
@@ -417,6 +417,12 @@ namespace Academically.Services.Notifications
                     return "left a review";
                 case NotificationAction.Follow:
                     return "started following";
+                case NotificationAction.Create:
+                    return "created";
+                case NotificationAction.Ask:
+                    return "asked";
+                case NotificationAction.Start:
+                    return "started";
                 default:
                     return "reacted";
             }
@@ -450,6 +456,10 @@ namespace Academically.Services.Notifications
                     return "tutorial";
                 case NotificationTarget.Workshop:
                     return "workshop";
+                case NotificationTarget.Post:
+                    return "post";
+                case NotificationTarget.Discussion:
+                    return "discussion";
                 default:
                     return "post";
             }
@@ -465,6 +475,9 @@ namespace Academically.Services.Notifications
         private async Task<bool> NotificationHasPronoun(NotificationDto notification)
         {
             if (notification.Action == NotificationAction.Post) return false;
+            if (notification.Action == NotificationAction.Create) return false;
+            if (notification.Action == NotificationAction.Ask) return false;
+            if (notification.Action == NotificationAction.Start) return false;
             return true;
         }
 
@@ -481,12 +494,18 @@ namespace Academically.Services.Notifications
                 }
             }
             if (notification.Action == NotificationAction.Review) return true;
+            if (notification.Action == NotificationAction.Create) return true;
+            if (notification.Action == NotificationAction.Ask) return true;
+            if (notification.Action == NotificationAction.Start) return true;
             return false;
         }
 
         private async Task<bool> NotificationHasLocation(NotificationDto notification)
         {
             if (notification.Action == NotificationAction.Follow) return false;
+            if (notification.Action == NotificationAction.Create) return false;
+            if (notification.Action == NotificationAction.Ask) return false;
+            if (notification.Action == NotificationAction.Start) return false;
             if (notification.Actors.Count > 1)
             {
                 if (notification.Action == NotificationAction.Answer) return false;
@@ -505,6 +524,9 @@ namespace Academically.Services.Notifications
             if (notification.Actors.Count > 1)
             {
                 if (notification.Action == NotificationAction.Post && notification.Target == NotificationTarget.Post) return false;
+                if (notification.Action == NotificationAction.Create) return false;
+                if (notification.Action == NotificationAction.Ask) return false;
+                if (notification.Action == NotificationAction.Start) return false;
             }
             return true;
         }
@@ -551,6 +573,9 @@ namespace Academically.Services.Notifications
                 }
             }
             if (notification.Action == NotificationAction.Review) return "for";
+            if (notification.Action == NotificationAction.Create) return "a new";
+            if (notification.Action == NotificationAction.Ask) return "a";
+            if (notification.Action == NotificationAction.Start) return "a";
             return null;
         }
 

@@ -9,6 +9,10 @@ import { PostComponent } from './post.component';
       {
         path: '',
         component: PostComponent,
+      },
+      {
+        path: ':id',
+        component: PostComponent,
       }
     ]),
   ],

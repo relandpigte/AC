@@ -17,36 +17,36 @@ import { AppRouteGuard } from '@shared/auth/auth-route-guard';
             path: '',
             component: CommunityComponent,
             children: [
-                {
-                  path: 'following',
-                  loadChildren: () =>
-                    import('@app/community/following/following.module').then(
-                      (m) => m.FollowingModule
-                    ),
-                },
-                {
-                  path: 'popular',
-                  loadChildren: () =>
-                    import('@app/community/popular/popular.module').then(
-                      (m) => m.PopularModule
-                    ),
-                },
-                {
-                  path: 'discussion/:id',
-                  loadChildren: () =>
-                    import('@app/community/discussion/discussion.module').then(
-                      (m) => m.DiscussionModule
-                    ),
-                },
-                {
-                  path: 'edit-history/:id',
-                  loadChildren: () =>
-                    import('@app/community/edit-history/edit-history.module').then(
-                      (m) => m.EditHistoryModule
-                    ),
-                },
               {
-                path: 'post/:id',
+                path: 'following',
+                loadChildren: () =>
+                  import('@app/community/following/following.module').then(
+                    (m) => m.FollowingModule
+                  ),
+              },
+              {
+                path: 'popular',
+                loadChildren: () =>
+                  import('@app/community/popular/popular.module').then(
+                    (m) => m.PopularModule
+                  ),
+              },
+              {
+                path: 'discussion/:id',
+                loadChildren: () =>
+                  import('@app/community/discussion/discussion.module').then(
+                    (m) => m.DiscussionModule
+                  ),
+              },
+              {
+                path: 'edit-history/:id',
+                loadChildren: () =>
+                  import('@app/community/edit-history/edit-history.module').then(
+                    (m) => m.EditHistoryModule
+                  ),
+              },
+              {
+                path: 'post',
                 loadChildren: () =>
                   import('@app/community/post/post.module').then(
                     (m) => m.PostModule

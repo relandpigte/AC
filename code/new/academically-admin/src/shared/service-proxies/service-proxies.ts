@@ -16374,6 +16374,84 @@ export class PostsServiceProxy {
     }
 
     /**
+     * @param ids (optional) 
+     * @param notificationId (optional) 
+     * @param includeEditHistory (optional) 
+     * @param includeHiddenPosts (optional) 
+     * @return Success
+     */
+    getByIds(ids: string[] | undefined, notificationId: string | undefined, includeEditHistory: boolean | undefined, includeHiddenPosts: boolean | undefined): Observable<PostDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Posts/GetByIds?";
+        if (ids === null)
+            throw new Error("The parameter 'ids' cannot be null.");
+        else if (ids !== undefined)
+            ids && ids.forEach(item => { url_ += "ids=" + encodeURIComponent("" + item) + "&"; });
+        if (notificationId === null)
+            throw new Error("The parameter 'notificationId' cannot be null.");
+        else if (notificationId !== undefined)
+            url_ += "notificationId=" + encodeURIComponent("" + notificationId) + "&";
+        if (includeEditHistory === null)
+            throw new Error("The parameter 'includeEditHistory' cannot be null.");
+        else if (includeEditHistory !== undefined)
+            url_ += "includeEditHistory=" + encodeURIComponent("" + includeEditHistory) + "&";
+        if (includeHiddenPosts === null)
+            throw new Error("The parameter 'includeHiddenPosts' cannot be null.");
+        else if (includeHiddenPosts !== undefined)
+            url_ += "includeHiddenPosts=" + encodeURIComponent("" + includeHiddenPosts) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetByIds(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetByIds(<any>response_);
+                } catch (e) {
+                    return <Observable<PostDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PostDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetByIds(response: HttpResponseBase): Observable<PostDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(PostDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PostDto[]>(<any>null);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
@@ -48027,7 +48105,7 @@ export interface IMyServiceViewDto {
     items: MyServiceItemViewDto[] | undefined;
 }
 
-/** 0 = Like 1 = React 2 = Share 3 = Comment 4 = Post 5 = Reply 6 = Answer 7 = Chat 8 = Purchase 9 = Enroll 10 = Review 11 = Follow */
+/** 0 = Like 1 = React 2 = Share 3 = Comment 4 = Post 5 = Reply 6 = Answer 7 = Chat 8 = Purchase 9 = Enroll 10 = Review 11 = Follow 12 = Start 13 = Create 14 = Ask */
 export enum NotificationAction {
     Like = 0,
     React = 1,
@@ -48041,6 +48119,9 @@ export enum NotificationAction {
     Enroll = 9,
     Review = 10,
     Follow = 11,
+    Start = 12,
+    Create = 13,
+    Ask = 14,
 }
 
 export class NotificationData implements INotificationData {
@@ -48116,12 +48197,12 @@ export class NotificationDto implements INotificationDto {
     target: NotificationTarget;
     referenceId: string;
     readTime: moment.Moment | undefined;
+    formattedNotification: string | undefined;
     url: string | undefined;
     user: UserDto;
     creatorUser: UserDto;
     actors: NotificationUserDto[] | undefined;
     sources: NotificationSourceDto[] | undefined;
-    formattedNotification: string | undefined;
 
     constructor(data?: INotificationDto) {
         if (data) {
@@ -48147,6 +48228,7 @@ export class NotificationDto implements INotificationDto {
             this.target = _data["target"];
             this.referenceId = _data["referenceId"];
             this.readTime = _data["readTime"] ? moment(_data["readTime"].toString()) : <any>undefined;
+            this.formattedNotification = _data["formattedNotification"];
             this.url = _data["url"];
             this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
@@ -48160,7 +48242,6 @@ export class NotificationDto implements INotificationDto {
                 for (let item of _data["sources"])
                     this.sources.push(NotificationSourceDto.fromJS(item));
             }
-            this.formattedNotification = _data["formattedNotification"];
         }
     }
 
@@ -48186,6 +48267,7 @@ export class NotificationDto implements INotificationDto {
         data["target"] = this.target;
         data["referenceId"] = this.referenceId;
         data["readTime"] = this.readTime ? this.readTime.toISOString() : <any>undefined;
+        data["formattedNotification"] = this.formattedNotification;
         data["url"] = this.url;
         data["user"] = this.user ? this.user.toJSON() : <any>undefined;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
@@ -48199,7 +48281,6 @@ export class NotificationDto implements INotificationDto {
             for (let item of this.sources)
                 data["sources"].push(item.toJSON());
         }
-        data["formattedNotification"] = this.formattedNotification;
         return data; 
     }
 
@@ -48225,12 +48306,12 @@ export interface INotificationDto {
     target: NotificationTarget;
     referenceId: string;
     readTime: moment.Moment | undefined;
+    formattedNotification: string | undefined;
     url: string | undefined;
     user: UserDto;
     creatorUser: UserDto;
     actors: NotificationUserDto[] | undefined;
     sources: NotificationSourceDto[] | undefined;
-    formattedNotification: string | undefined;
 }
 
 /** 0 = Info 1 = Success 2 = Warn 3 = Error 4 = Fatal */
@@ -48297,21 +48378,22 @@ export interface INotificationSourceDto {
     notification: NotificationDto;
 }
 
-/** 0 = Post 1 = Answer 2 = Question 3 = Reply 4 = Comment 5 = Chat 6 = Article 7 = Broadcast 8 = Coaching 9 = Course 10 = Tutorial 11 = Workshop 12 = User */
+/** 0 = Post 1 = Answer 2 = Question 3 = Discussion 4 = Reply 5 = Comment 6 = Chat 7 = Article 8 = Broadcast 9 = Coaching 10 = Course 11 = Tutorial 12 = Workshop 13 = User */
 export enum NotificationTarget {
     Post = 0,
     Answer = 1,
     Question = 2,
-    Reply = 3,
-    Comment = 4,
-    Chat = 5,
-    Article = 6,
-    Broadcast = 7,
-    Coaching = 8,
-    Course = 9,
-    Tutorial = 10,
-    Workshop = 11,
-    User = 12,
+    Discussion = 3,
+    Reply = 4,
+    Comment = 5,
+    Chat = 6,
+    Article = 7,
+    Broadcast = 8,
+    Coaching = 9,
+    Course = 10,
+    Tutorial = 11,
+    Workshop = 12,
+    User = 13,
 }
 
 export class NotificationUserDto implements INotificationUserDto {

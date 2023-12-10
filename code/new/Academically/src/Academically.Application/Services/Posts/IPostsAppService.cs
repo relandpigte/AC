@@ -14,6 +14,7 @@ namespace Academically.Services.Posts
         Task<Guid> Create(CreatePostDto input);
         Task<List<PostDto>> GetByUser(long userId, PostType? type);
         Task<PostDto> GetAsync(Guid id, Guid? notificationId = null, bool includeEditHistory = false, bool includeHiddenPosts = false);
+        Task<List<PostDto>> GetByIds(List<Guid> ids, Guid? notificationId = null, bool includeEditHistory = false, bool includeHiddenPosts = false);
         Task<PostDto> UpdateAsync(UpdatePostDto input);
         Task DeleteAsync(Guid id);
         Task<AvailableServiceDto> GetService(Guid id);

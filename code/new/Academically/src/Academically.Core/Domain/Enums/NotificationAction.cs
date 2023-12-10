@@ -19,6 +19,9 @@ namespace Academically.Domain.Enums
         Purchase,
         Enroll,
         Review,
-        Follow
+        Follow,
+        Start,
+        Create,
+        Ask,
     }
 }

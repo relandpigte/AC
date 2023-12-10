@@ -1,18 +1,18 @@
 import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { switchMap, takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
+import { CommunityPostCardComponent } from '@shared/components/community-post/community-post.component';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
-import { PostDto, PostsServiceProxy, SharedType } from '@shared/service-proxies/service-proxies';
+import { NotificationDto, NotificationsServiceProxy, PostDto, PostsServiceProxy, SharedType } from '@shared/service-proxies/service-proxies';
 import { PostsStateService } from '@shared/services/posts-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
-import { PostSorting } from '../discussion/discussion.component';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
-import { CommunityPostCardComponent } from '@shared/components/community-post/community-post.component';
+import { PostSorting } from '../discussion/discussion.component';
 
 @Component({
   selector: 'app-post',
@@ -24,8 +24,9 @@ export class PostComponent extends AppComponentBase implements OnInit, OnDestroy
 
   postId: string;
   notificationId: string;
+  notification: NotificationDto;
 
-  post: PostDto;
+  posts: PostDto[] = [];
   tempPost: PostDto = this.generateRandomPost() as PostDto;
 
   isLoadingPost$ = new BehaviorSubject(false);
@@ -38,6 +39,7 @@ export class PostComponent extends AppComponentBase implements OnInit, OnDestroy
     private _router: Router,
     private _route: ActivatedRoute,
     private _postsService: PostsServiceProxy,
+    private _notificationsService: NotificationsServiceProxy,
     private _modalService: BsModalService,
     private _cdr: ChangeDetectorRef,
     private _hubService: HubService,
@@ -58,7 +60,7 @@ export class PostComponent extends AppComponentBase implements OnInit, OnDestroy
       );
   }
 
-  get postsStateId(): string { return `posts-${this.post.id}`; }
+  get postsStateId(): string { return `posts-${this.notificationId}`; }
 
 
   ngOnInit(): void {
@@ -71,46 +73,51 @@ export class PostComponent extends AppComponentBase implements OnInit, OnDestroy
 
   private init(): void {
     this.isLoadingPost$.next(true);
-    this._route.queryParamMap
-      .pipe(switchMap(query => {
+    combineLatest([
+      this._route.params,
+      this._route.queryParamMap
+    ])
+    .pipe(debounceTime(100)) // debounced so that params and queryparams have time to trigger their events
+    .pipe(distinctUntilChanged()) // values should be distinct to avoid unnecessary calls
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(async ([params, query]) => {
         this.isLoadingPost$.next(true);
+        this.postId = params.id;
         this.notificationId = query.get('n');
-        return this._route.paramMap;
-      }))
-      .pipe(switchMap(params => {
-        this.postId = params.get('id');
-        return this._postsService.get(this.postId, this.notificationId ?? undefined, false, false);
-      }))
-      .subscribe(async post => {
-        this.post = post;
-        await this.initPostsAppStates();
+
+        try {
+          this.notification = await this._notificationsService.get(this.notificationId).toPromise();
+          var ids = this.postId ? [this.postId] : this.notification.sources.map(s => s.referenceId);
+          this.posts = await this._postsService.getByIds(ids, this.notificationId ?? undefined, false, false).toPromise();
+          await this.initPostsAppStates();
+        } catch (err) {
+            console.error(err);
+        }
+
         this.isLoadingPost$.next(false);
-      },
-      (err) => {
-        console.error(`Service is not available: ${err}`);
+        this._cdr.detectChanges();
+    },
+    (err) => {
+        console.error(`Error occurred while loading the post: ${err}`);
         this.isLoadingPost$.next(false);
-      });
+    });
   }
 
   handleSharePost(post: PostDto): void {
-    this._postsService.get(post.id, this.notificationId ?? undefined, false, false)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(p => {
-        const modalSettings = this.defaultModalSettings as ModalOptions<UpsertPostComponent>;
-        modalSettings.class = 'modal-lg';
-        modalSettings.initialState = {
-          allowTabs: false,
-          canRemoveAttachment: true,
-          title: 'Community.SharePost',
-          activeTab: 'quick-post',
-          model: {
-            sharedPost: p,
-            sharedId: p.id,
-            sharedType: SharedType.Post
-          }
-        };
-        const share = this._modalService.show(UpsertPostComponent, modalSettings).content;
-      });
+    const modalSettings = this.defaultModalSettings as ModalOptions<UpsertPostComponent>;
+    modalSettings.class = 'modal-lg';
+    modalSettings.initialState = {
+      allowTabs: false,
+      canRemoveAttachment: true,
+      title: 'Community.SharePost',
+      activeTab: 'quick-post',
+      model: {
+        sharedPost: post,
+        sharedId: post.id,
+        sharedType: SharedType.Post
+      }
+    };
+    const share = this._modalService.show(UpsertPostComponent, modalSettings).content;
   }
 
   private async initPostsAppStates() {
@@ -129,17 +136,21 @@ export class PostComponent extends AppComponentBase implements OnInit, OnDestroy
     this.postsStateService = this.pubSubService.getStateService<PostsStateService>(this.postsStateId);
     this.postsStateService.loading$.pipe(takeUntil(this.destroyed$)).subscribe(loading => this.isLoadingPost$.next(loading));
     this.postsStateService.posts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
-      if (event.data.id !== this.post.id) return;
-      switch (event.type) {
-        case StateUpdateType.Update:
-          this.post = event.data;
-
-          break;
-        case StateUpdateType.Delete:
-          this._router.navigate(['app', 'community', 'following'])
-          break;
+      if (this.posts.some(p => p.id === event.data.id)) {switch (event.type) {
+          case StateUpdateType.Update:
+            this.posts = this.posts.map(p => {
+              if (p.id === event.data.id) {
+                return event.data;
+              }
+              return p;
+            });
+            break;
+          case StateUpdateType.Delete:
+            this._router.navigate(['app', 'community', 'following'])
+            break;
+        }
+        this._cdr.detectChanges();
       }
-      this._cdr.detectChanges();
     });
   }
 }

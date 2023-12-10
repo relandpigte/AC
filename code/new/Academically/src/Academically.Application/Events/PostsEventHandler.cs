@@ -10,6 +10,8 @@ using Academically.Services.Posts;
 using Academically.Services.Notifications.Dto;
 using Academically.Services.Notifications;
 using Academically.Domain.Enums;
+using Abp.Domain.Repositories;
+using System;
 
 namespace Academically.Events
 {
@@ -22,16 +24,19 @@ namespace Academically.Events
         private readonly IHubManager _hubManager;
         private readonly IPostsAppService _postsAppService;
         private readonly INotificationsAppService _notificationsAppService;
+        private readonly IRepository<UserFollower, Guid> _userFollowersRepository;
 
         public PostsEventHandler(IObjectMapper objectMapper,
             IHubManager hubManager,
             IPostsAppService postsAppService,
-            INotificationsAppService notificationsAppService)
+            INotificationsAppService notificationsAppService,
+            IRepository<UserFollower, Guid> userFollowersRepository)
         {
             _objectMapper = objectMapper;
             _hubManager = hubManager;
             _postsAppService = postsAppService;
             _notificationsAppService = notificationsAppService;
+            _userFollowersRepository = userFollowersRepository;
         }
 
         public async Task HandleEventAsync(EntityCreatedEventData<Post> eventData)
@@ -39,6 +44,7 @@ namespace Academically.Events
             var postDto = await _postsAppService.GetAsync(eventData.Entity.Id, null, false, true);
             await _hubManager.NotifyUsersForPostCreated(postDto);
             await this.SendUserNotifications(postDto);
+            await this.SendFollowerNotifications(postDto);
         }
 
         public async Task HandleEventAsync(EntityUpdatedEventData<Post> eventData)
@@ -46,6 +52,7 @@ namespace Academically.Events
             var postDto = await _postsAppService.GetAsync(eventData.Entity.Id, null, false, true);
             await _hubManager.NotifyUsersForPostUpdated(postDto);
             await this.SendUserNotifications(postDto);
+            await this.SendFollowerNotifications(postDto);
         }
 
         public async Task HandleEventAsync(EntityDeletedEventData<Post> eventData)
@@ -64,10 +71,57 @@ namespace Academically.Events
                     ActorId = post.CreatorUserId.Value,
                     Action = NotificationAction.Post,
                     Target = NotificationTarget.Post,
-                    ReferenceId = discussion.Id,
+                    ReferenceId = post.Id,
                     SourceId = post.Id,
                     Url = $"app/community/discussion/{discussion.Id}"
                 });
+            }
+        }
+
+        private async Task SendFollowerNotifications(PostDto post)
+        {
+            // no notification if the post is inside a discussion
+            if (post.ParentId.HasValue) return;
+
+            var followers = await this._userFollowersRepository.GetAllListAsync(u => u.UserId == post.CreatorUserId);
+            foreach(var follower in followers)
+            {
+                await this._notificationsAppService.Create(new CreateNotificationDto()
+                {
+                    UserId = follower.CreatorUserId.GetValueOrDefault(),
+                    ActorId = post.CreatorUserId.Value,
+                    Action = this.GetNotificationActionByPostType(post.Type),
+                    Target = this.GetNotificationTargetByPostType(post.Type),
+                    ReferenceId = post.Id,
+                    SourceId = post.Id,
+                    Url = $"app/community/post"
+                });
+            }
+        }
+
+        private NotificationAction GetNotificationActionByPostType(PostType postType)
+        {
+            switch (postType)
+            {
+                case PostType.QuickPost:
+                    return NotificationAction.Create;
+                case PostType.Question:
+                    return NotificationAction.Ask;
+                default:
+                    return NotificationAction.Start;
+            }
+        }
+
+        private NotificationTarget GetNotificationTargetByPostType(PostType postType)
+        {
+            switch(postType)
+            {
+                case PostType.QuickPost:
+                    return NotificationTarget.Post;
+                case PostType.Question:
+                    return NotificationTarget.Question;
+                default:
+                    return NotificationTarget.Discussion;
             }
         }
     }

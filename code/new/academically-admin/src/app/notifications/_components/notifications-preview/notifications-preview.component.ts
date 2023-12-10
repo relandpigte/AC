@@ -1,6 +1,6 @@
 import { TitleCasePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, Injector, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppConsts } from '@shared/AppConsts';
 import { AppComponentBase } from '@shared/app-component-base';
@@ -114,6 +114,7 @@ export class NotificationsPreviewComponent extends AppComponentBase implements O
     const decodedUrl = decodeURIComponent(notification.url);
     const urlParts = decodedUrl.split('?');
     const path = urlParts[0].replace(AppConsts.appBaseUrl, '');
+    this._router.routeReuseStrategy.shouldReuseRoute = () => false;
     if (urlParts[1]) {
       const queryParamParts = urlParts[1].split('&');
       const queryParams = {};
