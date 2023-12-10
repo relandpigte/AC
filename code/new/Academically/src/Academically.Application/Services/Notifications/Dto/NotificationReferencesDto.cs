@@ -1,4 +1,5 @@
-﻿using Academically.Domain.Entities;
+﻿using Academically.Domain;
+using Academically.Domain.Entities;
 using Academically.Services.Posts.Dto;
 using System;
 using System.Collections.Generic;
@@ -23,9 +24,9 @@ namespace Academically.Services.Notifications.Dto
         public ServiceDiscussion? Discussion { get; set; }
 
         // Service of the related discussion for the notification, if applicable.
-        public AvailableServiceDto? DiscussionService { get; set; }
+        public ISimpleService? DiscussionService { get; set; }
 
         // Related service of the notification
-        public AvailableServiceDto? Service { get; set; }
+        public ISimpleService? Service { get; set; }
     }
 }

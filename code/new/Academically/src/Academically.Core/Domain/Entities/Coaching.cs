@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Academically.Domain.Entities
 {
     [Table("Coachings")]
-    public class Coaching : CreationAuditedEntity<Guid>
+    public class Coaching : CreationAuditedEntity<Guid>, ISimpleService
     {
         [NotMapped]
         public ServicesType ServiceType { get; set; } = ServicesType.Coaching;

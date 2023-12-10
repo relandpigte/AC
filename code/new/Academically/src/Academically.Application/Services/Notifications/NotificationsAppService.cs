@@ -11,6 +11,7 @@ using Abp.Domain.Repositories;
 using Abp.Notifications;
 using Abp.Timing;
 using Academically.Authorization.Users;
+using Academically.Domain;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
@@ -34,6 +35,11 @@ namespace Academically.Services.Notifications
         private readonly IRepository<Comment, Guid> _commentsRepository;
         private readonly IRepository<User, long> _usersRepository;
         private readonly IRepository<ServiceDiscussion, long> _serviceDiscussionRepository;
+        private readonly IRepository<Article, Guid> _articlesRepository;
+        private readonly IRepository<Course, Guid> _coursesRepository;
+        private readonly IRepository<Coaching, Guid> _coachingsRepository;
+        private readonly IRepository<Video, Guid> _videosRepository;
+        private readonly IRepository<Event, Guid> _eventsRepository;
         private readonly IUserNotificationManager _userNotificationManager;
         private readonly IPostsAppService _postsAppService;
 
@@ -47,6 +53,11 @@ namespace Academically.Services.Notifications
             IRepository<Comment, Guid> commentsRepository,
             IRepository<User, long> usersRepository,
             IRepository<ServiceDiscussion, long> serviceDiscussionRepository,
+            IRepository<Article, Guid> articlesRepository,
+            IRepository<Course, Guid> coursesRepository,
+            IRepository<Coaching, Guid> coachingsRepository,
+            IRepository<Video, Guid> videosRepository,
+            IRepository<Event, Guid> eventsRepository,
             IPostsAppService postsAppService
         )
         {
@@ -58,6 +69,11 @@ namespace Academically.Services.Notifications
             _commentsRepository = commentsRepository;
             _usersRepository = usersRepository;
             _serviceDiscussionRepository = serviceDiscussionRepository;
+            _articlesRepository = articlesRepository;
+            _coursesRepository = coursesRepository;
+            _coachingsRepository = coachingsRepository;
+            _videosRepository = videosRepository;
+            _eventsRepository = eventsRepository;
             _postsAppService = postsAppService;
         }
 
@@ -109,8 +125,6 @@ namespace Academically.Services.Notifications
                 actor.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(actor.User.ProfilePictureDocumentId.Value);
             }
 
-            notification.FormattedNotification = await this.FormatNotification(notification);
-
             return notification;
         }
         public async Task<IList<NotificationDto>> GetLatest(int take)
@@ -138,8 +152,6 @@ namespace Academically.Services.Notifications
                     actor.User = ObjectMapper.Map<UserDto>(await this._usersRepository.GetAsync(actor.UserId));
                     actor.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(actor.User.ProfilePictureDocumentId.Value);
                 }
-
-                notification.FormattedNotification = await this.FormatNotification(notification);
             }
 
             return notifications;
@@ -170,8 +182,6 @@ namespace Academically.Services.Notifications
                     actor.User = ObjectMapper.Map<UserDto>(await this._usersRepository.GetAsync(actor.UserId));
                     actor.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(actor.User.ProfilePictureDocumentId.Value);
                 }
-
-                notification.FormattedNotification = await this.FormatNotification(notification);
             }
 
             return notifications;
@@ -204,14 +214,14 @@ namespace Academically.Services.Notifications
                     Target = input.Target,
                     ReferenceId = input.ReferenceId,
                     Url = input.Url,
+                    FormattedNotification = string.Empty,
                 });
-
-                await this.CurrentUnitOfWork.SaveChangesAsync();
             }
 
             if (latestUserNotification.Actors == null || !latestUserNotification.Actors.Any(a => a.UserId == input.ActorId))
             {
-                await this._notificationUsersRepository.InsertAsync(new NotificationUser()
+                if (latestUserNotification.Actors == null) latestUserNotification.Actors = new List<NotificationUser>();
+                latestUserNotification.Actors.Add(new NotificationUser()
                 {
                     UserId = input.ActorId,
                     NotificationId = latestUserNotification.Id
@@ -220,7 +230,8 @@ namespace Academically.Services.Notifications
 
             if (latestUserNotification.Sources == null || !latestUserNotification.Sources.Any(s => s.ReferenceId == input.SourceId))
             {
-                await this._notificationSourcesRepository.InsertAsync(new NotificationSource()
+                if (latestUserNotification.Sources == null) latestUserNotification.Sources = new List<NotificationSource>();
+                latestUserNotification.Sources.Add(new NotificationSource()
                 {
                     ReferenceId = input.SourceId,
                     NotificationId = latestUserNotification.Id
@@ -230,6 +241,9 @@ namespace Academically.Services.Notifications
             latestUserNotification.ReadTime = null;
             latestUserNotification.LastModifierUserId = input.ActorId;
             latestUserNotification.LastModificationTime = Clock.Now;
+
+            var dto = ObjectMapper.Map<NotificationDto>(latestUserNotification);
+            latestUserNotification.FormattedNotification = await this.GetFormattedNotification(dto);
         }
 
         public async Task Read(string notificationId)
@@ -264,13 +278,13 @@ namespace Academically.Services.Notifications
             }
         }
 
-        private async Task<string> FormatNotification(NotificationDto notification)
+        private async Task<string> GetFormattedNotification(NotificationDto notification)
         {
             var references = await this.InitialNotificationReferences(notification);
 
             List<string> formatted = new List<String>();
 
-            formatted.Add(await this.FormatActors(notification.Actors.Select(a => a.User).ToList()));
+            formatted.Add(await this.FormatActors(notification));
 
             formatted.Add(" ");
             formatted.Add(await this.FormatVerb(notification));
@@ -329,6 +343,7 @@ namespace Academically.Services.Notifications
             NotificationReferencesDto references = new NotificationReferencesDto();
 
             references.Post = await this._postsRepository.GetAll()
+                .AsNoTracking()
                 .Include(p => p.Parent)
                 .Where(p => p.Id == notification.ReferenceId)
                 .FirstOrDefaultAsync();
@@ -336,16 +351,18 @@ namespace Academically.Services.Notifications
             if (references.Post != null)
             {
                 references.Discussion = await this._serviceDiscussionRepository.GetAll()
+                    .AsNoTracking()
                     .Where(s => s.PostId == references.Post.Id)
                     .FirstOrDefaultAsync();
 
                 if (references.Discussion != null)
                 {
-                    references.DiscussionService = await this._postsAppService.GetAvailableService(references.Discussion.ServiceId);
+                    references.DiscussionService = await this.GetSimpleService(references.Discussion.ServiceId);
                 }
             }
 
             references.Comment = await this._commentsRepository.GetAll()
+                .AsNoTracking()
                 .Include(p => p.Parent)
                 .Where(p => p.Id == notification.ReferenceId)
                 .FirstOrDefaultAsync();
@@ -353,14 +370,25 @@ namespace Academically.Services.Notifications
             if (references.Comment != null)
             {
                 references.ParentPost = await this._postsRepository.GetAll()
+                    .AsNoTracking()
                     .Include(p => p.Parent)
                     .Where(p => p.Id.ToString() == references.Comment.ReferenceId)
                     .FirstOrDefaultAsync();
             }
 
-            references.Service = await this._postsAppService.GetService(notification.ReferenceId);
+            references.Service = await this.GetSimpleService(notification.ReferenceId);
 
             return references;
+        }
+
+        private async Task<ISimpleService> GetSimpleService(Guid id)
+        {
+            var article = (ISimpleService) await this._articlesRepository.FirstOrDefaultAsync(id);
+            var course = (ISimpleService) await this._coursesRepository.FirstOrDefaultAsync(id);
+            var coaching = (ISimpleService) await this._coachingsRepository.FirstOrDefaultAsync(id);
+            var video = (ISimpleService) await this._videosRepository.FirstOrDefaultAsync(id);
+            var evt = (ISimpleService) await this._eventsRepository.FirstOrDefaultAsync(id);
+            return article ?? course ?? coaching ?? video ?? evt;
         }
 
         private async Task<string> NotificationActionToText(NotificationAction action)
@@ -481,20 +509,26 @@ namespace Academically.Services.Notifications
             return true;
         }
 
-        private async Task<string> FormatActors(List<UserDto> actors) {
+        private async Task<string> FormatActors(NotificationDto notification) {
+            if (notification.Actors.Count == 0) return "";
+
             var textinfo = new CultureInfo("en-US", false).TextInfo;
-            if (actors.Count == 0) return "";
-            if (actors.Count == 1)
+
+            if (notification.Actors.Count == 1)
             {
-                return $"<span>{textinfo.ToTitleCase(actors.ElementAt(0).FullName)}</span>";
+                var actor = await this._usersRepository.FirstOrDefaultAsync(notification.Actors.ElementAt(0).UserId);
+                return $"<span>{textinfo.ToTitleCase(actor.FullName)}</span>";
             }
-            else if (actors.Count == 2)
+            else if (notification.Actors.Count == 2)
             {
-                return $"<span>{textinfo.ToTitleCase(actors.ElementAt(0).FullName)}</span> and <span>{textinfo.ToTitleCase(actors.ElementAt(1).FullName)}</span>";
+                var actor1 = await this._usersRepository.FirstOrDefaultAsync(notification.Actors.ElementAt(0).UserId);
+                var actor2 = await this._usersRepository.FirstOrDefaultAsync(notification.Actors.ElementAt(1).UserId);
+                return $"<span>{textinfo.ToTitleCase(actor1.FullName)}</span> and <span>{textinfo.ToTitleCase(actor2.FullName)}</span>";
             }
             else
             {
-                return $"<span>{textinfo.ToTitleCase(actors.ElementAt(0).FullName)}</span> and <span>{actors.Count - 1} others</span>";
+                var actor = await this._usersRepository.FirstOrDefaultAsync(notification.Actors.ElementAt(0).UserId);
+                return $"<span>{textinfo.ToTitleCase(actor.FullName)}</span> and <span>{notification.Actors.Count - 1} others</span>";
             }
         }
 
@@ -541,7 +575,10 @@ namespace Academically.Services.Notifications
         private async Task<string> FormatLocation(NotificationReferencesDto references)
         {
             var service = references.Service;
-            var referencePost = references.ParentPost?.Parent ?? references.Post?.Parent ?? references.Post;
+            // The `referencePost` should always be the parent of a post.
+            // `references.ParentPost` = a quick post where a comment is created
+            // `references.Post` = a quick post
+            var referencePost = references.ParentPost?.Parent ?? references.Post?.Parent; 
             string location = null;
             if (service != null)
             {

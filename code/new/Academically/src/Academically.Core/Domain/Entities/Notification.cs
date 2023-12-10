@@ -18,6 +18,7 @@ namespace Academically.Domain.Entities
         public NotificationTarget Target { get; set; }
         public Guid ReferenceId { get; set; }
         public DateTime? ReadTime { get; set; }
+        public string FormattedNotification { get; set; }
         public string Url { get; set; }
 
         [ForeignKey("UserId")]

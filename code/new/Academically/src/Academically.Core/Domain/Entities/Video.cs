@@ -8,8 +8,8 @@ using Academically.Domain.Enums;
 namespace Academically.Domain.Entities
 {
 	[Table("Videos")]
-	public class Video : CreationAuditedEntity<Guid>
-	{
+	public class Video : CreationAuditedEntity<Guid>, ISimpleService
+    {
         [NotMapped]
         public ServicesType ServiceType { get; set; } = ServicesType.Tutorial;
         public VideoType Type { get; set; }

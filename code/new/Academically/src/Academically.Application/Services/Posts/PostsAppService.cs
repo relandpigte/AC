@@ -586,7 +586,7 @@ namespace Academically.Services.Posts
 
             query = query.PageBy(request);
 
-            var availableServices = query.Select(x => ObjectMapper.Map<AvailableServiceDto>(x)).ToList();
+            var availableServices = query.AsNoTracking().Select(x => ObjectMapper.Map<AvailableServiceDto>(x)).ToList();
             foreach (var item in availableServices)
             {
                 //ImageDocumentId: thumbnail for courses

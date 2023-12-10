@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Academically.Domain.Entities
 {
     [Table("Events")]
-    public class Event : CreationAuditedEntity<Guid>
+    public class Event : CreationAuditedEntity<Guid>, ISimpleService
     {
         [NotMapped]
         public ServicesType ServiceType { get; set; } = ServicesType.Event;

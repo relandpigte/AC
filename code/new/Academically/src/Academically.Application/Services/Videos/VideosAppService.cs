@@ -105,13 +105,13 @@ namespace Academically.Services.Videos
         public async Task<IEnumerable<AvailableServiceDto>> GetVideosByKeyword(string keyword, long? creatorUserId)
         {
             var videos = await _videosRepository.GetAll()
-                                    .WhereIf(!keyword.IsNullOrWhiteSpace(),
-                                        x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Categories.Contains(keyword) || x.Id.ToString().Equals(keyword))
-                                    .WhereIf(creatorUserId.HasValue, x => x.CreatorUserId == creatorUserId)
-                                    .Include(v => v.CreatorUser)
-                                    .AsNoTracking()
-                                    .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
-                                    .ToListAsync();
+                .AsNoTracking()
+                .WhereIf(!keyword.IsNullOrWhiteSpace(),
+                    x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Categories.Contains(keyword) || x.Id.ToString().Equals(keyword))
+                .WhereIf(creatorUserId.HasValue, x => x.CreatorUserId == creatorUserId)
+                .Include(v => v.CreatorUser)
+                .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                .ToListAsync();
 
             foreach (var vid in videos)
             {

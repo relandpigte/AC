@@ -8,7 +8,7 @@ using Academically.Domain.Enums;
 namespace Academically.Domain.Entities
 {
     [Table("Articles")]
-    public class Article : CreationAuditedEntity<Guid>
+    public class Article : CreationAuditedEntity<Guid>, ISimpleService
     { 
         [NotMapped]
         public ServicesType ServiceType { get; set; } = ServicesType.Article;

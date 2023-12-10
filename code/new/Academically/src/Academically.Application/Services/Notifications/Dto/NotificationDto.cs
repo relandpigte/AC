@@ -18,13 +18,11 @@ namespace Academically.Services.Notifications.Dto
         public NotificationTarget Target { get; set; }
         public Guid ReferenceId { get; set; }
         public DateTime? ReadTime { get; set; }
+        public string FormattedNotification { get; set; }
         public string Url { get; set; }
         public virtual UserDto User { get; set; }
         public virtual UserDto CreatorUser { get; set; }
         public virtual ICollection<NotificationUserDto> Actors { get; set; }
         public virtual ICollection<NotificationSourceDto> Sources { get; set; }
-
-        [NotMapped]
-        public string FormattedNotification { get; set; }
     }
 }

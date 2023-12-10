@@ -67,6 +67,7 @@ namespace Academically.Events
         private async Task SendUserNotifications(ReactionDto reaction)
         {
             Guid referenceId = new Guid();
+            Guid sourceId = new Guid();
             long userId = 0;
 
             var post = await this._postsAppService.GetAsync(new Guid(reaction.ReferenceId));
@@ -78,6 +79,7 @@ namespace Academically.Events
             if (post != null)
             {
                 referenceId = post.Id;
+                sourceId = post.Id;
                 userId = post.CreatorUserId.GetValueOrDefault();
                 if (post.Parent != null && post.Parent.Type == PostType.Discussion)
                     url = $"{discussionUrl}{post.ParentId}";
@@ -86,10 +88,11 @@ namespace Academically.Events
             }
             else if (comment != null)
             {
-                referenceId = comment.Id;
-                userId = comment.CreatorUserId.GetValueOrDefault();
                 var parentPost = await this._postsAppService.GetAsync(new Guid(comment.ReferenceId));
-                if (parentPost != null && parentPost.Parent != null && parentPost.Parent.Type == PostType.Discussion)
+                referenceId = parentPost.Id;
+                sourceId = comment.Id;
+                userId = comment.CreatorUserId.GetValueOrDefault();
+                if (parentPost.Parent != null && parentPost.Parent.Type == PostType.Discussion)
                     url = $"{discussionUrl}{parentPost.ParentId}";
                 else
                     url = $"{postUrl}{comment.ReferenceId}";
@@ -102,7 +105,7 @@ namespace Academically.Events
                 Action = await this.getNotificationAction(reaction.Type),
                 Target = await this.getNotificationTarget(post, comment),
                 ReferenceId = referenceId,
-                SourceId = referenceId,
+                SourceId = sourceId,
                 Url = url
             });
         }

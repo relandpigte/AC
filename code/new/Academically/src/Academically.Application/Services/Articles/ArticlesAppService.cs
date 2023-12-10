@@ -329,14 +329,17 @@ namespace Academically.Services.Articles
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IEnumerable<AvailableServiceDto>> GetArticlesByKeyword(string keyword, long? creatorUserId)
         {
-            return await _articlesRepository.GetAll().Where(w => w.ParentId == null && w.IsVisible && w.Status == ArticleStatus.Published)
-                                      .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Price.ToString().Contains(keyword)
-                                               || x.Id.ToString().Equals(keyword))
-                                      .WhereIf(creatorUserId.HasValue, x => x.CreatorUserId == creatorUserId)
-                                      .Include(a => a.CreatorUser)
-                                      .AsNoTracking()
-                                      .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
-                                      .ToListAsync();
+            var articles = await _articlesRepository.GetAll()
+                .AsNoTracking()
+                .Include(a => a.CreatorUser)
+                .Where(w => w.ParentId == null && w.IsVisible && w.Status == ArticleStatus.Published)
+                .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Name.Contains(keyword) || x.Description.Contains(keyword) || x.Price.ToString().Contains(keyword)
+                        || x.Id.ToString().Equals(keyword))
+                .WhereIf(creatorUserId.HasValue, x => x.CreatorUserId == creatorUserId)
+                .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                .ToListAsync();
+
+            return articles;
         }
 
         public async Task<List<ArticleDto>> GetAllSavedArticles(long creatorUserId)

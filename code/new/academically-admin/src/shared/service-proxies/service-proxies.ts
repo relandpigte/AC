@@ -41482,7 +41482,8 @@ export interface ICreateRoleDto {
 }
 
 export class CreateServiceBookingDto implements ICreateServiceBookingDto {
-    id: string | undefined;
+    id: string;
+    creationTime: moment.Moment;
     referenceId: string;
     bookingDateTime: moment.Moment;
     ownerId: number;
@@ -41502,6 +41503,7 @@ export class CreateServiceBookingDto implements ICreateServiceBookingDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.referenceId = _data["referenceId"];
             this.bookingDateTime = _data["bookingDateTime"] ? moment(_data["bookingDateTime"].toString()) : <any>undefined;
             this.ownerId = _data["ownerId"];
@@ -41521,6 +41523,7 @@ export class CreateServiceBookingDto implements ICreateServiceBookingDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["referenceId"] = this.referenceId;
         data["bookingDateTime"] = this.bookingDateTime ? this.bookingDateTime.toISOString() : <any>undefined;
         data["ownerId"] = this.ownerId;
@@ -41539,7 +41542,8 @@ export class CreateServiceBookingDto implements ICreateServiceBookingDto {
 }
 
 export interface ICreateServiceBookingDto {
-    id: string | undefined;
+    id: string;
+    creationTime: moment.Moment;
     referenceId: string;
     bookingDateTime: moment.Moment;
     ownerId: number;
