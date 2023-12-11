@@ -114,15 +114,14 @@ namespace Academically.Services.Notifications
                 .Select(n => ObjectMapper.Map<NotificationDto>(n))
                 .FirstOrDefaultAsync();
 
-            if (notification.User != null)
-            {
+            if (notification.User?.ProfilePictureDocumentId != null)
                 notification.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(notification.User.ProfilePictureDocumentId.Value);
-            }
 
             foreach (var actor in notification.Actors)
             {
                 actor.User = ObjectMapper.Map<UserDto>(await this._usersRepository.GetAsync(actor.UserId));
-                actor.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(actor.User.ProfilePictureDocumentId.Value);
+                if (actor.User.ProfilePictureDocumentId != null)
+                    actor.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(actor.User.ProfilePictureDocumentId.Value);
             }
 
             return notification;
@@ -142,15 +141,14 @@ namespace Academically.Services.Notifications
 
             foreach(var notification in notifications)
             {
-                if (notification.User != null)
-                {
+                if (notification.User?.ProfilePictureDocumentId != null)
                     notification.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(notification.User.ProfilePictureDocumentId.Value);
-                }
 
                 foreach (var actor in notification.Actors)
                 {
                     actor.User = ObjectMapper.Map<UserDto>(await this._usersRepository.GetAsync(actor.UserId));
-                    actor.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(actor.User.ProfilePictureDocumentId.Value);
+                    if (actor.User.ProfilePictureDocumentId != null)
+                        actor.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(actor.User.ProfilePictureDocumentId.Value);
                 }
             }
 
@@ -172,15 +170,14 @@ namespace Academically.Services.Notifications
 
             foreach (var notification in notifications)
             {
-                if (notification.User != null)
-                {
+                if (notification.User?.ProfilePictureDocumentId != null)
                     notification.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(notification.User.ProfilePictureDocumentId.Value);
-                }
 
                 foreach (var actor in notification.Actors)
                 {
                     actor.User = ObjectMapper.Map<UserDto>(await this._usersRepository.GetAsync(actor.UserId));
-                    actor.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(actor.User.ProfilePictureDocumentId.Value);
+                    if (actor.User.ProfilePictureDocumentId != null)
+                        actor.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(actor.User.ProfilePictureDocumentId.Value);
                 }
             }
 
@@ -297,7 +294,7 @@ namespace Academically.Services.Notifications
 
             if (await this.NotificationHasPronoun(notification))
             {
-                var pronoun = await this.FormatPronoun(notification.Action);
+                var pronoun = await this.FormatPronoun(notification);
                 if (!string.IsNullOrEmpty(pronoun))
                 {
                     formatted.Add(" ");
@@ -579,17 +576,39 @@ namespace Academically.Services.Notifications
             return null;
         }
 
-        private async Task<string> FormatPronoun(NotificationAction action)
+        private async Task<string> FormatPronoun(NotificationDto notification)
         {
-            switch(action)
+            switch(notification.Action)
             {
                 case NotificationAction.Chat:
                     return "you a";
                 case NotificationAction.Follow:
                     return "you";
+                case NotificationAction.Like:
+                case NotificationAction.React:
+                    return await FormatReactionPronoun(notification);
                 default:
                     return "your";
             }
+        }
+
+        private async Task<string> FormatReactionPronoun(NotificationDto notification)
+        {
+            var post = await _postsAppService.GetAsync(notification.ReferenceId);
+            var actorId = notification.Actors.ElementAt(0).UserId;
+            
+            if (post.CreatorUserId == actorId)
+            {
+                return "their";
+            }
+            
+            if (post.CreatorUserId != actorId && post.CreatorUserId != notification.UserId)
+            {
+                var textInfo = new CultureInfo("en-US", false).TextInfo;
+                return $"<span>{textInfo.ToTitleCase(post.CreatorUser.FullName)}'s</span>";
+            }
+            
+            return "your"; 
         }
 
         private async Task<string> FormatTarget(NotificationDto notification)
