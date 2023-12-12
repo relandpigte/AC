@@ -488,7 +488,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
     if (!this.isTutorCalendarUser) {
       return;
     }
-    this._userAvailabilitiesService.getAvailabilitySettings()
+    this._userAvailabilitiesService.getAvailabilitySettings(this.currentUserId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(settings => this.userAvailabilitySettings = settings);
   }

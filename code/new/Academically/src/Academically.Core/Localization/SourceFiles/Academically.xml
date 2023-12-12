@@ -712,6 +712,7 @@
     <text name="Bookings">Bookings</text>
     <text name="Booking">Booking</text>
     <text name="TimeSlotUnavailable">This time slot no longer exists</text>
+    <text name="BookingDateFull">This date is no longer available</text>
     <text name="ChooseTimeSlot">Please choose a different time</text>
     <text name="PaypalPaymentText">Click continue to proceed to the PayPal login screen.</text>
     <text name="WechatPaymentText">Please open your Wechat and scan the code to finish the payment.</text>

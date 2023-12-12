@@ -30066,10 +30066,15 @@ export class UserAvailabilitiesServiceProxy {
     }
 
     /**
+     * @param userId (optional) 
      * @return Success
      */
-    getAvailabilitySettings(): Observable<UserAvailabilitySetting> {
-        let url_ = this.baseUrl + "/api/services/app/UserAvailabilities/GetAvailabilitySettings";
+    getAvailabilitySettings(userId: number | undefined): Observable<UserAvailabilitySetting> {
+        let url_ = this.baseUrl + "/api/services/app/UserAvailabilities/GetAvailabilitySettings?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

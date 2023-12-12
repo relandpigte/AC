@@ -76,17 +76,26 @@ namespace Academically.Services.UserAvailabilities
 
         public async Task<UserAvailabilitySetting> SaveAvailabilitySettingsAsync(UserAvailabilitySettingDto input)
         {
-            var availabilitySetting = await GetAvailabilitySettings() ?? new UserAvailabilitySetting();
+            var availabilitySetting = await GetAvailabilitySettings(AbpSession.GetUserId()) ?? new UserAvailabilitySetting();
 
             ObjectMapper.Map(input, availabilitySetting);
             return await _userAvailabilitySettingRepository.InsertOrUpdateAsync(availabilitySetting);
         }
         
-        public async Task<UserAvailabilitySetting> GetAvailabilitySettings()
+        public async Task<UserAvailabilitySetting> GetAvailabilitySettings(long userId)
         {
-            return await _userAvailabilitySettingRepository.GetAll()
-                .Where(x => x.CreatorUserId == AbpSession.GetUserId())
+            var availability = await _userAvailabilitySettingRepository.GetAll()
+                .Where(x => x.CreatorUserId == userId)
                 .SingleOrDefaultAsync();
+
+            return availability ?? new UserAvailabilitySetting
+            {
+                BookingIntervals = 30,
+                IsPaddingAfterBooking = true,
+                IsPaddingBeforeBooking = true,
+                PaddingBeforeBooking = 5,
+                PaddingAfterBooking = 5
+            };
         }
     }
 }

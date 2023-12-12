@@ -11,6 +11,6 @@ namespace Academically.Services.UserAvailabilities
         Task<IEnumerable<UserAvailabilityDto>> GetAll(long userId);
         Task CreateEdit(IEnumerable<UserAvailabilityDto> inputs);
         Task<UserAvailabilitySetting> SaveAvailabilitySettingsAsync(UserAvailabilitySettingDto input);
-        Task<UserAvailabilitySetting> GetAvailabilitySettings();
+        Task<UserAvailabilitySetting> GetAvailabilitySettings(long userId);
     }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -7,7 +7,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
   styleUrls: ['./booking-taken.component.less']
 })
 export class BookingTakenComponent implements OnInit {
-
+  @Input() title: string;
   constructor(private _modal: BsModalRef) {}
 
   ngOnInit(): void {
