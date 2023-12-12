@@ -466,8 +466,8 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   }
 
   private getBookingIntervals(settings: UserAvailabilitySetting): number {
-    const paddingBefore = settings?.isPaddingBeforeBooking ? settings?.paddingBeforeBooking : 5;
-    const paddingAfter = settings?.isPaddingAfterBooking ? settings?.paddingAfterBooking : 5;
+    const paddingBefore = settings?.isPaddingBeforeBooking ? settings?.paddingBeforeBooking : 0;
+    const paddingAfter = settings?.isPaddingAfterBooking ? settings?.paddingAfterBooking : 0;
     return (settings?.bookingIntervals + paddingBefore + paddingAfter) ?? 30;
   }
 

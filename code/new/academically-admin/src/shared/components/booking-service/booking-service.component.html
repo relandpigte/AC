@@ -81,8 +81,8 @@
               </div>
             </div>
             <div class="booking-right-content ml-auto">
-              <div *ngIf="!isServiceFree else freeServiceTemplate" class="booking-payment">
-                <div *ngIf="!rescheduleBooking else rescheduleTemplate">
+              <div *ngIf="!rescheduleBooking else rescheduleTemplate" class="booking-payment h-100p">
+                <div *ngIf="!isServiceFree else freeServiceTemplate">
                   <h3 class="booking-payment-title required">Payment method</h3>
                   <div class="booking-payment-select d-flex align-items-center gap-16">
                     <div *ngFor="let payment of PaymentMethod | enumToArray | keyvalue"
