@@ -170,14 +170,13 @@ namespace Academically.Events
         
         private async Task SendFollowerNotifications(ReactionDto reaction)
         {
-            // no notification if the post is inside a discussion
+            var followers = await _userFollowersAppService.GetFollowers();
+            var userIds = followers.Select(x => x.CreatorUserId).ToList();
+            
             var post = await _postsAppService.GetAsync(new Guid(reaction.ReferenceId));
             if (post != null)
             {
                 if (post.ParentId.HasValue) return;
-
-                var followers = await _userFollowersAppService.GetFollowers();
-                var userIds = followers.Select(x => x.CreatorUserId).ToList().Distinct();
 
                 await Parallel.ForEachAsync(userIds, async (userId, token) =>
                 {
@@ -190,12 +189,34 @@ namespace Academically.Events
                             Target = await getNotificationTarget(post, null),
                             ReferenceId = post.Id,
                             SourceId = post.Id,
-                            Url = "app/community/post/"
+                            Url = $"app/community/post/{post.Id}"
                         });
 
                 });
             }
             
+            var comment = await _commentsAppService.GetAsync(new Guid(reaction.ReferenceId));
+            if (comment != null)
+            {
+                var parentPost = await _postsAppService.GetAsync(new Guid(comment.ReferenceId));
+                if (parentPost.ParentId.HasValue) return;
+                
+                await Parallel.ForEachAsync(userIds, async (userId, token) =>
+                {
+                    if (userId != null)
+                        await _notificationsAppService.Create(new CreateNotificationDto
+                        {
+                            UserId = userId.Value,
+                            ActorId = reaction.CreatorUserId,
+                            Action = await getNotificationAction(reaction.Type),
+                            Target = await getNotificationTarget(null, comment),
+                            ReferenceId = parentPost.Id,
+                            SourceId = comment.Id,
+                            Url = $"app/community/post/{parentPost.Id}"
+                        });
+
+                });
+            }
         }
     }
 }

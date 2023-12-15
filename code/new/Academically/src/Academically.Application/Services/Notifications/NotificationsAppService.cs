@@ -15,6 +15,7 @@ using Academically.Domain;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
+using Academically.Services.Comments;
 using Academically.Services.Notifications.Dto;
 using Academically.Services.Posts;
 using Academically.Users.Dto;
@@ -42,6 +43,7 @@ namespace Academically.Services.Notifications
         private readonly IRepository<Event, Guid> _eventsRepository;
         private readonly IUserNotificationManager _userNotificationManager;
         private readonly IPostsAppService _postsAppService;
+        private readonly ICommentsAppService _commentsAppService;
 
         public NotificationsAppService
         (
@@ -58,7 +60,8 @@ namespace Academically.Services.Notifications
             IRepository<Coaching, Guid> coachingsRepository,
             IRepository<Video, Guid> videosRepository,
             IRepository<Event, Guid> eventsRepository,
-            IPostsAppService postsAppService
+            IPostsAppService postsAppService,
+            ICommentsAppService commentsAppService
         )
         {
             _documentsDomainService = documentsDomainService;
@@ -75,6 +78,7 @@ namespace Academically.Services.Notifications
             _videosRepository = videosRepository;
             _eventsRepository = eventsRepository;
             _postsAppService = postsAppService;
+            _commentsAppService = commentsAppService;
         }
 
         public async Task<IEnumerable<UserNotification>> GetRecent()
@@ -594,21 +598,23 @@ namespace Academically.Services.Notifications
 
         private async Task<string> FormatReactionPronoun(NotificationDto notification)
         {
-            var post = await _postsAppService.GetAsync(notification.ReferenceId);
+            var sourceReferenceId = notification.Sources.Select(x => x.ReferenceId).FirstOrDefault();
+            var post = await _postsAppService.GetAsync(sourceReferenceId);
+            var comment = await _commentsAppService.GetAsync(sourceReferenceId);
             var actorId = notification.Actors.ElementAt(0).UserId;
-            
-            if (post.CreatorUserId == actorId)
+            var textInfo = new CultureInfo("en-US", false).TextInfo;
+
+            if (post != null)
             {
-                return "their";
-            }
-            
-            if (post.CreatorUserId != actorId && post.CreatorUserId != notification.UserId)
-            {
-                var textInfo = new CultureInfo("en-US", false).TextInfo;
+                if (post.CreatorUserId == actorId) return "their";
+                if (post.CreatorUserId == actorId || post.CreatorUserId == notification.UserId) return "your";
                 return $"<span>{textInfo.ToTitleCase(post.CreatorUser.FullName)}'s</span>";
             }
             
-            return "your"; 
+            if (comment.CreatorUserId == actorId) return "their";
+            if (comment.CreatorUserId == actorId || comment.CreatorUserId == notification.UserId) return "your";
+            return $"<span>{textInfo.ToTitleCase(comment.CreatorUser.FullName)}'s</span>";
+            
         }
 
         private async Task<string> FormatTarget(NotificationDto notification)
