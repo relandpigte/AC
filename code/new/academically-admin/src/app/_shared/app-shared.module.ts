@@ -191,7 +191,7 @@ FullCalendarModule.registerPlugins([
     LeaveReviewComponent,
     LeaveReviewConfirmationComponent,
     ServiceReviewStatsComponent,
-    ServiceNotificationPopupComponent
+    ServiceNotificationPopupComponent,
   ],
   imports: [
     CommonModule,
@@ -310,7 +310,7 @@ FullCalendarModule.registerPlugins([
     LeaveReviewComponent,
     LeaveReviewConfirmationComponent,
     ServiceReviewStatsComponent,
-    ServiceNotificationPopupComponent
+    ServiceNotificationPopupComponent,
   ],
 })
 export class AppSharedModule { }

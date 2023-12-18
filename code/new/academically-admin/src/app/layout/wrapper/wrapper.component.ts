@@ -1,20 +1,23 @@
+import { TitleCasePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterEvent } from '@angular/router';
+import { HubService } from '@app/_shared/services/hub.service';
+import { HubConnection } from '@microsoft/signalr';
 import { AppComponentBase } from '@shared/app-component-base';
 import { uiEvents } from '@shared/constants/ui-events.constant';
 import { NavigationPosition } from '@shared/enums/theme-settings/navigation-position.enum';
 import { SidebarSize } from '@shared/enums/theme-settings/sidebar-size.enum';
 import { IThemeSetting } from '@shared/interfaces/theme-setting.interface';
+import { CoachingDto, CommentsServiceProxy, EventDto, HubEvent, NotificationDto, NotificationsServiceProxy, PostsServiceProxy, ServiceBookingDto, ServicesType } from '@shared/service-proxies/service-proxies';
+import { NotificationsStateService } from '@shared/services/notifications-state.service';
+import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
+import { StateUpdateType } from '@shared/services/state-base.service';
 import { ThemeManagerService } from '@shared/services/theme-manager.service';
+import { WrapperService } from '@shared/services/wrapper.service';
 import { BehaviorSubject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { TitleCasePipe } from '@angular/common';
-import { WrapperService } from '@shared/services/wrapper.service';
-import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
-import { NotificationsStateService } from '@shared/services/notifications-state.service';
-import { StateUpdateType } from '@shared/services/state-base.service';
-import { HubService } from '@app/_shared/services/hub.service';
-import { CommentsServiceProxy, NotificationDto, NotificationsServiceProxy, PostsServiceProxy } from '@shared/service-proxies/service-proxies';
+
+const UPCOMING_EVENTS_HUB_NAME = 'upcomingEvents';
 
 @Component({
   selector: 'app-wrapper',
@@ -45,7 +48,7 @@ export class WrapperComponent extends AppComponentBase implements OnInit, OnDest
     private _hubService: HubService,
     private _commentsService: CommentsServiceProxy,
     private _postsService: PostsServiceProxy,
-    private _cdr: ChangeDetectorRef
+    private _cdr: ChangeDetectorRef,
   ) {
     super(injector);
     this.themeSetting = themeSettingsService.getConfiguration();
@@ -55,7 +58,10 @@ export class WrapperComponent extends AppComponentBase implements OnInit, OnDest
     });
   }
 
+  get upcomingEventsHub(): HubConnection { return this.getHub(UPCOMING_EVENTS_HUB_NAME); }
+
   async ngOnInit(): Promise<void> {
+    await this.initializeUpcomingEventsHub();
     await this.initNotificationAppStates();
     this.routerEvents.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
       this.routerEvent = event;
@@ -70,6 +76,23 @@ export class WrapperComponent extends AppComponentBase implements OnInit, OnDest
     }
 
     await this.notificationsStateService?.stop();
+  }
+
+  private async initializeUpcomingEventsHub(): Promise<void> {
+    this.addHub(UPCOMING_EVENTS_HUB_NAME, await this._hubService.getEventsHub({ userId: this.currentUserId }));
+    this.upcomingEventsHub.on(HubEvent[HubEvent.UpcomingEvent], ({ Booking, Data}) => {
+      const booking = ServiceBookingDto.fromJS(Booking);
+      let data = null;
+      if (booking) {
+        if (booking.type === ServicesType.Coaching) {
+          data = CoachingDto.fromJS(Data);
+        } else {
+          data = EventDto.fromJS(Data);
+        }
+        // this.upcomingEvents.unshift({ data, booking });
+      }
+    });
+    this.startHubConnection(UPCOMING_EVENTS_HUB_NAME);
   }
 
   private async initNotificationAppStates(): Promise<void> {
