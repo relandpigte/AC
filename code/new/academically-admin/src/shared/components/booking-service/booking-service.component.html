@@ -35,7 +35,7 @@
                 </div>
               </div>
               <div class="booking-right-content-schedules">
-                <ng-container *ngIf="!!selectedSchedule else noSchedule">
+                <ng-container *ngIf="!!selectedSchedule && (isMorningSessionAvailable && isAfternoonSessionAvailable && isEveningSessionAvailable) else noSchedule">
                   <div *ngIf="isMorningSessionAvailable" class="booking-schedules booking-right-content-schedules-morning">
                     <h3>{{ 'Morning' | localize | uppercase }}</h3>
                     <div class="booking-schedules-lists d-flex align-items-center flex-wrap gap-10">
@@ -81,8 +81,8 @@
               </div>
             </div>
             <div class="booking-right-content ml-auto">
-              <div *ngIf="!isServiceFree else freeServiceTemplate" class="booking-payment">
-                <div *ngIf="!rescheduleBooking else rescheduleTemplate">
+              <div *ngIf="!rescheduleBooking else rescheduleTemplate" class="booking-payment h-100p">
+                <div *ngIf="!isServiceFree else freeServiceTemplate">
                   <h3 class="booking-payment-title required">Payment method</h3>
                   <div class="booking-payment-select d-flex align-items-center gap-16">
                     <div *ngFor="let payment of PaymentMethod | enumToArray | keyvalue"

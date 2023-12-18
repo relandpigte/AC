@@ -15,7 +15,9 @@ using Academically.Services.Posts;
 using Academically.Services.Posts.Dto;
 using Academically.Services.Reactions.Dto;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Academically.Services.UserFollowers;
 
 namespace Academically.Events
 {
@@ -29,20 +31,22 @@ namespace Academically.Events
         private readonly IPostsAppService _postsAppService;
         private readonly ICommentsAppService _commentsAppService;
         private readonly INotificationsAppService _notificationsAppService;
+        private readonly IUserFollowersAppService _userFollowersAppService;
 
         public ReactionsEventHandler(
             IObjectMapper objectMapper,
             IHubManager hubManager,
             IPostsAppService postsAppService,
             ICommentsAppService commentsAppService,
-            INotificationsAppService notificationsAppService
-        )
+            INotificationsAppService notificationsAppService,
+            IUserFollowersAppService userFollowersAppService)
         {
             _objectMapper = objectMapper;
             _hubManager = hubManager;
             _postsAppService = postsAppService;
             _commentsAppService = commentsAppService;
             _notificationsAppService = notificationsAppService;
+            _userFollowersAppService = userFollowersAppService;
         }
 
         public async Task HandleEventAsync(EntityCreatedEventData<Reaction> eventData)
@@ -50,6 +54,7 @@ namespace Academically.Events
             var reaction = _objectMapper.Map<ReactionDto>(eventData.Entity);
             await _hubManager.NotifyUsersForReactionCreated(reaction);
             await this.SendUserNotifications(reaction);
+            await SendFollowerNotifications(reaction);
         }
 
         public async Task HandleEventAsync(EntityUpdatedEventData<Reaction> eventData)
@@ -57,6 +62,7 @@ namespace Academically.Events
             var reaction = _objectMapper.Map<ReactionDto>(eventData.Entity);
             await _hubManager.NotifyUsersForReactionUpdated(reaction);
             await this.SendUserNotifications(reaction);
+            await SendFollowerNotifications(reaction);
         }
 
         public async Task HandleEventAsync(EntityDeletedEventData<Reaction> eventData)
@@ -160,6 +166,57 @@ namespace Academically.Events
                 return NotificationTarget.Comment;
             }
             
+        }
+        
+        private async Task SendFollowerNotifications(ReactionDto reaction)
+        {
+            var followers = await _userFollowersAppService.GetFollowers();
+            var userIds = followers.Select(x => x.CreatorUserId).ToList();
+            
+            var post = await _postsAppService.GetAsync(new Guid(reaction.ReferenceId));
+            if (post != null)
+            {
+                if (post.ParentId.HasValue) return;
+
+                await Parallel.ForEachAsync(userIds, async (userId, token) =>
+                {
+                    if (userId != null)
+                        await _notificationsAppService.Create(new CreateNotificationDto
+                        {
+                            UserId = userId.Value,
+                            ActorId = reaction.CreatorUserId,
+                            Action = await getNotificationAction(reaction.Type),
+                            Target = await getNotificationTarget(post, null),
+                            ReferenceId = post.Id,
+                            SourceId = post.Id,
+                            Url = $"app/community/post/{post.Id}"
+                        });
+
+                });
+            }
+            
+            var comment = await _commentsAppService.GetAsync(new Guid(reaction.ReferenceId));
+            if (comment != null)
+            {
+                var parentPost = await _postsAppService.GetAsync(new Guid(comment.ReferenceId));
+                if (parentPost.ParentId.HasValue) return;
+                
+                await Parallel.ForEachAsync(userIds, async (userId, token) =>
+                {
+                    if (userId != null)
+                        await _notificationsAppService.Create(new CreateNotificationDto
+                        {
+                            UserId = userId.Value,
+                            ActorId = reaction.CreatorUserId,
+                            Action = await getNotificationAction(reaction.Type),
+                            Target = await getNotificationTarget(null, comment),
+                            ReferenceId = parentPost.Id,
+                            SourceId = comment.Id,
+                            Url = $"app/community/post/{parentPost.Id}"
+                        });
+
+                });
+            }
         }
     }
 }

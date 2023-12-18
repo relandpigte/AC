@@ -15,6 +15,7 @@ using Academically.Domain;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
+using Academically.Services.Comments;
 using Academically.Services.Notifications.Dto;
 using Academically.Services.Posts;
 using Academically.Users.Dto;
@@ -42,6 +43,7 @@ namespace Academically.Services.Notifications
         private readonly IRepository<Event, Guid> _eventsRepository;
         private readonly IUserNotificationManager _userNotificationManager;
         private readonly IPostsAppService _postsAppService;
+        private readonly ICommentsAppService _commentsAppService;
 
         public NotificationsAppService
         (
@@ -58,7 +60,8 @@ namespace Academically.Services.Notifications
             IRepository<Coaching, Guid> coachingsRepository,
             IRepository<Video, Guid> videosRepository,
             IRepository<Event, Guid> eventsRepository,
-            IPostsAppService postsAppService
+            IPostsAppService postsAppService,
+            ICommentsAppService commentsAppService
         )
         {
             _documentsDomainService = documentsDomainService;
@@ -75,6 +78,7 @@ namespace Academically.Services.Notifications
             _videosRepository = videosRepository;
             _eventsRepository = eventsRepository;
             _postsAppService = postsAppService;
+            _commentsAppService = commentsAppService;
         }
 
         public async Task<IEnumerable<UserNotification>> GetRecent()
@@ -114,15 +118,14 @@ namespace Academically.Services.Notifications
                 .Select(n => ObjectMapper.Map<NotificationDto>(n))
                 .FirstOrDefaultAsync();
 
-            if (notification.User != null)
-            {
+            if (notification.User?.ProfilePictureDocumentId != null)
                 notification.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(notification.User.ProfilePictureDocumentId.Value);
-            }
 
             foreach (var actor in notification.Actors)
             {
                 actor.User = ObjectMapper.Map<UserDto>(await this._usersRepository.GetAsync(actor.UserId));
-                actor.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(actor.User.ProfilePictureDocumentId.Value);
+                if (actor.User.ProfilePictureDocumentId != null)
+                    actor.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(actor.User.ProfilePictureDocumentId.Value);
             }
 
             return notification;
@@ -142,15 +145,14 @@ namespace Academically.Services.Notifications
 
             foreach(var notification in notifications)
             {
-                if (notification.User != null)
-                {
+                if (notification.User?.ProfilePictureDocumentId != null)
                     notification.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(notification.User.ProfilePictureDocumentId.Value);
-                }
 
                 foreach (var actor in notification.Actors)
                 {
                     actor.User = ObjectMapper.Map<UserDto>(await this._usersRepository.GetAsync(actor.UserId));
-                    actor.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(actor.User.ProfilePictureDocumentId.Value);
+                    if (actor.User.ProfilePictureDocumentId != null)
+                        actor.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(actor.User.ProfilePictureDocumentId.Value);
                 }
             }
 
@@ -172,15 +174,14 @@ namespace Academically.Services.Notifications
 
             foreach (var notification in notifications)
             {
-                if (notification.User != null)
-                {
+                if (notification.User?.ProfilePictureDocumentId != null)
                     notification.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(notification.User.ProfilePictureDocumentId.Value);
-                }
 
                 foreach (var actor in notification.Actors)
                 {
                     actor.User = ObjectMapper.Map<UserDto>(await this._usersRepository.GetAsync(actor.UserId));
-                    actor.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(actor.User.ProfilePictureDocumentId.Value);
+                    if (actor.User.ProfilePictureDocumentId != null)
+                        actor.User.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(actor.User.ProfilePictureDocumentId.Value);
                 }
             }
 
@@ -297,7 +298,7 @@ namespace Academically.Services.Notifications
 
             if (await this.NotificationHasPronoun(notification))
             {
-                var pronoun = await this.FormatPronoun(notification.Action);
+                var pronoun = await this.FormatPronoun(notification);
                 if (!string.IsNullOrEmpty(pronoun))
                 {
                     formatted.Add(" ");
@@ -579,17 +580,41 @@ namespace Academically.Services.Notifications
             return null;
         }
 
-        private async Task<string> FormatPronoun(NotificationAction action)
+        private async Task<string> FormatPronoun(NotificationDto notification)
         {
-            switch(action)
+            switch(notification.Action)
             {
                 case NotificationAction.Chat:
                     return "you a";
                 case NotificationAction.Follow:
                     return "you";
+                case NotificationAction.Like:
+                case NotificationAction.React:
+                    return await FormatReactionPronoun(notification);
                 default:
                     return "your";
             }
+        }
+
+        private async Task<string> FormatReactionPronoun(NotificationDto notification)
+        {
+            var sourceReferenceId = notification.Sources.Select(x => x.ReferenceId).FirstOrDefault();
+            var post = await _postsAppService.GetAsync(sourceReferenceId);
+            var comment = await _commentsAppService.GetAsync(sourceReferenceId);
+            var actorId = notification.Actors.ElementAt(0).UserId;
+            var textInfo = new CultureInfo("en-US", false).TextInfo;
+
+            if (post != null)
+            {
+                if (post.CreatorUserId == actorId) return "their";
+                if (post.CreatorUserId == actorId || post.CreatorUserId == notification.UserId) return "your";
+                return $"<span>{textInfo.ToTitleCase(post.CreatorUser.FullName)}'s</span>";
+            }
+            
+            if (comment.CreatorUserId == actorId) return "their";
+            if (comment.CreatorUserId == actorId || comment.CreatorUserId == notification.UserId) return "your";
+            return $"<span>{textInfo.ToTitleCase(comment.CreatorUser.FullName)}'s</span>";
+            
         }
 
         private async Task<string> FormatTarget(NotificationDto notification)

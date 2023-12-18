@@ -18,7 +18,7 @@
 
 <!-- MAIN CONTENT
 ================================================== -->
-<div class="main-content flex-grow-1 position-relative" [class.can-scroll]="canScroll">
+<div class="main-content flex-grow-1" [class.can-scroll]="canScroll">
   <topbar *ngIf="themeSetting.navigationPosition === NavigationPosition.Combo"></topbar>
   <app-notification-card [notification]="notification"></app-notification-card>
   <app-service-notification-popup></app-service-notification-popup>

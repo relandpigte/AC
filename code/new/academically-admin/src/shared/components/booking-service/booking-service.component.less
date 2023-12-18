@@ -57,6 +57,7 @@
             border-style: none !important;
             td, th {
                 border-style: none !important;
+                cursor: default;
             }
             th {
                 margin-bottom: 9px;
@@ -74,6 +75,7 @@
 
                     .fc-daygrid-day-top {
                         border: 1px solid #E4EBF6;
+                        cursor: pointer;
 
                         a {
                             color: #000;
@@ -109,6 +111,18 @@
                     }
                 }
 
+                &:not(.active).reschedule-events {
+                    background-color: transparent !important;
+
+                    .fc-daygrid-day-top {
+                        border: 1px solid #2C7BE5;
+
+                        a {
+                            color: #2C7BE5;
+                        }
+                    }
+                }
+
                 &-events {
                     display: none;
                 }
@@ -121,6 +135,7 @@
                     height: 40px;
                     border-radius: 50%;
                     margin: 0 auto 5px;
+                    cursor: pointer;
                 }
 
                 &-number {
@@ -205,7 +220,7 @@
 
         &-schedules {
             padding: 16px 24px;
-            max-height: 310px;
+            max-height: 320px;
             overflow-y: auto;
             scroll-behavior: smooth;
 
@@ -263,20 +278,7 @@
             }
         }
 
-        .free-service {
-            color: #12263F;
 
-            h4 {
-                font-size: 18px;
-                font-weight: 600;
-                margin-bottom: 4px;
-            }
-
-            p {
-                margin: 0;
-                font-size: 13px;
-            }
-        }
     }
 
     &-reschedule {
@@ -491,6 +493,21 @@
                 content: "*";
                 color: #E00000;
                 margin-left: 6px;
+            }
+        }
+
+        .free-service {
+            color: #12263F;
+
+            h4 {
+                font-size: 18px;
+                font-weight: 600;
+                margin-bottom: 4px;
+            }
+
+            p {
+                margin: 0;
+                font-size: 13px;
             }
         }
     }

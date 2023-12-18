@@ -712,6 +712,7 @@
     <text name="Bookings">Bookings</text>
     <text name="Booking">Booking</text>
     <text name="TimeSlotUnavailable">This time slot no longer exists</text>
+    <text name="BookingDateFull">This date is no longer available</text>
     <text name="ChooseTimeSlot">Please choose a different time</text>
     <text name="PaypalPaymentText">Click continue to proceed to the PayPal login screen.</text>
     <text name="WechatPaymentText">Please open your Wechat and scan the code to finish the payment.</text>
@@ -1990,6 +1991,7 @@
     <text name="ReviewCount">{0} reviews</text>
     <text name="AreYouSure">Are you sure?</text>
     <text name="TimeToStart">Time to start</text>
+    <text name="StartIn">Start in</text>
     <text name="CompletedEvent">You’ve completed this {0}</text>
     <text name="LeaveReview">Leave review</text>
     <text name="LeaveRating">Leave a rating</text>

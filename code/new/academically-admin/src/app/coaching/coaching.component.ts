@@ -16,7 +16,7 @@ import { LeaveReviewComponent } from '@shared/modals/leave-review/leave-review.c
 import { LeaveReviewConfirmationComponent } from '@shared/modals/leave-review-confirmation/leave-review-confirmation.component';
 import {
   ChatsServiceProxy, CoachingDto, CoachingsServiceProxy, ServiceBookingDto, ServiceReviewDto, ServiceReviewStats,
-  ServicesServiceProxy, UserAvailabilitiesServiceProxy, UserAvailabilityDto
+  ServicesServiceProxy, UserAvailabilitiesServiceProxy, UserAvailabilityDto, UserAvailabilitySetting
 } from '@shared/service-proxies/service-proxies';
 
 @Component({
@@ -33,6 +33,7 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
   booking: ServiceBookingDto;
   userAvailabilities: UserAvailabilityDto[] = [];
   serviceBookings: ServiceBookingDto[] = [];
+  coachAvailabilitySettings: UserAvailabilitySetting;
 
   constructor(
     injector: Injector,
@@ -93,6 +94,7 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
       userAvailabilities: this.userAvailabilities,
       serviceBookings: this.serviceBookings,
       title: this.l('BookASession'),
+      coachAvailabilitySettings: this.coachAvailabilitySettings
     };
     const modal = this._modalService.show(BookingServiceComponent, modalSettings);
 
@@ -112,6 +114,7 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
       serviceBookings: this.serviceBookings,
       rescheduleBooking: this.booking,
       title: this.l('RescheduleSession'),
+      coachAvailabilitySettings: this.coachAvailabilitySettings
     };
     const modal = this._modalService.show(BookingServiceComponent, modalSettings);
 
@@ -185,6 +188,7 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
         this._serviceData.serviceBooking = booking;
         this.initUserAvailabilities();
         this.initServiceBookings();
+        this.initUserAvailabilitySettings();
       });
   }
 
@@ -193,6 +197,14 @@ export class CoachingComponent extends  AppComponentBase implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .subscribe(availabilities => {
         this.userAvailabilities = availabilities;
+      });
+  }
+
+  private initUserAvailabilitySettings(): void {
+    this._userAvailabilitiesService.getAvailabilitySettings(this.serviceOwnerId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(settings => {
+        this.coachAvailabilitySettings = settings;
       });
   }
 

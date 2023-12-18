@@ -15,7 +15,7 @@ import { AppConsts } from '@shared/AppConsts';
 import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
 import {
   CoachingDto, PostsServiceProxy, SavedServicesServiceProxy, ServiceBookingDto, ServicesServiceProxy, SharedType,
-  UserAvailabilitiesServiceProxy, UserAvailabilityDto, UserDto
+  UserAvailabilitiesServiceProxy, UserAvailabilityDto, UserAvailabilitySetting, UserDto
 } from '@shared/service-proxies/service-proxies';
 
 @Component({
@@ -30,6 +30,7 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
   NavigationPosition = NavigationPosition;
   userAvailabilities: UserAvailabilityDto[] = [];
   serviceBookings: ServiceBookingDto[] = [];
+  coachAvailabilitySettings: UserAvailabilitySetting;
 
   shimmerType = ShimmerType;
   isSaved: boolean;
@@ -75,7 +76,8 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
       data: this.data,
       title: this.l('BookASession'),
       userAvailabilities: this.userAvailabilities,
-      serviceBookings: this.serviceBookings
+      serviceBookings: this.serviceBookings,
+      coachAvailabilitySettings: this.coachAvailabilitySettings
     };
     const purchaseModal = this._modalService.show(BookingServiceComponent, modalSettings);
 
@@ -137,6 +139,12 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
       });
   }
 
+  private initUserAvailabilitySettings(): void {
+    this._userAvailabilitiesService.getAvailabilitySettings(this.serviceOwnerId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(settings => this.coachAvailabilitySettings = settings);
+  }
+
   private initServiceData(): void {
     this._serviceData.serviceData$
       .pipe(takeUntil(this.destroyed$))
@@ -148,6 +156,7 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
         this.isSaved = this.data?.isSaved;
         this.initServiceBookings();
         this.initUserAvailabilities();
+        this.initUserAvailabilitySettings();
       });
   }
 

@@ -30066,10 +30066,15 @@ export class UserAvailabilitiesServiceProxy {
     }
 
     /**
+     * @param userId (optional) 
      * @return Success
      */
-    getAvailabilitySettings(): Observable<UserAvailabilitySetting> {
-        let url_ = this.baseUrl + "/api/services/app/UserAvailabilities/GetAvailabilitySettings";
+    getAvailabilitySettings(userId: number | undefined): Observable<UserAvailabilitySetting> {
+        let url_ = this.baseUrl + "/api/services/app/UserAvailabilities/GetAvailabilitySettings?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -58823,10 +58828,7 @@ export class UserAvailabilitySetting implements IUserAvailabilitySetting {
     bookingIntervals: number;
     isMaximumBookingPerDay: boolean;
     maximumBookingPerDay: number;
-    isPaddingBeforeBooking: boolean;
-    paddingBeforeBooking: number;
-    isPaddingAfterBooking: boolean;
-    paddingAfterBooking: number;
+    padding: number;
     isMinimumBookingNotice: boolean;
     minimumBookingNotice: number;
     minimumBookingNoticeUnit: AvailabilityUnit;
@@ -58853,10 +58855,7 @@ export class UserAvailabilitySetting implements IUserAvailabilitySetting {
             this.bookingIntervals = _data["bookingIntervals"];
             this.isMaximumBookingPerDay = _data["isMaximumBookingPerDay"];
             this.maximumBookingPerDay = _data["maximumBookingPerDay"];
-            this.isPaddingBeforeBooking = _data["isPaddingBeforeBooking"];
-            this.paddingBeforeBooking = _data["paddingBeforeBooking"];
-            this.isPaddingAfterBooking = _data["isPaddingAfterBooking"];
-            this.paddingAfterBooking = _data["paddingAfterBooking"];
+            this.padding = _data["padding"];
             this.isMinimumBookingNotice = _data["isMinimumBookingNotice"];
             this.minimumBookingNotice = _data["minimumBookingNotice"];
             this.minimumBookingNoticeUnit = _data["minimumBookingNoticeUnit"];
@@ -58883,10 +58882,7 @@ export class UserAvailabilitySetting implements IUserAvailabilitySetting {
         data["bookingIntervals"] = this.bookingIntervals;
         data["isMaximumBookingPerDay"] = this.isMaximumBookingPerDay;
         data["maximumBookingPerDay"] = this.maximumBookingPerDay;
-        data["isPaddingBeforeBooking"] = this.isPaddingBeforeBooking;
-        data["paddingBeforeBooking"] = this.paddingBeforeBooking;
-        data["isPaddingAfterBooking"] = this.isPaddingAfterBooking;
-        data["paddingAfterBooking"] = this.paddingAfterBooking;
+        data["padding"] = this.padding;
         data["isMinimumBookingNotice"] = this.isMinimumBookingNotice;
         data["minimumBookingNotice"] = this.minimumBookingNotice;
         data["minimumBookingNoticeUnit"] = this.minimumBookingNoticeUnit;
@@ -58913,10 +58909,7 @@ export interface IUserAvailabilitySetting {
     bookingIntervals: number;
     isMaximumBookingPerDay: boolean;
     maximumBookingPerDay: number;
-    isPaddingBeforeBooking: boolean;
-    paddingBeforeBooking: number;
-    isPaddingAfterBooking: boolean;
-    paddingAfterBooking: number;
+    padding: number;
     isMinimumBookingNotice: boolean;
     minimumBookingNotice: number;
     minimumBookingNoticeUnit: AvailabilityUnit;
@@ -58931,10 +58924,7 @@ export class UserAvailabilitySettingDto implements IUserAvailabilitySettingDto {
     bookingIntervals: number;
     isMaximumBookingPerDay: boolean;
     maximumBookingPerDay: number;
-    isPaddingBeforeBooking: boolean;
-    paddingBeforeBooking: number;
-    isPaddingAfterBooking: boolean;
-    paddingAfterBooking: number;
+    padding: number;
     isMinimumBookingNotice: boolean;
     minimumBookingNotice: number;
     minimumBookingNoticeUnit: AvailabilityUnit;
@@ -58957,10 +58947,7 @@ export class UserAvailabilitySettingDto implements IUserAvailabilitySettingDto {
             this.bookingIntervals = _data["bookingIntervals"];
             this.isMaximumBookingPerDay = _data["isMaximumBookingPerDay"];
             this.maximumBookingPerDay = _data["maximumBookingPerDay"];
-            this.isPaddingBeforeBooking = _data["isPaddingBeforeBooking"];
-            this.paddingBeforeBooking = _data["paddingBeforeBooking"];
-            this.isPaddingAfterBooking = _data["isPaddingAfterBooking"];
-            this.paddingAfterBooking = _data["paddingAfterBooking"];
+            this.padding = _data["padding"];
             this.isMinimumBookingNotice = _data["isMinimumBookingNotice"];
             this.minimumBookingNotice = _data["minimumBookingNotice"];
             this.minimumBookingNoticeUnit = _data["minimumBookingNoticeUnit"];
@@ -58983,10 +58970,7 @@ export class UserAvailabilitySettingDto implements IUserAvailabilitySettingDto {
         data["bookingIntervals"] = this.bookingIntervals;
         data["isMaximumBookingPerDay"] = this.isMaximumBookingPerDay;
         data["maximumBookingPerDay"] = this.maximumBookingPerDay;
-        data["isPaddingBeforeBooking"] = this.isPaddingBeforeBooking;
-        data["paddingBeforeBooking"] = this.paddingBeforeBooking;
-        data["isPaddingAfterBooking"] = this.isPaddingAfterBooking;
-        data["paddingAfterBooking"] = this.paddingAfterBooking;
+        data["padding"] = this.padding;
         data["isMinimumBookingNotice"] = this.isMinimumBookingNotice;
         data["minimumBookingNotice"] = this.minimumBookingNotice;
         data["minimumBookingNoticeUnit"] = this.minimumBookingNoticeUnit;
@@ -59009,10 +58993,7 @@ export interface IUserAvailabilitySettingDto {
     bookingIntervals: number;
     isMaximumBookingPerDay: boolean;
     maximumBookingPerDay: number;
-    isPaddingBeforeBooking: boolean;
-    paddingBeforeBooking: number;
-    isPaddingAfterBooking: boolean;
-    paddingAfterBooking: number;
+    padding: number;
     isMinimumBookingNotice: boolean;
     minimumBookingNotice: number;
     minimumBookingNoticeUnit: AvailabilityUnit;
