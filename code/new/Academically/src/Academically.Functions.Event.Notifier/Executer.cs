@@ -83,6 +83,7 @@ namespace Academically.Functions.Event.Notifier
 
             var candidateCoachings = await _coachingRepository.GetAll()
                      .AsNoTracking()
+                     .Include(c => c.CreatorUser)
                      .Where(c => candidateBookingIds.Any(i => i == c.Id))
                      .ToListAsync();
 
@@ -112,6 +113,7 @@ namespace Academically.Functions.Event.Notifier
 
             var candidateWorkshops = await _eventRepository.GetAll()
                     .AsNoTracking()
+                    .Include(c => c.CreatorUser)
                     .Where(w => w.Category == EventCategory.Workshop)
                     .Where(c => candidateBookingIds.Any(i => i == c.Id))
                     .ToListAsync();
@@ -141,6 +143,7 @@ namespace Academically.Functions.Event.Notifier
 
             var candidateBroadcasts = await _eventRepository.GetAll()
                     .AsNoTracking()
+                    .Include(c => c.CreatorUser)
                     .Where(w => w.Category == EventCategory.Broadcast)
                     .Where(c => candidateBookingIds.Any(i => i == c.Id))
                     .ToListAsync();

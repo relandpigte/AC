@@ -1,9 +1,10 @@
 import { TitleCasePipe } from '@angular/common';
-import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { HubService } from '@app/_shared/services/hub.service';
 import { HubConnection } from '@microsoft/signalr';
 import { AppComponentBase } from '@shared/app-component-base';
+import { UpcomingEvent } from '@shared/components/service-notification-popup/service-notification-popup.component';
 import { uiEvents } from '@shared/constants/ui-events.constant';
 import { NavigationPosition } from '@shared/enums/theme-settings/navigation-position.enum';
 import { SidebarSize } from '@shared/enums/theme-settings/sidebar-size.enum';
@@ -37,6 +38,9 @@ export class WrapperComponent extends AppComponentBase implements OnInit, OnDest
   notification: NotificationDto;
   isLoadingList$ = new BehaviorSubject<boolean>(true);
   timer: any;
+
+  upcomingEvents: UpcomingEvent[] = [];
+  closingUpcomingEvents: UpcomingEvent[] = [];
 
   constructor(
     injector: Injector,
@@ -80,17 +84,18 @@ export class WrapperComponent extends AppComponentBase implements OnInit, OnDest
 
   private async initializeUpcomingEventsHub(): Promise<void> {
     this.addHub(UPCOMING_EVENTS_HUB_NAME, await this._hubService.getEventsHub({ userId: this.currentUserId }));
-    this.upcomingEventsHub.on(HubEvent[HubEvent.UpcomingEvent], ({ Booking, Data}) => {
-      const booking = ServiceBookingDto.fromJS(Booking);
-      let data = null;
+    this.upcomingEventsHub.on(HubEvent[HubEvent.UpcomingEvent], ({ booking, data }) => {
+      const serviceBookingDto = ServiceBookingDto.fromJS(booking);
+      let serviceData = null;
       if (booking) {
         if (booking.type === ServicesType.Coaching) {
-          data = CoachingDto.fromJS(Data);
+          serviceData = CoachingDto.fromJS(data);
         } else {
-          data = EventDto.fromJS(Data);
+          serviceData = EventDto.fromJS(data);
         }
-        // this.upcomingEvents.unshift({ data, booking });
+        this.upcomingEvents.unshift({ data: serviceData, booking: serviceBookingDto });
       }
+      this._cdr.detectChanges();
     });
     this.startHubConnection(UPCOMING_EVENTS_HUB_NAME);
   }
@@ -127,5 +132,18 @@ export class WrapperComponent extends AppComponentBase implements OnInit, OnDest
       }
       this._cdr.detectChanges();
     });
+  }
+
+  isUpcomingEventClosing(upcomingEvent: UpcomingEvent): boolean {
+    return this.closingUpcomingEvents.includes(upcomingEvent);
+  }
+
+  handleCloseEventNotifier(upcomingEvent: UpcomingEvent): void {
+    this.closingUpcomingEvents.push(upcomingEvent);
+    this._cdr.detectChanges();
+    setTimeout(() => {
+      this.upcomingEvents = this.upcomingEvents.filter(event => event !== upcomingEvent);
+      this._cdr.detectChanges();
+    }, 500);
   }
 }
