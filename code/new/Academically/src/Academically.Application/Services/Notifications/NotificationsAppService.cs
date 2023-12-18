@@ -588,6 +588,9 @@ namespace Academically.Services.Notifications
                     return "you a";
                 case NotificationAction.Follow:
                     return "you";
+                case NotificationAction.Answer:
+                case NotificationAction.Reply:
+                case NotificationAction.Comment:
                 case NotificationAction.Like:
                 case NotificationAction.React:
                     return await FormatReactionPronoun(notification);
@@ -598,21 +601,21 @@ namespace Academically.Services.Notifications
 
         private async Task<string> FormatReactionPronoun(NotificationDto notification)
         {
-            var sourceReferenceId = notification.Sources.Select(x => x.ReferenceId).FirstOrDefault();
-            var post = await _postsAppService.GetAsync(sourceReferenceId);
-            var comment = await _commentsAppService.GetAsync(sourceReferenceId);
+            // we need to look at the reference post/comment to determine where the source of the notification is coming from
+            var post = await _postsAppService.GetAsync(notification.ReferenceId);
+            var comment = await _commentsAppService.GetAsync(notification.ReferenceId);
             var actorId = notification.Actors.ElementAt(0).UserId;
             var textInfo = new CultureInfo("en-US", false).TextInfo;
 
             if (post != null)
             {
                 if (post.CreatorUserId == actorId) return "their";
-                if (post.CreatorUserId == actorId || post.CreatorUserId == notification.UserId) return "your";
+                if (post.CreatorUserId == notification.UserId) return "your";
                 return $"<span>{textInfo.ToTitleCase(post.CreatorUser.FullName)}'s</span>";
             }
             
             if (comment.CreatorUserId == actorId) return "their";
-            if (comment.CreatorUserId == actorId || comment.CreatorUserId == notification.UserId) return "your";
+            if (comment.CreatorUserId == notification.UserId) return "your";
             return $"<span>{textInfo.ToTitleCase(comment.CreatorUser.FullName)}'s</span>";
             
         }

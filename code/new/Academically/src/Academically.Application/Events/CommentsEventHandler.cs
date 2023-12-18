@@ -21,6 +21,8 @@ using Academically.Services.Notifications;
 using Academically.Services.Posts;
 using Academically.Domain.Enums;
 using Academically.Services.Posts.Dto;
+using Academically.Services.UserFollowers;
+using System.Linq;
 
 namespace Academically.Events
 {
@@ -40,6 +42,7 @@ namespace Academically.Events
         private readonly IPostsAppService _postsAppService;
         private readonly ICommentsAppService _commentsAppService;
         private readonly INotificationsAppService _notificationsAppService;
+        private readonly IUserFollowersAppService _userFollowersAppService;
 
         public CommentsEventHandler(IObjectMapper objectMapper,
             IHubManager hubManager,
@@ -51,7 +54,8 @@ namespace Academically.Events
             IDocumentsDomainService documentsDomainService,
             IPostsAppService postsAppService,
             ICommentsAppService commentsAppService,
-            INotificationsAppService notificationsAppService)
+            INotificationsAppService notificationsAppService,
+            IUserFollowersAppService userFollowersAppService)
         {
             _objectMapper = objectMapper;
             _hubManager = hubManager;
@@ -64,6 +68,7 @@ namespace Academically.Events
             _postsAppService = postsAppService;
             _commentsAppService = commentsAppService;
             _notificationsAppService = notificationsAppService;
+            _userFollowersAppService = userFollowersAppService;
         }
 
         public async Task HandleEventAsync(EntityCreatedEventData<Comment> eventData)
@@ -72,6 +77,7 @@ namespace Academically.Events
             await FillInService(comment);
             await _hubManager.NotifyUsersForCommentCreated(comment);
             await this.SendUserNotifications(comment);
+            await SendFollowerNotifications(comment);
         }
 
         public async Task HandleEventAsync(EntityUpdatedEventData<Comment> eventData)
@@ -80,6 +86,7 @@ namespace Academically.Events
             await FillInService(comment);
             await _hubManager.NotifyUsersForCommentUpdated(comment);
             await this.SendUserNotifications(comment);
+            await SendFollowerNotifications(comment);
         }
 
         public async Task HandleEventAsync(EntityDeletedEventData<Comment> eventData)
@@ -234,6 +241,34 @@ namespace Academically.Events
                 }
             }
 
+        }
+
+        private async Task SendFollowerNotifications(CommentDto comment)
+        {
+            var followers = await _userFollowersAppService.GetFollowers();
+            var userIds = followers.Select(x => x.CreatorUserId).ToList();
+
+            var parentPost = await _postsAppService.GetAsync(new Guid(comment.ReferenceId));
+            var parentComment = comment.ParentId.HasValue ? await this._commentsAppService.GetAsync(comment.ParentId.Value) : null;
+
+            if (parentPost != null)
+            {
+                await Parallel.ForEachAsync(userIds, async (userId, token) =>
+                {
+                    if (userId != null)
+                        await _notificationsAppService.Create(new CreateNotificationDto
+                        {
+                            UserId = userId.Value,
+                            ActorId = comment.CreatorUserId.Value,
+                            Action = await getNotificationAction(parentPost, parentComment),
+                            Target = await getNotificationTarget(parentPost, parentComment),
+                            ReferenceId = parentComment?.Id ?? parentPost.Id,
+                            SourceId = comment.Id,
+                            Url = $"app/community/post/{parentPost.Id}"
+                        });
+
+                });
+            }
         }
     }
 }
