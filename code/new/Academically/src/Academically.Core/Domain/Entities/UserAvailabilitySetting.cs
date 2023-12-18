@@ -14,11 +14,7 @@ public class UserAvailabilitySetting : CreationAuditedEntity<Guid>
     public bool IsMaximumBookingPerDay { get; set; }
     public int MaximumBookingPerDay { get; set; }
     
-    public bool IsPaddingBeforeBooking { get; set; }
-    public int PaddingBeforeBooking { get; set; }
-    
-    public bool IsPaddingAfterBooking { get; set; }
-    public int PaddingAfterBooking { get; set; }
+    public int Padding { get; set; }
     
     public bool IsMinimumBookingNotice { get; set; }
     public int MinimumBookingNotice { get; set; }

@@ -1991,6 +1991,7 @@
     <text name="ReviewCount">{0} reviews</text>
     <text name="AreYouSure">Are you sure?</text>
     <text name="TimeToStart">Time to start</text>
+    <text name="StartIn">Start in</text>
     <text name="CompletedEvent">You’ve completed this {0}</text>
     <text name="LeaveReview">Leave review</text>
     <text name="LeaveRating">Leave a rating</text>

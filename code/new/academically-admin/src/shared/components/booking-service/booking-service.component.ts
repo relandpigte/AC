@@ -117,6 +117,9 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   get cancellationPrice(): number { return 0; }
   get isBookingCancelled(): boolean { return !!this.data?.cancellationTime; }
   get bookingSchedule(): string {
+    if ( !this.selectedDate || !this.selectedTime ) {
+      return;
+    }
     const bookingDate = moment(`${this.selectedDate} ${this.selectedTime}`);
     return `${moment(bookingDate).format('HH:mm a')} - ${moment(bookingDate).add(30, 'minutes').format('HH:mm a')}, ${moment(bookingDate).format('dddd, MMMM DD, YYYY')}`;
   }
@@ -157,6 +160,7 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   get serviceType(): ServiceCardType { return this.service?.type; }
   get isServiceFree(): boolean { return Number(this.servicePrice) === 0; }
 
+  get sessionPadding(): number { return this.coachAvailabilitySettings?.padding ?? 15; }
   get maxBookingPerDay(): number {
     const { isMaximumBookingPerDay, maximumBookingPerDay } = this.coachAvailabilitySettings || {};
     return isMaximumBookingPerDay ? maximumBookingPerDay : 0;
@@ -181,6 +185,8 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
     this.retrieveBookingToCancel();
     this.initPurchase();
     this.initService();
+
+    console.log('%c' + moment().format('dddd, MMMM Do YYYY, h:mm:ss a'), 'color:limegreen;font-weight:bold');
   }
 
   onCloseModal(): void {
@@ -221,6 +227,9 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   }
 
   isCurrentBookingTime(time: string): boolean {
+    if (!this.selectedDate || !this.selectedTime) {
+      return;
+    }
     const { bookingDateTime } = this.rescheduleBooking || {};
     const currentTime = bookingDateTime?.format('HH:mm');
     return currentTime === time && moment(bookingDateTime).isSame(moment(`${this.selectedDate} ${this.selectedTime}`), 'date');
@@ -275,21 +284,8 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
       this.selectedTime = null;
       return;
     }
-    if (!_.isEmpty(isTaken)) {
-      this.onScheduleTaken('TimeSlotUnavailable');
-      this.selectedTime = null;
-      return;
-    }
 
-    const minimumBookingDate = moment(this.minimumBookingNotice);
-    if (minimumBookingDate.isValid() && bookingDate.isBefore(minimumBookingDate)) {
-      this.onScheduleTaken('TimeSlotUnavailable');
-      this.selectedTime = null;
-      return;
-    }
-
-    const maximumBookingDate = moment(this.maximumAdvanceNotice);
-    if (maximumBookingDate.isValid() && bookingDate.isAfter(maximumBookingDate)) {
+    if (!_.isEmpty(isTaken) && !isTaken.some(x => x.creatorUserId === this.currentUserId)) {
       this.onScheduleTaken('TimeSlotUnavailable');
       this.selectedTime = null;
       return;
@@ -302,17 +298,12 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   }
 
   private handleDateClick(info: DateClickArg): void {
-    if (moment(info.date).isBefore(moment(), 'date')) {
-      this.selectedSchedule = null;
-      return;
-    }
     const dayGrid = this._elRef.nativeElement.querySelectorAll('.fc-daygrid-day');
     _.each(dayGrid, (day: HTMLDivElement): void => {
       day.classList.remove('active');
     });
     info.dayEl.classList.add('active');
     this.initAvailabilitySchedule(info.date);
-
   }
 
   private dayCellClassNamesCallback(info: any): string {
@@ -322,7 +313,7 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
       this.selectedTime = bookingDateTime?.format('HH:mm');
       if (moment(bookingDateTime).isSame(moment(currentDate), 'day')) {
         this.initAvailabilitySchedule(new Date(bookingDateTime?.toString()));
-        return this.bookingDates.includes(currentDate) ? 'active with-events' : 'active';
+        return this.bookingDates.includes(currentDate) ? 'active reschedule-events' : 'active';
       }
     } else {
       if (moment().isSame(moment(currentDate), 'day')) {
@@ -330,7 +321,9 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
         return this.bookingDates.includes(currentDate) ? 'active with-events' : 'active';
       }
     }
-    if (this.bookingDates.includes(currentDate)) {
+
+    const availability = this.userAvailabilities?.find(x => x.dayOfWeek === info.dow);
+    if (!this.checkAvailableDateSchedule(info.date) && availability.isAvailable && info.isFuture) {
       return 'with-events';
     }
   }
@@ -350,7 +343,8 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
       },
       timeZone: moment.tz.guess(),
       dateClick: this.handleDateClick.bind(this),
-      dayCellClassNames: this.dayCellClassNamesCallback.bind(this)
+      dayCellClassNames: this.dayCellClassNamesCallback.bind(this),
+      showNonCurrentDates: false
     };
 
     setTimeout((): void => {
@@ -397,12 +391,31 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
       });
   }
 
+  private checkAvailableDateSchedule(date: Date): boolean {
+    const minimumBookingDate = moment(this.minimumBookingNotice);
+    if (minimumBookingDate.isValid() && moment(date).isBefore(minimumBookingDate)) {
+      return true;
+    }
+
+    const maximumBookingDate = moment(this.maximumAdvanceNotice);
+    if (maximumBookingDate.isValid() && moment(date).isAfter(maximumBookingDate)) {
+      return true;
+    }
+    return false;
+  }
+
   private initAvailabilitySchedule(date: Date): void {
+    if (this.checkAvailableDateSchedule(date)) {
+      this.selectedSchedule = null;
+      return;
+    }
+
+    const { bookingDateTime } = this.rescheduleBooking || {};
     let selectedSchedules = _.filter(this.userAvailabilities, x => x.dayOfWeek === moment(date).day());
     this.selectedDate = moment(date).format('YYYY-MM-DD');
-    this.selectedTime = null;
+    this.selectedTime = moment(bookingDateTime).isValid() && moment(bookingDateTime).isSame(moment(date), 'date') ?
+      moment(bookingDateTime).format('HH:mm') : null;
     if (!_.isEmpty(this.bookingSchedule)) {
-      const { bookingDateTime } = this.rescheduleBooking || {};
       if (moment(bookingDateTime).isSame(moment(this.selectedDate), 'date')) {
         this.selectedTime = bookingDateTime?.format('HH:mm');
       }
@@ -436,14 +449,16 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
     this.initAvailabilitySessions();
   }
 
-  private async initAvailabilitySessions(): Promise<void> {
+  private initAvailabilitySessions(): void {
     if (_.isEmpty(this.userAvailabilities)) {
       return;
     }
+
     const bookingInterval = this.getBookingIntervals(this.coachAvailabilitySettings);
     const { startTime, endTime } = this.selectedSchedule;
     const start = new Date(startTime);
     const end = new Date(endTime);
+    const now = new Date();
 
     let loop = new Date(start);
     this.selectedSessions = { afternoon: [], evening: [], morning: [] };
@@ -452,24 +467,37 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
         loop = new Date(loop.setMinutes(loop.getMinutes() + bookingInterval));
         continue;
       }
+
       const loopTime = `${loop.getHours().toString().padStart(2, '0')}:${loop.getMinutes().toString().padStart(2, '0')}`;
       const loopHour = loop.getHours();
-      if (loopHour >= 0 && loopHour < 12) {
-        this.selectedSessions.morning.push(loopTime);
-      } else if (loopHour >= 12 && loopHour < 16) {
-        this.selectedSessions.afternoon.push(loopTime);
-      } else if (loopHour >= 16 && loopHour < 23) {
-        this.selectedSessions.evening.push(loopTime);
+      const { padding, owner } = this.isPaddingApplicable(loop);
+      if (!padding || owner === this.currentUserId) {
+        if (loopHour >= 0 && loopHour < 12 && loop > now) {
+          this.selectedSessions.morning.push(loopTime);
+        } else if (loopHour >= 12 && loopHour < 16 && loop > now) {
+          this.selectedSessions.afternoon.push(loopTime);
+        } else if (loopHour >= 16 && loopHour < 23 && loop > now) {
+          this.selectedSessions.evening.push(loopTime);
+        }
       }
-      loop = new Date(loop.setMinutes(loop.getMinutes() + bookingInterval));
+
+      loop = new Date(loop.setMinutes(loop.getMinutes() + bookingInterval + padding));
     }
   }
 
-  private getBookingIntervals(settings: UserAvailabilitySetting): number {
-    const paddingBefore = settings?.isPaddingBeforeBooking ? settings?.paddingBeforeBooking : 0;
-    const paddingAfter = settings?.isPaddingAfterBooking ? settings?.paddingAfterBooking : 0;
-    return (settings?.bookingIntervals + paddingBefore + paddingAfter) ?? 30;
+  private isPaddingApplicable(loop: Date): { padding: number, owner: number } {
+    const response = { padding: 0, owner: 0 };
+    _.forEach(this.serviceBookings, x => {
+      const booking = new Date(moment(x.bookingDateTime).format('YYYY-MM-DD HH:mm'));
+      if (booking.getTime() === loop.getTime()) {
+        response.padding = this.sessionPadding;
+        response.owner = x.creatorUserId;
+      }
+    });
+    return response;
   }
+
+  private getBookingIntervals(settings: UserAvailabilitySetting): number { return settings?.bookingIntervals ?? 30; }
 
   private isSessionBreak(date: Date, schedule: SelectedSchedule): boolean {
     if (_.isEmpty(schedule.breaks)) {
@@ -484,29 +512,10 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
     return !_.isEmpty(breakTime);
   }
 
-  private initServiceOwnerDetails(): void {
-    let calls = [];
-    if (this.userAvailabilities?.length)
-      calls.push(of([]));
-    else
-      calls.push(this._userAvailabilitiesService.getAll(this.data.creatorUserId));
-
-
-    if (this.serviceBookings?.length)
-      calls.push(of([]));
-    else
-      calls.push(this._servicesService.getAllBookings(this.data.id, this.data.creatorUserId));
-
-    forkJoin(calls)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(([availabilities, bookings]) => {
-        this.userAvailabilities = availabilities as UserAvailabilityDto[];
-        this.serviceBookings = bookings as ServiceBookingDto[];
-      });
-  }
-
   private retrieveBookingToCancel(): void {
-    if (!this.isCancellation) return;
+    if (!this.isCancellation) {
+      return;
+    }
     this.isLoadingInfo$.next(true);
     this._servicesService.getBookingByReferenceId(this.data.id)
       .pipe(takeUntil(this.destroyed$))

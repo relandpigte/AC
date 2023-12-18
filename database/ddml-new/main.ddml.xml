@@ -207,4 +207,5 @@
 	<include file="ddml-new/ddml.2023-11-27-01-alter-service-booking-table.xml" />
 	<include file="ddml-new/ddml.2023-11-29-01.create-service-reviews-tables.xml" />
 	<include file="ddml-new/ddml.2023-12-10-01-alter-notifications-table.xml" />
+	<include file="ddml-new/ddml.2023-12-18-01-alter-user-availability-settings-table.xml" />
 </databaseChangeLog>

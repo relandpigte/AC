@@ -91,10 +91,7 @@ namespace Academically.Services.UserAvailabilities
             return availability ?? new UserAvailabilitySetting
             {
                 BookingIntervals = 30,
-                IsPaddingAfterBooking = true,
-                IsPaddingBeforeBooking = true,
-                PaddingBeforeBooking = 5,
-                PaddingAfterBooking = 5
+                Padding = 15
             };
         }
     }

@@ -35,7 +35,7 @@
                 </div>
               </div>
               <div class="booking-right-content-schedules">
-                <ng-container *ngIf="!!selectedSchedule else noSchedule">
+                <ng-container *ngIf="!!selectedSchedule && (isMorningSessionAvailable && isAfternoonSessionAvailable && isEveningSessionAvailable) else noSchedule">
                   <div *ngIf="isMorningSessionAvailable" class="booking-schedules booking-right-content-schedules-morning">
                     <h3>{{ 'Morning' | localize | uppercase }}</h3>
                     <div class="booking-schedules-lists d-flex align-items-center flex-wrap gap-10">
