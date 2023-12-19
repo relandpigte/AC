@@ -419,13 +419,13 @@ namespace Academically.Services.Services
             return ObjectMapper.Map<ServiceBookingDto>(existing);
         }
 
-        public async Task<IEnumerable<ServiceBookingDto>> GetAllBookings(Guid referenceId, long ownerId)
+        public async Task<IEnumerable<ServiceBookingDto>> GetAllBookings(Guid? referenceId, long? ownerId)
         {
-            return await _serviceBooking.GetAll()
-                .Where(x => x.OwnerId == ownerId)
-                .Where(x => x.ReferenceId == referenceId)
+            return _serviceBooking.GetAll()
+                .WhereIf(referenceId.HasValue, x => x.ReferenceId == referenceId)
+                .WhereIf(ownerId.HasValue, x => x.OwnerId == ownerId)
                 .Select(x => ObjectMapper.Map<ServiceBookingDto>(x))
-                .ToListAsync();
+                .ToList();
         }
 
         public async Task<ServiceBookingDto> GetBookingAsync(Guid bookingId)

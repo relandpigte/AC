@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
 import { AvailableServiceDto, AvailableServiceDtoPagedResultDto, CoachingDto, EventDto, PostsServiceProxy, ScheduledServiceType, ServicesType } from '@shared/service-proxies/service-proxies';
-import { forEach } from 'lodash-es';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { finalize, switchMap } from 'rxjs/operators';
 
@@ -25,6 +25,7 @@ export class ScheduleListViewComponent extends PagedListingComponentBase<Availab
 
     constructor(
         injector: Injector,
+        private _router: Router,
         private _postsService: PostsServiceProxy,
     ) {
         super(injector);
@@ -66,20 +67,27 @@ export class ScheduleListViewComponent extends PagedListingComponentBase<Availab
                 finishedCallback();
             }))
             .subscribe((result: AvailableServiceDtoPagedResultDto) => {
-                this.groupServices(result.items.map(s => {
-                    if (s.serviceType === ServicesType.Coaching) return CoachingDto.fromJS(s);
-                    return EventDto.fromJS(s);
-                }));
+                this.groupServices(result.items);
                 this.showPaging(result, pageNumber);
             });
     }
 
-    private groupServices(services: (CoachingDto | EventDto)[]): void {
+    private groupServices(services: AvailableServiceDto[]): void {
         this.serviceMap = {};
         services.forEach(s => {
-            const dateStr = 'eventDateTime' in s ? s.eventDateTime.format('MMMM YYYY') : 'No date';
-            this.serviceMap = { ...this.serviceMap, [dateStr]: [...(this.serviceMap[dateStr] || []), s] };
+            if ('eventDateTime' in s) {
+                const key = s.eventDateTime.format('MMMM YYYY');
+                const service = (s.serviceType === ServicesType.Coaching) ? CoachingDto.fromJS(s) : EventDto.fromJS(s);
+                this.serviceMap = { ...this.serviceMap, [key]: [...(this.serviceMap[key] || []), service] };
+            }
         });
     }
 
+    async onRedirection(service: CoachingDto | EventDto): Promise<void> {
+        if (service instanceof CoachingDto) {
+            this._router.navigate(['app/coaching' , service.id, 'about']);
+        } else {
+            this._router.navigate(['app/events' , service.id, 'about']);
+        }
+    }
 }

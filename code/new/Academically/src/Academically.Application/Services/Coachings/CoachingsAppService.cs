@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.Application.Services;
+﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Session;
+using Abp.Timing;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
 using Academically.Domain.Entities;
@@ -21,6 +18,10 @@ using Academically.Services.Services.Dto;
 using Academically.Users.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Academically.Services.Coachings
 {
@@ -351,22 +352,38 @@ namespace Academically.Services.Coachings
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IEnumerable<AvailableServiceDto>> GetCoachingSchedule(long? creatorUserId, ScheduledServiceType? type)
         {
-            var purchases = await this._servicePurchasesRepository.GetAll()
-                .WhereIf(creatorUserId.HasValue, p => false)
-                .WhereIf(!creatorUserId.HasValue, p => p.CreatorUserId == this.AbpSession.UserId)
-                .Select(p => p.ReferenceId)
+            var now = Clock.Now;
+            var bookings = await this._serviceBookingRepository.GetAll()
+                .AsNoTracking()
+                .WhereIf(creatorUserId.HasValue, b => b.OwnerId == creatorUserId)
+                .WhereIf(!creatorUserId.HasValue, b => b.OwnerId == this.AbpSession.UserId)
+                .WhereIf(type.HasValue && type == ScheduledServiceType.Upcoming, b => b.CancellationTime == null && b.BookingDateTime >= now)
+                .WhereIf(type.HasValue && type == ScheduledServiceType.Past, b => b.CancellationTime == null && b.BookingDateTime < now)
+                .WhereIf(type.HasValue && type == ScheduledServiceType.Cancelled, b => b.CancellationTime != null)
                 .ToListAsync();
 
-            return await Repository.GetAll().Where(w => w.ParentId == null && w.Visible.Value && w.Status == CoachingStatus.Published)
-                                  .WhereIf(creatorUserId.HasValue, x => x.CreatorUserId == creatorUserId)
-                                  .WhereIf(purchases.Count > 0, x => purchases.Contains(x.Id))
-                                  .WhereIf(type.HasValue && type == ScheduledServiceType.Upcoming, c => true)
-                                  .WhereIf(type.HasValue && type == ScheduledServiceType.Past, c => true)
-                                  .WhereIf(type.HasValue && type == ScheduledServiceType.Cancelled, c => true)
-                                  .Include(c => c.CreatorUser)
-                                  .AsNoTracking()
-                                  .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
-                                  .ToListAsync();
+            var bookingIds = bookings.Select(b => b.ReferenceId).ToList();
+
+            var services = await Repository.GetAll()
+                .Where(w => w.ParentId == null && w.Visible.Value && w.Status == CoachingStatus.Published)
+                .WhereIf(creatorUserId.HasValue, x => x.CreatorUserId == creatorUserId)
+                .WhereIf(!creatorUserId.HasValue, x => x.CreatorUserId == this.AbpSession.UserId)
+                .WhereIf(bookings.Count > 0, x => bookingIds.Contains(x.Id))
+                .Include(c => c.CreatorUser)
+                .AsNoTracking()
+                .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                .ToListAsync();
+
+            foreach (var service in services)
+            {
+                var booking = bookings.Where(b => b.ReferenceId == service.Id).SingleOrDefault();
+                if (booking != null)
+                {
+                    service.EventDateTime = booking.BookingDateTime;
+                }
+            }
+
+            return services;
         }
 
         public async Task<List<CoachingDto>> GetAllPurchasedCoaching(long creatorUserId)

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { debounceTime, distinctUntilChanged, switchMap, takeUntil, tap } from 'rxjs/operators';
@@ -13,6 +13,8 @@ import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.servi
 import { StateUpdateType } from '@shared/services/state-base.service';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { PostSorting } from '../discussion/discussion.component';
+
+declare var ClassicEditor;
 
 @Component({
   selector: 'app-post',
@@ -36,6 +38,7 @@ export class PostComponent extends AppComponentBase implements OnInit, OnDestroy
 
   constructor(
     injector: Injector,
+    private _elRef: ElementRef,
     private _router: Router,
     private _route: ActivatedRoute,
     private _postsService: PostsServiceProxy,
@@ -65,6 +68,7 @@ export class PostComponent extends AppComponentBase implements OnInit, OnDestroy
 
   ngOnInit(): void {
     this.init();
+    this.initClassicEditor();
   }
 
   async ngOnDestroy() {
@@ -101,6 +105,13 @@ export class PostComponent extends AppComponentBase implements OnInit, OnDestroy
         console.error(`Error occurred while loading the post: ${err}`);
         this.isLoadingPost$.next(false);
     });
+  }
+
+  private initClassicEditor(): void {
+    const editor = this._elRef.nativeElement.querySelector('#editor');
+    if (editor) {
+      ClassicEditor.create(editor).catch( error => console.error( error ));
+    }
   }
 
   handleSharePost(post: PostDto): void {

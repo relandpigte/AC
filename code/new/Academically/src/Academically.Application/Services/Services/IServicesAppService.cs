@@ -28,7 +28,7 @@ namespace Academically.Services.Services
         Task<ServicePurchaseDto> SavePurchase(CreateServicePurchaseDto input);
         Task<ServiceBookingDto> SaveBooking(CreateServiceBookingDto input);
         Task<ServiceBookingDto> CancelBooking(CancelServiceBookingDto input);
-        Task<IEnumerable<ServiceBookingDto>> GetAllBookings(Guid referenceId, long ownerId);
+        Task<IEnumerable<ServiceBookingDto>> GetAllBookings(Guid? referenceId, long? ownerId);
         Task<ServiceBookingDto> GetBookingAsync(Guid bookingId);
         Task<ServiceBookingDto> GetBookingByReferenceId(Guid referenceId);
         Task<ServiceBookingDto> GetBookingDetails(Guid referenceId, long userId);

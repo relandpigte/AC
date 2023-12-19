@@ -326,14 +326,15 @@ namespace Academically.Services.Events
         public async Task<IEnumerable<AvailableServiceDto>> GetEventsSchedule(long? creatorUserId, ScheduledServiceType? type)
         {
             return await Repository.GetAll()
-                             .WhereIf(creatorUserId.HasValue, x => x.CreatorUserId == creatorUserId)
-                             .WhereIf(type.HasValue && type == ScheduledServiceType.Upcoming, e => e.EventDateTime >= Clock.Now)
-                             .WhereIf(type.HasValue && type == ScheduledServiceType.Past, e => e.EventDateTime < Clock.Now)
-                             .WhereIf(type.HasValue && type == ScheduledServiceType.Cancelled, e => e.EventDateTime < Clock.Now)
-                             .Include(e => e.CreatorUser)
-                             .AsNoTracking()
-                             .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
-                             .ToListAsync();
+                .WhereIf(creatorUserId.HasValue, x => x.CreatorUserId == creatorUserId)
+                .WhereIf(!creatorUserId.HasValue, x => x.CreatorUserId == this.AbpSession.UserId)
+                .WhereIf(type.HasValue && type == ScheduledServiceType.Upcoming, e => e.EventDateTime >= Clock.Now)
+                .WhereIf(type.HasValue && type == ScheduledServiceType.Past, e => e.EventDateTime < Clock.Now)
+                .WhereIf(type.HasValue && type == ScheduledServiceType.Cancelled, e => e.EventDateTime < Clock.Now)
+                .Include(e => e.CreatorUser)
+                .AsNoTracking()
+                .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                .ToListAsync();
         }
 
         public async Task<PagedResultDto<EventDto>> GetEventSchedules(PagedEventScheduleResultRequestDto input)

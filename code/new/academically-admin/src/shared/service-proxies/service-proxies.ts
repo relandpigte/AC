@@ -22978,10 +22978,15 @@ export class ServicesServiceProxy {
     }
 
     /**
+     * @param ids (optional) 
      * @return Success
      */
-    test(): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/Services/Test";
+    testEventNotifierToasters(ids: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Services/TestEventNotifierToasters?";
+        if (ids === null)
+            throw new Error("The parameter 'ids' cannot be null.");
+        else if (ids !== undefined)
+            url_ += "ids=" + encodeURIComponent("" + ids) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -22992,11 +22997,11 @@ export class ServicesServiceProxy {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processTest(response_);
+            return this.processTestEventNotifierToasters(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processTest(<any>response_);
+                    return this.processTestEventNotifierToasters(<any>response_);
                 } catch (e) {
                     return <Observable<void>><any>_observableThrow(e);
                 }
@@ -23005,7 +23010,7 @@ export class ServicesServiceProxy {
         }));
     }
 
-    protected processTest(response: HttpResponseBase): Observable<void> {
+    protected processTestEventNotifierToasters(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
