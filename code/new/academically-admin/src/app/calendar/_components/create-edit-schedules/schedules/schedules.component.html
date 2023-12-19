@@ -2,7 +2,7 @@
     <ng-container *ngIf="type === ScheduleType.DEFAULT">
         <ng-container *ngFor="let dayOfWeek of DayOfWeek | enumToArray | keyvalue" >
             <div class="schedule row d-flex flex-nowrap justify-content-end align-items-center" [class.disabled]="!models[dayOfWeek.key].availability.isAvailable">
-                <div class="schedule-day flex-grow-1">
+                <div class="schedule-day flex-shrink-0 flex-grow-1">
                     {{ dayOfWeek.value }}'s
                 </div>
                 <div class="schedule-available">
@@ -57,7 +57,7 @@
     <ng-container *ngIf="type === ScheduleType.CUSTOM">
         <div *ngFor="let entry of customDates" class="d-flex flex-column justify-content-center align-items-center gap-20 w-100">
             <div class="schedule row d-flex flex-nowrap justify-content-end align-items-center" [class.disabled]="!models[entry].availability.isAvailable" [class.removable]="entry != nowValue">
-                <div class="schedule-day flex-grow-1">
+                <div class="schedule-day flex-shrink-0 flex-grow-1">
                     <div class="input-group input-group-merge datepicker" (click)="dp.show()">
                         <div class="input-group-prepend"><div class="input-group-text"><img src="/assets/img/actions/calendar.svg" class="calendar"></div></div>
                         <input [(ngModel)]="models[entry].availability.specificDateDpValue" [id]="'specific-date-' + entry" [name]="'specific-date-' + entry" type="text" class="form-control form-control-prepended" #dp="bsDatepicker" bsDatepicker [bsConfig]="datePickerConfig" />
