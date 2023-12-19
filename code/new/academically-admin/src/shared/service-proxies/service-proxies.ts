@@ -2391,14 +2391,19 @@ export class ChatsServiceProxy {
 
     /**
      * @param channelId (optional) 
+     * @param userId (optional) 
      * @return Success
      */
-    archiveChannel(channelId: string | undefined): Observable<boolean> {
+    archiveChannel(channelId: string | undefined, userId: number | undefined): Observable<boolean> {
         let url_ = this.baseUrl + "/api/services/app/Chats/ArchiveChannel?";
         if (channelId === null)
             throw new Error("The parameter 'channelId' cannot be null.");
         else if (channelId !== undefined)
             url_ += "channelId=" + encodeURIComponent("" + channelId) + "&";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -3275,14 +3280,19 @@ export class ChatsServiceProxy {
 
     /**
      * @param channelId (optional) 
+     * @param userId (optional) 
      * @return Success
      */
-    unarchiveChannel(channelId: string | undefined): Observable<boolean> {
+    unarchiveChannel(channelId: string | undefined, userId: number | undefined): Observable<boolean> {
         let url_ = this.baseUrl + "/api/services/app/Chats/UnarchiveChannel?";
         if (channelId === null)
             throw new Error("The parameter 'channelId' cannot be null.");
         else if (channelId !== undefined)
             url_ += "channelId=" + encodeURIComponent("" + channelId) + "&";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

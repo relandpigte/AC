@@ -51,6 +51,8 @@ namespace Academically.Events
                 .Where(m => !m.UserId.Equals(currentUserId))
                 .Select(m => m.UserId)
                 .FirstOrDefault();
+
+            await _chatsAppService.UnarchiveChannel(eventData.Entity.ChannelId, channelMember);
             await _notificationsAppService.Create(new CreateNotificationDto()
             {
                 UserId = channelMember,

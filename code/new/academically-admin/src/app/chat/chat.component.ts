@@ -184,13 +184,13 @@ export class ChatComponent extends AppComponentBase implements OnInit, OnDestroy
   }
 
   handleOnArchiveChannel(channel: ChannelDto): void {
-    this._chatsService.archiveChannel(channel.id).subscribe(() => {
+    this._chatsService.archiveChannel(channel.id, this.currentUserId).subscribe(() => {
       this._chatService.selectedChannelType$.next(this.selectedChannelType);
     });
   }
 
   handleOnUnArchiveChannel(channel: ChannelDto): void {
-    this._chatsService.unarchiveChannel(channel.id).subscribe((): void => {
+    this._chatsService.unarchiveChannel(channel.id, this.currentUserId).subscribe((): void => {
       this._chatService.selectedChannelType$.next(this.selectedChannelType);
     });
   }

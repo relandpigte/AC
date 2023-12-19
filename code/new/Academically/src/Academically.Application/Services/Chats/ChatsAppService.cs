@@ -102,11 +102,11 @@ namespace Academically.Services.Chats
             _channelMessageVisibility = channelMessageVisibility;
         }
 
-        public async Task<bool> ArchiveChannel(Guid channelId)
+        public async Task<bool> ArchiveChannel(Guid channelId, long? userId)
         {
             var channel = await this._channelRepository.GetAsync(channelId);
             if (channel == null) return false;
-            await this._channelArchiveRepository.InsertAsync(new ChannelArchive { ChannelId = channelId });
+            await this._channelArchiveRepository.InsertAsync(new ChannelArchive { ChannelId = channelId, CreatorUserId = userId.HasValue ? userId.Value : AbpSession.GetUserId() });
             return true;
         }
 
@@ -483,12 +483,13 @@ namespace Academically.Services.Chats
             return true;
         }
 
-        public async Task<bool> UnarchiveChannel(Guid channelId)
+        public async Task<bool> UnarchiveChannel(Guid channelId, long? userId)
         {
             var channel = await this._channelRepository.GetAsync(channelId);
             if (channel == null) return false;
             var archive = await this._channelArchiveRepository.GetAll()
                 .Where(a => a.ChannelId == channelId)
+                .WhereIf(userId.HasValue, a => a.CreatorUserId == userId)
                 .FirstOrDefaultAsync();
             if (archive != null) await this._channelArchiveRepository.DeleteAsync(archive.Id);
             return true;

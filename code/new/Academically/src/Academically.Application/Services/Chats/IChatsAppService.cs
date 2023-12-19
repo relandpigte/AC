@@ -22,8 +22,8 @@ namespace Academically.Services.Chats
         Task<ChannelMessageDto> UpdateChannelMessage(UpdateChannelMessageInputDto input);
         Task<bool> SeenChannelMessages(Guid channelId, DateTime targetMessagesDateTime);
         Task<bool> SetChannelMemberTyping(Guid channelId, bool isTyping);
-        Task<bool> ArchiveChannel(Guid channelId);
-        Task<bool> UnarchiveChannel(Guid channelId);
+        Task<bool> ArchiveChannel(Guid channelId, long? userId);
+        Task<bool> UnarchiveChannel(Guid channelId, long? userId);
         Task<bool> DeleteChannel(Guid channelId);
         Task<bool> ReportTyping(Guid channelId);
         Task<SearchByKeywordResponseDto> SearchByKeyword(string keyword);
