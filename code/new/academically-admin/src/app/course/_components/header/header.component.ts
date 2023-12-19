@@ -13,7 +13,7 @@ import { ServiceDataService } from '@shared/services/service-data.service';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { AppConsts } from '@shared/AppConsts';
 import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
-import { CourseDto, PostsServiceProxy, SavedServicesServiceProxy, SharedType, UserDto } from '@shared/service-proxies/service-proxies';
+import { CourseDto, CoursesServiceProxy, PostsServiceProxy, SavedServicesServiceProxy, SharedType, UserDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-header',
@@ -38,7 +38,8 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
     private _clipboard: Clipboard,
     private _postsService: PostsServiceProxy,
     private _savedService: SavedServicesServiceProxy,
-    private _serviceData: ServiceDataService
+    private _serviceData: ServiceDataService,
+    private _courseService: CoursesServiceProxy
   ) {
     super(injector);
     this.themeSettings = _themeSettingsService.getConfiguration();
@@ -113,8 +114,9 @@ export class HeaderComponent extends AppComponentBase implements OnInit {
     const purchaseModal = this._modalService.show(BookingServiceComponent, modalSettings);
 
     purchaseModal.content.onPaid.subscribe((): void => {
-      this.data.isPurchased = true;
-      this._serviceData.serviceData = this.data;
+      this._courseService.get(this.data.id)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(x => this._serviceData.serviceData = x);
     });
   }
 }

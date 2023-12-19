@@ -128,4 +128,15 @@ export class JoinBadgeComponent extends AppComponentBase implements OnInit, OnCh
     }, 1000);
     this.clearTimer = () => clearInterval(interval);
   }
+
+  private getTimeDifference( date: Date ): any {
+    const bookingDate = new Date(date).getTime();
+    const now = new Date().getTime();
+    const milliSecondsDiff = bookingDate - now;
+
+    const days = Math.floor(milliSecondsDiff / 1000 / 60 / (60 * 24));
+    const dateDiff = new Date( milliSecondsDiff );
+
+    return days + " Days "+ dateDiff.getHours() + " Hours " + dateDiff.getMinutes() + " Minutes " + dateDiff.getSeconds() + " Seconds";
+  }
 }

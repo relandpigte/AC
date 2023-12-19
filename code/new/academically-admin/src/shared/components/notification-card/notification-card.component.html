@@ -13,7 +13,7 @@
                  [src]="getDominantUser(notification).profilePictureUrl" alt="...">
         </div>
         <div class="notification-content">
-            <p [innerHTML]="notification.formattedNotification"></p>
+            <p [innerHTML]="notification.formattedNotification | shorten : 105"></p>
             <span class="time">{{ getNotificationReceivedTime(notification) }}</span>
         </div>
     </div>

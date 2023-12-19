@@ -94,7 +94,8 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
     datesSet: this.dateSet.bind(this),
     dateClick: this.dateClicked.bind(this),
     eventClick: this.eventClick.bind(this),
-    dayHeaderContent: this.dayHeaderContent.bind(this)
+    dayHeaderContent: this.dayHeaderContent.bind(this),
+    firstDay: this.weekStartDay
   };
 
   constructor(
@@ -112,6 +113,7 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
 
   get isListView(): boolean { return this.activeView === CalendarView.List; }
   get isCalendarView(): boolean { return this.activeView === CalendarView.Calendar; }
+  get weekStartDay(): number { return  this.userAvailabilitySettings?.weekStartDay ?? 0; }
 
   ngOnInit(): void {
     this.calendar = this.calendarComponent.getApi();
@@ -490,6 +492,10 @@ export class CalendarComponent extends AppComponentBase implements OnInit, After
     }
     this._userAvailabilitiesService.getAvailabilitySettings(this.currentUserId)
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(settings => this.userAvailabilitySettings = settings);
+      .subscribe(settings => {
+        this.userAvailabilitySettings = settings;
+        this.calendarOptions.firstDay = this.weekStartDay;
+        this.calendar.render();
+      });
   }
 }
