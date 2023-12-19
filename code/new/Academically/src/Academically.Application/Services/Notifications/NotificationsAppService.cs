@@ -591,6 +591,7 @@ namespace Academically.Services.Notifications
                 case NotificationAction.Answer:
                 case NotificationAction.Reply:
                 case NotificationAction.Comment:
+                    return await FormatCommentPronoun(notification);
                 case NotificationAction.Like:
                 case NotificationAction.React:
                     return await FormatReactionPronoun(notification);
@@ -599,11 +600,34 @@ namespace Academically.Services.Notifications
             }
         }
 
-        private async Task<string> FormatReactionPronoun(NotificationDto notification)
+        private async Task<string> FormatCommentPronoun(NotificationDto notification)
         {
-            // we need to look at the reference post/comment to determine where the source of the notification is coming from
+            // we need to look at the reference post/comment to determine who the owner of the reference is
             var post = await _postsAppService.GetAsync(notification.ReferenceId);
             var comment = await _commentsAppService.GetAsync(notification.ReferenceId);
+            var actorId = notification.Actors.ElementAt(0).UserId;
+            var textInfo = new CultureInfo("en-US", false).TextInfo;
+
+            if (post != null)
+            {
+                if (post.CreatorUserId == actorId) return "their";
+                if (post.CreatorUserId == notification.UserId) return "your";
+                return $"<span>{textInfo.ToTitleCase(post.CreatorUser.FullName)}'s</span>";
+            }
+
+            if (comment.CreatorUserId == actorId) return "their";
+            if (comment.CreatorUserId == notification.UserId) return "your";
+            return $"<span>{textInfo.ToTitleCase(comment.CreatorUser.FullName)}'s</span>";
+
+        }
+
+        private async Task<string> FormatReactionPronoun(NotificationDto notification)
+        {
+            // we need to look at the source post/comment to determine who the owner of the source is
+            var sourceReferenceId = notification.Sources.Select(x => x.ReferenceId).FirstOrDefault();
+            var post = await _postsAppService.GetAsync(sourceReferenceId);
+            var comment = await _commentsAppService.GetAsync(sourceReferenceId);
+
             var actorId = notification.Actors.ElementAt(0).UserId;
             var textInfo = new CultureInfo("en-US", false).TextInfo;
 
