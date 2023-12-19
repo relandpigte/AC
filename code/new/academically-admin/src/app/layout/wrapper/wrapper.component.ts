@@ -127,7 +127,7 @@ export class WrapperComponent extends AppComponentBase implements OnInit, OnDest
             clearTimeout(this.timer);
           }
           this.notification = event.data;
-          this.timer = setTimeout((): void => this.notification = null, 5_000);
+          this.timer = setTimeout((): void => this.notification = null, 25_000);
           break;
       }
       this._cdr.detectChanges();

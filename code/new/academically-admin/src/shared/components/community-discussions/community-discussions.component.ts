@@ -293,7 +293,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   protected onEditCommentSubmit(message: HTMLDivElement, comment: CommentDto): void {
     const updated = new CommentDto(comment);
     const body = message.innerHTML?.trim();
-    this.isUpdatingComment$.next(true);
+    // this.isUpdatingComment$.next(true);
 
     if (body && body !== updated.body) {
       this._commentServiceProxy.update(
@@ -308,7 +308,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
       ).pipe(
         takeUntil(this.destroyed$),
         finalize(() => {
-          this.isUpdatingComment$.next(false);
+          // this.isUpdatingComment$.next(false);
         })
       ).subscribe((c: CommentDto) => {
         this.commentEditId = null;
