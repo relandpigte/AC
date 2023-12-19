@@ -19,6 +19,11 @@ using Academically.Extensions;
 using Academically.Services.StudentCourses;
 using Amazon.S3.Model;
 using Castle.MicroKernel.ModelBuilder.Descriptors;
+using Abp.Domain.Uow;
+using System.Dynamic;
+using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
+using System.Collections;
 
 namespace Academically.Services.Services
 {
@@ -35,6 +40,9 @@ namespace Academically.Services.Services
         private readonly IRepository<ServiceBooking, Guid> _serviceBooking;
         private readonly IRepository<ServiceReview, Guid> _serviceReviewRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
+        private readonly IRepository<Coaching, Guid> _coachingsRepository;
+        private readonly IRepository<Event, Guid> _eventsRepository;
+        private readonly IHubContext<EventsHub> _eventsHub;
 
         private readonly List<Service2Dto> StaticServiceLevels = new List<Service2Dto>
             {
@@ -100,7 +108,10 @@ namespace Academically.Services.Services
             IStudentCoursesAppService studentCoursesAppService,
             IRepository<ServiceBooking, Guid> serviceBooking,
             IRepository<ServiceReview, Guid> serviceReviewRepository,
-            IDocumentsDomainService documentsDomainService
+            IDocumentsDomainService documentsDomainService,
+            IRepository<Coaching, Guid> coachingsRepository,
+            IRepository<Event, Guid> eventsRepository,
+            IHubContext<EventsHub> eventsHub
             )
         {
             _servicesRepository = servicesRepository;
@@ -114,6 +125,111 @@ namespace Academically.Services.Services
             _serviceBooking = serviceBooking;
             _serviceReviewRepository = serviceReviewRepository;
             _documentsDomainService = documentsDomainService;
+            _coachingsRepository = coachingsRepository;
+            _eventsRepository = eventsRepository;
+            _eventsHub = eventsHub;
+        }
+
+        public async Task TestEventNotifierToasters(string ids)
+        {
+            var now = Clock.Now;
+            var targetDate = now.AddMinutes(2440);
+
+            var idsToGet = ids.Split(",");
+
+            var candidateBookings = await this._serviceBooking.GetAll()
+               .AsNoTracking()
+               //.Where(b => b.BookingDateTime >= now && b.BookingDateTime <= targetDate)
+               .Where(b => idsToGet.Any(i => i == b.Id.ToString()))
+               .ToListAsync();
+
+            if (candidateBookings != null && candidateBookings.Count > 0)
+            {
+                await CheckUpcomingCoachings(candidateBookings);
+                await CheckUpcomingWorkshops(candidateBookings);
+                await CheckUpcomingBroadcasts(candidateBookings);
+            }
+        }
+
+        private async Task CheckUpcomingCoachings(List<ServiceBooking> bookings)
+        {
+            var candidateBookingIds = bookings.Select(b => b.ReferenceId).ToList();
+
+            var candidateCoachings = await _coachingsRepository.GetAll()
+                     .AsNoTracking()
+                     .Include(c => c.CreatorUser)
+                     .Where(c => candidateBookingIds.Any(i => i == c.Id))
+                     .ToListAsync();
+
+            foreach (var coaching in candidateCoachings)
+            {
+                try
+                {
+                    var booking = bookings.SingleOrDefault(b => b.ReferenceId == coaching.Id);
+                    var obj = new ExpandoObject();
+                    obj.TryAdd("Booking", booking);
+                    obj.TryAdd("Data", coaching);
+                    await this._eventsHub.Clients.Group($"{booking.CreatorUserId}").SendAsync(nameof(HubEvent.UpcomingEvent), obj);
+                }
+                catch (ArgumentNullException ex)
+                {
+                }
+
+            }
+        }
+
+        private async Task CheckUpcomingWorkshops(List<ServiceBooking> bookings)
+        {
+            var candidateBookingIds = bookings.Select(b => b.ReferenceId).ToList();
+
+            var candidateWorkshops = await _eventsRepository.GetAll()
+                    .AsNoTracking()
+                    .Include(c => c.CreatorUser)
+                    .Where(w => w.Category == EventCategory.Workshop)
+                    .Where(c => candidateBookingIds.Any(i => i == c.Id))
+                    .ToListAsync();
+
+            foreach (var workshop in candidateWorkshops)
+            {
+                try
+                {
+                    var booking = bookings.SingleOrDefault(b => b.ReferenceId == workshop.Id);
+                    var obj = new ExpandoObject();
+                    obj.TryAdd("Booking", booking);
+                    obj.TryAdd("Data", workshop);
+                    await this._eventsHub.Clients.Group($"{booking.CreatorUserId}").SendAsync(nameof(HubEvent.UpcomingEvent), obj);
+                }
+                catch (ArgumentNullException ex)
+                {
+                }
+            }
+        }
+
+        private async Task CheckUpcomingBroadcasts(List<ServiceBooking> bookings)
+        {
+            var candidateBookingIds = bookings.Select(b => b.ReferenceId).ToList();
+
+            var candidateBroadcasts = await _eventsRepository.GetAll()
+                    .AsNoTracking()
+                    .Include(c => c.CreatorUser)
+                    .Where(w => w.Category == EventCategory.Broadcast)
+                    .Where(c => candidateBookingIds.Any(i => i == c.Id))
+                    .ToListAsync();
+
+            foreach (var broadcast in candidateBroadcasts)
+            {
+                try
+                {
+                    var booking = bookings.SingleOrDefault(b => b.ReferenceId == broadcast.Id);
+                    var obj = new ExpandoObject();
+                    obj.TryAdd("Booking", booking);
+                    obj.TryAdd("Data", broadcast);
+                    await this._eventsHub.Clients.Group($"{booking.CreatorUserId}").SendAsync(nameof(HubEvent.UpcomingEvent), obj);
+                }
+                catch (ArgumentNullException ex)
+                {
+                }
+            }
         }
 
         public async Task<IEnumerable<ServiceDto>> GetCategories()

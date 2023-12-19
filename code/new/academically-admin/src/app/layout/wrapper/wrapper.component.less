@@ -11,4 +11,26 @@
   &.can-scroll {
     overflow-y: auto;
   }
+
+  &-toaster {
+    z-index: 9999;
+    position: fixed;
+    transition: all 1s ease-in-out;
+
+    &.left {
+      left: 20px;
+    }
+
+    &.right {
+      right: 20px;
+    }
+
+    &.bottom {
+      bottom: 20px;
+    }
+
+    &.top {
+      top: 20px;
+    }
+  }
 }

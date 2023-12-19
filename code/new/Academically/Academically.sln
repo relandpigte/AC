@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Academically.Functions.Cont
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Functions", "Functions", "{EE87DB82-574B-4AC6-88EF-793A3AAA4C09}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Academically.Functions.Event.Notifier", "src\Academically.Functions.Event.Notifier\Academically.Functions.Event.Notifier.csproj", "{2D7CEB29-3738-4C81-A809-00E7CCE54900}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{05151500-B5EE-4864-96F4-C8B9C1304F1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05151500-B5EE-4864-96F4-C8B9C1304F1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05151500-B5EE-4864-96F4-C8B9C1304F1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D7CEB29-3738-4C81-A809-00E7CCE54900}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D7CEB29-3738-4C81-A809-00E7CCE54900}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D7CEB29-3738-4C81-A809-00E7CCE54900}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D7CEB29-3738-4C81-A809-00E7CCE54900}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -105,6 +111,7 @@ Global
 		{E1386BD2-6CC3-4109-A783-445DB1A2C8FA} = {AFAA0841-BD93-466F-B8F4-FB4EEC86F1FC}
 		{05151500-B5EE-4864-96F4-C8B9C1304F1B} = {EE87DB82-574B-4AC6-88EF-793A3AAA4C09}
 		{EE87DB82-574B-4AC6-88EF-793A3AAA4C09} = {AFAA0841-BD93-466F-B8F4-FB4EEC86F1FC}
+		{2D7CEB29-3738-4C81-A809-00E7CCE54900} = {EE87DB82-574B-4AC6-88EF-793A3AAA4C09}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AC729353-24BC-4403-8420-89F01F338C2A}

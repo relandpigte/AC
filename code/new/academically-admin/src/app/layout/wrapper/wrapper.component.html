@@ -21,7 +21,16 @@
 <div class="main-content flex-grow-1" [class.can-scroll]="canScroll">
   <topbar *ngIf="themeSetting.navigationPosition === NavigationPosition.Combo"></topbar>
   <app-notification-card [notification]="notification"></app-notification-card>
-  <app-service-notification-popup></app-service-notification-popup>
+
+  <div *ngIf="upcomingEvents?.length" class="main-content-toaster left bottom hide-empty d-flex flex-column justify-content-center align-items-center gap-20">
+    <app-service-notification-popup
+      *ngFor="let upcomingEvent of upcomingEvents"
+      [upcomingEvent]="upcomingEvent"
+      [isClosing]="isUpcomingEventClosing(upcomingEvent)"
+      (onClose)="handleCloseEventNotifier($event)"
+    ></app-service-notification-popup>
+  </div>
+
   <ng-container *ngIf="themeSetting.navigationPosition === NavigationPosition.Topnav">
     <router-outlet name="header"></router-outlet>
     <div class="container p-0">

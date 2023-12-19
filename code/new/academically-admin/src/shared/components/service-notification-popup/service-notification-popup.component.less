@@ -1,16 +1,19 @@
 .card {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
   margin: 0;
-  z-index: 9999;
   background: #fff;
-  box-shadow: 0 4px 30px rgba(0,0,0,0.04);
-  max-width: 342px;
   border: 1px solid #E4EBF6;
+  box-shadow: 0 4px 30px rgba(0,0,0,0.04);
+  width: 342px;
+  max-width: calc(100% - 40px);
+  opacity: 1;
+  transition: all 0.5s ease-in-out;
 
   &-body {
     padding: 14px;
+  }
+
+  &.closing {
+    opacity: 0;
   }
 }
 
@@ -35,6 +38,7 @@
   &-image {
     width: 58px;
     height: 58px;
+    border-radius: 5px;
   }
 
   &-popup-close {

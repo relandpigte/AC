@@ -22980,6 +22980,53 @@ export class ServicesServiceProxy {
     /**
      * @return Success
      */
+    test(): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Services/Test";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTest(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTest(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processTest(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
     getCategories(): Observable<ServiceDto[]> {
         let url_ = this.baseUrl + "/api/services/app/Services/GetCategories";
         url_ = url_.replace(/[?&]$/, "");
@@ -46929,7 +46976,7 @@ export interface IGroupedPermissionDtoListResultDto {
     items: GroupedPermissionDto[] | undefined;
 }
 
-/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted 18 = ChannelMessageCreated 19 = ChannelMessageUpdated 20 = ChannelMessageDeleted 21 = ChannelMemberTyping 22 = ChannelArchive 23 = ChannelUnarchive 24 = NewUserLoggedIn 25 = NotificationCreated 26 = NotificationUpdated 27 = NotificationDeleted 28 = QuestionCreated 29 = QuestionUpdated 30 = QuestionDeleted 31 = QuestionReactionCreated 32 = QuestionReactionUpdated 33 = QuestionReactionDeleted 34 = ServiceOfferCreated 35 = ServiceOfferUpdated 36 = ServiceOfferDeleted 37 = ServiceOfferLaunched 38 = ServiceOfferClosed 39 = AnsweringLiveQuestion 40 = EndAnsweringLiveQuestion 41 = EventPollCreated 42 = EventPollUpdated 43 = EventPollDeleted 44 = EventPollLaunched 45 = EventPollClosed 46 = EventPollShared */
+/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted 18 = ChannelMessageCreated 19 = ChannelMessageUpdated 20 = ChannelMessageDeleted 21 = ChannelMemberTyping 22 = ChannelArchive 23 = ChannelUnarchive 24 = NewUserLoggedIn 25 = NotificationCreated 26 = NotificationUpdated 27 = NotificationDeleted 28 = QuestionCreated 29 = QuestionUpdated 30 = QuestionDeleted 31 = QuestionReactionCreated 32 = QuestionReactionUpdated 33 = QuestionReactionDeleted 34 = ServiceOfferCreated 35 = ServiceOfferUpdated 36 = ServiceOfferDeleted 37 = ServiceOfferLaunched 38 = ServiceOfferClosed 39 = AnsweringLiveQuestion 40 = EndAnsweringLiveQuestion 41 = EventPollCreated 42 = EventPollUpdated 43 = EventPollDeleted 44 = EventPollLaunched 45 = EventPollClosed 46 = EventPollShared 47 = UpcomingEvent */
 export enum HubEvent {
     PostCreated = 0,
     PostUpdated = 1,
@@ -46978,6 +47025,7 @@ export enum HubEvent {
     EventPollLaunched = 44,
     EventPollClosed = 45,
     EventPollShared = 46,
+    UpcomingEvent = 47,
 }
 
 export class ICustomAttributeProvider implements IICustomAttributeProvider {

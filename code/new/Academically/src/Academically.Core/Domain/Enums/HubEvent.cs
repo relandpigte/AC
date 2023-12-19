@@ -49,5 +49,6 @@
         EventPollLaunched,
         EventPollClosed,
         EventPollShared,
+        UpcomingEvent
     }
 }

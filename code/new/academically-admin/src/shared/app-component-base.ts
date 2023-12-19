@@ -208,6 +208,22 @@ export abstract class AppComponentBase extends AppHubBase implements OnDestroy {
     return moment(date).fromNow(removeSuffix);
   }
 
+  convertMomentToTimeRemaining(date: Moment): string {
+    const now = moment();
+    const dur = moment.duration(date.diff(now));
+    const hours = dur.hours();
+    const minutes = dur.minutes();
+    const seconds = dur.seconds();
+
+    if (hours) {
+      return `${hours} hour${ hours > 1 ? 's' : '' }`;
+    } else if (minutes) {
+      return `${minutes} minute${ minutes > 1 ? 's' : '' }`;
+    } else {
+      return `${seconds} second${ seconds > 1 ? 's' : '' }`;
+    }
+  }
+
   convertMomentToChatChannelTime(date: Moment): string {
     const time = moment(date).format('hh:mm a');
     const days = moment(date).format('ddd');
