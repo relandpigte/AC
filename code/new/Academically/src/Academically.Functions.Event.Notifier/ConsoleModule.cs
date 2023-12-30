@@ -31,7 +31,7 @@ namespace Academically.Functions.Event.Notifier
             Configuration.DefaultNameOrConnectionString = 
                 _appConfiguration.GetConnectionString(AcademicallyConsts.ConnectionStringName);
 
-            Configuration.BackgroundJobs.IsJobExecutionEnabled = false;
+            Configuration.BackgroundJobs.IsJobExecutionEnabled = true;
 
             Configuration.ReplaceService<IAppConfigurationAccessor, ConsoleConfigurationAccessor>();
             Configuration.ReplaceService<IConfiguration, ConfigurationRoot>();

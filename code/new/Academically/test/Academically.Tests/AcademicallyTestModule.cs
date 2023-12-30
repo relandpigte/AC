@@ -35,7 +35,7 @@ namespace Academically.Tests
             // Disable static mapper usage since it breaks unit tests (see https://github.com/aspnetboilerplate/aspnetboilerplate/issues/2052)
             Configuration.Modules.AbpAutoMapper().UseStaticMapper = false;
 
-            Configuration.BackgroundJobs.IsJobExecutionEnabled = false;
+            Configuration.BackgroundJobs.IsJobExecutionEnabled = true;
 
             // Use database for language management
             Configuration.Modules.Zero().LanguageManagement.EnableDbLocalization();

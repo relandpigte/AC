@@ -49,7 +49,7 @@ namespace Academically
             Configuration.Modules.Zero().LanguageManagement.EnableDbLocalization();
 
             // Disable background worker
-            Configuration.BackgroundJobs.IsJobExecutionEnabled = false;
+            Configuration.BackgroundJobs.IsJobExecutionEnabled = true;
 
             Configuration.Modules.AbpAspNetCore()
                  .CreateControllersForAppServices(

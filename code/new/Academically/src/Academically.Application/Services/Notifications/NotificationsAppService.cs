@@ -216,6 +216,7 @@ namespace Academically.Services.Notifications
                     ReferenceId = input.ReferenceId,
                     Url = input.Url,
                     FormattedNotification = string.Empty,
+                    CreatorUserId = input.ActorId
                 });
             }
 
@@ -225,7 +226,8 @@ namespace Academically.Services.Notifications
                 latestUserNotification.Actors.Add(new NotificationUser()
                 {
                     UserId = input.ActorId,
-                    NotificationId = latestUserNotification.Id
+                    NotificationId = latestUserNotification.Id,
+                    CreatorUserId = input.ActorId
                 });
             }
 

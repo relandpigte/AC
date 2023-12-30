@@ -34,7 +34,7 @@ namespace Academically.EntityFrameworkCore
             }
 
             // Disable background worker
-            Configuration.BackgroundJobs.IsJobExecutionEnabled = false;
+            Configuration.BackgroundJobs.IsJobExecutionEnabled = true;
         }
 
         public override void Initialize()
