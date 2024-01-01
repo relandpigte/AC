@@ -4,37 +4,31 @@ using Abp.Domain.Repositories;
 using Academically.BackgroundJobs.Dto;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
-using Academically.Services.Notifications;
-using Academically.Services.Notifications.Dto;
-using Academically.Services.Posts;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Academically.BackgroundJobs
 {
     public class PostFollowerNotificationJob : AsyncBackgroundJob<PostFollowerNotificationJobArgs>, ITransientDependency
     {
-        private readonly IPostsAppService _postsAppService;
-        private readonly INotificationsAppService _notificationsAppService;
+        private readonly IRepository<Post, Guid> _postsRepository;
         private readonly IRepository<UserFollower, Guid> _userFollowersRepository;
+        private readonly IBackgroundJobManager _backgroundJobManager;
 
         public PostFollowerNotificationJob(
-            IPostsAppService postsAppService,
-            INotificationsAppService notificationsAppService,
-            IRepository<UserFollower, Guid> userFollowersRepository
+            IRepository<Post, Guid> postsRepository,
+            IRepository<UserFollower, Guid> userFollowersRepository,
+            IBackgroundJobManager backgroundJobManager
         )
         {
-            _postsAppService = postsAppService;
-            _notificationsAppService = notificationsAppService;
+            _postsRepository = postsRepository;
             _userFollowersRepository = userFollowersRepository;
+            _backgroundJobManager = backgroundJobManager;
         }
 
         public override async Task ExecuteAsync(PostFollowerNotificationJobArgs args)
         {
-            var post = args.Post;
+            var post = await this._postsRepository.FirstOrDefaultAsync(args.PostId);
             if (post == null) return;
 
             if (post.ParentId.HasValue) return;
@@ -42,7 +36,7 @@ namespace Academically.BackgroundJobs
             var followers = await this._userFollowersRepository.GetAllListAsync(u => u.UserId == post.CreatorUserId);
             foreach (var follower in followers)
             {
-                await this._notificationsAppService.Create(new CreateNotificationDto()
+                await _backgroundJobManager.EnqueueAsync<CreateNotificationJob, CreateNotificationJobArgs>(new CreateNotificationJobArgs()
                 {
                     UserId = follower.CreatorUserId.GetValueOrDefault(),
                     ActorId = post.CreatorUserId.Value,
@@ -51,7 +45,7 @@ namespace Academically.BackgroundJobs
                     ReferenceId = post.Id,
                     SourceId = post.Id,
                     Url = $"app/community/post"
-                });
+                }, BackgroundJobPriority.High);
             }
         }
 

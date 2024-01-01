@@ -9,6 +9,6 @@ namespace Academically.BackgroundJobs.Dto
 {
     public class PostFollowerNotificationJobArgs
     {
-        public PostDto Post { get; set; }
+        public Guid PostId { get; set; }
     }
 }

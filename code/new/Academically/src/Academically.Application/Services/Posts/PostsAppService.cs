@@ -44,7 +44,6 @@ using Abp.Collections.Extensions;
 
 namespace Academically.Services.Posts
 {
-    [AbpAuthorize(PermissionNames.Pages_Posts)]
     public class PostsAppService : AcademicallyAppServiceBase, IPostsAppService
     {
         private readonly IRepository<Post, Guid> _postRepository;
@@ -121,6 +120,7 @@ namespace Academically.Services.Posts
         // blueprint for recursive anonymous function
         private delegate void RelevantSetter(CommentDto comment);
 
+        [AbpAuthorize(PermissionNames.Pages_Posts)]
         public async Task<List<PostDto>> GetAllPosts(PostType? type, Guid? parentId)
         {
             var userId = AbpSession.UserId.Value;
@@ -161,6 +161,7 @@ namespace Academically.Services.Posts
             return result;
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Posts)]
         public async Task<PagedResultDto<PostDto>> GetAllPostsPaged(PagedGetAllPostsDto request)
         {
             var userId = AbpSession.UserId.Value;
@@ -188,6 +189,7 @@ namespace Academically.Services.Posts
                                    .WhereIf(request.CreationTime.HasValue, p => p.CreationTime < request.CreationTime);
 
             var totalCount = await query.CountAsync();
+            var test = await query.ToListAsync();
             var result = await query.Select(p => ObjectMapper.Map<PostDto>(p))
                                    .ToListAsync();
 
@@ -541,6 +543,7 @@ namespace Academically.Services.Posts
             return posts;
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Posts_Update)]
         public async Task<PostDto> UpdateAsync(UpdatePostDto input)
         {
             var post = await _postRepository.GetAsync(input.Id);
@@ -614,6 +617,7 @@ namespace Academically.Services.Posts
             return postDto;
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Posts_Delete)]
         public async Task DeleteAsync(Guid id)
         {
             await _postRepository.DeleteAsync(id);

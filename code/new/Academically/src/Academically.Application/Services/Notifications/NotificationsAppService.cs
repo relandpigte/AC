@@ -605,8 +605,18 @@ namespace Academically.Services.Notifications
         private async Task<string> FormatCommentPronoun(NotificationDto notification)
         {
             // we need to look at the reference post/comment to determine who the owner of the reference is
-            var post = await _postsAppService.GetAsync(notification.ReferenceId);
-            var comment = await _commentsAppService.GetAsync(notification.ReferenceId);
+            var post = await _postsRepository.GetAll()
+                .Include(p => p.CreatorUser)
+                .AsNoTracking()
+                .Where(p => p.Id == notification.ReferenceId)
+                .FirstOrDefaultAsync();
+
+            var comment = await _commentsRepository.GetAll()
+                .Include(c => c.CreatorUser)
+                .AsNoTracking()
+                .Where(c => c.Id == notification.ReferenceId)
+                .FirstOrDefaultAsync();
+
             var actorId = notification.Actors.ElementAt(0).UserId;
             var textInfo = new CultureInfo("en-US", false).TextInfo;
 
@@ -627,8 +637,17 @@ namespace Academically.Services.Notifications
         {
             // we need to look at the source post/comment to determine who the owner of the source is
             var sourceReferenceId = notification.Sources.Select(x => x.ReferenceId).FirstOrDefault();
-            var post = await _postsAppService.GetAsync(sourceReferenceId);
-            var comment = await _commentsAppService.GetAsync(sourceReferenceId);
+            var post = await _postsRepository.GetAll()
+                .Include(p => p.CreatorUser)
+                .AsNoTracking()
+                .Where(p => p.Id == sourceReferenceId)
+                .FirstOrDefaultAsync();
+
+            var comment = await _commentsRepository.GetAll()
+                .Include(c => c.CreatorUser)
+                .AsNoTracking()
+                .Where(c => c.Id == sourceReferenceId)
+                .FirstOrDefaultAsync();
 
             var actorId = notification.Actors.ElementAt(0).UserId;
             var textInfo = new CultureInfo("en-US", false).TextInfo;
@@ -643,7 +662,6 @@ namespace Academically.Services.Notifications
             if (comment.CreatorUserId == actorId) return "their";
             if (comment.CreatorUserId == notification.UserId) return "your";
             return $"<span>{textInfo.ToTitleCase(comment.CreatorUser.FullName)}'s</span>";
-            
         }
 
         private async Task<string> FormatTarget(NotificationDto notification)

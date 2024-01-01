@@ -4,40 +4,34 @@ using Abp.Domain.Repositories;
 using Academically.BackgroundJobs.Dto;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
-using Academically.Services.Notifications;
-using Academically.Services.Notifications.Dto;
-using Academically.Services.Posts;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Academically.BackgroundJobs
 {
     public class PostUserNotificationJob : AsyncBackgroundJob<PostUserNotificationJobArgs>, ITransientDependency
     {
-        private readonly IPostsAppService _postsAppService;
-        private readonly INotificationsAppService _notificationsAppService;
+        private readonly IRepository<Post, Guid> _postsRepository;
+        private readonly IBackgroundJobManager _backgroundJobManager;
 
         public PostUserNotificationJob(
-            IPostsAppService postsAppService,
-            INotificationsAppService notificationsAppService
+            IRepository<Post, Guid> postsRepository,
+            IBackgroundJobManager backgroundJobManager
         )
         {
-            _postsAppService = postsAppService;
-            _notificationsAppService = notificationsAppService;
+            _postsRepository = postsRepository;
+            _backgroundJobManager = backgroundJobManager;
         }
 
         public override async Task ExecuteAsync(PostUserNotificationJobArgs args)
         {
-            var post = args.Post;
+            var post = await this._postsRepository.FirstOrDefaultAsync(args.PostId);
             if (post == null) return;
 
-            var discussion = post.ParentId.HasValue ? await this._postsAppService.GetAsync(post.ParentId.Value) : null;
+            var discussion = post.ParentId.HasValue ? await this._postsRepository.FirstOrDefaultAsync(post.ParentId.Value) : null;
             if (discussion != null)
             {
-                await this._notificationsAppService.Create(new CreateNotificationDto()
+                await _backgroundJobManager.EnqueueAsync<CreateNotificationJob, CreateNotificationJobArgs>(new CreateNotificationJobArgs()
                 {
                     UserId = discussion.CreatorUserId.GetValueOrDefault(),
                     ActorId = post.CreatorUserId.Value,
@@ -46,7 +40,7 @@ namespace Academically.BackgroundJobs
                     ReferenceId = post.Id,
                     SourceId = post.Id,
                     Url = $"app/community/discussion/{discussion.Id}"
-                });
+                }, BackgroundJobPriority.High);
             }
         }
     }
