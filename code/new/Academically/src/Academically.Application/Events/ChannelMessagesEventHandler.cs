@@ -11,8 +11,9 @@ using Academically.Domain.Enums;
 using Academically.Services.Chats;
 using Academically.Services.Chats.Dto;
 using Academically.Services.Notifications;
-using Academically.Services.Notifications.Dto;
-using Microsoft.AspNetCore.Http;
+using Academically.BackgroundJobs.Dto;
+using Academically.BackgroundJobs;
+using Abp.BackgroundJobs;
 
 namespace Academically.Events
 {
@@ -24,20 +25,19 @@ namespace Academically.Events
         private readonly IObjectMapper _objectMapper;
         private readonly IHubManager _hubManager;
         private readonly IChatsAppService _chatsAppService;
-        private readonly INotificationsAppService _notificationsAppService;
-        private readonly IAbpSession _abpSession;
+        private readonly IBackgroundJobManager _backgroundJobManager;
 
         public ChannelMessagesEventHandler(IObjectMapper objectMapper,
             IHubManager hubManager,
             IChatsAppService chatsAppService,
             INotificationsAppService notificationsAppService,
-            IAbpSession abpSession)
+            IAbpSession abpSession,
+            IBackgroundJobManager backgroundJobManager)
         {
             _objectMapper = objectMapper;
             _hubManager = hubManager;
             _chatsAppService = chatsAppService;
-            _notificationsAppService = notificationsAppService;
-            _abpSession = abpSession;
+            _backgroundJobManager = backgroundJobManager;
         }
 
         public async Task HandleEventAsync(EntityCreatedEventData<ChannelMessage> eventData)
@@ -46,14 +46,15 @@ namespace Academically.Events
             channelMessageDto.Channel = await _chatsAppService.GetChannel(eventData.Entity.ChannelId);
             await _hubManager.NotifyUsersForChannelMessageCreated(channelMessageDto);
 
-            var currentUserId = _abpSession.GetUserId();
+            var currentUserId = channelMessageDto.CreatorUserId.Value;
             var channelMember = channelMessageDto.Channel.Members
                 .Where(m => !m.UserId.Equals(currentUserId))
                 .Select(m => m.UserId)
                 .FirstOrDefault();
 
             await _chatsAppService.UnarchiveChannel(eventData.Entity.ChannelId, channelMember);
-            await _notificationsAppService.Create(new CreateNotificationDto()
+
+            await _backgroundJobManager.EnqueueAsync<CreateNotificationJob, CreateNotificationJobArgs>(new CreateNotificationJobArgs()
             {
                 UserId = channelMember,
                 ActorId = currentUserId,
@@ -62,7 +63,7 @@ namespace Academically.Events
                 ReferenceId = channelMessageDto.ChannelId,
                 SourceId = channelMessageDto.Id,
                 Url = $"app/chat?channel={channelMessageDto.ChannelId}"
-            });
+            }, BackgroundJobPriority.High);
         }
 
         public async Task HandleEventAsync(EntityUpdatedEventData<ChannelMessage> eventData)
