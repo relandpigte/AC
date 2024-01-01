@@ -506,7 +506,16 @@ namespace Academically.Services.Notifications
         private async Task<bool> NotificationHasLocation(NotificationDto notification)
         {
             if (notification.Action == NotificationAction.Follow) return false;
-            if (notification.Action == NotificationAction.Create) return false;
+            if (notification.Action == NotificationAction.Create)
+            {
+                if (notification.Target == NotificationTarget.Article) return true;
+                if (notification.Target == NotificationTarget.Coaching) return true;
+                if (notification.Target == NotificationTarget.Course) return true;
+                if (notification.Target == NotificationTarget.Tutorial) return true;
+                if (notification.Target == NotificationTarget.Broadcast) return true;
+                if (notification.Target == NotificationTarget.Workshop) return true;
+                return false;
+            }
             if (notification.Action == NotificationAction.Ask) return false;
             if (notification.Action == NotificationAction.Start) return false;
             if (notification.Actors.Count > 1)
@@ -524,6 +533,15 @@ namespace Academically.Services.Notifications
             if (notification.Action == NotificationAction.Purchase) return false;
             if (notification.Action == NotificationAction.Enroll) return false;
             if (notification.Action == NotificationAction.Follow) return false;
+            if (notification.Action == NotificationAction.Create)
+            {
+                if (notification.Target == NotificationTarget.Article) return false;
+                if (notification.Target == NotificationTarget.Coaching) return false;
+                if (notification.Target == NotificationTarget.Course) return false;
+                if (notification.Target == NotificationTarget.Tutorial) return false;
+                if (notification.Target == NotificationTarget.Broadcast) return false;
+                if (notification.Target == NotificationTarget.Workshop) return false;
+            }
             if (notification.Actors.Count > 1)
             {
                 if (notification.Action == NotificationAction.Post && notification.Target == NotificationTarget.Post) return false;
