@@ -106,6 +106,7 @@ import { LeaveReviewComponent } from '@shared/modals/leave-review/leave-review.c
 import { LeaveReviewConfirmationComponent } from '@shared/modals/leave-review-confirmation/leave-review-confirmation.component';
 import { ServiceReviewStatsComponent } from '@shared/components/service-review-stats/service-review-stats.component';
 import { ServiceNotificationPopupComponent } from '@shared/components/service-notification-popup/service-notification-popup.component';
+import { SharedToFeedComponent } from '@shared/components/shared-to-feed/shared-to-feed.component';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -192,6 +193,7 @@ FullCalendarModule.registerPlugins([
     LeaveReviewConfirmationComponent,
     ServiceReviewStatsComponent,
     ServiceNotificationPopupComponent,
+    SharedToFeedComponent
   ],
   imports: [
     CommonModule,
@@ -311,6 +313,7 @@ FullCalendarModule.registerPlugins([
     LeaveReviewConfirmationComponent,
     ServiceReviewStatsComponent,
     ServiceNotificationPopupComponent,
+    SharedToFeedComponent
   ],
 })
 export class AppSharedModule { }

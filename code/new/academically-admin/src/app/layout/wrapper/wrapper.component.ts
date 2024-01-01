@@ -33,11 +33,13 @@ export class WrapperComponent extends AppComponentBase implements OnInit, OnDest
   routerEvents: BehaviorSubject<RouterEvent> = new BehaviorSubject(undefined);
   routerEvent: RouterEvent;
   canScroll: boolean = true;
+  sharedPostId: string;
 
   notificationsStateService: NotificationsStateService;
   notification: NotificationDto;
   isLoadingList$ = new BehaviorSubject<boolean>(true);
   timer: any;
+  sharedTimer: any;
 
   upcomingEvents: UpcomingEvent[] = [];
   closingUpcomingEvents: UpcomingEvent[] = [];
@@ -53,6 +55,7 @@ export class WrapperComponent extends AppComponentBase implements OnInit, OnDest
     private _commentsService: CommentsServiceProxy,
     private _postsService: PostsServiceProxy,
     private _cdr: ChangeDetectorRef,
+    private _wrapperService: WrapperService
   ) {
     super(injector);
     this.themeSetting = themeSettingsService.getConfiguration();
@@ -71,15 +74,29 @@ export class WrapperComponent extends AppComponentBase implements OnInit, OnDest
       this.routerEvent = event;
     });
     this.wrapperService.canScroll$.subscribe(canScroll => this.canScroll = canScroll);
+    this.wrapperService.postId$.subscribe(postId => {
+      this.sharedPostId = postId;
+      this.initSharedPostPopup();
+    });
     this._cdr.detectChanges();
   }
 
-  async ngOnDestroy() {
+  async ngOnDestroy(): Promise<void> {
     if (this.timer) {
       clearTimeout(this.timer);
     }
+    if (this.sharedTimer) {
+      clearTimeout(this.sharedTimer);
+    }
 
     await this.notificationsStateService?.stop();
+  }
+
+  private initSharedPostPopup(): void {
+    if (this.sharedTimer) {
+      clearTimeout(this.sharedTimer);
+    }
+    this.sharedTimer = setTimeout((): void => this._wrapperService.postId$.next(null), 5_000);
   }
 
   private async initializeUpcomingEventsHub(): Promise<void> {

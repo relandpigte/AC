@@ -13,6 +13,7 @@ import { StateUpdateType } from '@shared/services/state-base.service';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { CommunityService } from '../community.service';
 import { CommunityPostCardComponent } from '@shared/components/community-post/community-post.component';
+import { WrapperService } from '@shared/services/wrapper.service';
 
 enum PostFiltering {
   All = 'Community.Posts.Filtering.All',
@@ -67,7 +68,8 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     private _coursesService: CoursesServiceProxy,
     private _postsService: PostsServiceProxy,
     private _communityService: CommunityService,
-    private _modalService: BsModalService
+    private _modalService: BsModalService,
+    private _wrapperService: WrapperService
     ) {
     super(injector);
   }
@@ -147,7 +149,10 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
             sharedType: SharedType.Post
           }
         };
-        this._modalService.show(UpsertPostComponent, modalSettings).content;
+        const modal = this._modalService.show(UpsertPostComponent, modalSettings);
+        modal.content.onPostCreated.subscribe((postId: string): void => {
+          this._wrapperService.postId$.next(postId);
+        });
       });
   }
 

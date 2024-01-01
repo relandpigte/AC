@@ -161,9 +161,9 @@ export class UpsertPostComponent extends AppComponentBase implements OnInit {
       false
     ).pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isCreating = false))
-      .subscribe(_ => {
+      .subscribe(id => {
         this.onCloseClick();
-        this.onPostCreated.emit();
+        this.onPostCreated.emit(id);
         this._postSub.hasNewPost(null);
       });
   }

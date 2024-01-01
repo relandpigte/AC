@@ -12,6 +12,7 @@ import { DashboardPagesService } from '@shared/services/dashboard-pages.service'
 import { BehaviorSubject } from 'rxjs';
 import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
+import { WrapperService } from '@shared/services/wrapper.service';
 
 @Component({
   selector: 'app-explore-for-you',
@@ -59,7 +60,8 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
     private _postsService: PostsServiceProxy,
     private _servicesService: ServicesServiceProxy,
     private _dashboardPagesService: DashboardPagesService,
-    private _userAvailabilitiesService: UserAvailabilitiesServiceProxy
+    private _userAvailabilitiesService: UserAvailabilitiesServiceProxy,
+    private _wrapperService: WrapperService
   ) {
     super(injector);
   }
@@ -157,7 +159,11 @@ export class ExploreForYouComponent extends AppComponentBase implements OnInit {
             sharedType: SharedType.Service
           }
         };
-        this._modalService.show(UpsertPostComponent, modalSettings).content;
+        const modal = this._modalService.show(UpsertPostComponent, modalSettings);
+
+        modal.content.onPostCreated.subscribe((postId: string): void => {
+          this._wrapperService.postId$.next(postId);
+        });
       });
   }
 
