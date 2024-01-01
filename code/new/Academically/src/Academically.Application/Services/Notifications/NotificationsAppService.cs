@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Abp;
 using Abp.Application.Services.Dto;
@@ -30,8 +31,6 @@ namespace Academically.Services.Notifications
         private const int MAX_RECENT_NOTIFICATIONS = 5;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IRepository<Notification, Guid> _notificationsRepository;
-        private readonly IRepository<NotificationUser, Guid> _notificationUsersRepository;
-        private readonly IRepository<NotificationSource, Guid> _notificationSourcesRepository;
         private readonly IRepository<Post, Guid> _postsRepository;
         private readonly IRepository<Comment, Guid> _commentsRepository;
         private readonly IRepository<User, long> _usersRepository;
@@ -42,15 +41,11 @@ namespace Academically.Services.Notifications
         private readonly IRepository<Video, Guid> _videosRepository;
         private readonly IRepository<Event, Guid> _eventsRepository;
         private readonly IUserNotificationManager _userNotificationManager;
-        private readonly IPostsAppService _postsAppService;
-        private readonly ICommentsAppService _commentsAppService;
 
         public NotificationsAppService
         (
             IDocumentsDomainService documentsDomainService,
             IRepository<Notification, Guid> notificationsRepository,
-            IRepository<NotificationUser, Guid> notificationUsersRepository,
-            IRepository<NotificationSource, Guid> notificationSourcesRepository,
             IRepository<Post, Guid> postsRepository,
             IRepository<Comment, Guid> commentsRepository,
             IRepository<User, long> usersRepository,
@@ -59,15 +54,11 @@ namespace Academically.Services.Notifications
             IRepository<Course, Guid> coursesRepository,
             IRepository<Coaching, Guid> coachingsRepository,
             IRepository<Video, Guid> videosRepository,
-            IRepository<Event, Guid> eventsRepository,
-            IPostsAppService postsAppService,
-            ICommentsAppService commentsAppService
+            IRepository<Event, Guid> eventsRepository
         )
         {
             _documentsDomainService = documentsDomainService;
             _notificationsRepository = notificationsRepository;
-            _notificationUsersRepository = notificationUsersRepository;
-            _notificationSourcesRepository = notificationSourcesRepository;
             _postsRepository = postsRepository;
             _commentsRepository = commentsRepository;
             _usersRepository = usersRepository;
@@ -77,8 +68,6 @@ namespace Academically.Services.Notifications
             _coachingsRepository = coachingsRepository;
             _videosRepository = videosRepository;
             _eventsRepository = eventsRepository;
-            _postsAppService = postsAppService;
-            _commentsAppService = commentsAppService;
         }
 
         public async Task<IEnumerable<UserNotification>> GetRecent()
@@ -320,7 +309,7 @@ namespace Academically.Services.Notifications
 
             if (await this.NotificationHasLocation(notification))
             {
-                var location = await this.FormatLocation(references);
+                var location = await this.FormatLocation(references, notification);
                 if (!string.IsNullOrEmpty(location))
                 {
                     formatted.Add(" ");
@@ -380,6 +369,14 @@ namespace Academically.Services.Notifications
             }
 
             references.Service = await this.GetSimpleService(notification.ReferenceId);
+
+            var matches = Regex.Match(notification.ReferenceId.ToString(), $"{AppConsts.DefaultTempGuid}{@"[f]*(\d+)"}");
+            if (matches.Groups.Count > 0)
+            {
+                var userId = matches.Groups[1].Value;
+                references.User = await this._usersRepository.FirstOrDefaultAsync(long.Parse(userId));
+            }
+           
 
             return references;
         }
@@ -481,6 +478,7 @@ namespace Academically.Services.Notifications
             if (notification.Action == NotificationAction.Create) return false;
             if (notification.Action == NotificationAction.Ask) return false;
             if (notification.Action == NotificationAction.Start) return false;
+            if (notification.Action == NotificationAction.Follow) return false;
             return true;
         }
 
@@ -505,7 +503,6 @@ namespace Academically.Services.Notifications
 
         private async Task<bool> NotificationHasLocation(NotificationDto notification)
         {
-            if (notification.Action == NotificationAction.Follow) return false;
             if (notification.Action == NotificationAction.Create)
             {
                 if (notification.Target == NotificationTarget.Article) return true;
@@ -606,8 +603,6 @@ namespace Academically.Services.Notifications
             {
                 case NotificationAction.Chat:
                     return "you a";
-                case NotificationAction.Follow:
-                    return "you";
                 case NotificationAction.Answer:
                 case NotificationAction.Reply:
                 case NotificationAction.Comment:
@@ -687,15 +682,29 @@ namespace Academically.Services.Notifications
             return await this.NotificationTargetToText(notification.Target, notification.Action);
         }
 
-        private async Task<string> FormatLocation(NotificationReferencesDto references)
+        private async Task<string> FormatLocation(NotificationReferencesDto references, NotificationDto notification)
         {
+            var user = references.User;
             var service = references.Service;
             // The `referencePost` should always be the parent of a post.
             // `references.ParentPost` = a quick post where a comment is created
             // `references.Post` = a quick post
             var referencePost = references.ParentPost?.Parent ?? references.Post?.Parent; 
             string location = null;
-            if (service != null)
+
+            if (user != null)
+            {
+                if (user.Id == notification.UserId)
+                {
+                    location = "you";
+                }
+                else
+                {
+                    var textinfo = new CultureInfo("en-US", false).TextInfo;
+                    location = $"<span>{textinfo.ToTitleCase(user.FullName)}</span>";
+                }
+            }
+            else if (service != null)
             {
                 location = $"<span>{service.Name}</span>";
             }

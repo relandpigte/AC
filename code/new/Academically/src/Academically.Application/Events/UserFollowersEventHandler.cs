@@ -8,6 +8,7 @@ using Academically.Domain.Enums;
 using Abp.BackgroundJobs;
 using Academically.BackgroundJobs.Dto;
 using Academically.BackgroundJobs;
+using System;
 
 namespace Academically.Events
 {
@@ -30,15 +31,18 @@ namespace Academically.Events
         public async Task HandleEventAsync(EntityCreatedEventData<UserFollower> eventData)
         {
             var currentUserId = _abpSession.GetUserId();
+            var userGuid = $"{AppConsts.DefaultTempGuid}{($"{eventData.Entity.UserId}".PadLeft(12, 'f'))}";
             await _backgroundJobManager.EnqueueAsync<CreateNotificationJob, CreateNotificationJobArgs>(new CreateNotificationJobArgs()
             {
                 UserId = eventData.Entity.UserId,
                 ActorId = currentUserId,
                 Action = NotificationAction.Follow,
                 Target = NotificationTarget.User,
-                ReferenceId = eventData.Entity.Id,
+                ReferenceId = new Guid(userGuid),
                 SourceId = eventData.Entity.Id,
-            });
+            }, BackgroundJobPriority.High);
+
+            await _backgroundJobManager.EnqueueAsync<FollowingFollowerNotificationJob, FollowingFollowerNotificationJobArgs>(new FollowingFollowerNotificationJobArgs { UserFollowerId = eventData.Entity.Id });
         }
 
         public async Task HandleEventAsync(EntityUpdatedEventData<UserFollower> eventData)

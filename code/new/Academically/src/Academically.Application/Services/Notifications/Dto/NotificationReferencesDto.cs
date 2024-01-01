@@ -1,11 +1,6 @@
-﻿using Academically.Domain;
+﻿using Academically.Authorization.Users;
+using Academically.Domain;
 using Academically.Domain.Entities;
-using Academically.Services.Posts.Dto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Academically.Services.Notifications.Dto
 {
@@ -28,5 +23,8 @@ namespace Academically.Services.Notifications.Dto
 
         // Related service of the notification
         public ISimpleService? Service { get; set; }
+        
+        // Referenced user
+        public User User { get; set; }
     }
 }
