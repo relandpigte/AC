@@ -50,36 +50,63 @@ namespace Academically.BackgroundJobs
                 var followers = await this._userFollowersRepository.GetAllListAsync(u => u.UserId == commentEvent.CreatorUserId);
                 var userIds = followers.Select(x => x.CreatorUserId).Where(x => x != null).ToList();
 
-                var parentPost = await this._postsRepository.GetAll()
+                Guid referenceId = new Guid();
+
+                var post = await this._postsRepository.GetAll()
                     .Include(p => p.Parent)
                     .AsNoTracking()
                     .Where(p => p.Id == new Guid(commentEvent.ReferenceId))
                     .Select(p => this._objectMapper.Map<PostDto>(p))
                     .FirstOrDefaultAsync();
 
-                var parentComment = commentEvent.ParentId.HasValue ?
+                var comment = commentEvent.ParentId.HasValue ?
                         await this._commentsRepository.GetAll()
                         .AsNoTracking()
-                        .Where(c => c.Id == new Guid(commentEvent.ReferenceId))
+                        .Where(c => c.Id == commentEvent.ParentId.Value)
                         .Select(c => this._objectMapper.Map<CommentDto>(c))
                         .FirstOrDefaultAsync()
-                     : null;
+                    : null;
 
-                if (parentPost != null)
+                var url = "";
+                var postUrl = "app/community/post/";
+                var discussionUrl = "app/community/discussion/";
+
+                if (comment != null)
                 {
-                    foreach (var userId in userIds)
+                    referenceId = comment.Id;
+
+                    var parentPost = await this._postsRepository.GetAll()
+                        .Include(p => p.Parent)
+                        .AsNoTracking()
+                        .Where(p => p.Id == new Guid(comment.ReferenceId))
+                        .FirstOrDefaultAsync();
+
+                    if (parentPost != null && parentPost.Parent != null && parentPost.Parent.Type == PostType.Discussion)
+                        url = $"{discussionUrl}{parentPost.ParentId}";
+                    else
+                        url = $"{postUrl}{comment.ReferenceId}";
+                }
+                else if (post != null)
+                {
+                    referenceId = post.Id;
+                    if (post.Parent != null && post.Parent.Type == PostType.Discussion)
+                        url = $"{discussionUrl}{post.ParentId}";
+                    else
+                        url = $"{postUrl}{post.Id}";
+                }
+
+                foreach (var userId in userIds)
+                {
+                    await _backgroundJobManager.EnqueueAsync<CreateNotificationJob, CreateNotificationJobArgs>(new CreateNotificationJobArgs()
                     {
-                        await _backgroundJobManager.EnqueueAsync<CreateNotificationJob, CreateNotificationJobArgs>(new CreateNotificationJobArgs()
-                        {
-                            UserId = userId.Value,
-                            ActorId = commentEvent.CreatorUserId.Value,
-                            Action = await getNotificationAction(parentPost, parentComment),
-                            Target = await getNotificationTarget(parentPost, parentComment),
-                            ReferenceId = parentComment?.Id ?? parentPost.Id,
-                            SourceId = commentEvent.Id,
-                            Url = $"app/community/post/{parentPost.Id}"
-                        }, BackgroundJobPriority.High);
-                    }
+                        UserId = userId.Value,
+                        ActorId = commentEvent.CreatorUserId.Value,
+                        Action = await getNotificationAction(post, comment),
+                        Target = await getNotificationTarget(post, comment),
+                        ReferenceId = referenceId,
+                        SourceId = commentEvent.Id,
+                        Url = url
+                    }, BackgroundJobPriority.High);
                 }
 
                 await uow.CompleteAsync();
