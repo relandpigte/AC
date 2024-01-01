@@ -14,15 +14,9 @@ using Academically.Services.Videos.Dto;
 using System;
 using System.Threading.Tasks;
 using Academically.Domain.Services.Documents;
-using Academically.Services.Notifications.Dto;
-using Academically.Services.Reactions.Dto;
-using Academically.Services.Comments;
-using Academically.Services.Notifications;
-using Academically.Services.Posts;
-using Academically.Domain.Enums;
-using Academically.Services.Posts.Dto;
-using Academically.Services.UserFollowers;
-using System.Linq;
+using Academically.BackgroundJobs.Dto;
+using Academically.BackgroundJobs;
+using Abp.BackgroundJobs;
 
 namespace Academically.Events
 {
@@ -39,10 +33,7 @@ namespace Academically.Events
         private readonly IRepository<Video, Guid> _videoRepository;
         private readonly IRepository<Event, Guid> _eventRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
-        private readonly IPostsAppService _postsAppService;
-        private readonly ICommentsAppService _commentsAppService;
-        private readonly INotificationsAppService _notificationsAppService;
-        private readonly IUserFollowersAppService _userFollowersAppService;
+        private readonly IBackgroundJobManager _backgroundJobManager;
 
         public CommentsEventHandler(IObjectMapper objectMapper,
             IHubManager hubManager,
@@ -52,10 +43,7 @@ namespace Academically.Events
             IRepository<Video, Guid> videoRepository,
             IRepository<Event, Guid> eventRepository,
             IDocumentsDomainService documentsDomainService,
-            IPostsAppService postsAppService,
-            ICommentsAppService commentsAppService,
-            INotificationsAppService notificationsAppService,
-            IUserFollowersAppService userFollowersAppService)
+            IBackgroundJobManager backgroundJobManager)
         {
             _objectMapper = objectMapper;
             _hubManager = hubManager;
@@ -65,10 +53,7 @@ namespace Academically.Events
             _videoRepository = videoRepository;
             _eventRepository = eventRepository;
             _documentsDomainService = documentsDomainService;
-            _postsAppService = postsAppService;
-            _commentsAppService = commentsAppService;
-            _notificationsAppService = notificationsAppService;
-            _userFollowersAppService = userFollowersAppService;
+            _backgroundJobManager = backgroundJobManager;
         }
 
         public async Task HandleEventAsync(EntityCreatedEventData<Comment> eventData)
@@ -76,8 +61,9 @@ namespace Academically.Events
             var comment = _objectMapper.Map<CommentDto>(eventData.Entity);
             await FillInService(comment);
             await _hubManager.NotifyUsersForCommentCreated(comment);
-            await this.SendUserNotifications(comment);
-            await SendFollowerNotifications(comment);
+
+            await _backgroundJobManager.EnqueueAsync<CommentUserNotificationJob, CommentUserNotificationJobArgs>(new CommentUserNotificationJobArgs() { CommentId = eventData.Entity.Id });
+            await _backgroundJobManager.EnqueueAsync<CommentFollowerNotificationJob, CommentFollowerNotificationJobArgs>(new CommentFollowerNotificationJobArgs() { CommentId = eventData.Entity.Id });
         }
 
         public async Task HandleEventAsync(EntityUpdatedEventData<Comment> eventData)
@@ -85,8 +71,9 @@ namespace Academically.Events
             var comment = _objectMapper.Map<CommentDto>(eventData.Entity);
             await FillInService(comment);
             await _hubManager.NotifyUsersForCommentUpdated(comment);
-            await this.SendUserNotifications(comment);
-            await SendFollowerNotifications(comment);
+
+            await _backgroundJobManager.EnqueueAsync<CommentUserNotificationJob, CommentUserNotificationJobArgs>(new CommentUserNotificationJobArgs() { CommentId = eventData.Entity.Id });
+            await _backgroundJobManager.EnqueueAsync<CommentFollowerNotificationJob, CommentFollowerNotificationJobArgs>(new CommentFollowerNotificationJobArgs() { CommentId = eventData.Entity.Id });
         }
 
         public async Task HandleEventAsync(EntityDeletedEventData<Comment> eventData)
@@ -135,139 +122,6 @@ namespace Academically.Events
                     break;
                 default:
                     break;
-            }
-        }
-
-        private async Task SendUserNotifications(CommentDto commentEvent)
-        {
-            Guid referenceId = new Guid();
-            long userId = 0;
-
-            var post = await this._postsAppService.GetAsync(new Guid(commentEvent.ReferenceId));
-            var comment = commentEvent.ParentId.HasValue ? await this._commentsAppService.GetAsync(commentEvent.ParentId.Value) : null;
-            var url = "";
-            var postUrl = "app/community/post/";
-            var discussionUrl = "app/community/discussion/";
-
-            if (comment != null)
-            {
-                referenceId = comment.Id;
-                userId = comment.CreatorUserId.GetValueOrDefault();
-                var parentPost = await this._postsAppService.GetAsync(new Guid(comment.ReferenceId));
-                if (parentPost != null && parentPost.Parent != null && parentPost.Parent.Type == PostType.Discussion)
-                    url = $"{discussionUrl}{parentPost.ParentId}";
-                else
-                    url = $"{postUrl}{comment.ReferenceId}";
-            }
-            else if (post != null)
-            {
-                referenceId = post.Id;
-                userId = post.CreatorUserId.GetValueOrDefault();
-                if (post.Parent != null && post.Parent.Type == PostType.Discussion)
-                    url = $"{discussionUrl}{post.ParentId}";
-                else
-                    url = $"{postUrl}{post.Id}";
-            }
-
-            await this._notificationsAppService.Create(new CreateNotificationDto()
-            {
-                UserId = userId,
-                ActorId = commentEvent.CreatorUserId.Value,
-                Action = await this.getNotificationAction(post, comment),
-                Target = await this.getNotificationTarget(post, comment),
-                ReferenceId = referenceId,
-                SourceId = commentEvent.Id,
-                Url = url
-            });
-        }
-
-        private async Task<NotificationAction> getNotificationAction(PostDto post, CommentDto comment)
-        {
-            if (post != null)
-            {
-                if (comment != null)
-                {
-                    return NotificationAction.Reply;
-                }
-                else
-                {
-                    var type = post.Type;
-                    switch (type)
-                    {
-                        case PostType.Question:
-                            return NotificationAction.Answer;
-                    }
-                }
-            }
-            return NotificationAction.Comment;
-        }
-
-        private async Task<NotificationTarget> getNotificationTarget(PostDto post, CommentDto comment)
-        {
-            if (comment != null)
-            {
-                if (comment.Parent != null)
-                {
-
-                    return NotificationTarget.Reply;
-                }
-                else
-                {
-                    var reference = await this._postsAppService.GetAsync(new Guid(comment.ReferenceId));
-                    if (reference != null)
-                    {
-                        if (reference.Type == PostType.Question) return NotificationTarget.Answer;
-                    }
-                }
-                return NotificationTarget.Comment;
-            }
-            else
-            {
-                var type = post.Type;
-                var parentType = post.Parent?.Type;
-                switch (type)
-                {
-                    case PostType.Question:
-                        return NotificationTarget.Question;
-                    case PostType.QuickPost:
-                        if (parentType != null)
-                        {
-                            if (parentType == PostType.Question)
-                                return NotificationTarget.Answer;
-                        }
-                        return NotificationTarget.Post;
-                    default:
-                        return NotificationTarget.Post;
-                }
-            }
-
-        }
-
-        private async Task SendFollowerNotifications(CommentDto comment)
-        {
-            var followers = await _userFollowersAppService.GetFollowers();
-            var userIds = followers.Select(x => x.CreatorUserId).ToList();
-
-            var parentPost = await _postsAppService.GetAsync(new Guid(comment.ReferenceId));
-            var parentComment = comment.ParentId.HasValue ? await this._commentsAppService.GetAsync(comment.ParentId.Value) : null;
-
-            if (parentPost != null)
-            {
-                await Parallel.ForEachAsync(userIds, async (userId, token) =>
-                {
-                    if (userId != null)
-                        await _notificationsAppService.Create(new CreateNotificationDto
-                        {
-                            UserId = userId.Value,
-                            ActorId = comment.CreatorUserId.Value,
-                            Action = await getNotificationAction(parentPost, parentComment),
-                            Target = await getNotificationTarget(parentPost, parentComment),
-                            ReferenceId = parentComment?.Id ?? parentPost.Id,
-                            SourceId = comment.Id,
-                            Url = $"app/community/post/{parentPost.Id}"
-                        });
-
-                });
             }
         }
     }

@@ -3,11 +3,11 @@ using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 using Abp.Runtime.Session;
 using Academically.Domain.Entities;
-using Academically.Services.Notifications;
 using System.Threading.Tasks;
 using Academically.Domain.Enums;
-using Academically.Services.Notifications.Dto;
-using System;
+using Abp.BackgroundJobs;
+using Academically.BackgroundJobs.Dto;
+using Academically.BackgroundJobs;
 
 namespace Academically.Events
 {
@@ -17,20 +17,20 @@ namespace Academically.Events
         IAsyncEventHandler<EntityDeletedEventData<UserFollower>>
     {
         private readonly IAbpSession _abpSession;
-        private readonly INotificationsAppService _notificationsAppService;
+        private readonly IBackgroundJobManager _backgroundJobManager;
 
         public UserFollowersEventHandler(IAbpSession abpSession,
-            INotificationsAppService notificationsAppService
+            IBackgroundJobManager backgroundJobManager
         )
         {
             _abpSession = abpSession;
-            _notificationsAppService = notificationsAppService;
+            _backgroundJobManager = backgroundJobManager;
         }
 
         public async Task HandleEventAsync(EntityCreatedEventData<UserFollower> eventData)
         {
             var currentUserId = _abpSession.GetUserId();
-            await _notificationsAppService.Create(new CreateNotificationDto()
+            await _backgroundJobManager.EnqueueAsync<CreateNotificationJob, CreateNotificationJobArgs>(new CreateNotificationJobArgs()
             {
                 UserId = eventData.Entity.UserId,
                 ActorId = currentUserId,

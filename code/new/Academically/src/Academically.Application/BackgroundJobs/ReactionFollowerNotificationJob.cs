@@ -47,7 +47,6 @@ namespace Academically.BackgroundJobs
 
             using (var uow = _unitOfWorkManager.Begin())
             {
-
                 var followers = await this._userFollowersRepository.GetAllListAsync(u => u.UserId == reaction.CreatorUserId);
                 var userIds = followers.Select(x => x.CreatorUserId).Where(x => x != null).ToList();
 
