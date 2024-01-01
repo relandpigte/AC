@@ -38,6 +38,7 @@ namespace Academically.Events
         {
             var postDto = await _postsAppService.GetAsync(eventData.Entity.Id, null, false, true);
             await _hubManager.NotifyUsersForPostCreated(postDto);
+
             await _backgroundJobManager.EnqueueAsync<PostUserNotificationJob, PostUserNotificationJobArgs>(new PostUserNotificationJobArgs(){ PostId = eventData.Entity.Id });
             await _backgroundJobManager.EnqueueAsync<PostFollowerNotificationJob, PostFollowerNotificationJobArgs>(new PostFollowerNotificationJobArgs() { PostId = eventData.Entity.Id });
         }
@@ -46,6 +47,7 @@ namespace Academically.Events
         {
             var postDto = await _postsAppService.GetAsync(eventData.Entity.Id, null, false, true);
             await _hubManager.NotifyUsersForPostUpdated(postDto);
+
             await _backgroundJobManager.EnqueueAsync<PostUserNotificationJob, PostUserNotificationJobArgs>(new PostUserNotificationJobArgs() { PostId = eventData.Entity.Id });
             await _backgroundJobManager.EnqueueAsync<PostFollowerNotificationJob, PostFollowerNotificationJobArgs>(new PostFollowerNotificationJobArgs() { PostId = eventData.Entity.Id });
         }

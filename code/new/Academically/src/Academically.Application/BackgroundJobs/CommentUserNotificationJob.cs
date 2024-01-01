@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Academically.BackgroundJobs
 {
-    public class ReactionUserNotificationJob : AsyncBackgroundJob<ReactionUserNotificationJobArgs>, ITransientDependency
+    public class CommentUserNotificationJob : AsyncBackgroundJob<CommentUserNotificationJobArgs>, ITransientDependency
     {
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly Abp.ObjectMapping.IObjectMapper _objectMapper;
@@ -23,7 +23,7 @@ namespace Academically.BackgroundJobs
         private readonly IRepository<Comment, Guid> _commentsRepository;
         private readonly IBackgroundJobManager _backgroundJobManager;
 
-        public ReactionUserNotificationJob(
+        public CommentUserNotificationJob(
             IUnitOfWorkManager unitOfWorkManager,
             Abp.ObjectMapping.IObjectMapper objectMapper,
             IRepository<Post, Guid> postsRepository,
@@ -38,71 +38,69 @@ namespace Academically.BackgroundJobs
             _backgroundJobManager = backgroundJobManager;
         }
 
-        public override async Task ExecuteAsync(ReactionUserNotificationJobArgs args)
+        public override async Task ExecuteAsync(CommentUserNotificationJobArgs args)
         {
-            var reaction = args.Reaction;
-            if (reaction == null) return;
+            var commentEvent = await this._commentsRepository.FirstOrDefaultAsync(args.CommentId);
+            if (commentEvent == null) return;
 
             using (var uow = _unitOfWorkManager.Begin())
             {
                 Guid referenceId = new Guid();
-                Guid sourceId = new Guid();
                 long userId = 0;
-                PostDto post = null;
-                CommentDto comment = null;
-                var url = "";
 
-                post = await this._postsRepository.GetAll()
+                var post = await this._postsRepository.GetAll()
                     .Include(p => p.Parent)
                     .AsNoTracking()
-                    .Where(p => p.Id == new Guid(reaction.ReferenceId))
+                    .Where(p => p.Id == new Guid(commentEvent.ReferenceId))
                     .Select(p => this._objectMapper.Map<PostDto>(p))
                     .FirstOrDefaultAsync();
 
-                comment = await this._commentsRepository.GetAll()
-                    .AsNoTracking()
-                    .Where(c => c.Id == new Guid(reaction.ReferenceId))
-                    .Select(c => this._objectMapper.Map<CommentDto>(c))
-                    .FirstOrDefaultAsync();
+                var comment = commentEvent.ParentId.HasValue ?
+                        await this._commentsRepository.GetAll()
+                        .AsNoTracking()
+                        .Where(c => c.Id == commentEvent.ParentId.Value)
+                        .Select(c => this._objectMapper.Map<CommentDto>(c))
+                        .FirstOrDefaultAsync()
+                    : null;
 
+                var url = "";
                 var postUrl = "app/community/post/";
                 var discussionUrl = "app/community/discussion/";
 
-                if (post != null)
+                if (comment != null)
                 {
-                    referenceId = post.Id;
-                    sourceId = post.Id;
-                    userId = post.CreatorUserId.GetValueOrDefault();
-                    if (post.Parent != null && post.Parent.Type == PostType.Discussion)
-                        url = $"{discussionUrl}{post.ParentId}";
-                    else
-                        url = $"{postUrl}{post.Id}";
-                }
-                else if (comment != null)
-                {
+                    referenceId = comment.Id;
+                    userId = comment.CreatorUserId.GetValueOrDefault();
+
                     var parentPost = await this._postsRepository.GetAll()
                         .Include(p => p.Parent)
                         .AsNoTracking()
                         .Where(p => p.Id == new Guid(comment.ReferenceId))
                         .FirstOrDefaultAsync();
 
-                    referenceId = parentPost.Id;
-                    sourceId = comment.Id;
-                    userId = comment.CreatorUserId.GetValueOrDefault();
-                    if (parentPost.Parent != null && parentPost.Parent.Type == PostType.Discussion)
+                    if (parentPost != null && parentPost.Parent != null && parentPost.Parent.Type == PostType.Discussion)
                         url = $"{discussionUrl}{parentPost.ParentId}";
                     else
                         url = $"{postUrl}{comment.ReferenceId}";
+                }
+                else if (post != null)
+                {
+                    referenceId = post.Id;
+                    userId = post.CreatorUserId.GetValueOrDefault();
+                    if (post.Parent != null && post.Parent.Type == PostType.Discussion)
+                        url = $"{discussionUrl}{post.ParentId}";
+                    else
+                        url = $"{postUrl}{post.Id}";
                 }
 
                 await _backgroundJobManager.EnqueueAsync<CreateNotificationJob, CreateNotificationJobArgs>(new CreateNotificationJobArgs()
                 {
                     UserId = userId,
-                    ActorId = reaction.CreatorUserId,
-                    Action = await this.getNotificationAction(reaction.Type),
+                    ActorId = commentEvent.CreatorUserId.Value,
+                    Action = await this.getNotificationAction(post, comment),
                     Target = await this.getNotificationTarget(post, comment),
                     ReferenceId = referenceId,
-                    SourceId = sourceId,
+                    SourceId = commentEvent.Id,
                     Url = url
                 }, BackgroundJobPriority.High);
 
@@ -110,20 +108,47 @@ namespace Academically.BackgroundJobs
             }
         }
 
-        private async Task<NotificationAction> getNotificationAction(ReactionType type)
+        private async Task<NotificationAction> getNotificationAction(PostDto post, CommentDto comment)
         {
-            switch (type)
+            if (post != null)
             {
-                case ReactionType.Like:
-                    return NotificationAction.Like;
-                default:
-                    return NotificationAction.React;
+                if (comment != null)
+                {
+                    return NotificationAction.Reply;
+                }
+                else
+                {
+                    var type = post.Type;
+                    switch (type)
+                    {
+                        case PostType.Question:
+                            return NotificationAction.Answer;
+                    }
+                }
             }
+            return NotificationAction.Comment;
         }
 
         private async Task<NotificationTarget> getNotificationTarget(PostDto post, CommentDto comment)
         {
-            if (post != null)
+            if (comment != null)
+            {
+                if (comment.Parent != null)
+                {
+
+                    return NotificationTarget.Reply;
+                }
+                else
+                {
+                    var reference = await this._postsRepository.GetAsync(new Guid(comment.ReferenceId));
+                    if (reference != null)
+                    {
+                        if (reference.Type == PostType.Question) return NotificationTarget.Answer;
+                    }
+                }
+                return NotificationTarget.Comment;
+            }
+            else
             {
                 var type = post.Type;
                 var parentType = post.Parent?.Type;
@@ -142,23 +167,7 @@ namespace Academically.BackgroundJobs
                         return NotificationTarget.Post;
                 }
             }
-            else
-            {
-                if (comment.Parent != null)
-                {
 
-                    return NotificationTarget.Reply;
-                }
-                else
-                {
-                    var reference = await this._postsRepository.GetAsync(new Guid(comment.ReferenceId));
-                    if (reference != null)
-                    {
-                        if (reference.Type == PostType.Question) return NotificationTarget.Answer;
-                    }
-                }
-                return NotificationTarget.Comment;
-            }
         }
     }
 }
