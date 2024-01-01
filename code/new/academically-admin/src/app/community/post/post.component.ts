@@ -90,8 +90,10 @@ export class PostComponent extends AppComponentBase implements OnInit, OnDestroy
         this.notificationId = query.get('n');
 
         try {
-          this.notification = await this._notificationsService.get(this.notificationId).toPromise();
-          var ids = this.postId ? [this.postId] : this.notification.sources.map(s => s.referenceId);
+          if (this.notificationId) {
+            this.notification = await this._notificationsService.get(this.notificationId).toPromise();
+          }
+          const ids = this.postId ? [this.postId] : this.notification.sources.map(s => s.referenceId);
           this.posts = await this._postsService.getByIds(ids, this.notificationId ?? undefined, false, false).toPromise();
           await this.initPostsAppStates();
         } catch (err) {

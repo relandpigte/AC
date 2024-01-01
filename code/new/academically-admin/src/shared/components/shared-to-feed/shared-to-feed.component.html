@@ -1,0 +1,9 @@
+<div *ngIf="postId" class="card shared-post">
+  <div class="card-body">
+    <div class="shared-post-popup d-flex align-items-center">
+      <img src="assets/img/community/checkbox.svg" alt="...">
+      <span>{{ 'Community.SharedToFeed' | localize }}</span>
+      <a href="!#" (click)="goToPost($event)">{{ 'Community.ViewPost' | localize }}</a>
+    </div>
+  </div>
+</div>

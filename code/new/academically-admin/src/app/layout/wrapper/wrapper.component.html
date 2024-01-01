@@ -22,6 +22,10 @@
   <topbar *ngIf="themeSetting.navigationPosition === NavigationPosition.Combo"></topbar>
   <app-notification-card [notification]="notification"></app-notification-card>
 
+  <div class="main-content-toaster left bottom hide-empty">
+    <app-shared-to-feed [postId]="sharedPostId"></app-shared-to-feed>
+  </div>
+
   <div *ngIf="upcomingEvents?.length" class="main-content-toaster left bottom hide-empty d-flex flex-column justify-content-center align-items-center gap-20">
     <app-service-notification-popup
       *ngFor="let upcomingEvent of upcomingEvents"

@@ -1979,6 +1979,9 @@
 	<!-- Community - Share -->
 	<text name="Community.Share.AddToTimeline.Title">Add it to timeline</text>
 	<text name="Community.Share.AddToTimeline.Body">If you share this service to your timeline, it is will show in your profile and the feed.</text>
+
+    <text name="Community.SharedToFeed">Shared to feed</text>
+    <text name="Community.ViewPost">View post</text>
     
 	<!-- Events -->
 	<text name="EventsSchedule">From {0}</text>

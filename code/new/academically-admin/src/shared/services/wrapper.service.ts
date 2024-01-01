@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class WrapperService {
     public canScroll$ = new BehaviorSubject<boolean>(true);
+    public postId$ = new BehaviorSubject<string>(null);
 
     public toggleCanScroll(canScroll: boolean): void {
         this.canScroll$.next(canScroll);
