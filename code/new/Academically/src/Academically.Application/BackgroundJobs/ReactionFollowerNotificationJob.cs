@@ -92,10 +92,9 @@ namespace Academically.BackgroundJobs
                         .Where(p => p.Id == new Guid(comment.ReferenceId))
                         .FirstOrDefaultAsync();
 
-                    if (parentPost.ParentId.HasValue) return;
-
                     foreach (var userId in userIds)
                     {
+                        if (!userId.HasValue) return;
                         await _backgroundJobManager.EnqueueAsync<CreateNotificationJob, CreateNotificationJobArgs>(new CreateNotificationJobArgs()
                         {
                             UserId = userId.Value,
@@ -104,7 +103,7 @@ namespace Academically.BackgroundJobs
                             Target = await getNotificationTarget(null, comment),
                             ReferenceId = parentPost.Id,
                             SourceId = comment.Id,
-                            Url = $"app/community/post/{parentPost.Id}"
+                            Url = parentPost.Parent is { Type: PostType.Discussion } ? $"{discussionUrl}{parentPost.ParentId}" : $"{postUrl}{comment.ReferenceId}"
                         }, BackgroundJobPriority.High);
                     }
                 }
