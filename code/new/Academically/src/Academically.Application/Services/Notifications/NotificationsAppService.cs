@@ -371,7 +371,7 @@ namespace Academically.Services.Notifications
             references.Service = await this.GetSimpleService(notification.ReferenceId);
 
             var matches = Regex.Match(notification.ReferenceId.ToString(), $"{AppConsts.DefaultTempGuid}{@"[f]*(\d+)"}");
-            if (matches.Groups.Count > 0)
+            if (matches.Groups.Count > 1)
             {
                 var userId = matches.Groups[1].Value;
                 references.User = await this._usersRepository.FirstOrDefaultAsync(long.Parse(userId));
