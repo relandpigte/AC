@@ -28,23 +28,25 @@ namespace Academically.BackgroundJobs
 
         public override async Task ExecuteAsync(PostFollowerNotificationJobArgs args)
         {
-            var post = await this._postsRepository.FirstOrDefaultAsync(args.PostId);
+            var post = await _postsRepository.FirstOrDefaultAsync(args.PostId);
             if (post == null) return;
 
-            if (post.ParentId.HasValue) return;
-
             var followers = await this._userFollowersRepository.GetAllListAsync(u => u.UserId == post.CreatorUserId);
+            post.Parent = post.ParentId.HasValue ? await _postsRepository.FirstOrDefaultAsync(post.ParentId.Value) : null;
+            const string postUrl = "app/community/post/";
+            const string discussionUrl = "app/community/discussion/";
+            
             foreach (var follower in followers)
             {
                 await _backgroundJobManager.EnqueueAsync<CreateNotificationJob, CreateNotificationJobArgs>(new CreateNotificationJobArgs()
                 {
                     UserId = follower.CreatorUserId.GetValueOrDefault(),
                     ActorId = post.CreatorUserId.Value,
-                    Action = this.GetNotificationActionByPostType(post.Type),
-                    Target = this.GetNotificationTargetByPostType(post.Type),
+                    Action = post.Parent is { Type: PostType.Discussion } ? NotificationAction.Post : GetNotificationActionByPostType(post.Type),
+                    Target = GetNotificationTargetByPostType(post.Type),
                     ReferenceId = post.Id,
                     SourceId = post.Id,
-                    Url = $"app/community/post"
+                    Url = post.Parent is { Type: PostType.Discussion } ? $"{discussionUrl}{post.ParentId}" : $"{postUrl}{post.Id}"
                 }, BackgroundJobPriority.High);
             }
         }
