@@ -192,7 +192,7 @@ namespace Academically.Services.Notifications
                 .Where(n => n.ReadTime == null)
                 .Where(n => n.Action == input.Action)
                 .Where(n => n.Target == input.Target)
-                .Where(n => (n.ReferenceId == input.ReferenceId) || n.Action == NotificationAction.Create || n.Action == NotificationAction.Ask || n.Action == NotificationAction.Start)
+                .Where(n => (n.ReferenceId == input.ReferenceId) || n.Action == NotificationAction.Create || n.Action == NotificationAction.Ask || n.Action == NotificationAction.Start || n.Action == NotificationAction.Post)
                 .FirstOrDefault();
 
             if (latestUserNotification == null)
@@ -371,7 +371,7 @@ namespace Academically.Services.Notifications
             references.Service = await this.GetSimpleService(notification.ReferenceId);
 
             var matches = Regex.Match(notification.ReferenceId.ToString(), $"{AppConsts.DefaultTempGuid}{@"[f]*(\d+)"}");
-            if (matches.Groups.Count > 0)
+            if (matches.Groups.Count > 1)
             {
                 var userId = matches.Groups[1].Value;
                 references.User = await this._usersRepository.FirstOrDefaultAsync(long.Parse(userId));
