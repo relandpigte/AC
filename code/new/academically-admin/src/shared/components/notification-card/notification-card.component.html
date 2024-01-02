@@ -1,4 +1,4 @@
-<div *ngIf="!!notification" class="card notification custom-card-border custom-card-shadow">
+<div *ngIf="notification" class="card notification custom-card-border custom-card-shadow">
     <div class="card-header">
         <h4 class="card-header-title">
             {{ 'NewNotification' | localize }}
@@ -13,7 +13,7 @@
                  [src]="getDominantUser(notification).profilePictureUrl" alt="...">
         </div>
         <div class="notification-content">
-            <p [innerHTML]="notification.formattedNotification | shorten : 105"></p>
+            <p [innerHTML]="notification.formattedNotification" class="line-clamp-3"></p>
             <span class="time">{{ getNotificationReceivedTime(notification) }}</span>
         </div>
     </div>

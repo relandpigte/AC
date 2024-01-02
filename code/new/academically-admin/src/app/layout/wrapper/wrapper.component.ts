@@ -92,6 +92,10 @@ export class WrapperComponent extends AppComponentBase implements OnInit, OnDest
     await this.notificationsStateService?.stop();
   }
 
+  onCloseNotification(): void {
+    this.notification = null;
+  }
+
   private initSharedPostPopup(): void {
     if (this.sharedTimer) {
       clearTimeout(this.sharedTimer);

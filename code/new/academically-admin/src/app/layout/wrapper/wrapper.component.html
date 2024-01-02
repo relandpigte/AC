@@ -20,7 +20,7 @@
 ================================================== -->
 <div class="main-content flex-grow-1" [class.can-scroll]="canScroll">
   <topbar *ngIf="themeSetting.navigationPosition === NavigationPosition.Combo"></topbar>
-  <app-notification-card [notification]="notification"></app-notification-card>
+  <app-notification-card [notification]="notification" (onCloseNotification)="onCloseNotification()"></app-notification-card>
 
   <div class="main-content-toaster left bottom hide-empty">
     <app-shared-to-feed [postId]="sharedPostId"></app-shared-to-feed>
