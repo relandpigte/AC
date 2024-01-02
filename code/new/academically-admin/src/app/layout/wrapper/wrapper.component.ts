@@ -94,13 +94,17 @@ export class WrapperComponent extends AppComponentBase implements OnInit, OnDest
 
   onCloseNotification(): void {
     this.notification = null;
+    this._cdr.detectChanges();
   }
 
   private initSharedPostPopup(): void {
     if (this.sharedTimer) {
       clearTimeout(this.sharedTimer);
     }
-    this.sharedTimer = setTimeout((): void => this._wrapperService.postId$.next(null), 5_000);
+    this.sharedTimer = setTimeout((): void => {
+      this._wrapperService.postId$.next(null);
+      this._cdr.detectChanges();
+    }, 5_000);
   }
 
   private async initializeUpcomingEventsHub(): Promise<void> {
@@ -148,7 +152,10 @@ export class WrapperComponent extends AppComponentBase implements OnInit, OnDest
             clearTimeout(this.timer);
           }
           this.notification = event.data;
-          this.timer = setTimeout((): void => this.notification = null, 5_000);
+          this.timer = setTimeout((): void => {
+            this.notification = null;
+            this._cdr.detectChanges();
+          }, 5_000);
           break;
       }
       this._cdr.detectChanges();
