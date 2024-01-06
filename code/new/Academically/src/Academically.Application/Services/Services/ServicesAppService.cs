@@ -405,15 +405,16 @@ namespace Academically.Services.Services
 
         public async Task<ServiceBookingDto> CancelBooking(CancelServiceBookingDto input)
         {
-            var existing = await _serviceBooking.GetAll()
+            var existing = input.Id.HasValue ? await _serviceBooking.GetAsync(input.Id.Value) : await _serviceBooking.GetAll()
                 .Where(s => s.ReferenceId == input.ReferenceId)
-                .Where(s => s.CreatorUserId == this.AbpSession.UserId)
+                .Where(s => s.CreatorUserId == AbpSession.GetUserId())
                 .SingleOrDefaultAsync();
 
             if (existing != null)
             {
                 existing.CancellationReason = input.CancellationReason;
                 existing.CancellationTime = input.CancellationTime;
+                existing.UserCancelled = input.UserCancelled;
             }
 
             return ObjectMapper.Map<ServiceBookingDto>(existing);

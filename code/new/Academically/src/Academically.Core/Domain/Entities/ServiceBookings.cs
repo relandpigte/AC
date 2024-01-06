@@ -14,6 +14,7 @@ public class ServiceBooking: CreationAuditedEntity<Guid>
     public long OwnerId { get; set; }
     public string RescheduleReason { get; set; }
     public string CancellationReason { get; set; }
+    public long? UserCancelled { get; set; }
     public DateTime? CancellationTime { get; set; }
     public ServicesType? Type { get; set; }
 

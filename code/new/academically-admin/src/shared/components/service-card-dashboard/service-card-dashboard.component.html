@@ -206,7 +206,7 @@
                         </ng-container>
                        <ng-container *ngIf="isCreator">
                            <ng-container *ngIf="isBooking">
-                               <a href="javascript:void(0)" class="dropdown-item">
+                               <a href="javascript:void(0)" class="dropdown-item" (click)="handleCancelSession($event, data)">
                                    {{ 'Cancel session' | localize }}
                                </a>
                                <a href="javascript:void(0)" class="dropdown-item">
@@ -222,7 +222,7 @@
                                        {{ 'Unpublish' | localize }}
                                    </a>
                                </ng-container>
-                               <a *ngIf="!isPublished" href="javascript:void(0)" class="dropdown-item" (click)="handleEdit($event)">
+                               <a href="javascript:void(0)" class="dropdown-item" (click)="handleEdit($event)">
                                    {{ 'Edit' | localize }}
                                </a>
                                <a href="javascript:void(0)" class="dropdown-item" (click)="handleDuplicate($event, id)">

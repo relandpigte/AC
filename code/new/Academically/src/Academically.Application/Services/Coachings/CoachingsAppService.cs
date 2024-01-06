@@ -108,6 +108,9 @@ namespace Academically.Services.Coachings
                 if (u.ProfilePictureDocumentId.HasValue)
                     u.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(u.ProfilePictureDocumentId.Value);
             
+            if (result.CreatorUser.ProfilePictureDocumentId.HasValue)
+                result.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(result.CreatorUser.ProfilePictureDocumentId.Value);
+            
             var servicePurchase = await _servicePurchasesRepository
                 .FirstOrDefaultAsync(p => p.ReferenceId.ToString() == result.Id.ToString() && p.CreatorUserId == AbpSession.GetUserId());
             result.IsPurchased = servicePurchase != null;

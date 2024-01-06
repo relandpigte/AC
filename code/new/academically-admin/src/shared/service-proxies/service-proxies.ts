@@ -36504,9 +36504,11 @@ export enum CallingConventions {
 }
 
 export class CancelServiceBookingDto implements ICancelServiceBookingDto {
+    id: string | undefined;
     referenceId: string;
     cancellationReason: string | undefined;
     cancellationTime: moment.Moment;
+    userCancelled: number;
 
     constructor(data?: ICancelServiceBookingDto) {
         if (data) {
@@ -36519,9 +36521,11 @@ export class CancelServiceBookingDto implements ICancelServiceBookingDto {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.referenceId = _data["referenceId"];
             this.cancellationReason = _data["cancellationReason"];
             this.cancellationTime = _data["cancellationTime"] ? moment(_data["cancellationTime"].toString()) : <any>undefined;
+            this.userCancelled = _data["userCancelled"];
         }
     }
 
@@ -36534,9 +36538,11 @@ export class CancelServiceBookingDto implements ICancelServiceBookingDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["referenceId"] = this.referenceId;
         data["cancellationReason"] = this.cancellationReason;
         data["cancellationTime"] = this.cancellationTime ? this.cancellationTime.toISOString() : <any>undefined;
+        data["userCancelled"] = this.userCancelled;
         return data; 
     }
 
@@ -36549,9 +36555,11 @@ export class CancelServiceBookingDto implements ICancelServiceBookingDto {
 }
 
 export interface ICancelServiceBookingDto {
+    id: string | undefined;
     referenceId: string;
     cancellationReason: string | undefined;
     cancellationTime: moment.Moment;
+    userCancelled: number;
 }
 
 export class ChangeNotificationSettingsDto implements IChangeNotificationSettingsDto {
@@ -37335,7 +37343,6 @@ export class CoachingDto implements ICoachingDto {
     hasReviewed: boolean;
     isCancelled: boolean;
     serviceBooking: ServiceBookingDto;
-    serviceBookings: ServiceBookingDto[] | undefined;
 
     constructor(data?: ICoachingDto) {
         if (data) {
@@ -37449,11 +37456,6 @@ export class CoachingDto implements ICoachingDto {
             this.hasReviewed = _data["hasReviewed"];
             this.isCancelled = _data["isCancelled"];
             this.serviceBooking = _data["serviceBooking"] ? ServiceBookingDto.fromJS(_data["serviceBooking"]) : <any>undefined;
-            if (Array.isArray(_data["serviceBookings"])) {
-                this.serviceBookings = [] as any;
-                for (let item of _data["serviceBookings"])
-                    this.serviceBookings.push(ServiceBookingDto.fromJS(item));
-            }
         }
     }
 
@@ -37567,11 +37569,6 @@ export class CoachingDto implements ICoachingDto {
         data["hasReviewed"] = this.hasReviewed;
         data["isCancelled"] = this.isCancelled;
         data["serviceBooking"] = this.serviceBooking ? this.serviceBooking.toJSON() : <any>undefined;
-        if (Array.isArray(this.serviceBookings)) {
-            data["serviceBookings"] = [];
-            for (let item of this.serviceBookings)
-                data["serviceBookings"].push(item.toJSON());
-        }
         return data; 
     }
 
@@ -37677,7 +37674,6 @@ export interface ICoachingDto {
     hasReviewed: boolean;
     isCancelled: boolean;
     serviceBooking: ServiceBookingDto;
-    serviceBookings: ServiceBookingDto[] | undefined;
 }
 
 export class CoachingDtoPagedResultDto implements ICoachingDtoPagedResultDto {
@@ -51996,9 +51992,10 @@ export class ServiceBookingDto implements IServiceBookingDto {
     ownerId: number;
     rescheduleReason: string | undefined;
     cancellationReason: string | undefined;
+    userCancelled: number | undefined;
     cancellationTime: moment.Moment | undefined;
     type: ServicesType;
-    creatorUserId: number;
+    creatorUserId: number | undefined;
     creatorUser: UserDto;
 
     constructor(data?: IServiceBookingDto) {
@@ -52018,6 +52015,7 @@ export class ServiceBookingDto implements IServiceBookingDto {
             this.ownerId = _data["ownerId"];
             this.rescheduleReason = _data["rescheduleReason"];
             this.cancellationReason = _data["cancellationReason"];
+            this.userCancelled = _data["userCancelled"];
             this.cancellationTime = _data["cancellationTime"] ? moment(_data["cancellationTime"].toString()) : <any>undefined;
             this.type = _data["type"];
             this.creatorUserId = _data["creatorUserId"];
@@ -52040,6 +52038,7 @@ export class ServiceBookingDto implements IServiceBookingDto {
         data["ownerId"] = this.ownerId;
         data["rescheduleReason"] = this.rescheduleReason;
         data["cancellationReason"] = this.cancellationReason;
+        data["userCancelled"] = this.userCancelled;
         data["cancellationTime"] = this.cancellationTime ? this.cancellationTime.toISOString() : <any>undefined;
         data["type"] = this.type;
         data["creatorUserId"] = this.creatorUserId;
@@ -52062,9 +52061,10 @@ export interface IServiceBookingDto {
     ownerId: number;
     rescheduleReason: string | undefined;
     cancellationReason: string | undefined;
+    userCancelled: number | undefined;
     cancellationTime: moment.Moment | undefined;
     type: ServicesType;
-    creatorUserId: number;
+    creatorUserId: number | undefined;
     creatorUser: UserDto;
 }
 

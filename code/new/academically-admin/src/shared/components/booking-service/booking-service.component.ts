@@ -99,15 +99,18 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
     private _modalService: BsModalService,
     private _servicesService: ServicesServiceProxy,
     private _userAvailabilitiesService: UserAvailabilitiesServiceProxy,
-    private _crd: ChangeDetectorRef,
+    private _cdr: ChangeDetectorRef,
     private _router: Router
   ) {
     super(injector);
   }
 
-  get isLoading$() { return combineLatest([this.isLoadingInfo$, this.isSubmitting$]).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
-  get coachAvatar(): string { return this.getProfilePictureUrl(this.data?.creatorUser?.profilePictureDocument); }
-  get coachName(): string { return this.data?.creatorUser?.fullName; }
+  get isLoading$() {
+    return combineLatest([this.isLoadingInfo$, this.isSubmitting$])
+      .pipe(switchMap((loaders) => of(loaders.some(l => l))));
+  }
+  get coachAvatar(): string { return this.data?.creatorUser?.profilePictureUrl ?? this.service?.owner?.avatar?.src; }
+  get coachName(): string { return this.data?.creatorUser?.fullName ?? this.service?.owner?.fullName; }
   get coachFirstName(): string { return this.data?.creatorUser?.firstName; }
   get coachUserId(): number { return this.data?.creatorUserId; }
   get serviceName(): string { return this.data?.name; }
@@ -202,16 +205,18 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
 
   onSteps(nextStep: number): void {
     this.step = nextStep;
-    this._crd.detectChanges();
+    this._cdr.detectChanges();
   }
 
   onProcessCancellation(): void {
     this.isSubmitting$.next(true);
 
     this._servicesService.cancelBooking(CancelServiceBookingDto.fromJS({
-        referenceId: this.data.id,
-        cancellationReason: this.cancellationReasonValue,
-        cancellationTime: moment()
+      id: this.data?.serviceBooking?.id,
+      referenceId: this.data.id,
+      cancellationReason: this.cancellationReasonValue,
+      cancellationTime: moment(),
+      userCancelled: this.currentUserId
       }))
       .pipe(takeUntil(this.destroyed$))
       .subscribe((x): void => {
@@ -220,6 +225,7 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
         this.onCancelledBooking.next(x);
         this.isSubmitting$.next(false);
       });
+    this._cdr.detectChanges();
   }
 
   timeSelectionClass(time: string): string {
@@ -533,6 +539,9 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   }
 
   private initService(): void {
+    if (!_.isEmpty(this.data?.serviceBooking) && this.isTutor && this.serviceOwnerId === this.currentUserId) {
+      this.data.creatorUser = this.data?.serviceBooking?.creatorUser;
+    }
     const { service } = ServiceCardUtils.getSanitizeServiceData(this.data, {}, [], false);
     this.service = service;
   }
