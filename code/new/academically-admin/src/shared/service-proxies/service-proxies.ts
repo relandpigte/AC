@@ -5210,6 +5210,78 @@ export class CoachingsServiceProxy {
     }
 
     /**
+     * @param ownerId (optional) 
+     * @param type (optional) 0 = Upcoming
+    
+    1 = Past
+    
+    2 = Cancelled
+     * @return Success
+     */
+    getBookingScheduled(ownerId: number | undefined, type: ScheduledServiceType | undefined): Observable<AvailableServiceDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Coachings/GetBookingScheduled?";
+        if (ownerId === null)
+            throw new Error("The parameter 'ownerId' cannot be null.");
+        else if (ownerId !== undefined)
+            url_ += "ownerId=" + encodeURIComponent("" + ownerId) + "&";
+        if (type === null)
+            throw new Error("The parameter 'type' cannot be null.");
+        else if (type !== undefined)
+            url_ += "type=" + encodeURIComponent("" + type) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetBookingScheduled(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetBookingScheduled(<any>response_);
+                } catch (e) {
+                    return <Observable<AvailableServiceDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AvailableServiceDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetBookingScheduled(response: HttpResponseBase): Observable<AvailableServiceDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(AvailableServiceDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AvailableServiceDto[]>(<any>null);
+    }
+
+    /**
      * @param creatorUserId (optional) 
      * @return Success
      */
@@ -35628,6 +35700,7 @@ export class AvailableServiceDto implements IAvailableServiceDto {
     isDeleted: boolean;
     deleterUserId: number | undefined;
     deletionTime: moment.Moment | undefined;
+    serviceBooking: ServiceBookingDto;
     type: number;
     status: number;
     replayType: number | undefined;
@@ -35775,6 +35848,7 @@ export class AvailableServiceDto implements IAvailableServiceDto {
             this.isDeleted = _data["isDeleted"];
             this.deleterUserId = _data["deleterUserId"];
             this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
+            this.serviceBooking = _data["serviceBooking"] ? ServiceBookingDto.fromJS(_data["serviceBooking"]) : <any>undefined;
             this.type = _data["type"];
             this.status = _data["status"];
             this.replayType = _data["replayType"];
@@ -35926,6 +36000,7 @@ export class AvailableServiceDto implements IAvailableServiceDto {
         data["isDeleted"] = this.isDeleted;
         data["deleterUserId"] = this.deleterUserId;
         data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
+        data["serviceBooking"] = this.serviceBooking ? this.serviceBooking.toJSON() : <any>undefined;
         data["type"] = this.type;
         data["status"] = this.status;
         data["replayType"] = this.replayType;
@@ -36077,6 +36152,7 @@ export interface IAvailableServiceDto {
     isDeleted: boolean;
     deleterUserId: number | undefined;
     deletionTime: moment.Moment | undefined;
+    serviceBooking: ServiceBookingDto;
     type: number;
     status: number;
     replayType: number | undefined;
@@ -37259,6 +37335,7 @@ export class CoachingDto implements ICoachingDto {
     hasReviewed: boolean;
     isCancelled: boolean;
     serviceBooking: ServiceBookingDto;
+    serviceBookings: ServiceBookingDto[] | undefined;
 
     constructor(data?: ICoachingDto) {
         if (data) {
@@ -37372,6 +37449,11 @@ export class CoachingDto implements ICoachingDto {
             this.hasReviewed = _data["hasReviewed"];
             this.isCancelled = _data["isCancelled"];
             this.serviceBooking = _data["serviceBooking"] ? ServiceBookingDto.fromJS(_data["serviceBooking"]) : <any>undefined;
+            if (Array.isArray(_data["serviceBookings"])) {
+                this.serviceBookings = [] as any;
+                for (let item of _data["serviceBookings"])
+                    this.serviceBookings.push(ServiceBookingDto.fromJS(item));
+            }
         }
     }
 
@@ -37485,6 +37567,11 @@ export class CoachingDto implements ICoachingDto {
         data["hasReviewed"] = this.hasReviewed;
         data["isCancelled"] = this.isCancelled;
         data["serviceBooking"] = this.serviceBooking ? this.serviceBooking.toJSON() : <any>undefined;
+        if (Array.isArray(this.serviceBookings)) {
+            data["serviceBookings"] = [];
+            for (let item of this.serviceBookings)
+                data["serviceBookings"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -37590,6 +37677,7 @@ export interface ICoachingDto {
     hasReviewed: boolean;
     isCancelled: boolean;
     serviceBooking: ServiceBookingDto;
+    serviceBookings: ServiceBookingDto[] | undefined;
 }
 
 export class CoachingDtoPagedResultDto implements ICoachingDtoPagedResultDto {
@@ -51911,6 +51999,7 @@ export class ServiceBookingDto implements IServiceBookingDto {
     cancellationTime: moment.Moment | undefined;
     type: ServicesType;
     creatorUserId: number;
+    creatorUser: UserDto;
 
     constructor(data?: IServiceBookingDto) {
         if (data) {
@@ -51932,6 +52021,7 @@ export class ServiceBookingDto implements IServiceBookingDto {
             this.cancellationTime = _data["cancellationTime"] ? moment(_data["cancellationTime"].toString()) : <any>undefined;
             this.type = _data["type"];
             this.creatorUserId = _data["creatorUserId"];
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
         }
     }
 
@@ -51953,6 +52043,7 @@ export class ServiceBookingDto implements IServiceBookingDto {
         data["cancellationTime"] = this.cancellationTime ? this.cancellationTime.toISOString() : <any>undefined;
         data["type"] = this.type;
         data["creatorUserId"] = this.creatorUserId;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -51974,6 +52065,7 @@ export interface IServiceBookingDto {
     cancellationTime: moment.Moment | undefined;
     type: ServicesType;
     creatorUserId: number;
+    creatorUser: UserDto;
 }
 
 /** 1 = LastItem 2 = SpecificDate 3 = Immediate */

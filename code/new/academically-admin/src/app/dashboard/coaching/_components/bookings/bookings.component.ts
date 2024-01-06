@@ -1,8 +1,10 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
-import { CoachingDto } from '@shared/service-proxies/service-proxies';
+import { AvailableServiceDto, CoachingDto, CoachingsServiceProxy, ScheduledServiceType } from '@shared/service-proxies/service-proxies';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
+import { forkJoin } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-bookings',
@@ -10,15 +12,17 @@ import { DashboardPagesService } from '@shared/services/dashboard-pages.service'
   styleUrls: ['./bookings.component.less']
 })
 export class BookingsComponent extends AppComponentBase implements OnInit {
-  coachings: CoachingDto[] = Array(Math.floor(Math.random() * (10 - 4) + 4))
-    .fill([]).map(() => this.generateRandomCoaching()) as CoachingDto[];
+  upcomingCoaching: AvailableServiceDto[];
+  pastCoaching: AvailableServiceDto[];
+  cancelledCoaching: AvailableServiceDto[];
 
   isLoading = true;
   shimmerType = ShimmerType;
 
   constructor(
     injector: Injector,
-    private _dashboardPageService: DashboardPagesService
+    private _dashboardPageService: DashboardPagesService,
+    private _coachingsService: CoachingsServiceProxy
   ) {
     super(injector);
   }
@@ -27,11 +31,29 @@ export class BookingsComponent extends AppComponentBase implements OnInit {
   get additionalData() {
     return {
       booking: {
-        durationInSec: Math.floor(Math.random() * (9000000 - 30000) + 30000),
+        durationInSec: 1800000
       }
     };
   }
-  get totalCoaching(): number { return this.coachings?.length; }
+  get totalUpcomingCoaching(): number { return this.upcomingCoaching?.length ?? 0; }
+  get totalPastCoaching(): number { return this.pastCoaching?.length ?? 0; }
+  get totalCancelledCoaching(): number { return this.cancelledCoaching?.length ?? 0; }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadBookings();
+  }
+
+  private loadBookings(): void {
+    forkJoin([
+      this._coachingsService.getBookingScheduled(this.currentUserId, ScheduledServiceType.Upcoming),
+      this._coachingsService.getBookingScheduled(this.currentUserId, ScheduledServiceType.Past),
+      this._coachingsService.getBookingScheduled(this.currentUserId, ScheduledServiceType.Cancelled)
+    ])
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(([upcoming, past, cancelled]): void => {
+        this.upcomingCoaching = upcoming;
+        this.pastCoaching = past;
+        this.cancelledCoaching = cancelled;
+      });
+  }
 }

@@ -1,7 +1,10 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Application.Services.Dto;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
+using Academically.Services.Coachings.Dto;
+using Academically.Users.Dto;
 using AutoMapper;
 
 namespace Academically.Services.Services.Dto;
@@ -17,4 +20,6 @@ public class ServiceBookingDto : EntityDto<Guid>
     public DateTime? CancellationTime { get; set; }
     public ServicesType? Type { get; set; }
     public long CreatorUserId { get; set; }
+    
+    public UserDto CreatorUser { get; set; }
 }

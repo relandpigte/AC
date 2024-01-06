@@ -21,6 +21,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 
 namespace Academically.Services.Coachings
@@ -383,6 +384,48 @@ namespace Academically.Services.Coachings
                 }
             }
 
+            return services;
+        }
+
+        public async Task<IEnumerable<AvailableServiceDto>> GetBookingScheduled(long? ownerId, ScheduledServiceType? type)
+        {
+            var now = Clock.Now;
+            var bookings = await _serviceBookingRepository.GetAll()
+                .AsNoTracking()
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.ProfilePictureDocument)
+                .WhereIf(ownerId.HasValue, b => b.OwnerId == ownerId.Value)
+                .WhereIf(!ownerId.HasValue, b => b.OwnerId == AbpSession.GetUserId())
+                .WhereIf(type is ScheduledServiceType.Upcoming, b => b.CancellationTime == null && b.BookingDateTime >= now)
+                .WhereIf(type is ScheduledServiceType.Past, b => b.CancellationTime == null && b.BookingDateTime < now)
+                .WhereIf(type is ScheduledServiceType.Cancelled, b => b.CancellationTime != null)
+                .Select(x => ObjectMapper.Map<ServiceBookingDto>(x))
+                .ToListAsync();
+
+            var services = new List<AvailableServiceDto>();
+            foreach (var booking in bookings)
+            {
+                if (booking.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    booking.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(booking.CreatorUser.ProfilePictureDocumentId.Value);
+                
+                var service = await Repository.GetAll()
+                    .Where(w => w.ParentId == null && w.Visible.Value && w.Status == CoachingStatus.Published)
+                    .WhereIf(ownerId.HasValue, x => x.CreatorUserId == ownerId)
+                    .WhereIf(!ownerId.HasValue, x => x.CreatorUserId == AbpSession.GetUserId())
+                    .WhereIf(bookings.Count > 0, x => x.Id == booking.ReferenceId)
+                    .Include(c => c.CreatorUser)
+                        .ThenInclude(u => u.ProfilePictureDocument)
+                    .AsNoTracking()
+                    .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
+                    .FirstOrDefaultAsync();
+
+                if (service.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    service.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(service.CreatorUser.ProfilePictureDocumentId.Value);
+                
+                service.ServiceBooking = booking;
+                service.EventDateTime = booking.BookingDateTime;
+                services.Add(service);
+            }
             return services;
         }
 

@@ -134,7 +134,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
       'StartingFrom',
       moment(this.sanitized?.dates?.startDate)?.format('dddd, DD MMMM YYYY'),
       moment(this.sanitized?.dates?.startDate)?.format('HH:mm'),
-      moment(this.sanitized?.dates?.startDate)?.add(this.data?.duration, 'minutes')?.format('HH:mm')
+      moment(this.sanitized?.dates?.startDate)?.add(this.data?.duration || 30, 'minutes')?.format('HH:mm')
     );
   }
 
@@ -142,8 +142,8 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   get scheduleMonth(): string { return this.isDraft ? '---' : this.sanitized?.dates?.startDate?.format('MMM'); }
   get isBooked(): boolean { return !!this.sanitized?.booking; }
   get coachingTutorFullName(): string { return this.sanitized.owner.fullName ?? 'Casey Fyfe'; }
-  get coachingStudentFullName(): string { return this.sanitized?.booking?.student?.fullName ?? 'Casey Fyfe'; }
-  get coachingStudentAvatarSrc(): string { return this.sanitized?.booking?.student?.avatar?.src ?? 'assets/img/anonymous.png'; }
+  get coachingStudentFullName(): string { return this.data?.serviceBooking?.creatorUser?.fullName; }
+  get coachingStudentAvatarSrc(): string { return this.data?.serviceBooking?.creatorUser?.profilePictureUrl ?? 'assets/img/anonymous.png'; }
   get coachingDuration(): string { return humanizeDuration(this.sanitized?.booking?.durationInSec ?? 60000); }
   get serviceStatus(): number { return this.data?.status; }
   get isCourseStarted(): boolean { return this.sanitized?.progress > 0 && this.sanitized?.progress < 100; }

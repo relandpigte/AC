@@ -8,12 +8,17 @@ using Academically.Services.StudentCourses.Dto;
 using Academically.Users.Dto;
 using System;
 using System.Collections.Generic;
+using Academically.Services.Services.Dto;
 
 namespace Academically.Services.Posts.Dto
 {
     [AutoMap(typeof(Article), typeof(Event), typeof(Course), typeof(Video), typeof(Coaching))]
     public class AvailableServiceDto : FullAuditedEntityDto<Guid>
     {
+        #region Coaching
+        public ServiceBookingDto ServiceBooking { get; set; }
+        #endregion
+        
         #region Event
         public int Type { get; set; }
         public int Status { get; set; }
@@ -27,7 +32,6 @@ namespace Academically.Services.Posts.Dto
         public string SessionDaysOfWeek { get; set; }
         public string SessionDaysOfMonth { get; set; }
         public bool AutoAdmitAttendees { get; set; }
-        
         #endregion
 
         #region Course
