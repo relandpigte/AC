@@ -1,4 +1,4 @@
-<div class="card review d-flex flex-column custom-card-border custom-card-shadow m-0">
+<div class="card review d-flex flex-column custom-card-border custom-card-shadow m-0" [class.anim-outline-highlighted]="isHighlighted">
     <div class="review-container d-flex flex-column">
         <app-shimmer [show]="false" [shimmerType]="shimmerType.PostCard"></app-shimmer>
         <div class="review-heading d-flex flex-row flex-nowrap align-items-center">

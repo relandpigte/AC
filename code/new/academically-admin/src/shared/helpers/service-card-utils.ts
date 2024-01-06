@@ -25,6 +25,20 @@ export class ServiceCardUtils {
       }
     }
 
+    static getServicesType(data: any): ServicesType {
+      if (data instanceof EventDto) {
+        const d = data as EventDto;
+        if (d.category === EventCategory.Broadcast) return ServicesType.Event;
+        return ServicesType.Workshop;
+      }
+      else if (data instanceof ArticleDto) return ServicesType.Article;
+      else if (data instanceof CoachingDto) return ServicesType.Coaching;
+      else if (data instanceof CourseDto) return ServicesType.Course;
+      else if (data instanceof VideoDto) return ServicesType.Tutorial;
+      else if (data instanceof UserDto) return ServicesType.User;
+      return null;
+    }
+
   static getServiceType(data: any): string {
     switch (data.constructor) {
       case EventDto:

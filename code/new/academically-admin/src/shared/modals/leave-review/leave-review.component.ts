@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { ServiceDataService } from '@shared/services/service-data.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { CreateServiceReviewDto, EventCategory, ServicesServiceProxy, ServicesType } from '@shared/service-proxies/service-proxies';
+import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 
 @Component({
   selector: 'app-leave-review',
@@ -44,7 +45,7 @@ export class LeaveReviewComponent extends AppComponentBase {
     this.isLoading = true;
     this.model.referenceId = this.data.id;
     this.model.serviceOwnerId = this.data.creatorUserId;
-    this.model.serviceType = this.data.category === EventCategory.Broadcast ? ServicesType.Event : ServicesType.Workshop;
+    this.model.serviceType = ServiceCardUtils.getServicesType(this.data);
 
     this._serviceServices.saveServiceReview(this.model)
       .pipe(takeUntil(this.destroyed$))

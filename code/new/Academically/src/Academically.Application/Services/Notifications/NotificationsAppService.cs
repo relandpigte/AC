@@ -40,6 +40,7 @@ namespace Academically.Services.Notifications
         private readonly IRepository<Coaching, Guid> _coachingsRepository;
         private readonly IRepository<Video, Guid> _videosRepository;
         private readonly IRepository<Event, Guid> _eventsRepository;
+        private readonly IRepository<ServiceReview, Guid> _serviceReviewsRepository;
         private readonly IUserNotificationManager _userNotificationManager;
 
         public NotificationsAppService
@@ -54,7 +55,8 @@ namespace Academically.Services.Notifications
             IRepository<Course, Guid> coursesRepository,
             IRepository<Coaching, Guid> coachingsRepository,
             IRepository<Video, Guid> videosRepository,
-            IRepository<Event, Guid> eventsRepository
+            IRepository<Event, Guid> eventsRepository,
+            IRepository<ServiceReview, Guid> serviceReviewsRepository
         )
         {
             _documentsDomainService = documentsDomainService;
@@ -68,6 +70,7 @@ namespace Academically.Services.Notifications
             _coachingsRepository = coachingsRepository;
             _videosRepository = videosRepository;
             _eventsRepository = eventsRepository;
+            _serviceReviewsRepository = serviceReviewsRepository;
         }
 
         public async Task<IEnumerable<UserNotification>> GetRecent()
@@ -610,6 +613,8 @@ namespace Academically.Services.Notifications
                 case NotificationAction.Like:
                 case NotificationAction.React:
                     return await FormatReactionPronoun(notification);
+                case NotificationAction.Review:
+                    return await FormatReviewPronoun(notification);
                 default:
                     return "your";
             }
@@ -675,6 +680,20 @@ namespace Academically.Services.Notifications
             if (comment.CreatorUserId == actorId) return "their";
             if (comment.CreatorUserId == notification.UserId) return "your";
             return $"<span>{textInfo.ToTitleCase(comment.CreatorUser.FullName)}'s</span>";
+        }
+
+        private async Task<string> FormatReviewPronoun(NotificationDto notification)
+        {
+            var service = await this.GetSimpleService(notification.ReferenceId);
+            var actorId = notification.Actors.ElementAt(0).UserId;
+            var textInfo = new CultureInfo("en-US", false).TextInfo;
+
+            if (service.CreatorUserId == actorId) return "their";
+            if (service.CreatorUserId == notification.UserId) return "your";
+
+            var user = await this._usersRepository.FirstOrDefaultAsync(service.CreatorUserId.Value);
+
+            return $"<span>{textInfo.ToTitleCase(user.FullName)}'s</span>";
         }
 
         private async Task<string> FormatTarget(NotificationDto notification)

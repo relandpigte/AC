@@ -27,6 +27,7 @@ namespace Academically.BackgroundJobs
         {
             var post = await this._postsRepository.FirstOrDefaultAsync(args.PostId);
             if (post == null) return;
+            if (post.IsServiceDiscussion) return;
 
             var discussion = post.ParentId.HasValue ? await this._postsRepository.FirstOrDefaultAsync(post.ParentId.Value) : null;
             if (discussion != null)

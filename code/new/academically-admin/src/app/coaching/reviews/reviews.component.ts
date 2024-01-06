@@ -1,11 +1,12 @@
 import { Component, Injector, OnInit } from '@angular/core';
-import { takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
+import { ActivatedRoute } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
-import { ServiceDataService } from '@shared/services/service-data.service';
+import { CoachingDto, NotificationDto, NotificationsServiceProxy, ServiceReviewDto, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
-import { CoachingDto, ServiceReviewDto, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ServiceDataService } from '@shared/services/service-data.service';
 
 @Component({
   selector: 'app-reviews',
@@ -18,8 +19,12 @@ export class CoachingReviewsComponent extends AppComponentBase implements OnInit
   reviews: ServiceReviewDto[];
   totalReviews: number;
 
+  notificationId: string;
+  notification: NotificationDto;
+
   constructor(
     injector: Injector,
+    private _route: ActivatedRoute,
     private _landingPageService: LandingPagesService,
     private _serviceData: ServiceDataService,
     private _servicesService: ServicesServiceProxy
@@ -33,18 +38,29 @@ export class CoachingReviewsComponent extends AppComponentBase implements OnInit
   get isPurchased(): boolean { return this.data?.isPurchased; }
 
   ngOnInit(): void {
-    this._serviceData.serviceData$.pipe(takeUntil(this.destroyed$)).subscribe(data => {
-      this.data = data;
-      this.getServiceReviews();
+    this._route.queryParamMap
+    .pipe(debounceTime(100)) // debounced so that params and queryparams have time to trigger their events
+    .pipe(distinctUntilChanged()) // values should be distinct to avoid unnecessary calls
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe(async query => {
+        this.notificationId = query.get('n');
+        this._serviceData.serviceData$.pipe(takeUntil(this.destroyed$)).subscribe(data => {
+          this.data = data;
+          this.getServiceReviews();
+        });
+    },
+    (err) => {
+      console.error(`Error occurred while loading the discussion: ${err}`);
     });
   }
 
   private getServiceReviews(): void {
-    this._servicesService.getServiceReviews(this.serviceId)
+    this._servicesService.getServiceReviews(this.serviceId, this.notificationId ?? undefined)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(reviews => {
         this.reviews = reviews;
         this.totalReviews = reviews?.length ?? 0;
+        setTimeout(() => this.scrollToMiddleHighlightedComment());
       });
   }
 }

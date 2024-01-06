@@ -30,6 +30,7 @@ namespace Academically.BackgroundJobs
         {
             var post = await _postsRepository.FirstOrDefaultAsync(args.PostId);
             if (post == null) return;
+            if (post.IsServiceDiscussion) return;
 
             var followers = await this._userFollowersRepository.GetAllListAsync(u => u.UserId == post.CreatorUserId);
             post.Parent = post.ParentId.HasValue ? await _postsRepository.FirstOrDefaultAsync(post.ParentId.Value) : null;

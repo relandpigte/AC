@@ -1,6 +1,7 @@
 ﻿using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Timing;
+using Abp.Linq.Extensions;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Hubs;
@@ -17,13 +18,8 @@ using Abp.Runtime.Session;
 using Academically.Domain.Services.Documents;
 using Academically.Extensions;
 using Academically.Services.StudentCourses;
-using Amazon.S3.Model;
-using Castle.MicroKernel.ModelBuilder.Descriptors;
-using Abp.Domain.Uow;
 using System.Dynamic;
 using Microsoft.AspNetCore.SignalR;
-using Newtonsoft.Json;
-using System.Collections;
 
 namespace Academically.Services.Services
 {
@@ -42,6 +38,7 @@ namespace Academically.Services.Services
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IRepository<Coaching, Guid> _coachingsRepository;
         private readonly IRepository<Event, Guid> _eventsRepository;
+        private readonly IRepository<Notification, Guid> _notificationsRepository;
         private readonly IHubContext<EventsHub> _eventsHub;
 
         private readonly List<Service2Dto> StaticServiceLevels = new List<Service2Dto>
@@ -111,6 +108,7 @@ namespace Academically.Services.Services
             IDocumentsDomainService documentsDomainService,
             IRepository<Coaching, Guid> coachingsRepository,
             IRepository<Event, Guid> eventsRepository,
+            IRepository<Notification, Guid> notificationsRepository,
             IHubContext<EventsHub> eventsHub
             )
         {
@@ -127,6 +125,7 @@ namespace Academically.Services.Services
             _documentsDomainService = documentsDomainService;
             _coachingsRepository = coachingsRepository;
             _eventsRepository = eventsRepository;
+            _notificationsRepository = notificationsRepository;
             _eventsHub = eventsHub;
         }
 
@@ -570,15 +569,15 @@ namespace Academically.Services.Services
             return null;
         }
 
-        public async Task<IEnumerable<ServiceReviewDto>> GetServiceReviews(Guid referenceId)
+        public async Task<IEnumerable<ServiceReviewDto>> GetServiceReviews(Guid referenceId, Guid? notificationId)
         {
-            var reviews =  await _serviceReviewRepository.GetAll()
+            var reviews = await _serviceReviewRepository.GetAll()
                 .Where(x => x.ReferenceId == referenceId)
                 .Include(x => x.CreatorUser)
                 .Select(x => ObjectMapper.Map<ServiceReviewDto>(x))
                 .ToListAsync();
 
-            return await GetServiceReviewDetails(reviews);
+            return await GetServiceReviewDetails(reviews, notificationId);
         }
 
         public async Task<ServiceReview> SaveServiceReview(CreateServiceReviewDto input)
@@ -633,13 +632,22 @@ namespace Academically.Services.Services
             return reviews.Sum(x => x.Rating).ToDecimal() / reviews.Count;
         }
         
-        private async Task<List<ServiceReviewDto>> GetServiceReviewDetails(List<ServiceReviewDto> reviews)
+        private async Task<List<ServiceReviewDto>> GetServiceReviewDetails(List<ServiceReviewDto> reviews, Guid? notificationId)
         {
-            foreach (var review in reviews.Where(review => review.CreatorUser.ProfilePictureDocumentId.HasValue))
+            var targetNotification = await _notificationsRepository.GetAll()
+                .Include(n => n.Sources)
+                .WhereIf(notificationId.HasValue, n => n.Id == notificationId.Value)
+                .WhereIf(!notificationId.HasValue, n => false)
+                .SingleOrDefaultAsync();
+
+            foreach (var review in reviews)
             {
-                review.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(review.CreatorUser.ProfilePictureDocumentId.Value);
+                review.IsFromNotification = targetNotification != null && targetNotification.Sources.Any(s => s.ReferenceId == review.Id);
+
+                if (review.CreatorUser.ProfilePictureDocumentId.HasValue)
+                    review.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(review.CreatorUser.ProfilePictureDocumentId.Value);
             }
-            return reviews;
+            return reviews.OrderByDescending(r => r.IsFromNotification).ThenByDescending(r => r.CreationTime).ToList();
         }
     }
 }

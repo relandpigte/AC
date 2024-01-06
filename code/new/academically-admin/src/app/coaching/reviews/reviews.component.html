@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <div *ngIf="!!totalReviews" class="reviews-content w-100">
-        <app-service-review-card *ngFor="let review of reviews" [review]="review"></app-service-review-card>
+    <div *ngIf="!!totalReviews" class="reviews-content d-flex flex-column justify-content-start align-items-center gap-15 w-100">
+        <app-service-review-card *ngFor="let review of reviews" [review]="review" class="w-100"></app-service-review-card>
     </div>
 </div>

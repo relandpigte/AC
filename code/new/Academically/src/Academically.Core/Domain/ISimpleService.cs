@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Academically.Authorization.Users;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ namespace Academically.Domain
 {
     public interface ISimpleService
     {
-        string Name { get; set; }
+        public string Name { get; set; }
+        public long? CreatorUserId { get; set; }
     }
 }

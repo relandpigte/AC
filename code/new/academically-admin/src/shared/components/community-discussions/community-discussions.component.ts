@@ -169,7 +169,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   }
 
   ngAfterViewInit(): void {
-    this.scrollToMiddleHighlightedComment();
+    setTimeout(() => this.scrollToMiddleHighlightedComment());
   }
 
   async ngOnDestroy() {
@@ -183,19 +183,6 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
         else this.foldSubject$.next();
       }
     }
-  }
-
-  private scrollToMiddleHighlightedComment(): void {
-    const highlightedComment = this.elementRef.nativeElement.querySelectorAll('.highlighted');
-    if (highlightedComment?.length) {
-      const mid = _.sortBy(highlightedComment, c => c.offsetTop)[Math.floor(highlightedComment.length / 2)];
-      mid.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
-    }
-  }
-
-  private removeHighlightsInComments(): void {
-      const highlightedComments = this.elementRef.nativeElement.querySelectorAll('.highlighted');
-      highlightedComments?.forEach(c => c.classList.remove('highlighted'));
   }
 
   onFileUploadChange(files: FileList, isChild = false): void {

@@ -15,6 +15,7 @@ export class ServiceReviewComponent extends AppComponentBase {
     super(injector);
   }
 
+  get isHighlighted() { return this.review?.isFromNotification; }
   get shimmerType() { return ShimmerType; }
   get userRatingAvatar(): string { return this.review?.creatorUser?.profilePictureUrl; }
   get userRatingName(): string { return this.review?.creatorUser?.fullName; }

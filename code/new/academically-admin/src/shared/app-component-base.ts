@@ -722,4 +722,17 @@ export abstract class AppComponentBase extends AppHubBase implements OnDestroy {
       if (key in o) return o[key]
       else return this.deepSearch(Object.values(o), key);
   }
+
+  scrollToMiddleHighlightedComment(): void {
+    const highlightedComment = this.elementRef.nativeElement.querySelectorAll('.anim-outline-highlighted');
+    if (highlightedComment?.length) {
+      const mid = _.sortBy(highlightedComment, c => c.offsetTop)[Math.floor(highlightedComment.length / 2)];
+      mid.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+    }
+  }
+
+  removeHighlightsInComments(): void {
+      const highlightedComments = this.elementRef.nativeElement.querySelectorAll('.anim-outline-highlighted');
+      highlightedComments?.forEach(c => c.classList.remove('anim-outline-highlighted'));
+  }
 }

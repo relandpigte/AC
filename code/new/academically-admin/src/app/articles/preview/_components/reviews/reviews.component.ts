@@ -26,7 +26,7 @@ export class ReviewsComponent extends AppComponentBase implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .pipe(switchMap(article => {
         this.article = article;
-        return this._servicesService.getServiceReviews(this.article.id);
+        return this._servicesService.getServiceReviews(this.article.id, undefined);
       }))
       .subscribe(reviews => {
         this.reviews = reviews;

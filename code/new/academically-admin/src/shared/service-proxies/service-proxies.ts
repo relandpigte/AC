@@ -24429,14 +24429,19 @@ export class ServicesServiceProxy {
 
     /**
      * @param referenceId (optional) 
+     * @param notificationId (optional) 
      * @return Success
      */
-    getServiceReviews(referenceId: string | undefined): Observable<ServiceReviewDto[]> {
+    getServiceReviews(referenceId: string | undefined, notificationId: string | undefined): Observable<ServiceReviewDto[]> {
         let url_ = this.baseUrl + "/api/services/app/Services/GetServiceReviews?";
         if (referenceId === null)
             throw new Error("The parameter 'referenceId' cannot be null.");
         else if (referenceId !== undefined)
             url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        if (notificationId === null)
+            throw new Error("The parameter 'notificationId' cannot be null.");
+        else if (notificationId !== undefined)
+            url_ += "notificationId=" + encodeURIComponent("" + notificationId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -52887,6 +52892,7 @@ export interface IServiceReview {
 }
 
 export class ServiceReviewDto implements IServiceReviewDto {
+    id: string;
     referenceId: string;
     rating: number;
     comments: string | undefined;
@@ -52894,6 +52900,7 @@ export class ServiceReviewDto implements IServiceReviewDto {
     serviceType: ServicesType;
     creationTime: moment.Moment;
     creatorUser: UserDto;
+    isFromNotification: boolean;
 
     constructor(data?: IServiceReviewDto) {
         if (data) {
@@ -52906,6 +52913,7 @@ export class ServiceReviewDto implements IServiceReviewDto {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.referenceId = _data["referenceId"];
             this.rating = _data["rating"];
             this.comments = _data["comments"];
@@ -52913,6 +52921,7 @@ export class ServiceReviewDto implements IServiceReviewDto {
             this.serviceType = _data["serviceType"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+            this.isFromNotification = _data["isFromNotification"];
         }
     }
 
@@ -52925,6 +52934,7 @@ export class ServiceReviewDto implements IServiceReviewDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["referenceId"] = this.referenceId;
         data["rating"] = this.rating;
         data["comments"] = this.comments;
@@ -52932,6 +52942,7 @@ export class ServiceReviewDto implements IServiceReviewDto {
         data["serviceType"] = this.serviceType;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        data["isFromNotification"] = this.isFromNotification;
         return data; 
     }
 
@@ -52944,6 +52955,7 @@ export class ServiceReviewDto implements IServiceReviewDto {
 }
 
 export interface IServiceReviewDto {
+    id: string;
     referenceId: string;
     rating: number;
     comments: string | undefined;
@@ -52951,6 +52963,7 @@ export interface IServiceReviewDto {
     serviceType: ServicesType;
     creationTime: moment.Moment;
     creatorUser: UserDto;
+    isFromNotification: boolean;
 }
 
 export class ServiceReviewStats implements IServiceReviewStats {
