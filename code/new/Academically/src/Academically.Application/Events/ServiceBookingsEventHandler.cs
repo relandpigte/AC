@@ -39,6 +39,7 @@ namespace Academically.Events
             {
                 var additionalData = new ExpandoObject();
                 additionalData.TryAdd("bookingDateTime", eventData.Entity.BookingDateTime);
+                additionalData.TryAdd("oldBookingDateTime", eventData.Entity.OldBookingDateTime);
 
                 await _backgroundJobManager.EnqueueAsync<CreateNotificationJob, CreateNotificationJobArgs>(new CreateNotificationJobArgs()
                 {
@@ -58,10 +59,39 @@ namespace Academically.Events
 
         public async Task HandleEventAsync(EntityUpdatedEventData<ServiceBooking> eventData)
         {
+            if (eventData.Entity.Type.Value != ServicesType.Coaching) return;
+
+            try
+            {
+                var additionalData = new ExpandoObject();
+                additionalData.TryAdd("bookingDateTime", eventData.Entity.BookingDateTime);
+                additionalData.TryAdd("oldBookingDateTime", eventData.Entity.OldBookingDateTime);
+
+                await _backgroundJobManager.EnqueueAsync<CreateNotificationJob, CreateNotificationJobArgs>(new CreateNotificationJobArgs()
+                {
+                    UserId = eventData.Entity.OwnerId,
+                    ActorId = eventData.Entity.CreatorUserId.Value,
+                    Action = this.getNotificationAction(eventData.Entity),
+                    Target = getNotificationTarget(eventData.Entity.Type.Value),
+                    ReferenceId = eventData.Entity.ReferenceId,
+                    SourceId = eventData.Entity.Id,
+                    Url = getServiceUrl(eventData.Entity.Type.Value, eventData.Entity.ReferenceId),
+                    AdditionalData = JsonConvert.SerializeObject(additionalData)
+                });
+            }
+            catch (ArgumentNullException ex)
+            { }
         }
 
         public async Task HandleEventAsync(EntityDeletedEventData<ServiceBooking> eventData)
         {
+        }
+
+        private NotificationAction getNotificationAction(ServiceBooking booking)
+        {
+            if (!string.IsNullOrEmpty(booking.RescheduleReason)) return NotificationAction.Reschedule;
+            else if (!string.IsNullOrEmpty(booking.CancellationReason)) return NotificationAction.Cancel;
+            else return NotificationAction.Book;
         }
 
         private NotificationTarget getNotificationTarget(ServicesType type)

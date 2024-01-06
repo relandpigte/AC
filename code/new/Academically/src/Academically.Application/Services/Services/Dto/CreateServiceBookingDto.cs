@@ -11,6 +11,7 @@ public class CreateServiceBookingDto: CreationAuditedEntityDto<Guid>
 {
     public Guid ReferenceId { get; set; }
     public DateTime BookingDateTime { get; set; }
+    public DateTime? OldBookingDateTime { get; set; }
     public long OwnerId { get; set; }
     public string RescheduleReason { get; set; }
     public ServicesType? Type { get; set; }

@@ -72,7 +72,7 @@
                                 <img *ngIf="getDominantUser(notification); else avatarPlaceHolderTemplate" class="avatar-img rounded-circle" [src]="getDominantUser(notification).profilePictureUrl" alt="...">
                             </div>
                             <div class="notification-content">
-                                <div *ngIf="isShowOldSchedule(notification)" class="schedule-old">{{ getBookingSchedule(notification) | uppercase }}</div>
+                                <div *ngIf="isShowOldSchedule(notification)" class="schedule-old">{{ getOldBookingSchedule(notification) | uppercase }}</div>
                                 <div *ngIf="isShowSchedule(notification)" class="schedule">{{ getBookingSchedule(notification) | uppercase }}</div>
                                 <p [innerHTML]="notification.formattedNotification" [class]="'line-clamp-' + getNotificationLines(notification)"></p>
                                 <span class="time">{{ getNotificationReceivedTime(notification) }}</span>

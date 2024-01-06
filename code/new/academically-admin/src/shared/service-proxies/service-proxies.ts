@@ -41724,6 +41724,7 @@ export class CreateServiceBookingDto implements ICreateServiceBookingDto {
     creationTime: moment.Moment;
     referenceId: string;
     bookingDateTime: moment.Moment;
+    oldBookingDateTime: moment.Moment | undefined;
     ownerId: number;
     rescheduleReason: string | undefined;
     type: ServicesType;
@@ -41744,6 +41745,7 @@ export class CreateServiceBookingDto implements ICreateServiceBookingDto {
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.referenceId = _data["referenceId"];
             this.bookingDateTime = _data["bookingDateTime"] ? moment(_data["bookingDateTime"].toString()) : <any>undefined;
+            this.oldBookingDateTime = _data["oldBookingDateTime"] ? moment(_data["oldBookingDateTime"].toString()) : <any>undefined;
             this.ownerId = _data["ownerId"];
             this.rescheduleReason = _data["rescheduleReason"];
             this.type = _data["type"];
@@ -41764,6 +41766,7 @@ export class CreateServiceBookingDto implements ICreateServiceBookingDto {
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["referenceId"] = this.referenceId;
         data["bookingDateTime"] = this.bookingDateTime ? this.bookingDateTime.toISOString() : <any>undefined;
+        data["oldBookingDateTime"] = this.oldBookingDateTime ? this.oldBookingDateTime.toISOString() : <any>undefined;
         data["ownerId"] = this.ownerId;
         data["rescheduleReason"] = this.rescheduleReason;
         data["type"] = this.type;
@@ -41784,6 +41787,7 @@ export interface ICreateServiceBookingDto {
     creationTime: moment.Moment;
     referenceId: string;
     bookingDateTime: moment.Moment;
+    oldBookingDateTime: moment.Moment | undefined;
     ownerId: number;
     rescheduleReason: string | undefined;
     type: ServicesType;
@@ -52005,6 +52009,7 @@ export class ServiceBookingDto implements IServiceBookingDto {
     id: string;
     referenceId: string;
     bookingDateTime: moment.Moment;
+    oldBookingDateTime: moment.Moment | undefined;
     ownerId: number;
     rescheduleReason: string | undefined;
     cancellationReason: string | undefined;
@@ -52028,6 +52033,7 @@ export class ServiceBookingDto implements IServiceBookingDto {
             this.id = _data["id"];
             this.referenceId = _data["referenceId"];
             this.bookingDateTime = _data["bookingDateTime"] ? moment(_data["bookingDateTime"].toString()) : <any>undefined;
+            this.oldBookingDateTime = _data["oldBookingDateTime"] ? moment(_data["oldBookingDateTime"].toString()) : <any>undefined;
             this.ownerId = _data["ownerId"];
             this.rescheduleReason = _data["rescheduleReason"];
             this.cancellationReason = _data["cancellationReason"];
@@ -52051,6 +52057,7 @@ export class ServiceBookingDto implements IServiceBookingDto {
         data["id"] = this.id;
         data["referenceId"] = this.referenceId;
         data["bookingDateTime"] = this.bookingDateTime ? this.bookingDateTime.toISOString() : <any>undefined;
+        data["oldBookingDateTime"] = this.oldBookingDateTime ? this.oldBookingDateTime.toISOString() : <any>undefined;
         data["ownerId"] = this.ownerId;
         data["rescheduleReason"] = this.rescheduleReason;
         data["cancellationReason"] = this.cancellationReason;
@@ -52074,6 +52081,7 @@ export interface IServiceBookingDto {
     id: string;
     referenceId: string;
     bookingDateTime: moment.Moment;
+    oldBookingDateTime: moment.Moment | undefined;
     ownerId: number;
     rescheduleReason: string | undefined;
     cancellationReason: string | undefined;

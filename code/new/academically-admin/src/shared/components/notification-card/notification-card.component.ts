@@ -37,19 +37,19 @@ export class NotificationCardComponent extends AppComponentBase {
   }
 
   isNotificationForBooking(notification: NotificationDto): boolean {
-    return notification.action === NotificationAction.Book;
+    return notification.action === NotificationAction.Book ||
+      notification.action === NotificationAction.Cancel ||
+      notification.action === NotificationAction.Reschedule;
   }
 
   isShowSchedule(notification: NotificationDto): boolean {
-    return this.isNotificationForBooking(notification) &&
-      (notification.action === NotificationAction.Book ||
-      notification.action === NotificationAction.Reschedule);
+    return notification.action === NotificationAction.Book ||
+      notification.action === NotificationAction.Reschedule;
   }
 
   isShowOldSchedule(notification: NotificationDto): boolean {
-    return this.isNotificationForBooking(notification) &&
-      (notification.action === NotificationAction.Cancel ||
-      notification.action === NotificationAction.Reschedule);
+    return notification.action === NotificationAction.Cancel ||
+      notification.action === NotificationAction.Reschedule;
   }
 
   getDominantUser(notification: NotificationDto): UserDto {
@@ -69,6 +69,13 @@ export class NotificationCardComponent extends AppComponentBase {
     const data = JSON.parse(notification.additionalData);
     if (!data?.bookingDateTime) return null;
     return this.convertMomentToShorterPostDateFormat(moment(data.bookingDateTime));
+  }
+
+  getOldBookingSchedule(notification: NotificationDto): string {
+    if (!notification.additionalData) return null;
+    const data = JSON.parse(notification.additionalData);
+    if (!data?.oldBookingDateTime) return null;
+    return this.convertMomentToShorterPostDateFormat(moment(data.oldBookingDateTime));
   }
 
   handleCloseNotification(): void {

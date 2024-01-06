@@ -196,6 +196,9 @@ namespace Academically.Services.Notifications
                 .Where(n => n.Action == input.Action)
                 .Where(n => n.Target == input.Target)
                 .Where(n => (n.ReferenceId == input.ReferenceId) || n.Action == NotificationAction.Create || n.Action == NotificationAction.Ask || n.Action == NotificationAction.Start || n.Action == NotificationAction.Post)
+                .Where(n => n.Action != NotificationAction.Book)
+                .Where(n => n.Action != NotificationAction.Cancel)
+                .Where(n => n.Action != NotificationAction.Reschedule)
                 .FirstOrDefault();
 
             if (latestUserNotification == null)
@@ -429,6 +432,10 @@ namespace Academically.Services.Notifications
                     return "started";
                 case NotificationAction.Book:
                     return "booked";
+                case NotificationAction.Cancel:
+                    return "cancelled";
+                case NotificationAction.Reschedule:
+                    return "rescheduled";
                 default:
                     return "reacted";
             }
@@ -618,6 +625,9 @@ namespace Academically.Services.Notifications
                     return await FormatReactionPronoun(notification);
                 case NotificationAction.Review:
                     return await FormatReviewPronoun(notification);
+                case NotificationAction.Cancel:
+                case NotificationAction.Reschedule:
+                    return "their";
                 default:
                     return "your";
             }
