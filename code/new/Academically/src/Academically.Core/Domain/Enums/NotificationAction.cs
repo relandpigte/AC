@@ -23,5 +23,8 @@ namespace Academically.Domain.Enums
         Start,
         Create,
         Ask,
+        Book,
+        Cancel,
+        Reschedule,
     }
 }

@@ -38,7 +38,8 @@ namespace Academically.BackgroundJobs
                     Target = args.Target,
                     ReferenceId = args.ReferenceId,
                     SourceId = args.SourceId,
-                    Url = args.Url
+                    Url = args.Url,
+                    AdditionalData = args.AdditionalData
                 });
 
                 await uow.CompleteAsync();

@@ -17,5 +17,6 @@ namespace Academically.BackgroundJobs.Dto
         public Guid SourceId { get; set; }
         public Guid ReferenceId { get; set; }
         public string Url { get; set; }
+        public string AdditionalData { get; set; }
     }
 }

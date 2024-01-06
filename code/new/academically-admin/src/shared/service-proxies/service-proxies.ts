@@ -41379,6 +41379,7 @@ export class CreateNotificationDto implements ICreateNotificationDto {
     referenceId: string;
     sourceId: string;
     url: string | undefined;
+    additionalData: string | undefined;
 
     constructor(data?: ICreateNotificationDto) {
         if (data) {
@@ -41406,6 +41407,7 @@ export class CreateNotificationDto implements ICreateNotificationDto {
             this.referenceId = _data["referenceId"];
             this.sourceId = _data["sourceId"];
             this.url = _data["url"];
+            this.additionalData = _data["additionalData"];
         }
     }
 
@@ -41433,6 +41435,7 @@ export class CreateNotificationDto implements ICreateNotificationDto {
         data["referenceId"] = this.referenceId;
         data["sourceId"] = this.sourceId;
         data["url"] = this.url;
+        data["additionalData"] = this.additionalData;
         return data; 
     }
 
@@ -41460,6 +41463,7 @@ export interface ICreateNotificationDto {
     referenceId: string;
     sourceId: string;
     url: string | undefined;
+    additionalData: string | undefined;
 }
 
 export class CreateProjectDto implements ICreateProjectDto {
@@ -48262,7 +48266,7 @@ export interface IMyServiceViewDto {
     items: MyServiceItemViewDto[] | undefined;
 }
 
-/** 0 = Like 1 = React 2 = Share 3 = Comment 4 = Post 5 = Reply 6 = Answer 7 = Chat 8 = Purchase 9 = Enroll 10 = Review 11 = Follow 12 = Start 13 = Create 14 = Ask */
+/** 0 = Like 1 = React 2 = Share 3 = Comment 4 = Post 5 = Reply 6 = Answer 7 = Chat 8 = Purchase 9 = Enroll 10 = Review 11 = Follow 12 = Start 13 = Create 14 = Ask 15 = Book 16 = Cancel 17 = Reschedule */
 export enum NotificationAction {
     Like = 0,
     React = 1,
@@ -48279,6 +48283,9 @@ export enum NotificationAction {
     Start = 12,
     Create = 13,
     Ask = 14,
+    Book = 15,
+    Cancel = 16,
+    Reschedule = 17,
 }
 
 export class NotificationData implements INotificationData {
@@ -48356,6 +48363,7 @@ export class NotificationDto implements INotificationDto {
     readTime: moment.Moment | undefined;
     formattedNotification: string | undefined;
     url: string | undefined;
+    additionalData: string | undefined;
     user: UserDto;
     creatorUser: UserDto;
     actors: NotificationUserDto[] | undefined;
@@ -48387,6 +48395,7 @@ export class NotificationDto implements INotificationDto {
             this.readTime = _data["readTime"] ? moment(_data["readTime"].toString()) : <any>undefined;
             this.formattedNotification = _data["formattedNotification"];
             this.url = _data["url"];
+            this.additionalData = _data["additionalData"];
             this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
             if (Array.isArray(_data["actors"])) {
@@ -48426,6 +48435,7 @@ export class NotificationDto implements INotificationDto {
         data["readTime"] = this.readTime ? this.readTime.toISOString() : <any>undefined;
         data["formattedNotification"] = this.formattedNotification;
         data["url"] = this.url;
+        data["additionalData"] = this.additionalData;
         data["user"] = this.user ? this.user.toJSON() : <any>undefined;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         if (Array.isArray(this.actors)) {
@@ -48465,6 +48475,7 @@ export interface INotificationDto {
     readTime: moment.Moment | undefined;
     formattedNotification: string | undefined;
     url: string | undefined;
+    additionalData: string | undefined;
     user: UserDto;
     creatorUser: UserDto;
     actors: NotificationUserDto[] | undefined;

@@ -4,11 +4,12 @@ import { NavigationEnd, Router } from '@angular/router';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppConsts } from '@shared/AppConsts';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CommentsServiceProxy, NotificationDto, NotificationsServiceProxy, PostsServiceProxy, UserDto, UserNotificationState } from '@shared/service-proxies/service-proxies';
+import { CommentsServiceProxy, NotificationAction, NotificationDto, NotificationTarget, NotificationsServiceProxy, PostsServiceProxy, UserDto, UserNotificationState } from '@shared/service-proxies/service-proxies';
 import { NotificationsStateService } from '@shared/services/notifications-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -144,7 +145,34 @@ export class NotificationsPreviewComponent extends AppComponentBase implements O
     return notification.actors?.[0]?.user;
   }
 
+  isNotificationForBooking(notification: NotificationDto): boolean {
+    return notification.action === NotificationAction.Book;
+  }
+
+  isShowSchedule(notification: NotificationDto): boolean {
+    return this.isNotificationForBooking(notification) &&
+      (notification.action === NotificationAction.Book ||
+      notification.action === NotificationAction.Reschedule);
+  }
+
+  isShowOldSchedule(notification: NotificationDto): boolean {
+    return this.isNotificationForBooking(notification) &&
+      (notification.action === NotificationAction.Cancel ||
+      notification.action === NotificationAction.Reschedule);
+  }
+
   getNotificationReceivedTime(notification: NotificationDto): string {
     return this.convertMomentToPostDateAgo(notification.creationTime ?? notification.lastModificationTime);
+  }
+
+  getNotificationLines(notification: NotificationDto): number {
+    return this.isNotificationForBooking(notification) ? 2 : 3;
+  }
+
+  getBookingSchedule(notification: NotificationDto): string {
+    if (!notification.additionalData) return null;
+    const data = JSON.parse(notification.additionalData);
+    if (!data?.bookingDateTime) return null;
+    return this.convertMomentToShorterPostDateFormat(moment(data.bookingDateTime));
   }
 }

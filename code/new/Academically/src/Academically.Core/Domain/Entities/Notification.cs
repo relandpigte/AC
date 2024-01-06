@@ -20,6 +20,7 @@ namespace Academically.Domain.Entities
         public DateTime? ReadTime { get; set; }
         public string FormattedNotification { get; set; }
         public string Url { get; set; }
+        public string AdditionalData { get; set; }
 
         [ForeignKey("UserId")]
 		public virtual User User { get; set; }

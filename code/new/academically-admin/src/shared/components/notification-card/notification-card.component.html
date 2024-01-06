@@ -13,7 +13,9 @@
                  [src]="getDominantUser(notification).profilePictureUrl" alt="...">
         </div>
         <div class="notification-content">
-            <p [innerHTML]="notification.formattedNotification" class="line-clamp-3"></p>
+            <div *ngIf="isShowOldSchedule(notification)" class="schedule-old">{{ getBookingSchedule(notification) | uppercase }}</div>
+            <div *ngIf="isShowSchedule(notification)" class="schedule">{{ getBookingSchedule(notification) | uppercase }}</div>
+            <p [innerHTML]="notification.formattedNotification" [class]="'line-clamp-' + getNotificationLines(notification)"></p>
             <span class="time">{{ getNotificationReceivedTime(notification) }}</span>
         </div>
     </div>

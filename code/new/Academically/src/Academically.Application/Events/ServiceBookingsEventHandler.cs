@@ -9,18 +9,21 @@ using System;
 using Abp.BackgroundJobs;
 using Academically.BackgroundJobs.Dto;
 using Academically.BackgroundJobs;
+using System.Dynamic;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Academically.Events
 {
-    public class ServicePurchasesEventHandler : ITransientDependency,
-        IAsyncEventHandler<EntityCreatedEventData<ServicePurchase>>,
-        IAsyncEventHandler<EntityUpdatedEventData<ServicePurchase>>,
-        IAsyncEventHandler<EntityDeletedEventData<ServicePurchase>>
+    public class ServiceBookingsEventHandler : ITransientDependency,
+        IAsyncEventHandler<EntityCreatedEventData<ServiceBooking>>,
+        IAsyncEventHandler<EntityUpdatedEventData<ServiceBooking>>,
+        IAsyncEventHandler<EntityDeletedEventData<ServiceBooking>>
     {
         private readonly IAbpSession _abpSession;
         private readonly IBackgroundJobManager _backgroundJobManager;
 
-        public ServicePurchasesEventHandler(IAbpSession abpSession,
+        public ServiceBookingsEventHandler(IAbpSession abpSession,
             IBackgroundJobManager backgroundJobManager
         )
         {
@@ -28,40 +31,37 @@ namespace Academically.Events
             _backgroundJobManager = backgroundJobManager;
         }
 
-        public async Task HandleEventAsync(EntityCreatedEventData<ServicePurchase> eventData)
+        public async Task HandleEventAsync(EntityCreatedEventData<ServiceBooking> eventData)
         {
-            if (eventData.Entity.Type.Value == ServicesType.Coaching) return;
+            if (eventData.Entity.Type.Value != ServicesType.Coaching) return;
 
-            var currentUserId = _abpSession.GetUserId();
-            await _backgroundJobManager.EnqueueAsync<CreateNotificationJob, CreateNotificationJobArgs>(new CreateNotificationJobArgs()
+            try
             {
-                UserId = eventData.Entity.OwnerId.Value,
-                ActorId = currentUserId,
-                Action = getNotificationAction(eventData.Entity.Type.Value),
-                Target = getNotificationTarget(eventData.Entity.Type.Value),
-                ReferenceId = eventData.Entity.ReferenceId.Value,
-                SourceId = eventData.Entity.ReferenceId.Value,
-                Url = getServiceUrl(eventData.Entity.Type.Value, eventData.Entity.ReferenceId.Value)
-            });
-        }
+                var additionalData = new ExpandoObject();
+                additionalData.TryAdd("bookingDateTime", eventData.Entity.BookingDateTime);
 
-        public async Task HandleEventAsync(EntityUpdatedEventData<ServicePurchase> eventData)
-        {
-        }
-
-        public async Task HandleEventAsync(EntityDeletedEventData<ServicePurchase> eventData)
-        {
-        }
-
-        private NotificationAction getNotificationAction(ServicesType type)
-        {
-            switch(type)
-            {
-                case ServicesType.Course:
-                    return NotificationAction.Enroll;
-                default:
-                    return NotificationAction.Purchase;
+                await _backgroundJobManager.EnqueueAsync<CreateNotificationJob, CreateNotificationJobArgs>(new CreateNotificationJobArgs()
+                {
+                    UserId = eventData.Entity.OwnerId,
+                    ActorId = eventData.Entity.CreatorUserId.Value,
+                    Action = NotificationAction.Book,
+                    Target = getNotificationTarget(eventData.Entity.Type.Value),
+                    ReferenceId = eventData.Entity.ReferenceId,
+                    SourceId = eventData.Entity.Id,
+                    Url = getServiceUrl(eventData.Entity.Type.Value, eventData.Entity.ReferenceId),
+                    AdditionalData = JsonConvert.SerializeObject(additionalData)
+                });
             }
+            catch (ArgumentNullException ex)
+            {}
+        }
+
+        public async Task HandleEventAsync(EntityUpdatedEventData<ServiceBooking> eventData)
+        {
+        }
+
+        public async Task HandleEventAsync(EntityDeletedEventData<ServiceBooking> eventData)
+        {
         }
 
         private NotificationTarget getNotificationTarget(ServicesType type)

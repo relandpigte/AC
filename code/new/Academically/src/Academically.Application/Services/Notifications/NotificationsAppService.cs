@@ -208,7 +208,8 @@ namespace Academically.Services.Notifications
                     ReferenceId = input.ReferenceId,
                     Url = input.Url,
                     FormattedNotification = string.Empty,
-                    CreatorUserId = input.ActorId
+                    CreatorUserId = input.ActorId,
+                    AdditionalData = input.AdditionalData
                 });
             }
 
@@ -426,6 +427,8 @@ namespace Academically.Services.Notifications
                     return "asked";
                 case NotificationAction.Start:
                     return "started";
+                case NotificationAction.Book:
+                    return "booked";
                 default:
                     return "reacted";
             }

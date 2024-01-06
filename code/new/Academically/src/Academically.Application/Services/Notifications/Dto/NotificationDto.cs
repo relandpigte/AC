@@ -20,6 +20,7 @@ namespace Academically.Services.Notifications.Dto
         public DateTime? ReadTime { get; set; }
         public string FormattedNotification { get; set; }
         public string Url { get; set; }
+        public string AdditionalData { get; set; }
         public virtual UserDto User { get; set; }
         public virtual UserDto CreatorUser { get; set; }
         public virtual ICollection<NotificationUserDto> Actors { get; set; }
