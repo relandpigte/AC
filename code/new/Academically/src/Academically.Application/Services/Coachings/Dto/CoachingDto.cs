@@ -124,8 +124,5 @@ namespace Academically.Services.Coachings.Dto
         
         [NotMapped]
         public ServiceBookingDto ServiceBooking { get; set; }
-        
-        [NotMapped]
-        public IEnumerable<ServiceBookingDto> ServiceBookings { get; set; }
     }
 }
