@@ -51,6 +51,7 @@ namespace Academically.Services.Posts
         private readonly IRepository<PostAttachment, Guid> _postAttachmentRepository;
         private readonly IRepository<PostVisibility, Guid> _postVisibilityRepository;
         private readonly IRepository<DisciplineTaxonomy, Guid> _disciplineTaxonomyRepository;
+        private readonly IRepository<PostInvitation, Guid> _postInvitationRepository;
         private readonly IRepository<PostNotification, Guid> _postNotificationRepository;
         private readonly IRepository<Comment, Guid> _commentsRepository;
         private readonly IRepository<Article, Guid> _articlesRepository;
@@ -75,6 +76,7 @@ namespace Academically.Services.Posts
             IRepository<PostAttachment, Guid> postAttachmentRepository,
             IRepository<PostVisibility, Guid> postVisibilityRepository,
             IRepository<DisciplineTaxonomy, Guid> disciplineTaxonomyRepository,
+            IRepository<PostInvitation, Guid> postInvitationRepository,
             IRepository<PostNotification, Guid> postNotificationRepository,
             IRepository<Article, Guid> articlesRepository,
             IRepository<Course, Guid> coursesRepository,
@@ -97,6 +99,7 @@ namespace Academically.Services.Posts
             _postTopicRepository = postTopicRepository;
             _postAttachmentRepository = postAttachmentRepository;
             _postVisibilityRepository = postVisibilityRepository;
+            _postInvitationRepository = postInvitationRepository;
             _postNotificationRepository = postNotificationRepository;
             _disciplineTaxonomyRepository = disciplineTaxonomyRepository;
             _documentsDomainService = documentsDomainService;
@@ -963,6 +966,12 @@ namespace Academically.Services.Posts
                 return mainPost.Id;
             }
             return input.PostId;
+        }
+
+        public async Task CreatePostInvitation([FromForm] CreatePostInvitationDto input)
+        {
+            var postInvitation = ObjectMapper.Map<PostInvitation>(input);
+            await _postInvitationRepository.InsertAsync(postInvitation);
         }
 
         public async Task CreatePostNotification([FromForm] CreatePostNotificationDto input)

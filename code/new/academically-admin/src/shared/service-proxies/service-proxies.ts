@@ -17612,6 +17612,71 @@ export class PostsServiceProxy {
 
     /**
      * @param postId (optional) 
+     * @param userId (optional) 
+     * @param creatorUserId (optional) 
+     * @return Success
+     */
+    createPostInvitation(postId: string | undefined, userId: number | undefined, creatorUserId: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Posts/CreatePostInvitation";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (postId === null || postId === undefined) {
+            // do nothing
+        } else
+            content_.append("PostId", postId.toString());
+        if (userId === null || userId === undefined) {
+            // do nothing
+        } else
+            content_.append("UserId", userId.toString());
+        if (creatorUserId === null || creatorUserId === undefined) {
+            // do nothing
+        } else
+            content_.append("CreatorUserId", creatorUserId.toString());
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreatePostInvitation(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreatePostInvitation(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreatePostInvitation(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param postId (optional) 
      * @param creatorUserId (optional) 
      * @return Success
      */
@@ -27318,7 +27383,7 @@ export class TimeZonesServiceProxy {
      * @param body (optional) 
      * @return Success
      */
-    updateUserTimeZone(body: TimeZoneDto | undefined): Observable<UserDto> {
+    updateUserTimeZone(body: TimeZoneDto | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/TimeZones/UpdateUserTimeZone";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -27330,7 +27395,6 @@ export class TimeZonesServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "Content-Type": "application/json-patch+json",
-                "Accept": "text/plain"
             })
         };
 
@@ -27341,14 +27405,14 @@ export class TimeZonesServiceProxy {
                 try {
                     return this.processUpdateUserTimeZone(<any>response_);
                 } catch (e) {
-                    return <Observable<UserDto>><any>_observableThrow(e);
+                    return <Observable<void>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<UserDto>><any>_observableThrow(response_);
+                return <Observable<void>><any>_observableThrow(response_);
         }));
     }
 
-    protected processUpdateUserTimeZone(response: HttpResponseBase): Observable<UserDto> {
+    protected processUpdateUserTimeZone(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -27357,17 +27421,14 @@ export class TimeZonesServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = UserDto.fromJS(resultData200);
-            return _observableOf(result200);
+            return _observableOf<void>(<any>null);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<UserDto>(<any>null);
+        return _observableOf<void>(<any>null);
     }
 }
 
@@ -51891,6 +51952,8 @@ export interface ISearchDisciplineTaxonomyRequestDto {
 export class SearchFollowingInvitedDto implements ISearchFollowingInvitedDto {
     keyword: string | undefined;
     take: number | undefined;
+    postCreator: number | undefined;
+    isInvitedOnly: boolean | undefined;
 
     constructor(data?: ISearchFollowingInvitedDto) {
         if (data) {
@@ -51905,6 +51968,8 @@ export class SearchFollowingInvitedDto implements ISearchFollowingInvitedDto {
         if (_data) {
             this.keyword = _data["keyword"];
             this.take = _data["take"];
+            this.postCreator = _data["postCreator"];
+            this.isInvitedOnly = _data["isInvitedOnly"];
         }
     }
 
@@ -51919,6 +51984,8 @@ export class SearchFollowingInvitedDto implements ISearchFollowingInvitedDto {
         data = typeof data === 'object' ? data : {};
         data["keyword"] = this.keyword;
         data["take"] = this.take;
+        data["postCreator"] = this.postCreator;
+        data["isInvitedOnly"] = this.isInvitedOnly;
         return data; 
     }
 
@@ -51933,6 +52000,8 @@ export class SearchFollowingInvitedDto implements ISearchFollowingInvitedDto {
 export interface ISearchFollowingInvitedDto {
     keyword: string | undefined;
     take: number | undefined;
+    postCreator: number | undefined;
+    isInvitedOnly: boolean | undefined;
 }
 
 export class SearchResearchMethodResultRequestDto implements ISearchResearchMethodResultRequestDto {

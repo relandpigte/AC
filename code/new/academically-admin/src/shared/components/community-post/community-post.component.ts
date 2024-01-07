@@ -325,8 +325,9 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
 
     handleInviteUserClick(): void {
         const modalSettings = this.defaultModalSettings as ModalOptions<InviteUserComponent>;
-        modalSettings.class = "modal-lg modal-invite-user";
+        modalSettings.class = "modal-lg modal-invite-user d-flex justify-content-center";
+        modalSettings.initialState = { postId: this.data.id };
 
-        const modal = this._modalService.show(InviteUserComponent, modalSettings).content;
+        this._modalService.show(InviteUserComponent, modalSettings).content;
     }
 }

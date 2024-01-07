@@ -19,13 +19,16 @@ namespace Academically.Services.UserFollowers
 {
     public class UserFollowersAppService : AcademicallyAppServiceBase, IUserFollowersAppService
 	{
+		private readonly IRepository<PostInvitation, Guid> _postInvitationRepository;
 		private readonly IRepository<UserFollower, Guid> _userFollowersRepository;
         private readonly IRepository<User, long> _userRepository;
 
         public UserFollowersAppService(
+            IRepository<PostInvitation, Guid> postInvitationRepository,
             IRepository<UserFollower, Guid> userFollowersRepository,
             IRepository<User, long> usersRepository)
 		{
+            _postInvitationRepository = postInvitationRepository;
 			_userFollowersRepository = userFollowersRepository;
             _userRepository = usersRepository;
         }
@@ -91,16 +94,32 @@ namespace Academically.Services.UserFollowers
             var items = await _userFollowersRepository.GetAll()
                 .Include(x => x.User)
                     .ThenInclude(e => e.ProfilePictureDocument)
+                .Where(x => x.CreatorUserId == request.PostCreator)
                 .ToListAsync();
 
             var results = items
                 .WhereIf(!request.Keyword.IsNullOrWhiteSpace(), x => x.User.FullName.ToLower().Contains(request.Keyword.ToLower()))
                 .ToList();
 
-            if (request.Take.HasValue)
-                results = results.Take(request.Take.Value).ToList();
+            
 
-            return results.Select(x => ObjectMapper.Map<UserFollowerInvitedDto>(x)).ToList();
+            var dtos = results.Select(x => ObjectMapper.Map<UserFollowerInvitedDto>(x)).ToList();
+            var invitedUserIds = await _postInvitationRepository.GetAll()
+                .Where(i => i.CreatorUserId == request.PostCreator.Value)
+                .Select(i => i.UserId)
+                .ToListAsync();
+
+            foreach(var x in dtos) {
+                x.IsInvited = invitedUserIds.Any(i => x.UserId == i);
+            }
+
+            if (request.IsInvitedOnly.Value)
+                dtos = dtos.Where(x => x.IsInvited).ToList();
+
+            if (request.Take.HasValue)
+                dtos = dtos.Take(request.Take.Value).ToList();
+
+            return dtos;
         }
     }
 }

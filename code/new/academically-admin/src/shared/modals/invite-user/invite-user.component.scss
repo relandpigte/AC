@@ -51,6 +51,17 @@
                         letter-spacing: -0.13px;
                     }
                 }
+
+                &-right {
+                    .btn {
+                        &.invited {
+                            color: #6E84A3;
+                            border-radius: 5px;
+                            border-color: rgba(171, 180, 192, 0.10);
+                            background: rgba(171, 180, 192, 0.10);
+                        }
+                    }
+                }
             }
         }
 

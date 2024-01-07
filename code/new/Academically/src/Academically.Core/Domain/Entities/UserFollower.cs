@@ -15,6 +15,8 @@ namespace Academically.Domain.Entities
 
         [ForeignKey("CreatorUserId")]
         public User CreatorUser { get; set; }
+
+        
     }
 }
 

@@ -229,9 +229,10 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
 
     handleInviteUser(): void {
         const modalSettings = this.defaultModalSettings as ModalOptions<InviteUserComponent>;
-        modalSettings.class = "modal-lg modal-invite-user";
+        modalSettings.class = "modal-lg modal-invite-user d-flex justify-content-center";
+        modalSettings.initialState = { postId: this.discussionId };
 
-        const modal = this._modalService.show(InviteUserComponent, modalSettings).content;
+        this._modalService.show(InviteUserComponent, modalSettings).content;
     }
 
     goToHistory(): void {

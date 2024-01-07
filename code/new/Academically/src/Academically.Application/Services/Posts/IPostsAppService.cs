@@ -19,6 +19,7 @@ namespace Academically.Services.Posts
         Task DeleteAsync(Guid id);
         Task<AvailableServiceDto> GetService(Guid id);
         Task<AvailableServiceDto> GetAvailableService(Guid id);
+        Task CreatePostInvitation(CreatePostInvitationDto input);
         Task CreatePostNotification(CreatePostNotificationDto input);
         Task DeletePostNotification(DeletePostNotificationDto input);
         Task<List<Guid>> GetAllCurrentUserDiscussions();

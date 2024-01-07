@@ -118,6 +118,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<PostTopic> PostTopics { get; set; }
         public virtual DbSet<PostAttachment> PostAttachments { get; set; }
         public virtual DbSet<PostVisibility> PostVisibility { get; set; }
+        public virtual DbSet<PostInvitation> PostInvitations { get; set; }
         public virtual DbSet<PostNotification> PostNotification { get; set; }
         public virtual DbSet<SavedService> SavedService { get; set; }
         public virtual DbSet<Channel> Channels { get; set; }

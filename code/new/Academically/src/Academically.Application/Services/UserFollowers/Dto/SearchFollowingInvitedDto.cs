@@ -10,5 +10,7 @@ namespace Academically.Services.UserFollowers.Dto
     {
         public string Keyword { get; set; }
         public int? Take { get; set; }
+        public long? PostCreator { get; set; }
+        public bool? IsInvitedOnly { get; set; }
     }
 }

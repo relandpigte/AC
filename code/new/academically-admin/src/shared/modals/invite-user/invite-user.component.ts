@@ -2,18 +2,22 @@ import { ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { Utils } from '@shared/helpers/utils';
-import { SearchFollowingInvitedDto, UserFollowerDto, UserFollowerInvitedDto, UserFollowersServiceProxy } from '@shared/service-proxies/service-proxies';
+import { PostsServiceProxy, SearchFollowingInvitedDto, UserFollowerInvitedDto, UserFollowersServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 
 import * as _ from 'lodash';
+import { TitleCasePipe } from '@angular/common';
 
 @Component({
     selector: 'app-invite-user',
     templateUrl: './invite-user.component.html',
-    styleUrls: ['./invite-user.component.scss']
+    styleUrls: ['./invite-user.component.scss'],
+    providers: [ TitleCasePipe ]
   })
   export class InviteUserComponent extends AppComponentBase implements OnInit {
+
+    postId: string;
 
     activeTab: string = 'following';
 
@@ -31,6 +35,8 @@ import * as _ from 'lodash';
       const request = new SearchFollowingInvitedDto();
       request.keyword = searchFilter;
       request.take = 10;
+      request.postCreator = this.appSession.userId;
+      request.isInvitedOnly = this.activeTab === 'invited';
 
       return this._userFollowersService.searchFollowingInvited(request)
       .pipe(takeUntil(this.destroyed$))
@@ -44,7 +50,9 @@ import * as _ from 'lodash';
       private _router: Router,
       private _modal: BsModalRef,
       private _cdr: ChangeDetectorRef,
-      private _userFollowersService: UserFollowersServiceProxy
+      private _titleCasePipe: TitleCasePipe,
+      private _userFollowersService: UserFollowersServiceProxy,
+      private _postsService: PostsServiceProxy
     ) {
       super(injector);
     }
@@ -79,6 +87,7 @@ import * as _ from 'lodash';
 
     setActiveTab(tab: string): void {
       this.activeTab = tab;
+      this.handleOnSearch(this.searchFilter);
       this._cdr.detectChanges();
     }
 
@@ -118,22 +127,22 @@ import * as _ from 'lodash';
     }
 
     handleOnInvite(userFollower: UserFollowerInvitedDto): void {
-      // this.setRowLoading(userFollower.id, 'isInvitingUser', true);
+      this.isAllowLoading = false;
+      this.setRowLoading(userFollower.id, 'isInvitingUser', true);
 
-      // const request = new CreateUserTopicDto();
-      // request.userId = this.appSession.userId;
-      // request.disciplineTaxonomyId = topic.id;
-      // request.type = UserTopicType.Following;
-
-      // this._userTopics.create(request)
-      //     .pipe(switchMap(() => this.searchProcess$(this.searchFilter)))
-      //     .pipe(takeUntil(this.destroyed$))
-      //     .pipe(finalize(() => {
-      //         this.setRowLoading(userFollower.id, 'isInvitingUser', false);
-      //         this.updateTopicFromData(topic, UserTopicType.Following);
-      //     }))
-      //     .subscribe((topics) => {
-      //         this.notify.info(this.l('Community.Topics.Follow.Success', topic.name));
-      //     });
+      this._postsService.createPostInvitation(
+        this.postId,
+        userFollower.userId,
+        this.appSession.userId
+      )
+      .pipe(switchMap(() => this.searchProcess$(this.searchFilter)))
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => {
+        this.setRowLoading(userFollower.id, 'isInvitingUser', false);
+        this.updateFollowedUserFromData(userFollower, true);
+      }))
+      .subscribe(() => {
+        this.notify.info(`You have invited ${ this._titleCasePipe.transform(userFollower.user.name) } to this discussion.`);
+      });
     }
   }
