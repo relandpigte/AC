@@ -16,6 +16,7 @@ import { UserFollowingService } from '@shared/services/user-following.service';
 import { CommunityDiscussionsComponent } from '../community-discussions/community-discussions.component';
 import { PostsStateService } from '@shared/services/posts-state.service';
 import { PostSorting } from '@app/community/discussion/discussion.component';
+import { InviteUserComponent } from '@shared/modals/invite-user/invite-user.component';
 
 enum SubscribeType {
     subscribe = 'Subscribe',
@@ -320,5 +321,12 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
                     else this.subscriberIds = this.subscriberIds.filter(s => s !== userId);
                 });
         }
+    }
+
+    handleInviteUserClick(): void {
+        const modalSettings = this.defaultModalSettings as ModalOptions<InviteUserComponent>;
+        modalSettings.class = "modal-lg modal-invite-user";
+
+        const modal = this._modalService.show(InviteUserComponent, modalSettings).content;
     }
 }

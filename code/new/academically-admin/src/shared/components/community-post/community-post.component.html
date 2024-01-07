@@ -108,6 +108,7 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-left">
                         <div *ngIf="isQuestion" class="dropdown-item cursor-pointer">Invite to answer</div>
+                        <div *ngIf="isDiscussion" class="dropdown-item cursor-pointer" (click)="handleInviteUserClick()">Invite user</div>
                         <div class="dropdown-item cursor-pointer" (click)="handleSubscribeClick()">Turn {{ isSubscribedToNotifications ? 'off' : 'on' }} notifications</div>
                     </div>
                 </div>

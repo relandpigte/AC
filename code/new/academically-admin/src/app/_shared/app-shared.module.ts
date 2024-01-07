@@ -72,6 +72,7 @@ import { TopicsMoreComponent } from '@shared/components/topics-more/topics-more.
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
 import { AddServiceComponent } from '@shared/modals/add-service/add-service.component';
 import { AddTopicsComponent } from '@shared/modals/add-topics/add-topics.component';
+import { InviteUserComponent } from '@shared/modals/invite-user/invite-user.component';
 import { ShimmerComponent } from '@shared/components/shimmer/shimmer.component';
 import { StarRatingReviewComponent } from '@shared/components/star-rating-review/star-rating-review.component';
 import { PreviewLinksComponent } from '@shared/components/preview/links/links.component';
@@ -149,6 +150,7 @@ FullCalendarModule.registerPlugins([
     AddTopicsComponent,
     AttachmentPreviewComponent,
     AttachmentViewerComponent,
+    InviteUserComponent,
     ServicePickerComponent,
     ServicePreviewComponent,
     ServicePreviewLiteComponent,
@@ -267,6 +269,7 @@ FullCalendarModule.registerPlugins([
     AddServiceComponent,
     AddTopicsComponent,
     AutocompleteComponent,
+    InviteUserComponent,
     PillPickerComponent,
     AttachmentPreviewComponent,
     AttachmentViewerComponent,

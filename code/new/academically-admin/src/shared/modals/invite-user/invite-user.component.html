@@ -1,0 +1,79 @@
+<div class="modal-card card">
+    <div class="card-header d-flex justify-content-between align-items-center py-0">
+        <div class="title">Invite to discussion</div>
+        <ul class="nav nav-tabs nav-overflow header-tabs mb-0" style="height: calc(2px + 100%)">
+            <li class="nav-item">
+                <a class="nav-link h-100 d-flex justify-content-center align-items-center" [class.active]="activeTab === 'following'" role="button" (click)="setActiveTab('following')">{{ 'Following' | localize }}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link h-100 d-flex justify-content-center align-items-center" [class.active]="activeTab === 'invited'" role="button" (click)="setActiveTab('invited')">{{ 'Invited' | localize }}</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="card-body p-0 slick-scroll">
+        <app-search
+            [data]="followedUsersValues"
+            [options]="{ sortable: false }"
+            [itemTemplate]="followingTemplate"
+            [itemLoadingTemplate]="followingLoadingTemplate"
+            [loading]="isAllowLoading && isLoading"
+            (onSearch)="handleOnSearch($event)"
+        ></app-search>
+    </div>
+
+    <div class="card-footer d-flex justify-content-end gap-20">
+        <button (click)="onCloseClick()" type="button" class="btn btn-white d-flex justify-content-center align-items-center">
+            {{ 'Cancel' | localize }}
+        </button>
+        <button (click)="onCloseClick()" type="button" class="btn btn-primary d-flex justify-content-center align-items-center">
+            {{ 'Done' | localize }}
+        </button>
+    </div>
+</div>
+
+<ng-template #followingTemplate let-item="item">
+    <div class="following-row d-flex flex-row">
+        <div class="following-row-left d-flex flex-row flex-grow-1 align-items-center gap-18">
+            <div class="avatar" [style.width.px]="45" [style.height.px]="45">
+                <img [src]="getProfilePictureFromDocument(item.user.profilePictureDocument, item.user.id)" alt="..." class="avatar-img rounded-circle">
+            </div>
+            <div class="d-flex flex-column justify-content-between gap-2">
+                <div class="following-row-left-name">{{ item.user.fullName | titlecase }}</div>
+                <div class="following-row-left-status">{{ 'Online' | localize }}</div>
+            </div>
+        </div>
+        <div class="following-row-left d-flex flex-column flex-grow-1 justify-content-center gap-0">
+
+        </div>
+        <div class="following-row-right d-flex flex-row align-items-center gap-10">
+            <ng-container *ngIf="isShowInviteButtons(item)">
+                <button class="btn btn-md btn-primary d-flex justify-content-center align-items-center gap-5" (click)="handleOnInvite(item)"  [disabled]="isRowLoading(item.id)" [style.width.px]="103" [style.height.px]="34">
+                    <img src="assets/img/community/user-plus.svg" alt="Invite">
+                    {{ 'Invite' | localize }}
+                </button>
+            </ng-container>
+            <ng-container *ngIf="isShowInvitedButtons(item)">
+                <button class="btn btn-md btn-white d-flex justify-content-center align-items-center gap-5 border-0" [style.width.px]="103" [style.height.px]="34">
+                    <img src="assets/img/community/user-check.svg" alt="Invited">
+                    {{ 'Invited' | localize }}
+                </button>
+            </ng-container>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #followingLoadingTemplate>
+    <div class="following-row d-flex flex-row">
+        <div class="following-row-left d-flex flex-row flex-grow-1 align-items-center gap-18">
+            <div class="box-shimmer-bar" [style.width.px]="45" [style.height.px]="45" [style.borderRadius.%]="50"></div>
+            <div class="d-flex flex-column justify-content-between gap-2">
+                <div class="box-shimmer-bar" [style.width.%]="55" [style.height.px]="10"></div>
+                <div class="box-shimmer-bar" [style.width.%]="15" [style.height.px]="10"></div>
+            </div>
+        </div>
+        <div class="following-row-right d-flex flex-row align-items-center gap-20">
+            <div class="box-shimmer-bar" [style.width.px]="83" [style.height.px]="29"></div>
+        </div>
+    </div>
+</ng-template>

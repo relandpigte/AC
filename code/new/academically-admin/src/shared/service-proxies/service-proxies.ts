@@ -31147,6 +31147,69 @@ export class UserFollowersServiceProxy {
         }
         return _observableOf<UserFollowerDto[]>(<any>null);
     }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    searchFollowingInvited(body: SearchFollowingInvitedDto | undefined): Observable<UserFollowerInvitedDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/UserFollowers/SearchFollowingInvited";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSearchFollowingInvited(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSearchFollowingInvited(<any>response_);
+                } catch (e) {
+                    return <Observable<UserFollowerInvitedDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserFollowerInvitedDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSearchFollowingInvited(response: HttpResponseBase): Observable<UserFollowerInvitedDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(UserFollowerInvitedDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserFollowerInvitedDto[]>(<any>null);
+    }
 }
 
 @Injectable()
@@ -51821,6 +51884,53 @@ export interface ISearchDisciplineTaxonomyRequestDto {
     take: number | undefined;
 }
 
+export class SearchFollowingInvitedDto implements ISearchFollowingInvitedDto {
+    keyword: string | undefined;
+    take: number | undefined;
+
+    constructor(data?: ISearchFollowingInvitedDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.keyword = _data["keyword"];
+            this.take = _data["take"];
+        }
+    }
+
+    static fromJS(data: any): SearchFollowingInvitedDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SearchFollowingInvitedDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["keyword"] = this.keyword;
+        data["take"] = this.take;
+        return data; 
+    }
+
+    clone(): SearchFollowingInvitedDto {
+        const json = this.toJSON();
+        let result = new SearchFollowingInvitedDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISearchFollowingInvitedDto {
+    keyword: string | undefined;
+    take: number | undefined;
+}
+
 export class SearchResearchMethodResultRequestDto implements ISearchResearchMethodResultRequestDto {
     maxResultCount: number;
     searchFilter: string | undefined;
@@ -60134,6 +60244,7 @@ export class UserFollowerDto implements IUserFollowerDto {
     creationTime: moment.Moment;
     creatorUserId: number | undefined;
     userId: number;
+    user: UserDto;
 
     constructor(data?: IUserFollowerDto) {
         if (data) {
@@ -60150,6 +60261,7 @@ export class UserFollowerDto implements IUserFollowerDto {
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.creatorUserId = _data["creatorUserId"];
             this.userId = _data["userId"];
+            this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
         }
     }
 
@@ -60166,6 +60278,7 @@ export class UserFollowerDto implements IUserFollowerDto {
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["creatorUserId"] = this.creatorUserId;
         data["userId"] = this.userId;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -60182,6 +60295,70 @@ export interface IUserFollowerDto {
     creationTime: moment.Moment;
     creatorUserId: number | undefined;
     userId: number;
+    user: UserDto;
+}
+
+export class UserFollowerInvitedDto implements IUserFollowerInvitedDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    userId: number;
+    user: UserDto;
+    isInvited: boolean;
+
+    constructor(data?: IUserFollowerInvitedDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.userId = _data["userId"];
+            this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
+            this.isInvited = _data["isInvited"];
+        }
+    }
+
+    static fromJS(data: any): UserFollowerInvitedDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserFollowerInvitedDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["userId"] = this.userId;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        data["isInvited"] = this.isInvited;
+        return data; 
+    }
+
+    clone(): UserFollowerInvitedDto {
+        const json = this.toJSON();
+        let result = new UserFollowerInvitedDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserFollowerInvitedDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    userId: number;
+    user: UserDto;
+    isInvited: boolean;
 }
 
 export class UserLogin implements IUserLogin {
