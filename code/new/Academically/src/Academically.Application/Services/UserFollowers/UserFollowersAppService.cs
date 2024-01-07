@@ -94,18 +94,17 @@ namespace Academically.Services.UserFollowers
             var items = await _userFollowersRepository.GetAll()
                 .Include(x => x.User)
                     .ThenInclude(e => e.ProfilePictureDocument)
-                .Where(x => x.CreatorUserId == request.PostCreator)
+                .Where(x => x.CreatorUserId == request.InviterUserId)
                 .ToListAsync();
 
             var results = items
                 .WhereIf(!request.Keyword.IsNullOrWhiteSpace(), x => x.User.FullName.ToLower().Contains(request.Keyword.ToLower()))
                 .ToList();
 
-            
-
             var dtos = results.Select(x => ObjectMapper.Map<UserFollowerInvitedDto>(x)).ToList();
             var invitedUserIds = await _postInvitationRepository.GetAll()
-                .Where(i => i.CreatorUserId == request.PostCreator.Value)
+                .Where(i => i.PostId == request.PostId.Value)
+                .Where(i => i.CreatorUserId == request.InviterUserId)
                 .Select(i => i.UserId)
                 .ToListAsync();
 

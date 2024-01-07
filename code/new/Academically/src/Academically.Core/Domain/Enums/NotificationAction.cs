@@ -26,5 +26,6 @@ namespace Academically.Domain.Enums
         Book,
         Cancel,
         Reschedule,
+        Invite,
     }
 }

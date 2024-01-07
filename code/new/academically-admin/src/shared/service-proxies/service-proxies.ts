@@ -48398,7 +48398,7 @@ export interface IMyServiceViewDto {
     items: MyServiceItemViewDto[] | undefined;
 }
 
-/** 0 = Like 1 = React 2 = Share 3 = Comment 4 = Post 5 = Reply 6 = Answer 7 = Chat 8 = Purchase 9 = Enroll 10 = Review 11 = Follow 12 = Start 13 = Create 14 = Ask 15 = Book 16 = Cancel 17 = Reschedule */
+/** 0 = Like 1 = React 2 = Share 3 = Comment 4 = Post 5 = Reply 6 = Answer 7 = Chat 8 = Purchase 9 = Enroll 10 = Review 11 = Follow 12 = Start 13 = Create 14 = Ask 15 = Book 16 = Cancel 17 = Reschedule 18 = Invite */
 export enum NotificationAction {
     Like = 0,
     React = 1,
@@ -48418,6 +48418,7 @@ export enum NotificationAction {
     Book = 15,
     Cancel = 16,
     Reschedule = 17,
+    Invite = 18,
 }
 
 export class NotificationData implements INotificationData {
@@ -51952,7 +51953,8 @@ export interface ISearchDisciplineTaxonomyRequestDto {
 export class SearchFollowingInvitedDto implements ISearchFollowingInvitedDto {
     keyword: string | undefined;
     take: number | undefined;
-    postCreator: number | undefined;
+    postId: string | undefined;
+    inviterUserId: number | undefined;
     isInvitedOnly: boolean | undefined;
 
     constructor(data?: ISearchFollowingInvitedDto) {
@@ -51968,7 +51970,8 @@ export class SearchFollowingInvitedDto implements ISearchFollowingInvitedDto {
         if (_data) {
             this.keyword = _data["keyword"];
             this.take = _data["take"];
-            this.postCreator = _data["postCreator"];
+            this.postId = _data["postId"];
+            this.inviterUserId = _data["inviterUserId"];
             this.isInvitedOnly = _data["isInvitedOnly"];
         }
     }
@@ -51984,7 +51987,8 @@ export class SearchFollowingInvitedDto implements ISearchFollowingInvitedDto {
         data = typeof data === 'object' ? data : {};
         data["keyword"] = this.keyword;
         data["take"] = this.take;
-        data["postCreator"] = this.postCreator;
+        data["postId"] = this.postId;
+        data["inviterUserId"] = this.inviterUserId;
         data["isInvitedOnly"] = this.isInvitedOnly;
         return data; 
     }
@@ -52000,7 +52004,8 @@ export class SearchFollowingInvitedDto implements ISearchFollowingInvitedDto {
 export interface ISearchFollowingInvitedDto {
     keyword: string | undefined;
     take: number | undefined;
-    postCreator: number | undefined;
+    postId: string | undefined;
+    inviterUserId: number | undefined;
     isInvitedOnly: boolean | undefined;
 }
 

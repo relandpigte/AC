@@ -195,10 +195,16 @@ namespace Academically.Services.Notifications
                 .Where(n => n.ReadTime == null)
                 .Where(n => n.Action == input.Action)
                 .Where(n => n.Target == input.Target)
-                .Where(n => (n.ReferenceId == input.ReferenceId) || n.Action == NotificationAction.Create || n.Action == NotificationAction.Ask || n.Action == NotificationAction.Start || n.Action == NotificationAction.Post)
-                .Where(n => n.Action != NotificationAction.Book)
-                .Where(n => n.Action != NotificationAction.Cancel)
-                .Where(n => n.Action != NotificationAction.Reschedule)
+                .Where(n =>
+                    n.ReferenceId == input.ReferenceId ||
+                    n.Action == NotificationAction.Create || // always aggregate create action
+                    n.Action == NotificationAction.Ask || // always aggregate ask action
+                    n.Action == NotificationAction.Start || // always aggregate start action
+                    n.Action == NotificationAction.Post // always aggregate post action
+                )
+                .Where(n => n.Action != NotificationAction.Book) // never aggregate booking
+                .Where(n => n.Action != NotificationAction.Cancel) // never aggregate booking cancellation
+                .Where(n => n.Action != NotificationAction.Reschedule) // never aggregate booking reschedule
                 .FirstOrDefault();
 
             if (latestUserNotification == null)
@@ -329,8 +335,7 @@ namespace Academically.Services.Notifications
                 var obj = await this.FormatObject(notification);
                 if (!string.IsNullOrEmpty(obj))
                 {
-                    formatted.Add(": ");
-                    formatted.Add($"\"{obj}\"");
+                    formatted.Add(obj);
                 }
             }
 
@@ -383,7 +388,6 @@ namespace Academically.Services.Notifications
                 var userId = matches.Groups[1].Value;
                 references.User = await this._usersRepository.FirstOrDefaultAsync(long.Parse(userId));
             }
-           
 
             return references;
         }
@@ -436,6 +440,8 @@ namespace Academically.Services.Notifications
                     return "cancelled";
                 case NotificationAction.Reschedule:
                     return "rescheduled";
+                case NotificationAction.Invite:
+                    return "invited";
                 default:
                     return "reacted";
             }
@@ -472,6 +478,8 @@ namespace Academically.Services.Notifications
                 case NotificationTarget.Post:
                     return "post";
                 case NotificationTarget.Discussion:
+                    if (action == NotificationAction.Invite)
+                        return "to join a discussion";
                     return "discussion";
                 default:
                     return "post";
@@ -526,6 +534,7 @@ namespace Academically.Services.Notifications
                 if (notification.Target == NotificationTarget.Workshop) return true;
                 return false;
             }
+            if (notification.Action == NotificationAction.Invite) return false;
             if (notification.Action == NotificationAction.Ask) return false;
             if (notification.Action == NotificationAction.Start) return false;
             if (notification.Actors.Count > 1)
@@ -628,6 +637,8 @@ namespace Academically.Services.Notifications
                 case NotificationAction.Cancel:
                 case NotificationAction.Reschedule:
                     return "their";
+                case NotificationAction.Invite:
+                    return await FormatInvitePronoun(notification);
                 default:
                     return "your";
             }
@@ -708,6 +719,21 @@ namespace Academically.Services.Notifications
 
             return $"<span>{textInfo.ToTitleCase(user.FullName)}'s</span>";
         }
+        
+        private async Task<string> FormatInvitePronoun(NotificationDto notification)
+        {
+            var textInfo = new CultureInfo("en-US", false).TextInfo;
+            var matches = Regex.Match(notification.ReferenceId.ToString(), $"{AppConsts.DefaultTempGuid}{@"[f]*(\d+)"}");
+            if (matches.Groups.Count > 1)
+            {
+                var userId = matches.Groups[1].Value;
+                var user = await this._usersRepository.FirstOrDefaultAsync(long.Parse(userId));
+                
+                if (user.Id == notification.UserId) return "you";
+                else return $"<span>{textInfo.ToTitleCase(user.FullName)}</span>";
+            }
+            return "you";
+        }
 
         private async Task<string> FormatTarget(NotificationDto notification)
         {
@@ -774,10 +800,14 @@ namespace Academically.Services.Notifications
                 .FirstOrDefaultAsync();
 
             string obj = null;
-            if (post != null)
-                obj = $"{post.Title ?? post.Content}";
+            if (post != null) {
+                if (notification.Action == NotificationAction.Invite)
+                    obj = $": <span>{post.Title ?? post.Content}</span>";
+                else
+                    obj = $": \"{post.Title ?? post.Content}\"";
+            }
             else if (comment != null)
-                obj = $"{comment.Body}";
+                obj = $": \"{comment.Body}\"";
             return obj;
         }
 

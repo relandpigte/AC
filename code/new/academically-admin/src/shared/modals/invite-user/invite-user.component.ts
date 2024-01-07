@@ -29,13 +29,14 @@ import { TitleCasePipe } from '@angular/common';
 
     searchFilter: string;
 
-    searchProcess$ = (searchFilter: string, excludeFollowing = true) => {
+    searchProcess$ = (searchFilter: string) => {
       this.searchFilter = searchFilter;
 
       const request = new SearchFollowingInvitedDto();
       request.keyword = searchFilter;
       request.take = 10;
-      request.postCreator = this.appSession.userId;
+      request.postId = this.postId;
+      request.inviterUserId = this.appSession.userId;
       request.isInvitedOnly = this.activeTab === 'invited';
 
       return this._userFollowersService.searchFollowingInvited(request)
