@@ -1,0 +1,29 @@
+<div class="modal-card card">
+  <div class="card-header">
+    <form>
+      <div class="input-group input-group-flush">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <i class="fe fe-search"></i>
+          </span>
+        </div>
+        <input class="list-search form-control" type="search" name="Search" placeholder="Search"/>
+      </div>
+    </form>
+  </div>
+  <div class="card-body">
+    <div class="timezones">
+      <div class="timezones-wrapper">
+        <div *ngFor="let tz of timeZones" class="timezones-item">
+          <a href="javascript:void(0)"
+             class="cursor-pointer d-flex align-items-center justify-content-between"
+             [class.selected]="isTimezoneSelected(tz.id)"
+             (click)="onClickTimezone(tz)"
+          >{{ getTimezoneName(tz) }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

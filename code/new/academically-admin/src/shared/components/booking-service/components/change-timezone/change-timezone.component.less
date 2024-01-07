@@ -1,0 +1,54 @@
+::ng-deep {
+  .modal-dialog-timezone {
+    max-width: 370px !important;
+    margin-left: auto;
+    margin-right: auto;
+
+    .modal-content {
+      border: 0 none;
+    }
+  }
+}
+
+.card {
+  &-body {
+    padding: 0;
+
+    .timezones {
+      padding: 10px 5px;
+
+      &-wrapper {
+        padding-inline: 15px;
+        overflow-y: scroll;
+        scroll-behavior: smooth;
+        height: 300px;
+      }
+
+      &-item {
+        padding-block: 10px;
+
+        a {
+          font-size: 15px;
+          color: #6E84A3;
+
+          &:hover,
+          &:focus,
+          &:active,
+          &.selected {
+            color: #12263F;
+          }
+
+          &.selected {
+            &:after {
+              content: "";
+              width: 18px;
+              height: 18px;
+              background: url("assets/img/service/booking/selected.svg") no-repeat 0 0 transparent;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

@@ -13,8 +13,8 @@
               <full-calendar #calendar [options]="calendarOptions"></full-calendar>
               <div class="booking-left-content-timezone d-flex align-items-center mt-auto">
                 <img src="assets/img/service/booking/icon-globe.svg" alt="Timezone">
-                <span class="timezone">UK, Iremand, Lisbon Time</span>
-                <span class="change-timezone">{{ 'Change' | localize | titlecase }}</span>
+                <span class="timezone">{{ currentUserTimeZoneName }}</span>
+                <span class="change-timezone" (click)="onChangeTimeZone()">{{ 'Change' | localize | titlecase }}</span>
               </div>
             </div>
             <div class="booking-right-content ml-auto">
@@ -262,7 +262,7 @@
             </div>
             <div class="booking-details-timezone d-flex align-items-start gap-6">
               <img src="assets/img/service/booking/icon-globe.svg" alt="Timezone">
-              <span class="timezone"><del>UK, Iremand, Lisbon Time</del></span>
+              <span class="timezone"><del>{{ currentUserTimeZoneName }}</del></span>
             </div>
           </div>
         </div>
@@ -295,7 +295,7 @@
           </div>
           <div class="booking-details-timezone d-flex align-items-start gap-6">
             <img src="assets/img/service/booking/icon-globe.svg" alt="Timezone">
-            <span class="timezone">UK, Iremand, Lisbon Time</span>
+            <span class="timezone">{{ currentUserTimeZoneName }}</span>
           </div>
           <div class="separator"></div>
           <div class="booking-breakdown-price d-flex align-items-center">
@@ -367,7 +367,7 @@
     </div>
     <div class="booking-details-timezone d-flex align-items-start gap-6">
       <img src="assets/img/service/booking/icon-globe.svg" alt="Timezone">
-      <span class="timezone">UK, Iremand, Lisbon Time</span>
+      <span class="timezone">{{ currentUserTimeZoneName }}</span>
     </div>
     <ng-container *ngIf="pricing" [ngTemplateOutlet]="priceDetails"></ng-container>
   </div>
@@ -417,7 +417,7 @@
     </div>
     <div class="booking-details-timezone d-flex align-items-start gap-6">
       <img src="assets/img/service/booking/icon-globe.svg" alt="Timezone">
-      <span class="timezone">UK, Iremand, Lisbon Time</span>
+      <span class="timezone">{{ currentUserTimeZoneName }}</span>
     </div>
     <ng-container *ngIf="pricing" [ngTemplateOutlet]="priceDetails"></ng-container>
   </div>

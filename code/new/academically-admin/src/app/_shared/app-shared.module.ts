@@ -107,6 +107,8 @@ import { LeaveReviewConfirmationComponent } from '@shared/modals/leave-review-co
 import { ServiceReviewStatsComponent } from '@shared/components/service-review-stats/service-review-stats.component';
 import { ServiceNotificationPopupComponent } from '@shared/components/service-notification-popup/service-notification-popup.component';
 import { SharedToFeedComponent } from '@shared/components/shared-to-feed/shared-to-feed.component';
+import { ChangeTimezoneComponent } from '@shared/components/booking-service/components/change-timezone/change-timezone.component';
+import { ConfirmTimezoneComponent } from '@shared/components/booking-service/components/confirm-timezone/confirm-timezone.component';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -193,7 +195,9 @@ FullCalendarModule.registerPlugins([
     LeaveReviewConfirmationComponent,
     ServiceReviewStatsComponent,
     ServiceNotificationPopupComponent,
-    SharedToFeedComponent
+    SharedToFeedComponent,
+    ChangeTimezoneComponent,
+    ConfirmTimezoneComponent
   ],
   imports: [
     CommonModule,
@@ -313,7 +317,9 @@ FullCalendarModule.registerPlugins([
     LeaveReviewConfirmationComponent,
     ServiceReviewStatsComponent,
     ServiceNotificationPopupComponent,
-    SharedToFeedComponent
+    SharedToFeedComponent,
+    ChangeTimezoneComponent,
+    ConfirmTimezoneComponent
   ],
 })
 export class AppSharedModule { }

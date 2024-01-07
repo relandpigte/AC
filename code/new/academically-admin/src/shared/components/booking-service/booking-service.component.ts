@@ -13,10 +13,12 @@ import { BookingTakenComponent } from '@shared/components/booking-service/compon
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 import { ServiceCardType } from '@shared/models/service-card.model';
 import {
-  AvailabilityUnit,
-  CancelServiceBookingDto, CreateServiceBookingDto, CreateServicePurchaseDto, ServiceBookingDto, ServicePurchaseDto,
-  ServicesServiceProxy, ServicesType, UserAvailabilitiesServiceProxy, UserAvailabilityDto, UserAvailabilitySetting
+  AvailabilityUnit, CancelServiceBookingDto, CreateServiceBookingDto, CreateServicePurchaseDto, ProfilesServiceProxy,
+  ServiceBookingDto, ServicePurchaseDto, ServicesServiceProxy, ServicesType, TimeZoneDto, TimeZonesServiceProxy,
+  UserAvailabilitiesServiceProxy, UserAvailabilityDto, UserAvailabilitySetting, UserDto
 } from '@shared/service-proxies/service-proxies';
+import { ChangeTimezoneComponent } from '@shared/components/booking-service/components/change-timezone/change-timezone.component';
+import { ConfirmTimezoneComponent } from '@shared/components/booking-service/components/confirm-timezone/confirm-timezone.component';
 
 enum PaymentMethod {
   CreditCard,
@@ -89,6 +91,10 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   paymentSuccessTitle: string;
   paymentSuccessMessage: string;
 
+  timeZones: TimeZoneDto[] = [];
+  userData: UserDto;
+  userTimeZone: TimeZoneDto;
+
   readonly PaymentMethod = PaymentMethod;
   readonly PaymentStatus = PaymentStatus;
   private readonly rescheduleReasonTextLimit = 150;
@@ -100,7 +106,9 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
     private _servicesService: ServicesServiceProxy,
     private _userAvailabilitiesService: UserAvailabilitiesServiceProxy,
     private _cdr: ChangeDetectorRef,
-    private _router: Router
+    private _router: Router,
+    private _timeZonesService: TimeZonesServiceProxy,
+    private _profilesService: ProfilesServiceProxy
   ) {
     super(injector);
   }
@@ -183,11 +191,18 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
     return this.getDateBy(maximumAdvanceNoticeUnit, maximumAdvanceNotice);
   }
 
+  get currentUserTimeZoneName(): string {
+    const tz = this.userTimeZone?.name.match(/\(([^()]+)\)/g);
+    return _.isEmpty(tz) ? null : `${tz[0]} ${this.userTimeZone?.ianaName?.replace('_', ' ')}`;
+  }
+
   ngOnInit(): void {
     this.initCalendar();
     this.retrieveBookingToCancel();
     this.initPurchase();
     this.initService();
+    this.initTimeZones();
+    this.initUserData();
 
     console.log('%c' + moment().format('dddd, MMMM Do YYYY, h:mm:ss a'), 'color:limegreen;font-weight:bold');
   }
@@ -296,6 +311,30 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
       this.selectedTime = null;
       return;
     }
+  }
+
+  onChangeTimeZone(): void {
+    const modalSettings = this.defaultModalSettings as ModalOptions<ChangeTimezoneComponent>;
+    modalSettings.backdrop = true;
+    modalSettings.ignoreBackdropClick = false;
+    modalSettings.keyboard = true;
+    modalSettings.initialState = { timeZones: this.timeZones, userData: this.userData };
+    modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-timezone';
+    const modalTimezone = this._modalService.show(ChangeTimezoneComponent, modalSettings);
+
+    modalTimezone.content.onSelectTimezone.subscribe((tz: TimeZoneDto): void => {
+      modalTimezone.hide();
+      setTimeout((): void => {
+        const modalConfirmTimezone = this.defaultModalSettings as ModalOptions<ConfirmTimezoneComponent>;
+        modalConfirmTimezone.initialState = { timezone: tz };
+        modalConfirmTimezone.class = 'modal-lg modal-dialog-centered modal-dialog-change-timezone';
+        const modalChangeTimezone = this._modalService.show(ConfirmTimezoneComponent, modalConfirmTimezone);
+        modalChangeTimezone.content.onTimezoneUpdated.subscribe((timezone: TimeZoneDto): void => {
+          this.userData.timeZoneId = timezone.id;
+          this.userTimeZone = timezone;
+        });
+      }, 100);
+    });
   }
 
   async gotoSchedule(): Promise<void> {
@@ -585,5 +624,20 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
       case 3:
         return moment().add(addValue, 'days').format('YYYY-MM-DD HH:mm:ss');
     }
+  }
+
+  private initTimeZones(): void {
+    this._timeZonesService.getAll()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(tz => this.timeZones = tz);
+  }
+
+  private initUserData(): void {
+    this._profilesService.get(this.currentUserId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(u => {
+        this.userData = u;
+        this.userTimeZone = this.timeZones?.find(x => x.id === u.timeZoneId);
+      });
   }
 }
