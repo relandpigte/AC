@@ -78,8 +78,6 @@
     <Folder Include="Services\StudentVideos\Dto\" />
     <Folder Include="Services\Reactions\" />
     <Folder Include="Services\Reactions\Dto\" />
-    <Folder Include="Services\UserFollowers\" />
-    <Folder Include="Services\UserFollowers\Dto\" />
     <Folder Include="Services\EventResources\" />
     <Folder Include="Services\EventResources\Dto\" />
     <Folder Include="Services\Forums\" />

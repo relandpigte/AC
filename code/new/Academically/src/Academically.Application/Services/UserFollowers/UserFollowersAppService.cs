@@ -10,6 +10,10 @@ using Academically.Services.UserFollowers.Dto;
 using Academically.Users.Dto;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Abp.Extensions;
+using Academically.Services.DisciplineTaxonomies.Dto;
+using Abp.Linq.Extensions;
+using Abp.Collections.Extensions;
 
 namespace Academically.Services.UserFollowers
 {
@@ -66,6 +70,7 @@ namespace Academically.Services.UserFollowers
         public async Task<IEnumerable<UserFollowerDto>> GetFollowing()
         {
             var following = await _userFollowersRepository.GetAll()
+                .Include(x => x.User)
                 .Where(x => x.CreatorUserId == AbpSession.UserId.Value)
                 .ToListAsync();
 
@@ -79,6 +84,23 @@ namespace Academically.Services.UserFollowers
                 .ToListAsync();
 
             return ObjectMapper.Map<List<UserFollowerDto>>(following);
+        }
+
+        public async Task<IEnumerable<UserFollowerInvitedDto>> SearchFollowingInvited(SearchFollowingInvitedDto request)
+        {
+            var items = await _userFollowersRepository.GetAll()
+                .Include(x => x.User)
+                    .ThenInclude(e => e.ProfilePictureDocument)
+                .ToListAsync();
+
+            var results = items
+                .WhereIf(!request.Keyword.IsNullOrWhiteSpace(), x => x.User.FullName.ToLower().Contains(request.Keyword.ToLower()))
+                .ToList();
+
+            if (request.Take.HasValue)
+                results = results.Take(request.Take.Value).ToList();
+
+            return results.Select(x => ObjectMapper.Map<UserFollowerInvitedDto>(x)).ToList();
         }
     }
 }

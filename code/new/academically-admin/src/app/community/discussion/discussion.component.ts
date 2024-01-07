@@ -18,6 +18,7 @@ import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.servi
 import { StateUpdateType } from '@shared/services/state-base.service';
 import { UserFollowingService } from '@shared/services/user-following.service';
 import { combineLatest } from 'rxjs';
+import { InviteUserComponent } from '@shared/modals/invite-user/invite-user.component';
 
 export enum PostFiltering {
     All = 'Community.Posts.Filtering.All',
@@ -224,6 +225,13 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
             }
         };
         this._modalService.show(UpsertPostComponent, modalSettings).content;
+    }
+
+    handleInviteUser(): void {
+        const modalSettings = this.defaultModalSettings as ModalOptions<InviteUserComponent>;
+        modalSettings.class = "modal-lg modal-invite-user";
+
+        const modal = this._modalService.show(InviteUserComponent, modalSettings).content;
     }
 
     goToHistory(): void {

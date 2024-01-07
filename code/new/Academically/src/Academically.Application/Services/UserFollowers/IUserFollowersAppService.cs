@@ -15,6 +15,8 @@ namespace Academically.Services.UserFollowers
 		Task<IEnumerable<UserDto>> GetUsersToFollow();
 		Task<IEnumerable<UserFollowerDto>> GetFollowing();
 		Task<IEnumerable<UserFollowerDto>> GetFollowers();
+
+        Task<IEnumerable<UserFollowerInvitedDto>> SearchFollowingInvited(SearchFollowingInvitedDto request);
     }
 }
 
