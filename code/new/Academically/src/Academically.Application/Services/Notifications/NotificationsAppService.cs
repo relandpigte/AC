@@ -454,7 +454,7 @@ namespace Academically.Services.Notifications
                 case NotificationTarget.Answer:
                     return "answer";
                 case NotificationTarget.Question:
-                    return "question";
+                    return action == NotificationAction.Invite ? "to answer a question" : "question";
                 case NotificationTarget.Reply:
                     if (action == NotificationAction.Like || action == NotificationAction.React)
                         return "reply";
@@ -478,9 +478,7 @@ namespace Academically.Services.Notifications
                 case NotificationTarget.Post:
                     return "post";
                 case NotificationTarget.Discussion:
-                    if (action == NotificationAction.Invite)
-                        return "to join a discussion";
-                    return "discussion";
+                    return action == NotificationAction.Invite ? "to join a discussion" : "discussion";
                 default:
                     return "post";
             }
