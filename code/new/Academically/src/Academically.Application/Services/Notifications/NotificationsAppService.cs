@@ -662,12 +662,12 @@ namespace Academically.Services.Notifications
 
             if (post != null)
             {
-                if (post.CreatorUserId == actorId) return "their";
+                if (post.CreatorUserId == actorId && notification.Actors.Count == 1) return "their";
                 if (post.CreatorUserId == notification.UserId) return "your";
                 return $"<span>{textInfo.ToTitleCase(post.CreatorUser.FullName)}'s</span>";
             }
 
-            if (comment.CreatorUserId == actorId) return "their";
+            if (comment.CreatorUserId == actorId && notification.Actors.Count == 1) return "their";
             if (comment.CreatorUserId == notification.UserId) return "your";
             return $"<span>{textInfo.ToTitleCase(comment.CreatorUser.FullName)}'s</span>";
 
@@ -694,12 +694,12 @@ namespace Academically.Services.Notifications
 
             if (post != null)
             {
-                if (post.CreatorUserId == actorId) return "their";
+                if (post.CreatorUserId == actorId && notification.Actors.Count == 1) return "their";
                 if (post.CreatorUserId == notification.UserId) return "your";
                 return $"<span>{textInfo.ToTitleCase(post.CreatorUser.FullName)}'s</span>";
             }
             
-            if (comment.CreatorUserId == actorId) return "their";
+            if (comment.CreatorUserId == actorId && notification.Actors.Count == 1) return "their";
             if (comment.CreatorUserId == notification.UserId) return "your";
             return $"<span>{textInfo.ToTitleCase(comment.CreatorUser.FullName)}'s</span>";
         }
