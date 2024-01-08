@@ -1,6 +1,6 @@
 <div class="modal-card card">
     <div class="card-header d-flex justify-content-between align-items-center py-0">
-        <div class="title">Invite to discussion</div>
+        <div class="title">Invite to {{ popupTitle }}</div>
         <ul class="nav nav-tabs nav-overflow header-tabs mb-0" style="height: calc(2px + 100%)">
             <li class="nav-item">
                 <a class="nav-link h-100 d-flex justify-content-center align-items-center" [class.active]="activeTab === 'following'" role="button" (click)="setActiveTab('following')">{{ 'Following' | localize }}</a>

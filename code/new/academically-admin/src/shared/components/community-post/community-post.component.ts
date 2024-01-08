@@ -272,6 +272,31 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
         }
     }
 
+    handleSubscribeClick(): void {
+        if (this.data?.id) {
+            const type = this.isSubscribedToNotifications ? SubscribeType.unsubscribe : SubscribeType.subscribe;
+            const postId = this.data.id;
+            const userId = this.appSession.userId;
+
+            const service = type === SubscribeType.subscribe ? this._postsServiceProxy.createPostNotification(postId, userId)
+                : this._postsServiceProxy.deletePostNotification(postId, userId);
+
+            service.pipe(takeUntil(this.destroyed$))
+                .subscribe(() => {
+                    if (type === SubscribeType.subscribe) this.subscriberIds.push(userId);
+                    else this.subscriberIds = this.subscriberIds.filter(s => s !== userId);
+                });
+        }
+    }
+
+    handleInviteUserClick(): void {
+        const modalSettings = this.defaultModalSettings as ModalOptions<InviteUserComponent>;
+        modalSettings.class = 'modal-lg modal-invite-user d-flex justify-content-center';
+        modalSettings.initialState = { postId: this.data.id, postType: this.data.type };
+
+        this._modalService.show(InviteUserComponent, modalSettings);
+    }
+
     private async getFileAttachment() {
         if (this.data?.postAttachments) {
             const [file] = this.data.postAttachments;
@@ -304,30 +329,5 @@ export class CommunityPostCardComponent extends AppComponentBase implements OnCh
         this.isLoadingSubscriberIds = true;
         if (this.data) this.subscriberIds = this.data.postNotification?.map(n => n.creatorUserId);
         this.isLoadingSubscriberIds = false;
-    }
-
-    handleSubscribeClick(): void {
-        if (this.data?.id) {
-            const type = this.isSubscribedToNotifications ? SubscribeType.unsubscribe : SubscribeType.subscribe;
-            const postId = this.data.id;
-            const userId = this.appSession.userId;
-
-            const service = type === SubscribeType.subscribe ? this._postsServiceProxy.createPostNotification(postId, userId)
-                : this._postsServiceProxy.deletePostNotification(postId, userId);
-
-            service.pipe(takeUntil(this.destroyed$))
-                .subscribe(() => {
-                    if (type === SubscribeType.subscribe) this.subscriberIds.push(userId);
-                    else this.subscriberIds = this.subscriberIds.filter(s => s !== userId);
-                });
-        }
-    }
-
-    handleInviteUserClick(): void {
-        const modalSettings = this.defaultModalSettings as ModalOptions<InviteUserComponent>;
-        modalSettings.class = "modal-lg modal-invite-user d-flex justify-content-center";
-        modalSettings.initialState = { postId: this.data.id };
-
-        this._modalService.show(InviteUserComponent, modalSettings).content;
     }
 }
