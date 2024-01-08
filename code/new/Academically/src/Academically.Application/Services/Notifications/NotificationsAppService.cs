@@ -310,9 +310,9 @@ namespace Academically.Services.Notifications
                 }
             }
 
-            if (await this.NotificationHasTarget(notification))
+            if (await this.NotificationHasFirstTarget(notification))
             {
-                var target = await this.FormatTarget(notification);
+                var target = await this.FormatFirstTarget(notification);
                 if (!string.IsNullOrEmpty(target))
                 {
                     formatted.Add(" ");
@@ -330,12 +330,23 @@ namespace Academically.Services.Notifications
                 }
             }
 
+            if (await this.NotificationHasSecondTarget(notification))
+            {
+                var target = await this.FormatSecondTarget(notification);
+                if (!string.IsNullOrEmpty(target))
+                {
+                    formatted.Add(" ");
+                    formatted.Add(target);
+                }
+            }
+
             if (await this.NotificationHasObject(notification))
             {
                 var obj = await this.FormatObject(notification);
                 if (!string.IsNullOrEmpty(obj))
                 {
-                    formatted.Add(obj);
+                    formatted.Add(": ");
+                    formatted.Add($"{obj}");
                 }
             }
 
@@ -484,11 +495,18 @@ namespace Academically.Services.Notifications
             }
         }
 
-        private async Task<bool> NotificationHasTarget(NotificationDto notification)
+        private async Task<bool> NotificationHasFirstTarget(NotificationDto notification)
         {
             if (notification.Action == NotificationAction.Post) return false;
             if (notification.Action == NotificationAction.Follow) return false;
+            if (notification.Action == NotificationAction.Invite) return false;
             return true;
+        }
+
+        private async Task<bool> NotificationHasSecondTarget(NotificationDto notification)
+        {
+            if (notification.Action == NotificationAction.Invite) return true;
+            return false;
         }
 
         private async Task<bool> NotificationHasPronoun(NotificationDto notification)
@@ -498,6 +516,7 @@ namespace Academically.Services.Notifications
             if (notification.Action == NotificationAction.Ask) return false;
             if (notification.Action == NotificationAction.Start) return false;
             if (notification.Action == NotificationAction.Follow) return false;
+            if (notification.Action == NotificationAction.Invite) return false;
             return true;
         }
 
@@ -532,7 +551,6 @@ namespace Academically.Services.Notifications
                 if (notification.Target == NotificationTarget.Workshop) return true;
                 return false;
             }
-            if (notification.Action == NotificationAction.Invite) return false;
             if (notification.Action == NotificationAction.Ask) return false;
             if (notification.Action == NotificationAction.Start) return false;
             if (notification.Actors.Count > 1)
@@ -635,8 +653,6 @@ namespace Academically.Services.Notifications
                 case NotificationAction.Cancel:
                 case NotificationAction.Reschedule:
                     return "their";
-                case NotificationAction.Invite:
-                    return await FormatInvitePronoun(notification);
                 default:
                     return "your";
             }
@@ -718,22 +734,12 @@ namespace Academically.Services.Notifications
             return $"<span>{textInfo.ToTitleCase(user.FullName)}'s</span>";
         }
         
-        private async Task<string> FormatInvitePronoun(NotificationDto notification)
+        private async Task<string> FormatFirstTarget(NotificationDto notification)
         {
-            var textInfo = new CultureInfo("en-US", false).TextInfo;
-            var matches = Regex.Match(notification.ReferenceId.ToString(), $"{AppConsts.DefaultTempGuid}{@"[f]*(\d+)"}");
-            if (matches.Groups.Count > 1)
-            {
-                var userId = matches.Groups[1].Value;
-                var user = await this._usersRepository.FirstOrDefaultAsync(long.Parse(userId));
-                
-                if (user.Id == notification.UserId) return "you";
-                else return $"<span>{textInfo.ToTitleCase(user.FullName)}</span>";
-            }
-            return "you";
+            return await this.NotificationTargetToText(notification.Target, notification.Action);
         }
 
-        private async Task<string> FormatTarget(NotificationDto notification)
+        private async Task<string> FormatSecondTarget(NotificationDto notification)
         {
             return await this.NotificationTargetToText(notification.Target, notification.Action);
         }
@@ -800,12 +806,12 @@ namespace Academically.Services.Notifications
             string obj = null;
             if (post != null) {
                 if (notification.Action == NotificationAction.Invite)
-                    obj = $": <span>{post.Title ?? post.Content}</span>";
+                    obj = $"<span>{post.Title ?? post.Content}</span>";
                 else
-                    obj = $": \"{post.Title ?? post.Content}\"";
+                    obj = $"\"{post.Title ?? post.Content}\"";
             }
             else if (comment != null)
-                obj = $": \"{comment.Body}\"";
+                obj = $"\"{comment.Body}\"";
             return obj;
         }
 
