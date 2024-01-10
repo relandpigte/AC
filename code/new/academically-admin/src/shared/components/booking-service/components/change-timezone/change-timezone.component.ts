@@ -1,16 +1,28 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
-import { TimeZoneDto, UserDto } from '@shared/service-proxies/service-proxies';
+import { AfterViewInit, Component, EventEmitter, Input, Output, Injector } from '@angular/core';
 import * as _ from 'lodash';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+
+import { TimeZoneDto, TimeZonesServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
+import { AppComponentBase } from '@shared/app-component-base';
+import { takeUntil } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-change-timezone',
   templateUrl: './change-timezone.component.html',
   styleUrls: ['./change-timezone.component.less']
 })
-export class ChangeTimezoneComponent implements AfterViewInit {
+export class ChangeTimezoneComponent extends AppComponentBase implements AfterViewInit {
   @Input() timeZones: TimeZoneDto[] = [];
   @Input() userData: UserDto;
-  @Output() onSelectTimezone = new EventEmitter<TimeZoneDto>();
+  @Output() onTimezoneUpdated = new EventEmitter<TimeZoneDto>();
+
+  constructor(
+    injector: Injector,
+    private _modal: BsModalRef,
+    private _timeZonesService: TimeZonesServiceProxy
+  ) {
+    super(injector);
+  }
 
   ngAfterViewInit(): void {
     setTimeout(() => this.scrollToSelected(), 100);
@@ -31,6 +43,16 @@ export class ChangeTimezoneComponent implements AfterViewInit {
   }
 
   onClickTimezone(tz: TimeZoneDto): void {
-    this.onSelectTimezone.next(tz);
+    this.handleChangeTimezone(tz);
+  }
+
+  private handleChangeTimezone(tz: TimeZoneDto): void {
+    if (_.isEmpty(tz)) { return; }
+    this._timeZonesService.updateUserTimeZone(tz)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((): void => {
+        this.onTimezoneUpdated.next(tz);
+        this._modal.hide();
+      });
   }
 }

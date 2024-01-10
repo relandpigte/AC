@@ -197,12 +197,12 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   }
 
   ngOnInit(): void {
+    this.initTimeZones();
+    this.initUserData();
     this.initCalendar();
     this.retrieveBookingToCancel();
     this.initPurchase();
     this.initService();
-    this.initTimeZones();
-    this.initUserData();
 
     console.log('%c' + moment().format('dddd, MMMM Do YYYY, h:mm:ss a'), 'color:limegreen;font-weight:bold');
   }
@@ -314,26 +314,18 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   }
 
   onChangeTimeZone(): void {
+    console.warn(this.userTimeZone, this.userData);
     const modalSettings = this.defaultModalSettings as ModalOptions<ChangeTimezoneComponent>;
     modalSettings.backdrop = true;
     modalSettings.ignoreBackdropClick = false;
     modalSettings.keyboard = true;
     modalSettings.initialState = { timeZones: this.timeZones, userData: this.userData };
     modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-timezone';
-    const modalTimezone = this._modalService.show(ChangeTimezoneComponent, modalSettings);
+    const modal = this._modalService.show(ChangeTimezoneComponent, modalSettings);
 
-    modalTimezone.content.onSelectTimezone.subscribe((tz: TimeZoneDto): void => {
-      modalTimezone.hide();
-      setTimeout((): void => {
-        const modalConfirmTimezone = this.defaultModalSettings as ModalOptions<ConfirmTimezoneComponent>;
-        modalConfirmTimezone.initialState = { timezone: tz };
-        modalConfirmTimezone.class = 'modal-lg modal-dialog-centered modal-dialog-change-timezone';
-        const modalChangeTimezone = this._modalService.show(ConfirmTimezoneComponent, modalConfirmTimezone);
-        modalChangeTimezone.content.onTimezoneUpdated.subscribe((timezone: TimeZoneDto): void => {
-          this.userData.timeZoneId = timezone.id;
-          this.userTimeZone = timezone;
-        });
-      }, 100);
+    modal.content.onTimezoneUpdated.subscribe((timezone: TimeZoneDto): void => {
+      this.userData.timeZoneId = timezone.id;
+      this.userTimeZone = timezone;
     });
   }
 

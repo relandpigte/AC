@@ -629,6 +629,7 @@ namespace Academically.Services.Services
             var reviews = await _serviceReviewRepository.GetAll()
                 .Where(x => x.ServiceOwnerId == userId)
                 .ToListAsync();
+            if (reviews.Count == 0) return 0;
 
             return reviews.Sum(x => x.Rating).ToDecimal() / reviews.Count;
         }
