@@ -44181,7 +44181,6 @@ export class EventDto implements IEventDto {
     isPurchased: boolean;
     purchased: UserDto[] | undefined;
     hasReviewed: boolean;
-    review: EventRating;
 
     constructor(data?: IEventDto) {
         if (data) {
@@ -44307,7 +44306,6 @@ export class EventDto implements IEventDto {
                     this.purchased.push(UserDto.fromJS(item));
             }
             this.hasReviewed = _data["hasReviewed"];
-            this.review = _data["review"] ? EventRating.fromJS(_data["review"]) : <any>undefined;
         }
     }
 
@@ -44433,7 +44431,6 @@ export class EventDto implements IEventDto {
                 data["purchased"].push(item.toJSON());
         }
         data["hasReviewed"] = this.hasReviewed;
-        data["review"] = this.review ? this.review.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -44551,7 +44548,6 @@ export interface IEventDto {
     isPurchased: boolean;
     purchased: UserDto[] | undefined;
     hasReviewed: boolean;
-    review: EventRating;
 }
 
 export class EventDtoPagedResultDto implements IEventDtoPagedResultDto {

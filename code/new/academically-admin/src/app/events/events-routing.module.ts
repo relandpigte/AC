@@ -38,6 +38,13 @@ import { HeaderComponent } from '@app/events/_components/header/header.component
                     (m) => m.EventsDiscussionModule,
                   ),
               },
+              {
+                path: 'reviews',
+                loadChildren: () =>
+                  import('@app/events/reviews/reviews.module').then(
+                    (m) => m.EventsReviewsModule,
+                  ),
+              },
               { path: '', redirectTo: 'about' },
               { path: '**', redirectTo: 'about' },
             ]

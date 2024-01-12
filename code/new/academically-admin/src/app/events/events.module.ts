@@ -9,6 +9,8 @@ import { HeaderComponent } from './_components/header/header.component';
 import { EventsAboutModule } from '@app/events/about/about.module';
 import { RatingComponent } from '@app/events/_components/rating/rating.component';
 import { ThankYouComponent } from '@app/events/_components/thank-you/thank-you.component';
+import { EventsReviewsModule } from '@app/events/reviews/reviews.module';
+import { EventsDiscussionModule } from '@app/events/discussion/discussion.module';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { ThankYouComponent } from '@app/events/_components/thank-you/thank-you.c
     EventsRoutingModule,
     SharedModule,
     AppSharedModule,
-    EventsAboutModule
+    EventsAboutModule,
+    EventsReviewsModule,
+    EventsDiscussionModule
   ]
 })
 export class EventsModule { }

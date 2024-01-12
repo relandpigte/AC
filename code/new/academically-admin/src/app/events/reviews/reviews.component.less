@@ -1,0 +1,77 @@
+//::ng-deep {
+//    abp-modal-header {
+//        ::ng-deep {
+//            button.close {
+//                display: none !important;
+//            }
+//        }
+//    }
+//}
+
+.reviews {
+    &-controls {
+        margin-bottom: 0.625rem;
+
+        &-left {
+            &-posts-count {
+                font-weight: 400;
+                font-size: 13px;
+                line-height: 17px;
+                color: #6E84A3;
+            }
+
+            .dropdown {
+                &-toggle,
+                &-toggle .fe {
+                    font-weight: 600;
+                    font-size: 16px;
+                    line-height: 20px;
+                    color: #12263F;
+                }
+            }
+        }
+
+        &-right {
+            font-weight: 400;
+            font-size: 13px;
+            line-height: 20px;
+            text-align: right;
+            letter-spacing: -0.01em;
+            color: #6E84A3;
+
+            .dropdown {
+                &-toggle,
+                &-toggle .fe {
+                    font-weight: 600;
+                    font-size: 13px;
+                    line-height: 20px;
+                    color: #12263F;
+                }
+            }
+
+            .star-filter {
+                border: 1px solid #E3EBF6;
+                color: #3B516C;
+                border-radius: 4px;
+                padding: 3px 5px;
+            }
+        }
+    }
+
+    &-inline {
+        &-separator {
+            color: #95AAC9;
+            font-size: 13px;
+            font-weight: 600;
+            margin: 50px 0 30px;
+
+            &:before,
+            &:after {
+                content: "";
+                width: 162px;
+                height: 0.5px;
+                background-color: #95AAC9;
+            }
+        }
+    }
+}

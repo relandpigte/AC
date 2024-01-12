@@ -1,0 +1,45 @@
+<div *ngIf="isPurchased && !hasReviewed" class="reviews-inline">
+    <app-leave-review [data]="data" [inline]="true" (onReviewSuccess)="onReviewSuccess()"></app-leave-review>
+    <div class="reviews-inline-separator d-flex align-items-center text-center">
+        <span class="flex-grow-1">{{ 'OtherReviews' | localize }}</span>
+    </div>
+</div>
+
+<div class="d-flex flex-column justify-content-center align-items-center w-100 position-relative">
+    <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.LandingLeftReview" backgroundColor="#f9fbfd"></app-shimmer>
+
+    <div class="reviews-controls d-flex flex-row justify-content-between w-100">
+        <div class="reviews-controls-left d-flex align-items-end">
+            <div class="reviews-controls-left-posts-count">
+                {{ totalReviews }} reviews
+            </div>
+        </div>
+        <div class="reviews-controls-right d-flex flex-row align-items-center gap-10">
+            Sort by:
+            <div class="dropdown">
+                <a href="#" class="dropdown-ellipses dropdown-toggle d-flex flex-row align-items-center gap-5" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ 'Latest' | localize }} <span class="fe fe-chevron-down"></span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-left" [style.margin-top.px]="10">
+                    <div class="dropdown-item cursor-pointer d-flex justify-content-between">
+                        <div>{{ 'Latest' | localize }}</div>
+                        <i *ngIf="false" class="fe fe-check"></i>
+                    </div>
+                    <div class="dropdown-item cursor-pointer d-flex justify-content-between">
+                        <div>{{ 'Date' | localize }}</div>
+                        <i *ngIf="false" class="fe fe-check"></i>
+                    </div>
+                </div>
+            </div>
+
+            <select class="star-filter">
+                <option value="1">All stars</option>
+            </select>
+        </div>
+    </div>
+
+    <div *ngIf="!!totalReviews" class="reviews-content w-100">
+        <app-service-review-card *ngFor="let review of reviews" [review]="review"></app-service-review-card>
+    </div>
+</div>
