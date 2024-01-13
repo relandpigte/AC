@@ -413,12 +413,14 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
           if (this.isBooked) {
             this.sanitizedOptions.isShowActions = true;
             if (this.isExpired || this.isPast) {
+              this.sanitizedOptions.isShowActions = !this.isBooking;
               if (this.hasReviewed) {
                 this.sanitizedActions.splice(0, 0, <ServiceCardButton>{type: 'buy', label: 'Buy again'});
               } else {
                 this.sanitizedActions.splice(0, 0, <ServiceCardButton>{type: 'review', label: 'Leave review'});
               }
             } else if (this.isCancelled) {
+              this.sanitizedOptions.isShowActions = !this.isBooking;
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{type: 'buy', label: 'Buy again'});
             } else {
               this.sanitizedActions.splice(0, 0, <ServiceCardButton>{type: 'join', label: 'Join session'});

@@ -66,14 +66,14 @@ export class EventsComponent extends  AppComponentBase implements OnInit {
     });
 
     modal.content.onReviewSuccess.subscribe((): void => {
+      const modalConfirmationSettings = this.defaultModalSettings as ModalOptions<LeaveReviewConfirmationComponent>;
+      modalConfirmationSettings.class = 'modal-sm modal-rating-success modal-dialog-centered';
+      modalConfirmationSettings.initialState = {
+        reviewURL: `app/events/${this.id}/reviews`,
+        title: this.l('ReviewSubmitted'),
+        subTitle: this.l('ThankYouForRating')
+      };
       setTimeout((): void => {
-        const modalConfirmationSettings = this.defaultModalSettings as ModalOptions<LeaveReviewConfirmationComponent>;
-        modalConfirmationSettings.class = 'modal-sm modal-rating-success modal-dialog-centered';
-        modalConfirmationSettings.initialState = {
-          reviewURL: `app/events/${this.id}/reviews`,
-          title: this.l('ReviewSubmitted'),
-          subTitle: this.l('ThankYouForRating')
-        };
         this._modalService.show(LeaveReviewConfirmationComponent, modalSettings);
       }, 200);
     });

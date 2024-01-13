@@ -429,7 +429,7 @@ namespace Academically.Services.Coachings
                 service.EventDateTime = booking.BookingDateTime;
                 services.Add(service);
             }
-            return services;
+            return services.OrderBy(x => x.EventDateTime);
         }
 
         public async Task<List<CoachingDto>> GetAllPurchasedCoaching(long creatorUserId)

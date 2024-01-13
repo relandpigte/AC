@@ -44,7 +44,6 @@ export class RatingComponent extends AppComponentBase {
       .pipe(finalize(() => this.isLoading = false))
       .subscribe(review => {
         this.data.hasReviewed = true;
-        this.data.review = review;
         this._serviceData.serviceData = this.data;
         this.onSuccessReview.next(true);
         this.onCloseClick();
