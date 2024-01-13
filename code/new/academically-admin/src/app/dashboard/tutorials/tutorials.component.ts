@@ -10,7 +10,7 @@ import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { ChooseVideoTemplateComponent } from '@app/videos/_components/choose-video-template/choose-video-template.component';
 import { VideoTemplate } from '@app/videos/_models/video-template';
-import { VideoDto, VideosServiceProxy, VideoStatus, VideoType } from '@shared/service-proxies/service-proxies';
+import { ServicesType, VideoDto, VideosServiceProxy, VideoStatus, VideoType } from '@shared/service-proxies/service-proxies';
 import { CreateVideoComponent } from '@app/videos/_components/create-video/create-video.component';
 import { VideoService } from '@app/videos/_services/video.service';
 
@@ -23,6 +23,7 @@ import { VideoService } from '@app/videos/_services/video.service';
 export class TutorialsComponent extends AppComponentBase implements OnInit, AfterViewInit {
   shimmerType = ShimmerType;
   readonly DashboardServiceView = DashboardServiceView;
+  readonly ServicesType = ServicesType;
 
   constructor(
     injector: Injector,

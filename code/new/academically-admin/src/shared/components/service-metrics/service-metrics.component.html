@@ -1,0 +1,74 @@
+<div class="row">
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="card">
+      <div class="card-body">
+        <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.DashboardOverviewStats"></app-shimmer>
+        <div class="row align-items-center">
+          <div class="col">
+            <h6 class="text-uppercase text-muted mb-2">{{ 'Dashboard.Metrics.Revenue' | localize : serviceTypeName }}</h6>
+            <span class="h2 mb-0 align-middle">&#163;{{ serviceRevenue }}</span>
+            <span class="badge badge-soft-success ml-2">+3.5%</span>
+          </div>
+          <div class="col-auto">
+            <span class="card-fas fas fa-pound-sign text-muted mb-0"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xs-12 col-sm-6 col-xl-3">
+    <div class="card">
+      <div class="card-body">
+        <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.DashboardOverviewStats"></app-shimmer>
+        <div class="row align-items-center">
+          <div class="col">
+            <h6 class="text-uppercase text-muted mb-2">{{ 'Dashboard.Metrics.Sales' | localize : serviceTypeName }}</h6>
+            <span class="h2 mb-0 align-middle">{{ serviceSales }}</span>
+            <span class="badge badge-soft-success ml-2">+3.5%</span>
+          </div>
+          <div class="col-auto">
+            <span class="card-fas fe fe-bar-chart-2 text-muted mb-0"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xs-12 col-sm-6 col-xl-3">
+    <div class="card">
+      <div class="card-body">
+        <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.DashboardOverviewStats"></app-shimmer>
+        <div class="row align-items-center">
+          <div class="col">
+            <h6 class="text-uppercase text-muted mb-2">{{ 'Dashboard.Metrics.Created' | localize : serviceTypeName }}</h6>
+            <span class="h2 mb-0 align-middle">{{ serviceCreated }}</span>
+          </div>
+          <div class="col-auto">
+            <span class="h2 fe fe-plus text-muted mb-0"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xs-12 col-sm-6 col-xl-3">
+    <div class="card">
+      <div class="card-body">
+        <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.DashboardOverviewStats"></app-shimmer>
+        <div class="row align-items-center">
+          <div class="col">
+            <h6 class="text-uppercase text-muted mb-2">{{ 'Dashboard.Metrics.Reviews' | localize : serviceTypeName }}</h6>
+            <div class="d-flex align-items-center gap-10">
+              <app-star-rating-review [actualRating]="serviceReviews"></app-star-rating-review>
+              <span class="h2 mb-0 align-middle">{{ serviceReviews | number : '1.1-1' }}/5</span>
+            </div>
+          </div>
+          <div class="col-auto">
+            <span class="h2 fe fe-star text-muted mb-0"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

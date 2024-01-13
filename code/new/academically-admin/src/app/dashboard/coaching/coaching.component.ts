@@ -24,6 +24,7 @@ import { CoachingsServiceProxy, CoachingType, CreateCoachingDto, ServicesType } 
 export class CoachingComponent extends AppComponentBase implements OnInit, AfterViewInit {
   shimmerType = ShimmerType;
   readonly DashboardServiceView = DashboardServiceView;
+  readonly ServicesType = ServicesType;
 
   constructor(
     injector: Injector,

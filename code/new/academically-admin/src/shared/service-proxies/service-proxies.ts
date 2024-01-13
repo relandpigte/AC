@@ -24783,6 +24783,79 @@ export class ServicesServiceProxy {
         }
         return _observableOf<number>(<any>null);
     }
+
+    /**
+     * @param userId (optional) 
+     * @param type (optional) 1 = Event
+    
+    2 = Course
+    
+    3 = Tutorial
+    
+    4 = Article
+    
+    5 = Coaching
+    
+    6 = Workshop
+    
+    7 = User
+     * @return Success
+     */
+    getServiceMetrics(userId: number | undefined, type: ServicesType | undefined): Observable<ServiceMetricsDto> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetServiceMetrics?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        if (type === null)
+            throw new Error("The parameter 'type' cannot be null.");
+        else if (type !== undefined)
+            url_ += "type=" + encodeURIComponent("" + type) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetServiceMetrics(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetServiceMetrics(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceMetricsDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceMetricsDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetServiceMetrics(response: HttpResponseBase): Observable<ServiceMetricsDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServiceMetricsDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceMetricsDto>(<any>null);
+    }
 }
 
 @Injectable()
@@ -52583,6 +52656,61 @@ export interface IServiceMappingDto {
     node1Id: string | undefined;
     node2Id: string | undefined;
     node3Id: string | undefined;
+}
+
+export class ServiceMetricsDto implements IServiceMetricsDto {
+    revenue: number;
+    created: number;
+    sales: number;
+    overallReview: number;
+
+    constructor(data?: IServiceMetricsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.revenue = _data["revenue"];
+            this.created = _data["created"];
+            this.sales = _data["sales"];
+            this.overallReview = _data["overallReview"];
+        }
+    }
+
+    static fromJS(data: any): ServiceMetricsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServiceMetricsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["revenue"] = this.revenue;
+        data["created"] = this.created;
+        data["sales"] = this.sales;
+        data["overallReview"] = this.overallReview;
+        return data; 
+    }
+
+    clone(): ServiceMetricsDto {
+        const json = this.toJSON();
+        let result = new ServiceMetricsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IServiceMetricsDto {
+    revenue: number;
+    created: number;
+    sales: number;
+    overallReview: number;
 }
 
 export class ServiceOfferDto implements IServiceOfferDto {
