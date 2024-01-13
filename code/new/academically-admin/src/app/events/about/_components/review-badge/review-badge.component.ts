@@ -1,6 +1,6 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
-import { EventCategory, EventDto } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/app-component-base';
+import { EventCategory, EventDto, ServiceReviewDto } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-review-badge',
@@ -9,6 +9,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 })
 export class ReviewBadgeComponent extends AppComponentBase implements OnInit {
   @Input() data: EventDto;
+  @Input() review: ServiceReviewDto;
 
   constructor(
     injector: Injector
@@ -18,7 +19,7 @@ export class ReviewBadgeComponent extends AppComponentBase implements OnInit {
 
   get hasReviewed(): boolean { return this.data?.hasReviewed; }
   get eventCategoryName(): string { return this.data?.category === EventCategory.Broadcast ? 'Broadcast' : 'Workshop'; }
-  get rating(): number { return this.data?.review?.rating; }
+  get rating(): number { return this.review?.rating; }
 
   ngOnInit(): void {
   }

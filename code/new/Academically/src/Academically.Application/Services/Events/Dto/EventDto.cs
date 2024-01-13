@@ -131,8 +131,5 @@ namespace Academically.Services.Events.Dto
         
         [NotMapped]
         public bool HasReviewed { get; set; }
-        
-        [NotMapped]
-        public EventRating Review { get; set; }
     }
 }

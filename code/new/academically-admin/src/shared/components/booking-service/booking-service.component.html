@@ -200,7 +200,8 @@
       <div class="card-footer-steps text-uppercase mr-auto">
         {{ l('Steps', step, totalSteps) }}
       </div>
-      <button type="button" class="btn btn-outline-secondary" (click)="onCloseModal()">{{ 'Cancel' | localize }}</button>
+      <button *ngIf="!canStepBack" type="button" class="btn btn-outline-secondary" (click)="onCloseModal()">{{ 'Cancel' | localize }}</button>
+      <button *ngIf="canStepBack" type="button" class="btn btn-outline-secondary" (click)="onStepBack(step)">{{ 'Back' | localize }}</button>
       <button *ngIf="stepOne" [disabled]="!isValidFirstStep" class="btn btn-primary" (click)="onSteps(2)">{{ 'Continue' | localize }}</button>
       <button *ngIf="stepOneCancellation" class="btn btn-primary" (click)="onProcessCancellation()">{{ 'Confirm' | localize }}</button>
       <button *ngIf="step2Reschedule" [disabled]="!rescheduleReason?.length" type="button" class="btn btn-primary" (click)="onProcessReschedule()">{{ 'Reschedule' | localize }}</button>
@@ -235,7 +236,7 @@
       <div [ngSwitch]="paymentStatus" class="booking-confirmation-header text-center">
         <img src="assets/img/service/booking/icon-successful.svg" alt="">
         <h3 class="title">{{ 'Session cancelled' | localize }}</h3>
-        <span class="description">{{ 'Your session with ' + coachFirstName + ' has been cancelled' }}</span>
+        <span class="description">{{ 'Your session with ' + coachName + ' has been cancelled' }}</span>
         <div class="booking-confirmation-buttons d-flex gap-10 align-items-center justify-content-center">
           <button type="button" class="btn btn-primary" (click)="onCloseModal()">{{ 'Close' | localize }}</button>
         </div>

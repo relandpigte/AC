@@ -664,6 +664,7 @@ namespace Academically.Services.Notifications
                 case NotificationAction.Review:
                     return await FormatReviewPronoun(notification);
                 case NotificationAction.Cancel:
+                    return await FormatCancelPronoun(notification);
                 case NotificationAction.Reschedule:
                     return "their";
                 default:
@@ -745,6 +746,12 @@ namespace Academically.Services.Notifications
             var user = await this._usersRepository.FirstOrDefaultAsync(service.CreatorUserId.Value);
 
             return $"<span>{textInfo.ToTitleCase(user.FullName)}'s</span>";
+        }
+        
+        private async Task<string> FormatCancelPronoun(NotificationDto notification)
+        {
+            var service = await GetSimpleService(notification.ReferenceId);
+            return service.CreatorUserId == notification.UserId ? "their" : "your";
         }
         
         private async Task<string> FormatFirstTarget(NotificationDto notification)

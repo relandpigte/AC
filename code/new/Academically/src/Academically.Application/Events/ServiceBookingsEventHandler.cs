@@ -46,7 +46,7 @@ namespace Academically.Events
                     UserId = eventData.Entity.OwnerId,
                     ActorId = eventData.Entity.CreatorUserId.Value,
                     Action = NotificationAction.Book,
-                    Target = getNotificationTarget(eventData.Entity.Type.Value),
+                    Target = GetNotificationTarget(eventData.Entity.Type.Value),
                     ReferenceId = eventData.Entity.ReferenceId,
                     SourceId = eventData.Entity.Id,
                     Url = getServiceUrl(eventData.Entity.Type.Value, eventData.Entity.ReferenceId),
@@ -69,10 +69,10 @@ namespace Academically.Events
 
                 await _backgroundJobManager.EnqueueAsync<CreateNotificationJob, CreateNotificationJobArgs>(new CreateNotificationJobArgs()
                 {
-                    UserId = eventData.Entity.OwnerId,
-                    ActorId = eventData.Entity.CreatorUserId.Value,
-                    Action = this.getNotificationAction(eventData.Entity),
-                    Target = getNotificationTarget(eventData.Entity.Type.Value),
+                    UserId = GetNotificationTargetUser(eventData.Entity),
+                    ActorId = GetNotificationActorUser(eventData.Entity),
+                    Action = GetNotificationAction(eventData.Entity),
+                    Target = GetNotificationTarget(eventData.Entity.Type.Value),
                     ReferenceId = eventData.Entity.ReferenceId,
                     SourceId = eventData.Entity.Id,
                     Url = getServiceUrl(eventData.Entity.Type.Value, eventData.Entity.ReferenceId),
@@ -87,14 +87,26 @@ namespace Academically.Events
         {
         }
 
-        private NotificationAction getNotificationAction(ServiceBooking booking)
+        private static long GetNotificationTargetUser(ServiceBooking booking)
+        {
+            if (booking.UserCancelled.HasValue && booking.OwnerId == booking.UserCancelled.Value)
+                return booking.CreatorUserId.Value;
+            return booking.OwnerId;
+        }
+        
+        private static long GetNotificationActorUser(ServiceBooking booking)
+        {
+            return booking.UserCancelled ?? booking.CreatorUserId.Value;
+        }
+
+        private NotificationAction GetNotificationAction(ServiceBooking booking)
         {
             if (!string.IsNullOrEmpty(booking.RescheduleReason)) return NotificationAction.Reschedule;
             else if (!string.IsNullOrEmpty(booking.CancellationReason)) return NotificationAction.Cancel;
             else return NotificationAction.Book;
         }
 
-        private NotificationTarget getNotificationTarget(ServicesType type)
+        private NotificationTarget GetNotificationTarget(ServicesType type)
         {
             switch (type)
             {

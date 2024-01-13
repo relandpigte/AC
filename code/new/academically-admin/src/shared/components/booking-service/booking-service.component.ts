@@ -74,6 +74,7 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   isSubmitting$ = new BehaviorSubject<boolean>(false);
 
   step = 1;
+  isStepBack = false;
   paymentStatus: PaymentStatus = PaymentStatus.Fail;
   defaultPaymentMethod: PaymentMethod = PaymentMethod.CreditCard;
   paymentMethodNames: string[] = ['Credit card', 'Paypal', 'WeChat', 'Alipay'];
@@ -119,7 +120,7 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   }
   get coachAvatar(): string { return this.data?.creatorUser?.profilePictureUrl ?? this.service?.owner?.avatar?.src; }
   get coachName(): string { return this.data?.creatorUser?.fullName ?? this.service?.owner?.fullName; }
-  get coachFirstName(): string { return this.data?.creatorUser?.firstName; }
+  get coachFirstName(): string { return this.data?.creatorUser?.firstName ?? this.service?.owner?.firstName; }
   get coachUserId(): number { return this.data?.creatorUserId; }
   get serviceName(): string { return this.data?.name; }
   get serviceId(): string { return this.data?.id; }
@@ -160,6 +161,7 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   get cancellationReasonValue(): string { return this.cancellationReasonEl?.nativeElement?.innerHTML?.trim(); }
   get cancellationReasonLength(): number { return this.cancellationReasonValue?.length || 0; }
   get stepOne(): boolean { return this.step === 1 && !this.isCancellation; }
+  get canStepBack(): boolean { return this.totalSteps > 1 && this.step > 1; }
   get stepOneCancellation(): boolean { return this.step === 1 && this.isCancellation; }
   get step2Reschedule(): boolean { return this.step === 2 && !_.isEmpty(this.rescheduleBooking) && !this.isCancellation; }
   get step2Paypal(): boolean { return this.step === 2 && this.defaultPaymentMethod === PaymentMethod.Paypal && _.isEmpty(this.rescheduleBooking); }
@@ -197,12 +199,12 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   }
 
   ngOnInit(): void {
+    this.initTimeZones();
+    this.initUserData();
     this.initCalendar();
     this.retrieveBookingToCancel();
     this.initPurchase();
     this.initService();
-    this.initTimeZones();
-    this.initUserData();
 
     console.log('%c' + moment().format('dddd, MMMM Do YYYY, h:mm:ss a'), 'color:limegreen;font-weight:bold');
   }
@@ -220,6 +222,15 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
 
   onSteps(nextStep: number): void {
     this.step = nextStep;
+    this._cdr.detectChanges();
+  }
+
+  onStepBack(step: number): void {
+    if (step === 1) {
+      return;
+    }
+    this.step = step - 1;
+    this.isStepBack = true;
     this._cdr.detectChanges();
   }
 
@@ -292,11 +303,7 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   }
 
   onSelectTime(time: string): void {
-    // TODO: do the checking here for slot availability
-    // If not available call onScheduleTaken()
-    // Else set the selected time
     this.selectedTime = time;
-
     const bookingDate = moment(`${this.selectedDate} ${this.selectedTime}:00`);
     const isTaken = this.serviceBookings?.filter(x => moment(x.bookingDateTime).isSame(bookingDate));
     const totalBookingsToday = this.serviceBookings?.filter(x => moment(x.bookingDateTime).isSame(moment(bookingDate), 'day')) ?? [];
@@ -314,26 +321,18 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   }
 
   onChangeTimeZone(): void {
+    console.warn(this.userTimeZone, this.userData);
     const modalSettings = this.defaultModalSettings as ModalOptions<ChangeTimezoneComponent>;
     modalSettings.backdrop = true;
     modalSettings.ignoreBackdropClick = false;
     modalSettings.keyboard = true;
     modalSettings.initialState = { timeZones: this.timeZones, userData: this.userData };
     modalSettings.class = 'modal-lg modal-dialog-centered modal-dialog-timezone';
-    const modalTimezone = this._modalService.show(ChangeTimezoneComponent, modalSettings);
+    const modal = this._modalService.show(ChangeTimezoneComponent, modalSettings);
 
-    modalTimezone.content.onSelectTimezone.subscribe((tz: TimeZoneDto): void => {
-      modalTimezone.hide();
-      setTimeout((): void => {
-        const modalConfirmTimezone = this.defaultModalSettings as ModalOptions<ConfirmTimezoneComponent>;
-        modalConfirmTimezone.initialState = { timezone: tz };
-        modalConfirmTimezone.class = 'modal-lg modal-dialog-centered modal-dialog-change-timezone';
-        const modalChangeTimezone = this._modalService.show(ConfirmTimezoneComponent, modalConfirmTimezone);
-        modalChangeTimezone.content.onTimezoneUpdated.subscribe((timezone: TimeZoneDto): void => {
-          this.userData.timeZoneId = timezone.id;
-          this.userTimeZone = timezone;
-        });
-      }, 100);
+    modal.content.onTimezoneUpdated.subscribe((timezone: TimeZoneDto): void => {
+      this.userData.timeZoneId = timezone.id;
+      this.userTimeZone = timezone;
     });
   }
 
@@ -359,6 +358,10 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
       if (moment(bookingDateTime).isSame(moment(currentDate), 'day')) {
         this.initAvailabilitySchedule(new Date(bookingDateTime?.toString()));
         return this.bookingDates.includes(currentDate) ? 'active reschedule-events' : 'active';
+      }
+    } else if (this.isStepBack) {
+      if (moment(currentDate).isSame(this.selectedDate, 'day')) {
+        return 'active';
       }
     } else {
       if (moment().isSame(moment(currentDate), 'day')) {
