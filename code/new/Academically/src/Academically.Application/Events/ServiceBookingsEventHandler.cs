@@ -89,12 +89,14 @@ namespace Academically.Events
 
         private static long GetNotificationTargetUser(ServiceBooking booking)
         {
-            return booking.UserCancelled.HasValue ? booking.OwnerId : booking.CreatorUserId.Value;
+            if (booking.UserCancelled.HasValue && booking.OwnerId == booking.UserCancelled.Value)
+                return booking.CreatorUserId.Value;
+            return booking.OwnerId;
         }
         
         private static long GetNotificationActorUser(ServiceBooking booking)
         {
-            return booking.UserCancelled ?? booking.OwnerId;
+            return booking.UserCancelled ?? booking.CreatorUserId.Value;
         }
 
         private NotificationAction GetNotificationAction(ServiceBooking booking)
