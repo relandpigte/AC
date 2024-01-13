@@ -180,6 +180,18 @@ namespace Academically.Services.Notifications
             return notifications;
         }
 
+
+        private bool HasSpecialConditionForNotAggregating(CreateNotificationDto input, Notification notification) {
+            switch(notification.Action) {
+                case NotificationAction.Invite:
+                    // don't aggregate if source is not found in existing notification's sources
+                    // meaning, aggregate only if referenceId and sourceId are the same
+                    return !notification.Sources.Any(s => s.ReferenceId == input.SourceId);
+                default:
+                    return false;
+            }
+        }
+
         public async Task Create(CreateNotificationDto input)
         {
             if (input.UserId == input.ActorId) return;
@@ -207,7 +219,8 @@ namespace Academically.Services.Notifications
                 .Where(n => n.Action != NotificationAction.Reschedule) // never aggregate booking reschedule
                 .FirstOrDefault();
 
-            if (latestUserNotification == null)
+            // create new notification if aggregate rule doesn't match any existing notifications or has special condition for not aggregating
+            if (latestUserNotification == null || this.HasSpecialConditionForNotAggregating(input, latestUserNotification))
             {
                 latestUserNotification = await this._notificationsRepository.InsertAsync(new Notification()
                 {
