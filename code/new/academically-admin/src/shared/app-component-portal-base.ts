@@ -23,6 +23,12 @@ export interface PortalViewElementsProperties {
     attendeeVideosEl: QueryList<ElementRef>;
 }
 
+export interface PortalAttendeeProperties {
+    user: EventUserDto;
+    isAdmitted: boolean;
+    isCurrentUser: boolean;
+}
+
 export interface PeerLeaveProperties {
     peer: rtc.RemotePeer;
     videoEl: ElementRef;
@@ -59,7 +65,7 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
     eventUser = new EventUserDto();
     allEventUsers: EventUserDto[] = [];
     joiningEventUsers: EventUserDto[] = [];
-    attendees: EventUserDto[] = [];
+    attendees: { [key: string]: PortalAttendeeProperties } = {};
 
     isPortalInitialized = false;
     hubConnected = false;
@@ -84,6 +90,7 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
         this._eventsService = injector.get(EventsServiceProxy);
     }
 
+    get admittedAttendees(): EventUserDto[] { return Object.values(this.attendees).filter(a => a.user && (a.isAdmitted || a.isCurrentUser)).map(a => a.user); }
     get eventHostUserId(): number { return this.eventHost.user.id; }
     get otherEventUserIds(): number[] { return this.allEventUsers.filter(e => e.user.id !== this.eventUser.user.id).map(e => e.user.id); }
     get isHost(): boolean { return this.eventModel?.creatorUserId === this.appSession.userId; }
@@ -165,10 +172,12 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
         // peer joins
         this.room.on('peer_joined', (peer: rtc.RemotePeer) => {
             this.joiningEventUsers.forEach(joiningEventUser => {
-                const videoEl = joiningEventUser.type === EventUserType.Host ? this.props.viewProps.presenterVideoEl :
-                    this.props.viewProps.attendeeVideosEl.find(e => +e.nativeElement.id === joiningEventUser.user.id);
-                const videoStream = new rtc.MediaDomElement(videoEl.nativeElement, peer);
-                this.subscribeToPeerEvents({ peer, videoEl });
+                setTimeout(() => {
+                    const videoEl = joiningEventUser.type === EventUserType.Host ? this.props.viewProps.presenterVideoEl :
+                        this.props.viewProps.attendeeVideosEl.find(e => +e.nativeElement.id === joiningEventUser.user.id);
+                    const videoStream = new rtc.MediaDomElement(videoEl.nativeElement, peer);
+                    this.subscribeToPeerEvents({ peer, videoEl });
+                })
             });
         });
     }
@@ -193,8 +202,6 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
 
                 case ConferenceAction.EndEvent:
                     console.log('@@@ receiveSignal - EndEvent');
-                    this.eventStarted = false;
-                    this.eventJoined = false;
                     await this.leaveRoom();
                     break;
 
@@ -202,11 +209,16 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
                     console.log('@@@ receiveSignal - JoinEvent');
                     this.joiningEventUsers.push(eventUserObj);
                     this._portalService.attendeeJoined = eventUserObj;
+                    this.attendees[eventUserObj.user.id] = { ...this.attendees[eventUserObj.user.id], isAdmitted: true };
                     break;
 
                 case ConferenceAction.GuestJoined:
                     console.log('@@@ receiveSignal - GuestJoined');
-                    this.attendees.push(eventUserObj);
+                    this.attendees[eventUserObj.user.id] = {
+                        user: eventUserObj,
+                        isAdmitted: false,
+                        isCurrentUser: eventUserObj.user.id === this.eventUser.user.id
+                    };
                     this._portalService.guestJoined = eventUserObj;
                     break;
 
@@ -248,9 +260,17 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
     }
 
     private async leaveRoom(): Promise<void> {
+        // reset flags
+        this.eventStarted = false;
+        this.eventJoined = false;
+        this.waiting = false;
+        this.attendees = {};
+
+        // stop all streams and leave room
         this.streams.forEach(s => s.getTracks('both').forEach(s => s.stop()));
         this.room.leave();
-        this.attendees = [];
+
+        // reset room
         this.initRoom();
         this.props.viewProps.presenterVideoEl.nativeElement.load();
         this.onLobbyEntered(this.selectedMachineDevice);
@@ -300,7 +320,11 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
             this.initDevice(this.props.viewProps.presenterVideoEl.nativeElement);
             this.sendSignal(EVENT_SESSIONS_HUB_NAME, this.otherEventUserIds, new SignalData(ConferenceAction.LobbyEntered, this.eventUser));
         } else {
-            this.attendees.push(this.eventUser);
+            this.attendees[this.eventUser.user.id] = {
+                user: this.eventUser,
+                isAdmitted: false,
+                isCurrentUser: true
+            };
             if (!this.eventModel.autoAdmitAttendees) {
                 this.sendSignal(EVENT_SESSIONS_HUB_NAME, [this.eventHostUserId], new SignalData(ConferenceAction.LobbyEntered, this.eventUser));
             }

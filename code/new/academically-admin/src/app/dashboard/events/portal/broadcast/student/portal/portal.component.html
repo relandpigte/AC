@@ -65,7 +65,7 @@
     <div class="article-container">
       <div class="presentation-feed">
         <div class="attendees my-2">
-          <div *ngFor="let attendee of attendees" class="attendee">
+          <div *ngFor="let attendee of admittedAttendees" class="attendee">
             <video [attr.id]="attendee?.user?.id" class="attendee-video" #attendeeVideos autoplay playsinline></video>
           </div>
         </div>
