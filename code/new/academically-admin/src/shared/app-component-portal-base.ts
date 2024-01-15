@@ -244,8 +244,6 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
                     }
                     if (eventUserObj.user.id !== this.eventHostUserId) {
                         this._portalService.lobbyUser = eventUserObj;
-                    } else if (!this.eventModel.autoAdmitAttendees && this.inLobby) {
-                        this.sendSignal(EVENT_SESSIONS_HUB_NAME, [this.eventHost.user.id], new SignalData(ConferenceAction.LobbyEntered, this.eventUser));
                     }
                     break;
             }
@@ -264,6 +262,11 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
         this.eventStarted = false;
         this.eventJoined = false;
         this.waiting = false;
+
+        // let all attendees leave
+        Object.values(this.attendees).forEach(a => {
+            this._portalService.attendeeLeft = a.user;
+        });
         this.attendees = {};
 
         // stop all streams and leave room
