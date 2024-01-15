@@ -6,6 +6,7 @@ import { CourseWizardComponent } from './course-wizard/course-wizard.component';
 import { DashboardService, DashboardServiceView } from '@app/dashboard/_services/dashboard.service';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
+import { ServicesType } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-courses',
@@ -16,6 +17,7 @@ import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 export class CoursesComponent extends AppComponentBase implements OnInit, AfterViewInit {
   shimmerType = ShimmerType;
   readonly DashboardServiceView = DashboardServiceView;
+  readonly ServicesType = ServicesType;
 
   constructor(
     injector: Injector,

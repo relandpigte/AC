@@ -23,6 +23,7 @@ import { ServiceDataService } from '@shared/services/service-data.service';
 export class EventsComponent extends AppComponentBase implements OnInit, AfterViewInit {
   shimmerType = ShimmerType;
   readonly DashboardServiceView = DashboardServiceView;
+  readonly ServicesType = ServicesType;
 
   constructor(
     injector: Injector,

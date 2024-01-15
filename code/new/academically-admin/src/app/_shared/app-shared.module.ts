@@ -110,6 +110,7 @@ import { ServiceNotificationPopupComponent } from '@shared/components/service-no
 import { SharedToFeedComponent } from '@shared/components/shared-to-feed/shared-to-feed.component';
 import { ChangeTimezoneComponent } from '@shared/components/booking-service/components/change-timezone/change-timezone.component';
 import { ConfirmTimezoneComponent } from '@shared/components/booking-service/components/confirm-timezone/confirm-timezone.component';
+import { ServiceMetricsComponent } from '@shared/components/service-metrics/service-metrics.component';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -199,7 +200,8 @@ FullCalendarModule.registerPlugins([
     ServiceNotificationPopupComponent,
     SharedToFeedComponent,
     ChangeTimezoneComponent,
-    ConfirmTimezoneComponent
+    ConfirmTimezoneComponent,
+    ServiceMetricsComponent
   ],
   imports: [
     CommonModule,
@@ -322,7 +324,8 @@ FullCalendarModule.registerPlugins([
     ServiceNotificationPopupComponent,
     SharedToFeedComponent,
     ChangeTimezoneComponent,
-    ConfirmTimezoneComponent
+    ConfirmTimezoneComponent,
+    ServiceMetricsComponent
   ],
 })
 export class AppSharedModule { }

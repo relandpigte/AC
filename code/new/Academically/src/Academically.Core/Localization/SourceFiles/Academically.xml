@@ -2019,6 +2019,10 @@
     <text name="MyStudents">My students</text>
     <text name="FinishedTutorial">Congratulations! You've finished this tutorial.</text>
     <text name="OverallReview">Overall review</text>
+    <text name="Dashboard.Metrics.Revenue">{0} revenue</text>
+    <text name="Dashboard.Metrics.Sales">{0} sales</text>
+    <text name="Dashboard.Metrics.Created">{0} created</text>
+    <text name="Dashboard.Metrics.Reviews">{0} reviews</text>
     
     <!-- Chat -->
     <text name="WriteAMessage">Write a message</text>

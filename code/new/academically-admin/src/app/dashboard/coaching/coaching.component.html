@@ -35,7 +35,7 @@
                         <app-created></app-created>
                     </div>
                     <div class="tab-pane fade" id="analytics" role="tabpanel" aria-labelledby="analytics-tab">
-                        This is analytics tab
+                        <app-service-metrics [serviceType]="ServicesType.Coaching"></app-service-metrics>
                     </div>
                 </ng-container>
                 <ng-container *ngSwitchDefault>

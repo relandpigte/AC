@@ -12,13 +12,13 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Abp.Runtime.Session;
 using Academically.Domain.Services.Documents;
 using Academically.Extensions;
 using Academically.Services.StudentCourses;
 using System.Dynamic;
+using Academically.Services.UserFollowers;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Academically.Services.Services
@@ -38,6 +38,9 @@ namespace Academically.Services.Services
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IRepository<Coaching, Guid> _coachingsRepository;
         private readonly IRepository<Event, Guid> _eventsRepository;
+        private readonly IRepository<Article, Guid> _articlesRepository;
+        private readonly IRepository<Course, Guid> _coursesRepository;
+        private readonly IRepository<Video, Guid> _videosRepository;
         private readonly IRepository<Notification, Guid> _notificationsRepository;
         private readonly IHubContext<EventsHub> _eventsHub;
 
@@ -109,8 +112,10 @@ namespace Academically.Services.Services
             IRepository<Coaching, Guid> coachingsRepository,
             IRepository<Event, Guid> eventsRepository,
             IRepository<Notification, Guid> notificationsRepository,
-            IHubContext<EventsHub> eventsHub
-            )
+            IHubContext<EventsHub> eventsHub,
+            IRepository<Article, Guid> articlesRepository,
+            IRepository<Course, Guid> coursesRepository,
+            IRepository<Video, Guid> videosRepository)
         {
             _servicesRepository = servicesRepository;
             _serviceMappingsRepository = serviceMappingsRepository;
@@ -127,6 +132,9 @@ namespace Academically.Services.Services
             _eventsRepository = eventsRepository;
             _notificationsRepository = notificationsRepository;
             _eventsHub = eventsHub;
+            _articlesRepository = articlesRepository;
+            _coursesRepository = coursesRepository;
+            _videosRepository = videosRepository;
         }
 
         public async Task TestEventNotifierToasters(string ids)
@@ -632,6 +640,43 @@ namespace Academically.Services.Services
             if (reviews.Count == 0) return 0;
 
             return reviews.Sum(x => x.Rating).ToDecimal() / reviews.Count;
+        }
+
+        public async Task<ServiceMetricsDto> GetServiceMetrics(long userId, ServicesType type)
+        {
+            var serviceMetrics = new ServiceMetricsDto
+            {
+                Revenue = 350855.30,
+                Created = await ServiceCreatedCount(userId, type),
+                Sales = 5,
+                OverallReview = await GetServicesReviews(userId, type)
+            };
+            return serviceMetrics;
+        }
+
+        private async Task<int> ServiceCreatedCount(long userId, ServicesType type)
+        {
+            var serviceCreated = type switch
+            {
+                ServicesType.Event => await _eventsRepository.CountAsync(x => x.CreatorUserId == userId),
+                ServicesType.Course => await _coursesRepository.CountAsync(x => x.CreatorUserId == userId),
+                ServicesType.Tutorial => await _videosRepository.CountAsync(x => x.CreatorUserId == userId),
+                ServicesType.Article => await _articlesRepository.CountAsync(x => x.CreatorUserId == userId),
+                ServicesType.Coaching => await _coachingsRepository.CountAsync(x => x.CreatorUserId == userId),
+                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+            };
+            return serviceCreated;
+        }
+
+        private async Task<decimal> GetServicesReviews(long userId, ServicesType type)
+        {
+            var reviews = _serviceReviewRepository.GetAll()
+                .Where(x => x.ServiceOwnerId == userId)
+                .Where(x => x.ServiceType == type);
+            
+            var sumRatings = (await reviews.SumAsync(x => x.Rating)).ToDecimal();
+            var totalReviews = await reviews.CountAsync();
+            return totalReviews > 0 ? Math.Round(sumRatings / totalReviews, 1) : 0;
         }
         
         private async Task<List<ServiceReviewDto>> GetServiceReviewDetails(List<ServiceReviewDto> reviews, Guid? notificationId)
