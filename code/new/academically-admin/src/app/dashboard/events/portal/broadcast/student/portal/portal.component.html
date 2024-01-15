@@ -8,18 +8,18 @@
         <a class="navbar-brand text-left pt-0" href="javascript:;">
           <div class="d-flex">
             <div class="avatar avatar-4by3">
-              <img [src]="getServiceImageUrl(model.thumbnailDocument)" alt="..." class="avatar-img rounded">
+              <img [src]="getServiceImageUrl(eventModel.thumbnailDocument)" alt="..." class="avatar-img rounded">
             </div>
             <div class="navbar-brand-header ml-3 mr-n3">
               <h6 class="header-pretitle">
-                <ng-container *ngIf="model.parent && model.parent.id else singleVideoPretitle">
+                <ng-container *ngIf="eventModel.parent && eventModel.parent.id else singleVideoPretitle">
                   {{ model.parent.name }}
                 </ng-container>
                 <ng-template #singleVideoPretitle>
                   {{ 'Event' | localize }}
                 </ng-template>
               </h6>
-              <h3 class="header-title">{{ model.name }}</h3>
+              <h3 class="header-title">{{ eventModel.name }}</h3>
             </div>
           </div>
         </a>
@@ -31,7 +31,7 @@
             </button>
             <ng-container *ngIf="isHost">
               <div class="custom-control custom-switch no-wrap mr-4">
-                <input [(ngModel)]="model.autoAdmitAttendees" id="autoAdmitAttendees" name="autoAdmitAttendees"
+                <input [(ngModel)]="eventModel.autoAdmitAttendees" id="autoAdmitAttendees" name="autoAdmitAttendees"
                   type="checkbox" class="custom-control-input" (change)="onAutoAdmitChange()">
                 <label class="custom-control-label" for="autoAdmitAttendees">
                   {{ 'AutoAdmit' | localize }}

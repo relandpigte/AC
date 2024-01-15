@@ -22,8 +22,8 @@ export class HubService {
     return this.getHub('conversations');
   }
 
-  public getEventSessionsHub(callback: (connection?: any) => void): Promise<any> {
-    return this.getHub('eventSessions', null, callback);
+  public getEventSessionsHub(params?: Record<string, any>, callback?: (connection?: any) => void): Promise<any> {
+    return this.getHub('eventSessions', Utils.generateUrlParams(params), callback);
   }
 
   public getQuestionsHub(params?: Record<string, any>): Promise<any> {

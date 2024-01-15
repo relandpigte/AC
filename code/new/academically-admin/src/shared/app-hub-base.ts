@@ -15,7 +15,7 @@ export class SignalData<TObject> {
     }
 
     public getDataObject(): TObject {
-      return JSON.parse(this.data) as TObject;
+      return (this.data ? JSON.parse(this.data) : null) as TObject;
     }
 }
 
@@ -62,9 +62,9 @@ export abstract class AppHubBase implements OnDestroy {
         customHub.start().then(() => this.onHubStartSuccess).catch((err) => this.onHubStartFailure);
     }
 
-    protected startHubConnection(key: string): void {
+    protected startHubConnection(key: string, callback?: () => void): void {
         if (!this.hubs?.has(key)) return;
-        this.hubs.get(key).start().then(() => this.onHubStartSuccess).catch((err) => this.onHubStartFailure);
+        this.hubs.get(key).start().then(() => this.onHubStartSuccess(callback)).catch((err) => this.onHubStartFailure);
     }
 
     protected stopHubConnection(key: string): void {
@@ -79,7 +79,8 @@ export abstract class AppHubBase implements OnDestroy {
         }
     }
 
-    protected onHubStartSuccess = () => {
+    protected onHubStartSuccess = (callback?: () => void) => {
+        if (callback) callback();
         console.log('SignalR connection started.');
     }
 

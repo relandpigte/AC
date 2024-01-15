@@ -93,7 +93,7 @@ export class BroadcastSessionComponent extends AppComponentBase implements OnIni
 
   private async initHub(): Promise<void> {
     console.log('initializing hub');
-    this._hubService.getEventSessionsHub(async (conn) => {
+    this._hubService.getEventSessionsHub({ 'userId': this.appSession.userId }, async (conn) => {
       console.log(conn);
       // const ws = conn.connection.baseUrl.replace('http', 'ws').replace('https', 'ws');
       const ws = 'wss://easy.innovailable.eu/' + encodeURI(this.eventId);

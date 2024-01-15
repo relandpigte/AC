@@ -25,45 +25,43 @@ export class RegistrantsComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
-    this._portalService.attendees$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(responses => {
-        console.log('registrants - attendees');
-        this.attendees = _.cloneDeep(responses);
-      });
-    this._portalService.lobbyUser$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(response => {
-        if (response) {
-          console.log('registrants - lobbyUser');
-          const index = this.attendees.findIndex(e => e.user.id === response.user.id);
+    this.pipeDestroy(this._portalService.attendees$, responses => {
+      console.log('registrants - attendees');
+      this.attendees = _.cloneDeep(responses);
+    });
+
+    this.pipeDestroy(this._portalService.lobbyUser$, response => {
+      if (response) {
+        console.log('registrants - lobbyUser');
+        const index = this.attendees.findIndex(e => e.user.id === response.user.id);
+        if (index >= 0) {
+          this.lobbyUsers.splice(index, 1);
           this.attendees.splice(index, 1);
-          this.lobbyUsers.push(response);
         }
-      });
-    this._portalService.guestJoined$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(response => {
-        if (response) {
-          console.log('registrants - guestJoined');
-          const index = this.lobbyUsers.findIndex(e => e.user.id === response.user.id);
-          if (index >= 0) {
-            this.lobbyUsers.splice(index, 1);
-          }
-          this.waitingUsers.push(response);
+        this.lobbyUsers.push(response);
+      }
+    });
+
+    this.pipeDestroy(this._portalService.guestJoined$, response => {
+      if (response) {
+        console.log('registrants - guestJoined');
+        const index = this.lobbyUsers.findIndex(e => e.user.id === response.user.id);
+        if (index >= 0) {
+          this.lobbyUsers.splice(index, 1);
         }
-      });
-    this._portalService.attendeeJoined$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(response => {
-        if (response) {
-          console.log('registrants - attendeeJoined');
-          const index = this.attendees.findIndex(e => e.user.id === response.user.id);
-          if (index >= 0) {
-            this.attendees.splice(index, 1);
-          }
+        this.waitingUsers.push(response);
+      }
+    });
+
+    this.pipeDestroy(this._portalService.attendeeJoined$, response => {
+      if (response) {
+        console.log('registrants - attendeeJoined');
+        const index = this.attendees.findIndex(e => e.user.id === response.user.id);
+        if (index >= 0) {
+          this.attendees.splice(index, 1);
         }
-      });
+      }
+    });
   }
 
   onAdmitClick(eventUser: EventUserDto): void {

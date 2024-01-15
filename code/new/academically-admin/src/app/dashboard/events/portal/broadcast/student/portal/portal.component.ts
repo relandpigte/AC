@@ -1,50 +1,33 @@
-import { Component, OnInit, Injector, ViewChild, ElementRef, AfterViewInit, OnDestroy, ViewChildren, QueryList } from '@angular/core';
-import { AppComponentBase } from '@shared/app-component-base';
-import {
-  EventDto,
-  EventsServiceProxy,
-  EventUserDto,
-  EventSessionsServiceProxy,
-  EventUserType,
-  EventPollDto,
-  ProfilesServiceProxy,
-  ServiceOfferStatus,
-  ServicesServiceProxy,
-  ServiceOfferDto, QuestionDto, HubEvent, QuestionsServiceProxy, EventPollsServiceProxy,
-} from '@shared/service-proxies/service-proxies';
-import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { takeUntil } from 'rxjs/operators';
-import { HubService } from '@app/_shared/services/hub.service';
-import { PortalService } from './_services/portal.service';
-import { SelectedMachineDevice } from './_components/device-settings/device-settings.component';
-import * as _ from 'lodash';
-import { ShareVideosComponent } from './_components/share-videos/share-videos.component';
-import * as rtc from 'rtc-lib';
-import { PollSignalAction } from './_components/polls/polls.component';
-import { PortalPollService } from './_components/polls/_services/portal-poll.service';
-import { BsModalService, ModalOptions, BsModalRef } from 'ngx-bootstrap/modal';
-import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
-import { ServiceOffersStateService, offersType } from '@shared/services/service-offers-state.service';
-import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
-import { ServiceOffersService } from '@shared/services/service-offers.service';
+import { AppComponentPortalBase, EVENT_SESSIONS_HUB_NAME } from '@shared/app-component-portal-base';
+import {
+  EventPollDto,
+  EventPollsServiceProxy,
+  EventSessionsServiceProxy,
+  EventUserDto,
+  EventUserType,
+  HubEvent,
+  ProfilesServiceProxy,
+  QuestionDto,
+  QuestionsServiceProxy,
+  ServiceOfferDto,
+  ServicesServiceProxy
+} from '@shared/service-proxies/service-proxies';
 import { EventPollsStateService, pollsType } from '@shared/services/event-polls-state.service';
+import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
+import { ServiceOffersStateService, offersType } from '@shared/services/service-offers-state.service';
+import { ServiceOffersService } from '@shared/services/service-offers.service';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import * as rtc from 'rtc-lib';
+import { takeUntil } from 'rxjs/operators';
 import { PollComponent } from './_components/polls/_components/poll/poll.component';
-import { SignalData } from '@shared/app-hub-base';
+import { PortalPollService } from './_components/polls/_services/portal-poll.service';
+import { ShareVideosComponent } from './_components/share-videos/share-videos.component';
 
-enum SignalAction {
-  StartEvent,
-  JoinEvent,
-  EndEvent,
-  GuestJoined,
-  AutoAdmitChange,
-  AdmitGuest,
-  LobbyEntered,
-  PingHost,
-}
-
-const EVENT_SESSIONS_HUB_NAME = 'eventSessionsHub';
+export const ANSWERING_LIVE_QUESTION_HUB_NAME = 'answeringLiveQuestionHub';
 
 @Component({
   selector: 'app-portal',
@@ -52,10 +35,10 @@ const EVENT_SESSIONS_HUB_NAME = 'eventSessionsHub';
   styleUrls: ['./portal.component.less'],
   animations: [appModuleAnimation()],
 })
-export class PortalComponent extends AppComponentBase implements OnInit, OnDestroy, AfterViewInit {
+export class PortalComponent extends AppComponentPortalBase implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('presenterVideoEl') presenterVideoEl: ElementRef;
   @ViewChildren('attendeeVideos') attendeeVideosEl: QueryList<ElementRef>;
   @ViewChild(ShareVideosComponent) shareVideosComponent: ShareVideosComponent;
-  @ViewChild('presenterVideoEl') presenterVideoEl: ElementRef;
 
   offersStateService: ServiceOffersStateService;
   selectedOffer: ServiceOfferDto;
@@ -66,55 +49,35 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
 
   liveQuestion: QuestionDto;
 
-  model = new EventDto;
-  room: rtc.Room;
-  allEventUsers: EventUserDto[] = [];
-  attendees: EventUserDto[] = [];
-  host = new EventUserDto();
-  eventUser = new EventUserDto();
-  joiningUsers: EventUserDto[] = [];
-  selectedMachineDevice = new SelectedMachineDevice();
-
-  eventId: string;
   invitationId: string;
 
   preview = false;
   showSidebar = true;
-  showDeviceSettings = true;
-  eventStarting = false;
-  eventStarted = false;
-  eventJoined = false;
-  hubConnected = false;
-  waiting = false;
   testMode = true;
-  requestToSpeakDisabled = false;
-  sharingWhiteboard = false;
-  inLobby = false;
 
   constructor(
     injector: Injector,
     route: ActivatedRoute,
     private _location: Location,
     private _router: Router,
-    private _hubService: HubService,
-    private _eventsService: EventsServiceProxy,
-    private _portalService: PortalService,
     private _portalPollService: PortalPollService,
     private _eventSessionsService: EventSessionsServiceProxy,
     private _eventPollsService: EventPollsServiceProxy,
     private _profilesService: ProfilesServiceProxy,
     private _modalService: BsModalService,
-    private _modalDialogService: ModalDialogService,
     private _servicesService: ServicesServiceProxy,
     private _serviceOffersService: ServiceOffersService,
     private _questionsService: QuestionsServiceProxy
   ) {
     super(injector);
+
+    // routings
     this.pipeDestroy(route.paramMap, (paramMap) => {
       if (paramMap.has('invitation-id')) {
         this.invitationId = paramMap.get('invitation-id');
       }
     });
+
     this.pipeDestroy(route.parent.parent.paramMap, async (paramMap) => {
       if (paramMap.has('event-id')) {
         this.eventId = paramMap.get('event-id');
@@ -122,20 +85,9 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
         await this.getEventUsers();
       }
     });
-    this.pipeDestroy(this._portalService.admitGuest$, async (response) => {
-      if (response) {
-        const userIds = this.allEventUsers
-          .filter(e => e.user.id !== this.eventUser.user.id)
-          .map(e => e.user.id);
-        await this.sendSignal(EVENT_SESSIONS_HUB_NAME, userIds, new SignalData(SignalAction.AdmitGuest, response));
-      }
-    });
 
-    this._portalService.liveQuestion$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(question => {
-        this.liveQuestion = question;
-      });
+    // questions
+    this.pipeDestroy(this._portalService.liveQuestion$, question => this.liveQuestion = question);
 
     // polls
     this.pipeDestroy(this._portalPollService.pollSelected$, poll => this.selectedPoll = poll);
@@ -144,24 +96,19 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
 
   get offersStateId(): string { return 'offers-event'; }
   get pollsStateId(): string { return 'polls-event'; }
-  get isHost(): boolean {
-    return this.model.creatorUserId === this.appSession.userId;
-  }
-
-  ngAfterViewInit(): void {
-    this.attendeeVideosEl.changes.subscribe(async (val: any) => {
-      if (this.attendeeVideosEl.length && !this.eventStarted) {
-        const currentEl = this.attendeeVideosEl.last.nativeElement;
-        await this.initDevice(currentEl);
-      }
-    });
-  }
 
   async ngOnInit() {
-    await this.initHub();
+    await super.ngOnInit();
     await this.initOffersAppStates();
     await this.initPollsAppStates();
     await this.initLiveAnsweringQuestion();
+  }
+
+  ngAfterViewInit(): void {
+    this.initPortalViewProperties({
+      presenterVideoEl: this.presenterVideoEl,
+      attendeeVideosEl: this.attendeeVideosEl
+    });
   }
 
   async ngOnDestroy() {
@@ -170,14 +117,6 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     await this.offersStateService?.stop();
     // this.disconnectTrack(this.presenterStream);
     // this.disconnectTrack(this.attendeeStream);
-  }
-
-  async handleLiveAnswering(question: QuestionDto): Promise<void> {
-    await this.getHub(EVENT_SESSIONS_HUB_NAME).invoke('answerLiveQuestion', question);
-  }
-
-  async handleEndLiveAnswering(question: QuestionDto): Promise<void> {
-    await this.getHub(EVENT_SESSIONS_HUB_NAME).invoke('endAnswerLiveQuestion', question);
   }
 
   private async initOffersAppStates() {
@@ -241,6 +180,14 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     });
   }
 
+  async handleLiveAnswering(question: QuestionDto): Promise<void> {
+    await this.getHub(EVENT_SESSIONS_HUB_NAME).invoke('answerLiveQuestion', question);
+  }
+
+  async handleEndLiveAnswering(question: QuestionDto): Promise<void> {
+    await this.getHub(EVENT_SESSIONS_HUB_NAME).invoke('endAnswerLiveQuestion', question);
+  }
+
   handleSelectedPollMaximized(isMaximized: boolean): void {
     if (this.selectedPoll) {
       if (isMaximized) {
@@ -274,43 +221,6 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     this.shareVideosComponent.uploadFiles();
   }
 
-  async onLobbyEntered(selectedMachineDevice: SelectedMachineDevice): Promise<void> {
-    this.inLobby = true;
-    this.selectedMachineDevice = selectedMachineDevice;
-
-    if (this.isHost) {
-      this.initDevice(this.presenterVideoEl.nativeElement);
-      const userIds = this.allEventUsers
-        .filter(e => e.user.id !== this.eventUser.user.id)
-        .map(e => e.user.id);
-      this.sendSignal(EVENT_SESSIONS_HUB_NAME, userIds, new SignalData(SignalAction.LobbyEntered, this.eventUser));
-    } else {
-      this.attendees.push(this.eventUser);
-      if (!this.model.autoAdmitAttendees) {
-        this.sendSignal(EVENT_SESSIONS_HUB_NAME, [this.host.user.id], new SignalData(SignalAction.LobbyEntered, this.eventUser));
-      }
-    }
-  }
-
-  async onStartEventClick(): Promise<void> {
-    this.eventStarting = true;
-    await this.joinRoom();
-    const userIds = this.allEventUsers.map(e => e.user.id);
-    this.sendSignal(EVENT_SESSIONS_HUB_NAME, userIds, new SignalData(SignalAction.StartEvent));
-  }
-
-  async onEndEventClick(): Promise<void> {
-    const options: ModalDialogOptions = {
-      title: this.l('AreYouSure'),
-      text: this.l('EndEventConfirmation'),
-      confirmCb: async () => {
-        const userIds = this.allEventUsers.map(e => e.user.id);
-        this.sendSignal(EVENT_SESSIONS_HUB_NAME, userIds, new SignalData(SignalAction.EndEvent));
-      }
-    };
-    this._modalDialogService.showConfirmDialog(options);
-  }
-
   async onShareVideo(file: File): Promise<void> {
     // @TODO: replace with logic that uses a separate room for other types of presentation
     this.room.leave();
@@ -328,222 +238,35 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
     await presenterVideo.play();
   }
 
-  async onUnshareVideo(): Promise<void> {
-    this.room.leave();
-    this.initRoom();
-    await this.initDevice(this.presenterVideoEl.nativeElement);
-    await this.joinRoom();
-  }
-
   onShareWhiteboardClick(): void {
     this.sharingWhiteboard = true;
-  }
-
-  async onJoinClick(): Promise<void> {
-    if (this.model.autoAdmitAttendees) {
-      await this.joinRoom();
-      this.eventJoined = true;
-    } else {
-      this.waiting = true;
-      await this.sendSignal(EVENT_SESSIONS_HUB_NAME, [this.host.user.id], new SignalData(SignalAction.GuestJoined, this.eventUser));
-    }
   }
 
   async onRequestToSpeakClick(): Promise<void> {
   }
 
-  async onAutoAdmitChange(): Promise<void> {
-    this._portalService.event = this.model;
-    this.pipeDestroy(this._eventsService.updateAutoAdmit(this.model.id, this.model.autoAdmitAttendees));
-    const userIds = this.allEventUsers
-      .filter(e => e.user.id !== this.eventUser.user.id)
-      .map(e => e.user.id);
-    await this.sendSignal(EVENT_SESSIONS_HUB_NAME, userIds, new SignalData(SignalAction.AutoAdmitChange, this.model.autoAdmitAttendees));
-  }
-
-  private async initHub(): Promise<void> {
-    this.addHub = await this._hubService.getEventSessionsHub(() => {
-      this.hubConnected = true;
-      this._portalService.hub = this.getHub(EVENT_SESSIONS_HUB_NAME);
-      this.initRoom();
-      this.handleHubEvents();
-    });
-  }
-
-  private initRoom(): void {
-    const ws = 'wss://easy.innovailable.eu/' + encodeURI(this.eventId);
-    const channel = new rtc.WebSocketChannel(ws);
-    const signaling = new rtc.MucSignaling(channel);
-    const options = {
-      stun: 'stun:stun.innovailable.eu',
-    };
-
-    this.room = new rtc.Room(signaling, options);
-    this.room.on('peer_joined', (peer: rtc.RemotePeer) => {
-      console.log('joining peer');
-      console.log(this.joiningUsers);
-      if (this.joiningUsers.length > 0) {
-        const eventUser = this.joiningUsers[0];
-        const i = this.joiningUsers.findIndex(e => e === eventUser);
-        this.joiningUsers.splice(i, 1);
-
-        if (eventUser.type === EventUserType.Host) {
-          console.log('host user joined');
-          const hostVideo = new rtc.MediaDomElement(this.presenterVideoEl.nativeElement, peer);
-        } else {
-          this.attendees.push(eventUser);
-          setTimeout(() => {
-            console.log('attendee user joined');
-            const videoEl = this.attendeeVideosEl.find(e => +e.nativeElement.id === eventUser.user.id);
-            const attendeeVideo = new rtc.MediaDomElement(videoEl.nativeElement, peer);
-          });
-        }
-
-        console.log('peer joined');
-      }
-    });
-  }
-
-  private async initDevice(videoEl: HTMLVideoElement): Promise<void> {
-    const stream = await this.room.local.addStream({
-      video: {
-        deviceId: this.selectedMachineDevice.videoDevice.id,
-      },
-      audio: {
-        deviceId: this.selectedMachineDevice.audioDevice.id,
-        echoCancellation: {
-          exact: true,
-        },
-        // @ts-ignore
-        googEchoCancellation: { exact: true },
-        googAutoGainControl: { exact: true },
-        googNoiseSuppression: { exact: true },
-      },
-    });
-    const videoDom = new rtc.MediaDomElement(videoEl, stream);
-  }
-
-  private handleHubEvents(): void {
-    this.receiveSignal(EVENT_SESSIONS_HUB_NAME, async (sSignalData: string) => {
-      let modal: BsModalRef;
-      const signalData = new SignalData();
-      Object.assign(signalData, JSON.parse(sSignalData));
-
-      switch (signalData.action) {
-        case SignalAction.StartEvent:
-          console.log('receieveSignal - StartEvent');
-          this.eventStarting = false;
-          this.eventStarted = true;
-          break;
-
-        case SignalAction.JoinEvent:
-          console.log('receieveSignal - JoinEvent');
-          const joinedEventUser = signalData.getDataObject() as EventUserDto;
-          this.joiningUsers.push(joinedEventUser);
-          this._portalService.attendeeJoined = joinedEventUser;
-          break;
-
-        case SignalAction.EndEvent:
-          console.log('receieveSignal - EndEvent');
-          this.eventStarted = false;
-          this.eventJoined = false;
-          break;
-
-        case SignalAction.GuestJoined:
-          console.log('receieveSignal - GuestJoined');
-          const guestEventUser = signalData.getDataObject() as EventUserDto;
-          this._portalService.guestJoined = guestEventUser;
-          break;
-
-        case SignalAction.AutoAdmitChange:
-          console.log('receieveSignal - AutoAdmitChange');
-          const autoAdmit = signalData.getDataObject() as boolean;
-          this.model.autoAdmitAttendees = autoAdmit;
-          this._portalService.event = this.model;
-          break;
-
-        case SignalAction.AdmitGuest:
-          console.log('receieveSignal - AdmitGuest');
-          const userToAdmit = signalData.getDataObject() as EventUserDto;
-          if (userToAdmit.user.id === this.eventUser.user.id) {
-            await this.joinRoom();
-            this.eventJoined = true;
-          }
-          break;
-
-        case SignalAction.LobbyEntered:
-          console.log('receieveSignal - LobbyEntered');
-          const lobbyUser = signalData.getDataObject() as EventUserDto;
-          console.log(lobbyUser);
-
-          if (!this.allEventUsers.some(u => u.user.id === lobbyUser.user.id)) {
-            this.allEventUsers.push(lobbyUser);
-            this._portalService.attendees = this.allEventUsers.filter(e => e.type !== EventUserType.Host);
-          }
-
-          if (lobbyUser.user.id !== this.host.user.id) {
-            console.log(lobbyUser.user.fullName + ' has entered');
-            this._portalService.lobbyUser = lobbyUser;
-          } else {
-            if (!this.model.autoAdmitAttendees && this.inLobby) {
-              this.sendSignal(EVENT_SESSIONS_HUB_NAME, [this.host.user.id], new SignalData(SignalAction.LobbyEntered, this.eventUser));
-            }
-          }
-          break;
-      }
-
-      switch (signalData.action as number as PollSignalAction) {
-        case PollSignalAction.SharePoll:
-        case PollSignalAction.PollStopped:
-        case PollSignalAction.PollClosed:
-          console.log(modal);
-          if (modal) {
-            modal.hide();
-            modal = undefined;
-          }
-          break;
-      }
-    });
-  }
-
-  private async joinRoom(): Promise<void> {
-    const userIds = this.allEventUsers
-      .filter(e => e.user.id !== this.eventUser.user.id)
-      .map(e => e.user.id);
-    await this.sendSignal(EVENT_SESSIONS_HUB_NAME, userIds, new SignalData(SignalAction.JoinEvent, this.eventUser));
-    await this.room.connect();
-  }
-
   async getEvent() {
-    this._eventsService.get(this.eventId)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(response => {
-        this.model = response;
-        this._portalService.event = this.model;
-        if (this.appSession.user) {
-        } if (this.invitationId) {
-          console.warn('has invitation!');
-        }
-      });
+    this.pipeDestroy(this._eventsService.get(this.eventId), response => {
+      this.eventModel = response;
+      this._portalService.event = this.eventModel;
+    });
   }
 
   async getEventUsers() {
-    this._eventSessionsService.getUsers(this.eventId)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(async responses => {
-        this.allEventUsers = responses;
-        if (!this.allEventUsers.some(u => u.user.id === this.appSession.userId)) {
-          try {
-            const user = await this._profilesService.get(this.appSession.userId).toPromise();
-            this.allEventUsers.push(EventUserDto.fromJS({ user, type: EventUserType.Guest }));
-          } catch (err) {
-            console.error(err);
-          }
+    this.pipeDestroy(this._eventSessionsService.getUsers(this.eventId), async responses => {
+      this.allEventUsers = responses;
+      if (!this.allEventUsers.some(u => u.user.id === this.appSession.userId)) {
+        try {
+          const user = await this._profilesService.get(this.appSession.userId).toPromise();
+          this.allEventUsers.push(EventUserDto.fromJS({ user, type: EventUserType.Guest }));
+        } catch (err) {
+          console.error(err);
         }
-        this.host = this.allEventUsers.find(e => e.type === EventUserType.Host);
-        this.eventUser = this.allEventUsers.find(e => e.user.id === this.appSession.userId);
-        this._portalService.attendees = this.allEventUsers.filter(e => e.type !== EventUserType.Host);
-      });
+      }
+      this.eventHost = this.allEventUsers.find(e => e.type === EventUserType.Host);
+      this.eventUser = this.allEventUsers.find(e => e.user.id === this.appSession.userId);
+      this._portalService.attendees = this.allEventUsers.filter(e => e.type !== EventUserType.Host);
+    });
   }
 
   private disconnectTrack(stream: MediaStream): void {
@@ -568,16 +291,16 @@ export class PortalComponent extends AppComponentBase implements OnInit, OnDestr
   }
 
   private async initLiveAnsweringQuestion(): Promise<void> {
-    this.addHub(EVENT_SESSIONS_HUB_NAME, await this._hubService.getAnsweringLiveQuestionHub());
-    this.getHub(EVENT_SESSIONS_HUB_NAME).on(HubEvent[HubEvent.AnsweringLiveQuestion], (question: QuestionDto) => {
+    this.addHub(ANSWERING_LIVE_QUESTION_HUB_NAME, await this._hubService.getAnsweringLiveQuestionHub());
+    this.getHub(ANSWERING_LIVE_QUESTION_HUB_NAME).on(HubEvent[HubEvent.AnsweringLiveQuestion], (question: QuestionDto) => {
       this.liveQuestion = question;
     });
 
-    this.getHub(EVENT_SESSIONS_HUB_NAME).on(HubEvent[HubEvent.EndAnsweringLiveQuestion], (question: QuestionDto) => {
+    this.getHub(ANSWERING_LIVE_QUESTION_HUB_NAME).on(HubEvent[HubEvent.EndAnsweringLiveQuestion], (question: QuestionDto) => {
       this.liveQuestion = null;
       this.createQuestion(question);
     });
-    this.startHubConnection(EVENT_SESSIONS_HUB_NAME);
+    this.startHubConnection(ANSWERING_LIVE_QUESTION_HUB_NAME);
   }
 
   private createQuestion(question: QuestionDto): void {

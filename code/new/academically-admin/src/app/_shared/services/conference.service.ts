@@ -3,6 +3,7 @@ import { AppHubBase, SignalData } from '@shared/app-hub-base';
 import { UserDto } from '@shared/service-proxies/service-proxies';
 import { environment } from 'environments/environment';
 import { HubService } from './hub.service';
+import { AbpSessionService } from 'abp-ng2-module';
 
 enum StreamTrackType {
   Audio = 'audio',
@@ -22,6 +23,7 @@ export class ConferenceService extends AppHubBase implements OnDestroy {
 
   constructor(
     private _hubService: HubService,
+    private _appSession: AbpSessionService,
   ) {
     super();
   }
@@ -31,7 +33,7 @@ export class ConferenceService extends AppHubBase implements OnDestroy {
   }
 
   async initHub(callback?: () => void): Promise<void> {
-    this.addHub(EVENT_SESSIONS_HUB_NAME, await this._hubService.getEventSessionsHub(async () => {
+    this.addHub(EVENT_SESSIONS_HUB_NAME, await this._hubService.getEventSessionsHub({ 'userId': this._appSession.userId }, async () => {
       if (callback) {
         callback();
       }
