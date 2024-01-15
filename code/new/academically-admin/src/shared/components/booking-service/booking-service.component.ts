@@ -420,7 +420,7 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
     let booking = new CreateServiceBookingDto();
     if (!_.isEmpty(this.rescheduleBooking)) {
       booking.init(this.rescheduleBooking);
-      booking.oldBookingDateTime = this.data.serviceBooking.bookingDateTime;
+      booking.oldBookingDateTime = this.data?.serviceBooking?.bookingDateTime;
       booking.bookingDateTime = moment(`${this.selectedDate} ${this.selectedTime}`);
       booking.creatorUserId = this.currentUserId;
       booking.rescheduleReason = this.rescheduleReason;
