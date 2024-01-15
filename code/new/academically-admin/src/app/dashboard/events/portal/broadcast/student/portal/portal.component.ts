@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { AppComponentPortalBase, EVENT_SESSIONS_HUB_NAME } from '@shared/app-component-portal-base';
+import { AppComponentPortalBase } from '@shared/app-component-portal-base';
 import {
   EventPollDto,
   EventPollsServiceProxy,
@@ -21,7 +21,6 @@ import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.servi
 import { ServiceOffersStateService, offersType } from '@shared/services/service-offers-state.service';
 import { ServiceOffersService } from '@shared/services/service-offers.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import * as rtc from 'rtc-lib';
 import { takeUntil } from 'rxjs/operators';
 import { PollComponent } from './_components/polls/_components/poll/poll.component';
 import { PortalPollService } from './_components/polls/_services/portal-poll.service';
@@ -57,7 +56,7 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
 
   constructor(
     injector: Injector,
-    route: ActivatedRoute,
+    private _route: ActivatedRoute,
     private _location: Location,
     private _router: Router,
     private _portalPollService: PortalPollService,
@@ -70,15 +69,20 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
     private _questionsService: QuestionsServiceProxy
   ) {
     super(injector);
+  }
 
+  get offersStateId(): string { return 'offers-event'; }
+  get pollsStateId(): string { return 'polls-event'; }
+
+  async ngOnInit() {
     // routings
-    this.pipeDestroy(route.paramMap, (paramMap) => {
+    this.pipeDestroy(this._route.paramMap, (paramMap) => {
       if (paramMap.has('invitation-id')) {
         this.invitationId = paramMap.get('invitation-id');
       }
     });
 
-    this.pipeDestroy(route.parent.parent.paramMap, async (paramMap) => {
+    this.pipeDestroy(this._route.paramMap, async (paramMap) => {
       if (paramMap.has('event-id')) {
         this.eventId = paramMap.get('event-id');
         await this.getEvent();
@@ -92,22 +96,23 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
     // polls
     this.pipeDestroy(this._portalPollService.pollSelected$, poll => this.selectedPoll = poll);
     this.pipeDestroy(this._portalPollService.pollSelectedMaximized$, isMaximized => this.handleSelectedPollMaximized(isMaximized));
-  }
 
-  get offersStateId(): string { return 'offers-event'; }
-  get pollsStateId(): string { return 'polls-event'; }
-
-  async ngOnInit() {
-    await super.ngOnInit();
     await this.initOffersAppStates();
     await this.initPollsAppStates();
     await this.initLiveAnsweringQuestion();
   }
 
   ngAfterViewInit(): void {
-    this.initPortalViewProperties({
-      presenterVideoEl: this.presenterVideoEl,
-      attendeeVideosEl: this.attendeeVideosEl
+    // Initialize portal (rtc) properties
+    this.initPortal({
+      serverProps: {
+        signalingServerUrl: 'wss://easy.innovailable.eu/',
+        stunServerUrl: 'stun:stun.innovailable.eu',
+      },
+      viewProps: {
+        presenterVideoEl: this.presenterVideoEl,
+        attendeeVideosEl: this.attendeeVideosEl
+      }
     });
   }
 
@@ -115,8 +120,6 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
     super.ngOnDestroy();
     await this.pollsStateService?.stop();
     await this.offersStateService?.stop();
-    // this.disconnectTrack(this.presenterStream);
-    // this.disconnectTrack(this.attendeeStream);
   }
 
   private async initOffersAppStates() {
@@ -180,21 +183,13 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
     });
   }
 
-  async handleLiveAnswering(question: QuestionDto): Promise<void> {
-    await this.getHub(EVENT_SESSIONS_HUB_NAME).invoke('answerLiveQuestion', question);
-  }
-
-  async handleEndLiveAnswering(question: QuestionDto): Promise<void> {
-    await this.getHub(EVENT_SESSIONS_HUB_NAME).invoke('endAnswerLiveQuestion', question);
-  }
-
   handleSelectedPollMaximized(isMaximized: boolean): void {
     if (this.selectedPoll) {
       if (isMaximized) {
         const modalSettings = this.defaultModalSettings as ModalOptions<PollComponent>;
         modalSettings.class = 'modal-w-auto modal-dialog-centered';
         modalSettings.initialState = {
-          poll: EventPollDto.fromJS({ ...this.selectedPoll}),
+          poll: EventPollDto.fromJS({ ...this.selectedPoll }),
           showBackButton: false,
           isModal: true
         };
@@ -219,23 +214,6 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
 
   onShareVideoClick(): void {
     this.shareVideosComponent.uploadFiles();
-  }
-
-  async onShareVideo(file: File): Promise<void> {
-    // @TODO: replace with logic that uses a separate room for other types of presentation
-    this.room.leave();
-    this.initRoom();
-    const presenterVideo = this.presenterVideoEl.nativeElement as HTMLVideoElement;
-    presenterVideo.src = URL.createObjectURL(file);
-    presenterVideo.srcObject = undefined;
-    presenterVideo.pause();
-    presenterVideo.controls = true;
-    presenterVideo.volume = 1;
-    presenterVideo.muted = false;
-    const stream = (presenterVideo as any).captureStream() as MediaStream;
-    await this.room.local.addStream(new rtc.Stream(stream));
-    await this.joinRoom();
-    await presenterVideo.play();
   }
 
   onShareWhiteboardClick(): void {
@@ -269,27 +247,6 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
     });
   }
 
-  private disconnectTrack(stream: MediaStream): void {
-    if (stream) {
-      stream.getAudioTracks().forEach(track => {
-        track.enabled = false;
-        track.stop();
-        setTimeout(() => {
-          stream.removeTrack(track);
-          console.log('audo track removed');
-        }, 500);
-      });
-      stream.getVideoTracks().forEach(track => {
-        track.enabled = false;
-        track.stop();
-        setTimeout(() => {
-          stream.removeTrack(track);
-          console.log('video track removed');
-        }, 500);
-      });
-    }
-  }
-
   private async initLiveAnsweringQuestion(): Promise<void> {
     this.addHub(ANSWERING_LIVE_QUESTION_HUB_NAME, await this._hubService.getAnsweringLiveQuestionHub());
     this.getHub(ANSWERING_LIVE_QUESTION_HUB_NAME).on(HubEvent[HubEvent.AnsweringLiveQuestion], (question: QuestionDto) => {
@@ -301,6 +258,14 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
       this.createQuestion(question);
     });
     this.startHubConnection(ANSWERING_LIVE_QUESTION_HUB_NAME);
+  }
+
+  async handleLiveAnswering(question: QuestionDto): Promise<void> {
+    await this.getHub(ANSWERING_LIVE_QUESTION_HUB_NAME).invoke('answerLiveQuestion', question);
+  }
+
+  async handleEndLiveAnswering(question: QuestionDto): Promise<void> {
+    await this.getHub(ANSWERING_LIVE_QUESTION_HUB_NAME).invoke('endAnswerLiveQuestion', question);
   }
 
   private createQuestion(question: QuestionDto): void {

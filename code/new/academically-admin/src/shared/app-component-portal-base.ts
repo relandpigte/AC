@@ -1,4 +1,4 @@
-import { ElementRef, Injectable, Injector, OnDestroy, OnInit, QueryList } from '@angular/core';
+import { ElementRef, Injectable, Injector, OnDestroy, QueryList } from '@angular/core';
 import { HubService } from '@app/_shared/services/hub.service';
 import { SelectedMachineDevice } from '@app/dashboard/events/portal/broadcast/student/portal/_components/device-settings/device-settings.component';
 import { PortalService } from '@app/dashboard/events/portal/broadcast/student/portal/_services/portal.service';
@@ -7,6 +7,16 @@ import { AppComponentBase } from './app-component-base';
 import { SignalData } from './app-hub-base';
 import { EventDto, EventUserDto, EventUserType, EventsServiceProxy } from './service-proxies/service-proxies';
 import { ModalDialogOptions, ModalDialogService } from './services/modal-dialog.service';
+
+export interface PortalProperties {
+    serverProps: PortalServierProperties;
+    viewProps: PortalViewElementsProperties;
+}
+
+export interface PortalServierProperties {
+    signalingServerUrl: string;
+    stunServerUrl: string;
+}
 
 export interface PortalViewElementsProperties {
     presenterVideoEl: ElementRef;
@@ -32,20 +42,18 @@ export enum ConferenceAction {
 export const EVENT_SESSIONS_HUB_NAME = 'eventSessionsHub';
 
 @Injectable()
-export abstract class AppComponentPortalBase extends AppComponentBase implements OnInit, OnDestroy {
+export abstract class AppComponentPortalBase extends AppComponentBase implements OnDestroy {
     _hubService: HubService;
     _portalService: PortalService;
     _modalDialogService: ModalDialogService;
     _eventsService: EventsServiceProxy;
 
-    viewProps: PortalViewElementsProperties;
-
-    room: rtc.Room;
-
-    selectedMachineDevice: SelectedMachineDevice;
+    private props: PortalProperties;
+    private room: rtc.Room;
+    private selectedMachineDevice: SelectedMachineDevice;
 
     eventId: string;
-    eventModel = new EventDto;
+    eventModel = new EventDto();
 
     eventHost = new EventUserDto();
     eventUser = new EventUserDto();
@@ -53,6 +61,7 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
     joiningEventUsers: EventUserDto[] = [];
     attendees: EventUserDto[] = [];
 
+    isPortalInitialized = false;
     hubConnected = false;
     eventStarting = false;
     eventStarted = false;
@@ -62,6 +71,8 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
     requestToSpeakDisabled = false;
     sharingWhiteboard = false;
     waiting = false;
+
+    streams: rtc.Stream[] = [];
 
     constructor(
         injector: Injector
@@ -75,39 +86,96 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
 
     get eventHostUserId(): number { return this.eventHost.user.id; }
     get otherEventUserIds(): number[] { return this.allEventUsers.filter(e => e.user.id !== this.eventUser.user.id).map(e => e.user.id); }
-    get isHost(): boolean { return this.eventModel.creatorUserId === this.appSession.userId; }
+    get isHost(): boolean { return this.eventModel?.creatorUserId === this.appSession.userId; }
 
-    async ngOnInit() {
-        this.subscribeToPortalEvents();
-        await this.initHub();
+    async ngOnDestroy() {
+        // this.disconnectTrack(this.presenterStream);
+        // this.disconnectTrack(this.attendeeStream);
     }
 
-    initPortalViewProperties(viewProps: PortalViewElementsProperties) {
-        this.viewProps = viewProps;
-        this.viewProps.attendeeVideosEl?.changes.subscribe(async (val: any) => {
-            if (this.viewProps.attendeeVideosEl.length && !this.eventStarted) {
-                const currentEl = this.viewProps.attendeeVideosEl.last.nativeElement;
+    async initPortal(props: PortalProperties) {
+        this.props = props;
+        this.subscribeToPortalEvents();
+        await this.initHub();
+        this.initPortalViewProperties();
+        this.isPortalInitialized = true;
+    }
+
+    private initPortalViewProperties() {
+        this.props.viewProps.attendeeVideosEl?.changes.subscribe(async (val: any) => {
+            if (this.props.viewProps.attendeeVideosEl.length && !this.eventStarted) {
+                const currentEl = this.props.viewProps.attendeeVideosEl.last.nativeElement;
                 await this.initDevice(currentEl);
             }
         });
     }
 
-    subscribeToPortalEvents() {
-        // admissions
-        this.pipeDestroy(this._portalService.admitGuest$, async (response) => {
-            if (response) {
-                await this.sendSignal(EVENT_SESSIONS_HUB_NAME, this.otherEventUserIds, new SignalData(ConferenceAction.AdmitGuest, response));
+    private subscribeToPortalEvents() {
+        // event model
+        this.pipeDestroy(this._portalService.event$, async (event: EventDto) => {
+            this.eventModel = event;
+        });
+
+        // guest admissions
+        this.pipeDestroy(this._portalService.admitGuest$, async (guestUser: EventUserDto) => {
+            if (guestUser) {
+                await this.sendSignal(EVENT_SESSIONS_HUB_NAME, this.otherEventUserIds, new SignalData(ConferenceAction.AdmitGuest, guestUser));
             }
         });
     }
 
-    async initHub(): Promise<void> {
+    private async initHub(): Promise<void> {
         this.addHub(EVENT_SESSIONS_HUB_NAME, await this._hubService.getEventSessionsHub({ 'userId': this.appSession.userId }));
         this.startHubConnection(EVENT_SESSIONS_HUB_NAME, () => {
             this.hubConnected = true;
             this.initRoom();
             this.handleHubEvents();
         });
+    }
+
+    private initRoom(): void {
+        const ws = this.props.serverProps.signalingServerUrl + encodeURI(this.eventId);
+        const channel = new rtc.WebSocketChannel(ws);
+        const signaling = new rtc.MucSignaling(channel);
+        const options = { stun: this.props.serverProps.stunServerUrl };
+
+        this.room = new rtc.Room(signaling, options);
+        this.subsribeToRoomEvents();
+    }
+
+    private async initDevice(videoEl: HTMLVideoElement): Promise<void> {
+        const stream = await this.room.local.addStream({
+            video: {
+                deviceId: this.selectedMachineDevice.videoDevice.id,
+            },
+            audio: {
+                deviceId: this.selectedMachineDevice.audioDevice.id,
+                echoCancellation: { exact: true },
+                // @ts-ignore
+                googEchoCancellation: { exact: true },
+                googAutoGainControl: { exact: true },
+                googNoiseSuppression: { exact: true },
+            },
+        });
+        const videoDom = new rtc.MediaDomElement(videoEl, stream);
+        this.streams.push(stream);
+    }
+
+    private subsribeToRoomEvents() {
+        // peer joins
+        this.room.on('peer_joined', (peer: rtc.RemotePeer) => {
+            this.joiningEventUsers.forEach(joiningEventUser => {
+                const videoEl = joiningEventUser.type === EventUserType.Host ? this.props.viewProps.presenterVideoEl :
+                    this.props.viewProps.attendeeVideosEl.find(e => +e.nativeElement.id === joiningEventUser.user.id);
+                const videoStream = new rtc.MediaDomElement(videoEl.nativeElement, peer);
+                this.subscribeToPeerEvents({ peer, videoEl });
+            });
+        });
+    }
+
+    private subscribeToPeerEvents(peerLeaveProps: PeerLeaveProperties) {
+        // peer left
+        peerLeaveProps.peer.on('left', () => document.removeChild(peerLeaveProps.videoEl.nativeElement));
     }
 
     private handleHubEvents(): void {
@@ -127,6 +195,7 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
                     console.log('@@@ receiveSignal - EndEvent');
                     this.eventStarted = false;
                     this.eventJoined = false;
+                    await this.leaveRoom();
                     break;
 
                 case ConferenceAction.JoinEvent:
@@ -167,107 +236,116 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
                         this.sendSignal(EVENT_SESSIONS_HUB_NAME, [this.eventHost.user.id], new SignalData(ConferenceAction.LobbyEntered, this.eventUser));
                     }
                     break;
-
-                // case PollSignalAction.SharePoll:
-                //     case PollSignalAction.PollStopped:
-                //     case PollSignalAction.PollClosed:
-                //         console.log(modal);
-                //         if (modal) {
-                //         modal.hide();
-                //         modal = undefined;
-                //         }
-                //         break;
             }
         });
     }
 
-    initRoom(): void {
-        const ws = 'wss://easy.innovailable.eu/' + encodeURI(this.eventId);
-        const channel = new rtc.WebSocketChannel(ws);
-        const signaling = new rtc.MucSignaling(channel);
-        const options = { stun: 'stun:stun.innovailable.eu' };
-
-        this.room = new rtc.Room(signaling, options);
-        this.subsribeToPeerJoins();
-    }
-
-    subsribeToPeerJoins() {
-        this.room.on('peer_joined', (peer: rtc.RemotePeer) => {
-            this.joiningEventUsers.forEach(joiningEventUser => {
-                const videoEl = joiningEventUser.type === EventUserType.Host ? this.viewProps.presenterVideoEl :
-                    this.viewProps.attendeeVideosEl.find(e => +e.nativeElement.id === joiningEventUser.user.id);
-                const videoStream = new rtc.MediaDomElement(videoEl.nativeElement, peer);
-                this.subscribeToPeerEvents({ peer, videoEl });
-            });
-        });
-    }
-
-    subscribeToPeerEvents(peerLeaveProps: PeerLeaveProperties) {
-        peerLeaveProps.peer.on('left', () => document.removeChild(peerLeaveProps.videoEl.nativeElement));
-    }
-
-    async initDevice(videoEl: HTMLVideoElement): Promise<void> {
-        const stream = await this.room.local.addStream({
-            video: {
-                deviceId: this.selectedMachineDevice.videoDevice.id,
-            },
-            audio: {
-                deviceId: this.selectedMachineDevice.audioDevice.id,
-                echoCancellation: { exact: true },
-                // @ts-ignore
-                googEchoCancellation: { exact: true },
-                googAutoGainControl: { exact: true },
-                googNoiseSuppression: { exact: true },
-            },
-        });
-        const videoDom = new rtc.MediaDomElement(videoEl, stream);
-    }
-
-    async joinRoom(): Promise<void> {
+    private async joinRoom(): Promise<void> {
         const eventUserId = this.eventUser.user.id;
         const allOtherAttendeeIds = this.allEventUsers.filter(e => e.user.id !== eventUserId).map(e => e.user.id);
         await this.sendSignal(EVENT_SESSIONS_HUB_NAME, allOtherAttendeeIds, new SignalData(ConferenceAction.JoinEvent, this.eventUser));
         await this.room.connect();
     }
 
+    private async leaveRoom(): Promise<void> {
+        this.streams.forEach(s => s.getTracks('both').forEach(s => s.stop()));
+        this.room.leave();
+        this.attendees = [];
+        this.initRoom();
+        this.props.viewProps.presenterVideoEl.nativeElement.load();
+        this.onLobbyEntered(this.selectedMachineDevice);
+    }
+
+    private disconnectTrack(stream: MediaStream): void {
+        if (stream) {
+            stream.getAudioTracks().forEach(track => {
+                track.enabled = false;
+                track.stop();
+                setTimeout(() => {
+                    stream.removeTrack(track);
+                    console.log('audo track removed');
+                }, 500);
+            });
+            stream.getVideoTracks().forEach(track => {
+                track.enabled = false;
+                track.stop();
+                setTimeout(() => {
+                    stream.removeTrack(track);
+                    console.log('video track removed');
+                }, 500);
+            });
+        }
+    }
+
+    private isPortalRtcNotInitialized(): boolean {
+        if (this.isPortalInitialized) return false;
+        this.notify.warn('RTC server is not initialized. Please try again later.');
+        return true;
+    }
+
+    // PUBLIC FUNCTIONS
+
     async onAutoAdmitChange(): Promise<void> {
+        if (this.isPortalRtcNotInitialized()) return;
         this._portalService.event = this.eventModel;
         this.pipeDestroy(this._eventsService.updateAutoAdmit(this.eventModel.id, this.eventModel.autoAdmitAttendees));
         await this.sendSignal(EVENT_SESSIONS_HUB_NAME, this.otherEventUserIds, new SignalData(ConferenceAction.AutoAdmitChange, this.eventModel.autoAdmitAttendees));
     }
 
     async onLobbyEntered(selectedMachineDevice: SelectedMachineDevice): Promise<void> {
+        if (this.isPortalRtcNotInitialized()) return;
         this.inLobby = true;
         this.selectedMachineDevice = selectedMachineDevice;
         if (this.isHost) {
-          this.initDevice(this.viewProps.presenterVideoEl.nativeElement);
-          this.sendSignal(EVENT_SESSIONS_HUB_NAME, this.otherEventUserIds, new SignalData(ConferenceAction.LobbyEntered, this.eventUser));
+            this.initDevice(this.props.viewProps.presenterVideoEl.nativeElement);
+            this.sendSignal(EVENT_SESSIONS_HUB_NAME, this.otherEventUserIds, new SignalData(ConferenceAction.LobbyEntered, this.eventUser));
         } else {
-          this.attendees.push(this.eventUser);
-          if (!this.eventModel.autoAdmitAttendees) {
-            this.sendSignal(EVENT_SESSIONS_HUB_NAME, [this.eventHostUserId], new SignalData(ConferenceAction.LobbyEntered, this.eventUser));
-          }
+            this.attendees.push(this.eventUser);
+            if (!this.eventModel.autoAdmitAttendees) {
+                this.sendSignal(EVENT_SESSIONS_HUB_NAME, [this.eventHostUserId], new SignalData(ConferenceAction.LobbyEntered, this.eventUser));
+            }
         }
     }
 
     async onJoinClick(): Promise<void> {
+        if (this.isPortalRtcNotInitialized()) return;
         if (this.eventModel.autoAdmitAttendees) {
-          await this.joinRoom();
-          this.eventJoined = true;
+            await this.joinRoom();
+            this.eventJoined = true;
         } else {
-          this.waiting = true;
-          await this.sendSignal(EVENT_SESSIONS_HUB_NAME, [this.eventHostUserId], new SignalData(ConferenceAction.GuestJoined, this.eventUser));
+            this.waiting = true;
+            await this.sendSignal(EVENT_SESSIONS_HUB_NAME, [this.eventHostUserId], new SignalData(ConferenceAction.GuestJoined, this.eventUser));
         }
     }
 
-    async onUnshareVideo(): Promise<void> {
+    async onShareVideo(file: File): Promise<void> {
+        if (this.isPortalRtcNotInitialized()) return;
+        // @TODO: replace with logic that uses a separate room for other types of presentation
         this.room.leave();
         this.initRoom();
-        await this.initDevice(this.viewProps.presenterVideoEl.nativeElement);
+        const presenterVideo = this.props.viewProps.presenterVideoEl.nativeElement as HTMLVideoElement;
+        presenterVideo.src = URL.createObjectURL(file);
+        presenterVideo.srcObject = undefined;
+        presenterVideo.pause();
+        presenterVideo.controls = true;
+        presenterVideo.volume = 1;
+        presenterVideo.muted = false;
+        const stream = (presenterVideo as any).captureStream() as MediaStream;
+        await this.room.local.addStream(new rtc.Stream(stream));
+        await this.joinRoom();
+        await presenterVideo.play();
+    }
+
+    async onUnshareVideo(): Promise<void> {
+        if (this.isPortalRtcNotInitialized()) return;
+        this.room.leave();
+        this.initRoom();
+        await this.initDevice(this.props.viewProps.presenterVideoEl.nativeElement);
         await this.joinRoom();
     }
 
     async onStartEventClick(): Promise<void> {
+        if (this.isPortalRtcNotInitialized()) return;
         this.eventStarting = true;
         await this.joinRoom();
         const userIds = this.allEventUsers.map(e => e.user.id);
@@ -275,14 +353,15 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
     }
 
     async onEndEventClick(): Promise<void> {
+        if (this.isPortalRtcNotInitialized()) return;
         const options: ModalDialogOptions = {
-          title: this.l('AreYouSure'),
-          text: this.l('EndEventConfirmation'),
-          confirmCb: async () => {
-            const userIds = this.allEventUsers.map(e => e.user.id);
-            this.sendSignal(EVENT_SESSIONS_HUB_NAME, userIds, new SignalData(ConferenceAction.EndEvent));
-          }
+            title: this.l('AreYouSure'),
+            text: this.l('EndEventConfirmation'),
+            confirmCb: async () => {
+                const userIds = this.allEventUsers.map(e => e.user.id);
+                this.sendSignal(EVENT_SESSIONS_HUB_NAME, userIds, new SignalData(ConferenceAction.EndEvent));
+            }
         };
         this._modalDialogService.showConfirmDialog(options);
-      }
+    }
 }

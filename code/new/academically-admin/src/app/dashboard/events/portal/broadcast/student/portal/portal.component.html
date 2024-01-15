@@ -3,7 +3,7 @@
 
 <div class="h-100" [@routerTransition]>
   <div [class.sidebar-hidden]="!showSidebar" class="main-content position-relative h-100">
-    <nav class="navbar navbar-expand-lg navbar-light" id="topnav">
+    <nav *ngIf="eventModel" class="navbar navbar-expand-lg navbar-light" id="topnav">
       <div class="mx-3 w-100 d-flex justify-content-between align-items-center">
         <a class="navbar-brand text-left pt-0" href="javascript:;">
           <div class="d-flex">
