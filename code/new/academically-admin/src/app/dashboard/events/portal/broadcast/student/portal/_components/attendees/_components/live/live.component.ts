@@ -26,36 +26,48 @@ export class LiveComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
-    this._portalService.event$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(response => {
-        if (response) {
-          this.model = response;
+    this.pipeDestroy(this._portalService.event$, event => {
+      if (event) {
+        this.model = event;
+      }
+    });
+
+    this.pipeDestroy(this._portalService.attendeeJoined$, user => {
+      if (user) {
+        switch (user.type) {
+          case EventUserType.Audience:
+            this.audiences.push(user);
+            break;
+          case EventUserType.CoHost:
+            this.coHosts.push(user);
+            break;
+          case EventUserType.Guest:
+            this.guests.push(user);
+            break;
         }
-      });
-    this._portalService.attendeeJoined$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(response => {
-        if (response) {
-          switch (response.type) {
-            case EventUserType.Audience:
-              this.audiences.push(response);
-              break;
-            case EventUserType.CoHost:
-              this.coHosts.push(response);
-              break;
-            case EventUserType.Guest:
-              this.guests.push(response);
-              break;
-          }
+      }
+    });
+
+    this.pipeDestroy(this._portalService.attendeeLeft$, user => {
+      if (user) {
+        switch (user.type) {
+          case EventUserType.Audience:
+            this.audiences = this.audiences.filter(e => e.user.id !== user.user.id);
+            break;
+          case EventUserType.CoHost:
+            this.coHosts = this.coHosts.filter(e => e.user.id !== user.user.id);
+            break;
+          case EventUserType.Guest:
+            this.guests = this.guests.filter(e => e.user.id !== user.user.id);
+            break;
         }
-      });
-    this._portalService.grantedRequestToSpeak$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(response => {
-        if (response) {
-          this.controlsEnabled = true;
-        }
-      });
+      }
+    })
+
+    this.pipeDestroy(this._portalService.grantedRequestToSpeak$, response => {
+      if (response) {
+        this.controlsEnabled = true;
+      }
+    });
   }
 }

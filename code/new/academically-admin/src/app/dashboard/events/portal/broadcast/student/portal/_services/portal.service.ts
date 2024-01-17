@@ -14,6 +14,7 @@ export class PortalService {
   public event$: Observable<EventDto>;
   public attendees$: Observable<EventUserDto[]>;
   public attendeeJoined$: Observable<EventUserDto>;
+  public attendeeLeft$: Observable<EventUserDto>;
   public guestJoined$: Observable<EventUserDto>;
   public lobbyUser$: Observable<EventUserDto>;
   public admitGuest$: Observable<EventUserDto>;
@@ -28,6 +29,7 @@ export class PortalService {
   private _attendeesSubject: BehaviorSubject<EventUserDto[]>;
   private _lobbyUserSubject: BehaviorSubject<EventUserDto>;
   private _attendeeJoinedSubject: BehaviorSubject<EventUserDto>;
+  private _attendeeLeftSubject: BehaviorSubject<EventUserDto>;
   private _guestJoinedSubject: BehaviorSubject<EventUserDto>;
   private _admitGuestSubject: BehaviorSubject<EventUserDto>;
   private _speakRequestSubject: BehaviorSubject<EventUserDto>;
@@ -43,6 +45,9 @@ export class PortalService {
 
     this._attendeeJoinedSubject = new BehaviorSubject<EventUserDto>(undefined);
     this.attendeeJoined$ = this._attendeeJoinedSubject.asObservable();
+
+    this._attendeeLeftSubject = new BehaviorSubject<EventUserDto>(undefined);
+    this.attendeeLeft$ = this._attendeeLeftSubject.asObservable();
 
     this._attendeesSubject = new BehaviorSubject<EventUserDto[]>([]);
     this.attendees$ = this._attendeesSubject.asObservable();
@@ -85,6 +90,10 @@ export class PortalService {
 
   public set attendeeJoined(value: EventUserDto) {
     this._attendeeJoinedSubject.next(value);
+  }
+
+  public set attendeeLeft(value: EventUserDto) {
+    this._attendeeLeftSubject.next(value);
   }
 
   public set guestJoined(value: EventUserDto) {
