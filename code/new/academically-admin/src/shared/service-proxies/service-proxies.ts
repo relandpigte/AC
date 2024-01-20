@@ -24192,6 +24192,84 @@ export class ServicesServiceProxy {
     }
 
     /**
+     * @param serviceUserId (optional) 
+     * @param serviceId (optional) 
+     * @param year (optional) 
+     * @param month (optional) 
+     * @return Success
+     */
+    getCoachingSchedules(serviceUserId: number | undefined, serviceId: string | undefined, year: number | undefined, month: number | undefined): Observable<moment.Moment[]> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetCoachingSchedules?";
+        if (serviceUserId === null)
+            throw new Error("The parameter 'serviceUserId' cannot be null.");
+        else if (serviceUserId !== undefined)
+            url_ += "serviceUserId=" + encodeURIComponent("" + serviceUserId) + "&";
+        if (serviceId === null)
+            throw new Error("The parameter 'serviceId' cannot be null.");
+        else if (serviceId !== undefined)
+            url_ += "serviceId=" + encodeURIComponent("" + serviceId) + "&";
+        if (year === null)
+            throw new Error("The parameter 'year' cannot be null.");
+        else if (year !== undefined)
+            url_ += "year=" + encodeURIComponent("" + year) + "&";
+        if (month === null)
+            throw new Error("The parameter 'month' cannot be null.");
+        else if (month !== undefined)
+            url_ += "month=" + encodeURIComponent("" + month) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCoachingSchedules(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCoachingSchedules(<any>response_);
+                } catch (e) {
+                    return <Observable<moment.Moment[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<moment.Moment[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetCoachingSchedules(response: HttpResponseBase): Observable<moment.Moment[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(moment(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<moment.Moment[]>(<any>null);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
@@ -27431,6 +27509,62 @@ export class TimeZonesServiceProxy {
     }
 
     protected processGet(response: HttpResponseBase): Observable<TimeZoneDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TimeZoneDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TimeZoneDto>(<any>null);
+    }
+
+    /**
+     * @param userId (optional) 
+     * @return Success
+     */
+    getByUser(userId: number | undefined): Observable<TimeZoneDto> {
+        let url_ = this.baseUrl + "/api/services/app/TimeZones/GetByUser?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetByUser(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetByUser(<any>response_);
+                } catch (e) {
+                    return <Observable<TimeZoneDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TimeZoneDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetByUser(response: HttpResponseBase): Observable<TimeZoneDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :

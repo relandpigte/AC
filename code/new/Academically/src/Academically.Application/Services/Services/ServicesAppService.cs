@@ -10,6 +10,7 @@ using Academically.Services.Services.Dto;
 using Academically.Services.UserServices.Dto;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,6 +19,13 @@ using Academically.Domain.Services.Documents;
 using Academically.Extensions;
 using Academically.Services.StudentCourses;
 using System.Dynamic;
+using System.Linq.Dynamic.Core;
+using Abp.Configuration;
+using Abp.Timing.Timezone;
+using Academically.Services.TimeZones;
+using Academically.Services.TimeZones.Dto;
+using Academically.Services.UserAvailabilities;
+using Academically.Services.UserAvailabilities.Dto;
 using Academically.Services.UserFollowers;
 using Microsoft.AspNetCore.SignalR;
 
@@ -43,6 +51,9 @@ namespace Academically.Services.Services
         private readonly IRepository<Video, Guid> _videosRepository;
         private readonly IRepository<Notification, Guid> _notificationsRepository;
         private readonly IHubContext<EventsHub> _eventsHub;
+        private readonly IUserAvailabilitiesAppService _userAvailabilitiesAppService;
+        private readonly ITimeZonesAppService _timeZonesAppService;
+        private readonly ISettingManager _settingManager;
 
         private readonly List<Service2Dto> StaticServiceLevels = new List<Service2Dto>
             {
@@ -115,7 +126,10 @@ namespace Academically.Services.Services
             IHubContext<EventsHub> eventsHub,
             IRepository<Article, Guid> articlesRepository,
             IRepository<Course, Guid> coursesRepository,
-            IRepository<Video, Guid> videosRepository)
+            IRepository<Video, Guid> videosRepository,
+            IUserAvailabilitiesAppService userAvailabilitiesAppService,
+            ITimeZonesAppService timeZonesAppService,
+            ISettingManager settingManager)
         {
             _servicesRepository = servicesRepository;
             _serviceMappingsRepository = serviceMappingsRepository;
@@ -135,6 +149,9 @@ namespace Academically.Services.Services
             _articlesRepository = articlesRepository;
             _coursesRepository = coursesRepository;
             _videosRepository = videosRepository;
+            _userAvailabilitiesAppService = userAvailabilitiesAppService;
+            _timeZonesAppService = timeZonesAppService;
+            _settingManager = settingManager;
         }
 
         public async Task TestEventNotifierToasters(string ids)
@@ -432,6 +449,7 @@ namespace Academically.Services.Services
             return _serviceBooking.GetAll()
                 .WhereIf(referenceId.HasValue, x => x.ReferenceId == referenceId)
                 .WhereIf(ownerId.HasValue, x => x.OwnerId == ownerId)
+                .Where(x => x.CancellationTime.Equals(null))
                 .Select(x => ObjectMapper.Map<ServiceBookingDto>(x))
                 .ToList();
         }
@@ -452,7 +470,100 @@ namespace Academically.Services.Services
                .Select(x => ObjectMapper.Map<ServiceBookingDto>(x))
                .SingleOrDefaultAsync();
         }
+        
+        public async Task<List<DateTime?>> GetCoachingSchedules(long serviceUserId, Guid serviceId, int year, int month)
+        {
+            var serviceBookings = await GetAllBookings(serviceId, serviceUserId);
+            var availability = (await _userAvailabilitiesAppService.GetAll(serviceUserId)).ToList();
+            var availabilitySetting = await _userAvailabilitiesAppService.GetAvailabilitySettings(serviceUserId);
+            var coachTimezoneId = await _settingManager.GetSettingValueForUserAsync(TimingSettingNames.TimeZone, AbpSession.GetTenantId(), serviceUserId);
+            var userTimezoneId = await _settingManager.GetSettingValueForUserAsync(TimingSettingNames.TimeZone, AbpSession.GetTenantId(), AbpSession.GetUserId());
+            var days = DateTime.DaysInMonth(year, month);
+            var bookings = serviceBookings.Where(x => x.CreatorUserId != AbpSession.GetUserId())
+                .Select(x => ConvertBookingDateTimezoneToLocal(coachTimezoneId, userTimezoneId, x.BookingDateTime).ToString()).ToList();
+            
+            var response = new List<DateTime?>();
+            for (var day = 1; day <= days; day++)
+            {
+                var d = new DateTime(year, month, day);
+                var customSchedules = GetSchedules(availability, d, true);
+                var defaultSchedules = GetSchedules(availability, d);
+                var schedules = customSchedules.Count > 0 ? customSchedules : defaultSchedules;
+                var schedule = schedules.First();
+                
+                if (Clock.Now.Date > d.Date || !schedule.IsAvailable) continue;
 
+                var bookingStartDate = ConstructBookingDate(coachTimezoneId, userTimezoneId, d, schedule.StartTime);
+                var bookingEndDate = ConstructBookingDate(coachTimezoneId, userTimezoneId, d, schedule.EndTime);
+                var currentDateTime = bookingStartDate;
+                
+                while (currentDateTime <= bookingEndDate)
+                {
+                    var paddingApplicable = false;
+                    if (!CheckAvailabilitySchedule(currentDateTime.Value, availabilitySetting))
+                    {
+                        if (!bookings.Contains(currentDateTime.ToString())) response.Add(currentDateTime);
+                        else paddingApplicable = true;
+                    }
+                    currentDateTime = currentDateTime.Value.AddMinutes(availabilitySetting.BookingIntervals + (paddingApplicable ? availabilitySetting.Padding : 0));
+                }
+            }
+            return response;
+        }
+
+        private static List<UserAvailabilityDto> GetSchedules(IEnumerable<UserAvailabilityDto> availability, DateTime date, bool custom = false)
+        {
+            return availability.WhereIf(custom, x => x.SpecificDate != null && x.SpecificDate.Value.Date == date.Date)
+                .WhereIf(!custom, x => x.DayOfWeek == date.DayOfWeek)
+                .OrderBy(x => x.StartTime)
+                .ToList();
+        }
+
+        private static DateTime? ConstructBookingDate(string coachTimezoneId, string userTimezoneId, DateTime date, string time)
+        {
+            return coachTimezoneId == userTimezoneId ? date + TimeOnly.Parse(time).ToTimeSpan() :
+                TimezoneHelper.Convert(date + TimeOnly.Parse(time).ToTimeSpan(), coachTimezoneId, userTimezoneId);
+        }
+
+        private static DateTime? ConvertBookingDateTimezoneToLocal(string coachTimezoneId, string userTimezoneId, DateTime date)
+        {
+            return coachTimezoneId == userTimezoneId ? date : TimezoneHelper.Convert(date, coachTimezoneId, userTimezoneId);
+        }
+
+        private static bool CheckAvailabilitySchedule(DateTime date, UserAvailabilitySetting availabilitySettings)
+        {
+            var isMinimumBooking = availabilitySettings.IsMinimumBookingNotice;
+            var minimumBooking = availabilitySettings.MinimumBookingNotice;
+            var minimumBookingUnit = availabilitySettings.MinimumBookingNoticeUnit;
+            if (isMinimumBooking && minimumBooking > 0 )
+            {
+                var minimumBookingDate = GetDateTimeByUnit(minimumBookingUnit, minimumBooking);
+                if (minimumBookingDate >= date) return true;
+            }
+            
+            var isMaximumBooking = availabilitySettings.IsMaximumAdvanceNotice;
+            var maximumBooking = availabilitySettings.MaximumAdvanceNotice;
+            var maximumBookingUnit = availabilitySettings.MaximumAdvanceNoticeUnit;
+            if (isMaximumBooking && maximumBooking > 0 )
+            {
+                var maximumBookingDate = GetDateTimeByUnit(maximumBookingUnit, maximumBooking);
+                if (maximumBookingDate <= date) return true;
+            }
+            return false;
+        }
+
+        private static DateTime GetDateTimeByUnit(AvailabilityUnit unit, int minimumBooking)
+        {
+            var now = Clock.Now;
+            return unit switch
+            {
+                AvailabilityUnit.Minutes => now.AddMinutes(minimumBooking),
+                AvailabilityUnit.Hours => now.AddHours(minimumBooking),
+                AvailabilityUnit.Days => now.AddDays(minimumBooking),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+        
         private async Task CreateStudentServiceRecords(Guid id, ServicesType type)
         {
             switch (type)

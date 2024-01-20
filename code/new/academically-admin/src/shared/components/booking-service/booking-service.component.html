@@ -35,32 +35,36 @@
                 </div>
               </div>
               <div class="booking-right-content-schedules">
-                <ng-container *ngIf="!!selectedSchedule && (isMorningSessionAvailable && isAfternoonSessionAvailable && isEveningSessionAvailable) else noSchedule">
+                <ng-container *ngIf="isScheduleAvailable else noSchedule">
                   <div *ngIf="isMorningSessionAvailable" class="booking-schedules booking-right-content-schedules-morning">
                     <h3>{{ 'Morning' | localize | uppercase }}</h3>
                     <div class="booking-schedules-lists d-flex align-items-center flex-wrap gap-10">
-                      <div class="item" [class.current]="isCurrentBookingTime(time)"
-                           [class]="timeSelectionClass(time)" *ngFor="let time of selectedSessions.morning"
-                           (click)="onSelectTime(time)">{{ time }}
-                      </div>
+                      <div class="item" *ngFor="let d of selectedSessions.morning"
+                           (click)="onSelectTime(d)"
+                           [class.current]="isCurrentBookingTime(d)"
+                           [class.active]="timeSelectionClass(d)"
+                      >{{ formatScheduleToTime(d) }}</div>
                     </div>
                   </div>
                   <div *ngIf="isAfternoonSessionAvailable" class="booking-schedules booking-right-content-schedules-afternoon">
                     <h3>{{ 'Afternoon' | localize | uppercase }}</h3>
                     <div class="booking-schedules-lists d-flex align-items-center flex-wrap gap-10">
-                      <div class="item" [class.current]="isCurrentBookingTime(time)"
-                           [class]="timeSelectionClass(time)" *ngFor="let time of selectedSessions.afternoon"
-                           (click)="onSelectTime(time)">{{ time }}
-                      </div>
+                      <div class="item" *ngFor="let d of selectedSessions.afternoon"
+                           (click)="onSelectTime(d)"
+                           [class.current]="isCurrentBookingTime(d)"
+                           [class.active]="timeSelectionClass(d)"
+                      >{{ formatScheduleToTime(d) }}</div>
                     </div>
                   </div>
                   <div *ngIf="isEveningSessionAvailable" class="booking-schedules booking-right-content-schedules-evening">
                     <h3>{{ 'Evening' | localize | uppercase }}</h3>
                     <div class="booking-schedules-lists d-flex align-items-center flex-wrap gap-10">
-                      <div class="item" [class.current]="isCurrentBookingTime(time)"
-                           [class]="timeSelectionClass(time)" *ngFor="let time of selectedSessions.evening"
-                           (click)="onSelectTime(time)">{{ time }}
-                      </div>
+                      <div *ngFor="let d of selectedSessions.evening"
+                           (click)="onSelectTime(d)"
+                           [class.current]="isCurrentBookingTime(d)"
+                           [class.active]="timeSelectionClass(d)"
+                           class="item"
+                      >{{ formatScheduleToTime(d) }}</div>
                     </div>
                   </div>
                 </ng-container>

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Runtime.Session;
 using TimeZone = Academically.Domain.Entities.TimeZone;
 
 namespace Academically.Services.TimeZones
@@ -41,6 +42,16 @@ namespace Academically.Services.TimeZones
         public async Task<TimeZoneDto> GetAsync()
         {
             var id = await _settingManager.GetSettingValueAsync(TimingSettingNames.TimeZone);
+            var timeZone = await _timeZonesRepository.GetAsync(id);
+            var output = ObjectMapper.Map<TimeZoneDto>(timeZone);
+            output.IanaName = TimezoneHelper.WindowsToIana(output.Id);
+            return output;
+        }
+        
+        public async Task<TimeZoneDto> GetByUserAsync(long userId)
+        {
+            var id = await _settingManager.GetSettingValueForUserAsync(TimingSettingNames.TimeZone,
+                AbpSession.GetTenantId(), userId);
             var timeZone = await _timeZonesRepository.GetAsync(id);
             var output = ObjectMapper.Map<TimeZoneDto>(timeZone);
             output.IanaName = TimezoneHelper.WindowsToIana(output.Id);

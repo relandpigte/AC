@@ -2,12 +2,15 @@ import { Component, Injector, Input, OnChanges, OnDestroy, OnInit, Output, Simpl
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import * as _ from 'lodash';
+import { Subject } from 'rxjs';
 
 import { AppComponentBase } from '@shared/app-component-base';
-import { CoachingDto, CoachingStatus, ServiceBookingDto } from '@shared/service-proxies/service-proxies';
-import { Subject } from 'rxjs';
 import { LandingPagesService } from '@shared/services/landing-pages.service';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
+import { CoachingDto, ServiceBookingDto, TimeZoneDto, TimeZonesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { takeUntil } from 'rxjs/operators';
+import { Utils } from '@shared/helpers/utils';
+import { pageType } from '@shared/services/posts-state.service';
 
 enum timeline {
   days = 'days',
@@ -31,14 +34,15 @@ export class JoinBadgeComponent extends AppComponentBase implements OnInit, OnCh
 
   countdown = 0;
   timeline: timeline = timeline.seconds;
-
+  userTimeZone: TimeZoneDto;
   shimmerType = ShimmerType;
 
   private clearTimer: VoidFunction | undefined;
   constructor(
     injector: Injector,
     private _router: Router,
-    private _landingPageService: LandingPagesService
+    private _landingPageService: LandingPagesService,
+    private _timeZonesService: TimeZonesServiceProxy
   ) {
     super(injector);
   }
@@ -50,14 +54,20 @@ export class JoinBadgeComponent extends AppComponentBase implements OnInit, OnCh
   get eventCancelled(): boolean { return this.data?.isCancelled; }
   get eventFinished(): boolean { return this.countdown <= 0; }
   get completedText(): string { return this.l('CompletedEvent', 'coaching'); }
+  get userTimezoneName(): string { return this.userTimeZone?.ianaName; }
 
   ngOnInit(): void {
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  async ngOnChanges(changes: SimpleChanges): Promise<void> {
     if ('booking' in changes && !_.isEmpty(this.booking)) {
-      this.initJoinBadge();
-      this.initCountDown();
+      try {
+        this.userTimeZone = await this._timeZonesService.getByUser(this.currentUserId).toPromise();
+        this.initJoinBadge();
+        this.initCountDown();
+      } catch (err) {
+        console.error(err);
+      }
     }
   }
 
@@ -87,10 +97,11 @@ export class JoinBadgeComponent extends AppComponentBase implements OnInit, OnCh
 
   private initJoinBadge(): void {
     const bookedDate = moment(this.booking?.bookingDateTime);
-    const days = moment(bookedDate).diff(moment(), 'days');
-    const hours = moment(bookedDate).diff(moment(), 'hours');
-    const minutes = moment(bookedDate).diff(moment(), 'minutes');
-    const seconds = moment(bookedDate).diff(moment(), 'seconds');
+    const now = moment.tz(this.userTimezoneName);
+    const days = bookedDate.clone().diff(now, 'days');
+    const hours = bookedDate.clone().diff(now, 'hours');
+    const minutes = bookedDate.clone().diff(now, 'minutes');
+    const seconds = bookedDate.clone().diff(now, 'seconds');
 
     if (days > 0) {
       this.countdown = days;

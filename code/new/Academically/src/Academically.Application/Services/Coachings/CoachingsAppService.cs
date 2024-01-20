@@ -380,7 +380,7 @@ namespace Academically.Services.Coachings
 
             foreach (var service in services)
             {
-                var booking = bookings.Where(b => b.ReferenceId == service.Id).SingleOrDefault();
+                var booking = bookings.Where(b => b.ReferenceId == service.Id).FirstOrDefault();
                 if (booking != null)
                 {
                     service.EventDateTime = booking.BookingDateTime;

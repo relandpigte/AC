@@ -13,7 +13,7 @@ import { takeUntil } from '@node_modules/rxjs/operators';
 })
 export class ChangeTimezoneComponent extends AppComponentBase implements AfterViewInit {
   @Input() timeZones: TimeZoneDto[] = [];
-  @Input() userData: UserDto;
+  @Input() userTimeZone: TimeZoneDto;
   @Output() onTimezoneUpdated = new EventEmitter<TimeZoneDto>();
 
   constructor(
@@ -34,7 +34,7 @@ export class ChangeTimezoneComponent extends AppComponentBase implements AfterVi
   }
 
   isTimezoneSelected(id: string): boolean {
-    return id === this.userData?.timeZoneId;
+    return id === this.userTimeZone?.id;
   }
 
   scrollToSelected(): void {
@@ -43,10 +43,6 @@ export class ChangeTimezoneComponent extends AppComponentBase implements AfterVi
   }
 
   onClickTimezone(tz: TimeZoneDto): void {
-    this.handleChangeTimezone(tz);
-  }
-
-  private handleChangeTimezone(tz: TimeZoneDto): void {
     if (_.isEmpty(tz)) { return; }
     this._timeZonesService.updateUserTimeZone(tz)
       .pipe(takeUntil(this.destroyed$))
