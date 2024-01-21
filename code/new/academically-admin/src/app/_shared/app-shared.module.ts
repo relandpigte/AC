@@ -112,6 +112,7 @@ import { ChangeTimezoneComponent } from '@shared/components/booking-service/comp
 import { ConfirmTimezoneComponent } from '@shared/components/booking-service/components/confirm-timezone/confirm-timezone.component';
 import { ServiceMetricsComponent } from '@shared/components/service-metrics/service-metrics.component';
 import { ServiceCreateComponent } from '@shared/components/service-create/service-create.component';
+import { ServiceOfferComponent } from '@shared/components/service-offer/service-offer.component';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -203,7 +204,8 @@ FullCalendarModule.registerPlugins([
     ChangeTimezoneComponent,
     ConfirmTimezoneComponent,
     ServiceMetricsComponent,
-    ServiceCreateComponent
+    ServiceCreateComponent,
+    ServiceOfferComponent
   ],
   imports: [
     CommonModule,
@@ -328,7 +330,8 @@ FullCalendarModule.registerPlugins([
     ChangeTimezoneComponent,
     ConfirmTimezoneComponent,
     ServiceMetricsComponent,
-    ServiceCreateComponent
+    ServiceCreateComponent,
+    ServiceOfferComponent
   ],
 })
 export class AppSharedModule { }

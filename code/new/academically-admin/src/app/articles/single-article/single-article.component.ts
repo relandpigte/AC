@@ -39,6 +39,13 @@ export class SingleArticleComponent extends AppComponentBase implements OnInit {
       infoText: 'Here, you can input all the details for your article. This information will be visible to potential clients, so keep it clear and informative.'
     },
     {
+      id: 'offers',
+      label: 'Offers',
+      icon: 'assets/img/service/create/shopping.svg',
+      iconHover: 'assets/img/service/create/shopping-hover.svg',
+      infoText: 'Upsell additional products or services to those who purchase your article by creating exclusive discounts and limited-time offers.'
+    },
+    {
       id: 'settings',
       label: 'Settings',
       icon: 'assets/img/service/create/settings.svg',
@@ -58,7 +65,7 @@ export class SingleArticleComponent extends AppComponentBase implements OnInit {
     private _serviceCreateService: ServiceCreateService
   ) {
     super(injector);
-    this._serviceCreateService.setDefaultMenuItem(this.menuItems[0]);
+    this._serviceCreateService.setDefaultMenuItem(this.menuItems[2]); // Set default to 0 for first item;
     this._serviceCreateService.getDefaultMenuItem().subscribe(x => this.defaultMenuItem = x);
     route.paramMap.subscribe(paramMap => {
       if (paramMap.has('id')) {
