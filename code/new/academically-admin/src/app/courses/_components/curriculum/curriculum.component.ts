@@ -83,7 +83,9 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
 
   addTemporarySection(type: CourseSectionType): void {
     this.courseSections.push(CourseSectionDto.fromJS({
-      courseId: this.courseId, type
+      courseId: this.courseId,
+      displayOrder: this.courseSections.length + 1,
+      type
     }));
   }
 

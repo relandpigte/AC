@@ -42,7 +42,7 @@
           {{ 'AddLesson' | localize }}
         </button>
 
-        <button *ngIf="isStandardStructure" class="btn btn-lg btn-block btn-primary" (click)="onAddEditCourseSectionClick(CourseSectionType.Module)">
+        <button *ngIf="isStandardStructure" class="btn btn-lg btn-block btn-primary" (click)="addTemporarySection(CourseSectionType.Module)">
           <img src="assets/img/service/content/plus-white.svg" alt="Add"/>
           {{ 'AddModule' | localize }}
         </button>

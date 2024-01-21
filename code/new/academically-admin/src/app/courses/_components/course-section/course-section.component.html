@@ -1,5 +1,5 @@
 <div class="course-section" [ngClass]="{'module': courseSection.type === CourseSectionType.Module, 'lesson': courseSection.type === CourseSectionType.Lesson}">
-  <div class="course-section-info w100p">
+  <div class="course-section-info w100p" [style.marginBottom.px]="courseSection.type === CourseSectionType.Module ? 10 : 0">
     <div class="course-section-drag" [ngClass]="{ 'cursor-grab': !isTemporary, 'cursor-not-allowed': isTemporary }">
       <img src="assets/img/service/content/drag.svg" alt="move"/>
     </div>
@@ -70,6 +70,7 @@
     <div *ngIf="courseSection.children?.length" id="{{courseSection.id}}" dragula="Course" [(dragulaModel)]="courseSection.children" class="course-section-children w100p">
       <app-course-section
         *ngFor="let courseSectionUnit of courseSection.children"
+        [isTemporary]="!courseSectionUnit.id"
         [selectedStructure]="selectedStructure"
         [courseSection]="courseSectionUnit"
         (editSection)="onAddEditCourseSectionClick($event)"
@@ -80,7 +81,7 @@
     </div>
 
     <div *ngIf="courseSection.type === CourseSectionType.Module" class="course-section-actions w100p">
-      <button class="btn btn-lg btn-block btn-primary" (click)="onAddCourseSectionClick(courseSection)">
+      <button class="btn btn-lg btn-block btn-primary" (click)="addTemporarySection(CourseSectionType.Lesson)">
         <img src="assets/img/service/content/plus-blue.svg" alt="Add"/>
         {{ 'AddLesson' | localize }}
       </button>

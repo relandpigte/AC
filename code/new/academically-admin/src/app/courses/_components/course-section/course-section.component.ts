@@ -77,4 +77,13 @@ export class CourseSectionComponent extends AppComponentBase implements OnInit {
     this.addSection.emit(courseSectionUnit);
   }
 
+  addTemporarySection(type: CourseSectionType): void {
+    this.courseSection.children.push(CourseSectionDto.fromJS({
+      parentId: this.courseSection.id,
+      courseId: this.courseSection.courseId,
+      displayOrder: this.courseSection.children.length + 1,
+      type
+    }));
+  }
+
 }
