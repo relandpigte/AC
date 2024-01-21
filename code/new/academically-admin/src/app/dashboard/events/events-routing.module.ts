@@ -40,13 +40,6 @@ import { EventsComponent } from './events.component';
             ]
           },
           {
-            path: 'workshop/:id',
-            loadChildren: () =>
-              import('@app/dashboard/events/details/workshop/single/single.module').then(
-                (m) => m.SingleModule,
-              ),
-          },
-          {
             path: 'workshop/series',
             children: [
               {
@@ -95,6 +88,13 @@ import { EventsComponent } from './events.component';
         loadChildren: () =>
           import('@app/dashboard/events/portal/broadcast/student/student-portal.module').then(
             (m) => m.StudentPortalModule
+          ),
+      },
+      {
+        path: 'workshop/:id',
+        loadChildren: () =>
+          import('@app/dashboard/events/details/workshop/single/single.module').then(
+            (m) => m.SingleModule,
           ),
       },
     ]),

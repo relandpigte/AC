@@ -2,44 +2,30 @@
   <div id="sidebar" class="service-sidebar navbar navbar-vertical fixed-start navbar-expand-md bg-white border-right d-flex flex-column">
     <div class="service-sidebar-header w-100">
       <div class="service-create d-flex align-items-center gap-8">
-        <a href="#">
+        <a href="javascript: void(0);" (click)="onProcessReturn()">
           <img src="assets/img/service/create/back.svg" alt="Back">
         </a>
         <div class="service-create-info">
-          Coach creation
+          {{ 'Service.Creation' | localize : serviceTypeName }}
         </div>
       </div>
-      <div class="service-sidebar-title">
-        Create Affinity Diagrams to Organize Ideas in Miro
-      </div>
+      <div class="service-sidebar-title" [innerHTML]="serviceName"></div>
     </div>
     <div class="service-sidebar-menu w-100">
       <ul class="navbar-nav">
-        <li class="nav-item curriculum active">
-          <a class="nav-link" href="#" role="button">
-            Curriculum
-          </a>
-        </li>
-        <li class="nav-item details">
-          <a class="nav-link" href="#" role="button">
-            Details
-          </a>
-        </li>
-        <li class="nav-item offers">
-          <a class="nav-link" href="#" role="button">
-            Offers
-          </a>
-        </li>
-        <li class="nav-item settings">
-          <a class="nav-link" href="#" role="button">
-            Settings
+        <li *ngFor="let menu of menuItems" class="nav-item curriculum" [class.active]="defaultMenuItem.id === menu.id">
+          <a class="nav-link d-flex align-items-center gap-8" href="javascript: void(0);" role="button" (click)="setDefaultMenuItem(menu)">
+            <img class="icon-default" [src]="menu.icon" [alt]="menu.label">
+            <img class="icon-hover" [src]="menu.iconHover" [alt]="menu.label">
+            <span>{{ menu.label }}</span>
           </a>
         </li>
       </ul>
     </div>
     <div class="service-sidebar-actions d-flex flex-column gap-10 mt-auto w-100">
-      <button class="btn w-100 btn-primary lift" type="button">Publish</button>
-      <button class="btn w-100 btn-outline-danger lift" type="button">Delete</button>
+      <button *ngIf="isServicePublished" (click)="handleUnpublished()" class="btn w-100 btn-primary" type="button">Unpublish</button>
+      <button *ngIf="isServiceDraft" (click)="handlePublished()" class="btn w-100 btn-outline-success" type="button">Publish</button>
+      <button (click)="handleDelete()" class="btn w-100 btn-outline-danger" type="button">Delete</button>
     </div>
   </div>
   <div class="main-content">
@@ -50,8 +36,8 @@
             <div class="header-body">
               <div class="row align-items-center">
                 <div class="col">
-                  <h6 class="header-pretitle">Coaching</h6>
-                  <h1 class="header-title">Curriculum</h1>
+                  <h6 class="header-pretitle">{{ serviceTypeName }}</h6>
+                  <h1 class="header-title">{{ activeMenuName }}</h1>
                 </div>
               </div>
             </div>
@@ -59,12 +45,15 @@
 
           <div class="row justify-content-between align-items-center mb-5">
             <div class="col-12">
-              Content here.
+              <div *ngIf="displayInfoText" class="service-alert alert alert-secondary" role="alert">
+                <a class="service-alert-close" href="javascript: void(0);" (click)="onCloseInfoText()"><img src="assets/img/service/create/close.svg" alt="Close"></a>
+                {{ activeInfoText }}
+              </div>
+              <ng-content></ng-content>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
 </div>
