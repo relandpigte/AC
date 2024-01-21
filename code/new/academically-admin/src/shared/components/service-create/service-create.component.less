@@ -1,0 +1,92 @@
+.service {
+  &-sidebar {
+    padding: 0 24px;
+
+    &-header {
+      color: #1F2D3D;
+      font-weight: 600;
+      font-size: 15px;
+      padding-top: 15px;
+    }
+
+    &-title {
+      color: #12263F;
+      font-weight: 600;
+      font-size: 18px;
+      padding-block: 24px;
+    }
+
+    &-menu {
+      .navbar-nav {
+        margin-inline: 0;
+
+        .nav-item {
+          &.active {
+            .nav-link {
+              color: #12263F;
+            }
+
+            &.curriculum { background-image: url("assets/img/service/create/layers-hover.svg"); }
+            &.details { background-image: url("assets/img/service/create/list-hover.svg"); }
+            &.offers { background-image: url("assets/img/service/create/shopping-hover.svg"); }
+            &.settings { background-image: url("assets/img/service/create/settings-hover.svg"); }
+          }
+
+          &.curriculum {
+            background: url("assets/img/service/create/layers.svg") no-repeat 0 center transparent;
+            &:hover { background-image: url("assets/img/service/create/layers-hover.svg"); }
+          }
+
+          &.details {
+            background: url("assets/img/service/create/list.svg") no-repeat 0 center transparent;
+            &:hover { background-image: url("assets/img/service/create/list-hover.svg"); }
+          }
+
+          &.offers {
+            background: url("assets/img/service/create/shopping.svg") no-repeat 0 center transparent;
+            &:hover { background-image: url("assets/img/service/create/shopping-hover.svg"); }
+          }
+
+          &.settings {
+            background: url("assets/img/service/create/settings.svg") no-repeat 0 center transparent;
+            &:hover { background-image: url("assets/img/service/create/settings-hover.svg"); }
+          }
+
+          .nav-link {
+            color: #6E84A3;
+            font-size: 15px;
+            padding-left: 28px;
+
+            &:hover,
+            &:active,
+            &:focus {
+              color: #12263F;
+            }
+          }
+        }
+      }
+    }
+
+    &-actions {
+      padding-bottom: 24px;
+    }
+  }
+
+  &-container {
+    padding-top: 60px;
+
+    .header {
+      margin-bottom: 30px;
+
+      &-body {
+        padding: 0 0 20px;
+      }
+      &-title {
+        font-size: 24px;
+      }
+    }
+  }
+}
+.main-content {
+  padding-left: 250px;
+}
