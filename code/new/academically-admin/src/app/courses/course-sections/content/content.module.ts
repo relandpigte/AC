@@ -18,5 +18,8 @@ import { ContentComponent } from './content.component';
     AppSharedModule,
     ContentBuilderModule,
   ],
+  exports: [
+    ContentComponent
+  ]
 })
 export class ContentModule { }

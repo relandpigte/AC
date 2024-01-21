@@ -21,13 +21,6 @@ import { VideosComponent } from './videos.component';
             component: VideosComponent,
           },
           {
-            path: ':id',
-            loadChildren: () =>
-              import('@app/videos/manage-video/manage-video.module').then(
-                (m) => m.ManageVideoModule
-              ),
-          },
-          {
             path: 'video-series',
             children: [
               {
@@ -77,6 +70,13 @@ import { VideosComponent } from './videos.component';
         loadChildren: () =>
           import('@app/videos/student-portal/student-portal.module').then(
             (m) => m.StudentPortalModule
+          ),
+      },
+      {
+        path: ':id',
+        loadChildren: () =>
+          import('@app/videos/manage-video/manage-video.module').then(
+            (m) => m.ManageVideoModule
           ),
       },
     ]),

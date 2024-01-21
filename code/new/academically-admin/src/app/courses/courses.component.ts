@@ -3,10 +3,11 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ActivatedRoute } from '@angular/router';
 import { CourseService } from './_services/course.service';
-import { CoursesServiceProxy, CourseDto, CourseStatus } from '@shared/service-proxies/service-proxies';
+import { CoursesServiceProxy, CourseDto, CourseStatus, ServicesType } from '@shared/service-proxies/service-proxies';
 import { takeUntil } from 'rxjs/operators';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { CommunityPostService } from '@shared/services/community-post.service';
+import { MenuItem, ServiceCreateService } from '@shared/services/service-create.service';
 
 enum CourseTab {
   Details = 'details',
@@ -27,16 +28,44 @@ export class CoursesComponent extends AppComponentBase implements OnInit, OnDest
   currentTab = CourseTab.Details;
   CourseTab = CourseTab;
   CourseStatus = CourseStatus;
+  defaultMenuItem: MenuItem;
+  menuItems: MenuItem[] = [
+    {
+      id: 'details',
+      label: 'Details',
+      icon: 'assets/img/service/create/list.svg',
+      iconHover: 'assets/img/service/create/list-hover.svg',
+      infoText: 'Here, you can input all the details for your article. This information will be visible to potential clients, so keep it clear and informative.'
+    },
+    {
+      id: 'curriculum',
+      label: 'Curriculum',
+      icon: 'assets/img/service/create/layers.svg',
+      iconHover: 'assets/img/service/create/layers-hover.svg',
+      infoText: 'Here 2, you can input all the details for your article. This information will be visible to potential clients, so keep it clear and informative.'
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: 'assets/img/service/create/settings.svg',
+      iconHover: 'assets/img/service/create/settings-hover.svg',
+      infoText: 'Here 4, you can input all the details for your article. This information will be visible to potential clients, so keep it clear and informative.'
+    },
+  ];
 
+  readonly ServicesType = ServicesType;
   constructor(
     injector: Injector,
     private _route: ActivatedRoute,
     private _coursesService: CoursesServiceProxy,
     private _courseService: CourseService,
     private _modalDialogService: ModalDialogService,
-    private _communityPostService: CommunityPostService
+    private _communityPostService: CommunityPostService,
+    private _serviceCreateService: ServiceCreateService
   ) {
     super(injector);
+    this._serviceCreateService.setDefaultMenuItem(this.menuItems[0]);
+    this._serviceCreateService.getDefaultMenuItem().subscribe(x => this.defaultMenuItem = x);
     this._route.paramMap.subscribe(paramMap => {
       if (paramMap.has('id')) {
         this.id = paramMap.get('id');

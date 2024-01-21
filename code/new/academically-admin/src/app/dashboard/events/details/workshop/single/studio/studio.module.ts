@@ -14,6 +14,9 @@ import { InvitePresenterByEmailComponent } from './_components/invite-presenter-
     InvitePresenterComponent,
     InvitePresenterByEmailComponent,
   ],
+  exports: [
+    StudioComponent
+  ],
   imports: [
     CommonModule,
     StudioRoutingModule,

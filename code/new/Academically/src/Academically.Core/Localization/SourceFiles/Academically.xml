@@ -2095,5 +2095,8 @@
 	<!-- Bookings -->
 	<text name="Bookings.Cancellation.Confirm.Title">Cancel this session?</text>
 	<text name="Bookings.Cancellation.Confirm.Subtitle">If you are sure to cancel this session, this is an irreversible action</text>
+
+    <!-- Service Creation -->
+    <text name="Service.Creation">{0} creation</text>
   </texts>
 </localizationDictionary>

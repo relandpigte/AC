@@ -1,0 +1,253 @@
+<form autocomplete="off" #form="ngForm">
+    <div class="modal-card card" [loader]="isLoading$ | async">
+      <abp-modal-header [title]="'Offer' | localize" (onCloseClick)="onCloseClick()"></abp-modal-header>
+      <div class="card-body d-flex flex-column justify-content-center align-items-center w-100">
+        <div class="offer-reference d-flex justify-content-center align-items-center w-100" [style.marginBottom.px]="20">
+            <div *ngIf="hasSelectedService; else noServiceSelected" class="offer-reference-details flex-grow-1 d-flex justify-content-center align-items-center" [style.gap.px]="15">
+                <div class="offer-reference-details-img bg-center" [ngStyle]="{ 'background-image': 'url(\'' + serviceThumbnail + '\')' }"></div>
+                <div class="offer-reference-details-info flex-grow-1 d-flex flex-column justify-content-center align-items-start">
+                    <div class="offer-reference-details-info-title">{{ serviceTitle }}</div>
+                    <div class="offer-reference-details-info-type">{{ serviceType }}</div>
+                    <div class="offer-reference-details-info-price">{{ servicePrice | currency:'GBP' }}</div>
+                </div>
+            </div>
+            <ng-template #noServiceSelected>
+                <div class="offer-reference-no-selected flex-grow-1">
+                    {{ 'No services have been added yet' | localize }}
+                </div>
+            </ng-template>
+            <div class="offer-reference-actions">
+                <div *ngIf="!hasSelectedService" class="offer-reference-actions-add cursor-pointer d-flex justify-content-center align-items-center" (click)="onSelectServiceClick()">{{ 'Add' | localize }}</div>
+                <div *ngIf="hasSelectedService" class="offer-reference-actions-change cursor-pointer d-flex justify-content-center align-items-center" (click)="onSelectServiceClick()">{{ 'Change' | localize }}</div>
+            </div>
+        </div>
+        <div class="offer-price d-flex flex-column justify-content-center align-items-center w-100">
+            <div class="offer-price-label d-flex justify-content-between align-items-center w-100" [style.marginBottom.px]="7">
+                <div class="offer-price-label-value">{{ 'Input your new price' | localize }}</div>
+            </div>
+            <div class="offer-price-value d-flex flex-column justify-content-center align-items-center w-100" [style.marginBottom.px]="20">
+
+                <ng-container *ngIf="isPriceInput">
+                    <div class="d-flex flex-grow-1 justify-content-center align-items-center w-100" [style.gap.px]="18">
+                        <div class="d-flex flex-grow-1 justify-content-center align-items-center input-group input-group-merge">
+                            <input
+                                type="number"
+                                class="form-control form-control-appended h-40-px"
+                                name="amount"
+                                id="amount"
+                                [placeholder]="'At least lower than ' + (validMaxDiscountPrice | currency:'GBP') | localize"
+                                required
+                                [(ngModel)]="model.discountAmount"
+                                #amountModel="ngModel"
+                                #amountEl
+                            />
+                            <div class="input-group-append d-flex justify-content-end align-items-center h-40-px">
+                                <div class="input-group-text h-40-px">
+                                    {{ '£' | localize }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center" [style.gap.px]="10">
+                            <div
+                                class="offer-price-value-btn-input d-flex justify-content-center align-items-center cursor-pointer"
+                                [class.active]="isPriceInput"
+                                (click)="onAmountTypeClick(0)"
+                            >{{ 'Input' | localize }}</div>
+                            <div
+                                class="offer-price-value-btn-discount d-flex justify-content-center align-items-center cursor-pointer"
+                                [class.active]="isPriceDiscount"
+                                (click)="onAmountTypeClick(1)"
+                            >{{ 'Discount' | localize }}</div>
+                        </div>
+                    </div>
+                    <div class="hide-empty d-flex flex-column justify-content-start align-items-start w-100">
+                        <abp-validation-summary [control]="amountModel" [controlEl]="amountEl"></abp-validation-summary>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="isPriceDiscount">
+                    <div class="d-flex flex-grow-1 justify-content-center align-items-center w-100" [style.gap.px]="18">
+                        <div class="d-flex flex-grow-1 justify-content-center align-items-center input-group input-group-merge">
+                            <input
+                                type="number"
+                                class="form-control form-control-appended h-40-px"
+                                name="percentage"
+                                id="percentage"
+                                [placeholder]="'At least lower than 100%' | localize"
+                                required
+                                [(ngModel)]="model.percentageDiscount"
+                                #percentageModel="ngModel"
+                                #percentageEl
+                            />
+                            <div class="input-group-append d-flex justify-content-end align-items-center h-40-px">
+                                <div class="input-group-text h-40-px">
+                                    {{ '%' | localize }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center" [style.gap.px]="10">
+                            <div
+                                class="offer-price-value-btn-input d-flex justify-content-center align-items-center cursor-pointer"
+                                [class.active]="isPriceInput"
+                                (click)="onAmountTypeClick(0)"
+                            >{{ 'Input' | localize }}</div>
+                            <div
+                                class="offer-price-value-btn-discount d-flex justify-content-center align-items-center cursor-pointer"
+                                [class.active]="isPriceDiscount"
+                                (click)="onAmountTypeClick(1)"
+                            >{{ 'Discount' | localize }}</div>
+                        </div>
+                    </div>
+                    <div class="hide-empty d-flex flex-column justify-content-start align-items-start w-100">
+                        <abp-validation-summary [control]="percentageModel" [controlEl]="percentageEl"></abp-validation-summary>
+                    </div>
+                </ng-container>
+
+            </div>
+        </div>
+        <div class="offer-end d-flex flex-column justify-content-center align-items-center w-100" [style.marginBottom.px]="20">
+            <div class="offer-end-label d-flex justify-content-between align-items-center w-100" [style.marginBottom.px]="7">
+                <div class="offer-end-label-value">{{ 'End time' | localize }}</div>
+                <div class="custom-control custom-switch no-label">
+                    <input
+                        class="custom-control-input"
+                        id="duration"
+                        name="duration"
+                        type="checkbox"
+                        [checked]="model.isOfferDurationLimited"
+                        [(ngModel)]="model.isOfferDurationLimited"
+                        (change)="model.isOfferDurationLimited=$event.target.checked" />
+                    <label class="custom-control-label" for="duration">Duration</label>
+                </div>
+            </div>
+
+            <div class="offer-end-value d-flex flex-column justify-content-center align-items-center w-100">
+                <div class="d-flex justify-content-center align-items-start w-100" [style.gap.px]="14">
+                    <div class="d-flex flex-column justify-content-center align-items-start w-100">
+                        <div class="offer-end-value-days input-group input-group-merge" [class.disabled]="!model.isOfferDurationLimited">
+                            <input
+                                type="number"
+                                class="form-control form-control-appended h-40-px"
+                                name="endDays"
+                                id="endDays"
+                                [placeholder]="'-' | localize"
+                                [required]="model.isOfferDurationLimited ? '' : null"
+                                [disabled]="!model.isOfferDurationLimited"
+                                [(ngModel)]="model.offerLimitDays"
+                                #endDaysModel="ngModel"
+                                #endDaysEl
+                            >
+                            <div class="input-group-append d-flex justify-content-end align-items-center h-40-px">
+                                <div class="input-group-text h-40-px">
+                                    {{ 'Days' | localize }}
+                                </div>
+                            </div>
+                        </div>
+                        <abp-validation-summary [control]="endDaysModel" [controlEl]="endDaysEl"></abp-validation-summary>
+                    </div>
+
+                    <div class="d-flex flex-column justify-content-center align-items-start w-100">
+                        <div class="offer-end-value-hours input-group input-group-merge" [class.disabled]="!model.isOfferDurationLimited">
+                            <input
+                                type="number"
+                                class="form-control form-control-appended h-40-px"
+                                name="endHours"
+                                id="endHours"
+                                [placeholder]="'-' | localize"
+                                [required]="model.isOfferDurationLimited ? '' : null"
+                                [disabled]="!model.isOfferDurationLimited"
+                                [(ngModel)]="model.offerLimitHours"
+                                #endHoursModel="ngModel"
+                                #endHoursEl
+                            >
+                            <div class="input-group-append d-flex justify-content-end align-items-center h-40-px">
+                                <div class="input-group-text h-40-px">
+                                    {{ 'Hours' | localize }}
+                                </div>
+                            </div>
+                        </div>
+                        <abp-validation-summary [control]="endHoursModel" [controlEl]="endHoursEl"></abp-validation-summary>
+                    </div>
+
+                    <div class="d-flex flex-column justify-content-center align-items-start w-100">
+                        <div class="offer-end-value-minutes input-group input-group-merge" [class.disabled]="!model.isOfferDurationLimited">
+                            <input
+                                type="number"
+                                class="form-control form-control-appended h-40-px"
+                                name="endMinutes"
+                                id="endMinutes"
+                                [placeholder]="'-' | localize"
+                                [required]="model.isOfferDurationLimited ? '' : null"
+                                [disabled]="!model.isOfferDurationLimited"
+                                [(ngModel)]="model.offerLimitMinutes"
+                                #endMinutesModel="ngModel"
+                                #endMinutesEl
+                            >
+                            <div class="input-group-append d-flex justify-content-end align-items-center h-40-px">
+                                <div class="input-group-text h-40-px">
+                                    {{ 'Minutes' | localize }}
+                                </div>
+                            </div>
+                        </div>
+                        <abp-validation-summary [control]="endMinutesModel" [controlEl]="endMinutesEl"></abp-validation-summary>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="offer-units d-flex flex-column justify-content-center align-items-center w-100" [style.marginBottom.px]="14">
+            <div class="offer-units-label d-flex justify-content-between align-items-center w-100" [style.marginBottom.px]="7">
+                <div class="offer-units-label-value">{{ 'Available units' | localize }}</div>
+                <div class="custom-control custom-switch no-label">
+                    <input
+                        class="custom-control-input"
+                        id="units"
+                        name="units"
+                        type="checkbox"
+                        [checked]="model.isNumberOfUnitsLimited"
+                        [(ngModel)]="model.isNumberOfUnitsLimited"
+                        (change)="model.isNumberOfUnitsLimited=$event.target.checked" />
+                    <label class="custom-control-label" for="units">Units</label>
+                </div>
+            </div>
+
+            <div class="offer-units-value d-flex flex-column justify-content-center align-items-start w-100">
+                <input
+                    type="number"
+                    class="form-control form-control-appended h-40-px"
+                    name="unit"
+                    id="unit"
+                    [placeholder]="'Input a number' | localize"
+                    [required]="model.isNumberOfUnitsLimited ? '' : null"
+                    [disabled]="!model.isNumberOfUnitsLimited"
+                    [(ngModel)]="model.unitLimit"
+                    #unitModel="ngModel"
+                    #unitEl
+                >
+                <abp-validation-summary [control]="unitModel" [controlEl]="unitEl"></abp-validation-summary>
+            </div>
+        </div>
+
+      </div>
+      <div class="card-footer d-flex justify-content-between align-items-center border-top-0">
+        <div class="custom-control custom-checkbox no-wrap mr-4">
+            <input
+                [(ngModel)]="isCreateAnotherOffer"
+                id="isCreateAnotherOffer"
+                name="isCreateAnotherOffer"
+                type="checkbox"
+                class="custom-control-input"
+            >
+            <label class="custom-control-label" for="isCreateAnotherOffer">
+              {{ 'Create another offer' | localize }}
+            </label>
+          </div>
+        <button
+            [disabled]="(isLoading$ | async) || !form.form.valid || !selectedService"
+            type="button"
+            class="btn btn-done btn-primary d-flex justify-content-center align-items-center"
+            (click)="onFormSubmit()">
+            {{ 'Done' | localize }}
+        </button>
+      </div>
+    </div>
+  </form>

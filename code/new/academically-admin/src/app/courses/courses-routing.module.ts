@@ -11,7 +11,6 @@ import { CoursesComponent } from './courses.component';
     RouterModule.forChild([
       {
         path: ':id',
-        component: WrapperComponent,
         data: { permission: 'Pages.Conversations' },
         canActivate: [AppRouteGuard],
         canActivateChild: [AppRouteGuard],

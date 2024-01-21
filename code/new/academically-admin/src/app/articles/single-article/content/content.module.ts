@@ -18,5 +18,8 @@ import { ContentBuilderModule } from '@app/content-builder/content-builder.modul
     AppSharedModule,
     ContentBuilderModule,
   ],
+  exports: [
+    ContentComponent
+  ]
 })
 export class ContentModule { }

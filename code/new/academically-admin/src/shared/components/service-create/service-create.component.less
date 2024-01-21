@@ -13,7 +13,7 @@
       color: #12263F;
       font-weight: 600;
       font-size: 18px;
-      padding-block: 24px;
+      margin-block: 24px;
     }
 
     &-menu {
@@ -21,47 +21,32 @@
         margin-inline: 0;
 
         .nav-item {
-          &.active {
+          margin-bottom: 16px;
+
+          &.active,
+          &:hover,
+          &:active,
+          &:focus {
             .nav-link {
               color: #12263F;
             }
 
-            &.curriculum { background-image: url("assets/img/service/create/layers-hover.svg"); }
-            &.details { background-image: url("assets/img/service/create/list-hover.svg"); }
-            &.offers { background-image: url("assets/img/service/create/shopping-hover.svg"); }
-            &.settings { background-image: url("assets/img/service/create/settings-hover.svg"); }
+            .icon-hover {
+              display: block;
+            }
+            .icon-default {
+              display: none;
+            }
           }
 
-          &.curriculum {
-            background: url("assets/img/service/create/layers.svg") no-repeat 0 center transparent;
-            &:hover { background-image: url("assets/img/service/create/layers-hover.svg"); }
-          }
-
-          &.details {
-            background: url("assets/img/service/create/list.svg") no-repeat 0 center transparent;
-            &:hover { background-image: url("assets/img/service/create/list-hover.svg"); }
-          }
-
-          &.offers {
-            background: url("assets/img/service/create/shopping.svg") no-repeat 0 center transparent;
-            &:hover { background-image: url("assets/img/service/create/shopping-hover.svg"); }
-          }
-
-          &.settings {
-            background: url("assets/img/service/create/settings.svg") no-repeat 0 center transparent;
-            &:hover { background-image: url("assets/img/service/create/settings-hover.svg"); }
+          .icon-hover {
+            display: none;
           }
 
           .nav-link {
             color: #6E84A3;
             font-size: 15px;
-            padding-left: 28px;
-
-            &:hover,
-            &:active,
-            &:focus {
-              color: #12263F;
-            }
+            padding: 0;
           }
         }
       }
@@ -84,6 +69,18 @@
       &-title {
         font-size: 24px;
       }
+    }
+  }
+
+  &-alert {
+    background-color: #EDF2F9;
+    border: 1px solid #E3EBF6;
+    font-size: 15px;
+    color: #6E84A3;
+    padding: 15px 20px;
+
+    &-close {
+      line-height: 1em;
     }
   }
 }

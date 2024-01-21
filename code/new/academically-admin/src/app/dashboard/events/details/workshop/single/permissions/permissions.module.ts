@@ -16,8 +16,8 @@ import { GuestsComponent } from './guests/guests.component';
     AppSharedModule,
     PermissionsRoutingModule
   ],
-  exports : [
-    AudienceComponent, CoHostComponent, GuestsComponent
+  exports: [
+    AudienceComponent, CoHostComponent, GuestsComponent, PermissionsComponent
   ]
 })
 export class PermissionsModule { }
