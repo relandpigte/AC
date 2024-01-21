@@ -21,13 +21,6 @@ import { EventsComponent } from './events.component';
             data: { permission: 'Pages.Dashboard' }
           },
           {
-            path: 'broadcast/:id',
-            loadChildren: () =>
-              import('@app/dashboard/events/details/broadcast/single/single.module').then(
-                (m) => m.SingleModule,
-              ),
-          },
-          {
             path: 'broadcast/series',
             children: [
               {
@@ -94,6 +87,13 @@ import { EventsComponent } from './events.component';
         path: 'workshop/:id',
         loadChildren: () =>
           import('@app/dashboard/events/details/workshop/single/single.module').then(
+            (m) => m.SingleModule,
+          ),
+      },
+      {
+        path: 'broadcast/:id',
+        loadChildren: () =>
+          import('@app/dashboard/events/details/broadcast/single/single.module').then(
             (m) => m.SingleModule,
           ),
       },

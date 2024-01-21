@@ -20,6 +20,9 @@ import { InvitePresenterByEmailComponent } from './_components/invite-presenter-
     SharedModule,
     AppSharedModule,
     PermissionsModule,
+  ],
+  exports: [
+    StudioComponent
   ]
 })
 export class StudioModule { }

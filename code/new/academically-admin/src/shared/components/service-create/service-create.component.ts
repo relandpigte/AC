@@ -3,7 +3,7 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { MenuItem, ServiceCreateService } from '@shared/services/service-create.service';
 import { Router } from '@angular/router';
-import { EventStatus, ServicesType } from '@shared/service-proxies/service-proxies';
+import { EventCategory, EventStatus, ServicesType } from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-service-create',
@@ -32,7 +32,11 @@ export class ServiceCreateComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
-  get serviceTypeName(): string { return ServicesType[this.servicesType] ?? 'Service'; }
+  get serviceTypeName(): string {
+    return (this.servicesType === ServicesType.Event ?
+      (this.model?.category === EventCategory.Broadcast ? 'Broadcast' : 'Workshop') :
+      ServicesType[this.servicesType]) ?? 'Service';
+  }
   get serviceName(): string { return this.model?.name; }
   get activeMenuName(): string { return this.defaultMenuItem?.label; }
   get isServicePublished(): boolean { return this.model?.status === EventStatus.Published; }

@@ -34,5 +34,8 @@ import { SelectPollQuestionComponent } from './_components/select-poll-question/
     SharedModule,
     AppSharedModule,
   ],
+  exports: [
+    ResourcesComponent
+  ]
 })
 export class ResourcesModule { }
