@@ -16,5 +16,8 @@ import { AppSharedModule } from '@app/_shared/app-shared.module';
     SharedModule,
     AppSharedModule,
   ],
+  exports: [
+    VideoComponent
+  ]
 })
 export class VideoModule { }

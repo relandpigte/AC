@@ -5,6 +5,10 @@ import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 
 import { SingleArticleComponent } from './single-article.component';
+import { ContentModule } from '@app/articles/single-article/content/content.module';
+import { DetailsModule } from '@app/articles/single-article/details/details.module';
+import { SettingsModule } from '@app/articles/single-article/settings/settings.module';
+
 
 @NgModule({
   declarations: [
@@ -15,6 +19,9 @@ import { SingleArticleComponent } from './single-article.component';
     SingleArticleRoutingModule,
     SharedModule,
     AppSharedModule,
+    ContentModule,
+    DetailsModule,
+    SettingsModule,
   ],
 })
 export class SingleArticleModule { }

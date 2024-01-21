@@ -21,13 +21,6 @@ import { ArticlesComponent } from './articles.component';
             component: ArticlesComponent,
           },
           {
-            path: ':id',
-            loadChildren: () =>
-              import('@app/articles/single-article/single-article.module').then(
-                (m) => m.SingleArticleModule
-              ),
-          },
-          {
             path: 'article-series',
             children: [
               {
@@ -78,6 +71,13 @@ import { ArticlesComponent } from './articles.component';
               ),
           },
         ],
+      },
+      {
+        path: ':id',
+        loadChildren: () =>
+          import('@app/articles/single-article/single-article.module').then(
+            (m) => m.SingleArticleModule
+          ),
       },
     ]),
   ],

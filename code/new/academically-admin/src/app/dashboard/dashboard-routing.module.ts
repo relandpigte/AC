@@ -35,13 +35,6 @@ import { DashboardComponent } from './dashboard.component';
               ),
           },
           {
-            path: 'coaching',
-            loadChildren: () =>
-              import('@app/dashboard/coaching/coaching.module').then(
-                (m) => m.CoachingModule
-              ),
-          },
-          {
             path: 'tutorials',
             loadChildren: () =>
               import('@app/dashboard/tutorials/tutorials.module').then(
@@ -56,6 +49,13 @@ import { DashboardComponent } from './dashboard.component';
         loadChildren: () =>
           import('@app/dashboard/events/events.module').then(
             (m) => m.EventsModule
+          ),
+      },
+      {
+        path: 'coaching',
+        loadChildren: () =>
+          import('@app/dashboard/coaching/coaching.module').then(
+            (m) => m.CoachingModule
           ),
       },
     ]),
