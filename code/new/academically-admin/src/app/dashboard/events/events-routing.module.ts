@@ -10,61 +10,82 @@ import { EventsComponent } from './events.component';
     RouterModule.forChild([
       {
         path: '',
-        component: EventsComponent,
-        data: { permission: 'Pages.Dashboard' }
-      },
-      {
-        path: 'broadcast/:id',
-        loadChildren: () =>
-          import('@app/dashboard/events/details/broadcast/single/single.module').then(
-            (m) => m.SingleModule,
-          ),
-      },
-      {
-        path: 'broadcast/series',
-        children: [
-          {
-            path: ':parent-id',
-            loadChildren: () =>
-              import('@app/dashboard/events/details/broadcast/series/series.module').then(
-                (m) => m.SeriesModule
-              ),
-          }
-        ]
-      },
-      {
-        path: 'workshop/:id',
-        loadChildren: () =>
-          import('@app/dashboard/events/details/workshop/single/single.module').then(
-            (m) => m.SingleModule,
-          ),
-      },
-      {
-        path: 'workshop/series',
-        children: [
-          {
-            path: ':parent-id',
-            loadChildren: () =>
-              import('@app/dashboard/events/details/workshop/series/series.module').then(
-                (m) => m.SeriesModule
-              ),
-          }
-        ]
-      },
-      {
-        path: 'portal/broadcast/tutor',
-        data: { permission: 'Pages.Events' },
+        component: WrapperComponent,
+        data: { permission: 'Pages.Dashboard' },
         canActivate: [AppRouteGuard],
         canActivateChild: [AppRouteGuard],
         children: [
           {
-            path: ':id',
+            path: '',
+            component: EventsComponent,
+            data: { permission: 'Pages.Dashboard' }
+          },
+          {
+            path: 'broadcast/:id',
             loadChildren: () =>
-              import('@app/dashboard/events/portal/broadcast/tutor/tutor-portal.module').then(
-                (m) => m.TutorPortalModule
+              import('@app/dashboard/events/details/broadcast/single/single.module').then(
+                (m) => m.SingleModule,
               ),
           },
-        ],
+          {
+            path: 'broadcast/series',
+            children: [
+              {
+                path: ':parent-id',
+                loadChildren: () =>
+                  import('@app/dashboard/events/details/broadcast/series/series.module').then(
+                    (m) => m.SeriesModule
+                  ),
+              }
+            ]
+          },
+          {
+            path: 'workshop/:id',
+            loadChildren: () =>
+              import('@app/dashboard/events/details/workshop/single/single.module').then(
+                (m) => m.SingleModule,
+              ),
+          },
+          {
+            path: 'workshop/series',
+            children: [
+              {
+                path: ':parent-id',
+                loadChildren: () =>
+                  import('@app/dashboard/events/details/workshop/series/series.module').then(
+                    (m) => m.SeriesModule
+                  ),
+              }
+            ]
+          },
+          {
+            path: 'portal/broadcast/tutor',
+            data: { permission: 'Pages.Events' },
+            canActivate: [AppRouteGuard],
+            canActivateChild: [AppRouteGuard],
+            children: [
+              {
+                path: ':id',
+                loadChildren: () =>
+                  import('@app/dashboard/events/portal/broadcast/tutor/tutor-portal.module').then(
+                    (m) => m.TutorPortalModule
+                  ),
+              },
+            ],
+          },
+          {
+            path: 'session/broadcast',
+            canActivate: [AppRouteGuard],
+            canActivateChild: [AppRouteGuard],
+            data: { permission: 'Pages.Events.StudentPortal' },
+            loadChildren: () =>
+              import('@app/dashboard/events/session/broadcast/broadcast-session.module').then(
+                (m) => m.BroadcastSessionModule
+              ),
+          },
+          { path: 'portal/workshop/tutor', redirectTo: 'portal/broadcast/tutor' },
+          { path: 'portal/workshop/student', redirectTo: 'portal/broadcast/student' },
+        ]
       },
       {
         path: 'portal/broadcast/student',
@@ -76,18 +97,6 @@ import { EventsComponent } from './events.component';
             (m) => m.StudentPortalModule
           ),
       },
-      {
-        path: 'session/broadcast',
-        canActivate: [AppRouteGuard],
-        canActivateChild: [AppRouteGuard],
-        data: { permission: 'Pages.Events.StudentPortal' },
-        loadChildren: () =>
-          import('@app/dashboard/events/session/broadcast/broadcast-session.module').then(
-            (m) => m.BroadcastSessionModule
-          ),
-      },
-      { path: 'portal/workshop/tutor', redirectTo: 'portal/broadcast/tutor' },
-      { path: 'portal/workshop/student', redirectTo: 'portal/broadcast/student' },
     ]),
   ],
   exports: [

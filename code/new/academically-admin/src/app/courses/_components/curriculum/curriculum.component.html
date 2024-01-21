@@ -1,80 +1,59 @@
-<div class="curriculum-container" [loader]="isLoading">
-  <div *ngIf="courseSections && courseSections.length > 0; else noCourseSection" class="curriculums">
-    <div class="d-flex justify-content-end mb-3">
-      <div class="dropdown d-inline-block">
-        <button class="btn btn-sm btn-white dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
-          aria-expanded="false">
-          {{ 'View' | localize }}
-        </button>
-        <div class="dropdown-menu">
-          <a class="dropdown-item" href="javascript:;">{{ 'Student' | localize }}</a>
-          <a class="dropdown-item" href="javascript:;">{{ 'Tutor' | localize }}</a>
-        </div>
-      </div>
-      <div class="dropdown d-inline-block ml-2">
-        <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
-          aria-expanded="false">
-          {{ 'Draft' | localize }}
-        </button>
-        <div class="dropdown-menu">
-          <a class="dropdown-item" href="javascript:;">{{ 'Publish' | localize }}</a>
-        </div>
-      </div>
-    </div>
-    <div dragula="Course" [(dragulaModel)]="courseSections">
-      <div *ngFor="let courseSectionModule of courseSections">
-        <app-course-section [courseSection]="courseSectionModule" (editSection)="editSection($event)" (addSection)="addSection($event)" (deleteSection)="onDeleteClick($event)" (duplicate)="onDuplicateClick($event)"></app-course-section>
-        <div class="actions mt-n3 ml-2 mb-3 add-button-bordered pd-2"
-          *ngIf="courseSectionModule.type === courseSectionType.Module">
-          <a href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fe fe-plus"></i>{{ 'Add' | localize }}
-          </a>
-          <div class="dropdown-menu dropdown-menu-right">
-            <a href="javascript:;" (click)="onAddEditCourseSectionClick(courseSectionType.Lesson, courseSectionModule)"
-              class="dropdown-item">
-              {{ 'AddLesson' | localize | titlecase }}
-            </a>
-            <a href="javascript:;" (click)="onAddEditCourseSectionClick(courseSectionType.Unit, courseSectionModule)"
-              class="dropdown-item">
-              {{ 'AddUnit' | localize | titlecase }}
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="actions mt-n2 mb-4">
-      <b>
-        <a href="javascript:;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="fs-2">
-          <i class="fe fe-plus"></i>{{ 'Add' | localize }}
-        </a>
-        <div class="dropdown-menu dropdown-menu-right">
-          <a href="javascript:;" (click)="onAddEditCourseSectionClick(courseSectionType.Lesson)" class="dropdown-item">
-            {{ 'AddLesson' | localize | titlecase }}
-          </a>
-          <a href="javascript:;" (click)="onAddEditCourseSectionClick(courseSectionType.Module)" class="dropdown-item">
-            {{ 'AddModule' | localize | titlecase }}
-          </a>
-        </div>
-      </b>
-    </div>
-  </div>
+<div class="curriculum-container service-builder w100p" [loader]="isLoading">
+  <div class="curriculum-structure flex-column justify-content-center align-items-center w100p">
 
-  <ng-template #noCourseSection>
-    <div class="card h-100">
-      <div class="card-body h-100">
-        <div class="no-curriculum d-flex flex-column justify-content-center align-items-center h-100">
-          <h1 class="mb-3">{{ 'NoLessonsOrModules' | localize }}</h1>
-          <p class="text-muted mb-5">{{ 'StartByAddingALessonOrModule' | localize }}</p>
-          <div class="d-flex">
-            <button class="btn btn-primary" (click)="onAddEditCourseSectionClick(courseSectionType.Lesson)">
-              <i class="fe fe-plus"></i>&nbsp;{{ 'AddLesson' | localize | titlecase }}
-            </button>
-            <button class="btn btn-white ml-5" (click)="onAddEditCourseSectionClick(courseSectionType.Module)">
-              <i class="fe fe-plus"></i>&nbsp;{{ 'AddModule' | localize | titlecase }}
-            </button>
-          </div>
-        </div>
+    <div class="curriculum-structure-title service-builder-label w100p">
+      <div class="curriculum-structure-title-name service-builder-label-text">Course structure</div>
+      <div class="curriculum-structure-title-description service-builder-label-description">
+        <div class="curriculum-structure-title-description-text service-builder-label-description-text">Select the type of course you'd like to create.</div>
+        <div class="curriculum-structure-title-description-link service-builder-label-description-link">Learn more.</div>
       </div>
     </div>
-  </ng-template>
+
+    <div class="curriculum-structure-options service-builder-options w100p" [style.marginTop.px]="8">
+      <div class="curriculum-structure-options-item service-builder-options-item" [class.selected]="isMiniStructure" (click)="onCourseStructureClick(CourseStructure.Mini)">
+        <div class="curriculum-structure-options-text service-builder-options-item-text">Mini course</div>
+        <div class="curriculum-structure-options-description service-builder-options-item-description">Create a course with lessons only </div>
+      </div>
+      <div class="curriculum-structure-options-item service-builder-options-item" [class.selected]="isStandardStructure" (click)="onCourseStructureClick(CourseStructure.Standard)">
+        <div class="curriculum-structure-options-text service-builder-options-item-text">Standard course</div>
+        <div class="curriculum-structure-options-description service-builder-options-item-description">Create a course with modules and lessons</div>
+      </div>
+    </div>
+
+    <div *ngIf="courseSections?.length; else noData" class="curriculum-structure-content w100p" [style.marginTop.px]="24">
+      <div dragula="Course" [(dragulaModel)]="courseSections">
+        <app-course-section
+          *ngFor="let courseSectionModule of courseSections"
+          [isTemporary]="!courseSectionModule.id"
+          [selectedStructure]="selectedStructure"
+          [courseSection]="courseSectionModule"
+          (editSection)="editSection($event)"
+          (addSection)="addSection($event)"
+          (deleteSection)="onDeleteClick($event)"
+          (duplicate)="onDuplicateClick($event)"
+          (removeTemporary)="onRemoveTemporary($event)"
+          [attr.temporary]="!courseSectionModule.id"
+        ></app-course-section>
+      </div>
+
+      <div class="curriculum-structure-content-actions">
+        <button *ngIf="isMiniStructure" class="btn btn-lg btn-block btn-primary" (click)="addTemporarySection(CourseSectionType.Lesson)">
+          <img src="assets/img/service/content/plus-white.svg" alt="Add"/>
+          {{ 'AddLesson' | localize }}
+        </button>
+
+        <button *ngIf="isStandardStructure" class="btn btn-lg btn-block btn-primary" (click)="onAddEditCourseSectionClick(CourseSectionType.Module)">
+          <img src="assets/img/service/content/plus-white.svg" alt="Add"/>
+          {{ 'AddModule' | localize }}
+        </button>
+      </div>
+    </div>
+
+  </div>
 </div>
+
+<ng-template #noData>
+  <div class="service-builder-no-data" [style.marginTop.px]="24">
+    <div class="service-builder-no-data-text">{{ 'NoLessonsOrModules' | localize }}</div>
+  </div>
+</ng-template>

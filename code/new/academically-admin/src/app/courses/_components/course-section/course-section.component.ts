@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { CourseSectionDto, CourseSectionStatus, CourseSectionType } from '@shared/service-proxies/service-proxies';
+import { CourseStructure } from '../curriculum/curriculum.component';
 
 @Component({
   selector: 'app-course-section',
@@ -9,19 +10,55 @@ import { CourseSectionDto, CourseSectionStatus, CourseSectionType } from '@share
 })
 export class CourseSectionComponent extends AppComponentBase implements OnInit {
 
-  courseSectionType = CourseSectionType;
+  CourseStructure = CourseStructure;
+  CourseSectionType = CourseSectionType;
+
+  @Input() selectedStructure: CourseStructure;
   @Input() courseSection: CourseSectionDto = new CourseSectionDto();
+  @Input() isTemporary: boolean;
+
   @Output() duplicate = new EventEmitter();
   @Output() editSection = new EventEmitter();
   @Output() addSection = new EventEmitter();
   @Output() deleteSection = new EventEmitter();
+  @Output() removeTemporary = new EventEmitter();
+
   CourseSectionStatus = CourseSectionStatus;
+
   constructor(injector: Injector) {
     super(injector);
   }
 
   ngOnInit(): void {
     console.log(this.courseSection);
+  }
+
+  get isMiniStructure(): boolean { return this.selectedStructure === CourseStructure.Mini; }
+  get isStandardStructure(): boolean { return this.selectedStructure === CourseStructure.Standard; }
+  get lessonsCount(): number { return this.courseSection?.children?.length || 0; }
+  get pollsCount(): number { return this.courseSection?.['polls']?.length || 0; }
+  get filesCount(): number { return this.courseSection?.['files']?.length || 0; }
+  get questionsCount(): number { return this.courseSection?.['questions']?.length || 0; }
+  get offersCount(): number { return this.courseSection?.['offers']?.length || 0; }
+
+  onBlurName() {
+    if (this.courseSection.name) {
+      this.addSection.emit(this.courseSection);
+    } else {
+      this.removeTemporary.emit(this.courseSection);
+    }
+  }
+
+  onKeyPressName(event) {
+    if (event.keyCode === 13) {
+      event.target.blur();
+    }
+  }
+
+  onKeyUpName(event) {
+    if (event.keyCode === 27) {
+      this.removeTemporary.emit(this.courseSection);
+    }
   }
 
   onDuplicateClick(courseSection) {

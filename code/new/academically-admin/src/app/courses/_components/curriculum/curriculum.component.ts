@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Injector, Input, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { LessonWizardComponent } from '../lesson-wizard/lesson-wizard.component';
@@ -7,6 +7,11 @@ import { takeUntil, finalize } from 'rxjs/operators';
 import { DragulaService } from 'ng2-dragula';
 import { CourseEllipseState } from './../../_models/courseEllipseType';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+
+export enum CourseStructure {
+  Mini = 'mini',
+  Standard = 'standard',
+}
 
 @Component({
   selector: 'app-curriculum',
@@ -17,13 +22,18 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
   @Input() courseId: string;
 
   courseSections: CourseSectionDto[];
+
   isLoading = false;
+  selectedStructure: CourseStructure;
+
+  CourseStructure = CourseStructure;
   CourseSectionStatus = CourseSectionStatus;
-  courseSectionType = CourseSectionType;
+  CourseSectionType = CourseSectionType;
   CourseEllipseState = CourseEllipseState;
 
   constructor(
     injector: Injector,
+    private _cdr: ChangeDetectorRef,
     private _modalService: BsModalService,
     private _courseSectionsService: CourseSectionsServiceProxy,
     private dragulaService: DragulaService,
@@ -32,6 +42,10 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
     super(injector);
     this.dragulaService.createGroup('Course', {
       revertOnSpill: true,
+      moves: (el: any) => {
+        if (el?.getAttribute('temporary') === 'true') return false;
+        return true;
+      }
     });
 
     this.dragulaService.dropModel('Course').subscribe(args => {
@@ -64,12 +78,36 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
     this.dragulaService.destroy('Course');
   }
 
+  get isMiniStructure(): boolean { return this.selectedStructure === CourseStructure.Mini; }
+  get isStandardStructure(): boolean { return this.selectedStructure === CourseStructure.Standard; }
+
+  addTemporarySection(type: CourseSectionType): void {
+    this.courseSections.push(CourseSectionDto.fromJS({
+      courseId: this.courseId, type
+    }));
+  }
+
   editSection(courseSection) {
     this.onAddEditCourseSectionClick(courseSection.type, courseSection, CourseEllipseState.Rename);
   }
 
   addSection(courseSection) {
-    this.onAddEditCourseSectionClick(this.courseSectionType.Lesson, courseSection);
+    this.isLoading = true;
+    this._courseSectionsService.create(courseSection)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      ).subscribe(() => {
+        this.notify.success(this.l('SavedSuccessfully'));
+        this.getCourseSections();
+      });
+    // this.onAddEditCourseSectionClick(this.courseSectionType.Lesson, courseSection);
+  }
+
+  onCourseStructureClick(structure: CourseStructure): void {
+    this.selectedStructure = structure;
   }
 
   onAddEditCourseSectionClick(courseSectionType: CourseSectionType, courseSection?:
@@ -94,6 +132,10 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
       .subscribe(() => {
         this.getCourseSections();
       });
+  }
+
+  onRemoveTemporary(courseSection): void {
+    this.courseSections = this.courseSections.filter(x => x.id !== courseSection.id);
   }
 
   onDeleteClick(id): void {
@@ -152,6 +194,12 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
       )
       .subscribe(courseSections => {
         this.courseSections = courseSections;
+
+        // set selected course structure if we already have course sections defined
+        if (this.courseSections?.length) {
+          this.selectedStructure = this.courseSections.some(s => s.type === CourseSectionType.Module) ? CourseStructure.Standard : CourseStructure.Mini;
+          this._cdr.detectChanges();
+        }
       });
   }
 

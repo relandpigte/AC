@@ -42,7 +42,8 @@
               "src/assets/themes/dashkit/libs/quill/dist/quill.core.css",
               "src/assets/themes/dashkit/libs/highlightjs/styles/vs2015.css",
               "src/assets/themes/dashkit/css/theme.min.css",
-              "src/shared/core.less"
+              "src/shared/core.less",
+              "src/shared/service-builder.less"
             ],
             "scripts": [
               "node_modules/moment/min/moment.min.js",

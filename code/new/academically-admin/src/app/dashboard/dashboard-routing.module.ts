@@ -42,13 +42,6 @@ import { DashboardComponent } from './dashboard.component';
               ),
           },
           {
-            path: 'events',
-            loadChildren: () =>
-              import('@app/dashboard/events/events.module').then(
-                (m) => m.EventsModule
-              ),
-          },
-          {
             path: 'tutorials',
             loadChildren: () =>
               import('@app/dashboard/tutorials/tutorials.module').then(
@@ -57,7 +50,14 @@ import { DashboardComponent } from './dashboard.component';
           },
           { path: '', redirectTo: 'overview' },
         ],
-      }
+      },
+      {
+        path: 'events',
+        loadChildren: () =>
+          import('@app/dashboard/events/events.module').then(
+            (m) => m.EventsModule
+          ),
+      },
     ]),
   ],
   exports: [

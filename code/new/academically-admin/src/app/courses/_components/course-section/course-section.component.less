@@ -1,3 +1,200 @@
-.mar-27 {
-    margin-left: 27px;
+.course-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    padding: 20px 24px;
+    border-radius: 6px;
+    background: #FFF;
+    border: 1px solid #e3ebf6;
+    margin-bottom: 23px;
+
+    &-drag {
+        margin-left: -11px;
+    }
+
+    &-dropdown {
+        margin-right: -11px;
+    }
+
+    &-info {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        height: 19px;
+    }
+
+    &-name {
+        flex-grow: 1;
+        color: #12263F;
+        font-size: 15px;
+        font-style: normal;
+        font-weight: 600;
+        letter-spacing: -0.15px;
+    }
+
+    &-lessons {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 4px;
+
+        &-count {
+            color: #B1C2D9;
+            font-size: 15px;
+            font-style: normal;
+            font-weight: 400;
+            letter-spacing: -0.15px;
+        }
+
+        &-text {
+            color: #B1C2D9;
+            font-size: 15px;
+            font-style: normal;
+            font-weight: 400;
+            letter-spacing: -0.15px;
+        }
+    }
+
+    &-activities {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+
+        &-polls {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+
+            &-count {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                color: #B1C2D9;
+                font-size: 13px;
+                font-style: normal;
+                font-weight: 400;
+            }
+
+            &-icon {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+
+        &-files {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+
+            &-count {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                color: #B1C2D9;
+                font-size: 13px;
+                font-style: normal;
+                font-weight: 400;
+            }
+
+            &-icon {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+
+        &-questions {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+
+            &-count {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                color: #B1C2D9;
+                font-size: 13px;
+                font-style: normal;
+                font-weight: 400;
+            }
+
+            &-icon {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+
+        &-offers {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+
+            &-count {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                color: #B1C2D9;
+                font-size: 13px;
+                font-style: normal;
+                font-weight: 400;
+            }
+
+            &-icon {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+    }
+
+    &-children {
+        app-course-section {
+            .course-section.lesson {
+                margin-bottom: 15px !important;
+            }
+
+            &:last-child .course-section.lesson {
+                margin-bottom: 0px !important;
+            }
+        }
+    }
+
+    &-actions {
+        .btn {
+            background: #EDF2F9;
+            border-color: #EDF2F9;
+            color: #2C7BE5;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+        }
+    }
 }
