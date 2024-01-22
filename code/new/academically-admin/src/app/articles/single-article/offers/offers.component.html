@@ -8,7 +8,7 @@
     </div>
     <button class="btn btn-primary ml-auto offer-create" (click)="onAddOffer()">Add</button>
   </div>
-  <div class="offer-content" *ngIf="offers else noOffers">
+  <div class="offer-content" *ngIf="offers?.length > 0 else noOffers">
     <app-offer *ngFor="let offer of offers" [offer]="offer"></app-offer>
   </div>
 </div>
