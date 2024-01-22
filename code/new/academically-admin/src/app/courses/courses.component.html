@@ -6,8 +6,8 @@
   (onPublished)="onPublishClick()"
   (onUnpublished)="onUnpublishClick()"
 >
-  <app-details *ngIf="defaultMenuItem.id === 'details'"></app-details>
   <app-curriculum *ngIf="defaultMenuItem.id === 'curriculum'" [courseId]="id"></app-curriculum>
+  <app-details *ngIf="defaultMenuItem.id === 'details'"></app-details>
   <app-settings *ngIf="defaultMenuItem.id === 'settings'"></app-settings>
 </app-service-create>
 

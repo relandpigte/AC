@@ -8396,10 +8396,17 @@ export class CoursesServiceProxy {
      * @param languageId (optional) 
      * @param pricingType (optional) 
      * @param imageDocumentFile (optional) 
+     * @param type (optional) 
+     * @param price (optional) 
+     * @param numberOfPlaces (optional) 
+     * @param startDate (optional) 
+     * @param startTime (optional) 
+     * @param endDate (optional) 
+     * @param endTime (optional) 
      * @param id (optional) 
      * @return Success
      */
-    updateDetails(name: string | undefined, subtitle: string | undefined, description: string | undefined, categories: string | undefined, languageId: string | undefined, pricingType: PricingType | undefined, imageDocumentFile: FileParameter | undefined, id: string | undefined): Observable<CourseDto> {
+    updateDetails(name: string | undefined, subtitle: string | undefined, description: string | undefined, categories: string | undefined, languageId: string | undefined, pricingType: PricingType | undefined, imageDocumentFile: FileParameter | undefined, type: CourseType | undefined, price: number | undefined, numberOfPlaces: number | undefined, startDate: moment.Moment | undefined, startTime: string | undefined, endDate: moment.Moment | undefined, endTime: string | undefined, id: string | undefined): Observable<CourseDto> {
         let url_ = this.baseUrl + "/api/services/app/Courses/UpdateDetails";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -8432,6 +8439,34 @@ export class CoursesServiceProxy {
             // do nothing
         } else
             content_.append("ImageDocumentFile", imageDocumentFile.data, imageDocumentFile.fileName ? imageDocumentFile.fileName : "ImageDocumentFile");
+        if (type === null || type === undefined) {
+            // do nothing
+        } else
+            content_.append("Type", type.toString());
+        if (price === null || price === undefined) {
+            // do nothing
+        } else
+            content_.append("Price", price.toString());
+        if (numberOfPlaces === null || numberOfPlaces === undefined) {
+            // do nothing
+        } else
+            content_.append("NumberOfPlaces", numberOfPlaces.toString());
+        if (startDate === null || startDate === undefined) {
+            // do nothing
+        } else
+            content_.append("StartDate", startDate.toJSON());
+        if (startTime === null || startTime === undefined) {
+            // do nothing
+        } else
+            content_.append("StartTime", startTime.toString());
+        if (endDate === null || endDate === undefined) {
+            // do nothing
+        } else
+            content_.append("EndDate", endDate.toJSON());
+        if (endTime === null || endTime === undefined) {
+            // do nothing
+        } else
+            content_.append("EndTime", endTime.toString());
         if (id === null || id === undefined) {
             // do nothing
         } else

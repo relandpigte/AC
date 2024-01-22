@@ -12,8 +12,8 @@ namespace Academically.Services.CourseSections.Dto
 		public string Name { get; set; }
 		public string Description { get; set; }
 		public string Categories { get; set; }
-		public string ApproximateLessonDuration { get; set; }
+        public string ApproximateLessonDuration { get; set; }
 		public Guid? ImageDocumentId { get; set; }
-	}
+    }
 }
 

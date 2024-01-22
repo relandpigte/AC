@@ -449,6 +449,18 @@ input[type='file'].inline-file-upload {
   display: none;
 }
 
+input.no-arrow {
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+  }
+
+  &[type=number] {
+      -moz-appearance: textfield;
+  }
+}
+
 .table-align-top {
   td {
     vertical-align: top !important;
@@ -1647,6 +1659,11 @@ each(range(1px, 30px, 1), {
   border: 1px solid #e3ebf6 !important;
 }
 
+.custom-input-border {
+  border-radius: 0.375rem;
+  border: 1px solid #d2ddec !important;
+}
+
 .custom-control.custom-switch.no-label {
   .custom-control-label {
     font: 0/0 a;
@@ -1684,4 +1701,16 @@ each(range(1px, 30px, 1), {
   animation: outline-highlight;
   animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
   animation-duration: 2.6s;
+}
+
+.ql-toolbar {
+  border-top-left-radius: 6px !important;
+  border-top-right-radius: 6px !important;
+  border-color: #d2ddec !important;
+}
+
+.ql-container {
+  border-bottom-left-radius: 6px !important;
+  border-bottom-right-radius: 6px !important;
+  border-color: #d2ddec !important;
 }

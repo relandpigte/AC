@@ -1,107 +1,184 @@
 <form class="form-horizontal" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
-  <div class="row">
 
-    <div class="col-8" [loader]="isLoading">
+  <div class="course-details-container service-builder w100p" [loader]="isLoading">
+    <div class="course-details flex-column justify-content-center align-items-center gap-24 w100p">
 
-      <div class="card">
-        <div class="card-header">
-          <h4 class="card-header-title">
-            {{ 'Name' | localize | titlecase }}
-          </h4>
-          <div class="col-auto row">
-            <button *ngIf="!editField || editField !== EditField.Name" (click)="onEditClick(EditField.Name)"
-              type="button" class="btn btn-sm btn-light">
-              {{ 'Edit' | localize }}
-            </button>
-            <button *ngIf="editField === EditField.Name" type="submit" class="btn btn-sm btn-primary">
-              {{ 'Save' | localize }}
-            </button>
+      <div class="course-details-name service-builder-label gap-10 w100p">
+        <div class="course-details-name-label service-builder-label-text">Course structure</div>
+        <div class="course-details-name-input w100p">
+          <input
+            [(ngModel)]="model.name"
+            #nameModel="ngModel"
+            #nameEl
+            class="form-control"
+            type="text"
+            id="name"
+            name="name"
+            required
+            [placeholder]="'WriteYourCourseNameHere' | localize" />
+          <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
+        </div>
+      </div>
+
+      <div class="d-flex flex-column justify-content-center align-items-center w100p">
+        <div class="course-details-type service-builder-label w100p">
+          <div class="course-details-type-name service-builder-label-text">Type</div>
+          <div class="course-details-type-description service-builder-label-description">
+            <div class="course-details-type-description-text service-builder-label-description-text">Select the type of course you'd like to create.</div>
+            <div class="course-details-type-description-link service-builder-label-description-link">Learn more</div>
           </div>
         </div>
-        <div class="card-body">
-          <div class="form-group required mb-0">
-            <input [(ngModel)]="model.name" #nameModel="ngModel" #nameEl class="form-control" type="text" id="name"
-              name="name" required [placeholder]="'WriteYourCourseNameHere' | localize"
-              [disabled]="editField !== EditField.Name" />
-            <abp-validation-summary [control]="nameModel" [controlEl]="nameEl">
-            </abp-validation-summary>
+
+        <div class="course-details-options service-builder-options w100p" [style.marginTop.px]="8">
+          <div class="course-details-options-item service-builder-options-item" [class.selected]="isStandardType" (click)="onCourseTypeClick(CourseType.Standard)">
+            <div class="course-details-options-text service-builder-options-item-text">Standard</div>
+            <div class="course-details-options-description service-builder-options-item-description">Students progress through the course independently at their own pace</div>
+          </div>
+          <div class="course-details-options-item service-builder-options-item" [class.selected]="isCohortType" (click)="onCourseTypeClick(CourseType.Cohort)">
+            <div class="course-details-options-text service-builder-options-item-text">Cohort</div>
+            <div class="course-details-description service-builder-options-item-description">Students progress through the course as a group, starting and finishing together</div>
           </div>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-header">
-          <h4 class="card-header-title">
-            {{ 'Subtitle' | localize | titlecase }}
-          </h4>
-          <div class="col-auto row">
-            <button *ngIf="!editField || editField !== EditField.Subtitle" (click)="onEditClick(EditField.Subtitle)"
-              type="button" class="btn btn-sm btn-light">
-              {{ 'Edit' | localize }}
-            </button>
-            <button *ngIf="editField === EditField.Subtitle" type="submit" class="btn btn-sm btn-primary">
-              {{ 'Save' | localize }}
-            </button>
+      <ng-container *ngIf="isCohortType">
+        <div class="course-details-seats service-builder-label gap-10 w100p">
+          <div class="course-details-seats-label service-builder-label-text">No of seats</div>
+          <div class="course-details-seats-input w100p">
+            <input
+              [(ngModel)]="model.numberOfPlaces"
+              #numberOfPlacesModel="ngModel"
+              #numberOfPlacesEl
+              class="form-control no-arrow"
+              type="number"
+              id="numberOfPlaces"
+              name="numberOfPlaces"
+              required
+              [placeholder]="'No of slots' | localize" />
+            <abp-validation-summary [control]="numberOfPlacesModel" [controlEl]="numberOfPlacesEl"></abp-validation-summary>
           </div>
         </div>
-        <div class="card-body">
-          <div class="form-group mb-0">
-            <input [(ngModel)]="model.subtitle" #subtitleModel="ngModel" #subtitleEl class="form-control" type="text"
-              id="subtitle" name="subtitle" [placeholder]="'WriteYourSubtitleHere' | localize"
-              [disabled]="editField !== EditField.Subtitle" />
+
+        <div class="course-details-schedule service-builder-label gap-10 w100p">
+          <div class="course-details-schedule-label service-builder-label-text">Date & Time</div>
+          <div class="course-details-schedule-input d-flex flex-column justify-content-center align-items-center gap-16 w100p">
+            <div class="d-flex justify-content-center align-items-center gap-16 w100p">
+              <div class="input-group input-group-merge" (click)="cohortStartDateDp.show()">
+                <input [(ngModel)]="cohortStartDate" [bsConfig]="datePickerConfig" bsDatepicker
+                  class="form-control form-control-appended" type="text" id="cohortStartDate" name="cohortStartDate"
+                  #cohortStartDateDp="bsDatepicker" (bsValueChange)="onCohortStartDateTimeChange()" />
+                <div class="input-group-append">
+                  <div class="input-group-text">
+                    <i class="fe fe-calendar"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="session-time input-group input-group-merge">
+                <p-calendar [(ngModel)]="model.startTime" id="cohortStartTime" name="cohortStartTime"
+                  [timeOnly]="true" [hourFormat]="12" [class]="'form-control form-control-appended'"
+                  [dataType]="'string'">
+                </p-calendar>
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    <i class="fe fe-clock"></i>
+                  </span>
+                </div>
+              </div>
+
+              <div>to</div>
+
+              <div class="input-group input-group-merge" (click)="cohortEndDateDp.show()">
+                <input [(ngModel)]="cohortEndDate" [bsConfig]="datePickerConfig" bsDatepicker
+                  class="form-control form-control-appended" type="text" id="cohortEndDate" name="cohortEndDate"
+                  #cohortEndDateDp="bsDatepicker" (bsValueChange)="onCohortEndDateTimeChange()" />
+                <div class="input-group-append">
+                  <div class="input-group-text">
+                    <i class="fe fe-calendar"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="session-time input-group input-group-merge">
+                <p-calendar [(ngModel)]="model.endTime" id="cohortEndTime" name="cohortEndTime"
+                  [timeOnly]="true" [hourFormat]="12" [class]="'form-control form-control-appended'"
+                  [dataType]="'string'">
+                </p-calendar>
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    <i class="fe fe-clock"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <select class="custom-select" [disabled]="isLoading" select2 [defaultValue]="user.timeZoneId"
+                (select2ValueChange)="onTimeZoneChange($event)" [(ngModel)]="user.timeZoneId" id="timeZoneId"
+                name="timeZoneId" #timeZoneIdModel="ngModel" #timeZoneIdEl required>
+                <option *ngFor="let timeZone of timeZones" [value]="timeZone.id">
+                  {{ timeZone.name }}
+                </option>
+              </select>
           </div>
+        </div>
+      </ng-container>
+
+      <div class="course-details-description service-builder-label w100p">
+        <div class="course-details-description-name service-builder-label-text">Course description</div>
+        <div class="course-details-description-description service-builder-label-description">
+          <div class="course-details-description-description-text service-builder-label-description-text">This is how others will learn about your course, so make it good!</div>
+          <div class="course-details-description-description-link service-builder-label-description-link">See example</div>
+        </div>
+        <div class="course-details-name-input w100p" [style.marginTop.px]="10">
+          <quill-editor [(ngModel)]="model.description" id="description" name="description">
+            <div quill-editor-toolbar>
+              <span class="ql-formats">
+                <button class="ql-bold"></button>
+                <button class="ql-italic"></button>
+                <button class="ql-underline"></button>
+                <button class="ql-strike"></button>
+              </span>
+              <span class="ql-formats">
+                <select class="ql-color ql-color-picker" [title]="'Text color'">
+                </select>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-blockquote"></button>
+                <button class="ql-code-block"></button>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-list" value="ordered"></button>
+                <button class="ql-list" value="bullet"></button>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-script" value="sub"></button>
+                <button class="ql-script" value="super"></button>
+              </span>
+              <span class="ql-formats">
+                <select class="ql-align">
+                </select>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-clean"></button>
+              </span>
+            </div>
+          </quill-editor>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-header">
-          <h4 class="card-header-title">
-            {{ 'Description' | localize | titlecase }}
-          </h4>
-          <div class="col-auto row">
-            <button *ngIf="!editField || editField !== EditField.Description"
-              (click)="onEditClick(EditField.Description)" type="button" class="btn btn-sm btn-light">
-              {{ 'Edit' | localize }}
-            </button>
-            <button *ngIf="editField === EditField.Description" type="submit" class="btn btn-sm btn-primary">
-              {{ 'Save' | localize }}
-            </button>
-          </div>
+      <div class="course-details-topics service-builder-label w100p">
+        <div class="course-details-topics-name service-builder-label-text">Topics</div>
+        <div class="course-details-topics-description service-builder-label-description">
+          <div class="course-details-topics-description-text service-builder-label-description-text">Provide up to 10 topics to help users find your course.</div>
         </div>
-        <div class="card-body">
-          <div class="form-group mb-0">
-            <textarea [rows]="4" [(ngModel)]="model.description" #descriptionModel="ngModel" #descriptionEl
-              class="form-control" id="description" name="description"
-              [placeholder]="'WriteYourDescriptionHere' | localize" [disabled]="editField !== EditField.Description">
-            </textarea>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <h4 class="card-header-title">
-            {{ 'Topics' | localize | titlecase }}
-          </h4>
-          <div class="col-auto row">
-            <button *ngIf="!editField || editField !== EditField.Categories" (click)="onEditClick(EditField.Categories)"
-              type="button" class="btn btn-sm btn-light">
-              {{ 'Edit' | localize }}
-            </button>
-            <button *ngIf="editField === EditField.Categories" type="submit" class="btn btn-sm btn-primary">
-              {{ 'Save' | localize }}
-            </button>
-          </div>
-        </div>
-        <div class="card-body">
+        <div class="course-details-topics-input w100p" [style.marginTop.px]="10">
           <div class="form-group required mb-0">
             <input [(ngModel)]="category" #categoryModel="ngModel" #categoryEl class="form-control" type="text"
-              id="category" name="category" required [disabled]="editField !== EditField.Categories"
-              (keydown)="onCategoryKeyDown($event)" [placeholder]="'PressEnterToAddMore' | localize" />
+              id="category" name="category" required (keydown)="onCategoryKeyDown($event)" [placeholder]="'Add a tag' | localize" />
             <div class="ac-alerts">
               <div *ngFor="let category of categories" class="alert alert-info alert-dismissible ac-alert" role="alert">
                 {{ category }}
-                <button [disabled]="editField !== EditField.Categories" (click)="onRemoveCategoryClick(category)"
+                <button (click)="onRemoveCategoryClick(category)"
                   type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">×</span>
                 </button>
@@ -111,143 +188,88 @@
         </div>
       </div>
 
-    </div>
+      <div class="course-details-price service-builder-label w100p">
+        <div class="course-details-price-name service-builder-label-text">Price</div>
+        <div class="course-details-price-input d-flex justify-content-start align-items-start gap-52 w100p" [style.marginTop.px]="8">
+          <div class="d-flex justify-content-start align-items-center gap-52 h-40-px">
+            <div class="custom-control custom-radio d-inline">
+              <input type="radio" class="custom-control-input" id="freePricingType" name="freePricingType"
+                [(ngModel)]="model.pricingType" [value]="PricingType.Free" checked (click)="onPricingClick()"/>
+              <label class="custom-control-label" for="freePricingType">
+                {{ 'Free' | localize | titlecase }}
+              </label>
+            </div>
 
-    <div class="col-4">
+            <div class="custom-control custom-radio d-inline">
+              <input type="radio" class="custom-control-input" id="chargePricingType" name="chargePricingType"
+                [(ngModel)]="model.pricingType" [value]="PricingType.FixedPrice" (click)="onPricingClick()"/>
+              <label class="custom-control-label" for="chargePricingType">
+                {{ 'Charge a fee' | localize }}
+              </label>
+            </div>
+          </div>
 
-      <div class="card" [loader]="isLoading">
-        <div class="card-header">
-          <h4 class="card-header-title">
-            {{ 'CourseImage' | localize }}
-          </h4>
-          <div class="row">
-            <button *ngIf="!editField || editField !== EditField.Image" (click)="onEditClick(EditField.Image)"
-              type="button" class="btn btn-sm btn-light">
-              {{ 'Edit' | localize }}
-            </button>
-            <button *ngIf="editField === EditField.Image" type="submit" class="btn btn-sm btn-primary">
-              {{ 'Save' | localize }}
-            </button>
+          <div class="d-flex justify-content-center align-items-start gap-16 flex-grow-1">
+            <div class="dropdown course-details-price-input-currency custom-input-border w-91-px">
+              <div
+                class="dropdown-ellipses dropdown-toggle d-flex justify-content-center align-items-center gap-4"
+                role="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false">
+                  {{ selectedCurrencyLabel }} <span class="fe fe-chevron-down"></span>
+              </div>
+              <div class="dropdown-menu dropdown-menu-right custom-card-shadow">
+                <div class="dropdown-item-container">
+                    <div
+                      *ngFor="let currency of currencies"
+                      [value]="currency.value"
+                      class="dropdown-item cursor-pointer d-flex justify-content-end"
+                      (click)="model.currencyId = currency.value">
+                      {{ currency.label }}
+                    </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex flex-column justify-content-center align-items-start flex-grow-1">
+              <input
+                [(ngModel)]="model.price"
+                #priceModel="ngModel"
+                #priceEl
+                class="form-control no-arrow"
+                type="number"
+                id="price"
+                name="price"
+                required
+                [placeholder]="'Input a price' | localize" />
+              <abp-validation-summary [control]="priceModel" [controlEl]="priceEl"></abp-validation-summary>
+            </div>
           </div>
         </div>
-        <div class="card-body position-relative">
-          <div *ngIf="editField !== EditField.Image" class="disabled-block"></div>
-          <app-document-uploader [previewImages]="true" [largeImagePreview]="true" [maxFiles]="1" [cropImages]="true"
-            [cropperAspectRatioWidth]="350" [cropperAspectRationHeight]="263"
+      </div>
+
+      <div class="course-details-cover service-builder-label w100p">
+        <div class="course-details-cover-label service-builder-label-text">Course cover and thumbnail</div>
+        <div class="course-details-cover-description service-builder-label-description">
+          <div class="course-details-cover-description-text service-builder-label-description-text">Please use an image no larger than 1200px * 600px.</div>
+        </div>
+        <div class="course-details-cover-input w100p" [style.marginTop.px]="8">
+          <app-document-uploader
+            [previewImages]="true"
+            [largeImagePreview]="true"
+            [maxFiles]="1"
+            [cropImages]="true"
+            [cropperAspectRatioWidth]="350"
+            [cropperAspectRationHeight]="263"
+            noFilePlaceholder="Drag and drop or click to upload"
+            placeholderHeight="222px"
             [allowedExtensions]="allowedImageExtensions">
           </app-document-uploader>
         </div>
       </div>
 
-      <div class="card" [loader]="isLoading">
-        <div class="card-header">
-          <h4 class="card-header-title">
-            {{ 'Language' | localize }}
-          </h4>
-          <div class="row">
-            <button *ngIf="!editField || editField !== EditField.Language" (click)="onEditClick(EditField.Language)"
-              type="button" class="btn btn-sm btn-light">
-              {{ 'Edit' | localize }}
-            </button>
-            <button *ngIf="editField === EditField.Language" type="submit" class="btn btn-sm btn-primary">
-              {{ 'Save' | localize }}
-            </button>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="form-group mb-0">
-            <select class="custom-select" select2 [defaultValue]="model.languageId"
-              (select2ValueChange)="model.languageId = $event" [(ngModel)]="model.languageId" id="language"
-              name="language" #languageIdModel="ngModel" #languageIdEl [disabled]="editField !== EditField.Language">
-              <option *ngFor="let langauge of languages" [value]="langauge.id">
-                {{ langauge.name | localize }}
-              </option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" [loader]="isLoading">
-        <div class="card-header">
-          <h4 class="card-header-title">
-            {{ 'Pricing' | localize }}
-          </h4>
-          <div class="row">
-            <button *ngIf="!editField || editField !== EditField.Pricing" (click)="onEditClick(EditField.Pricing)"
-              type="button" class="btn btn-sm btn-light">
-              {{ 'Edit' | localize }}
-            </button>
-            <button *ngIf="editField === EditField.Pricing" type="submit" class="btn btn-sm btn-primary">
-              {{ 'Save' | localize }}
-            </button>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-auto mr-n4">
-              <div class="custom-control custom-radio">
-                <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
-                  id="free" [value]="PricingType.Free" (click)="onPricingClick(PricingType.Free)">
-                <label class="custom-control-label" for="free"></label>
-              </div>
-            </div>
-            <div class="col">
-              <label class="form-check-label" for="free">
-                {{ 'Free' | localize | titlecase }}
-                <p class="small text-muted">{{ 'FreeDescription' | localize }}</p>
-              </label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-auto mr-n4">
-              <div class="custom-control custom-radio">
-                <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
-                  id="fixedFee" [value]="PricingType.FixedPrice" (click)="onPricingClick(PricingType.FixedPrice)">
-                <label class="custom-control-label" for="fixedFee"></label>
-              </div>
-            </div>
-            <div class="col">
-              <label class="form-check-label" for="fixedFee">
-                {{ 'FixedFee' | localize }}
-                <p class="small text-muted">{{ 'FixedFeeDescription' | localize }}</p>
-              </label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-auto mr-n4">
-              <div class="custom-control custom-radio">
-                <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
-                  id="paymentPlan" [value]="PricingType.PaymentPlan" (click)="onPricingClick(PricingType.PaymentPlan)">
-                <label class="custom-control-label" for="paymentPlan"></label>
-              </div>
-            </div>
-            <div class="col">
-              <label class="form-check-label" for="paymentPlan">
-                {{ 'PaymentPlan' | localize | titlecase }}
-                <p class="small text-muted">{{ 'PaymentPlanDescription' | localize }}</p>
-              </label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-auto mr-n4">
-              <div class="custom-control custom-radio">
-                <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
-                  id="subscription" [value]="PricingType.Subscription"
-                  (click)="onPricingClick(PricingType.Subscription)" [disabled]="editField !== EditField.Pricing">
-                <label class="custom-control-label" for="subscription"></label>
-              </div>
-            </div>
-            <div class="col">
-              <label class="form-check-label" for="subscription">
-                {{ 'Subscription' | localize | titlecase }}
-                <p class="small text-muted">{{ 'SubscriptionDescription' | localize }}</p>
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
-
   </div>
+
 </form>
