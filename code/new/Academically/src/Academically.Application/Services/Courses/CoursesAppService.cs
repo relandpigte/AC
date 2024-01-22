@@ -41,6 +41,8 @@ namespace Academically.Services.Courses
         private readonly IRepository<CourseConversationReaction, Guid> _courseConversationReactionRepository;
         private readonly IRepository<SavedService, Guid> _savedServiceRepository;
         private readonly IRepository<ServicePurchase, Guid> _servicePurchasesRepository;
+        private readonly IRepository<DisciplineTaxonomy, Guid> _disciplineTaxonomyRepository;
+        private readonly IRepository<CourseTopic, Guid> _courseTopicRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IRepository<ServiceReview, Guid> _serviceReviewRepository;
 
@@ -55,6 +57,8 @@ namespace Academically.Services.Courses
             IRepository<CourseConversationReaction, Guid> courseConversationReactionRepository,
             IRepository<SavedService, Guid> savedServiceRepository,
             IRepository<ServicePurchase, Guid> servicePurchasesRepository,
+            IRepository<DisciplineTaxonomy, Guid> disciplineTaxonomyRepository,
+            IRepository<CourseTopic, Guid> courseTopicRepository,
             IDocumentsDomainService documentsDomainService,
             IRepository<ServiceReview, Guid> serviceReviewRepository
             ) : base(coursesRepository)
@@ -69,6 +73,8 @@ namespace Academically.Services.Courses
             _courseConversationReactionRepository = courseConversationReactionRepository;
             _savedServiceRepository = savedServiceRepository;
             _servicePurchasesRepository = servicePurchasesRepository;
+            _disciplineTaxonomyRepository = disciplineTaxonomyRepository;
+            _courseTopicRepository = courseTopicRepository;
             _serviceReviewRepository = serviceReviewRepository;
         }
 
@@ -84,6 +90,8 @@ namespace Academically.Services.Courses
                 .Include(c => c.StudentCourses)
                     .ThenInclude(c => c.StudentCourseSections)
                         .ThenInclude(c => c.CourseSection)
+                .Include(c => c.CourseTopics)
+                    .ThenInclude(t => t.DisciplineTaxonomy)
                 .FirstOrDefaultAsync();
             var output = ObjectMapper.Map<CourseDto>(course);
             var courseSections = await _courseSectionRepository.GetAll()
@@ -283,7 +291,10 @@ namespace Academically.Services.Courses
 
         public async Task<CourseDto> UpdateDetails([FromForm] UpdateCourseDetailsDto input)
         {
-            var course = await Repository.GetAsync(input.Id);
+            var course = await Repository.GetAll()
+                .Include(c => c.CourseTopics)
+                .Where(c => c.Id == input.Id)
+                .SingleOrDefaultAsync();
             ObjectMapper.Map(input, course);
 
             if (input.ImageDocumentFile != null)
@@ -296,6 +307,38 @@ namespace Academically.Services.Courses
                 {
                     await _documentsDomainService.DeleteAsync(oldDocumentId.Value);
                 }
+            }
+
+            var topicIds = input.Topics?.Count() > 0 ? input.Topics.ToList() : new List<Guid>();
+            if (input.NewTopics != null && input.NewTopics.Any())
+            {
+                var otherTopicParent = await _disciplineTaxonomyRepository.FirstOrDefaultAsync(x => x.Name == "Other Topics");
+                if (otherTopicParent != null)
+                {
+                    foreach (var newTopic in input.NewTopics)
+                    {
+                        var topicId = await _disciplineTaxonomyRepository.InsertAndGetIdAsync(new DisciplineTaxonomy
+                        {
+                            ParentId = otherTopicParent.Id,
+                            Name = newTopic
+                        });
+
+                        topicIds.Add(topicId);
+                    }
+                }
+            }
+
+            // clear all course's topics so we can add the ones that are retained/selected from the frontend side
+            course.CourseTopics.Clear();
+            foreach (var topicId in topicIds)
+            {
+                course.CourseTopics.Add(new CourseTopic
+                {
+                    CourseId = course.Id,
+                    DisciplineTaxonomyId = topicId,
+                    CreationTime = DateTime.Now,
+                    CreatorUserId = this.AbpSession.UserId
+                });
             }
 
             await Repository.UpdateAsync(course);

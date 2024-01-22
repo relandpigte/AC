@@ -1,6 +1,6 @@
 <form class="form-horizontal" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
 
-  <div class="course-details-container service-builder w100p" [loader]="isLoading">
+  <div class="course-details-container service-builder w100p">
     <div class="course-details flex-column justify-content-center align-items-center gap-24 w100p">
 
       <div class="course-details-name service-builder-label gap-10 w100p">
@@ -173,16 +173,19 @@
         </div>
         <div class="course-details-topics-input w100p" [style.marginTop.px]="10">
           <div class="form-group required mb-0">
-            <input [(ngModel)]="category" #categoryModel="ngModel" #categoryEl class="form-control" type="text"
-              id="category" name="category" required (keydown)="onCategoryKeyDown($event)" [placeholder]="'Add a tag' | localize" />
-            <div class="ac-alerts">
-              <div *ngFor="let category of categories" class="alert alert-info alert-dismissible ac-alert" role="alert">
-                {{ category }}
-                <button (click)="onRemoveCategoryClick(category)"
-                  type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">×</span>
-                </button>
-              </div>
+            <div class="form-control d-flex justify-content-start align-items-center position-relative minh-40-px h-auto">
+              <app-pill-picker
+                  [choices]="topicsChoices"
+                  [maxSelected]="10"
+                  keywordPrefix="#"
+                  [keywordPlaceholder]="'Add a tag' | localize"
+                  [autocompleteTemplateRef]="topicRowItem"
+                  autocompleteNoDataText="{{ 'Community.NoTopicsFoundEnterToCreate' | localize }}"
+                  [isLoading]="isLoadingTopics"
+                  (onUpdateModel)="handleTopicsModelUpdate($event)"
+                  (onKeywordUpdate)="handleTopicsKeywordUpdate($event)"
+                  [selected]="selectedTopics"
+              ></app-pill-picker>
             </div>
           </div>
         </div>
@@ -273,3 +276,14 @@
   </div>
 
 </form>
+
+<ng-template #topicRowItem let-item="item" let-isLoading="isLoading">
+  <div *ngIf="isLoading" class="d-flex flex-column flex-grow-1 topic-row gap-4">
+      <div class="box-shimmer-bar" [style.width.%]="80" [style.minHeight.px]="16"></div>
+      <div class="box-shimmer-bar" [style.width.%]="45" [style.minHeight.px]="12"></div>
+  </div>
+  <div *ngIf="!isLoading" class="d-flex flex-column flex-grow-1 topic-row">
+      <div class="topic-row-name">#{{ item.name }}</div>
+      <div class="topic-row-followers">{{ 'Community.Topics.Followers' | localize: (item.followerCount | shortNum: 1)  }}</div>
+  </div>
+</ng-template>

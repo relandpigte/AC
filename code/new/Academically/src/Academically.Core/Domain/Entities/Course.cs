@@ -46,5 +46,6 @@ namespace Academically.Domain.Entities
         public virtual User CreatorUser { get; set; }
 
         public virtual ICollection<StudentCourse> StudentCourses { get; set; }
+        public virtual ICollection<CourseTopic> CourseTopics { get; set; }
     }
 }

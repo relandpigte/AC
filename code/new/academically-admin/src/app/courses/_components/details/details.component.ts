@@ -3,10 +3,11 @@ import { DefaultFile, DocumentUploaderComponent } from '@app/_shared/components/
 import { CourseService } from '@app/courses/_services/course.service';
 import { AutoSaveComponentBase } from '@shared/auto-save-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
-import { CourseDto, CourseType, CoursesServiceProxy, FileParameter, PricingType, ProfilesServiceProxy, SpokenLanguageDto, SpokenLanguagesServiceProxy, TimeZoneDto, TimeZonesServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
+import { CourseDto, CourseType, CoursesServiceProxy, DisciplineTaxonomiesServiceProxy, FileParameter, KeywordSearchStrategy, PricingType, ProfilesServiceProxy, SpokenLanguageDto, SpokenLanguagesServiceProxy, TimeZoneDto, TimeZonesServiceProxy, UserDto } from '@shared/service-proxies/service-proxies';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { finalize, takeUntil } from 'rxjs/operators';
 import * as moment from 'moment';
+import { TopicSorting } from '@shared/components/topic/topic.component';
 
 @Component({
   selector: 'app-details',
@@ -27,6 +28,12 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
   categories: string[] = [];
   currencies: { label: string, value: any }[] = [{ label: '£ GBP', value: 'gbp' }];
   timeZones: TimeZoneDto[] = [];
+  topicsChoices: any[] = [];
+
+  selectedTopics: { id: string, name: string }[] = [];
+  newSelectedTopics: { id: string, name: string }[] = [];
+
+  isLoadingTopics = false;
 
   model = new CourseDto();
   isLoading = false;
@@ -45,6 +52,7 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
     private _coursesService: CoursesServiceProxy,
     private _timeZonesService: TimeZonesServiceProxy,
     private _profilesService: ProfilesServiceProxy,
+    private _taxonomyService: DisciplineTaxonomiesServiceProxy,
     private _spokenLanguagesService: SpokenLanguagesServiceProxy,
   ) {
     super(injector);
@@ -92,6 +100,13 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
         if (this.model.categories?.trim()) {
           this.categories = this.model.categories.split(',');
         }
+
+        // let's reset the selected topics here
+        this.selectedTopics = course?.courseTopics?.map(e => { return { id: e.disciplineTaxonomy.id, name: e.disciplineTaxonomy.name }}) ?? [];
+        this.newSelectedTopics = [];
+
+        // add fresh topics to the model
+        this.updateModelForTopics();
 
         this.intervalMs = 2_000;
         this.modelToSave = this.model;
@@ -147,11 +162,14 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
       this.model.startTime,
       this.model.endDate,
       this.model.endTime,
+      this.model.topics,
+      this.model.newTopics,
       this.model.id,
     ).pipe(
       takeUntil(this.destroyed$),
       finalize(() => {
         this.isLoading = false;
+        this.isAutoSaving = false;
       })
     )
       .subscribe(() => {
@@ -233,6 +251,25 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
       .subscribe(user => {
         this.user = user;
       });
+  }
+
+  updateModelForTopics(): void {
+    this.model.topics = this.selectedTopics.filter(t => t.id).map(t => t.id) ?? [];
+    this.model.newTopics = this.newSelectedTopics.map(t => t.name);
+  }
+
+  handleTopicsModelUpdate(data: any): void {
+    const { selected, newSelected } = data;
+    this.selectedTopics = selected;
+    this.newSelectedTopics = newSelected;
+    this.updateModelForTopics();
+  }
+
+  handleTopicsKeywordUpdate(data: any): void {
+    const { keyword, showLoading } = data;
+    this._taxonomyService.getAllLastChildren(keyword, KeywordSearchStrategy.StartsWith, true, TopicSorting.Popular, undefined)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(topics => this.topicsChoices = topics.filter(t => !this.selectedTopics.some(x => x.id === t.id)));
   }
 
   onTimeZoneChange(timeZoneId: string): void {

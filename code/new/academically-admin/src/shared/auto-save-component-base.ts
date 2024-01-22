@@ -12,6 +12,7 @@ export abstract class AutoSaveComponentBase extends AppComponentBase implements 
   protected modelToSave: object;
   protected autoSaveCallback: () => void;
   protected intervalMs = 1_000;
+  protected isAutoSaving = false;
 
   private _autoSaveSub: Subscription;
 
@@ -27,12 +28,14 @@ export abstract class AutoSaveComponentBase extends AppComponentBase implements 
   }
 
   protected initAutoSave(callback: () => void): void {
+    if (this.isAutoSaving) return;
     this.autoSaveCallback = callback;
     if (this._autoSaveSub) {
       this._autoSaveSub.unsubscribe();
     }
     let content = JSON.stringify(_.cloneDeep(this.modelToSave));
     console.log('autosave initialzed!');
+    this.isAutoSaving = true;
     this._autoSaveSub = interval(this.intervalMs)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(() => {

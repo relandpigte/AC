@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
@@ -26,5 +27,7 @@ namespace Academically.Services.Courses.Dto
         public string StartTime { get; set; }
         public DateTime? EndDate { get; set; }
         public string EndTime { get; set; }
+        public IEnumerable<Guid> Topics { get; set; }
+        public IEnumerable<string> NewTopics { get; set; }
     }
 }

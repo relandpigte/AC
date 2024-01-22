@@ -53,7 +53,7 @@ export class AutocompleteComponent extends AppComponentBase implements OnInit, A
         this.keyword = text.toLowerCase().trim();
         this.onKeywordChange.next({ keyword: this.keyword, showLoading: true });
         this.isShowChoices = true;
-        this.positionContainer();
+        // this.positionContainer();
       });
 
     this.input.addEventListener('focus', () => {
@@ -61,7 +61,7 @@ export class AutocompleteComponent extends AppComponentBase implements OnInit, A
       const inputValue = this.input.value.toLowerCase().trim();
       if (inputValue.length >= this.minChars) {
         this.isShowChoices = true;
-        this.positionContainer();
+        // this.positionContainer();
         if (inputValue !== this.keyword) {
           this.keyword = inputValue;
           this.onKeywordChange.next({ keyword: this.keyword, showLoading: false });

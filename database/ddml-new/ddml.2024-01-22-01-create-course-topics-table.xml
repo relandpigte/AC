@@ -1,0 +1,46 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="j.cezar" id="1">
+        <createTable tableName="coursetopics">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CourseId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DisciplineTaxonomyId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="j.cezar" id="2">
+        <createIndex indexName="FK_CourseTopics_Courses_CourseId_idx" tableName="coursetopics">
+            <column name="CourseId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="j.cezar" id="3">
+        <createIndex indexName="FK_CourseTopics_DisciplineTaxonomies_DisciplineTaxonomyId_idx" tableName="coursetopics">
+            <column name="DisciplineTaxonomyId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="j.cezar" id="4">
+        <createIndex indexName="FK_CourseTopics_Users_CreatorUserId_idx" tableName="coursetopics">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="j.cezar" id="5">
+        <addForeignKeyConstraint baseColumnNames="CourseId" baseTableName="coursetopics" constraintName="FK_CourseTopics_Courses_CourseId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="courses" validate="true"/>
+    </changeSet>
+    <changeSet author="j.cezar" id="6">
+        <addForeignKeyConstraint baseColumnNames="DisciplineTaxonomyId" baseTableName="coursetopics" constraintName="FK_CourseTopics_DisciplineTaxonomies_DisciplineTaxonomyId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="disciplinetaxonomies" validate="true"/>
+    </changeSet>
+    <changeSet author="j.cezar" id="7">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="coursetopics" constraintName="FK_CourseTopics_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

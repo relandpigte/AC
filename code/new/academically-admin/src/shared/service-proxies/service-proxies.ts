@@ -8403,10 +8403,12 @@ export class CoursesServiceProxy {
      * @param startTime (optional) 
      * @param endDate (optional) 
      * @param endTime (optional) 
+     * @param topics (optional) 
+     * @param newTopics (optional) 
      * @param id (optional) 
      * @return Success
      */
-    updateDetails(name: string | undefined, subtitle: string | undefined, description: string | undefined, categories: string | undefined, languageId: string | undefined, pricingType: PricingType | undefined, imageDocumentFile: FileParameter | undefined, type: CourseType | undefined, price: number | undefined, numberOfPlaces: number | undefined, startDate: moment.Moment | undefined, startTime: string | undefined, endDate: moment.Moment | undefined, endTime: string | undefined, id: string | undefined): Observable<CourseDto> {
+    updateDetails(name: string | undefined, subtitle: string | undefined, description: string | undefined, categories: string | undefined, languageId: string | undefined, pricingType: PricingType | undefined, imageDocumentFile: FileParameter | undefined, type: CourseType | undefined, price: number | undefined, numberOfPlaces: number | undefined, startDate: moment.Moment | undefined, startTime: string | undefined, endDate: moment.Moment | undefined, endTime: string | undefined, topics: string[] | undefined, newTopics: string[] | undefined, id: string | undefined): Observable<CourseDto> {
         let url_ = this.baseUrl + "/api/services/app/Courses/UpdateDetails";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -8467,6 +8469,14 @@ export class CoursesServiceProxy {
             // do nothing
         } else
             content_.append("EndTime", endTime.toString());
+        if (topics === null || topics === undefined) {
+            // do nothing
+        } else
+            topics.forEach(item_ => content_.append("Topics", item_.toString()));
+        if (newTopics === null || newTopics === undefined) {
+            // do nothing
+        } else
+            newTopics.forEach(item_ => content_.append("NewTopics", item_.toString()));
         if (id === null || id === undefined) {
             // do nothing
         } else
@@ -39900,6 +39910,9 @@ export class CourseDto implements ICourseDto {
     isPurchased: boolean;
     hasReviewed: boolean;
     enrolled: UserDto[] | undefined;
+    courseTopics: CourseTopicDto[] | undefined;
+    topics: string[] | undefined;
+    newTopics: string[] | undefined;
 
     constructor(data?: ICourseDto) {
         if (data) {
@@ -39956,6 +39969,21 @@ export class CourseDto implements ICourseDto {
                 this.enrolled = [] as any;
                 for (let item of _data["enrolled"])
                     this.enrolled.push(UserDto.fromJS(item));
+            }
+            if (Array.isArray(_data["courseTopics"])) {
+                this.courseTopics = [] as any;
+                for (let item of _data["courseTopics"])
+                    this.courseTopics.push(CourseTopicDto.fromJS(item));
+            }
+            if (Array.isArray(_data["topics"])) {
+                this.topics = [] as any;
+                for (let item of _data["topics"])
+                    this.topics.push(item);
+            }
+            if (Array.isArray(_data["newTopics"])) {
+                this.newTopics = [] as any;
+                for (let item of _data["newTopics"])
+                    this.newTopics.push(item);
             }
         }
     }
@@ -40014,6 +40042,21 @@ export class CourseDto implements ICourseDto {
             for (let item of this.enrolled)
                 data["enrolled"].push(item.toJSON());
         }
+        if (Array.isArray(this.courseTopics)) {
+            data["courseTopics"] = [];
+            for (let item of this.courseTopics)
+                data["courseTopics"].push(item.toJSON());
+        }
+        if (Array.isArray(this.topics)) {
+            data["topics"] = [];
+            for (let item of this.topics)
+                data["topics"].push(item);
+        }
+        if (Array.isArray(this.newTopics)) {
+            data["newTopics"] = [];
+            for (let item of this.newTopics)
+                data["newTopics"].push(item);
+        }
         return data; 
     }
 
@@ -40063,6 +40106,9 @@ export interface ICourseDto {
     isPurchased: boolean;
     hasReviewed: boolean;
     enrolled: UserDto[] | undefined;
+    courseTopics: CourseTopicDto[] | undefined;
+    topics: string[] | undefined;
+    newTopics: string[] | undefined;
 }
 
 export class CourseDtoPagedResultDto implements ICourseDtoPagedResultDto {
@@ -40588,6 +40634,69 @@ export enum CourseStatus {
     Draft = 0,
     Published = 1,
     Archived = 2,
+}
+
+export class CourseTopicDto implements ICourseTopicDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    courseId: string;
+    disciplineTaxonomyId: string;
+    disciplineTaxonomy: DisciplineTaxonomyDto;
+
+    constructor(data?: ICourseTopicDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.courseId = _data["courseId"];
+            this.disciplineTaxonomyId = _data["disciplineTaxonomyId"];
+            this.disciplineTaxonomy = _data["disciplineTaxonomy"] ? DisciplineTaxonomyDto.fromJS(_data["disciplineTaxonomy"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CourseTopicDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CourseTopicDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["courseId"] = this.courseId;
+        data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
+        data["disciplineTaxonomy"] = this.disciplineTaxonomy ? this.disciplineTaxonomy.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): CourseTopicDto {
+        const json = this.toJSON();
+        let result = new CourseTopicDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICourseTopicDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    courseId: string;
+    disciplineTaxonomyId: string;
+    disciplineTaxonomy: DisciplineTaxonomyDto;
 }
 
 /** 1 = Standard 2 = Cohort */

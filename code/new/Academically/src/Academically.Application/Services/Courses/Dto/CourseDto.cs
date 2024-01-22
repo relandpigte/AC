@@ -9,6 +9,7 @@ using Academically.Domain.Enums;
 using Academically.Domain.Interfaces;
 using Academically.Domain.Views;
 using Academically.Services.Documents.Dto;
+using Academically.Services.Posts.Dto;
 using Academically.Services.StudentCourses.Dto;
 using Academically.Users.Dto;
 
@@ -65,6 +66,13 @@ namespace Academically.Services.Courses.Dto
         
         [NotMapped]
         public IEnumerable<UserDto> Enrolled { get; set; }
-        
+
+        public IEnumerable<CourseTopicDto> CourseTopics { get; set; }
+
+        [NotMapped]
+        public IEnumerable<Guid> Topics { get; set; }
+
+        [NotMapped]
+        public IEnumerable<string> NewTopics { get; set; }
     }
 }

@@ -15,7 +15,6 @@ import { AppSharedModule } from '@app/_shared/app-shared.module';
 import { VerificationsModule } from './_shared/modules/verifications/verifications.module';
 import { NgPipesModule } from 'ngx-pipes';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
-import { TagInputModule } from 'ngx-chips';
 
 // Cookie Consent
 import { NgcCookieConsentModule, NgcCookieConsentConfig } from 'ngx-cookieconsent';
@@ -164,7 +163,6 @@ const cookieConfig: NgcCookieConsentConfig = {
     TypeaheadModule.forRoot(),
     NgcCookieConsentModule.forRoot(cookieConfig),
     NotificationsModule,
-    TagInputModule,
   ],
   entryComponents: [
     // tenants
