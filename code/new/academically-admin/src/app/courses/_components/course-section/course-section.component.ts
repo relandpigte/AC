@@ -2,6 +2,7 @@ import { Component, EventEmitter, Injector, Input, OnInit, Output } from '@angul
 import { AppComponentBase } from '@shared/app-component-base';
 import { CourseSectionDto, CourseSectionStatus, CourseSectionType } from '@shared/service-proxies/service-proxies';
 import { CourseStructure } from '../curriculum/curriculum.component';
+import { maxBy } from 'lodash';
 
 @Component({
   selector: 'app-course-section',
@@ -81,7 +82,7 @@ export class CourseSectionComponent extends AppComponentBase implements OnInit {
     this.courseSection.children.push(CourseSectionDto.fromJS({
       parentId: this.courseSection.id,
       courseId: this.courseSection.courseId,
-      displayOrder: this.courseSection.children.length + 1,
+      displayOrder: maxBy( this.courseSection.children, s => s.displayOrder).displayOrder + 1,
       type
     }));
   }

@@ -7,6 +7,7 @@ import { takeUntil, finalize } from 'rxjs/operators';
 import { DragulaService } from 'ng2-dragula';
 import { CourseEllipseState } from './../../_models/courseEllipseType';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { maxBy } from 'lodash';
 
 export enum CourseStructure {
   Mini = 'mini',
@@ -84,7 +85,7 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
   addTemporarySection(type: CourseSectionType): void {
     this.courseSections.push(CourseSectionDto.fromJS({
       courseId: this.courseId,
-      displayOrder: this.courseSections.length + 1,
+      displayOrder: maxBy(this.courseSections, s => s.displayOrder).displayOrder + 1,
       type
     }));
   }
