@@ -490,6 +490,7 @@ namespace Academically.Services.Services
                 var defaultSchedules = GetSchedules(availability, d);
                 var schedules = customSchedules.Count > 0 ? customSchedules : defaultSchedules;
                 var schedule = schedules.First();
+                var breaks = schedules.Where(s => s.Id != schedule.Id).ToList();
                 
                 if (Clock.Now.Date > d.Date || !schedule.IsAvailable) continue;
 
@@ -500,7 +501,13 @@ namespace Academically.Services.Services
                 while (currentDateTime <= bookingEndDate)
                 {
                     var paddingApplicable = false;
-                    if (!CheckAvailabilitySchedule(currentDateTime.Value, availabilitySetting))
+                    var isBreakTime = breaks.Any(x =>
+                    {
+                        var start = ConstructBookingDate(coachTimezoneId, userTimezoneId, d, x.StartTime);
+                        var end = ConstructBookingDate(coachTimezoneId, userTimezoneId, d, x.EndTime);
+                        return start < currentDateTime && currentDateTime < end;
+                    });
+                    if (!CheckAvailabilitySchedule(currentDateTime.Value, availabilitySetting) && !isBreakTime && currentDateTime > Clock.Now)
                     {
                         if (!bookings.Contains(currentDateTime.ToString())) response.Add(currentDateTime);
                         else paddingApplicable = true;

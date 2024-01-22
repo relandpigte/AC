@@ -83,6 +83,8 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   timeZones: TimeZoneDto[] = [];
   userTimeZone: TimeZoneDto;
   coachSchedules: moment.Moment[] = [];
+  month = moment().month() + 1;
+  year = moment().year();
 
   readonly PaymentMethod = PaymentMethod;
   readonly PaymentStatus = PaymentStatus;
@@ -329,8 +331,25 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
       dateClick: this.handleDateClick.bind(this),
       dayCellClassNames: this.dayCellClassNamesCallback.bind(this),
       showNonCurrentDates: false,
+      datesSet: this.handleMonthChange.bind(this),
     };
     this._cdr.detectChanges();
+  }
+
+  private handleMonthChange(info: any): void {
+    const month = moment(info.start).month() + 1;
+    const year = moment(info.start).year();
+
+    if (this.year !== year || this.month !== month) {
+      this.year = year;
+      this.month = month;
+      this._servicesService.getCoachingSchedules(this.serviceOwnerId, this.serviceId, year, month)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(schedule => {
+          this.coachSchedules = schedule;
+          this.initCalendar();
+        });
+    }
   }
 
   private dayCellClassNamesCallback(info: any): string {
@@ -370,17 +389,7 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
 
   private getAvailableSessions(schedules: moment.Moment[]): void {
     this.selectedSessions = { afternoon: [], evening: [], morning: [] };
-    const now = moment.tz(this.userTimezoneName);
-
     schedules.forEach(s => {
-      const customBreaks = this.userAvailabilities.filter(x => !x.isAvailable && moment(x.specificDate).isSame(s, 'date'));
-      const defaultBreaks = this.userAvailabilities.filter(x => x.dayOfWeek === s.day() && !x.isAvailable);
-      const breaks = _.isEmpty(customBreaks) ? defaultBreaks : customBreaks;
-
-      if (now.isAfter(s) || this.isSessionBreakTime(breaks, s)) {
-        return;
-      }
-
       if (s.hour() >= 0 && s.hour() < 12) {
         this.selectedSessions.morning.push(s);
       } else if (s.hour() >= 12 && s.hour() < 16) {
@@ -389,16 +398,6 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
         this.selectedSessions.evening.push(s);
       }
     });
-  }
-
-  private isSessionBreakTime(breaks: UserAvailabilityDto[], date: moment.Moment): boolean {
-    const strDate = date.format('YYYY-MM-DD');
-    const breakTime = breaks.filter(b => {
-      const bStart = moment(`${strDate} ${b.startTime}`).tz(this.userTimezoneName);
-      const bEnd = moment(`${strDate} ${b.endTime}`).tz(this.userTimezoneName);
-      return date.isAfter(bStart) && date.isBefore(bEnd);
-    });
-    return !_.isEmpty(breakTime);
   }
 
   private resetActiveDate(info: DateClickArg): void {
@@ -507,11 +506,10 @@ export class BookingServiceComponent extends AppComponentBase implements OnInit 
   }
 
   private initBookingData(): void {
-    const now = moment.tz(this.userTimezoneName);
     forkJoin([
       this._timeZonesService.getAll(),
       this._timeZonesService.getByUser(this.currentUserId),
-      this._servicesService.getCoachingSchedules(this.serviceOwnerId, this.serviceId, now.year(), now.month() + 1)
+      this._servicesService.getCoachingSchedules(this.serviceOwnerId, this.serviceId, this.year, this.month)
     ])
       .pipe(takeUntil(this.destroyed$))
       .subscribe(([timeZones, userTimezone, schedules]): void => {

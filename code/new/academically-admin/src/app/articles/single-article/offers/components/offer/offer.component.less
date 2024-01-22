@@ -1,0 +1,87 @@
+.offer {
+  &-item {
+    margin-bottom: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+    padding: 16px;
+    color: #3B516C;
+
+    &-title {
+      margin-bottom: 4px;
+      font-size: 15px;
+      font-weight: 400;
+
+      a {
+        color: #12263F;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1; /* number of lines to show */
+        -webkit-box-orient: vertical;
+      }
+    }
+
+    &-image {
+      padding-right: 6px;
+    }
+
+    &-details {
+      padding-left: 6px;
+    }
+
+    .price {
+      &-original {
+        color: #6E84A3;
+      }
+    }
+  }
+
+  &-article {
+    .offer-item-details {
+      padding-left: 12px;
+    }
+  }
+
+  &-tutorial {
+    .offer-item-image {
+      a {
+        position: relative;
+        &:after {
+          background: url("assets/img/service/article/play.png") no-repeat 0 0 transparent;
+          width: 22px;
+          height: 22px;
+          content: "";
+          display: block;
+          position: absolute;
+          top: 0;
+          margin: auto;
+          bottom: 0;
+          left: 0;
+          right: 0;
+        }
+
+        img {
+          width: 65px;
+          height: 48px;
+        }
+      }
+    }
+  }
+
+  &-broadcast, &-workshop, &-coaching {
+    .offer-item-image {
+      img {
+        width: 45px;
+        height: 45px;
+      }
+    }
+  }
+
+  &-course {
+    .offer-item-image {
+      img {
+        width: 65px;
+        height: 48px;
+      }
+    }
+  }
+}
