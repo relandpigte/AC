@@ -9,12 +9,14 @@ import { ContentModule } from '@app/articles/single-article/content/content.modu
 import { DetailsModule } from '@app/articles/single-article/details/details.module';
 import { SettingsModule } from '@app/articles/single-article/settings/settings.module';
 import { OffersComponent } from './offers/offers.component';
+import { OfferComponent } from './offers/components/offer/offer.component';
 
 
 @NgModule({
   declarations: [
     SingleArticleComponent,
     OffersComponent,
+    OfferComponent,
   ],
   imports: [
     CommonModule,

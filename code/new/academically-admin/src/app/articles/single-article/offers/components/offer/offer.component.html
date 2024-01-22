@@ -1,0 +1,41 @@
+<div class="card offer-item" [class]="'offer-' + serviceType">
+  <div class="card-body p-0">
+    <div class="row align-items-center">
+      <div *ngIf="!isArticle" class="col-auto offer-item-image">
+        <a href="#">
+          <img [src]="isCoaching ? coachThumbnailUrl : thumbnailUrl" [alt]="serviceName" class="avatar-img"
+               [class.rounded]="!isCoaching" [class.rounded-circle]="isCoaching">
+        </a>
+      </div>
+      <div class="col ms-n2 offer-item-details">
+        <h4 class="offer-item-title">
+          <a href="javascript: void(0);" class="line-clamp">{{ serviceName }}</a>
+        </h4>
+        <p class="small text-muted mb-0">{{ serviceType | titlecase }}</p>
+      </div>
+      <div class="col-auto units">{{ serviceUnit }} units</div>
+      <div class="col-auto hours">{{ serviceOfferDuration }} hours</div>
+      <div class="col-auto price">
+        <p class="m-0 p-0 d-flex gap-4">
+          <span class="price-original"><del>{{ servicePriceOrig | currency : 'GBP' }}</del></span>
+          <span class="price-offer">{{ servicePriceOffer | currency : 'GBP' }}</span>
+        </p>
+      </div>
+      <div class="col-auto">
+        <div class="dropdown">
+          <a href="javascript:void(0);" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fe fe-more-vertical dropdown-toggle-icon"></i>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right">
+            <a href="javascript:void(0);" class="dropdown-item">
+              Action
+            </a>
+            <a href="javascript:void(0);" class="dropdown-item">
+              Another action
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
