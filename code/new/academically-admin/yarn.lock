@@ -2012,14 +2012,14 @@
 
 "@types/lodash-es@^4.17.3":
   version "4.17.3"
-  resolved "https://registry.npm.taobao.org/@types/lodash-es/download/@types/lodash-es-4.17.3.tgz#87eb0b3673b076b8ee655f1890260a136af09a2d"
+  resolved "http://registry.npm.taobao.org/@types/lodash-es/download/@types/lodash-es-4.17.3.tgz#87eb0b3673b076b8ee655f1890260a136af09a2d"
   integrity sha1-h+sLNnOwdrjuZV8YkCYKE2rwmi0=
   dependencies:
     "@types/lodash" "*"
 
 "@types/lodash@*":
   version "4.14.161"
-  resolved "https://registry.npm.taobao.org/@types/lodash/download/@types/lodash-4.14.161.tgz#a21ca0777dabc6e4f44f3d07f37b765f54188b18"
+  resolved "http://registry.npm.taobao.org/@types/lodash/download/@types/lodash-4.14.161.tgz#a21ca0777dabc6e4f44f3d07f37b765f54188b18"
   integrity sha1-ohygd32rxuT0Tz0H83t2X1QYixg=
 
 "@types/minimatch@*":
