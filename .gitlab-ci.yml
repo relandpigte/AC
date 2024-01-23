@@ -430,6 +430,8 @@ deploy_frontend_to_uat:
     env_name: uat
   dependencies:
     - build_frontend
+  needs:
+    - build_frontend
   environment:
     name: uat
     deployment_tier: testing
