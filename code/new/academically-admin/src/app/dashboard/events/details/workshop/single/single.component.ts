@@ -45,6 +45,13 @@ export class SingleComponent extends AppComponentBase implements OnInit {
       infoText: 'Here 3, you can input all the details for your article. This information will be visible to potential clients, so keep it clear and informative.'
     },
     {
+      id: 'offers',
+      label: 'Offers',
+      icon: 'assets/img/service/create/shopping.svg',
+      iconHover: 'assets/img/service/create/shopping-hover.svg',
+      infoText: 'Upsell additional products or services to attendees of your event by creating exclusive discounts and limited-time offers.'
+    },
+    {
       id: 'settings',
       label: 'Settings',
       icon: 'assets/img/service/create/settings.svg',

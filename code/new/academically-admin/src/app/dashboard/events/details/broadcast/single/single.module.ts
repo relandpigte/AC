@@ -8,10 +8,12 @@ import { DetailsModule } from '@app/dashboard/events/details/broadcast/single/de
 import { SettingsModule } from '@app/dashboard/events/details/broadcast/single/settings/settings.module';
 import { ResourcesModule } from '@app/dashboard/events/details/broadcast/single/resources/resources.module';
 import { StudioModule } from '@app/dashboard/events/details/broadcast/single/studio/studio.module';
+import { OffersComponent } from '@app/dashboard/events/details/broadcast/single/offers/offers.component';
 
 @NgModule({
   declarations: [
-    SingleComponent
+    SingleComponent,
+    OffersComponent
   ],
   imports: [
     CommonModule,

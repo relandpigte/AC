@@ -10,6 +10,7 @@ import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 import { BehaviorSubject, combineLatest, of } from '@node_modules/rxjs';
 import { switchMap } from '@node_modules/rxjs/operators';
 import { ServiceCreateOfferComponent } from '@shared/components/service-create-offer/service-create-offer.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-offers',
@@ -23,12 +24,11 @@ export class OffersComponent extends AppComponentBase implements OnInit {
 
   constructor(
     injector: Injector,
-    private _articleService: ArticleService,
     private _bsModalService: BsModalService,
-    private _servicesService: ServicesServiceProxy
+    private _servicesService: ServicesServiceProxy,
+    private _route: ActivatedRoute
   ) {
     super(injector);
-
   }
 
   get isLoading$() { return combineLatest([this.isLoadingInitialData$]).pipe(switchMap((loaders) => of(loaders.some(l => l)))); }
@@ -36,13 +36,8 @@ export class OffersComponent extends AppComponentBase implements OnInit {
 
   ngOnInit(): void {
     this.isLoadingInitialData$.next(true);
-    this._articleService.articleCreated$.subscribe(article => {
-      if (!article) {
-        return;
-      }
-      this.id = article.id;
-      this.initArticleOffers();
-    });
+    this.id = this._route.snapshot.paramMap.get('id');
+    this.initArticleOffers();
   }
 
   onAddOffer(): void {

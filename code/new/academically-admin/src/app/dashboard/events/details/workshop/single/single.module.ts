@@ -9,10 +9,12 @@ import { PermissionsModule } from '@app/dashboard/events/details/workshop/single
 import { ResourcesModule } from '@app/dashboard/events/details/workshop/single/resources/resources.module';
 import { StudioModule } from '@app/dashboard/events/details/workshop/single/studio/studio.module';
 import { SettingsModule } from '@app/dashboard/events/details/workshop/single/settings/settings.module';
+import { OffersComponent } from '@app/dashboard/events/details/workshop/single/offers/offers.component';
 
 @NgModule({
   declarations: [
-    SingleComponent
+    SingleComponent,
+    OffersComponent
     ],
   imports: [
     CommonModule,

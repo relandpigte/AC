@@ -10,11 +10,11 @@ import { switchMap, takeUntil } from 'rxjs/operators';
 import { NgForm } from '@angular/forms';
 
 @Component({
-    selector: 'app-service-offer',
-    templateUrl: './service-offer.component.html',
-    styleUrls: ['./service-offer.component.less']
+    selector: 'app-service-create-offer',
+    templateUrl: './service-create-offer.component.html',
+    styleUrls: ['./service-create-offer.component.less']
 })
-export class ServiceOfferComponent extends AppComponentBase implements OnInit {
+export class ServiceCreateOfferComponent extends AppComponentBase implements OnInit {
     model = new CreateServiceOfferDto();
 
     referenceId: string;
