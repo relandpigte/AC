@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit } from '@
 import { Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CreateEventDto, EventCategory, EventsServiceProxy, EventType, ServicesType } from '@shared/service-proxies/service-proxies';
+import { CreateEventDto, EventCategory, EventDto, EventsServiceProxy, EventType, ServicesType } from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { takeUntil } from 'rxjs/operators';
 import { ChooseTemplateComponent } from './_components/choose-template/choose-template.component';
@@ -13,6 +13,7 @@ import { DashboardService, DashboardServiceView } from '@app/dashboard/_services
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { ServiceDataService } from '@shared/services/service-data.service';
+import { CreateServiceComponent } from '@shared/modals/create-service/create-service.component';
 
 @Component({
   selector: 'app-dashboard-events',
@@ -22,8 +23,10 @@ import { ServiceDataService } from '@shared/services/service-data.service';
 })
 export class EventsComponent extends AppComponentBase implements OnInit, AfterViewInit {
   shimmerType = ShimmerType;
+
   readonly DashboardServiceView = DashboardServiceView;
   readonly ServicesType = ServicesType;
+  readonly EventCategory = EventCategory;
 
   constructor(
     injector: Injector,
@@ -54,6 +57,33 @@ export class EventsComponent extends AppComponentBase implements OnInit, AfterVi
   handleSwitchView(): void {
     this._dashboardService.handleSwitchView();
     this._cdr.detectChanges();
+  }
+
+  onCreateEvent(category: EventCategory): void {
+    const model = new CreateEventDto();
+    model.init({ category, type: EventType.Single, name: '' });
+
+    const modalSettings = this.defaultModalSettings as ModalOptions<CreateServiceComponent>;
+    modalSettings.initialState = { model, servicesType: ServicesType.Event };
+    modalSettings.class = 'modal-dialog-centered modal-dialog-create-service';
+    modalSettings.backdrop = true;
+    modalSettings.ignoreBackdropClick = false;
+    modalSettings.keyboard = true;
+    const modal = this._modalService.show(CreateServiceComponent, modalSettings);
+
+    modal.content.onCreateService.subscribe(service => {
+      this._eventsService.create(service)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(async res => {
+          this.notify.success(this.l('SavedSuccessfully'));
+          if (res.category === EventCategory.Workshop) {
+            await this._router.navigate(['/app/dashboard/events/workshop/', res.id]);
+          } else {
+            await this._router.navigate(['/app/dashboard/events/broadcast/', res.id]);
+          }
+          this._serviceData.createServiceDiscussion(res.id, ServicesType.Event, this.currentUserId);
+        });
+    });
   }
 
   onNewBroadcastClick(): void {

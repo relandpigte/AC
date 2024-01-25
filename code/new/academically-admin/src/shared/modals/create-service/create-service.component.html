@@ -1,0 +1,24 @@
+<form class="form-horizontal" autocomplete="off" #f="ngForm" (ngSubmit)="onFormSubmit()">
+  <div class="modal-card card">
+    <div class="card-body">
+      <div class="card-body-title">{{ 'Service.Create' | localize : serviceTypeName }}</div>
+      <div class="col-md-12 form-group m-0 p-0 required">
+        <label class="col-form-label sr-only" for="name">{{ 'Name' | localize }}</label>
+        <input type="text" class="form-control"
+               [placeholder]="'Service.NameYour' | localize : isEvent ? 'event' : serviceTypeName"
+               name="name" id="name" [(ngModel)]="model.name" required [maxlength]="100"/>
+      </div>
+    </div>
+    <div class="card-footer border-top-0 d-flex align-items-center justify-content-between">
+      <div class="card-footer-left text-muted">
+        {{ f.value.name?.length }} / 100
+      </div>
+      <div class="card-footer-right d-flex gap-12">
+        <button type="button" class="btn btn-white" (click)="onCancelClick()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="onFormSubmit()"
+                [class.disabled]="!f.form.valid || isLoading || (model.name.trim() === '')"
+        >{{ 'Create' | localize }}</button>
+      </div>
+    </div>
+  </div>
+</form>

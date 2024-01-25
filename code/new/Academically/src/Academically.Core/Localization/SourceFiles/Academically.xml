@@ -1852,7 +1852,8 @@
 	<text name="PublishCourseConfirmationMessage">Are you sure you want to publish this course?</text>
 	<text name="UnpublishCourseConfirmationMessage">Are you sure you want to unpublish this course? The status will change to Draft.</text>
 	<!-- Coaching -->
-	<text name="NewCoaching">New Coaching</text>
+    <text name="NewCoaching">New Coaching</text>
+    <text name="NewSession">New session</text>
 	<text name="CreateCoaching">Create Coaching</text>
     <text name="SingleCoaching">Single Coaching</text>
     <text name="CoachingSeries">Coaching Series</text>
@@ -2098,5 +2099,8 @@
 
     <!-- Service Creation -->
     <text name="Service.Creation">{0} creation</text>
+    <text name="Service.Create">Create {0}</text>
+    <text name="Service.NewServiceText">New {0}</text>
+    <text name="Service.NameYour">Name your {0}</text>
   </texts>
 </localizationDictionary>

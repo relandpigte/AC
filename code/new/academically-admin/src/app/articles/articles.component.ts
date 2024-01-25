@@ -1,7 +1,7 @@
 import { Component, OnInit, Injector, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ArticleService } from './_services/article.service';
-import { ArticlesServiceProxy, ArticleDto, ArticleStatus, ArticleType, ServicesType } from '@shared/service-proxies/service-proxies';
+import { ArticlesServiceProxy, ArticleDto, ArticleStatus, ArticleType, ServicesType, EventType } from '@shared/service-proxies/service-proxies';
 import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ChooseTemplateComponent } from './_components/choose-template/choose-template.component';
@@ -12,6 +12,7 @@ import { takeUntil } from 'rxjs/operators';
 import { DashboardService, DashboardServiceView } from '@app/dashboard/_services/dashboard.service';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
+import { CreateServiceComponent } from '@shared/modals/create-service/create-service.component';
 
 @Component({
   selector: 'app-articles',
@@ -53,6 +54,29 @@ export class ArticlesComponent extends AppComponentBase implements OnInit, After
   handleSwitchView(): void {
     this._dashboardService.handleSwitchView();
     this._cdr.detectChanges();
+  }
+
+  onCreateArticle(): void {
+    const model = new ArticleDto();
+    model.init({ status: ArticleStatus.Draft, type: ArticleType.SingleArticle, name: '' });
+
+    const modalSettings = this.defaultModalSettings as ModalOptions<CreateServiceComponent>;
+    modalSettings.initialState = { model, servicesType: ServicesType.Article };
+    modalSettings.class = 'modal-dialog-centered modal-dialog-create-service';
+    modalSettings.backdrop = true;
+    modalSettings.ignoreBackdropClick = false;
+    modalSettings.keyboard = true;
+    const modal = this._modalService.show(CreateServiceComponent, modalSettings);
+
+    modal.content.onCreateService.subscribe((article: ArticleDto): void => {
+      this._articlesService.create(article)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(async response => {
+          this.notify.success(this.l('SavedSuccessfully'));
+          this._articleService.articleCreated = article;
+          await this._router.navigate(['/app/articles/', response.id]);
+        });
+    });
   }
 
   onNewArticleClick(): void {

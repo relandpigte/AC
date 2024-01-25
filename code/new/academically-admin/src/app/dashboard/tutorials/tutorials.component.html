@@ -1,52 +1,56 @@
 <div class="container-fluid" [@routerTransition]>
-    <div class="row justify-content-center">
-        <div class="col-12">
-            <div class="header position-relative">
-                <app-shimmer [show]="isLoading$ | async" [shimmerType]="isLearnerView ? shimmerType.DashboardHeaderLearner : shimmerType.DashboardHeaderCreator" backgroundColor="#f9fbfd"></app-shimmer>
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="header position-relative">
+        <app-shimmer [show]="isLoading$ | async" [shimmerType]="isLearnerView ? shimmerType.DashboardHeaderLearner : shimmerType.DashboardHeaderCreator" backgroundColor="#f9fbfd"></app-shimmer>
 
-                <div class="header-body">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h6 class="header-pretitle">{{ 'Dashboard' | localize }}</h6>
-                            <h1 class="header-title">{{ 'Tutorials' | localize }}</h1>
-                        </div>
-                        <ng-container *ngIf="isTutor">
-                            <div class="col-auto d-flex gap-10">
-                                <button *ngIf="DashboardServiceView.creator === userView" class="btn btn-primary" (click)="handleCreateVideo()">
-                                    {{ 'CreateVideo' | localize | titlecase }}
-                                </button>
-                                <button class="btn btn-white custom-card-border d-flex align-items-center gap-10" (click)="handleSwitchView()">
-                                    <span class="fe fe-refresh-cw"></span>
-                                    Switch to {{ switchButtonText }} view
-                                </button>
-                            </div>
-                        </ng-container>
-                    </div>
-                    <app-sub-header [userView]="userView"></app-sub-header>
-                </div>
+        <div class="header-body">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="header-pretitle">{{ 'Dashboard' | localize }}</h6>
+              <h1 class="header-title">{{ 'Tutorials' | localize }}</h1>
             </div>
-
-            <div class="tab-content" [ngSwitch]="userView">
-                <ng-container *ngSwitchCase="DashboardServiceView.creator">
-                    <div class="tab-pane fade show active" id="created" role="tabpanel" aria-labelledby="created-tab">
-                        <app-created></app-created>
-                    </div>
-                    <div class="tab-pane fade" id="analytics" role="tabpanel" aria-labelledby="analytics-tab">
-                      <app-service-metrics [serviceType]="ServicesType.Tutorial"></app-service-metrics>
-                    </div>
-                </ng-container>
-                <ng-container *ngSwitchDefault>
-                    <div class="tab-pane fade show active" id="purchased" role="tabpanel" aria-labelledby="purchased-tab">
-                        <app-purchased></app-purchased>
-                    </div>
-                    <div class="tab-pane fade" id="saved" role="tabpanel" aria-labelledby="save-tab">
-                        <app-saved></app-saved>
-                    </div>
-                    <div class="tab-pane fade" id="for-you" role="tabpanel" aria-labelledby="for-you-tab">
-                        <app-tutorial-for-you></app-tutorial-for-you>
-                    </div>
-                </ng-container>
-            </div>
+            <ng-container *ngIf="isTutor">
+              <div class="col-auto d-flex gap-10">
+                <button
+                  *ngIf="DashboardServiceView.creator === userView"
+                  class="btn btn-primary d-flex align-items-center gap-5"
+                  (click)="onCreateTutorial()">
+                  <span class="fe fe-plus"></span>
+                  {{ 'Service.NewServiceText' | localize : 'tutorial' }}
+                </button>
+                <button class="btn btn-white custom-card-border d-flex align-items-center gap-10" (click)="handleSwitchView()">
+                  <span class="fe fe-refresh-cw"></span>
+                  Switch to {{ switchButtonText }} view
+                </button>
+              </div>
+            </ng-container>
+          </div>
+          <app-sub-header [userView]="userView"></app-sub-header>
         </div>
+      </div>
+
+      <div class="tab-content" [ngSwitch]="userView">
+        <ng-container *ngSwitchCase="DashboardServiceView.creator">
+          <div class="tab-pane fade show active" id="created" role="tabpanel" aria-labelledby="created-tab">
+            <app-created></app-created>
+          </div>
+          <div class="tab-pane fade" id="analytics" role="tabpanel" aria-labelledby="analytics-tab">
+            <app-service-metrics [serviceType]="ServicesType.Tutorial"></app-service-metrics>
+          </div>
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+          <div class="tab-pane fade show active" id="purchased" role="tabpanel" aria-labelledby="purchased-tab">
+            <app-purchased></app-purchased>
+          </div>
+          <div class="tab-pane fade" id="saved" role="tabpanel" aria-labelledby="save-tab">
+            <app-saved></app-saved>
+          </div>
+          <div class="tab-pane fade" id="for-you" role="tabpanel" aria-labelledby="for-you-tab">
+            <app-tutorial-for-you></app-tutorial-for-you>
+          </div>
+        </ng-container>
+      </div>
     </div>
+  </div>
 </div>

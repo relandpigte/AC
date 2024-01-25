@@ -10,9 +10,10 @@ import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { ChooseVideoTemplateComponent } from '@app/videos/_components/choose-video-template/choose-video-template.component';
 import { VideoTemplate } from '@app/videos/_models/video-template';
-import { ServicesType, VideoDto, VideosServiceProxy, VideoStatus, VideoType } from '@shared/service-proxies/service-proxies';
+import { CreateEventDto, EventType, ServicesType, VideoDto, VideosServiceProxy, VideoStatus, VideoType } from '@shared/service-proxies/service-proxies';
 import { CreateVideoComponent } from '@app/videos/_components/create-video/create-video.component';
 import { VideoService } from '@app/videos/_services/video.service';
+import { CreateServiceComponent } from '@shared/modals/create-service/create-service.component';
 
 @Component({
   selector: 'app-tutorials',
@@ -54,6 +55,29 @@ export class TutorialsComponent extends AppComponentBase implements OnInit, Afte
   handleSwitchView(): void {
     this._dashboardService.handleSwitchView();
     this._cdr.detectChanges();
+  }
+
+  onCreateTutorial(): void {
+    const model = new VideoDto();
+    model.init({ type: VideoType.SingleVideo, status: VideoStatus.Draft, name: '' });
+
+    const modalSettings = this.defaultModalSettings as ModalOptions<CreateServiceComponent>;
+    modalSettings.initialState = { model, servicesType: ServicesType.Tutorial };
+    modalSettings.class = 'modal-dialog-centered modal-dialog-create-service';
+    modalSettings.backdrop = true;
+    modalSettings.ignoreBackdropClick = false;
+    modalSettings.keyboard = true;
+    const modal = this._modalService.show(CreateServiceComponent, modalSettings);
+
+    modal.content.onCreateService.subscribe(tutorial => {
+      this._videosService.create(tutorial)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(async response => {
+          this.notify.success(this.l('SavedSuccessfully'));
+          this._videoService.videoCreated = tutorial;
+          await this._router.navigate(['/app/videos/', response.id]);
+        });
+    });
   }
 
   handleCreateVideo(): void {

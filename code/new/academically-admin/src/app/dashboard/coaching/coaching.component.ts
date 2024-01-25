@@ -13,6 +13,7 @@ import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { ServiceDataService } from '@shared/services/service-data.service';
 import { CoachingsServiceProxy, CoachingType, CreateCoachingDto, ServicesType } from '@shared/service-proxies/service-proxies';
+import { CreateServiceComponent } from '@shared/modals/create-service/create-service.component';
 
 
 @Component({
@@ -53,6 +54,29 @@ export class CoachingComponent extends AppComponentBase implements OnInit, After
 
   ngAfterViewInit(): void {
     this._cdr.detectChanges();
+  }
+
+  onCreateCoaching(): void {
+    const model = new CreateCoachingDto();
+    model.init({ type: CoachingType.Single, name: '' });
+
+    const modalSettings = this.defaultModalSettings as ModalOptions<CreateServiceComponent>;
+    modalSettings.initialState = { model, servicesType: ServicesType.Coaching };
+    modalSettings.class = 'modal-dialog-centered modal-dialog-create-service';
+    modalSettings.backdrop = true;
+    modalSettings.ignoreBackdropClick = false;
+    modalSettings.keyboard = true;
+    const modal = this._modalService.show(CreateServiceComponent, modalSettings);
+
+    modal.content.onCreateService.subscribe(coaching => {
+      this._coachingService.create(coaching)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(async response => {
+          this.notify.success(this.l('SavedSuccessfully'));
+          this._serviceData.createServiceDiscussion(response.id, ServicesType.Coaching, this.currentUserId);
+          await this._router.navigate(['/app/dashboard/coaching/', response.id]);
+        });
+    });
   }
 
   onNewCoachingClick(): void {

@@ -114,6 +114,7 @@ import { ServiceMetricsComponent } from '@shared/components/service-metrics/serv
 import { ServiceCreateComponent } from '@shared/components/service-create/service-create.component';
 import { ServiceCreateOfferComponent } from '@shared/components/service-create-offer/service-create-offer.component';
 import { ServiceCardOfferComponent } from '@shared/components/service-card-offer/service-card-offer.component';
+import { CreateServiceComponent } from '@shared/modals/create-service/create-service.component';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -207,7 +208,8 @@ FullCalendarModule.registerPlugins([
     ServiceMetricsComponent,
     ServiceCreateComponent,
     ServiceCreateOfferComponent,
-    ServiceCardOfferComponent
+    ServiceCardOfferComponent,
+    CreateServiceComponent
   ],
   imports: [
     CommonModule,
@@ -334,7 +336,8 @@ FullCalendarModule.registerPlugins([
     ServiceMetricsComponent,
     ServiceCreateComponent,
     ServiceCreateOfferComponent,
-    ServiceCardOfferComponent
+    ServiceCardOfferComponent,
+    CreateServiceComponent
   ],
 })
 export class AppSharedModule { }
