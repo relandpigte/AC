@@ -14350,6 +14350,62 @@ export class EventsServiceProxy {
      * @param body (optional) 
      * @return Success
      */
+    updateDetails(body: UpdateEventDetailsDto | undefined): Observable<EventDto> {
+        let url_ = this.baseUrl + "/api/services/app/Events/UpdateDetails";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateDetails(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateDetails(<any>response_);
+                } catch (e) {
+                    return <Observable<EventDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateDetails(response: HttpResponseBase): Observable<EventDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = EventDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
     create(body: CreateEventDto | undefined): Observable<EventDto> {
         let url_ = this.baseUrl + "/api/services/app/Events/Create";
         url_ = url_.replace(/[?&]$/, "");
@@ -43961,6 +44017,7 @@ export class Event implements IEvent {
     price: number | undefined;
     frequencyType: EventFrequencyType;
     eventDateTime: moment.Moment | undefined;
+    eventDateTimeEnd: moment.Moment | undefined;
     endDate: moment.Moment | undefined;
     duration: number | undefined;
     delayType: ServiceDelayType;
@@ -44046,6 +44103,7 @@ export class Event implements IEvent {
     children: Event[] | undefined;
     studentEvents: StudentEvent[] | undefined;
     eventPresenters: EventPresenter[] | undefined;
+    eventTopics: EventTopic[] | undefined;
 
     constructor(data?: IEvent) {
         if (data) {
@@ -44075,6 +44133,7 @@ export class Event implements IEvent {
             this.price = _data["price"];
             this.frequencyType = _data["frequencyType"];
             this.eventDateTime = _data["eventDateTime"] ? moment(_data["eventDateTime"].toString()) : <any>undefined;
+            this.eventDateTimeEnd = _data["eventDateTimeEnd"] ? moment(_data["eventDateTimeEnd"].toString()) : <any>undefined;
             this.endDate = _data["endDate"] ? moment(_data["endDate"].toString()) : <any>undefined;
             this.duration = _data["duration"];
             this.delayType = _data["delayType"];
@@ -44172,6 +44231,11 @@ export class Event implements IEvent {
                 for (let item of _data["eventPresenters"])
                     this.eventPresenters.push(EventPresenter.fromJS(item));
             }
+            if (Array.isArray(_data["eventTopics"])) {
+                this.eventTopics = [] as any;
+                for (let item of _data["eventTopics"])
+                    this.eventTopics.push(EventTopic.fromJS(item));
+            }
         }
     }
 
@@ -44201,6 +44265,7 @@ export class Event implements IEvent {
         data["price"] = this.price;
         data["frequencyType"] = this.frequencyType;
         data["eventDateTime"] = this.eventDateTime ? this.eventDateTime.toISOString() : <any>undefined;
+        data["eventDateTimeEnd"] = this.eventDateTimeEnd ? this.eventDateTimeEnd.toISOString() : <any>undefined;
         data["endDate"] = this.endDate ? this.endDate.toISOString() : <any>undefined;
         data["duration"] = this.duration;
         data["delayType"] = this.delayType;
@@ -44298,6 +44363,11 @@ export class Event implements IEvent {
             for (let item of this.eventPresenters)
                 data["eventPresenters"].push(item.toJSON());
         }
+        if (Array.isArray(this.eventTopics)) {
+            data["eventTopics"] = [];
+            for (let item of this.eventTopics)
+                data["eventTopics"].push(item.toJSON());
+        }
         return data; 
     }
 
@@ -44327,6 +44397,7 @@ export interface IEvent {
     price: number | undefined;
     frequencyType: EventFrequencyType;
     eventDateTime: moment.Moment | undefined;
+    eventDateTimeEnd: moment.Moment | undefined;
     endDate: moment.Moment | undefined;
     duration: number | undefined;
     delayType: ServiceDelayType;
@@ -44412,6 +44483,7 @@ export interface IEvent {
     children: Event[] | undefined;
     studentEvents: StudentEvent[] | undefined;
     eventPresenters: EventPresenter[] | undefined;
+    eventTopics: EventTopic[] | undefined;
 }
 
 export enum EventAttributes {
@@ -44443,6 +44515,7 @@ export class EventDto implements IEventDto {
     price: number | undefined;
     frequencyType: EventFrequencyType;
     eventDateTime: moment.Moment | undefined;
+    eventDateTimeEnd: moment.Moment | undefined;
     endDate: moment.Moment | undefined;
     duration: number;
     replayType: EventReplayType;
@@ -44532,6 +44605,9 @@ export class EventDto implements IEventDto {
     isPurchased: boolean;
     purchased: UserDto[] | undefined;
     hasReviewed: boolean;
+    eventTopics: EventTopicDto[] | undefined;
+    topics: string[] | undefined;
+    newTopics: string[] | undefined;
 
     constructor(data?: IEventDto) {
         if (data) {
@@ -44560,6 +44636,7 @@ export class EventDto implements IEventDto {
             this.price = _data["price"];
             this.frequencyType = _data["frequencyType"];
             this.eventDateTime = _data["eventDateTime"] ? moment(_data["eventDateTime"].toString()) : <any>undefined;
+            this.eventDateTimeEnd = _data["eventDateTimeEnd"] ? moment(_data["eventDateTimeEnd"].toString()) : <any>undefined;
             this.endDate = _data["endDate"] ? moment(_data["endDate"].toString()) : <any>undefined;
             this.duration = _data["duration"];
             this.replayType = _data["replayType"];
@@ -44657,6 +44734,21 @@ export class EventDto implements IEventDto {
                     this.purchased.push(UserDto.fromJS(item));
             }
             this.hasReviewed = _data["hasReviewed"];
+            if (Array.isArray(_data["eventTopics"])) {
+                this.eventTopics = [] as any;
+                for (let item of _data["eventTopics"])
+                    this.eventTopics.push(EventTopicDto.fromJS(item));
+            }
+            if (Array.isArray(_data["topics"])) {
+                this.topics = [] as any;
+                for (let item of _data["topics"])
+                    this.topics.push(item);
+            }
+            if (Array.isArray(_data["newTopics"])) {
+                this.newTopics = [] as any;
+                for (let item of _data["newTopics"])
+                    this.newTopics.push(item);
+            }
         }
     }
 
@@ -44685,6 +44777,7 @@ export class EventDto implements IEventDto {
         data["price"] = this.price;
         data["frequencyType"] = this.frequencyType;
         data["eventDateTime"] = this.eventDateTime ? this.eventDateTime.toISOString() : <any>undefined;
+        data["eventDateTimeEnd"] = this.eventDateTimeEnd ? this.eventDateTimeEnd.toISOString() : <any>undefined;
         data["endDate"] = this.endDate ? this.endDate.toISOString() : <any>undefined;
         data["duration"] = this.duration;
         data["replayType"] = this.replayType;
@@ -44782,6 +44875,21 @@ export class EventDto implements IEventDto {
                 data["purchased"].push(item.toJSON());
         }
         data["hasReviewed"] = this.hasReviewed;
+        if (Array.isArray(this.eventTopics)) {
+            data["eventTopics"] = [];
+            for (let item of this.eventTopics)
+                data["eventTopics"].push(item.toJSON());
+        }
+        if (Array.isArray(this.topics)) {
+            data["topics"] = [];
+            for (let item of this.topics)
+                data["topics"].push(item);
+        }
+        if (Array.isArray(this.newTopics)) {
+            data["newTopics"] = [];
+            for (let item of this.newTopics)
+                data["newTopics"].push(item);
+        }
         return data; 
     }
 
@@ -44810,6 +44918,7 @@ export interface IEventDto {
     price: number | undefined;
     frequencyType: EventFrequencyType;
     eventDateTime: moment.Moment | undefined;
+    eventDateTimeEnd: moment.Moment | undefined;
     endDate: moment.Moment | undefined;
     duration: number;
     replayType: EventReplayType;
@@ -44899,6 +45008,9 @@ export interface IEventDto {
     isPurchased: boolean;
     purchased: UserDto[] | undefined;
     hasReviewed: boolean;
+    eventTopics: EventTopicDto[] | undefined;
+    topics: string[] | undefined;
+    newTopics: string[] | undefined;
 }
 
 export class EventDtoPagedResultDto implements IEventDtoPagedResultDto {
@@ -46159,6 +46271,136 @@ export enum EventScheduleFilter {
 export enum EventStatus {
     Draft = 0,
     Published = 1,
+}
+
+export class EventTopic implements IEventTopic {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    eventId: string;
+    disciplineTaxonomyId: string;
+    event: Event;
+    disciplineTaxonomy: DisciplineTaxonomy;
+
+    constructor(data?: IEventTopic) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.eventId = _data["eventId"];
+            this.disciplineTaxonomyId = _data["disciplineTaxonomyId"];
+            this.event = _data["event"] ? Event.fromJS(_data["event"]) : <any>undefined;
+            this.disciplineTaxonomy = _data["disciplineTaxonomy"] ? DisciplineTaxonomy.fromJS(_data["disciplineTaxonomy"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): EventTopic {
+        data = typeof data === 'object' ? data : {};
+        let result = new EventTopic();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["eventId"] = this.eventId;
+        data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
+        data["event"] = this.event ? this.event.toJSON() : <any>undefined;
+        data["disciplineTaxonomy"] = this.disciplineTaxonomy ? this.disciplineTaxonomy.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): EventTopic {
+        const json = this.toJSON();
+        let result = new EventTopic();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IEventTopic {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    eventId: string;
+    disciplineTaxonomyId: string;
+    event: Event;
+    disciplineTaxonomy: DisciplineTaxonomy;
+}
+
+export class EventTopicDto implements IEventTopicDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    eventId: string;
+    disciplineTaxonomyId: string;
+    disciplineTaxonomy: DisciplineTaxonomyDto;
+
+    constructor(data?: IEventTopicDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.eventId = _data["eventId"];
+            this.disciplineTaxonomyId = _data["disciplineTaxonomyId"];
+            this.disciplineTaxonomy = _data["disciplineTaxonomy"] ? DisciplineTaxonomyDto.fromJS(_data["disciplineTaxonomy"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): EventTopicDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new EventTopicDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["eventId"] = this.eventId;
+        data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
+        data["disciplineTaxonomy"] = this.disciplineTaxonomy ? this.disciplineTaxonomy.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): EventTopicDto {
+        const json = this.toJSON();
+        let result = new EventTopicDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IEventTopicDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    eventId: string;
+    disciplineTaxonomyId: string;
+    disciplineTaxonomy: DisciplineTaxonomyDto;
 }
 
 /** 0 = Single 1 = Series */
@@ -58081,6 +58323,117 @@ export interface IUpdateCourseSettingsDto {
     endTime: string | undefined;
     commentsVisibility: CommentSetting;
     commentsNeedAdminApproval: boolean | undefined;
+}
+
+export class UpdateEventDetailsDto implements IUpdateEventDetailsDto {
+    id: string;
+    name: string | undefined;
+    description: string | undefined;
+    categories: string | undefined;
+    thumbnailDocumentId: string | undefined;
+    languageId: string | undefined;
+    pricingType: PricingType;
+    price: number | undefined;
+    eventDateTime: moment.Moment | undefined;
+    eventDateTimeEnd: moment.Moment | undefined;
+    endDate: moment.Moment | undefined;
+    recursionType: EventRecursionType;
+    topics: string[] | undefined;
+    newTopics: string[] | undefined;
+
+    constructor(data?: IUpdateEventDetailsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.categories = _data["categories"];
+            this.thumbnailDocumentId = _data["thumbnailDocumentId"];
+            this.languageId = _data["languageId"];
+            this.pricingType = _data["pricingType"];
+            this.price = _data["price"];
+            this.eventDateTime = _data["eventDateTime"] ? moment(_data["eventDateTime"].toString()) : <any>undefined;
+            this.eventDateTimeEnd = _data["eventDateTimeEnd"] ? moment(_data["eventDateTimeEnd"].toString()) : <any>undefined;
+            this.endDate = _data["endDate"] ? moment(_data["endDate"].toString()) : <any>undefined;
+            this.recursionType = _data["recursionType"];
+            if (Array.isArray(_data["topics"])) {
+                this.topics = [] as any;
+                for (let item of _data["topics"])
+                    this.topics.push(item);
+            }
+            if (Array.isArray(_data["newTopics"])) {
+                this.newTopics = [] as any;
+                for (let item of _data["newTopics"])
+                    this.newTopics.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): UpdateEventDetailsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateEventDetailsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["categories"] = this.categories;
+        data["thumbnailDocumentId"] = this.thumbnailDocumentId;
+        data["languageId"] = this.languageId;
+        data["pricingType"] = this.pricingType;
+        data["price"] = this.price;
+        data["eventDateTime"] = this.eventDateTime ? this.eventDateTime.toISOString() : <any>undefined;
+        data["eventDateTimeEnd"] = this.eventDateTimeEnd ? this.eventDateTimeEnd.toISOString() : <any>undefined;
+        data["endDate"] = this.endDate ? this.endDate.toISOString() : <any>undefined;
+        data["recursionType"] = this.recursionType;
+        if (Array.isArray(this.topics)) {
+            data["topics"] = [];
+            for (let item of this.topics)
+                data["topics"].push(item);
+        }
+        if (Array.isArray(this.newTopics)) {
+            data["newTopics"] = [];
+            for (let item of this.newTopics)
+                data["newTopics"].push(item);
+        }
+        return data; 
+    }
+
+    clone(): UpdateEventDetailsDto {
+        const json = this.toJSON();
+        let result = new UpdateEventDetailsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateEventDetailsDto {
+    id: string;
+    name: string | undefined;
+    description: string | undefined;
+    categories: string | undefined;
+    thumbnailDocumentId: string | undefined;
+    languageId: string | undefined;
+    pricingType: PricingType;
+    price: number | undefined;
+    eventDateTime: moment.Moment | undefined;
+    eventDateTimeEnd: moment.Moment | undefined;
+    endDate: moment.Moment | undefined;
+    recursionType: EventRecursionType;
+    topics: string[] | undefined;
+    newTopics: string[] | undefined;
 }
 
 export class UpdateEventDto implements IUpdateEventDto {

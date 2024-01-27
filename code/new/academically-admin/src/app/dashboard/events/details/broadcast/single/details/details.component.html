@@ -1,146 +1,379 @@
-<form class="form-horizontal" autocomplete="off" #form="ngForm">
-  <div class="row">
+<form autocomplete="off" #f="ngForm" [loader]="isLoading">
+  <div class="form-group">
+    <label class="form-label font-weight-bold">Broadcast name</label>
+    <input [(ngModel)]="model.name" #nameModel="ngModel" #nameEl
+           class="form-control" type="text" id="name" name="name"
+           placeholder="Write your event name here..." required/>
+    <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
+  </div>
 
-    <div class="col-8" [loader]="isLoading">
-
-      <div class="card">
-        <div class="card-header">
-          <h4 class="card-header-title">
-            {{ (eventType === EventType.Single ? 'EventName' : 'EventSeriesName') | localize }}
-          </h4>
-        </div>
-        <div class="card-body">
-          <div class="form-group required mb-0">
-            <input [(ngModel)]="model.name" #nameModel="ngModel" #nameEl class="form-control" type="text" id="name"
-              name="name" required
-              [placeholder]="(eventType === EventType.Single ? 'WriteYourEventNameHere' : 'WriteYourEventSeriesNameHere') | localize" />
-            <abp-validation-summary [control]="nameModel" [controlEl]="nameEl">
-            </abp-validation-summary>
-          </div>
-        </div>
+  <div class="form-group">
+    <label class="form-label font-weight-bold">Broadcast description</label>
+    <small class="form-text text-body-secondary">
+      This is how others will learn about your event, so make it good! <a href="#" class="text-primary">See example</a>
+    </small>
+    <quill-editor [(ngModel)]="model.description" id="description" name="description" placeholder="Write your description here...">
+      <div quill-editor-toolbar>
+        <span class="ql-formats">
+          <button class="ql-bold"></button>
+          <button class="ql-italic"></button>
+          <button class="ql-underline"></button>
+          <button class="ql-strike"></button>
+        </span>
+        <span class="ql-formats">
+          <select class="ql-color ql-color-picker" [title]="'Text color'">
+          </select>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-blockquote"></button>
+          <button class="ql-code-block"></button>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-list" value="ordered"></button>
+          <button class="ql-list" value="bullet"></button>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-script" value="sub"></button>
+          <button class="ql-script" value="super"></button>
+        </span>
+        <span class="ql-formats">
+          <select class="ql-align">
+          </select>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-clean"></button>
+        </span>
       </div>
+    </quill-editor>
+  </div>
 
-      <div class="card">
-        <div class="card-header">
-          <h4 class="card-header-title">
-            {{ 'Subtitle' | localize | titlecase }}
-          </h4>
-        </div>
-        <div class="card-body">
-          <div class="form-group mb-0">
-            <textarea [rows]="4" [(ngModel)]="model.description" #descriptionModel="ngModel" #descriptionEl
-              class="form-control" id="description" name="description"
-              [placeholder]="'WriteYourSubtitleHere' | localize">
-            </textarea>
-          </div>
-        </div>
+  <div class="form-group form-datetime">
+    <div class="form-row">
+      <div class="col">
+        <label class="form-label font-weight-bold">Date & time</label>
       </div>
-
-      <div class="card">
-        <div class="card-header">
-          <h4 class="card-header-title">
-            {{ 'Topics' | localize | titlecase }}
-          </h4>
-        </div>
-        <div class="card-body">
-          <div class="form-group required mb-0">
-            <input [(ngModel)]="category" #categoryModel="ngModel" #categoryEl class="form-control" type="text"
-              id="category" name="category" required (keydown)="onCategoryKeyDown($event)"
-              [placeholder]="'PressEnterToAddMore' | localize" />
-            <div class="ac-alerts">
-              <div *ngFor="let category of categories" class="alert alert-info alert-dismissible ac-alert" role="alert">
-                {{ category }}
-                <button (click)="onRemoveCategoryClick(category)" type="button" class="close" data-dismiss="alert"
-                  aria-label="Close">
-                  <span aria-hidden="true">×</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
-
-    <div class="col-4">
-
-      <div class="card" [loader]="isLoading || isUploadingImage">
-        <div class="card-header">
-          <h4 class="card-header-title">
-            {{ (eventType === EventType.Single ? 'EventThumbnail' : 'EventSeriesThumbnail') | localize }}
-          </h4>
-        </div>
-        <div class="card-body position-relative">
-          <app-document-uploader [previewImages]="true" [largeImagePreview]="true" [maxFiles]="1" [cropImages]="true"
-            [cropperAspectRatioWidth]="350" [cropperAspectRationHeight]="263"
-            [allowedExtensions]="allowedImageExtensions">
-          </app-document-uploader>
-        </div>
-      </div>
-
-      <div class="card" [loader]="isLoading">
-        <div class="card-header">
-          <h4 class="card-header-title">
-            {{ 'Language' | localize }}
-          </h4>
-        </div>
-        <div class="card-body">
-          <div class="form-group mb-0">
-            <select class="custom-select" select2 [defaultValue]="model.languageId"
-              (select2ValueChange)="model.languageId = $event" [(ngModel)]="model.languageId" id="language"
-              name="language" #languageIdModel="ngModel" #languageIdEl>
-              <option *ngFor="let langauge of languages" [value]="langauge.id">
-                {{ langauge.name | localize }}
-              </option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" [loader]="isLoading">
-        <div class="card-header">
-          <h4 class="card-header-title">
-            {{ 'Pricing' | localize }}
-          </h4>
-        </div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-auto mr-n4">
-              <div class="custom-control custom-radio">
-                <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
-                  id="free" [value]="PricingType.Free">
-                <label class="custom-control-label" for="free"></label>
-              </div>
-            </div>
-            <div class="col">
-              <label class="form-check-label" for="free">
-                {{ 'Free' | localize | titlecase }}
-                <p class="small text-muted">{{ 'FreeDescription' | localize }}</p>
-              </label>
+    <div class="d-flex align-items-center justify-content-between w-100p gap-8">
+      <div class="d-flex gap-16 align-items-center">
+        <div class="input-group input-group-merge">
+          <input
+            [(ngModel)]="eventDateTime"
+            [bsConfig]="datePickerConfig"
+            (bsValueChange)="onEventDateTimeChange()"
+            name="start-date" bsDatepicker
+            class="form-control form-control-appended"
+            type="text"
+            placeholder="Start date"
+          />
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <i class="fe fe-calendar"></i>
             </div>
           </div>
-          <div class="row">
-            <div class="col-auto mr-n4">
-              <div class="custom-control custom-radio">
-                <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"
-                  id="fixedFee" [value]="PricingType.FixedPrice">
-                <label class="custom-control-label" for="fixedFee"></label>
-              </div>
-            </div>
-            <div class="col">
-              <label class="form-check-label" for="fixedFee">
-                {{ 'FixedFee' | localize }}
-                <p class="small text-muted">{{ 'FixedFeeDescription' | localize }}</p>
-              </label>
-              <div *ngIf="model.pricingType === PricingType.FixedPrice">
-                <input [(ngModel)]="model.price" class=" form-control" type="number" id="price" name="price" required />
-              </div>
+        </div>
+        <div class="input-group input-group-merge">
+          <p-calendar
+            [(ngModel)]="eventDateTime"
+            (onSelect)="onEventDateTimeChange()"
+            id="start-time" name="start-time"
+            [timeOnly]="true"
+            hourFormat="12"
+            placeholder="Start time"
+            class="form-control form-control-appended"
+          ></p-calendar>
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <i class="fe fe-clock"></i>
             </div>
           </div>
         </div>
       </div>
-
+      <div>to</div>
+      <div>
+        <div class="input-group input-group-merge">
+          <p-calendar
+            id="time-end" name="time-end" [timeOnly]="true" hourFormat="12" placeholder="End time"
+            class="form-control form-control-appended" [(ngModel)]="eventDateTimeEnd" (onSelect)="onEventDateTimeEndChange()"
+          ></p-calendar>
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <i class="fe fe-clock"></i>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
+  <div class="form-group">
+    <select class="custom-select" [disabled]="isLoading" select2 [defaultValue]="userTimeZone.id"
+            (select2ValueChange)="onTimeZoneChange($event)" [(ngModel)]="userTimeZone.id" id="timeZoneId"
+            name="timeZoneId" #timeZoneIdModel="ngModel" #timeZoneIdEl required>
+      <option *ngFor="let timeZone of timeZones" [value]="timeZone.id">
+        {{ timeZone.name }}
+      </option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <div class="form-row">
+      <div class="col">
+        <label class="form-label font-weight-bold">Repeat broadcast</label>
+      </div>
+    </div>
+    <div class="d-flex align-items-center gap-8">
+      <div class="flex-grow-1" [style.width.px]="0">
+        <select [(ngModel)]="model.recursionType" (change)="onRecursionTypeChange()" class="custom-select" name="select" id="select">
+          <option [ngValue]="EventRecursionType.Daily">
+            {{ 'Daily' | localize }}
+          </option>
+          <option [ngValue]="EventRecursionType.Weekly">
+            {{ 'Weekly' | localize }}
+          </option>
+          <option [ngValue]="EventRecursionType.Monthly">
+            {{ 'Monthly' | localize }}
+          </option>
+        </select>
+      </div>
+      <div>to</div>
+      <div class="flex-grow-1" [style.width.px]="0">
+        <div class="form-row">
+          <div class="col-6">
+            <div class="input-group input-group-merge">
+              <input
+                [(ngModel)]="endDate"
+                [bsConfig]="datePickerConfig"
+                (bsValueChange)="onEventEndDateChange()"
+                name="end-date" bsDatepicker
+                class="form-control form-control-appended"
+                type="text" placeholder="End date"
+              />
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <i class="fe fe-calendar"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="input-group input-group-merge">
+              <p-calendar
+                [(ngModel)]="endDate"
+                [timeOnly]="true"
+                (onSelect)="onEventEndDateChange()"
+                hourFormat="12"
+                id="end-time" name="end-time"
+                class="form-control form-control-appended"
+                placeholder="End time"
+              ></p-calendar>
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <i class="fe fe-clock"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label font-weight-bold">Topics</label>
+    <small class="form-text text-body-secondary">
+      Provide up to 10 topics to help users find your event.
+    </small>
+    <div class="form-control d-flex justify-content-start align-items-center position-relative minh-40-px h-auto">
+      <app-pill-picker
+        [choices]="topicsChoices"
+        [maxSelected]="10"
+        keywordPrefix="#"
+        [keywordPlaceholder]="'Add a tag' | localize"
+        [autocompleteTemplateRef]="topicRowItem"
+        autocompleteNoDataText="{{ 'Community.NoTopicsFoundEnterToCreate' | localize }}"
+        [isLoading]="isLoadingTopics"
+        (onUpdateModel)="handleTopicsModelUpdate($event)"
+        (onKeywordUpdate)="handleTopicsKeywordUpdate($event)"
+        [selected]="selectedTopics"
+      ></app-pill-picker>
+    </div>
+  </div>
+
+  <div class="form-group form-price">
+    <div class="form-row">
+      <div class="col">
+        <label class="form-label font-weight-bold">Price</label>
+      </div>
+    </div>
+    <div class="d-flex align-items-center gap-16">
+      <div class="flex-grow-1" [style.width.px]="0">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="custom-control custom-radio d-inline">
+            <input type="radio" class="custom-control-input" id="chargePricingType"
+                   name="chargePricingType" [(ngModel)]="model.pricingType" [value]="PricingType.FixedPrice"/>
+            <label class="custom-control-label" for="chargePricingType">Charge a fee</label>
+          </div>
+          <div class="custom-control custom-radio d-inline">
+            <input type="radio" class="custom-control-input" id="freePricingType"
+                   name="freePricingType" [(ngModel)]="model.pricingType" [value]="PricingType.Free"/>
+            <label class="custom-control-label" for="freePricingType">Free</label>
+          </div>
+          <select class="custom-select" name="select" id="selectss">
+            <option value="gbp">£GBP</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex-grow-1" [style.width.px]="0">
+        <div class="form-row">
+          <div class="col-12">
+            <input [(ngModel)]="model.price" name="price" id="price" type="number" placeholder="Input a price" class="form-control">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label font-weight-bold">Broadcast cover thumbnail</label>
+    <small class="form-text text-body-secondary">
+      Please use an image no larger than 1200px * 600px.
+    </small>
+    <app-document-uploader
+      [previewImages]="true"
+      [largeImagePreview]="true"
+      [maxFiles]="1"
+      [cropImages]="true"
+      [cropperAspectRatioWidth]="350"
+      [cropperAspectRationHeight]="263"
+      noFilePlaceholder="Drag and drop or click to upload"
+      placeholderHeight="222px"
+      [allowedExtensions]="allowedImageExtensions">
+    </app-document-uploader>
   </div>
 </form>
+
+<ng-template #topicRowItem let-item="item" let-isLoading="isLoading">
+  <div *ngIf="isLoading" class="d-flex flex-column flex-grow-1 topic-row gap-4">
+    <div class="box-shimmer-bar" [style.width.%]="80" [style.min-height.px]="16"></div>
+    <div class="box-shimmer-bar" [style.width.%]="45" [style.min-height.px]="12"></div>
+  </div>
+  <div *ngIf="!isLoading" class="d-flex flex-column flex-grow-1 topic-row">
+    <div class="topic-row-name">#{{ item.name }}</div>
+    <div class="topic-row-followers">{{ 'Community.Topics.Followers' | localize: (item.followerCount | shortNum: 1)  }}</div>
+  </div>
+</ng-template>
+
+<!--<form class="form-horizontal" autocomplete="off" #form="ngForm">-->
+<!--  <div class="row">-->
+
+<!--    <div class="col-8" [loader]="isLoading">-->
+
+
+<!--      <div class="card">-->
+<!--        <div class="card-header">-->
+<!--          <h4 class="card-header-title">-->
+<!--            {{ 'Topics' | localize | titlecase }}-->
+<!--          </h4>-->
+<!--        </div>-->
+<!--        <div class="card-body">-->
+<!--          <div class="form-group required mb-0">-->
+<!--            <input [(ngModel)]="category" #categoryModel="ngModel" #categoryEl class="form-control" type="text"-->
+<!--                   id="category" name="category" required (keydown)="onCategoryKeyDown($event)"-->
+<!--                   [placeholder]="'PressEnterToAddMore' | localize"/>-->
+<!--            <div class="ac-alerts">-->
+<!--              <div *ngFor="let category of categories" class="alert alert-info alert-dismissible ac-alert" role="alert">-->
+<!--                {{ category }}-->
+<!--                <button (click)="onRemoveCategoryClick(category)" type="button" class="close" data-dismiss="alert"-->
+<!--                        aria-label="Close">-->
+<!--                  <span aria-hidden="true">×</span>-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--    </div>-->
+
+<!--    <div class="col-4">-->
+
+<!--      <div class="card" [loader]="isLoading || isUploadingImage">-->
+<!--        <div class="card-header">-->
+<!--          <h4 class="card-header-title">-->
+<!--            {{ (eventType === EventType.Single ? 'EventThumbnail' : 'EventSeriesThumbnail') | localize }}-->
+<!--          </h4>-->
+<!--        </div>-->
+<!--        <div class="card-body position-relative">-->
+<!--          <app-document-uploader [previewImages]="true" [largeImagePreview]="true" [maxFiles]="1" [cropImages]="true"-->
+<!--                                 [cropperAspectRatioWidth]="350" [cropperAspectRationHeight]="263"-->
+<!--                                 [allowedExtensions]="allowedImageExtensions">-->
+<!--          </app-document-uploader>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="card" [loader]="isLoading">-->
+<!--        <div class="card-header">-->
+<!--          <h4 class="card-header-title">-->
+<!--            {{ 'Language' | localize }}-->
+<!--          </h4>-->
+<!--        </div>-->
+<!--        <div class="card-body">-->
+<!--          <div class="form-group mb-0">-->
+<!--            <select class="custom-select" select2 [defaultValue]="model.languageId"-->
+<!--                    (select2ValueChange)="model.languageId = $event" [(ngModel)]="model.languageId" id="language"-->
+<!--                    name="language" #languageIdModel="ngModel" #languageIdEl>-->
+<!--              <option *ngFor="let langauge of languages" [value]="langauge.id">-->
+<!--                {{ langauge.name | localize }}-->
+<!--              </option>-->
+<!--            </select>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="card" [loader]="isLoading">-->
+<!--        <div class="card-header">-->
+<!--          <h4 class="card-header-title">-->
+<!--            {{ 'Pricing' | localize }}-->
+<!--          </h4>-->
+<!--        </div>-->
+<!--        <div class="card-body">-->
+<!--          <div class="row">-->
+<!--            <div class="col-auto mr-n4">-->
+<!--              <div class="custom-control custom-radio">-->
+<!--                <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"-->
+<!--                       id="free" [value]="PricingType.Free">-->
+<!--                <label class="custom-control-label" for="free"></label>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="col">-->
+<!--              <label class="form-check-label" for="free">-->
+<!--                {{ 'Free' | localize | titlecase }}-->
+<!--                <p class="small text-muted">{{ 'FreeDescription' | localize }}</p>-->
+<!--              </label>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="row">-->
+<!--            <div class="col-auto mr-n4">-->
+<!--              <div class="custom-control custom-radio">-->
+<!--                <input [(ngModel)]="model.pricingType" class="custom-control-input" type="radio" name="pricing"-->
+<!--                       id="fixedFee" [value]="PricingType.FixedPrice">-->
+<!--                <label class="custom-control-label" for="fixedFee"></label>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="col">-->
+<!--              <label class="form-check-label" for="fixedFee">-->
+<!--                {{ 'FixedFee' | localize }}-->
+<!--                <p class="small text-muted">{{ 'FixedFeeDescription' | localize }}</p>-->
+<!--              </label>-->
+<!--              <div *ngIf="model.pricingType === PricingType.FixedPrice">-->
+<!--                <input [(ngModel)]="model.price" class=" form-control" type="number" id="price" name="price" required/>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--    </div>-->
+
+<!--  </div>-->
+<!--</form>-->

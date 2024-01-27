@@ -26,6 +26,7 @@ namespace Academically.Domain.Entities
         public decimal? Price { get; set; }
         public EventFrequencyType? FrequencyType { get; set; }
         public DateTime? EventDateTime { get; set; }
+        public DateTime? EventDateTimeEnd { get; set; }
         public DateTime? EndDate { get; set; }
         public int? Duration { get; set; }
         public ServiceDelayType? DelayType { get; set; }
@@ -116,6 +117,8 @@ namespace Academically.Domain.Entities
         public virtual ICollection<Event> Children { get; set; }
         public virtual ICollection<StudentEvent> StudentEvents { get; set; }
         public virtual ICollection<EventPresenter> EventPresenters { get; set; }
+        
+        public virtual ICollection<EventTopic> EventTopics { get; set; }
 
         public Event()
         {
