@@ -50,6 +50,7 @@ namespace Academically.Services.Events
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IExploreRepository _exploreRepository;
         private readonly IRepository<ServiceReview, Guid> _serviceReviewRepository;
+        private readonly IRepository<DisciplineTaxonomy, Guid> _disciplineTaxonomyRepository;
 
         public EventsAppService(
             RoleManager roleManager,
@@ -65,7 +66,7 @@ namespace Academically.Services.Events
             IRepository<ServicePurchase, Guid> servicePurchasesRepository,
             IDocumentsDomainService documentsDomainService,
             IExploreRepository exploreRepository,
-            IRepository<ServiceReview, Guid> serviceReviewRepository) : base(repository)
+            IRepository<ServiceReview, Guid> serviceReviewRepository, IRepository<DisciplineTaxonomy, Guid> disciplineTaxonomyRepository) : base(repository)
         {
             LocalizationSourceName = AcademicallyConsts.LocalizationSourceName;
 
@@ -82,6 +83,7 @@ namespace Academically.Services.Events
             _documentsDomainService = documentsDomainService;
             _exploreRepository = exploreRepository;
             _serviceReviewRepository = serviceReviewRepository;
+            _disciplineTaxonomyRepository = disciplineTaxonomyRepository;
         }
 
         protected override IQueryable<Event> CreateFilteredQuery(PagedEventResultRequestDto input)
@@ -135,6 +137,8 @@ namespace Academically.Services.Events
                     .ThenInclude(e => e.CoverPhotoDocument)
                 .Include(e => e.CreatorUser)
                     .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.EventTopics)
+                    .ThenInclude(e => e.DisciplineTaxonomy)
                 .Select(e => ObjectMapper.Map<EventDto>(e))
                 .FirstOrDefaultAsync();
 
@@ -757,6 +761,51 @@ namespace Academically.Services.Events
 
             var created = await Repository.InsertAsync(existing);
             return ObjectMapper.Map<EventDto>(created);
+        }
+
+        public async Task<EventDto> UpdateDetails(UpdateEventDetailsDto input)
+        {
+            var @event = await Repository.GetAll()
+                .Include(e => e.EventTopics)
+                .Where(c => c.Id == input.Id)
+                .SingleOrDefaultAsync();
+            
+            ObjectMapper.Map(input, @event);
+            
+            var topicIds = input.Topics?.Count() > 0 ? input.Topics.ToList() : new List<Guid>();
+            if (input.NewTopics != null && input.NewTopics.Any())
+            {
+                var otherTopicParent = await _disciplineTaxonomyRepository.FirstOrDefaultAsync(x => x.Name == "Other Topics");
+                if (otherTopicParent != null)
+                {
+                    foreach (var newTopic in input.NewTopics)
+                    {
+                        var topicId = await _disciplineTaxonomyRepository.InsertAndGetIdAsync(new DisciplineTaxonomy
+                        {
+                            ParentId = otherTopicParent.Id,
+                            Name = newTopic
+                        });
+
+                        topicIds.Add(topicId);
+                    }
+                }
+            }
+
+            // clear all course's topics so we can add the ones that are retained/selected from the frontend side
+            @event.EventTopics.Clear();
+            foreach (var topicId in topicIds)
+            {
+                @event.EventTopics.Add(new EventTopic
+                {
+                    EventId =  @event.Id,
+                    DisciplineTaxonomyId = topicId,
+                    CreationTime = DateTime.Now,
+                    CreatorUserId = AbpSession.GetUserId()
+                });
+            }
+            
+            await Repository.UpdateAsync(@event);
+            return ObjectMapper.Map<EventDto>(@event);
         }
     }
 }

@@ -1,21 +1,24 @@
-import { Component, OnInit, ViewChild, Injector } from '@angular/core';
+import { Component, OnInit, ViewChild, Injector, OnDestroy } from '@angular/core';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { DocumentUploaderComponent, DefaultFile } from '@app/_shared/components/document-uploader/document-uploader.component';
-import { DocumentDto, DocumentType, FileParameter, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
+import { DocumentDto, DocumentType, FileParameter, VideoAttachmentDto, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { UploadService } from '@app/_shared/services/upload.service';
+import { DragulaService } from 'ng2-dragula';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-video',
   templateUrl: './video.component.html',
   styleUrls: ['./video.component.less']
 })
-export class VideoComponent extends AppComponentBase implements OnInit {
+export class VideoComponent extends AppComponentBase implements OnInit, OnDestroy {
   @ViewChild(DocumentUploaderComponent, { static: true }) documentUploader: DocumentUploaderComponent;
   id: string;
   defaultFile: DefaultFile;
+  attachments: VideoAttachmentDto[] = [];
 
   allowedExtensions = fileUploadConfiguration.videoExtensions;
   document = new DocumentDto();
@@ -26,17 +29,24 @@ export class VideoComponent extends AppComponentBase implements OnInit {
     route: ActivatedRoute,
     private _videosService: VideosServiceProxy,
     private _uploadService: UploadService,
+    private _dragulaService: DragulaService
   ) {
     super(injector);
-    route.parent.parent.paramMap.subscribe(paramMap => {
-      if (paramMap.has('id')) {
-        this.id = paramMap.get('id');
-        this.getVideo();
-      }
+    this.id = route.snapshot.paramMap.get('id');
+
+    this._dragulaService.createGroup('Videos', {
+      revertOnSpill: true,
+      moves: (el, source, handle) => handle.classList.contains('drag-handle')
+    });
+
+    this._dragulaService.dropModel('Videos').subscribe(({ sourceModel }): void => {
+      this.updateVideoAttachmentDisplayOrder(sourceModel);
     });
   }
 
   ngOnInit(): void {
+    this.getVideo();
+    this.getAllVideoAttachments();
     this.documentUploader.filesChanged.subscribe((files: FileParameter[]) => {
       if (files && files.length) {
         const file = files[0].data as File;
@@ -88,6 +98,22 @@ export class VideoComponent extends AppComponentBase implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this._dragulaService.destroy('Videos');
+  }
+
+  private updateVideoAttachmentDisplayOrder(attachments: VideoAttachmentDto[]): void {
+    if (_.isEmpty(attachments)) {
+      return;
+    }
+
+    attachments.forEach((item, index): void => {
+      this._videosService.updateVideoAttachmentDisplayOrder(item.id, index)
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe();
+    });
+  }
+
   private getVideo(): void {
     this.isLoading = true;
     this._videosService.get(this.id)
@@ -111,5 +137,11 @@ export class VideoComponent extends AppComponentBase implements OnInit {
     this.defaultFile.url = this._uploadService.getFileUrl(this.document);
     this.defaultFile.size = this.document.size;
     this.documentUploader.defaultFile = this.defaultFile;
+  }
+
+  private getAllVideoAttachments(): void {
+    this._videosService.getAllVideoAttachments(this.id)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(attachments => this.attachments = attachments);
   }
 }

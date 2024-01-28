@@ -30,6 +30,7 @@ namespace Academically.Services.Events.Dto
         public decimal? Price { get; set; }
         public EventFrequencyType? FrequencyType { get; set; }
         public DateTime? EventDateTime { get; set; }
+        public DateTime? EventDateTimeEnd { get; set; }
         public DateTime? EndDate { get; set; }
         public int Duration { get; set; }
         public EventReplayType? ReplayType { get; set; }
@@ -119,6 +120,7 @@ namespace Academically.Services.Events.Dto
 
         public IEnumerable<EventDto> Children { get; set; }
         public int PopularityWeight { get; set; }
+        public int? CancellationPeriod { get; set; }
 
         [NotMapped]
         public bool IsSaved { get; set; }
@@ -131,5 +133,13 @@ namespace Academically.Services.Events.Dto
         
         [NotMapped]
         public bool HasReviewed { get; set; }
+        
+        public IEnumerable<EventTopicDto> EventTopics { get; set; }
+
+        [NotMapped]
+        public IEnumerable<Guid> Topics { get; set; }
+
+        [NotMapped]
+        public IEnumerable<string> NewTopics { get; set; }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
@@ -36,6 +38,7 @@ namespace Academically.Services.Videos
         private readonly IRepository<ServicePurchase, Guid> _servicePurchasesRepository;
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IExploreRepository _exploreRepository;
+        private readonly IRepository<VideoAttachment, Guid> _videoAttachmentRepository;
 
         public VideosAppService(
             IRepository<Video, Guid> videosRepository,
@@ -44,8 +47,8 @@ namespace Academically.Services.Videos
             IRepository<SavedService, Guid> savedServiceRepository,
             IRepository<ServicePurchase, Guid> servicePurchasesRepository,
             IDocumentsDomainService documentsDomainService,
-            IExploreRepository exploreRepository
-            )
+            IExploreRepository exploreRepository,
+            IRepository<VideoAttachment, Guid> videoAttachmentRepository)
         {
             _videosRepository = videosRepository;
             _reactionsRepository = reactionsRepository;
@@ -54,6 +57,7 @@ namespace Academically.Services.Videos
             _servicePurchasesRepository = servicePurchasesRepository;
             _documentsDomainService = documentsDomainService;
             _exploreRepository = exploreRepository;
+            _videoAttachmentRepository = videoAttachmentRepository;
         }
 
         public async Task<PagedResultDto<VideoDto>> GetAll(PagedVideoResultRequestDto input)
@@ -211,6 +215,8 @@ namespace Academically.Services.Videos
                 .Where(e => e.Id == id)
                 .Include(e => e.Document)
                 .Include(e => e.ThumbnailDocument)
+                .Include(e => e.VideoAttachments)
+                    .ThenInclude(v => v.Document)
                 .Include(e => e.Parent)
                 .Include(e => e.Children)
                 .Include(e => e.CreatorUser)
@@ -465,6 +471,45 @@ namespace Academically.Services.Videos
             return ObjectMapper.Map<VideoDto>(created);
         }
 
+        public async Task SaveVideoAttachmentsAsync(CreateVideoAttachmentsDto input)
+        {
+            if (input.Attachments == null || !input.Attachments.Any()) return;
+            
+            var fileExtensionList = input.Attachments.Select(a => Path.GetExtension(a.FileName)[1..]).ToList();
+            if (fileExtensionList.Select(f => Enum.IsDefined(typeof(AttachmentType), f.ToLower())).Any(isValidExtension => !isValidExtension))
+            {
+                throw new InvalidOperationException("Invalid File Extension!");
+            }
+
+            var userId = AbpSession.GetUserId();
+            foreach (var attachment in input.Attachments)
+            {
+                var document = await _documentsDomainService.CreateAsync(userId, attachment, DocumentType.Video);
+                await _videoAttachmentRepository.InsertAsync(new VideoAttachment
+                {
+                    VideoId = input.VideoId,
+                    DocumentId = document.Id
+                });
+            }
+        }
+
+        public async Task<IEnumerable<VideoAttachmentDto>> GetAllVideoAttachmentsAsync(Guid videoId)
+        {
+            return await _videoAttachmentRepository.GetAll()
+                .AsNoTracking()
+                .Include(v => v.Document)
+                .Where(v => v.VideoId == videoId)
+                .OrderBy(v => v.DisplayOrder)
+                .Select(v => ObjectMapper.Map<VideoAttachmentDto>(v))
+                .ToListAsync();
+        }
+
+        public async Task UpdateVideoAttachmentDisplayOrderAsync(Guid id, int order)
+        {
+            var attachment = await _videoAttachmentRepository.GetAsync(id);
+            attachment.DisplayOrder = order;
+            await _videoAttachmentRepository.UpdateAsync(attachment);
+        }
     }
 }
 
