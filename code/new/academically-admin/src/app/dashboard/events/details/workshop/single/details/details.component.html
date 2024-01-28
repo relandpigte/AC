@@ -218,15 +218,15 @@
         <div class="d-flex align-items-center justify-content-between">
           <div class="custom-control custom-radio d-inline">
             <input type="radio" class="custom-control-input" id="chargePricingType"
-                   name="chargePricingType" [(ngModel)]="model.pricingType" [value]="PricingType.FixedPrice"/>
+                   name="chargePricingType" [(ngModel)]="model.pricingType" [value]="PricingType.FixedPrice" (click)="onPricingClick()"/>
             <label class="custom-control-label" for="chargePricingType">Charge a fee</label>
           </div>
           <div class="custom-control custom-radio d-inline">
             <input type="radio" class="custom-control-input" id="freePricingType"
-                   name="freePricingType" [(ngModel)]="model.pricingType" [value]="PricingType.Free"/>
+                   name="freePricingType" [(ngModel)]="model.pricingType" [value]="PricingType.Free" (click)="onPricingClick()"/>
             <label class="custom-control-label" for="freePricingType">Free</label>
           </div>
-          <select class="custom-select" name="select" id="selectss">
+          <select class="custom-select" name="select" id="selects"  [disabled]="isEventFree">
             <option value="gbp">£GBP</option>
           </select>
         </div>
@@ -234,7 +234,7 @@
       <div class="flex-grow-1" [style.width.px]="0">
         <div class="form-row">
           <div class="col-12">
-            <input [(ngModel)]="model.price" name="price" id="price" type="number" placeholder="Input a price" class="form-control">
+            <input [(ngModel)]="model.price" name="price" id="price" type="number" placeholder="Input a price" class="form-control" #priceEl [disabled]="isEventFree"/>
           </div>
         </div>
       </div>

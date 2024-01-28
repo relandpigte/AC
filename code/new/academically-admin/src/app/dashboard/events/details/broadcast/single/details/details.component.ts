@@ -26,6 +26,7 @@ import * as _ from 'lodash';
 import { forkJoin } from 'rxjs';
 import { TopicSorting } from '@shared/components/topic/topic.component';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { ElementRef } from '@node_modules/@angular/core';
 
 @Component({
   selector: 'app-details',
@@ -34,6 +35,7 @@ import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 })
 export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
   @ViewChild(DocumentUploaderComponent, { static: true }) documentUploader: DocumentUploaderComponent;
+  @ViewChild('priceEl', { static: true }) priceInput: ElementRef;
 
   id: string;
   category: string;
@@ -81,6 +83,8 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
     this.getTimeZones();
   }
 
+  get isEventFree(): boolean { return PricingType.Free === this.model?.pricingType; }
+
   ngOnInit(): void {
     this._eventService.eventCreated$
       .pipe(takeUntil(this.destroyed$))
@@ -106,6 +110,18 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
     this.documentUploader.defaultFileRemoved.subscribe(() => {
       this.deleteThumbnail();
     });
+  }
+
+  onPricingClick(): void {
+    setTimeout((): void => {
+      if (this.model.pricingType === PricingType.Free) {
+        this.model.price = undefined;
+      } else {
+        this.priceInput.nativeElement.focus();
+        this.priceInput.nativeElement.select();
+        this.priceInput.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+      }
+    }, 200);
   }
 
   onCategoryKeyDown(e: KeyboardEvent): void {
