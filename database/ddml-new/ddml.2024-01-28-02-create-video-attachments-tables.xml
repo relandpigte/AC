@@ -1,0 +1,49 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="r.pigte" id="1">
+        <createTable tableName="videoattachments">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="VideoId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DocumentId" type="CHAR(36)"/>
+            <column name="DisplayOrder" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="r.pigte" id="2">
+        <createIndex indexName="FK_VideoAttachments_Videos_VideoId_idx" tableName="videoattachments">
+            <column name="VideoId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="r.pigte" id="3">
+        <createIndex indexName="FK_VideoAttachments_Document_DocumentId_idx" tableName="videoattachments">
+            <column name="DocumentId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="r.pigte" id="4">
+        <createIndex indexName="FK_VideoAttachments_Users_CreatorUserId_idx" tableName="videoattachments">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="r.pigte" id="5">
+        <addForeignKeyConstraint baseColumnNames="VideoId" baseTableName="videoattachments" constraintName="FK_VideoAttachments_Videos_VideoId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="videos" validate="true"/>
+    </changeSet>
+    <changeSet author="r.pigte" id="6">
+        <addForeignKeyConstraint baseColumnNames="DocumentId" baseTableName="videoattachments" constraintName="FK_VideoAttachments_Document_DocumentId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="documents" validate="true"/>
+    </changeSet>
+      <changeSet author="r.pigte" id="7">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="videoattachments" constraintName="FK_VideoAttachments_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

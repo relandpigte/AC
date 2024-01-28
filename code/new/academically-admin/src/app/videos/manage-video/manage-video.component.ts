@@ -23,11 +23,11 @@ export class ManageVideoComponent extends AppComponentBase implements OnInit {
   defaultMenuItem: MenuItem;
   menuItems: MenuItem[] = [
     {
-      id: 'video',
-      label: 'Video',
+      id: 'playlist',
+      label: 'Playlist',
       icon: 'assets/img/service/create/play-circle.svg',
       iconHover: 'assets/img/service/create/play-circle-hover.svg',
-      infoText: 'Here 2, you can input all the details for your article. This information will be visible to potential clients, so keep it clear and informative.'
+      infoText: 'Drag videos into the drop zone to create the playlist for your tutorial. You can rearrange the order using the drag handle and edit the video by clicking on the arrow next to each video.'
     },
     {
       id: 'details',

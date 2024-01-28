@@ -34747,6 +34747,178 @@ export class VideosServiceProxy {
         }
         return _observableOf<VideoDto>(<any>null);
     }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    saveVideoAttachments(body: CreateVideoAttachmentsDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Videos/SaveVideoAttachments";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSaveVideoAttachments(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSaveVideoAttachments(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSaveVideoAttachments(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param videoId (optional) 
+     * @return Success
+     */
+    getAllVideoAttachments(videoId: string | undefined): Observable<VideoAttachmentDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Videos/GetAllVideoAttachments?";
+        if (videoId === null)
+            throw new Error("The parameter 'videoId' cannot be null.");
+        else if (videoId !== undefined)
+            url_ += "videoId=" + encodeURIComponent("" + videoId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllVideoAttachments(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllVideoAttachments(<any>response_);
+                } catch (e) {
+                    return <Observable<VideoAttachmentDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<VideoAttachmentDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllVideoAttachments(response: HttpResponseBase): Observable<VideoAttachmentDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(VideoAttachmentDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<VideoAttachmentDto[]>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @param order (optional) 
+     * @return Success
+     */
+    updateVideoAttachmentDisplayOrder(id: string | undefined, order: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Videos/UpdateVideoAttachmentDisplayOrder?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        if (order === null)
+            throw new Error("The parameter 'order' cannot be null.");
+        else if (order !== undefined)
+            url_ += "order=" + encodeURIComponent("" + order) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateVideoAttachmentDisplayOrder(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateVideoAttachmentDisplayOrder(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateVideoAttachmentDisplayOrder(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
 }
 
 @Injectable()
@@ -43004,6 +43176,61 @@ export interface ICreateUserTopicDto {
     userId: number;
     disciplineTaxonomyId: string;
     type: UserTopicType;
+}
+
+export class CreateVideoAttachmentsDto implements ICreateVideoAttachmentsDto {
+    videoId: string;
+    attachments: string[] | undefined;
+
+    constructor(data?: ICreateVideoAttachmentsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.videoId = _data["videoId"];
+            if (Array.isArray(_data["attachments"])) {
+                this.attachments = [] as any;
+                for (let item of _data["attachments"])
+                    this.attachments.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateVideoAttachmentsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateVideoAttachmentsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["videoId"] = this.videoId;
+        if (Array.isArray(this.attachments)) {
+            data["attachments"] = [];
+            for (let item of this.attachments)
+                data["attachments"].push(item);
+        }
+        return data; 
+    }
+
+    clone(): CreateVideoAttachmentsDto {
+        const json = this.toJSON();
+        let result = new CreateVideoAttachmentsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateVideoAttachmentsDto {
+    videoId: string;
+    attachments: string[] | undefined;
 }
 
 export class CurrencyDto implements ICurrencyDto {
@@ -63183,6 +63410,77 @@ export interface IVerificationStatusDto {
     passportVerificationStatus: PassportVerificationStatus;
 }
 
+export class VideoAttachmentDto implements IVideoAttachmentDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    videoId: string;
+    displayOrder: number;
+    documentId: string;
+    document: DocumentDto;
+    documentUrl: string | undefined;
+
+    constructor(data?: IVideoAttachmentDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.videoId = _data["videoId"];
+            this.displayOrder = _data["displayOrder"];
+            this.documentId = _data["documentId"];
+            this.document = _data["document"] ? DocumentDto.fromJS(_data["document"]) : <any>undefined;
+            this.documentUrl = _data["documentUrl"];
+        }
+    }
+
+    static fromJS(data: any): VideoAttachmentDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new VideoAttachmentDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["videoId"] = this.videoId;
+        data["displayOrder"] = this.displayOrder;
+        data["documentId"] = this.documentId;
+        data["document"] = this.document ? this.document.toJSON() : <any>undefined;
+        data["documentUrl"] = this.documentUrl;
+        return data; 
+    }
+
+    clone(): VideoAttachmentDto {
+        const json = this.toJSON();
+        let result = new VideoAttachmentDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IVideoAttachmentDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    videoId: string;
+    displayOrder: number;
+    documentId: string;
+    document: DocumentDto;
+    documentUrl: string | undefined;
+}
+
 export class VideoDto implements IVideoDto {
     id: string;
     creationTime: moment.Moment;
@@ -63217,6 +63515,7 @@ export class VideoDto implements IVideoDto {
     children: VideoDto[] | undefined;
     likeCount: number;
     thumbnailImageUrl: string | undefined;
+    videoAttachments: VideoAttachmentDto[] | undefined;
     isSaved: boolean;
     isPurchased: boolean;
     purchased: UserDto[] | undefined;
@@ -63269,6 +63568,11 @@ export class VideoDto implements IVideoDto {
             }
             this.likeCount = _data["likeCount"];
             this.thumbnailImageUrl = _data["thumbnailImageUrl"];
+            if (Array.isArray(_data["videoAttachments"])) {
+                this.videoAttachments = [] as any;
+                for (let item of _data["videoAttachments"])
+                    this.videoAttachments.push(VideoAttachmentDto.fromJS(item));
+            }
             this.isSaved = _data["isSaved"];
             this.isPurchased = _data["isPurchased"];
             if (Array.isArray(_data["purchased"])) {
@@ -63325,6 +63629,11 @@ export class VideoDto implements IVideoDto {
         }
         data["likeCount"] = this.likeCount;
         data["thumbnailImageUrl"] = this.thumbnailImageUrl;
+        if (Array.isArray(this.videoAttachments)) {
+            data["videoAttachments"] = [];
+            for (let item of this.videoAttachments)
+                data["videoAttachments"].push(item.toJSON());
+        }
         data["isSaved"] = this.isSaved;
         data["isPurchased"] = this.isPurchased;
         if (Array.isArray(this.purchased)) {
@@ -63377,6 +63686,7 @@ export interface IVideoDto {
     children: VideoDto[] | undefined;
     likeCount: number;
     thumbnailImageUrl: string | undefined;
+    videoAttachments: VideoAttachmentDto[] | undefined;
     isSaved: boolean;
     isPurchased: boolean;
     purchased: UserDto[] | undefined;

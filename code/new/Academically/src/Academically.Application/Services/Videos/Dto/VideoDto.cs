@@ -49,6 +49,8 @@ namespace Academically.Services.Videos.Dto
 
         public int LikeCount { get; set; }
         public string ThumbnailImageUrl { get; set; }
+        
+        public IEnumerable<VideoAttachmentDto> VideoAttachments { get; set; }
 
         [NotMapped]
         public bool IsSaved { get; set; }

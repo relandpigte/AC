@@ -6,7 +6,7 @@
   (onPublished)="onPublishClick()"
   (onUnpublished)="onUnpublishClick()"
 >
-  <app-video *ngIf="defaultMenuItem.id === 'video'"></app-video>
+  <app-video *ngIf="defaultMenuItem.id === 'playlist'"></app-video>
   <app-video-details *ngIf="defaultMenuItem.id === 'details'"></app-video-details>
   <app-video-settings *ngIf="defaultMenuItem.id === 'settings'"></app-video-settings>
 </app-service-create>
