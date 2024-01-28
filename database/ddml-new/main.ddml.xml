@@ -217,4 +217,5 @@
 	<include file="ddml-new/ddml.2024-01-27-01-alter-events-table.xml" />
 	<include file="ddml-new/ddml.2024-01-27-01-create-service-poll-tables.xml" />
 	<include file="ddml-new/ddml.2024-01-28-02-create-video-attachments-tables.xml" />
+	<include file="ddml-new/ddml.2024-01-29-01-alter-service-poll-tables.xml" />
 </databaseChangeLog>

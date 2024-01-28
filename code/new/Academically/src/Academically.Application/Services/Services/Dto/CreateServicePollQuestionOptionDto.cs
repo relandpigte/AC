@@ -13,6 +13,7 @@ namespace Academically.Services.Services.Dto
 	{
         public string Text { get; set; }
         public Guid ServicePollQuestionId { get; set; }
+        public int DisplayOrder { get; set; }
 
         [NotMapped]
         public bool IsTemporary { get; set; }

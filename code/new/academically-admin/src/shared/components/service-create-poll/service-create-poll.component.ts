@@ -123,6 +123,14 @@ export class ServiceCreatePollComponent extends AppComponentBase implements OnIn
             this.isLoading = true;
             this.model.referenceId = this.referenceId;
             this.model.serviceType = this.serviceType;
+
+            this.model.servicePollQuestions.forEach((q, idx) => {
+                q.displayOrder = idx + 1;
+                q.servicePollQuestionOptions.forEach((o, idx) => {
+                    o.displayOrder = idx + 1;
+                });
+            });
+
             this._servicePollsService.create(this.model)
             .pipe(finalize(() => this.isLoading = false))
             .subscribe(res => {

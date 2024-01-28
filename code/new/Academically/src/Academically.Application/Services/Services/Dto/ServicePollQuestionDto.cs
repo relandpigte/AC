@@ -13,6 +13,7 @@ namespace Academically.Services.Services.Dto
         public string Text { get; set; }
         public ServicePollQuestionType Type { get; set; }
         public Guid ServicePollId { get; set; }
+        public int DisplayOrder { get; set; }
         public IEnumerable<ServicePollQuestionOptionDto> ServicePollQuestionOptions { get; set; }
     }
 }

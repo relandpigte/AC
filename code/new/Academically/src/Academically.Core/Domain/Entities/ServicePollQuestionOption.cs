@@ -9,8 +9,9 @@ namespace Academically.Domain.Entities
 	{
         public string Text { get; set; }
         public Guid ServicePollQuestionId { get; set; }
+        public int DisplayOrder { get; set; }
 
-		[ForeignKey("ServicePollQuestionId")]
+        [ForeignKey("ServicePollQuestionId")]
 		public ServicePollQuestion ServicePollQuestion { get; set; }
 	}
 }

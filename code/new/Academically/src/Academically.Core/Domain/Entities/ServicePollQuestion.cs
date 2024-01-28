@@ -16,6 +16,8 @@ namespace Academically.Domain.Entities
 
         public Guid ServicePollId { get; set; }
 
+        public int DisplayOrder { get; set; }
+
         [ForeignKey("ServicePollId")]
         public ServicePoll ServicePoll { get; set; }
 

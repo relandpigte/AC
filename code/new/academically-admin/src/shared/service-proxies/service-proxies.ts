@@ -43059,6 +43059,7 @@ export class CreateServicePollQuestionDto implements ICreateServicePollQuestionD
     text: string | undefined;
     type: ServicePollQuestionType;
     servicePollId: string;
+    displayOrder: number;
     servicePollQuestionOptions: CreateServicePollQuestionOptionDto[] | undefined;
     isTemporary: boolean;
 
@@ -43077,6 +43078,7 @@ export class CreateServicePollQuestionDto implements ICreateServicePollQuestionD
             this.text = _data["text"];
             this.type = _data["type"];
             this.servicePollId = _data["servicePollId"];
+            this.displayOrder = _data["displayOrder"];
             if (Array.isArray(_data["servicePollQuestionOptions"])) {
                 this.servicePollQuestionOptions = [] as any;
                 for (let item of _data["servicePollQuestionOptions"])
@@ -43099,6 +43101,7 @@ export class CreateServicePollQuestionDto implements ICreateServicePollQuestionD
         data["text"] = this.text;
         data["type"] = this.type;
         data["servicePollId"] = this.servicePollId;
+        data["displayOrder"] = this.displayOrder;
         if (Array.isArray(this.servicePollQuestionOptions)) {
             data["servicePollQuestionOptions"] = [];
             for (let item of this.servicePollQuestionOptions)
@@ -43121,6 +43124,7 @@ export interface ICreateServicePollQuestionDto {
     text: string | undefined;
     type: ServicePollQuestionType;
     servicePollId: string;
+    displayOrder: number;
     servicePollQuestionOptions: CreateServicePollQuestionOptionDto[] | undefined;
     isTemporary: boolean;
 }
@@ -43129,6 +43133,7 @@ export class CreateServicePollQuestionOptionDto implements ICreateServicePollQue
     id: string;
     text: string | undefined;
     servicePollQuestionId: string;
+    displayOrder: number;
     isTemporary: boolean;
 
     constructor(data?: ICreateServicePollQuestionOptionDto) {
@@ -43145,6 +43150,7 @@ export class CreateServicePollQuestionOptionDto implements ICreateServicePollQue
             this.id = _data["id"];
             this.text = _data["text"];
             this.servicePollQuestionId = _data["servicePollQuestionId"];
+            this.displayOrder = _data["displayOrder"];
             this.isTemporary = _data["isTemporary"];
         }
     }
@@ -43161,6 +43167,7 @@ export class CreateServicePollQuestionOptionDto implements ICreateServicePollQue
         data["id"] = this.id;
         data["text"] = this.text;
         data["servicePollQuestionId"] = this.servicePollQuestionId;
+        data["displayOrder"] = this.displayOrder;
         data["isTemporary"] = this.isTemporary;
         return data; 
     }
@@ -43177,6 +43184,7 @@ export interface ICreateServicePollQuestionOptionDto {
     id: string;
     text: string | undefined;
     servicePollQuestionId: string;
+    displayOrder: number;
     isTemporary: boolean;
 }
 
@@ -54286,6 +54294,7 @@ export class ServicePollQuestionDto implements IServicePollQuestionDto {
     text: string | undefined;
     type: ServicePollQuestionType;
     servicePollId: string;
+    displayOrder: number;
     servicePollQuestionOptions: ServicePollQuestionOptionDto[] | undefined;
 
     constructor(data?: IServicePollQuestionDto) {
@@ -54303,6 +54312,7 @@ export class ServicePollQuestionDto implements IServicePollQuestionDto {
             this.text = _data["text"];
             this.type = _data["type"];
             this.servicePollId = _data["servicePollId"];
+            this.displayOrder = _data["displayOrder"];
             if (Array.isArray(_data["servicePollQuestionOptions"])) {
                 this.servicePollQuestionOptions = [] as any;
                 for (let item of _data["servicePollQuestionOptions"])
@@ -54324,6 +54334,7 @@ export class ServicePollQuestionDto implements IServicePollQuestionDto {
         data["text"] = this.text;
         data["type"] = this.type;
         data["servicePollId"] = this.servicePollId;
+        data["displayOrder"] = this.displayOrder;
         if (Array.isArray(this.servicePollQuestionOptions)) {
             data["servicePollQuestionOptions"] = [];
             for (let item of this.servicePollQuestionOptions)
@@ -54345,6 +54356,7 @@ export interface IServicePollQuestionDto {
     text: string | undefined;
     type: ServicePollQuestionType;
     servicePollId: string;
+    displayOrder: number;
     servicePollQuestionOptions: ServicePollQuestionOptionDto[] | undefined;
 }
 
@@ -54352,6 +54364,7 @@ export class ServicePollQuestionOptionDto implements IServicePollQuestionOptionD
     id: string;
     text: string | undefined;
     servicePollQuestionId: string;
+    displayOrder: number;
 
     constructor(data?: IServicePollQuestionOptionDto) {
         if (data) {
@@ -54367,6 +54380,7 @@ export class ServicePollQuestionOptionDto implements IServicePollQuestionOptionD
             this.id = _data["id"];
             this.text = _data["text"];
             this.servicePollQuestionId = _data["servicePollQuestionId"];
+            this.displayOrder = _data["displayOrder"];
         }
     }
 
@@ -54382,6 +54396,7 @@ export class ServicePollQuestionOptionDto implements IServicePollQuestionOptionD
         data["id"] = this.id;
         data["text"] = this.text;
         data["servicePollQuestionId"] = this.servicePollQuestionId;
+        data["displayOrder"] = this.displayOrder;
         return data; 
     }
 
@@ -54397,6 +54412,7 @@ export interface IServicePollQuestionOptionDto {
     id: string;
     text: string | undefined;
     servicePollQuestionId: string;
+    displayOrder: number;
 }
 
 /** 0 = MultipleChoice 1 = MultipleResponse */
