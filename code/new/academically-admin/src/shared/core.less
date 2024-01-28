@@ -58,6 +58,12 @@ ngx-intl-tel-input {
   }
 }
 
+textarea {
+  &.noresize {
+    resize: none;
+  }
+}
+
 bs-datepicker-container {
   .bs-datepicker-head {
     background-color: #2c7be5 !important;
@@ -563,7 +569,7 @@ input.no-arrow {
 }
 
 .cursor-not-allowed {
-  cursor: not-allowed;
+  cursor: not-allowed !important;
 }
 
 .card-fas {
@@ -1315,6 +1321,10 @@ a.disabled {
   width: 100%;
 }
 
+.w100vw {
+  width: 100vw;
+}
+
 @media (min-width: 576px) {
   .w-sm-auto {
     width: auto;
@@ -1645,6 +1655,13 @@ each(range(1px, 30px, 1), {
   &:empty {
     display: none !important;
   }
+}
+
+.offscreen {
+  position: absolute;
+  visibility: hidden;
+  left: -9999px;
+  top: -9999px;
 }
 
 .d-none {

@@ -1,0 +1,155 @@
+:host {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.service-poll {
+    &-body {
+        &-questions {
+            padding: 20px 14px auto 17px;
+
+            &-item {
+                &-separator {
+                    width: calc(100% + 50px);
+                    position: absolute;
+                    left: -25px;
+                    top: 0;
+                }
+
+                &-drag {
+                    width: 24px;
+                }
+
+                &-type {
+                    .dropdown-toggle {
+                        height: 40px;
+                        color: #1F2D3D;
+                        font-size: 15px;
+                        font-style: normal;
+                        font-weight: 400;
+                        letter-spacing: -0.15px;
+                        padding: 0 12px;
+                    }
+
+                    .dropdown-menu {
+                        min-width: unset;
+                    }
+                }
+
+                &-options {
+                    &-item {
+                        &.conceal {
+                            &:not(:hover) {
+                                .service-poll-body-questions-item-options-item {
+                                    &-drag {
+                                        visibility: hidden;
+                                    }
+
+                                    &-text {
+                                        input {
+                                            border-color: transparent;
+                                        }
+                                    }
+
+                                    &-dropdown {
+                                        visibility: hidden;
+                                    }
+                                }
+                            }
+                        }
+
+                        &-drag {
+                            width: 24px;
+                        }
+
+                        &-actions {
+                            &-add {
+                                &-option {
+                                    cursor: pointer;
+                                    padding: 8px 8px 8px 10px;
+                                    color: #B1C2D9;
+                                    font-size: 15px;
+                                    font-style: normal;
+                                    font-weight: 400;
+                                    line-height: normal;
+                                    letter-spacing: -0.15px;
+                                    margin-left: 34px;
+                                    border: 1px solid transparent;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            &-actions {
+                &-separator {
+                    width: calc(100% + 50px);
+                    position: absolute;
+                    left: -25px;
+                    top: 0;
+                }
+
+                &-add {
+                    &-question {
+                        margin-top: 20px;
+                        cursor: pointer;
+                        color: #2C7BE5;
+                        font-size: 15px;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: normal;
+                        letter-spacing: -0.15px;
+                    }
+                }
+            }
+        }
+    }
+    &-footer {
+        &-steps {
+            color: #6e84a3;
+            font-size: 10px;
+            font-style: normal;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+    }
+}
+
+.card {
+    &-header {
+        .nav-tabs {
+            height: 60px;
+            position: absolute;
+            top: 0;
+            right: 1.5rem;
+        }
+    }
+
+    &-body {
+        padding: 20px 24px 24px;
+    }
+
+    &-footer {
+        gap: 20px;
+        justify-content: flex-end !important;
+
+        button {
+            width: 130px;
+            height: 34px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            &.btn.btn-white {
+                background-color: #EEEFF2 !important;
+
+                &:hover {
+                    border-color: #EEEFF2 !important;
+                }
+            }
+        }
+    }
+}

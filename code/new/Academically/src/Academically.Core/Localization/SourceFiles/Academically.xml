@@ -731,6 +731,7 @@
     <text name="ServiceWizardStep1Title">Let's start with the Basics</text>
     <text name="Of">Of</text>
     <text name="Step">Step</text>
+    <text name="StepXOfY">STEP {0} OF {1}</text>
     <text name="BlockOuts">Block Outs</text>
     <text name="TimeZoneUpdatedMessage">Your time zone was successfully updated.</text>
     <text name="Yearly">Yearly</text>
@@ -2102,5 +2103,14 @@
     <text name="Service.Create">Create {0}</text>
     <text name="Service.NewServiceText">New {0}</text>
     <text name="Service.NameYour">Name your {0}</text>
+
+	<!-- Service Polls -->
+	<text name="Service.Poll.Trigger.PurchaseOfService">Upon purchase of the {0}</text>
+    <text name="Service.Poll.Trigger.StartOfService">At the start of the {0}</text>
+	<text name="Service.Poll.Trigger.EndOfService">At the end of the {0}</text>
+	<text name="Service.Poll.Trigger.CompletionOfService">Upon completion of the {0}</text>
+	<text name="Service.Poll.Trigger.Manual">When launched manually during the {0}</text>
+	<text name="Service.Poll.Question.Type.MultipleChoice">Single choice</text>
+	<text name="Service.Poll.Question.Type.MultipleResponse">Multiple choice</text>
   </texts>
 </localizationDictionary>

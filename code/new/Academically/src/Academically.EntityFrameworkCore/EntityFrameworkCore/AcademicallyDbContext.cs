@@ -143,6 +143,9 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<UserAvailabilitySetting> UserAvailabilitySettings { get; set; }
         public virtual DbSet<ServiceBooking> ServiceBookings { get; set; }
         public virtual DbSet<ServiceReview> ServiceReviews { get; set; }
+        public virtual DbSet<ServicePoll> ServicePolls { get; set; }
+        public virtual DbSet<ServicePollQuestion> ServicePollQuestions { get; set; }
+        public virtual DbSet<ServicePollQuestionOption> ServicePollQuestionOptions { get; set; }
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
         {

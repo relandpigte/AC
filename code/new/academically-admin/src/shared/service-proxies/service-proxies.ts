@@ -23159,6 +23159,326 @@ export class ServiceDiscussionServiceProxy {
 }
 
 @Injectable()
+export class ServicePollsServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param referenceIdFilter (optional) 
+     * @param serviceTypeFilter (optional) 1 = Event
+    
+    2 = Course
+    
+    3 = Tutorial
+    
+    4 = Article
+    
+    5 = Coaching
+    
+    6 = Workshop
+    
+    7 = User
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(referenceIdFilter: string | undefined, serviceTypeFilter: ServicesType | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<ServicePollDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/ServicePolls/GetAll?";
+        if (referenceIdFilter === null)
+            throw new Error("The parameter 'referenceIdFilter' cannot be null.");
+        else if (referenceIdFilter !== undefined)
+            url_ += "ReferenceIdFilter=" + encodeURIComponent("" + referenceIdFilter) + "&";
+        if (serviceTypeFilter === null)
+            throw new Error("The parameter 'serviceTypeFilter' cannot be null.");
+        else if (serviceTypeFilter !== undefined)
+            url_ += "ServiceTypeFilter=" + encodeURIComponent("" + serviceTypeFilter) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<ServicePollDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServicePollDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<ServicePollDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServicePollDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServicePollDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: string | undefined): Observable<ServicePollDto> {
+        let url_ = this.baseUrl + "/api/services/app/ServicePolls/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<ServicePollDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServicePollDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<ServicePollDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServicePollDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServicePollDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: CreateServicePollDto | undefined): Observable<ServicePollDto> {
+        let url_ = this.baseUrl + "/api/services/app/ServicePolls/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<ServicePollDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServicePollDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<ServicePollDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServicePollDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServicePollDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: CreateServicePollDto | undefined): Observable<ServicePollDto> {
+        let url_ = this.baseUrl + "/api/services/app/ServicePolls/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<ServicePollDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServicePollDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<ServicePollDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServicePollDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServicePollDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/ServicePolls/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class ServicesServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -42423,6 +42743,215 @@ export interface ICreateServiceOfferDto {
     endedTime: moment.Moment | undefined;
 }
 
+export class CreateServicePollDto implements ICreateServicePollDto {
+    id: string;
+    name: string | undefined;
+    description: string | undefined;
+    duration: number;
+    trigger: ServicePollTrigger;
+    referenceId: string;
+    serviceType: ServicesType;
+    servicePollQuestions: CreateServicePollQuestionDto[] | undefined;
+    isTemporary: boolean;
+
+    constructor(data?: ICreateServicePollDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.duration = _data["duration"];
+            this.trigger = _data["trigger"];
+            this.referenceId = _data["referenceId"];
+            this.serviceType = _data["serviceType"];
+            if (Array.isArray(_data["servicePollQuestions"])) {
+                this.servicePollQuestions = [] as any;
+                for (let item of _data["servicePollQuestions"])
+                    this.servicePollQuestions.push(CreateServicePollQuestionDto.fromJS(item));
+            }
+            this.isTemporary = _data["isTemporary"];
+        }
+    }
+
+    static fromJS(data: any): CreateServicePollDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateServicePollDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["duration"] = this.duration;
+        data["trigger"] = this.trigger;
+        data["referenceId"] = this.referenceId;
+        data["serviceType"] = this.serviceType;
+        if (Array.isArray(this.servicePollQuestions)) {
+            data["servicePollQuestions"] = [];
+            for (let item of this.servicePollQuestions)
+                data["servicePollQuestions"].push(item.toJSON());
+        }
+        data["isTemporary"] = this.isTemporary;
+        return data; 
+    }
+
+    clone(): CreateServicePollDto {
+        const json = this.toJSON();
+        let result = new CreateServicePollDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateServicePollDto {
+    id: string;
+    name: string | undefined;
+    description: string | undefined;
+    duration: number;
+    trigger: ServicePollTrigger;
+    referenceId: string;
+    serviceType: ServicesType;
+    servicePollQuestions: CreateServicePollQuestionDto[] | undefined;
+    isTemporary: boolean;
+}
+
+export class CreateServicePollQuestionDto implements ICreateServicePollQuestionDto {
+    id: string;
+    text: string | undefined;
+    type: ServicePollQuestionType;
+    servicePollId: string;
+    servicePollQuestionOptions: CreateServicePollQuestionOptionDto[] | undefined;
+    isTemporary: boolean;
+
+    constructor(data?: ICreateServicePollQuestionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.text = _data["text"];
+            this.type = _data["type"];
+            this.servicePollId = _data["servicePollId"];
+            if (Array.isArray(_data["servicePollQuestionOptions"])) {
+                this.servicePollQuestionOptions = [] as any;
+                for (let item of _data["servicePollQuestionOptions"])
+                    this.servicePollQuestionOptions.push(CreateServicePollQuestionOptionDto.fromJS(item));
+            }
+            this.isTemporary = _data["isTemporary"];
+        }
+    }
+
+    static fromJS(data: any): CreateServicePollQuestionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateServicePollQuestionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["text"] = this.text;
+        data["type"] = this.type;
+        data["servicePollId"] = this.servicePollId;
+        if (Array.isArray(this.servicePollQuestionOptions)) {
+            data["servicePollQuestionOptions"] = [];
+            for (let item of this.servicePollQuestionOptions)
+                data["servicePollQuestionOptions"].push(item.toJSON());
+        }
+        data["isTemporary"] = this.isTemporary;
+        return data; 
+    }
+
+    clone(): CreateServicePollQuestionDto {
+        const json = this.toJSON();
+        let result = new CreateServicePollQuestionDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateServicePollQuestionDto {
+    id: string;
+    text: string | undefined;
+    type: ServicePollQuestionType;
+    servicePollId: string;
+    servicePollQuestionOptions: CreateServicePollQuestionOptionDto[] | undefined;
+    isTemporary: boolean;
+}
+
+export class CreateServicePollQuestionOptionDto implements ICreateServicePollQuestionOptionDto {
+    id: string;
+    text: string | undefined;
+    servicePollQuestionId: string;
+    isTemporary: boolean;
+
+    constructor(data?: ICreateServicePollQuestionOptionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.text = _data["text"];
+            this.servicePollQuestionId = _data["servicePollQuestionId"];
+            this.isTemporary = _data["isTemporary"];
+        }
+    }
+
+    static fromJS(data: any): CreateServicePollQuestionOptionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateServicePollQuestionOptionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["text"] = this.text;
+        data["servicePollQuestionId"] = this.servicePollQuestionId;
+        data["isTemporary"] = this.isTemporary;
+        return data; 
+    }
+
+    clone(): CreateServicePollQuestionOptionDto {
+        const json = this.toJSON();
+        let result = new CreateServicePollQuestionOptionDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateServicePollQuestionOptionDto {
+    id: string;
+    text: string | undefined;
+    servicePollQuestionId: string;
+    isTemporary: boolean;
+}
+
 export class CreateServicePurchaseDto implements ICreateServicePurchaseDto {
     id: string | undefined;
     referenceId: string | undefined;
@@ -53139,6 +53668,273 @@ export enum ServiceOfferStatus {
     Queued = 1,
     Open = 2,
     Closed = 3,
+}
+
+export class ServicePollDto implements IServicePollDto {
+    id: string;
+    name: string | undefined;
+    duration: number;
+    trigger: ServicePollTrigger;
+    referenceId: string;
+    serviceType: ServicesType;
+    creationTime: moment.Moment;
+    servicePollQuestions: ServicePollQuestionDto[] | undefined;
+
+    constructor(data?: IServicePollDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.duration = _data["duration"];
+            this.trigger = _data["trigger"];
+            this.referenceId = _data["referenceId"];
+            this.serviceType = _data["serviceType"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            if (Array.isArray(_data["servicePollQuestions"])) {
+                this.servicePollQuestions = [] as any;
+                for (let item of _data["servicePollQuestions"])
+                    this.servicePollQuestions.push(ServicePollQuestionDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ServicePollDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServicePollDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["duration"] = this.duration;
+        data["trigger"] = this.trigger;
+        data["referenceId"] = this.referenceId;
+        data["serviceType"] = this.serviceType;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        if (Array.isArray(this.servicePollQuestions)) {
+            data["servicePollQuestions"] = [];
+            for (let item of this.servicePollQuestions)
+                data["servicePollQuestions"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): ServicePollDto {
+        const json = this.toJSON();
+        let result = new ServicePollDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IServicePollDto {
+    id: string;
+    name: string | undefined;
+    duration: number;
+    trigger: ServicePollTrigger;
+    referenceId: string;
+    serviceType: ServicesType;
+    creationTime: moment.Moment;
+    servicePollQuestions: ServicePollQuestionDto[] | undefined;
+}
+
+export class ServicePollDtoPagedResultDto implements IServicePollDtoPagedResultDto {
+    items: ServicePollDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IServicePollDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(ServicePollDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): ServicePollDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServicePollDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): ServicePollDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new ServicePollDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IServicePollDtoPagedResultDto {
+    items: ServicePollDto[] | undefined;
+    totalCount: number;
+}
+
+export class ServicePollQuestionDto implements IServicePollQuestionDto {
+    id: string;
+    text: string | undefined;
+    type: ServicePollQuestionType;
+    servicePollId: string;
+    servicePollQuestionOptions: ServicePollQuestionOptionDto[] | undefined;
+
+    constructor(data?: IServicePollQuestionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.text = _data["text"];
+            this.type = _data["type"];
+            this.servicePollId = _data["servicePollId"];
+            if (Array.isArray(_data["servicePollQuestionOptions"])) {
+                this.servicePollQuestionOptions = [] as any;
+                for (let item of _data["servicePollQuestionOptions"])
+                    this.servicePollQuestionOptions.push(ServicePollQuestionOptionDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ServicePollQuestionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServicePollQuestionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["text"] = this.text;
+        data["type"] = this.type;
+        data["servicePollId"] = this.servicePollId;
+        if (Array.isArray(this.servicePollQuestionOptions)) {
+            data["servicePollQuestionOptions"] = [];
+            for (let item of this.servicePollQuestionOptions)
+                data["servicePollQuestionOptions"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): ServicePollQuestionDto {
+        const json = this.toJSON();
+        let result = new ServicePollQuestionDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IServicePollQuestionDto {
+    id: string;
+    text: string | undefined;
+    type: ServicePollQuestionType;
+    servicePollId: string;
+    servicePollQuestionOptions: ServicePollQuestionOptionDto[] | undefined;
+}
+
+export class ServicePollQuestionOptionDto implements IServicePollQuestionOptionDto {
+    id: string;
+    text: string | undefined;
+    servicePollQuestionId: string;
+
+    constructor(data?: IServicePollQuestionOptionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.text = _data["text"];
+            this.servicePollQuestionId = _data["servicePollQuestionId"];
+        }
+    }
+
+    static fromJS(data: any): ServicePollQuestionOptionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServicePollQuestionOptionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["text"] = this.text;
+        data["servicePollQuestionId"] = this.servicePollQuestionId;
+        return data; 
+    }
+
+    clone(): ServicePollQuestionOptionDto {
+        const json = this.toJSON();
+        let result = new ServicePollQuestionOptionDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IServicePollQuestionOptionDto {
+    id: string;
+    text: string | undefined;
+    servicePollQuestionId: string;
+}
+
+/** 0 = MultipleChoice 1 = MultipleResponse */
+export enum ServicePollQuestionType {
+    MultipleChoice = 0,
+    MultipleResponse = 1,
+}
+
+/** 0 = PurchaseOfService 1 = StartOfService 2 = EndOfService 3 = CompletionOfService 4 = Manual */
+export enum ServicePollTrigger {
+    PurchaseOfService = 0,
+    StartOfService = 1,
+    EndOfService = 2,
+    CompletionOfService = 3,
+    Manual = 4,
 }
 
 export class ServicePurchaseDto implements IServicePurchaseDto {

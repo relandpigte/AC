@@ -87,6 +87,7 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.ChatsServiceProxy,
         ApiServiceProxies.NotificationsServiceProxy,
         ApiServiceProxies.ServiceDiscussionServiceProxy,
+        ApiServiceProxies.ServicePollsServiceProxy,
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
 })

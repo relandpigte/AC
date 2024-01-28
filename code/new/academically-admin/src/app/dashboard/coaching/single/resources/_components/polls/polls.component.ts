@@ -2,13 +2,15 @@ import { Component, OnInit, Injector } from '@angular/core';
 import { CreateEditPollComponent } from '../create-edit-poll/create-edit-poll.component';
 import { ModalOptions, BsModalService } from 'ngx-bootstrap/modal';
 import { CoachingService } from '@app/dashboard/coaching/_services/coaching.service';
-import { CoachingDto, CoachingPollDto, CoachingPollsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CoachingDto, CoachingPollDto, CoachingPollsServiceProxy, ServicePollDto, ServicePollsServiceProxy, ServicesType } from '@shared/service-proxies/service-proxies';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { PagedListingComponentBase, PagedAndSortedRequestDto } from '@shared/paged-listing-component-base';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { ServiceCreatePollComponent } from '@shared/components/service-create-poll/service-create-poll.component';
 
-class PagedCoachingPollRequestDto extends PagedAndSortedRequestDto {
-  coachingIdFilter: string;
+class PagedServicePollResultRequestDto extends PagedAndSortedRequestDto {
+  referenceIdFilter: string;
+  serviceTypeFilter: ServicesType;
 }
 
 @Component({
@@ -16,16 +18,16 @@ class PagedCoachingPollRequestDto extends PagedAndSortedRequestDto {
   templateUrl: './polls.component.html',
   styleUrls: ['./polls.component.less']
 })
-export class PollsComponent extends PagedListingComponentBase<CoachingPollDto> implements OnInit {
+export class PollsComponent extends PagedListingComponentBase<ServicePollDto> implements OnInit {
   coaching = new CoachingDto();
-  coachingPolls: CoachingPollDto[] = [];
+  coachingPolls: ServicePollDto[] = [];
   isLoading = false;
 
   constructor(
     injector: Injector,
     private _modalService: BsModalService,
     private _coachingService: CoachingService,
-    private _coachingPollsService: CoachingPollsServiceProxy,
+    private _servicePollsService: ServicePollsServiceProxy,
     private _modalDialogService: ModalDialogService
   ) {
     super(injector);
@@ -43,27 +45,29 @@ export class PollsComponent extends PagedListingComponentBase<CoachingPollDto> i
   }
 
   onAddClick(): void {
-    const modalSettings = this.defaultModalSettings as ModalOptions<CreateEditPollComponent>;
+    const modalSettings = this.defaultModalSettings as ModalOptions<ServiceCreatePollComponent>;
     modalSettings.class = 'modal-lg';
     modalSettings.initialState = {
-      coachingId: this.coaching.id,
+      referenceId: this.coaching.id,
+      serviceType: ServicesType.Coaching
     };
-    const modal = this._modalService.show(CreateEditPollComponent, modalSettings).content;
+    const modal = this._modalService.show(ServiceCreatePollComponent, modalSettings).content;
     modal.modelSaved
       .pipe(takeUntil(this.destroyed$))
       .subscribe(() => {
+        this.notify.success(this.l('SavedSuccessfully'));
         this.pageNumber = 1;
         this.refresh();
       });
   }
 
-  onDeleteClick(coachingPoll: CoachingPollDto): void {
+  onDeleteClick(coachingPoll: ServicePollDto): void {
     const options: ModalDialogOptions = {
       title: this.l('AreYouSure'),
       text: this.l('DeleteCoachingPollConfirmationMessage'),
       confirmCb: (): void => {
         this.isLoading = true;
-        this._coachingPollsService.delete(coachingPoll.id)
+        this._servicePollsService.delete(coachingPoll.id)
           .pipe(
             takeUntil(this.destroyed$),
             finalize(() => {
@@ -81,18 +85,19 @@ export class PollsComponent extends PagedListingComponentBase<CoachingPollDto> i
   }
 
   protected list(
-    request: PagedCoachingPollRequestDto,
+    request: PagedServicePollResultRequestDto,
     pageNumber: number,
     finishedCallback: Function,
   ): void {
     if (this.coaching.id) {
       this.isLoading = true;
       request.sort = 'name';
-      request.coachingIdFilter = this.coaching.id;
+      request.referenceIdFilter = this.coaching.id;
 
-      this._coachingPollsService
+      this._servicePollsService
         .getAll(
-          request.coachingIdFilter,
+          request.referenceIdFilter,
+          ServicesType.Coaching,
           request.sort,
           request.skipCount,
           request.maxResultCount

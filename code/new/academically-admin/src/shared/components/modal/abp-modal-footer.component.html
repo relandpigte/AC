@@ -1,9 +1,15 @@
 <div class="card-footer d-flex justify-content-between">
-  <button type="button" class="btn btn-white" [disabled]="cancelDisabled" (click)="onCancelClick.emit()">
-    {{ cancelLabel }}
-  </button>
-  <button type="submit" class="btn btn-primary" [disabled]="saveDisabled">
-    <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-    {{ isLoading ? savingLabel : saveLabel }}
-  </button>
+  <div class="hide-empty">
+    <ng-content></ng-content>
+  </div>
+  <div class="flex-grow-1 d-flex justify-content-between">
+    <button type="button" class="btn btn-white" [disabled]="cancelDisabled" (click)="onCancelClick.emit()">
+      {{ cancelLabel }}
+    </button>
+    <button type="submit" class="btn btn-primary" [disabled]="saveDisabled">
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      {{ isLoading ? savingLabel : saveLabel }}
+    </button>
+  </div>
+
 </div>

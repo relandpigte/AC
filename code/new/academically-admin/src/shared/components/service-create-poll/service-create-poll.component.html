@@ -1,0 +1,262 @@
+<form class="form-horizontal d-flex flex-column flex-grow-1" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
+    <div class="modal-card card service-poll d-flex flex-column justify-content-center flex-grow-1">
+
+        <div class="card-header position-relative service-poll-header">
+            <h4 class="card-header-title">
+              {{ 'Create poll' | localize }}
+            </h4>
+
+            <ul class="nav nav-tabs nav-overflow header-tabs d-flex justify-content-center align-items-center">
+              <li class="nav-item h-100">
+                <span
+                    [class.active]="activeTab === CreatePollTabs.INTRODUCTION"
+                    class="nav-link d-flex justify-content-center align-items-center h-100"
+                    role="button"
+                    (click)="activeTab = CreatePollTabs.INTRODUCTION"
+                >
+                  {{ 'Introduction' | localize }}
+                </span>
+              </li>
+              <li class="nav-item h-100">
+                <span
+                    [class.active]="activeTab === CreatePollTabs.QUESTIONS"
+                    [class.disabled-container]="!isIntroductionFormValid()"
+                    class="nav-link d-flex justify-content-center align-items-center h-100"
+                    role="button"
+                    (click)="activeTab = CreatePollTabs.QUESTIONS"
+                >
+                  {{ 'Questions' | localize }}
+                </span>
+              </li>
+            </ul>
+        </div>
+
+        <div class="card-body service-poll-body flex-grow-1 d-flex justify-content-center align-items-center scroll-y">
+
+            <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-start gap-20 w100p" [class.offscreen]="activeTab !== CreatePollTabs.INTRODUCTION">
+                <div class="service-poll-body-name service-builder-label w100p">
+                    <div class="service-poll-body-name-label service-builder-label-text">{{ 'Poll name' | localize }}</div>
+                    <div class="service-poll-body-name-input w100p" [style.marginTop.px]="8">
+                        <input
+                            [(ngModel)]="model.name"
+                            #nameModel="ngModel"
+                            #nameEl
+                            class="form-control"
+                            type="text"
+                            id="name"
+                            name="name"
+                            required
+                            [placeholder]="'Write the poll name here...' | localize" />
+                        <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
+                    </div>
+                </div>
+
+                <div class="service-poll-body-description service-builder-label w100p">
+                    <div class="service-poll-body-description-label service-builder-label-text">{{ 'Poll description' | localize }}</div>
+                    <div class="service-poll-body-description-description service-builder-label-description">
+                        <div class="service-poll-body-description-description-text service-builder-label-description-text">This is how others will learn about the poll, so make sure it's clear.</div>
+                    </div>
+                    <div class="service-poll-body-description-input w100p" [style.marginTop.px]="8">
+                        <textarea
+                            [rows]="3"
+                            [(ngModel)]="model.description"
+                            #descriptionModel="ngModel"
+                            #descriptionEl
+                            class="form-control noresize slick-scroll"
+                            id="description"
+                            name="description"
+                            [placeholder]="'Write your description here...' | localize">
+                        </textarea>
+                        <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl"></abp-validation-summary>
+                    </div>
+                </div>
+
+                <div class="service-poll-body-duration service-builder-label w100p">
+                    <div class="service-poll-body-duration-label service-builder-label-text">{{ 'How long does it take to complete the poll?' | localize }}</div>
+                    <div class="service-poll-body-duration-description service-builder-label-description">
+                        <div class="service-poll-body-duration-description-text service-builder-label-description-text">Select the number of minutes it takes to complete the poll.</div>
+                    </div>
+                    <div class="service-poll-body-duration-input w100p" [style.marginTop.px]="8">
+                        <select
+                            select2
+                            class="custom-select"
+                            [disabled]="isLoading"
+                            [(ngModel)]="model.duration"
+                            [defaultValue]="model.duration"
+                            (select2ValueChange)="model.duration=$event"
+                            id="duration"
+                            name="duration"
+                            [placeholder]="'Select' | localize"
+                            #durationModel="ngModel"
+                            #durationEl
+                            required>
+                            <option *ngFor="let durationOption of durationOptions" [value]="durationOption.value">
+                            {{ durationOption.label | localize }}
+                            </option>
+                        </select>
+                        <abp-validation-summary [control]="durationModel" [controlEl]="durationEl"></abp-validation-summary>
+                    </div>
+                </div>
+
+                <div class="service-poll-body-trigger service-builder-label w100p">
+                    <div class="service-poll-body-trigger-label service-builder-label-text">{{ 'When should the poll trigger?' | localize }}</div>
+                    <div class="service-poll-body-trigger-input w100p" [style.marginTop.px]="8">
+                        <select
+                            select2
+                            class="custom-select"
+                            [disabled]="isLoading"
+                            [(ngModel)]="model.trigger"
+                            [defaultValue]="model.trigger"
+                            (select2ValueChange)="model.trigger=$event"
+                            id="trigger"
+                            name="trigger"
+                            [placeholder]="'Select' | localize"
+                            #triggerModel="ngModel"
+                            #triggerEl
+                            required>
+                            <option *ngFor="let triggerOption of triggerOptions" [value]="triggerOption.value">
+                            {{ triggerOption.label | localize : serviceTypeObject }}
+                            </option>
+                        </select>
+                        <abp-validation-summary [control]="triggerModel" [controlEl]="triggerEl"></abp-validation-summary>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-start gap-12 w100p" [class.offscreen]="activeTab !== CreatePollTabs.QUESTIONS">
+                <div class="service-poll-body-questions d-flex flex-column justify-content-center align-items-center gap-12 w100p" [dragula]="dragulaGroup" [(dragulaModel)]="model.servicePollQuestions">
+                    <div *ngFor="let question of model.servicePollQuestions; let qidx = index;" class="service-poll-body-questions-item d-flex flex-column justify-content-center align-items-center w100p position-relative">
+                        <div *ngIf="qidx !== 0" class="service-poll-body-questions-item-separator border-top"></div>
+
+                        <div class="d-flex justify-content-center align-items-center gap-10 w100p" [style.marginBottom.px]="12" [style.marginTop.px]="qidx !== 0 ? 20 : 0">
+                            <div class="service-poll-body-questions-item-drag" [ngClass]="{ 'cursor-grab': question.id, 'cursor-not-allowed': !question.id }">
+                                <img src="assets/img/service/content/drag.svg" alt="move"/>
+                            </div>
+                            <div class="service-poll-body-questions-item-text flex-grow-1">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    [id]="'text-' + qidx"
+                                    [name]="'text-' + qidx"
+                                    [(ngModel)]="question.text"
+                                    (keypress)="onKeyPressText($event)"
+                                    (keyup)="onKeyUpText($event, question, 'text')"
+                                    (blur)="onBlurText(question, 'text')"
+                                    [autofocus]="!question.id"
+                                    autocomplete="off"
+                                />
+                            </div>
+                            <div class="dropdown service-poll-body-questions-item-type custom-input-border w-179-px">
+                                <div
+                                    class="dropdown-ellipses dropdown-toggle d-flex justify-content-between align-items-center gap-4"
+                                    role="button"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                    <img *ngIf="question.type === ServicePollQuestionType.MultipleChoice" src="assets/img/service/content/check-circle.svg" [alt]="ServicePollQuestionTypeToLabel[question.type] | localize"/>
+                                    <img *ngIf="question.type === ServicePollQuestionType.MultipleResponse" src="assets/img/service/content/disc.svg" [alt]="ServicePollQuestionTypeToLabel[question.type] | localize"/>
+                                    {{ ServicePollQuestionTypeToLabel[question.type] | localize }}
+                                    <span class="fe fe-chevron-down"></span>
+                                </div>
+                                <div class="dropdown-menu dropdown-menu-right custom-card-shadow">
+                                    <div class="dropdown-item-container">
+                                        <div
+                                        *ngFor="let questionTypeOption of questionTypeOptions"
+                                        [value]="questionTypeOption.value"
+                                        class="dropdown-item cursor-pointer d-flex justify-content-start"
+                                        (click)="question.type = questionTypeOption.value">
+                                        {{ questionTypeOption.label | localize }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="service-poll-body-questions-item-dropdown dropdown">
+                                <a href="javascript:;" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                                  aria-haspopup="true" aria-expanded="false">
+                                  <i class="fe fe-more-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                  <a href="javascript:;" class="dropdown-item">
+                                    {{ 'Add image' | localize }}
+                                  </a>
+                                  <a href="javascript:;" class="dropdown-item"  (click)="deleteQuestion(question)">
+                                    {{ 'Delete question' | localize }}
+                                  </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="service-poll-body-questions-item-options d-flex flex-column justify-content-center align-items-center gap-12 w100p" [dragula]="dragulaGroup" [(dragulaModel)]="question.servicePollQuestionOptions">
+                            <div *ngFor="let option of question.servicePollQuestionOptions; let oidx = index;" [class.conceal]="option.id" class="service-poll-body-questions-item-options-item d-flex justify-content-center align-items-center gap-10 w100p" >
+                                <div class="service-poll-body-questions-item-options-item-drag" [ngClass]="{ 'cursor-grab': option.id, 'cursor-not-allowed': !option.id }">
+                                    <img src="assets/img/service/content/drag.svg" alt="move"/>
+                                </div>
+                                <div class="service-poll-body-questions-item-options-item-text flex-grow-1">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        [id]="'text-' + qidx + '-' + oidx"
+                                        [name]="'text-' + qidx + '-' + oidx"
+                                        [(ngModel)]="option.text"
+                                        (keypress)="onKeyPressText($event)"
+                                        (keyup)="onKeyUpText($event, option, 'text')"
+                                        (blur)="onBlurText(option, 'text', question)"
+                                        [autofocus]="!option.id"
+                                        autocomplete="off"
+                                    />
+                                </div>
+                                <div class="service-poll-body-questions-item-options-item-dropdown dropdown">
+                                    <a href="javascript:;" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                                      aria-haspopup="true" aria-expanded="false">
+                                      <i class="fe fe-more-vertical"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a href="javascript:;" class="dropdown-item">
+                                            {{ 'Add image' | localize }}
+                                        </a>
+                                        <a href="javascript:;" class="dropdown-item" (click)="deleteOption(option, question)">
+                                            {{ 'Delete option' | localize }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="service-poll-body-questions-item-options-item-actions d-flex justify-content-start w100p no-drag no-next-drag">
+                                <div class="service-poll-body-questions-item-options-item-actions-add-option d-flex justify-content-center align-items-center gap-5 h-36-px" (click)="addTemporaryOption(question)">
+                                    {{ 'Click to add option' | localize }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="service-poll-body-questions-actions d-flex flex-column justify-content-start align-items-start w100p position-relative">
+                    <div class="service-poll-body-questions-actions-separator border-top"></div>
+                    <div class="service-poll-body-questions-actions-add-question d-flex justify-content-center align-items-center gap-5" (click)="addTemporaryQuestion()">
+                        <img src="assets/img/service/content/plus-blue.svg" alt="Add"/>
+                        {{ 'ADD QUESTION' | localize }}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card-footer d-flex justify-content-center align-items-center service-poll-footer">
+            <div class="service-poll-footer-steps flex-grow-1">
+                {{ 'StepXOfY' | localize: (activeTab === CreatePollTabs.INTRODUCTION ? 1 : 2) : 2 }}
+            </div>
+            <div class="service-poll-footer-actions d-flex gap-10">
+                <button type="button" class="btn btn-white" [disabled]="isLoading" (click)="onCloseClick()">
+                  {{ 'Cancel' | localize }}
+                </button>
+                <button type="submit" class="btn btn-primary" [disabled]="isLoading || !isModelValid">
+                    <ng-container *ngIf="activeTab === CreatePollTabs.INTRODUCTION">
+                        {{ 'Next' | localize }}
+                    </ng-container>
+                    <ng-container *ngIf="activeTab === CreatePollTabs.QUESTIONS">
+                        <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        {{ 'Done' | localize }}
+                    </ng-container>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

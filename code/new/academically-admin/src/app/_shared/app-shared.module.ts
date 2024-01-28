@@ -113,6 +113,7 @@ import { ConfirmTimezoneComponent } from '@shared/components/booking-service/com
 import { ServiceMetricsComponent } from '@shared/components/service-metrics/service-metrics.component';
 import { ServiceCreateComponent } from '@shared/components/service-create/service-create.component';
 import { ServiceCreateOfferComponent } from '@shared/components/service-create-offer/service-create-offer.component';
+import { ServiceCreatePollComponent } from '@shared/components/service-create-poll/service-create-poll.component';
 import { ServiceCardOfferComponent } from '@shared/components/service-card-offer/service-card-offer.component';
 import { CreateServiceComponent } from '@shared/modals/create-service/create-service.component';
 
@@ -208,6 +209,7 @@ FullCalendarModule.registerPlugins([
     ServiceMetricsComponent,
     ServiceCreateComponent,
     ServiceCreateOfferComponent,
+    ServiceCreatePollComponent,
     ServiceCardOfferComponent,
     CreateServiceComponent
   ],
@@ -336,6 +338,7 @@ FullCalendarModule.registerPlugins([
     ServiceMetricsComponent,
     ServiceCreateComponent,
     ServiceCreateOfferComponent,
+    ServiceCreatePollComponent,
     ServiceCardOfferComponent,
     CreateServiceComponent
   ],

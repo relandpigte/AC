@@ -323,6 +323,23 @@ export class ServiceCardUtils {
       }
     }
 
+    static getServiceTypeObject(serviceType: ServicesType) {
+      switch (serviceType) {
+        case ServicesType.Article:
+          return 'article';
+        case ServicesType.Event:
+          return 'broadcast';
+        case ServicesType.Coaching:
+          return 'coaching session';
+        case ServicesType.Course:
+          return 'course';
+        case ServicesType.Tutorial:
+          return 'tutorial';
+        case ServicesType.Workshop:
+          return 'workshop';
+      }
+    }
+
     static getServiceSchedule(data: any) {
       const start = data.eventDateTime;
       const end = data.endDate;

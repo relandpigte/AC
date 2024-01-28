@@ -11,6 +11,7 @@ import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { ShortNumPipe } from './pipes/short-num.pipe';
 import { EqualValidator } from './directives/equal-validator.directive';
 import { UniqueEmailValidator } from './directives/unique-email-validator.directive';
+import { AutofocusDirective } from './directives/autofocus.directive';
 import { BusyDirective } from './directives/busy.directive';
 import { BodyClassDirective } from './directives/body-class.directive';
 import { Select2Directive } from './directives/select2.directive';
@@ -49,6 +50,7 @@ import { SearchPipe } from './pipes/search.pipe';
     ShortNumPipe,
     EqualValidator,
     UniqueEmailValidator,
+    AutofocusDirective,
     BusyDirective,
     BodyClassDirective,
     Select2Directive,
@@ -72,6 +74,7 @@ import { SearchPipe } from './pipes/search.pipe';
     ShortNumPipe,
     EqualValidator,
     UniqueEmailValidator,
+    AutofocusDirective,
     BusyDirective,
     BodyClassDirective,
     Select2Directive,
