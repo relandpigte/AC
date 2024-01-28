@@ -119,6 +119,7 @@ namespace Academically.Domain.Entities
         public virtual ICollection<EventPresenter> EventPresenters { get; set; }
         
         public virtual ICollection<EventTopic> EventTopics { get; set; }
+        public int? CancellationPeriod { get; set; }
 
         public Event()
         {

@@ -16,4 +16,17 @@
             <append value=" AFTER EventDateTime"/>
         </modifySql>
     </changeSet>
+
+    <changeSet author="r.pigte" id="2">
+        <preConditions onFail="MARK_RAN">
+           <not>
+                <columnExists tableName="events" columnName="CancellationPeriod" />
+            </not>
+        </preConditions>
+        <addColumn tableName="events">
+            <column name="CancellationPeriod" type="SMALLINT">
+                <constraints nullable="true"/>
+			</column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

@@ -65,6 +65,8 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
   scheduleWeekValues: DayOfWeek[] = [];
   scheduleMonthsValues: Date[];
 
+  cancelPolicyTimeSelection = [...Array(25).keys()];
+
   readonly EventRecursionType = EventRecursionType;
   constructor(
     injector: Injector,
@@ -265,7 +267,6 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
       )
       .subscribe(response => {
         this.model.init(response);
-        console.warn(response);
         if (this.model.categories) {
           this.categories = this.model.categories.split(',');
         }

@@ -250,6 +250,21 @@
       [allowedExtensions]="allowedImageExtensions">
     </app-document-uploader>
   </div>
+
+  <div class="form-group form-cancellation">
+    <label class="form-label font-weight-bold">Cancellation policy</label>
+    <small class="form-text text-body-secondary">
+      Establish a minimum free cancellation period; beyond this, refunds won't be automatic, but you can still refund through your Stripe account.
+    </small>
+    <div class="form-cancellation align-items-center d-flex gap-16">
+      <select class="custom-select flex-shrink-0" [(ngModel)]="model.cancellationPeriod" name="cancellation-period" required>
+        <option *ngFor="let c of cancelPolicyTimeSelection" [ngValue]="c">
+          {{ c }}
+        </option>
+      </select>
+      <span>hours before the start of the event.</span>
+    </div>
+  </div>
 </form>
 
 <ng-template #topicRowItem let-item="item" let-isLoading="isLoading">

@@ -120,6 +120,7 @@ namespace Academically.Services.Events.Dto
 
         public IEnumerable<EventDto> Children { get; set; }
         public int PopularityWeight { get; set; }
+        public int? CancellationPeriod { get; set; }
 
         [NotMapped]
         public bool IsSaved { get; set; }

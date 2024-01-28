@@ -44104,6 +44104,7 @@ export class Event implements IEvent {
     studentEvents: StudentEvent[] | undefined;
     eventPresenters: EventPresenter[] | undefined;
     eventTopics: EventTopic[] | undefined;
+    cancellationPeriod: number | undefined;
 
     constructor(data?: IEvent) {
         if (data) {
@@ -44236,6 +44237,7 @@ export class Event implements IEvent {
                 for (let item of _data["eventTopics"])
                     this.eventTopics.push(EventTopic.fromJS(item));
             }
+            this.cancellationPeriod = _data["cancellationPeriod"];
         }
     }
 
@@ -44368,6 +44370,7 @@ export class Event implements IEvent {
             for (let item of this.eventTopics)
                 data["eventTopics"].push(item.toJSON());
         }
+        data["cancellationPeriod"] = this.cancellationPeriod;
         return data; 
     }
 
@@ -44484,6 +44487,7 @@ export interface IEvent {
     studentEvents: StudentEvent[] | undefined;
     eventPresenters: EventPresenter[] | undefined;
     eventTopics: EventTopic[] | undefined;
+    cancellationPeriod: number | undefined;
 }
 
 export enum EventAttributes {
@@ -44601,6 +44605,7 @@ export class EventDto implements IEventDto {
     creatorUser: UserDto;
     children: EventDto[] | undefined;
     popularityWeight: number;
+    cancellationPeriod: number | undefined;
     isSaved: boolean;
     isPurchased: boolean;
     purchased: UserDto[] | undefined;
@@ -44726,6 +44731,7 @@ export class EventDto implements IEventDto {
                     this.children.push(EventDto.fromJS(item));
             }
             this.popularityWeight = _data["popularityWeight"];
+            this.cancellationPeriod = _data["cancellationPeriod"];
             this.isSaved = _data["isSaved"];
             this.isPurchased = _data["isPurchased"];
             if (Array.isArray(_data["purchased"])) {
@@ -44867,6 +44873,7 @@ export class EventDto implements IEventDto {
                 data["children"].push(item.toJSON());
         }
         data["popularityWeight"] = this.popularityWeight;
+        data["cancellationPeriod"] = this.cancellationPeriod;
         data["isSaved"] = this.isSaved;
         data["isPurchased"] = this.isPurchased;
         if (Array.isArray(this.purchased)) {
@@ -45004,6 +45011,7 @@ export interface IEventDto {
     creatorUser: UserDto;
     children: EventDto[] | undefined;
     popularityWeight: number;
+    cancellationPeriod: number | undefined;
     isSaved: boolean;
     isPurchased: boolean;
     purchased: UserDto[] | undefined;
@@ -58340,6 +58348,8 @@ export class UpdateEventDetailsDto implements IUpdateEventDetailsDto {
     recursionType: EventRecursionType;
     topics: string[] | undefined;
     newTopics: string[] | undefined;
+    cancellationPeriod: number | undefined;
+    numberOfAttendees: number | undefined;
 
     constructor(data?: IUpdateEventDetailsDto) {
         if (data) {
@@ -58374,6 +58384,8 @@ export class UpdateEventDetailsDto implements IUpdateEventDetailsDto {
                 for (let item of _data["newTopics"])
                     this.newTopics.push(item);
             }
+            this.cancellationPeriod = _data["cancellationPeriod"];
+            this.numberOfAttendees = _data["numberOfAttendees"];
         }
     }
 
@@ -58408,6 +58420,8 @@ export class UpdateEventDetailsDto implements IUpdateEventDetailsDto {
             for (let item of this.newTopics)
                 data["newTopics"].push(item);
         }
+        data["cancellationPeriod"] = this.cancellationPeriod;
+        data["numberOfAttendees"] = this.numberOfAttendees;
         return data; 
     }
 
@@ -58434,6 +58448,8 @@ export interface IUpdateEventDetailsDto {
     recursionType: EventRecursionType;
     topics: string[] | undefined;
     newTopics: string[] | undefined;
+    cancellationPeriod: number | undefined;
+    numberOfAttendees: number | undefined;
 }
 
 export class UpdateEventDto implements IUpdateEventDto {

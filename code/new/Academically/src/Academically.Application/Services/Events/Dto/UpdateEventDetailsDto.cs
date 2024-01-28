@@ -23,4 +23,6 @@ public class UpdateEventDetailsDto : EntityDto<Guid>
     public EventRecursionType RecursionType { get; set; }
     public IEnumerable<Guid> Topics { get; set; }
     public IEnumerable<string> NewTopics { get; set; }
+    public int? CancellationPeriod { get; set; }
+    public int? NumberOfAttendees { get; set; }
 }
