@@ -82,9 +82,12 @@ export class CourseSectionComponent extends AppComponentBase implements OnInit {
     this.courseSection.children.push(CourseSectionDto.fromJS({
       parentId: this.courseSection.id,
       courseId: this.courseSection.courseId,
-      displayOrder: maxBy( this.courseSection.children, s => s.displayOrder).displayOrder + 1,
+      displayOrder: (maxBy( this.courseSection.children, s => s?.displayOrder)?.displayOrder ?? 0) + 1,
       type
     }));
   }
 
+  onRemoveTemporary(courseSection): void {
+    this.courseSection.children = this.courseSection.children.filter(x => x.id !== courseSection.id);
+  }
 }

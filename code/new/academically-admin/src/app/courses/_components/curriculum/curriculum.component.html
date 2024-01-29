@@ -25,6 +25,7 @@
         <app-course-section
           *ngFor="let courseSectionModule of courseSections"
           [isTemporary]="!courseSectionModule.id"
+          [attr.temporary]="!courseSectionModule.id"
           [selectedStructure]="selectedStructure"
           [courseSection]="courseSectionModule"
           (editSection)="editSection($event)"
@@ -32,7 +33,6 @@
           (deleteSection)="onDeleteClick($event)"
           (duplicate)="onDuplicateClick($event)"
           (removeTemporary)="onRemoveTemporary($event)"
-          [attr.temporary]="!courseSectionModule.id"
         ></app-course-section>
       </div>
 
