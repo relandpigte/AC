@@ -1,5 +1,5 @@
 <div class="course-section" [ngClass]="{'module': courseSection.type === CourseSectionType.Module, 'lesson': courseSection.type === CourseSectionType.Lesson}">
-  <div class="course-section-info w100p" [style.marginBottom.px]="courseSection.type === CourseSectionType.Module ? 10 : 0">
+  <div class="course-section-info w100p" [style.marginBottom.px]="isStandardStructure && courseSection.type === CourseSectionType.Module ? 10 : 0">
     <div class="course-section-drag" [ngClass]="{ 'cursor-grab': !isTemporary, 'cursor-not-allowed': isTemporary }">
       <img src="assets/img/service/content/drag.svg" alt="move"/>
     </div>
