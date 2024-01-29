@@ -136,13 +136,13 @@
                                 <input
                                     type="text"
                                     class="form-control"
-                                    [id]="'text-' + qidx"
-                                    [name]="'text-' + qidx"
+                                    [id]="'text-' + question.id"
+                                    [name]="'text-' + question.id"
                                     [(ngModel)]="question.text"
                                     (keypress)="onKeyPressText($event)"
                                     (keyup)="onKeyUpText($event, question, 'text')"
                                     (blur)="onBlurText(question, 'text')"
-                                    [autofocus]="!question.id"
+                                    [autofocus]="question.isTemporary"
                                     autocomplete="off"
                                 />
                             </div>
@@ -187,21 +187,21 @@
                         </div>
 
                         <div class="service-poll-body-questions-item-options d-flex flex-column justify-content-center align-items-center gap-12 w100p" [dragula]="dragulaGroup" [(dragulaModel)]="question.servicePollQuestionOptions">
-                            <div *ngFor="let option of question.servicePollQuestionOptions; let oidx = index;" [class.conceal]="option.id" class="service-poll-body-questions-item-options-item d-flex justify-content-center align-items-center gap-10 w100p" >
-                                <div class="service-poll-body-questions-item-options-item-drag" [ngClass]="{ 'cursor-grab': option.id, 'cursor-not-allowed': !option.id }">
+                            <div *ngFor="let option of question.servicePollQuestionOptions; let oidx = index;" [class.conceal]="!option.isTemporary" class="service-poll-body-questions-item-options-item d-flex justify-content-center align-items-center gap-10 w100p" >
+                                <div class="service-poll-body-questions-item-options-item-drag" [ngClass]="{ 'cursor-grab': !option.isTemporary, 'cursor-not-allowed': option.isTemporary }">
                                     <img src="assets/img/service/content/drag.svg" alt="move"/>
                                 </div>
                                 <div class="service-poll-body-questions-item-options-item-text flex-grow-1">
                                     <input
                                         type="text"
                                         class="form-control"
-                                        [id]="'text-' + qidx + '-' + oidx"
-                                        [name]="'text-' + qidx + '-' + oidx"
+                                        [id]="'text-' + option.id"
+                                        [name]="'text-' + option.id"
                                         [(ngModel)]="option.text"
                                         (keypress)="onKeyPressText($event)"
                                         (keyup)="onKeyUpText($event, option, 'text')"
                                         (blur)="onBlurText(option, 'text', question)"
-                                        [autofocus]="!option.id"
+                                        [autofocus]="option.isTemporary"
                                         autocomplete="off"
                                     />
                                 </div>

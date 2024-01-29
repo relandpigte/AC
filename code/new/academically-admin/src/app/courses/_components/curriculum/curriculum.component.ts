@@ -43,9 +43,18 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
     super(injector);
     this.dragulaService.createGroup('Course', {
       revertOnSpill: true,
-      moves: (el: any) => {
-        if (el?.getAttribute('temporary') === 'true') return false;
-        return true;
+      moves: (el: any) => el && el?.getAttribute('temporary') !== 'true' && !el?.classList.contains('no-drag'),
+      accepts: (el, target, source, sibling) => {
+          if (!el?.firstElementChild || !target) return false;
+
+          const isLesson = el.firstElementChild.classList.contains('lesson');
+          if (this.selectedStructure === CourseStructure.Standard && isLesson)
+            return target.classList.contains(isLesson ? 'course-section-children' : '');
+
+          if (!sibling?.firstElementChild)
+            return false;
+
+          return sibling.firstElementChild.classList.contains(isLesson ? 'lesson' : 'module');
       }
     });
 
@@ -85,7 +94,7 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
   addTemporarySection(type: CourseSectionType): void {
     this.courseSections.push(CourseSectionDto.fromJS({
       courseId: this.courseId,
-      displayOrder: maxBy(this.courseSections, s => s.displayOrder).displayOrder + 1,
+      displayOrder: (maxBy(this.courseSections, s => s?.displayOrder)?.displayOrder ?? 0) + 1,
       type
     }));
   }
