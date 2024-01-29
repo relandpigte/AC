@@ -32,8 +32,12 @@ export const ServicePollQuestionTypeToLabel: { [key in ServicePollQuestionType]?
     [ServicePollQuestionType.MultipleResponse]: 'Service.Poll.Question.Type.MultipleResponse',
 };
 
+
+const QUESTIONS_CONTAINER = 'service-poll-body-questions';
+const OPTIONS_CONTAINER = 'service-poll-body-questions-item-options';
+
 const QUESTION_ITEM_CLASS = 'service-poll-body-questions-item';
-const OPTION_ITEM_CLASS = 'service-poll-body-questions-item';
+const OPTION_ITEM_CLASS = 'service-poll-body-questions-item-options-item';
 
 @Component({
     selector: 'app-service-create-poll',
@@ -91,9 +95,11 @@ export class ServiceCreatePollComponent extends AppComponentBase implements OnIn
             revertOnSpill: true,
             moves: (el: any) => el && el?.getAttribute('temporary') !== 'true' && !el?.classList.contains('no-drag'),
             accepts: (el, target, source, sibling) => {
-                if (!el || !sibling) return false;
+                if (!el || !target || !sibling) return false;
                 const isQuestion = el.classList.contains(QUESTION_ITEM_CLASS);
-                return !sibling.classList.contains(isQuestion ? QUESTION_ITEM_CLASS : OPTION_ITEM_CLASS);
+                if (isQuestion)
+                    return target.classList.contains(QUESTIONS_CONTAINER)&& !sibling.classList.contains('no-next-drag');
+                return target.classList.contains(OPTIONS_CONTAINER);
             }
         });
 
@@ -143,8 +149,8 @@ export class ServiceCreatePollComponent extends AppComponentBase implements OnIn
 
     onBlurText(value: CollectionTypes, key: string, parent?: CollectionTypes) {
         if (value[key]) {
-            if (!value.id) {
-                value.id = this.uuidv4();
+            if (value.isTemporary) {
+                value.isTemporary = false;
                 if (parent instanceof CreateServicePollQuestionDto) {
                     this.addTemporaryOption(parent);
                 }
@@ -171,12 +177,12 @@ export class ServiceCreatePollComponent extends AppComponentBase implements OnIn
     private removeFromCollection(value: CollectionTypes, key: string) {
         if (value instanceof CreateServicePollQuestionDto) {
             if (this.model.servicePollQuestions.length > 1) {
-                this.model.servicePollQuestions = this.model.servicePollQuestions.filter(i => i.id);
+                this.model.servicePollQuestions = this.model.servicePollQuestions.filter(i => !i.isTemporary);
             }
         } else {
             this.model.servicePollQuestions.forEach(q => {
                 if (q.id === value.servicePollQuestionId) {
-                    q.servicePollQuestionOptions = q.servicePollQuestionOptions.filter(i => i.id);
+                    q.servicePollQuestionOptions = q.servicePollQuestionOptions.filter(i => !i.isTemporary);
                 }
             });
         }
@@ -192,6 +198,7 @@ export class ServiceCreatePollComponent extends AppComponentBase implements OnIn
     addTemporaryQuestion() {
         if (!this.model.servicePollQuestions) this.model.servicePollQuestions = [];
         this.model.servicePollQuestions.push(CreateServicePollQuestionDto.fromJS({
+            id: this.uuidv4(),
             type: ServicePollQuestionType.MultipleChoice,
             isTemporary: true,
         }));
@@ -200,6 +207,7 @@ export class ServiceCreatePollComponent extends AppComponentBase implements OnIn
     addTemporaryOption(question: CreateServicePollQuestionDto) {
         if (!question.servicePollQuestionOptions) question.servicePollQuestionOptions = [];
         question.servicePollQuestionOptions.push(CreateServicePollQuestionOptionDto.fromJS({
+            id: this.uuidv4(),
             servicePollQuestionId: question.id,
             isTemporary: true,
         }));

@@ -422,6 +422,8 @@ namespace Academically.Services.Coachings
                     .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
                     .FirstOrDefaultAsync();
 
+                if (service == null) continue;
+
                 if (service.CreatorUser.ProfilePictureDocumentId.HasValue)
                     service.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(service.CreatorUser.ProfilePictureDocumentId.Value);
                 
