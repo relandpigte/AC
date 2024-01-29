@@ -29,7 +29,6 @@ export class CreateServiceComponent extends AppComponentBase {
         return ServicesType[this.servicesType]?.toLowerCase();
     }
   }
-  get isEvent(): boolean { return this.servicesType === ServicesType.Event; }
 
   onFormSubmit(): void {
     this.onCreateService.emit(this.model);

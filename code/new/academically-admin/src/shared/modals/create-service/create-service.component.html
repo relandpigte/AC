@@ -5,7 +5,7 @@
       <div class="col-md-12 form-group m-0 p-0 required">
         <label class="col-form-label sr-only" for="name">{{ 'Name' | localize }}</label>
         <input type="text" class="form-control"
-               [placeholder]="'Service.NameYour' | localize : isEvent ? 'event' : serviceTypeName"
+               [placeholder]="'Service.NameYour' | localize : serviceTypeName"
                name="name" id="name" [(ngModel)]="model.name" required [maxlength]="100"/>
       </div>
     </div>
