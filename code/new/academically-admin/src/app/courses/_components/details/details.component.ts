@@ -172,7 +172,8 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
         this.isAutoSaving = false;
       })
     )
-      .subscribe(() => {
+      .subscribe((updatedCourse) => {
+        this._courseService.course = updatedCourse;
         if (!silent) this.notify.success(this.l('SavedSuccessfully'));
       });
   }

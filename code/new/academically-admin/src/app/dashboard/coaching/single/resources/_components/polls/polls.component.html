@@ -27,8 +27,8 @@
           <div class="col d-flex flex-column justify-content-center">
             <h4 class="m-0">{{ coachingPoll.name }}</h4>
             <small class="text-muted mb-2">
-              {{ coachingPoll.coachingPollQuestions.length }}
-              {{ (coachingPoll.coachingPollQuestions.length === 1 ? 'Question' : 'Questions') | localize }}
+              {{ coachingPoll?.servicePollQuestions?.length }}
+              {{ (coachingPoll?.servicePollQuestions?.length === 1 ? 'Question' : 'Questions') | localize }}
             </small>
             <small class="text-muted m-0">
               {{ 'CreatedOn' | localize }}

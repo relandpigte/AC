@@ -336,6 +336,7 @@ namespace Academically.Services.Courses
                 {
                     CourseId = course.Id,
                     DisciplineTaxonomyId = topicId,
+                    DisciplineTaxonomy = await this._disciplineTaxonomyRepository.GetAsync(topicId),
                     CreationTime = DateTime.Now,
                     CreatorUserId = this.AbpSession.UserId
                 });
