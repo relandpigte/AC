@@ -471,14 +471,15 @@ namespace Academically.Services.Videos
             return ObjectMapper.Map<VideoDto>(created);
         }
 
-        public async Task SaveVideoAttachmentsAsync(CreateVideoAttachmentsDto input)
+        public async Task SaveVideoAttachmentsAsync([FromForm] CreateVideoAttachmentsDto input)
         {
             if (input.Attachments == null || !input.Attachments.Any()) return;
             
             var fileExtensionList = input.Attachments.Select(a => Path.GetExtension(a.FileName)[1..]).ToList();
-            if (fileExtensionList.Select(f => Enum.IsDefined(typeof(AttachmentType), f.ToLower())).Any(isValidExtension => !isValidExtension))
+            foreach (var f in fileExtensionList)
             {
-                throw new InvalidOperationException("Invalid File Extension!");
+                var isValidExtension = Enum.IsDefined(typeof(AttachmentType), f.ToLower());
+                if (!isValidExtension) throw new InvalidOperationException("Invalid File Extension!");
             }
 
             var userId = AbpSession.GetUserId();
@@ -488,7 +489,8 @@ namespace Academically.Services.Videos
                 await _videoAttachmentRepository.InsertAsync(new VideoAttachment
                 {
                     VideoId = input.VideoId,
-                    DocumentId = document.Id
+                    DocumentId = document.Id,
+                    DisplayOrder = await _videoAttachmentRepository.CountAsync(v => v.VideoId == input.VideoId)
                 });
             }
         }

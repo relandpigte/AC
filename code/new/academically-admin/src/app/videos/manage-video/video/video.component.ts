@@ -1,13 +1,15 @@
 import { Component, OnInit, ViewChild, Injector, OnDestroy } from '@angular/core';
-import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
-import { DocumentUploaderComponent, DefaultFile } from '@app/_shared/components/document-uploader/document-uploader.component';
-import { DocumentDto, DocumentType, FileParameter, VideoAttachmentDto, VideoDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
-import { AppComponentBase } from '@shared/app-component-base';
-import { ActivatedRoute } from '@angular/router';
-import { takeUntil, finalize } from 'rxjs/operators';
-import { UploadService } from '@app/_shared/services/upload.service';
 import { DragulaService } from 'ng2-dragula';
 import * as _ from 'lodash';
+import { takeUntil, finalize } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
+
+import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
+import { DocumentUploaderComponent, DefaultFile } from '@app/_shared/components/document-uploader/document-uploader.component';
+import { AppComponentBase } from '@shared/app-component-base';
+import { UploadService } from '@app/_shared/services/upload.service';
+import { DocumentDto, FileParameter, VideoAttachmentDto, VideosServiceProxy } from '@shared/service-proxies/service-proxies';
+
 
 @Component({
   selector: 'app-video',
@@ -44,62 +46,78 @@ export class VideoComponent extends AppComponentBase implements OnInit, OnDestro
     });
   }
 
+  get isAttachments(): boolean { return this.attachments?.length > 0; }
+
   ngOnInit(): void {
     this.getVideo();
     this.getAllVideoAttachments();
-    this.documentUploader.filesChanged.subscribe((files: FileParameter[]) => {
-      if (files && files.length) {
-        const file = files[0].data as File;
-        const videoEl = document.createElement('video') as HTMLVideoElement;
-        videoEl.preload = 'metadata';
-        videoEl.onloadedmetadata = () => {
-          window.URL.revokeObjectURL(videoEl.src);
-          const duration = videoEl.duration;
-          if (duration > 600) {
-            this.notify.error(this.l('InvalidFileDurationUploadError', '10 Seconds'), this.l('InvalidFileUploadError'));
-            this.documentUploader.files = [];
-          } else {
-            this.isLoading = true;
-            this._uploadService.upload(file, DocumentType.Video, this.id)
-              .pipe(
-                takeUntil(this.destroyed$),
-                finalize(() => {
-                  this.isLoading = false;
-                }),
-              )
-              .subscribe(response => {
-                this.notify.success(this.l('SuccessfullyUploaded'));
-                this.document = response;
-                this.documentUploader.files = [];
-                this.setDefaultFile();
-              });
-          }
-        };
-
-        videoEl.src = URL.createObjectURL(file);
-      } else {
-        this.defaultFile = undefined;
-        if (this.document && this.document.id) {
-          this.isLoading = true;
-          this._uploadService.delete(this.document, this.id)
-            .pipe(
-              takeUntil(this.destroyed$),
-              finalize(() => {
-                this.isLoading = false;
-              }),
-            )
-            .subscribe(() => {
-              this.notify.success(this.l('SuccessfullyRemoved'));
-              this.defaultFile = undefined;
-              this.document = new DocumentDto();
-            });
-        }
-      }
-    });
+    // this.documentUploader.filesChanged.subscribe((files: FileParameter[]) => {
+    //   if (files && files.length) {
+    //     const file = files[0].data as File;
+    //     console.warn('file', file);
+    //     const videoEl = document.createElement('video') as HTMLVideoElement;
+    //     videoEl.preload = 'metadata';
+    //     videoEl.onloadedmetadata = () => {
+    //       window.URL.revokeObjectURL(videoEl.src);
+    //       const duration = videoEl.duration;
+    //       if (duration > 600) {
+    //         this.notify.error(this.l('InvalidFileDurationUploadError', '10 Seconds'), this.l('InvalidFileUploadError'));
+    //         this.documentUploader.files = [];
+    //       } else {
+    //         this.isLoading = true;
+    //         this._uploadService.upload(file, DocumentType.Video, this.id)
+    //           .pipe(
+    //             takeUntil(this.destroyed$),
+    //             finalize(() => {
+    //               this.isLoading = false;
+    //             }),
+    //           )
+    //           .subscribe(response => {
+    //             this.notify.success(this.l('SuccessfullyUploaded'));
+    //             this.document = response;
+    //             this.documentUploader.files = [];
+    //             this.setDefaultFile();
+    //           });
+    //       }
+    //     };
+    //
+    //     videoEl.src = URL.createObjectURL(file);
+    //   } else {
+    //     this.defaultFile = undefined;
+    //     if (this.document && this.document.id) {
+    //       this.isLoading = true;
+    //       this._uploadService.delete(this.document, this.id)
+    //         .pipe(
+    //           takeUntil(this.destroyed$),
+    //           finalize(() => {
+    //             this.isLoading = false;
+    //           }),
+    //         )
+    //         .subscribe(() => {
+    //           this.notify.success(this.l('SuccessfullyRemoved'));
+    //           this.defaultFile = undefined;
+    //           this.document = new DocumentDto();
+    //         });
+    //     }
+    //   }
+    // });
   }
 
   ngOnDestroy(): void {
     this._dragulaService.destroy('Videos');
+  }
+
+  onFileChanged(files: FileParameter[]): void {
+    if (!files) {
+      return;
+    }
+
+    this.isLoading = true;
+    const file = files.pop();
+    this._videosService.saveVideoAttachments(this.id, [file])
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe(() => this.getAllVideoAttachments());
   }
 
   private updateVideoAttachmentDisplayOrder(attachments: VideoAttachmentDto[]): void {
@@ -107,9 +125,11 @@ export class VideoComponent extends AppComponentBase implements OnInit, OnDestro
       return;
     }
 
+    this.isLoading = true;
     attachments.forEach((item, index): void => {
       this._videosService.updateVideoAttachmentDisplayOrder(item.id, index)
         .pipe(takeUntil(this.destroyed$))
+        .pipe(finalize(() => this.isLoading = false))
         .subscribe();
     });
   }

@@ -33,6 +33,7 @@ export class DocumentUploaderComponent extends AppComponentBase implements OnIni
   @Input() maxFileSize = fileUploadConfiguration.maxFileSize;
   @Input() showUploadHint = false;
   @Input() readonly = false;
+  @Input() hidePreview = false;
   @Output() filesChanged = new EventEmitter<FileParameter[]>();
   @Output() defaultFileRemoved = new EventEmitter();
   @ViewChild('documentUploader') documentUploaderInput: ElementRef;

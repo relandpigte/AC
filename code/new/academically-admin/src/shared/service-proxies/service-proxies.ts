@@ -35069,21 +35069,29 @@ export class VideosServiceProxy {
     }
 
     /**
-     * @param body (optional) 
+     * @param videoId (optional) 
+     * @param attachments (optional) 
      * @return Success
      */
-    saveVideoAttachments(body: CreateVideoAttachmentsDto | undefined): Observable<void> {
+    saveVideoAttachments(videoId: string | undefined, attachments: FileParameter[] | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/Videos/SaveVideoAttachments";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
+        const content_ = new FormData();
+        if (videoId === null || videoId === undefined) {
+            // do nothing
+        } else
+            content_.append("VideoId", videoId.toString());
+        if (attachments === null || attachments === undefined) {
+            // do nothing
+        } else
+            attachments.forEach(item_ => content_.append("Attachments", item_.data, item_.fileName ? item_.fileName : "Attachments") );
 
         let options_ : any = {
             body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Content-Type": "application/json-patch+json",
             })
         };
 
@@ -43713,61 +43721,6 @@ export interface ICreateUserTopicDto {
     userId: number;
     disciplineTaxonomyId: string;
     type: UserTopicType;
-}
-
-export class CreateVideoAttachmentsDto implements ICreateVideoAttachmentsDto {
-    videoId: string;
-    attachments: string[] | undefined;
-
-    constructor(data?: ICreateVideoAttachmentsDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.videoId = _data["videoId"];
-            if (Array.isArray(_data["attachments"])) {
-                this.attachments = [] as any;
-                for (let item of _data["attachments"])
-                    this.attachments.push(item);
-            }
-        }
-    }
-
-    static fromJS(data: any): CreateVideoAttachmentsDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateVideoAttachmentsDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["videoId"] = this.videoId;
-        if (Array.isArray(this.attachments)) {
-            data["attachments"] = [];
-            for (let item of this.attachments)
-                data["attachments"].push(item);
-        }
-        return data; 
-    }
-
-    clone(): CreateVideoAttachmentsDto {
-        const json = this.toJSON();
-        let result = new CreateVideoAttachmentsDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface ICreateVideoAttachmentsDto {
-    videoId: string;
-    attachments: string[] | undefined;
 }
 
 export class CurrencyDto implements ICurrencyDto {
