@@ -1,4 +1,121 @@
-<form class="form-horizontal" autocomplete="off" #form="ngForm">
+<form autocomplete="off" #f="ngForm" [loader]="isLoading">
+  <div class="form-group">
+    <label class="form-label font-weight-bold">Article name</label>
+    <input [(ngModel)]="model.name" #nameModel="ngModel" #nameEl
+           class="form-control" type="text" id="name" name="name"
+           placeholder="Write your article name here..." required/>
+    <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label font-weight-bold">Article description</label>
+    <small class="form-text text-body-secondary">
+      This is how others will learn about your article, so make it good! <a href="#" class="text-primary">See example</a>
+    </small>
+    <quill-editor [(ngModel)]="model.description" id="description" name="description" placeholder="Write your description here...">
+      <div quill-editor-toolbar>
+        <span class="ql-formats">
+          <button class="ql-bold"></button>
+          <button class="ql-italic"></button>
+          <button class="ql-underline"></button>
+          <button class="ql-strike"></button>
+        </span>
+        <span class="ql-formats">
+          <select class="ql-color ql-color-picker" [title]="'Text color'">
+          </select>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-blockquote"></button>
+          <button class="ql-code-block"></button>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-list" value="ordered"></button>
+          <button class="ql-list" value="bullet"></button>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-script" value="sub"></button>
+          <button class="ql-script" value="super"></button>
+        </span>
+        <span class="ql-formats">
+          <select class="ql-align">
+          </select>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-clean"></button>
+        </span>
+      </div>
+    </quill-editor>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label font-weight-bold">Topics</label>
+    <small class="form-text text-body-secondary">
+      Provide up to 10 topics to help users find your article.
+    </small>
+    <div class="form-control d-flex justify-content-start align-items-center position-relative minh-40-px h-auto">
+      <app-pill-picker
+        [choices]="topicsChoices"
+        [maxSelected]="10"
+        keywordPrefix="#"
+        [keywordPlaceholder]="'Add a tag' | localize"
+        [autocompleteTemplateRef]="topicRowItem"
+        autocompleteNoDataText="{{ 'Community.NoTopicsFoundEnterToCreate' | localize }}"
+        [isLoading]="isLoadingTopics"
+        (onUpdateModel)="handleTopicsModelUpdate($event)"
+        (onKeywordUpdate)="handleTopicsKeywordUpdate($event)"
+        [selected]="selectedTopics"
+      ></app-pill-picker>
+    </div>
+  </div>
+
+  <div class="form-group form-price">
+    <div class="form-row">
+      <div class="col">
+        <label class="form-label font-weight-bold">Price</label>
+      </div>
+    </div>
+    <div class="d-flex align-items-center gap-16">
+      <div class="flex-grow-1" [style.width.px]="0">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="custom-control custom-radio d-inline">
+            <input type="radio" class="custom-control-input" id="chargePricingType"
+                   name="chargePricingType" [(ngModel)]="model.pricingType" [value]="PricingType.FixedPrice" (click)="onPricingClick()"/>
+            <label class="custom-control-label" for="chargePricingType">Charge a fee</label>
+          </div>
+          <div class="custom-control custom-radio d-inline">
+            <input type="radio" class="custom-control-input" id="freePricingType"
+                   name="freePricingType" [(ngModel)]="model.pricingType" [value]="PricingType.Free" (click)="onPricingClick()"/>
+            <label class="custom-control-label" for="freePricingType">Free</label>
+          </div>
+          <select class="custom-select" name="select" id="selects"  [disabled]="isFreeService">
+            <option value="gbp">£GBP</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex-grow-1" [style.width.px]="0">
+        <div class="form-row">
+          <div class="col-12">
+            <input [(ngModel)]="model.price" name="price" id="price" type="number" placeholder="Input a price" class="form-control" #priceEl [disabled]="isFreeService"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<ng-template #topicRowItem let-item="item" let-isLoading="isLoading">
+  <div *ngIf="isLoading" class="d-flex flex-column flex-grow-1 topic-row gap-4">
+    <div class="box-shimmer-bar" [style.width.%]="80" [style.min-height.px]="16"></div>
+    <div class="box-shimmer-bar" [style.width.%]="45" [style.min-height.px]="12"></div>
+  </div>
+  <div *ngIf="!isLoading" class="d-flex flex-column flex-grow-1 topic-row">
+    <div class="topic-row-name">#{{ item.name }}</div>
+    <div class="topic-row-followers">{{ 'Community.Topics.Followers' | localize: (item.followerCount | shortNum: 1)  }}</div>
+  </div>
+</ng-template>
+
+
+<!--form class="form-horizontal" autocomplete="off" #form="ngForm">
   <div class="row">
 
     <div class="col-8" [loader]="isLoading">
@@ -170,4 +287,4 @@
     </div>
 
   </div>
-</form>
+</form-->

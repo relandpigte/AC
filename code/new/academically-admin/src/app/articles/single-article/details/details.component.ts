@@ -1,21 +1,17 @@
-import { Component, Injector, OnInit, ViewChild } from '@angular/core';
-import { ArticleService } from '@app/articles/_services/article.service';
+import { Component, Injector, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { takeUntil, finalize } from 'rxjs/operators';
+
 import { DocumentUploaderComponent, DefaultFile } from '@app/_shared/components/document-uploader/document-uploader.component';
 import { UploadService } from '@app/_shared/services/upload.service';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
-import {
-  FileParameter,
-  SpokenLanguageDto,
-  DocumentType,
-  PricingType,
-  ArticlesServiceProxy,
-  SpokenLanguagesServiceProxy,
-  ArticleType,
-  DocumentDto,
-  UpdateArticleDetailsDto,
-} from '@shared/service-proxies/service-proxies';
-import { takeUntil, finalize } from 'rxjs/operators';
+import { ArticleService } from '@app/articles/_services/article.service';
 import { AutoSaveComponentBase } from '@shared/auto-save-component-base';
+import { TopicSorting } from '@shared/components/topic/topic.component';
+import {
+  FileParameter, SpokenLanguageDto, DocumentType, PricingType, ArticlesServiceProxy,
+  SpokenLanguagesServiceProxy, ArticleType, DocumentDto, KeywordSearchStrategy,
+  DisciplineTaxonomiesServiceProxy, ArticleDto,
+} from '@shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'app-details',
@@ -24,6 +20,7 @@ import { AutoSaveComponentBase } from '@shared/auto-save-component-base';
 })
 export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
   @ViewChild(DocumentUploaderComponent, { static: true }) documentUploader: DocumentUploaderComponent;
+  @ViewChild('priceEl', { static: true }) priceInput: ElementRef;
 
   id: string;
   category: string;
@@ -32,7 +29,7 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
   defaultFile: DefaultFile;
   languages: SpokenLanguageDto[] = [];
 
-  model = new UpdateArticleDetailsDto();
+  model = new ArticleDto();
   isLoading = false;
   isUploadingImage = false;
   allowedImageExtensions = fileUploadConfiguration.allowedImageExtensions;
@@ -41,15 +38,23 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
   thumbnailDocument = new DocumentDto();
   articleType: ArticleType;
 
+  topicsChoices: any[] = [];
+  isLoadingTopics = false;
+  selectedTopics: { id: string, name: string }[] = [];
+  newSelectedTopics: { id: string, name: string }[] = [];
+
   constructor(
     injector: Injector,
     private _articleService: ArticleService,
     private _articlesService: ArticlesServiceProxy,
     private _spokenLanguagesService: SpokenLanguagesServiceProxy,
     private _uploadService: UploadService,
+    private _taxonomyService: DisciplineTaxonomiesServiceProxy
   ) {
     super(injector);
   }
+
+  get isFreeService(): boolean { return PricingType.Free === this.model?.pricingType; }
 
   ngOnInit(): void {
     this._articleService.articleCreated$
@@ -62,21 +67,21 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
       });
     this.getLanguages();
 
-    this.documentUploader.filesChanged.subscribe((files: FileParameter[]) => {
-      if (files && files.length) {
-        this.articleThumbnailDocument = files[0];
-        this.uploadThumbnail();
-      } else {
-        this.articleThumbnailDocument = undefined;
-        if (!this.defaultFile || !this.defaultFile.name) {
-          this.deleteThumbnail();
-        }
-      }
-    });
-
-    this.documentUploader.defaultFileRemoved.subscribe(() => {
-      this.deleteThumbnail();
-    });
+    // this.documentUploader.filesChanged.subscribe((files: FileParameter[]) => {
+    //   if (files && files.length) {
+    //     this.articleThumbnailDocument = files[0];
+    //     this.uploadThumbnail();
+    //   } else {
+    //     this.articleThumbnailDocument = undefined;
+    //     if (!this.defaultFile || !this.defaultFile.name) {
+    //       this.deleteThumbnail();
+    //     }
+    //   }
+    // });
+    //
+    // this.documentUploader.defaultFileRemoved.subscribe(() => {
+    //   this.deleteThumbnail();
+    // });
   }
 
   onCategoryKeyDown(e: KeyboardEvent): void {
@@ -97,6 +102,37 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
       this.categories.splice(index, 1);
     }
     this.updateCategories();
+  }
+
+  updateModelForTopics(): void {
+    this.model.topics = this.selectedTopics.filter(t => t.id).map(t => t.id) ?? [];
+    this.model.newTopics = this.newSelectedTopics.map(t => t.name);
+  }
+
+  handleTopicsModelUpdate(data: any): void {
+    const { selected, newSelected } = data;
+    this.selectedTopics = selected;
+    this.newSelectedTopics = newSelected;
+    this.updateModelForTopics();
+  }
+
+  handleTopicsKeywordUpdate(data: any): void {
+    const { keyword, showLoading } = data;
+    this._taxonomyService.getAllLastChildren(keyword, KeywordSearchStrategy.StartsWith, true, TopicSorting.Popular, undefined)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(topics => this.topicsChoices = topics.filter(t => !this.selectedTopics.some(x => x.id === t.id)));
+  }
+
+  onPricingClick(): void {
+    setTimeout((): void => {
+      if (this.model.pricingType === PricingType.Free) {
+        this.model.price = undefined;
+      } else {
+        this.priceInput.nativeElement.focus();
+        this.priceInput.nativeElement.select();
+        this.priceInput.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+      }
+    }, 200);
   }
 
   private getLanguages(): void {
@@ -172,6 +208,16 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
         if (this.model.categories && this.model.categories.trim()) {
           this.categories = this.model.categories.split(',');
         }
+
+        // let's reset the selected topics here
+        this.selectedTopics = response?.articleTopics?.map(e => {
+          return { id: e.disciplineTaxonomy.id, name: e.disciplineTaxonomy.name };
+        }) ?? [];
+        this.newSelectedTopics = [];
+
+        // add fresh topics to the model
+        this.updateModelForTopics();
+
         this.modelToSave = this.model;
         this.initAutoSave(this.updateDetails);
       });

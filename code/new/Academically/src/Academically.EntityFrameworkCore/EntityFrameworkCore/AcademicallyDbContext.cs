@@ -81,6 +81,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<Video> Videos { get; set; }
         public virtual DbSet<VideoAttachment> VideoAttachments { get; set; }
         public virtual DbSet<Article> Articles { get; set; }
+        public virtual DbSet<ArticleTopic> ArticleTopics { get; set; }
         public virtual DbSet<Content> Contents { get; set; }
         public virtual DbSet<ContentMargin> ContentMargins { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }

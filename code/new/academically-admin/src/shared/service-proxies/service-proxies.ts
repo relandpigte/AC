@@ -35967,6 +35967,9 @@ export class ArticleDto implements IArticleDto {
     isSaved: boolean;
     isPurchased: boolean;
     purchased: UserDto[] | undefined;
+    articleTopics: ArticleTopicDto[] | undefined;
+    topics: string[] | undefined;
+    newTopics: string[] | undefined;
 
     constructor(data?: IArticleDto) {
         if (data) {
@@ -36015,6 +36018,21 @@ export class ArticleDto implements IArticleDto {
                 this.purchased = [] as any;
                 for (let item of _data["purchased"])
                     this.purchased.push(UserDto.fromJS(item));
+            }
+            if (Array.isArray(_data["articleTopics"])) {
+                this.articleTopics = [] as any;
+                for (let item of _data["articleTopics"])
+                    this.articleTopics.push(ArticleTopicDto.fromJS(item));
+            }
+            if (Array.isArray(_data["topics"])) {
+                this.topics = [] as any;
+                for (let item of _data["topics"])
+                    this.topics.push(item);
+            }
+            if (Array.isArray(_data["newTopics"])) {
+                this.newTopics = [] as any;
+                for (let item of _data["newTopics"])
+                    this.newTopics.push(item);
             }
         }
     }
@@ -36065,6 +36083,21 @@ export class ArticleDto implements IArticleDto {
             for (let item of this.purchased)
                 data["purchased"].push(item.toJSON());
         }
+        if (Array.isArray(this.articleTopics)) {
+            data["articleTopics"] = [];
+            for (let item of this.articleTopics)
+                data["articleTopics"].push(item.toJSON());
+        }
+        if (Array.isArray(this.topics)) {
+            data["topics"] = [];
+            for (let item of this.topics)
+                data["topics"].push(item);
+        }
+        if (Array.isArray(this.newTopics)) {
+            data["newTopics"] = [];
+            for (let item of this.newTopics)
+                data["newTopics"].push(item);
+        }
         return data; 
     }
 
@@ -36106,6 +36139,9 @@ export interface IArticleDto {
     isSaved: boolean;
     isPurchased: boolean;
     purchased: UserDto[] | undefined;
+    articleTopics: ArticleTopicDto[] | undefined;
+    topics: string[] | undefined;
+    newTopics: string[] | undefined;
 }
 
 export class ArticleDtoPagedResultDto implements IArticleDtoPagedResultDto {
@@ -36168,6 +36204,69 @@ export enum ArticleStatus {
     Draft = 0,
     Published = 1,
     Archived = 2,
+}
+
+export class ArticleTopicDto implements IArticleTopicDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    eventId: string;
+    disciplineTaxonomyId: string;
+    disciplineTaxonomy: DisciplineTaxonomyDto;
+
+    constructor(data?: IArticleTopicDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.eventId = _data["eventId"];
+            this.disciplineTaxonomyId = _data["disciplineTaxonomyId"];
+            this.disciplineTaxonomy = _data["disciplineTaxonomy"] ? DisciplineTaxonomyDto.fromJS(_data["disciplineTaxonomy"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ArticleTopicDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ArticleTopicDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["eventId"] = this.eventId;
+        data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
+        data["disciplineTaxonomy"] = this.disciplineTaxonomy ? this.disciplineTaxonomy.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): ArticleTopicDto {
+        const json = this.toJSON();
+        let result = new ArticleTopicDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IArticleTopicDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    eventId: string;
+    disciplineTaxonomyId: string;
+    disciplineTaxonomy: DisciplineTaxonomyDto;
 }
 
 /** 1 = SingleArticle 2 = ArticleSeries */
@@ -41562,6 +41661,7 @@ export interface ICreateCoachingResourceDto {
 
 export class CreateCourseDto implements ICreateCourseDto {
     name: string | undefined;
+    type: CourseType;
 
     constructor(data?: ICreateCourseDto) {
         if (data) {
@@ -41575,6 +41675,7 @@ export class CreateCourseDto implements ICreateCourseDto {
     init(_data?: any) {
         if (_data) {
             this.name = _data["name"];
+            this.type = _data["type"];
         }
     }
 
@@ -41588,6 +41689,7 @@ export class CreateCourseDto implements ICreateCourseDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
+        data["type"] = this.type;
         return data; 
     }
 
@@ -41601,6 +41703,7 @@ export class CreateCourseDto implements ICreateCourseDto {
 
 export interface ICreateCourseDto {
     name: string | undefined;
+    type: CourseType;
 }
 
 export class CreateCourseRatingAreaDto implements ICreateCourseRatingAreaDto {
@@ -58486,6 +58589,9 @@ export class UpdateArticleDetailsDto implements IUpdateArticleDetailsDto {
     languageId: string | undefined;
     pricingType: PricingType;
     thumbnailDocumentId: string | undefined;
+    price: number | undefined;
+    topics: string[] | undefined;
+    newTopics: string[] | undefined;
 
     constructor(data?: IUpdateArticleDetailsDto) {
         if (data) {
@@ -58505,6 +58611,17 @@ export class UpdateArticleDetailsDto implements IUpdateArticleDetailsDto {
             this.languageId = _data["languageId"];
             this.pricingType = _data["pricingType"];
             this.thumbnailDocumentId = _data["thumbnailDocumentId"];
+            this.price = _data["price"];
+            if (Array.isArray(_data["topics"])) {
+                this.topics = [] as any;
+                for (let item of _data["topics"])
+                    this.topics.push(item);
+            }
+            if (Array.isArray(_data["newTopics"])) {
+                this.newTopics = [] as any;
+                for (let item of _data["newTopics"])
+                    this.newTopics.push(item);
+            }
         }
     }
 
@@ -58524,6 +58641,17 @@ export class UpdateArticleDetailsDto implements IUpdateArticleDetailsDto {
         data["languageId"] = this.languageId;
         data["pricingType"] = this.pricingType;
         data["thumbnailDocumentId"] = this.thumbnailDocumentId;
+        data["price"] = this.price;
+        if (Array.isArray(this.topics)) {
+            data["topics"] = [];
+            for (let item of this.topics)
+                data["topics"].push(item);
+        }
+        if (Array.isArray(this.newTopics)) {
+            data["newTopics"] = [];
+            for (let item of this.newTopics)
+                data["newTopics"].push(item);
+        }
         return data; 
     }
 
@@ -58543,6 +58671,9 @@ export interface IUpdateArticleDetailsDto {
     languageId: string | undefined;
     pricingType: PricingType;
     thumbnailDocumentId: string | undefined;
+    price: number | undefined;
+    topics: string[] | undefined;
+    newTopics: string[] | undefined;
 }
 
 export class UpdateArticleSettingsDto implements IUpdateArticleSettingsDto {

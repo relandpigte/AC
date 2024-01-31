@@ -54,6 +54,14 @@ namespace Academically.Services.Articles.Dto
         
         [NotMapped]
         public IEnumerable<UserDto> Purchased { get; set; }
+        
+        public IEnumerable<ArticleTopicDto> ArticleTopics { get; set; }
+
+        [NotMapped]
+        public IEnumerable<Guid> Topics { get; set; }
+
+        [NotMapped]
+        public IEnumerable<string> NewTopics { get; set; }
 
         public ArticleDto()
 		{

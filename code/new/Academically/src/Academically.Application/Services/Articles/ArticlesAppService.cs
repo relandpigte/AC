@@ -34,6 +34,7 @@ namespace Academically.Services.Articles
         private readonly IRepository<SavedService, Guid> _savedServiceRepository;
         private readonly IRepository<ServicePurchase, Guid> _servicePurchasesRepository;
         private readonly IExploreRepository _exploreRepository;
+        private readonly IRepository<DisciplineTaxonomy, Guid> _disciplineTaxonomyRepository;
 
         public ArticlesAppService(
             IRepository<Article, Guid> articlesRepository,
@@ -41,8 +42,7 @@ namespace Academically.Services.Articles
             IRepository<StudentArticle, Guid> studentArticleRepository,
             IRepository<SavedService, Guid> savedServiceRepository,
             IRepository<ServicePurchase, Guid> servicePurchasesRepository,
-            IExploreRepository exploreRepository
-            )
+            IExploreRepository exploreRepository, IRepository<DisciplineTaxonomy, Guid> disciplineTaxonomyRepository)
         {
             _articlesRepository = articlesRepository;
             _documentsDomainService = documentsDomainService;
@@ -50,6 +50,7 @@ namespace Academically.Services.Articles
             _savedServiceRepository = savedServiceRepository;
             _servicePurchasesRepository = servicePurchasesRepository;
             _exploreRepository = exploreRepository;
+            _disciplineTaxonomyRepository = disciplineTaxonomyRepository;
         }
 
         public async Task<PagedResultDto<ArticleDto>> GetAll(PagedArticleResultRequestDto input)
@@ -129,6 +130,8 @@ namespace Academically.Services.Articles
             var article = await _articlesRepository.GetAll()
                 .Include(e => e.ThumbnailDocument)
                 .Include(e => e.Parent)
+                .Include(a => a.ArticleTopics)
+                    .ThenInclude(d => d.DisciplineTaxonomy)
                 .Where(e => e.Id == id)
                 .Select(e => ObjectMapper.Map<ArticleDto>(e))
                 .FirstOrDefaultAsync();
@@ -144,8 +147,44 @@ namespace Academically.Services.Articles
 
         public async Task<ArticleDto> UpdateDetails(UpdateArticleDetailsDto input)
         {
-            var article = await _articlesRepository.GetAsync(input.Id);
+            var article = await _articlesRepository.GetAll()
+                .Include(a => a.ArticleTopics)
+                .Where(a => a.Id == input.Id)
+                .SingleOrDefaultAsync();
             ObjectMapper.Map(input, article);
+            
+            var topicIds = input.Topics?.Count() > 0 ? input.Topics.ToList() : new List<Guid>();
+            if (input.NewTopics != null && input.NewTopics.Any())
+            {
+                var otherTopicParent = await _disciplineTaxonomyRepository.FirstOrDefaultAsync(x => x.Name == "Other Topics");
+                if (otherTopicParent != null)
+                {
+                    foreach (var newTopic in input.NewTopics)
+                    {
+                        var topicId = await _disciplineTaxonomyRepository.InsertAndGetIdAsync(new DisciplineTaxonomy
+                        {
+                            ParentId = otherTopicParent.Id,
+                            Name = newTopic
+                        });
+
+                        topicIds.Add(topicId);
+                    }
+                }
+            }
+
+            // clear all course's topics so we can add the ones that are retained/selected from the frontend side
+            article.ArticleTopics.Clear();
+            foreach (var topicId in topicIds)
+            {
+                article.ArticleTopics.Add(new ArticleTopic
+                {
+                    ArticleId =  article.Id,
+                    DisciplineTaxonomyId = topicId,
+                    CreationTime = DateTime.Now,
+                    CreatorUserId = AbpSession.GetUserId()
+                });
+            }
+            
             await _articlesRepository.UpdateAsync(article);
             return ObjectMapper.Map<ArticleDto>(article);
         }

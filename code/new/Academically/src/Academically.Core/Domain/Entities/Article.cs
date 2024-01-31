@@ -45,6 +45,8 @@ namespace Academically.Domain.Entities
         public virtual Document ThumbnailDocument { get; set; }
 
         public virtual ICollection<Article> Children { get; set; }
+        
+        public virtual ICollection<ArticleTopic> ArticleTopics { get; set; }
 
         public Article()
         {

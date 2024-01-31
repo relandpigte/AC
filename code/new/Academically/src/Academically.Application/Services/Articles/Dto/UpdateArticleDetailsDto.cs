@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
-using Microsoft.AspNetCore.Http;
 
 namespace Academically.Services.Articles.Dto
 {
@@ -16,6 +16,9 @@ namespace Academically.Services.Articles.Dto
         public Guid? LanguageId { get; set; }
         public PricingType PricingType { get; set; }
         public Guid? ThumbnailDocumentId { get; set; }
+        public decimal? Price { get; set; }
+        public IEnumerable<Guid> Topics { get; set; }
+        public IEnumerable<string> NewTopics { get; set; }
     }
 }
 
