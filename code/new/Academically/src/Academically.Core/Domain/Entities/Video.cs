@@ -47,6 +47,7 @@ namespace Academically.Domain.Entities
 
         public virtual ICollection<Video> Children { get; set; }
         public virtual ICollection<VideoAttachment> VideoAttachments { get; set; }
+        public virtual ICollection<VideoTopic> VideoTopics { get; set; }
 
         public Video()
 		{

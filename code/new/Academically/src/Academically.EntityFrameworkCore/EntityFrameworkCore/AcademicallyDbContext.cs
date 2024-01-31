@@ -79,6 +79,7 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<CourseConversationReaction> CourseConversationReactions { get; set; }
         public virtual DbSet<CourseAssignment> CourseAssignments { get; set; }
         public virtual DbSet<Video> Videos { get; set; }
+        public virtual DbSet<VideoTopic> VideoTopics { get; set; }
         public virtual DbSet<VideoAttachment> VideoAttachments { get; set; }
         public virtual DbSet<Article> Articles { get; set; }
         public virtual DbSet<ArticleTopic> ArticleTopics { get; set; }

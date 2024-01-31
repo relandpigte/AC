@@ -39,6 +39,8 @@ namespace Academically.Services.Videos
         private readonly IDocumentsDomainService _documentsDomainService;
         private readonly IExploreRepository _exploreRepository;
         private readonly IRepository<VideoAttachment, Guid> _videoAttachmentRepository;
+        private readonly IRepository<DisciplineTaxonomy, Guid> _disciplineTaxonomyRepository;
+
 
         public VideosAppService(
             IRepository<Video, Guid> videosRepository,
@@ -48,7 +50,8 @@ namespace Academically.Services.Videos
             IRepository<ServicePurchase, Guid> servicePurchasesRepository,
             IDocumentsDomainService documentsDomainService,
             IExploreRepository exploreRepository,
-            IRepository<VideoAttachment, Guid> videoAttachmentRepository)
+            IRepository<VideoAttachment, Guid> videoAttachmentRepository,
+            IRepository<DisciplineTaxonomy, Guid> disciplineTaxonomyRepository)
         {
             _videosRepository = videosRepository;
             _reactionsRepository = reactionsRepository;
@@ -58,6 +61,7 @@ namespace Academically.Services.Videos
             _documentsDomainService = documentsDomainService;
             _exploreRepository = exploreRepository;
             _videoAttachmentRepository = videoAttachmentRepository;
+            _disciplineTaxonomyRepository = disciplineTaxonomyRepository;
         }
 
         public async Task<PagedResultDto<VideoDto>> GetAll(PagedVideoResultRequestDto input)
@@ -221,6 +225,8 @@ namespace Academically.Services.Videos
                 .Include(e => e.Children)
                 .Include(e => e.CreatorUser)
                     .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(v => v.VideoTopics)
+                    .ThenInclude(d => d.DisciplineTaxonomy)
                 .Select(e => ObjectMapper.Map<VideoDto>(e))
                 .FirstOrDefaultAsync();
 
@@ -249,8 +255,44 @@ namespace Academically.Services.Videos
 
         public async Task<VideoDto> UpdateDetails(UpdateVideoDetailsDto input)
         {
-            var video = await _videosRepository.GetAsync(input.Id);
+            var video = await _videosRepository.GetAll()
+                .Include(v => v.VideoTopics)
+                .Where(v => v.Id == input.Id)
+                .SingleOrDefaultAsync();
             ObjectMapper.Map(input, video);
+            
+            var topicIds = input.Topics?.Count() > 0 ? input.Topics.ToList() : new List<Guid>();
+            if (input.NewTopics != null && input.NewTopics.Any())
+            {
+                var otherTopicParent = await _disciplineTaxonomyRepository.FirstOrDefaultAsync(x => x.Name == "Other Topics");
+                if (otherTopicParent != null)
+                {
+                    foreach (var newTopic in input.NewTopics)
+                    {
+                        var topicId = await _disciplineTaxonomyRepository.InsertAndGetIdAsync(new DisciplineTaxonomy
+                        {
+                            ParentId = otherTopicParent.Id,
+                            Name = newTopic
+                        });
+
+                        topicIds.Add(topicId);
+                    }
+                }
+            }
+
+            // clear all course's topics so we can add the ones that are retained/selected from the frontend side
+            video.VideoTopics.Clear();
+            foreach (var topicId in topicIds)
+            {
+                video.VideoTopics.Add(new VideoTopic
+                {
+                    VideoId =  video.Id,
+                    DisciplineTaxonomyId = topicId,
+                    CreationTime = DateTime.Now,
+                    CreatorUserId = AbpSession.GetUserId()
+                });
+            }
+            
             await _videosRepository.UpdateAsync(video);
             return ObjectMapper.Map<VideoDto>(video);
         }

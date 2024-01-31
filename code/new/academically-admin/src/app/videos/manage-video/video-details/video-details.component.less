@@ -1,0 +1,20 @@
+.form {
+  &-group {
+    margin-bottom: 24px;
+  }
+
+  &-text {
+    color: #6E84A3;
+    font-size: 13px;
+  }
+
+  &-label:has(~.form-text) {
+    margin-bottom: 1px;
+  }
+
+  &-price {
+    .custom-select {
+      max-width: 91px;
+    }
+  }
+}

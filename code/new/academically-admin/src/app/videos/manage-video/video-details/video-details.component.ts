@@ -1,22 +1,26 @@
 import { Component, OnInit, Injector, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { VideoService } from '@app/videos/_services/video.service';
-import { DocumentUploaderComponent, DefaultFile } from '@app/_shared/components/document-uploader/document-uploader.component';
-import { UploadService } from '@app/_shared/services/upload.service';
+import * as _ from 'lodash';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
+
+import { VideoService } from '@app/videos/_services/video.service';
+import { UploadService } from '@app/_shared/services/upload.service';
+import { AutoSaveComponentBase } from '@shared/auto-save-component-base';
+import { DocumentUploaderComponent, DefaultFile } from '@app/_shared/components/document-uploader/document-uploader.component';
 import {
+  DisciplineTaxonomiesServiceProxy,
   DocumentDto,
   DocumentType,
-  FileParameter,
+  FileParameter, KeywordSearchStrategy,
   PricingType,
   SpokenLanguageDto,
   SpokenLanguagesServiceProxy,
-  UpdateVideoDetailsDto,
+  UpdateVideoDetailsDto, VideoDto,
   VideosServiceProxy
 } from '@shared/service-proxies/service-proxies';
-import { finalize, takeUntil } from 'rxjs/operators';
-import { AutoSaveComponentBase } from '@shared/auto-save-component-base';
-import * as _ from 'lodash';
+import { TopicSorting } from '@shared/components/topic/topic.component';
+import { ElementRef } from '@node_modules/@angular/core';
 
 @Component({
   selector: 'app-video-details',
@@ -25,9 +29,11 @@ import * as _ from 'lodash';
 })
 export class VideoDetailsComponent extends AutoSaveComponentBase implements OnInit {
   @ViewChild(DocumentUploaderComponent, { static: true }) documentUploader: DocumentUploaderComponent;
+  @ViewChild('priceEl', { static: true }) priceInput: ElementRef;
+
   id: string;
   videoThumbnail: FileParameter;
-  model = new UpdateVideoDetailsDto();
+  model = new VideoDto();
   thumbnailDocument = new DocumentDto();
   isLoading = false;
   isUploadingImage = false;
@@ -39,6 +45,11 @@ export class VideoDetailsComponent extends AutoSaveComponentBase implements OnIn
   category: string;
   categories: string[] = [];
 
+  topicsChoices: any[] = [];
+  isLoadingTopics = false;
+  selectedTopics: { id: string, name: string }[] = [];
+  newSelectedTopics: { id: string, name: string }[] = [];
+
   constructor(
     injector: Injector,
     private _router: Router,
@@ -46,9 +57,12 @@ export class VideoDetailsComponent extends AutoSaveComponentBase implements OnIn
     private _videosService: VideosServiceProxy,
     private _videoService: VideoService,
     private _uploadService: UploadService,
+    private _taxonomyService: DisciplineTaxonomiesServiceProxy
   ) {
     super(injector);
   }
+
+  get isFreeService(): boolean { return PricingType.Free === this.model?.pricingType; }
 
   ngOnInit(): void {
     this._videoService.videoCreated$
@@ -81,10 +95,16 @@ export class VideoDetailsComponent extends AutoSaveComponentBase implements OnIn
     this._router.navigate(['/app/videos/' + this.model.id + '/video']);
   }
 
-  onPricingClick(pricingState: PricingType): void {
-    if (this.model.pricingType === PricingType.Free) {
-      this.model.price = 0;
-    }
+  onPricingClick(): void {
+    setTimeout((): void => {
+      if (this.model.pricingType === PricingType.Free) {
+        this.model.price = undefined;
+      } else {
+        this.priceInput.nativeElement.focus();
+        this.priceInput.nativeElement.select();
+        this.priceInput.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+      }
+    }, 200);
   }
 
   onCategoryKeyDown(e: KeyboardEvent): void {
@@ -105,6 +125,25 @@ export class VideoDetailsComponent extends AutoSaveComponentBase implements OnIn
       this.categories.splice(index, 1);
     }
     this.updateCategories();
+  }
+
+  updateModelForTopics(): void {
+    this.model.topics = this.selectedTopics.filter(t => t.id).map(t => t.id) ?? [];
+    this.model.newTopics = this.newSelectedTopics.map(t => t.name);
+  }
+
+  handleTopicsModelUpdate(data: any): void {
+    const { selected, newSelected } = data;
+    this.selectedTopics = selected;
+    this.newSelectedTopics = newSelected;
+    this.updateModelForTopics();
+  }
+
+  handleTopicsKeywordUpdate(data: any): void {
+    const { keyword, showLoading } = data;
+    this._taxonomyService.getAllLastChildren(keyword, KeywordSearchStrategy.StartsWith, true, TopicSorting.Popular, undefined)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(topics => this.topicsChoices = topics.filter(t => !this.selectedTopics.some(x => x.id === t.id)));
   }
 
   private getLanguages(): void {
@@ -180,6 +219,16 @@ export class VideoDetailsComponent extends AutoSaveComponentBase implements OnIn
           this.thumbnailDocument = response.thumbnailDocument;
           this.setDefaultFile();
         }
+
+        // let's reset the selected topics here
+        this.selectedTopics = response?.videoTopics?.map(e => {
+          return { id: e.disciplineTaxonomy.id, name: e.disciplineTaxonomy.name };
+        }) ?? [];
+        this.newSelectedTopics = [];
+
+        // add fresh topics to the model
+        this.updateModelForTopics();
+
         this.modelToSave = this.model;
         this.initAutoSave(this.updateDetails);
       });

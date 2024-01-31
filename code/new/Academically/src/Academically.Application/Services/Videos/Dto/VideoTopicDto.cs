@@ -4,12 +4,13 @@ using Abp.Domain.Entities.Auditing;
 using Academically.Domain.Entities;
 using Academically.Services.DisciplineTaxonomies.Dto;
 
-namespace Academically.Services.Articles.Dto;
+namespace Academically.Services.Videos.Dto;
 
-[AutoMapFrom(typeof(ArticleTopic))]
-public class ArticleTopicDto : CreationAuditedEntity<Guid>
+[AutoMapFrom(typeof(VideoTopic))]
+public class VideoTopicDto : CreationAuditedEntity<Guid>
 {
-    public Guid ArticleId { get; set; }
+    public Guid VideoId { get; set; }
     public Guid DisciplineTaxonomyId { get; set; }
     public DisciplineTaxonomyDto DisciplineTaxonomy { get; set; }
 }
+

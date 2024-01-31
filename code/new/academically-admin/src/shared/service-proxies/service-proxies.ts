@@ -36210,7 +36210,7 @@ export class ArticleTopicDto implements IArticleTopicDto {
     id: string;
     creationTime: moment.Moment;
     creatorUserId: number | undefined;
-    eventId: string;
+    articleId: string;
     disciplineTaxonomyId: string;
     disciplineTaxonomy: DisciplineTaxonomyDto;
 
@@ -36228,7 +36228,7 @@ export class ArticleTopicDto implements IArticleTopicDto {
             this.id = _data["id"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             this.creatorUserId = _data["creatorUserId"];
-            this.eventId = _data["eventId"];
+            this.articleId = _data["articleId"];
             this.disciplineTaxonomyId = _data["disciplineTaxonomyId"];
             this.disciplineTaxonomy = _data["disciplineTaxonomy"] ? DisciplineTaxonomyDto.fromJS(_data["disciplineTaxonomy"]) : <any>undefined;
         }
@@ -36246,7 +36246,7 @@ export class ArticleTopicDto implements IArticleTopicDto {
         data["id"] = this.id;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         data["creatorUserId"] = this.creatorUserId;
-        data["eventId"] = this.eventId;
+        data["articleId"] = this.articleId;
         data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
         data["disciplineTaxonomy"] = this.disciplineTaxonomy ? this.disciplineTaxonomy.toJSON() : <any>undefined;
         return data; 
@@ -36264,7 +36264,7 @@ export interface IArticleTopicDto {
     id: string;
     creationTime: moment.Moment;
     creatorUserId: number | undefined;
-    eventId: string;
+    articleId: string;
     disciplineTaxonomyId: string;
     disciplineTaxonomy: DisciplineTaxonomyDto;
 }
@@ -60479,6 +60479,8 @@ export class UpdateVideoDetailsDto implements IUpdateVideoDetailsDto {
     languageId: string | undefined;
     price: number;
     pricingType: PricingType;
+    topics: string[] | undefined;
+    newTopics: string[] | undefined;
 
     constructor(data?: IUpdateVideoDetailsDto) {
         if (data) {
@@ -60499,6 +60501,16 @@ export class UpdateVideoDetailsDto implements IUpdateVideoDetailsDto {
             this.languageId = _data["languageId"];
             this.price = _data["price"];
             this.pricingType = _data["pricingType"];
+            if (Array.isArray(_data["topics"])) {
+                this.topics = [] as any;
+                for (let item of _data["topics"])
+                    this.topics.push(item);
+            }
+            if (Array.isArray(_data["newTopics"])) {
+                this.newTopics = [] as any;
+                for (let item of _data["newTopics"])
+                    this.newTopics.push(item);
+            }
         }
     }
 
@@ -60519,6 +60531,16 @@ export class UpdateVideoDetailsDto implements IUpdateVideoDetailsDto {
         data["languageId"] = this.languageId;
         data["price"] = this.price;
         data["pricingType"] = this.pricingType;
+        if (Array.isArray(this.topics)) {
+            data["topics"] = [];
+            for (let item of this.topics)
+                data["topics"].push(item);
+        }
+        if (Array.isArray(this.newTopics)) {
+            data["newTopics"] = [];
+            for (let item of this.newTopics)
+                data["newTopics"].push(item);
+        }
         return data; 
     }
 
@@ -60539,6 +60561,8 @@ export interface IUpdateVideoDetailsDto {
     languageId: string | undefined;
     price: number;
     pricingType: PricingType;
+    topics: string[] | undefined;
+    newTopics: string[] | undefined;
 }
 
 export class UpdateVideoSettingsDto implements IUpdateVideoSettingsDto {
@@ -64415,6 +64439,9 @@ export class VideoDto implements IVideoDto {
     isSaved: boolean;
     isPurchased: boolean;
     purchased: UserDto[] | undefined;
+    videoTopics: VideoTopicDto[] | undefined;
+    topics: string[] | undefined;
+    newTopics: string[] | undefined;
 
     constructor(data?: IVideoDto) {
         if (data) {
@@ -64475,6 +64502,21 @@ export class VideoDto implements IVideoDto {
                 this.purchased = [] as any;
                 for (let item of _data["purchased"])
                     this.purchased.push(UserDto.fromJS(item));
+            }
+            if (Array.isArray(_data["videoTopics"])) {
+                this.videoTopics = [] as any;
+                for (let item of _data["videoTopics"])
+                    this.videoTopics.push(VideoTopicDto.fromJS(item));
+            }
+            if (Array.isArray(_data["topics"])) {
+                this.topics = [] as any;
+                for (let item of _data["topics"])
+                    this.topics.push(item);
+            }
+            if (Array.isArray(_data["newTopics"])) {
+                this.newTopics = [] as any;
+                for (let item of _data["newTopics"])
+                    this.newTopics.push(item);
             }
         }
     }
@@ -64537,6 +64579,21 @@ export class VideoDto implements IVideoDto {
             for (let item of this.purchased)
                 data["purchased"].push(item.toJSON());
         }
+        if (Array.isArray(this.videoTopics)) {
+            data["videoTopics"] = [];
+            for (let item of this.videoTopics)
+                data["videoTopics"].push(item.toJSON());
+        }
+        if (Array.isArray(this.topics)) {
+            data["topics"] = [];
+            for (let item of this.topics)
+                data["topics"].push(item);
+        }
+        if (Array.isArray(this.newTopics)) {
+            data["newTopics"] = [];
+            for (let item of this.newTopics)
+                data["newTopics"].push(item);
+        }
         return data; 
     }
 
@@ -64586,6 +64643,9 @@ export interface IVideoDto {
     isSaved: boolean;
     isPurchased: boolean;
     purchased: UserDto[] | undefined;
+    videoTopics: VideoTopicDto[] | undefined;
+    topics: string[] | undefined;
+    newTopics: string[] | undefined;
 }
 
 export class VideoDtoPagedResultDto implements IVideoDtoPagedResultDto {
@@ -64648,6 +64708,69 @@ export enum VideoStatus {
     Draft = 0,
     Published = 1,
     Archived = 2,
+}
+
+export class VideoTopicDto implements IVideoTopicDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    videoId: string;
+    disciplineTaxonomyId: string;
+    disciplineTaxonomy: DisciplineTaxonomyDto;
+
+    constructor(data?: IVideoTopicDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.videoId = _data["videoId"];
+            this.disciplineTaxonomyId = _data["disciplineTaxonomyId"];
+            this.disciplineTaxonomy = _data["disciplineTaxonomy"] ? DisciplineTaxonomyDto.fromJS(_data["disciplineTaxonomy"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): VideoTopicDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new VideoTopicDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["videoId"] = this.videoId;
+        data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
+        data["disciplineTaxonomy"] = this.disciplineTaxonomy ? this.disciplineTaxonomy.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): VideoTopicDto {
+        const json = this.toJSON();
+        let result = new VideoTopicDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IVideoTopicDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    videoId: string;
+    disciplineTaxonomyId: string;
+    disciplineTaxonomy: DisciplineTaxonomyDto;
 }
 
 /** 1 = SingleVideo 2 = VideoSeries */

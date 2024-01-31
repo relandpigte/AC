@@ -1,7 +1,8 @@
-﻿using Abp.AutoMapper;
+﻿using System;
+using Abp.AutoMapper;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
-using System;
+using System.Collections.Generic;
 
 namespace Academically.Services.Videos.Dto
 {
@@ -19,6 +20,8 @@ namespace Academically.Services.Videos.Dto
 
         public decimal Price { get; set; }
         public PricingType PricingType { get; set; }
+        public IEnumerable<Guid> Topics { get; set; }
+        public IEnumerable<string> NewTopics { get; set; }
     }
 }
 

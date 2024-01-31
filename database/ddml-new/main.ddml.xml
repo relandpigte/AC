@@ -219,4 +219,5 @@
 	<include file="ddml-new/ddml.2024-01-28-02-create-video-attachments-tables.xml" />
 	<include file="ddml-new/ddml.2024-01-29-01-alter-service-poll-tables.xml" />
 	<include file="ddml-new/ddml.2024-01-31-01-create-article-topics-table.xml" />
+	<include file="ddml-new/ddml.2024-01-31-01-create-video-topics-table.xml" />
 </databaseChangeLog>

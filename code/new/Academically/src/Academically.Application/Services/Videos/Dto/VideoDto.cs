@@ -61,6 +61,14 @@ namespace Academically.Services.Videos.Dto
         [NotMapped]
         public IEnumerable<UserDto> Purchased { get; set; }
         
+        public IEnumerable<VideoTopicDto> VideoTopics { get; set; }
+
+        [NotMapped]
+        public IEnumerable<Guid> Topics { get; set; }
+
+        [NotMapped]
+        public IEnumerable<string> NewTopics { get; set; }
+        
         public VideoDto()
 		{
 		}
