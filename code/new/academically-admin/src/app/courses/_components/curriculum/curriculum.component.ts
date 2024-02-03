@@ -3,16 +3,27 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { LessonWizardComponent } from '../lesson-wizard/lesson-wizard.component';
 import { CourseSectionDto, CourseSectionsServiceProxy, CourseSectionStatus, CourseSectionType } from '@shared/service-proxies/service-proxies';
-import { takeUntil, finalize } from 'rxjs/operators';
+import { takeUntil, finalize, switchMap } from 'rxjs/operators';
 import { DragulaService } from 'ng2-dragula';
 import { CourseEllipseState } from './../../_models/courseEllipseType';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { maxBy } from 'lodash';
+import { forkJoin, of } from 'rxjs';
 
 export enum CourseStructure {
   Mini = 'mini',
   Standard = 'standard',
 }
+
+export const CourseStructureToTitle: { [key in CourseStructure]?: string } = {
+  [CourseStructure.Mini]: 'Course.Change.Structure.Title.Mini',
+  [CourseStructure.Standard]: 'Course.Change.Structure.Title.Standard',
+};
+
+export const CourseStructureToBody: { [key in CourseStructure]?: string } = {
+  [CourseStructure.Mini]: 'Course.Change.Structure.Body.Mini',
+  [CourseStructure.Standard]: 'Course.Change.Structure.Body.Standard',
+};
 
 @Component({
   selector: 'app-curriculum',
@@ -119,7 +130,22 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
   }
 
   onCourseStructureClick(structure: CourseStructure): void {
-    this.selectedStructure = structure;
+    this._modalDialogService.showConfirmDialog({
+      title: this.l(CourseStructureToTitle[structure]),
+      text: this.l(CourseStructureToBody[structure]),
+      confirmCb: (): void => {
+        this.isLoading = false;
+        this._courseSectionsService.flatCourseCurriculum(this.courseId, structure)
+          .pipe(
+            takeUntil(this.destroyed$),
+            finalize(() => this.isLoading = false),
+            switchMap(() => this._courseSectionsService.getAll(this.courseId)),
+          ).subscribe(courseSections => {
+            this.courseSections = courseSections;
+          });
+        this.selectedStructure = structure;
+      }
+    });
   }
 
   onAddEditCourseSectionClick(courseSectionType: CourseSectionType, courseSection?:

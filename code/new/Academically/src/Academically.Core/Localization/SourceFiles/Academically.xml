@@ -2065,6 +2065,10 @@
     <text name="ReviewSubmitted">Review submitted</text>
     <text name="ThankYouForReviewing">Thank you for your review. Your response has been sent to the instructor.</text>
     <text name="GoToReviews">Go to reviews</text>
+	<text name="Course.Change.Structure.Title.Standard">Switch to standard course?</text>
+	<text name="Course.Change.Structure.Title.Mini">Switch to mini course?</text>
+	<text name="Course.Change.Structure.Body.Standard">If you switch to a standard course all lessons will be merged into a module.</text>
+	<text name="Course.Change.Structure.Body.Mini">Switching to a mini course will remove all modules and revert the course to lessons only.</text>
 
     <!-- Coaching service -->
     <text name="AttendedSession">You attended this session</text>
