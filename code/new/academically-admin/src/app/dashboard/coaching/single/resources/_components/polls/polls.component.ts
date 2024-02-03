@@ -7,6 +7,7 @@ import { takeUntil, finalize } from 'rxjs/operators';
 import { PagedListingComponentBase, PagedAndSortedRequestDto } from '@shared/paged-listing-component-base';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { ServiceCreatePollComponent } from '@shared/components/service-create-poll/service-create-poll.component';
+import { ServiceCreateQuizComponent } from '@shared/components/service-create-quiz/service-create-quiz.component';
 
 class PagedServicePollResultRequestDto extends PagedAndSortedRequestDto {
   referenceIdFilter: string;
@@ -45,13 +46,13 @@ export class PollsComponent extends PagedListingComponentBase<ServicePollDto> im
   }
 
   onAddClick(): void {
-    const modalSettings = this.defaultModalSettings as ModalOptions<ServiceCreatePollComponent>;
+    const modalSettings = this.defaultModalSettings as ModalOptions<ServiceCreateQuizComponent>;
     modalSettings.class = 'modal-lg';
     modalSettings.initialState = {
       referenceId: this.coaching.id,
       serviceType: ServicesType.Coaching
     };
-    const modal = this._modalService.show(ServiceCreatePollComponent, modalSettings).content;
+    const modal = this._modalService.show(ServiceCreateQuizComponent, modalSettings).content;
     modal.modelSaved
       .pipe(takeUntil(this.destroyed$))
       .subscribe(() => {

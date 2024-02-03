@@ -2112,5 +2112,14 @@
 	<text name="Service.Poll.Trigger.Manual">When launched manually during the {0}</text>
 	<text name="Service.Poll.Question.Type.MultipleChoice">Single choice</text>
 	<text name="Service.Poll.Question.Type.MultipleResponse">Multiple choice</text>
+
+	<!-- Service Quizes -->
+	<text name="Service.Quiz.Trigger.PurchaseOfService">Upon purchase of the {0}</text>
+	<text name="Service.Quiz.Trigger.StartOfService">At the start of the {0}</text>
+	<text name="Service.Quiz.Trigger.EndOfService">At the end of the {0}</text>
+	<text name="Service.Quiz.Trigger.CompletionOfService">Upon completion of the {0}</text>
+	<text name="Service.Quiz.Trigger.Manual">When launched manually during the {0}</text>
+	<text name="Service.Quiz.Question.Type.MultipleChoice">Single choice</text>
+	<text name="Service.Quiz.Question.Type.MultipleResponse">Multiple choice</text>
   </texts>
 </localizationDictionary>
