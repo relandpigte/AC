@@ -110,7 +110,15 @@ export class ServiceCreateQuizComponent extends AppComponentBase implements OnIn
         });
     }
 
-    get isModelValid(): boolean { return this.createQuizForm?.valid; }
+    get isModelValid(): boolean {
+        return this.createQuizForm?.valid && (this.activeTab === CreateQuizTabs.INTRODUCTION || (this.activeTab === CreateQuizTabs.QUESTIONS && this.eachQuestionHasAtLeastOneAnswer));
+    }
+    get eachQuestionHasAtLeastOneAnswer(): boolean {
+        return this.model.serviceQuizQuestions?.filter(q => !q.isTemporary)?.every(q => {
+            const options = q.serviceQuizQuestionOptions?.filter(o => !o.isTemporary);
+            return options?.length && options?.some(c => c.isCorrect);
+        });
+    }
     get serviceTypeObject(): string { return ServiceCardUtils.getServiceTypeObject(this.serviceType); }
 
     async ngOnInit() {
