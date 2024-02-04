@@ -87,11 +87,11 @@
         <app-share-videos (shareVideo)="onShareVideo($event)" (unshareVideo)="onUnshareVideo()"></app-share-videos>
       </div>
       <div class="presentation-controls bg-white">
-        <button class="btn btn-sm btn-outline-primary mx-2">
+        <button class="btn btn-sm btn-outline-primary mx-2" [disabled]="!isAudienceMicrophoneEnabled">
           <i class="fe fe-mic"></i>
         </button>
 
-        <button class="btn btn-sm btn-outline-primary mx-2">
+        <button class="btn btn-sm btn-outline-primary mx-2" [disabled]="!isAudienceWebCamEnabled">
           <i class="fe fe-camera"></i>
         </button>
 

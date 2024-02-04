@@ -54618,18 +54618,39 @@ export enum ServiceExpertiseLevel {
 export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
     id: string;
     creationTime: moment.Moment;
+    creatorUserId: number | undefined;
     referenceId: string;
     serviceType: ServicesType;
-    creatorUserId: number | undefined;
     attendees: boolean;
     chat: boolean;
+    chatAudiencePublic: boolean;
+    chatAudiencePrivate: boolean;
     activities: boolean;
+    activitiesAudienceCanAdd: boolean;
+    activitiesAudienceCanParticipate: boolean;
+    activitiesAudienceCanViewResult: boolean;
     questions: boolean;
+    questionsAudienceCanVote: boolean;
+    questionsAudienceCanAsk: boolean;
+    questionsAudienceCanRespond: boolean;
+    questionsAudienceCanAnswerLive: boolean;
     offers: boolean;
+    offersAudienceCanCreate: boolean;
+    offersAudienceCanPurchase: boolean;
     handouts: boolean;
+    handoutsAudienceCanAdd: boolean;
+    handoutsAudienceCanShare: boolean;
+    handoutsAudienceCanDownload: boolean;
     comments: boolean;
+    commentsAudienceCanAdd: boolean;
+    commentsAudienceCanReact: boolean;
     reviews: boolean;
     settings: boolean;
+    interactiveToolsAudienceMicrophone: boolean;
+    interactiveToolsAudienceWebCam: boolean;
+    interactiveToolsAudienceSharing: boolean;
+    interactiveToolsAudienceRaiseHand: boolean;
+    interactiveToolsAudienceLowerHand: boolean;
 
     constructor(data?: IServiceFeatureFlagDto) {
         if (data) {
@@ -54644,18 +54665,39 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
         if (_data) {
             this.id = _data["id"];
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
             this.referenceId = _data["referenceId"];
             this.serviceType = _data["serviceType"];
-            this.creatorUserId = _data["creatorUserId"];
             this.attendees = _data["attendees"];
             this.chat = _data["chat"];
+            this.chatAudiencePublic = _data["chatAudiencePublic"];
+            this.chatAudiencePrivate = _data["chatAudiencePrivate"];
             this.activities = _data["activities"];
+            this.activitiesAudienceCanAdd = _data["activitiesAudienceCanAdd"];
+            this.activitiesAudienceCanParticipate = _data["activitiesAudienceCanParticipate"];
+            this.activitiesAudienceCanViewResult = _data["activitiesAudienceCanViewResult"];
             this.questions = _data["questions"];
+            this.questionsAudienceCanVote = _data["questionsAudienceCanVote"];
+            this.questionsAudienceCanAsk = _data["questionsAudienceCanAsk"];
+            this.questionsAudienceCanRespond = _data["questionsAudienceCanRespond"];
+            this.questionsAudienceCanAnswerLive = _data["questionsAudienceCanAnswerLive"];
             this.offers = _data["offers"];
+            this.offersAudienceCanCreate = _data["offersAudienceCanCreate"];
+            this.offersAudienceCanPurchase = _data["offersAudienceCanPurchase"];
             this.handouts = _data["handouts"];
+            this.handoutsAudienceCanAdd = _data["handoutsAudienceCanAdd"];
+            this.handoutsAudienceCanShare = _data["handoutsAudienceCanShare"];
+            this.handoutsAudienceCanDownload = _data["handoutsAudienceCanDownload"];
             this.comments = _data["comments"];
+            this.commentsAudienceCanAdd = _data["commentsAudienceCanAdd"];
+            this.commentsAudienceCanReact = _data["commentsAudienceCanReact"];
             this.reviews = _data["reviews"];
             this.settings = _data["settings"];
+            this.interactiveToolsAudienceMicrophone = _data["interactiveToolsAudienceMicrophone"];
+            this.interactiveToolsAudienceWebCam = _data["interactiveToolsAudienceWebCam"];
+            this.interactiveToolsAudienceSharing = _data["interactiveToolsAudienceSharing"];
+            this.interactiveToolsAudienceRaiseHand = _data["interactiveToolsAudienceRaiseHand"];
+            this.interactiveToolsAudienceLowerHand = _data["interactiveToolsAudienceLowerHand"];
         }
     }
 
@@ -54670,18 +54712,39 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
         data["referenceId"] = this.referenceId;
         data["serviceType"] = this.serviceType;
-        data["creatorUserId"] = this.creatorUserId;
         data["attendees"] = this.attendees;
         data["chat"] = this.chat;
+        data["chatAudiencePublic"] = this.chatAudiencePublic;
+        data["chatAudiencePrivate"] = this.chatAudiencePrivate;
         data["activities"] = this.activities;
+        data["activitiesAudienceCanAdd"] = this.activitiesAudienceCanAdd;
+        data["activitiesAudienceCanParticipate"] = this.activitiesAudienceCanParticipate;
+        data["activitiesAudienceCanViewResult"] = this.activitiesAudienceCanViewResult;
         data["questions"] = this.questions;
+        data["questionsAudienceCanVote"] = this.questionsAudienceCanVote;
+        data["questionsAudienceCanAsk"] = this.questionsAudienceCanAsk;
+        data["questionsAudienceCanRespond"] = this.questionsAudienceCanRespond;
+        data["questionsAudienceCanAnswerLive"] = this.questionsAudienceCanAnswerLive;
         data["offers"] = this.offers;
+        data["offersAudienceCanCreate"] = this.offersAudienceCanCreate;
+        data["offersAudienceCanPurchase"] = this.offersAudienceCanPurchase;
         data["handouts"] = this.handouts;
+        data["handoutsAudienceCanAdd"] = this.handoutsAudienceCanAdd;
+        data["handoutsAudienceCanShare"] = this.handoutsAudienceCanShare;
+        data["handoutsAudienceCanDownload"] = this.handoutsAudienceCanDownload;
         data["comments"] = this.comments;
+        data["commentsAudienceCanAdd"] = this.commentsAudienceCanAdd;
+        data["commentsAudienceCanReact"] = this.commentsAudienceCanReact;
         data["reviews"] = this.reviews;
         data["settings"] = this.settings;
+        data["interactiveToolsAudienceMicrophone"] = this.interactiveToolsAudienceMicrophone;
+        data["interactiveToolsAudienceWebCam"] = this.interactiveToolsAudienceWebCam;
+        data["interactiveToolsAudienceSharing"] = this.interactiveToolsAudienceSharing;
+        data["interactiveToolsAudienceRaiseHand"] = this.interactiveToolsAudienceRaiseHand;
+        data["interactiveToolsAudienceLowerHand"] = this.interactiveToolsAudienceLowerHand;
         return data; 
     }
 
@@ -54696,18 +54759,39 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
 export interface IServiceFeatureFlagDto {
     id: string;
     creationTime: moment.Moment;
+    creatorUserId: number | undefined;
     referenceId: string;
     serviceType: ServicesType;
-    creatorUserId: number | undefined;
     attendees: boolean;
     chat: boolean;
+    chatAudiencePublic: boolean;
+    chatAudiencePrivate: boolean;
     activities: boolean;
+    activitiesAudienceCanAdd: boolean;
+    activitiesAudienceCanParticipate: boolean;
+    activitiesAudienceCanViewResult: boolean;
     questions: boolean;
+    questionsAudienceCanVote: boolean;
+    questionsAudienceCanAsk: boolean;
+    questionsAudienceCanRespond: boolean;
+    questionsAudienceCanAnswerLive: boolean;
     offers: boolean;
+    offersAudienceCanCreate: boolean;
+    offersAudienceCanPurchase: boolean;
     handouts: boolean;
+    handoutsAudienceCanAdd: boolean;
+    handoutsAudienceCanShare: boolean;
+    handoutsAudienceCanDownload: boolean;
     comments: boolean;
+    commentsAudienceCanAdd: boolean;
+    commentsAudienceCanReact: boolean;
     reviews: boolean;
     settings: boolean;
+    interactiveToolsAudienceMicrophone: boolean;
+    interactiveToolsAudienceWebCam: boolean;
+    interactiveToolsAudienceSharing: boolean;
+    interactiveToolsAudienceRaiseHand: boolean;
+    interactiveToolsAudienceLowerHand: boolean;
 }
 
 export class ServiceMapping implements IServiceMapping {

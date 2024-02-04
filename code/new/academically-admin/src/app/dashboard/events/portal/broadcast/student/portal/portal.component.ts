@@ -52,7 +52,7 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
 
   preview = false;
   showSidebar = true;
-  serviceFeatureFlags = new ServiceFeatureFlagDto();
+  flags = new ServiceFeatureFlagDto();
 
   constructor(
     injector: Injector,
@@ -69,11 +69,14 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
     private _questionsService: QuestionsServiceProxy
   ) {
     super(injector);
+    this.pipeDestroy(this._portalService.featureFlags$, flags => this.flags.init(flags));
   }
 
   get offersStateId(): string { return 'offers-event'; }
   get pollsStateId(): string { return 'polls-event'; }
-  get flags(): ServiceFeatureFlagDto { return this.serviceFeatureFlags; }
+
+  get isAudienceMicrophoneEnabled(): boolean { return this.isStudent && this.flags?.interactiveToolsAudienceMicrophone; }
+  get isAudienceWebCamEnabled(): boolean { return this.isStudent && this.flags?.interactiveToolsAudienceWebCam; }
 
   async ngOnInit() {
     // routings
