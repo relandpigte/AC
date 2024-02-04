@@ -114,6 +114,7 @@ import { ServiceMetricsComponent } from '@shared/components/service-metrics/serv
 import { ServiceCreateComponent } from '@shared/components/service-create/service-create.component';
 import { ServiceCreateOfferComponent } from '@shared/components/service-create-offer/service-create-offer.component';
 import { ServiceCreatePollComponent } from '@shared/components/service-create-poll/service-create-poll.component';
+import { ServiceCreateQuizComponent } from '@shared/components/service-create-quiz/service-create-quiz.component';
 import { ServiceCardOfferComponent } from '@shared/components/service-card-offer/service-card-offer.component';
 import { CreateServiceComponent } from '@shared/modals/create-service/create-service.component';
 
@@ -210,6 +211,7 @@ FullCalendarModule.registerPlugins([
     ServiceCreateComponent,
     ServiceCreateOfferComponent,
     ServiceCreatePollComponent,
+    ServiceCreateQuizComponent,
     ServiceCardOfferComponent,
     CreateServiceComponent
   ],
@@ -339,6 +341,7 @@ FullCalendarModule.registerPlugins([
     ServiceCreateComponent,
     ServiceCreateOfferComponent,
     ServiceCreatePollComponent,
+    ServiceCreateQuizComponent,
     ServiceCardOfferComponent,
     CreateServiceComponent
   ],

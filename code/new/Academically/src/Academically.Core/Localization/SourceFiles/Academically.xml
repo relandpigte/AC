@@ -2065,6 +2065,10 @@
     <text name="ReviewSubmitted">Review submitted</text>
     <text name="ThankYouForReviewing">Thank you for your review. Your response has been sent to the instructor.</text>
     <text name="GoToReviews">Go to reviews</text>
+	<text name="Course.Change.Structure.Title.Standard">Switch to standard course?</text>
+	<text name="Course.Change.Structure.Title.Mini">Switch to mini course?</text>
+	<text name="Course.Change.Structure.Body.Standard">If you switch to a standard course all lessons will be merged into a module.</text>
+	<text name="Course.Change.Structure.Body.Mini">Switching to a mini course will remove all modules and revert the course to lessons only.</text>
 
     <!-- Coaching service -->
     <text name="AttendedSession">You attended this session</text>
@@ -2112,5 +2116,14 @@
 	<text name="Service.Poll.Trigger.Manual">When launched manually during the {0}</text>
 	<text name="Service.Poll.Question.Type.MultipleChoice">Single choice</text>
 	<text name="Service.Poll.Question.Type.MultipleResponse">Multiple choice</text>
+
+	<!-- Service Quizes -->
+	<text name="Service.Quiz.Trigger.PurchaseOfService">Upon purchase of the {0}</text>
+	<text name="Service.Quiz.Trigger.StartOfService">At the start of the {0}</text>
+	<text name="Service.Quiz.Trigger.EndOfService">At the end of the {0}</text>
+	<text name="Service.Quiz.Trigger.CompletionOfService">Upon completion of the {0}</text>
+	<text name="Service.Quiz.Trigger.Manual">When launched manually during the {0}</text>
+	<text name="Service.Quiz.Question.Type.MultipleChoice">Single choice</text>
+	<text name="Service.Quiz.Question.Type.MultipleResponse">Multiple choice</text>
   </texts>
 </localizationDictionary>

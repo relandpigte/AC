@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Abp.Domain.Repositories;
+using Abp.Runtime.Session;
+using Abp.Timing;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
@@ -66,7 +69,8 @@ namespace Academically.Services.CourseSections
         {
             var course = ObjectMapper.Map<CourseSection>(input);
             course.Status = CourseSectionStatus.Draft;
-            await _courseSectionsRepository.InsertAsync(course);
+            course.CreatorUserId = this.AbpSession.GetUserId();
+            await _courseSectionsRepository.InsertOrUpdateAsync(course);
         }
 
         public async Task Delete(Guid id)
@@ -178,6 +182,46 @@ namespace Academically.Services.CourseSections
             ObjectMapper.Map(input, courseSection);
             await _courseSectionsRepository.UpdateAsync(courseSection);
             return ObjectMapper.Map<CourseSectionDto>(courseSection);
+        }
+
+        public async Task<bool> FlatCourseCurriculum(Guid id, string targetType)
+        {
+            var courseSections = await _courseSectionsRepository.GetAll()
+                .Where(c => c.CourseId == id)
+                .OrderBy(e => e.DisplayOrder)
+                .ToListAsync();
+
+            foreach (var courseSection in courseSections)
+                courseSection.ParentId = null;
+
+            var displayOrder = 1;
+            foreach (var courseSection in courseSections)
+            {
+                if (courseSection.Type == CourseSectionType.Lesson)
+                    courseSection.DisplayOrder = displayOrder++;
+                else
+                    await this._courseSectionsRepository.DeleteAsync(courseSection);
+            }
+
+            if (targetType == "standard")
+            {
+                var newModule = await _courseSectionsRepository.InsertAsync(new CourseSection()
+                {
+                    Name = "",
+                    CourseId = id,
+                    DisplayOrder = 1,
+                    Type = CourseSectionType.Module,
+                    CreatorUserId = this.AbpSession.UserId,
+                    CreationTime = Clock.Now,
+                });
+
+                foreach (var courseSection in courseSections)
+                {
+                    courseSection.ParentId = newModule.Id;
+                }
+            }
+
+            return true;
         }
     }
 }

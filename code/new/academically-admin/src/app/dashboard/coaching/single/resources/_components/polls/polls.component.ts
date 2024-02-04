@@ -1,12 +1,11 @@
-import { Component, OnInit, Injector } from '@angular/core';
-import { CreateEditPollComponent } from '../create-edit-poll/create-edit-poll.component';
-import { ModalOptions, BsModalService } from 'ngx-bootstrap/modal';
+import { Component, Injector, OnInit } from '@angular/core';
 import { CoachingService } from '@app/dashboard/coaching/_services/coaching.service';
-import { CoachingDto, CoachingPollDto, CoachingPollsServiceProxy, ServicePollDto, ServicePollsServiceProxy, ServicesType } from '@shared/service-proxies/service-proxies';
-import { takeUntil, finalize } from 'rxjs/operators';
-import { PagedListingComponentBase, PagedAndSortedRequestDto } from '@shared/paged-listing-component-base';
-import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { ServiceCreatePollComponent } from '@shared/components/service-create-poll/service-create-poll.component';
+import { PagedAndSortedRequestDto, PagedListingComponentBase } from '@shared/paged-listing-component-base';
+import { CoachingDto, ServicePollDto, ServicePollsServiceProxy, ServicesType } from '@shared/service-proxies/service-proxies';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 class PagedServicePollResultRequestDto extends PagedAndSortedRequestDto {
   referenceIdFilter: string;

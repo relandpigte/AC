@@ -5,16 +5,16 @@
     </div>
 
     <div class="course-section-name">
-      <ng-container *ngIf="!isTemporary">
+      <ng-container *ngIf="!isTemporary && courseSection.name">
         {{ courseSection.name }}
       </ng-container>
-      <ng-container *ngIf="isTemporary">
+      <ng-container *ngIf="isTemporary || !courseSection.name">
         <input
           type="text"
           class="form-control"
           id="name"
           name="name"
-          [(ngModel)]="courseSection.name"
+          [(ngModel)]="nameInput"
           (keypress)="onKeyPressName($event)"
           (keyup)="onKeyUpName($event)"
           (blur)="onBlurName()"

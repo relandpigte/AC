@@ -24,6 +24,8 @@ export class CourseSectionComponent extends AppComponentBase implements OnInit {
   @Output() deleteSection = new EventEmitter();
   @Output() removeTemporary = new EventEmitter();
 
+  nameInput: string;
+
   CourseSectionStatus = CourseSectionStatus;
 
   constructor(injector: Injector) {
@@ -31,7 +33,7 @@ export class CourseSectionComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.courseSection);
+    this.nameInput = this.courseSection.name;
   }
 
   get isMiniStructure(): boolean { return this.selectedStructure === CourseStructure.Mini; }
@@ -43,7 +45,8 @@ export class CourseSectionComponent extends AppComponentBase implements OnInit {
   get offersCount(): number { return this.courseSection?.['offers']?.length || 0; }
 
   onBlurName() {
-    if (this.courseSection.name) {
+    if (this.nameInput) {
+      this.courseSection.name = this.nameInput;
       this.addSection.emit(this.courseSection);
     } else {
       this.removeTemporary.emit(this.courseSection);

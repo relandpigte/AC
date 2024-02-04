@@ -1,0 +1,314 @@
+<form class="form-horizontal d-flex flex-column flex-grow-1" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
+    <div class="modal-card card service-quiz d-flex flex-column justify-content-center flex-grow-1">
+
+        <div class="card-header position-relative service-quiz-header">
+            <h4 class="card-header-title">
+              {{ 'Create quiz' | localize }}
+            </h4>
+
+            <ul class="nav nav-tabs nav-overflow header-tabs d-flex justify-content-center align-items-center">
+              <li class="nav-item h-100">
+                <span
+                    [class.active]="activeTab === CreateQuizTabs.INTRODUCTION"
+                    class="nav-link d-flex justify-content-center align-items-center h-100"
+                    role="button"
+                    (click)="activeTab = CreateQuizTabs.INTRODUCTION"
+                >
+                  {{ 'Introduction' | localize }}
+                </span>
+              </li>
+              <li class="nav-item h-100">
+                <span
+                    [class.active]="activeTab === CreateQuizTabs.QUESTIONS"
+                    [class.disabled-container]="!isIntroductionFormValid()"
+                    class="nav-link d-flex justify-content-center align-items-center h-100"
+                    role="button"
+                    (click)="activeTab = CreateQuizTabs.QUESTIONS"
+                >
+                  {{ 'Questions' | localize }}
+                </span>
+              </li>
+            </ul>
+        </div>
+
+        <div class="card-body service-quiz-body flex-grow-1 d-flex justify-content-center align-items-center scroll-y">
+
+            <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-start gap-20 w100p" [class.offscreen]="activeTab !== CreateQuizTabs.INTRODUCTION">
+                <div class="service-quiz-body-name service-builder-label w100p">
+                    <div class="service-quiz-body-name-label service-builder-label-text">{{ 'Quiz name' | localize }}</div>
+                    <div class="service-quiz-body-name-input w100p" [style.marginTop.px]="8">
+                        <input
+                            [(ngModel)]="model.name"
+                            #nameModel="ngModel"
+                            #nameEl
+                            class="form-control"
+                            type="text"
+                            id="name"
+                            name="name"
+                            required
+                            [placeholder]="'Write the quiz name here...' | localize" />
+                        <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
+                    </div>
+                </div>
+
+                <div class="service-quiz-body-description service-builder-label w100p">
+                    <div class="service-quiz-body-description-label service-builder-label-text">{{ 'Quiz description' | localize }}</div>
+                    <div class="service-quiz-body-description-description service-builder-label-description">
+                        <div class="service-quiz-body-description-description-text service-builder-label-description-text">This is how others will learn about the quiz, so make sure it's clear.</div>
+                    </div>
+                    <div class="service-quiz-body-description-input w100p" [style.marginTop.px]="8">
+                        <textarea
+                            [rows]="3"
+                            [(ngModel)]="model.description"
+                            #descriptionModel="ngModel"
+                            #descriptionEl
+                            class="form-control noresize slick-scroll"
+                            id="description"
+                            name="description"
+                            [placeholder]="'Write your description here...' | localize">
+                        </textarea>
+                        <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl"></abp-validation-summary>
+                    </div>
+                </div>
+
+                <div class="service-quiz-body-duration service-builder-label w100p">
+                    <div class="service-quiz-body-duration-label service-builder-label-text">{{ 'How long does it take to complete the quiz?' | localize }}</div>
+                    <div class="service-quiz-body-duration-description service-builder-label-description">
+                        <div class="service-quiz-body-duration-description-text service-builder-label-description-text">Select the number of minutes it takes to complete the quiz.</div>
+                    </div>
+                    <div class="service-quiz-body-duration-input w100p" [style.marginTop.px]="8">
+                        <select
+                            select2
+                            class="custom-select"
+                            [disabled]="isLoading"
+                            [(ngModel)]="model.duration"
+                            [defaultValue]="model.duration"
+                            (select2ValueChange)="model.duration=$event"
+                            id="duration"
+                            name="duration"
+                            [placeholder]="'Select' | localize"
+                            #durationModel="ngModel"
+                            #durationEl
+                            required>
+                            <option *ngFor="let durationOption of durationOptions" [value]="durationOption.value">
+                            {{ durationOption.label | localize }}
+                            </option>
+                        </select>
+                        <abp-validation-summary [control]="durationModel" [controlEl]="durationEl"></abp-validation-summary>
+                    </div>
+                </div>
+
+                <div class="service-quiz-body-trigger service-builder-label w100p">
+                    <div class="service-quiz-body-trigger-label service-builder-label-text">{{ 'When should the quiz trigger?' | localize }}</div>
+                    <div class="service-quiz-body-trigger-input w100p" [style.marginTop.px]="8">
+                        <select
+                            select2
+                            class="custom-select"
+                            [disabled]="isLoading"
+                            [(ngModel)]="model.trigger"
+                            [defaultValue]="model.trigger"
+                            (select2ValueChange)="model.trigger=$event"
+                            id="trigger"
+                            name="trigger"
+                            [placeholder]="'Select' | localize"
+                            #triggerModel="ngModel"
+                            #triggerEl
+                            required>
+                            <option *ngFor="let triggerOption of triggerOptions" [value]="triggerOption.value">
+                            {{ triggerOption.label | localize : serviceTypeObject }}
+                            </option>
+                        </select>
+                        <abp-validation-summary [control]="triggerModel" [controlEl]="triggerEl"></abp-validation-summary>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-start gap-12 w100p" [class.offscreen]="activeTab !== CreateQuizTabs.QUESTIONS">
+                <div class="service-quiz-body-questions d-flex flex-column justify-content-center align-items-center gap-12 w100p" [dragula]="dragulaGroup" [(dragulaModel)]="model.serviceQuizQuestions">
+                    <div *ngFor="let question of model.serviceQuizQuestions; let qidx = index;" class="service-quiz-body-questions-item d-flex flex-column justify-content-center align-items-center w100p position-relative">
+                        <div *ngIf="qidx !== 0" class="service-quiz-body-questions-item-separator border-top"></div>
+
+                        <div class="d-flex justify-content-center align-items-center gap-10 w100p" [style.marginBottom.px]="12" [style.marginTop.px]="qidx !== 0 ? 20 : 0">
+                            <div class="service-quiz-body-questions-item-drag" [ngClass]="{ 'cursor-grab': question.id, 'cursor-not-allowed': !question.id }">
+                                <img src="assets/img/service/content/drag.svg" alt="move"/>
+                            </div>
+                            <div class="service-quiz-body-questions-item-text flex-grow-1">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    [id]="'text-' + question.id"
+                                    [name]="'text-' + question.id"
+                                    [(ngModel)]="question.text"
+                                    (keypress)="onKeyPressText($event)"
+                                    (keyup)="onKeyUpText($event, question, 'text')"
+                                    (blur)="onBlurText(question, 'text')"
+                                    [autofocus]="question.isTemporary"
+                                    autocomplete="off"
+                                />
+                            </div>
+                            <div class="dropdown service-quiz-body-questions-item-type custom-input-border w-179-px">
+                                <div
+                                    class="dropdown-ellipses dropdown-toggle d-flex justify-content-between align-items-center gap-4"
+                                    role="button"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                    <img *ngIf="question.type === ServiceQuizQuestionType.MultipleChoice" src="assets/img/service/content/check-circle.svg" [alt]="ServiceQuizQuestionTypeToLabel[question.type] | localize"/>
+                                    <img *ngIf="question.type === ServiceQuizQuestionType.MultipleResponse" src="assets/img/service/content/disc.svg" [alt]="ServiceQuizQuestionTypeToLabel[question.type] | localize"/>
+                                    {{ ServiceQuizQuestionTypeToLabel[question.type] | localize }}
+                                    <span class="fe fe-chevron-down"></span>
+                                </div>
+                                <div class="dropdown-menu dropdown-menu-right custom-card-shadow">
+                                    <div class="dropdown-item-container">
+                                        <div
+                                        *ngFor="let questionTypeOption of questionTypeOptions"
+                                        [value]="questionTypeOption.value"
+                                        class="dropdown-item cursor-pointer d-flex justify-content-start"
+                                        (click)="question.type = questionTypeOption.value">
+                                        {{ questionTypeOption.label | localize }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="service-quiz-body-questions-item-dropdown dropdown">
+                                <a href="javascript:;" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                                  aria-haspopup="true" aria-expanded="false">
+                                  <i class="fe fe-more-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                  <a href="javascript:;" class="dropdown-item">
+                                    {{ 'Add image' | localize }}
+                                  </a>
+                                  <a href="javascript:;" class="dropdown-item"  (click)="deleteQuestion(question)">
+                                    {{ 'Delete question' | localize }}
+                                  </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="service-quiz-body-questions-item-options d-flex flex-column justify-content-center align-items-center gap-12 w100p" [dragula]="dragulaGroup" [(dragulaModel)]="question.serviceQuizQuestionOptions">
+                            <div *ngFor="let option of question.serviceQuizQuestionOptions; let oidx = index;" [class.conceal]="!option.isTemporary" class="service-quiz-body-questions-item-options-item d-flex justify-content-center align-items-center gap-10 w100p" >
+                                <div class="service-quiz-body-questions-item-options-item-drag" [ngClass]="{ 'cursor-grab': !option.isTemporary, 'cursor-not-allowed': option.isTemporary }">
+                                    <img src="assets/img/service/content/drag.svg" alt="move"/>
+                                </div>
+                                <div class="service-quiz-body-questions-item-options-item-text flex-grow-1">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        [id]="'text-' + option.id"
+                                        [name]="'text-' + option.id"
+                                        [(ngModel)]="option.text"
+                                        (keypress)="onKeyPressText($event)"
+                                        (keyup)="onKeyUpText($event, option, 'text')"
+                                        (blur)="onBlurText(option, 'text', question)"
+                                        [autofocus]="option.isTemporary"
+                                        autocomplete="off"
+                                    />
+                                </div>
+                                <div
+                                    class="service-quiz-body-questions-item-options-item-correct cursor-pointer d-flex justify-content-center align-items-center gap-10" [class.active]="option.isCorrect" (click)="toggleOptionCorrect(question, option)">
+                                    <ng-container *ngIf="isQuestionMultipleResponses(question)">
+                                        <ng-container *ngIf="isQuestionAlreadyHasCorrectSelected(question)">
+                                            <img *ngIf="!option.isCorrect" src="assets/img/service/content/checkbox-sq-checked-blurry.svg" alt="Correct"/>
+                                            <img *ngIf="option.isCorrect" src="assets/img/service/content/checkbox-sq-checked.svg" alt="Correct"/>
+                                        </ng-container>
+                                        <ng-container *ngIf="!isQuestionAlreadyHasCorrectSelected(question)">
+                                            <img src="assets/img/service/content/checkbox-sq-blurry.svg" alt="Correct"/>
+                                        </ng-container>
+                                    </ng-container>
+                                    <ng-container *ngIf="!isQuestionMultipleResponses(question)">
+                                        <ng-container *ngIf="isQuestionAlreadyHasCorrectSelected(question)">
+                                            <img *ngIf="!option.isCorrect" src="assets/img/service/content/checkbox-checked-blurry.svg" alt="Correct"/>
+                                            <img *ngIf="option.isCorrect" src="assets/img/service/content/checkbox-checked.svg" alt="Correct"/>
+                                        </ng-container>
+                                        <ng-container *ngIf="!isQuestionAlreadyHasCorrectSelected(question)">
+                                            <img src="assets/img/service/content/checkbox-blurry.svg" alt="Correct"/>
+                                        </ng-container>
+                                    </ng-container>
+                                    <div>{{ 'Correct' | localize }}</div>
+                                </div>
+                                <div class="service-quiz-body-questions-item-options-item-dropdown dropdown">
+                                    <a href="javascript:;" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                                      aria-haspopup="true" aria-expanded="false">
+                                      <i class="fe fe-more-vertical"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a href="javascript:;" class="dropdown-item">
+                                            {{ 'Add image' | localize }}
+                                        </a>
+                                        <a href="javascript:;" class="dropdown-item" (click)="deleteOption(option, question)">
+                                            {{ 'Delete option' | localize }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="service-quiz-body-questions-item-options-item-actions d-flex justify-content-start w100p no-drag no-next-drag">
+                                <div class="service-quiz-body-questions-item-options-item-actions-add-option d-flex justify-content-center align-items-center gap-5 h-36-px" (click)="addTemporaryOption(question)">
+                                    {{ 'Click to add option' | localize }}
+                                </div>
+                            </div>
+                            <div class="service-quiz-body-questions-item-options-item-explanation d-flex flex-column justify-content-center align-items-center gap-12 w100p no-drag no-next-drag">
+                                <div class="d-flex justify-content-between align-items-center w100p">
+                                    <div class="service-quiz-body-questions-item-options-item-explanation-label" [class.active]="question.isExplainAnswer">{{ 'Explain answer' | localize }}</div>
+                                    <div class="service-quiz-body-questions-item-options-item-explanation-input">
+                                        <div class="custom-control custom-switch mr-n2">
+                                            <input
+                                                class="custom-control-input"
+                                                type="checkbox"
+                                                [id]="'explain-check-' + question.id"
+                                                [name]="'explain-check-' + question.id"
+                                                [(ngModel)]="question.isExplainAnswer"
+                                                (change)="onExplainAnswerToggle(question)"
+                                            />
+                                            <label class="custom-control-label" [for]="'explain-check-' + question.id"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="question.isExplainAnswer" class="service-quiz-body-questions-item-options-item-explanation-text w100p">
+                                    <textarea
+                                        [rows]="getTextareaLine('explain-text-' + question.id)"
+                                        [(ngModel)]="question.explanation"
+                                        class="form-control noresize slick-scroll"
+                                        [id]="'explain-text-' + question.id"
+                                        [name]="'explain-text-' + question.id"
+                                        [placeholder]="'Input your explanation here...' | localize"
+                                        (keypress)="adjustTextareaLines('explain-text-' + question.id)"
+                                        [autofocus]="true">
+                                    </textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="service-quiz-body-questions-actions d-flex flex-column justify-content-start align-items-start w100p position-relative">
+                    <div class="service-quiz-body-questions-actions-separator border-top"></div>
+                    <div class="service-quiz-body-questions-actions-add-question d-flex justify-content-center align-items-center gap-5" (click)="addTemporaryQuestion()">
+                        <img src="assets/img/service/content/plus-blue.svg" alt="Add"/>
+                        {{ 'ADD QUESTION' | localize }}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card-footer d-flex justify-content-center align-items-center service-quiz-footer">
+            <div class="service-quiz-footer-steps flex-grow-1">
+                {{ 'StepXOfY' | localize: (activeTab === CreateQuizTabs.INTRODUCTION ? 1 : 2) : 2 }}
+            </div>
+            <div class="service-quiz-footer-actions d-flex gap-10">
+                <button type="button" class="btn btn-white" [disabled]="isLoading" (click)="onCloseClick()">
+                  {{ 'Cancel' | localize }}
+                </button>
+                <button type="submit" class="btn btn-primary" [disabled]="isLoading || !isModelValid">
+                    <ng-container *ngIf="activeTab === CreateQuizTabs.INTRODUCTION">
+                        {{ 'Next' | localize }}
+                    </ng-container>
+                    <ng-container *ngIf="activeTab === CreateQuizTabs.QUESTIONS">
+                        <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        {{ 'Done' | localize }}
+                    </ng-container>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

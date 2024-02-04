@@ -221,4 +221,5 @@
 	<include file="ddml-new/ddml.2024-01-31-01-create-article-topics-table.xml" />
 	<include file="ddml-new/ddml.2024-01-31-01-create-video-topics-table.xml" />
 	<include file="ddml-new/ddml.2024-02-02-03-create-service-feature-flags-table.xml" />
+	<include file="ddml-new/ddml.2024-02-01-02-create-service-quiz-tables.xml" />
 </databaseChangeLog>

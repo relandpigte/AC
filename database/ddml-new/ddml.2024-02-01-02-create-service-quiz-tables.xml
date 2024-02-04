@@ -1,0 +1,128 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet author="j.cezar" id="1">
+        <createTable tableName="servicequizquestionoptions">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Text" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ServiceQuizQuestionId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DisplayOrder" type="SMALLINT">
+                <constraints nullable="false"/>
+			</column>
+            <column name="IsCorrect" type="BIT(1)" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="2">
+        <createTable tableName="servicequizquestions">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Text" type="CHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Type" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ServiceQuizId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DisplayOrder" type="SMALLINT">
+                <constraints nullable="false"/>
+			</column>
+            <column name="IsExplainAnswer" type="BIT(1)" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Explanation" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="3">
+        <createTable tableName="serviceQuizes">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="Name" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Description" type="LONGTEXT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="Duration" type="INT(10)">
+                <constraints nullable="false"/>
+			</column>
+            <column name="Trigger" type="TINYINT">
+                <constraints nullable="false"/>
+			</column>
+            <column name="ReferenceId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ServiceType" type="TINYINT">
+                <constraints nullable="false"/>
+			</column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="4">
+        <createIndex indexName="FK_SQQOs_SQQs_ServiceQuizQuestionId_idx" tableName="servicequizquestionoptions">
+            <column name="ServiceQuizQuestionId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="5">
+        <createIndex indexName="FK_SQQs_SQs_ServiceQuizId_idx" tableName="servicequizquestions">
+            <column name="ServiceQuizId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="6">
+        <createIndex indexName="FK_SQQs_Users_CreatorUserId_idx" tableName="servicequizquestions">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="7">
+        <createIndex indexName="FK_SQs_Users_CreatorUserId_idx" tableName="servicequizes">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="8">
+        <addForeignKeyConstraint baseColumnNames="ServiceQuizQuestionId" baseTableName="servicequizquestionoptions" constraintName="FK_SQQOs_SQQs_ServiceQuizQuestionId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="servicequizquestions" validate="true"/>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="9">
+        <addForeignKeyConstraint baseColumnNames="ServiceQuizId" baseTableName="servicequizquestions" constraintName="FK_SQQs_SQs_ServiceQuizId" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="servicequizes" validate="true"/>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="10">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="servicequizquestions" constraintName="FK_SQQs_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+
+    <changeSet author="j.cezar" id="11">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="servicequizes" constraintName="FK_SQs_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+
+</databaseChangeLog>

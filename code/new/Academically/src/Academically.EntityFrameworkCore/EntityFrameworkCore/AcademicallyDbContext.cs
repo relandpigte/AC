@@ -150,7 +150,11 @@ namespace Academically.EntityFrameworkCore
         public virtual DbSet<ServicePoll> ServicePolls { get; set; }
         public virtual DbSet<ServicePollQuestion> ServicePollQuestions { get; set; }
         public virtual DbSet<ServicePollQuestionOption> ServicePollQuestionOptions { get; set; }
+        public virtual DbSet<ServiceQuiz> ServiceQuizes { get; set; }
+        public virtual DbSet<ServiceQuizQuestion> ServiceQuizQuestions { get; set; }
+        public virtual DbSet<ServiceQuizQuestionOption> ServiceQuizQuestionOptions { get; set; }
         public virtual DbSet<ServiceFeatureFlag> ServiceFeatureFlags { get; set; }
+
         public AcademicallyDbContext(DbContextOptions<AcademicallyDbContext> options)
             : base(options)
         {
