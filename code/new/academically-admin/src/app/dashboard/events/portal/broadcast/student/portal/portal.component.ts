@@ -12,7 +12,7 @@ import {
   HubEvent,
   ProfilesServiceProxy,
   QuestionDto,
-  QuestionsServiceProxy,
+  QuestionsServiceProxy, ServiceFeatureFlagDto,
   ServiceOfferDto,
   ServicesServiceProxy
 } from '@shared/service-proxies/service-proxies';
@@ -52,7 +52,7 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
 
   preview = false;
   showSidebar = true;
-  testMode = true;
+  serviceFeatureFlags = new ServiceFeatureFlagDto();
 
   constructor(
     injector: Injector,
@@ -73,6 +73,7 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
 
   get offersStateId(): string { return 'offers-event'; }
   get pollsStateId(): string { return 'polls-event'; }
+  get flags(): ServiceFeatureFlagDto { return this.serviceFeatureFlags; }
 
   async ngOnInit() {
     // routings
@@ -120,6 +121,92 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
     super.ngOnDestroy();
     await this.pollsStateService?.stop();
     await this.offersStateService?.stop();
+  }
+
+  handleSelectedPollMaximized(isMaximized: boolean): void {
+    if (this.selectedPoll) {
+      if (isMaximized) {
+        const modalSettings = this.defaultModalSettings as ModalOptions<PollComponent>;
+        modalSettings.class = 'modal-w-auto modal-dialog-centered';
+        modalSettings.initialState = {
+          poll: EventPollDto.fromJS({ ...this.selectedPoll }),
+          showBackButton: false,
+          isModal: true
+        };
+        this.pollWindowRef = this._modalService.show(PollComponent, modalSettings);
+      } else {
+        this.pollWindowRef?.hide();
+      }
+    }
+  }
+
+  onOfferClick(offer: ServiceOfferDto): void {
+    this._serviceOffersService.selectServiceOffer(offer);
+  }
+
+  onExitClick(): void {
+    if (this.preview) {
+      this._location.back();
+    } else {
+      this._router.navigate(['/app/dashboard/events']);
+    }
+  }
+
+  onShareVideoClick(): void {
+    this.shareVideosComponent.uploadFiles();
+  }
+
+  onShareWhiteboardClick(): void {
+    this.sharingWhiteboard = true;
+  }
+
+  async onRequestToSpeakClick(): Promise<void> {
+  }
+
+  async getEvent() {
+    this.pipeDestroy(this._eventsService.get(this.eventId), response => {
+      this.eventModel = response;
+      this._portalService.event = this.eventModel;
+      this.getServiceFeatureFlags();
+    });
+  }
+
+  async getEventUsers() {
+    this.pipeDestroy(this._eventSessionsService.getUsers(this.eventId), async responses => {
+      this.allEventUsers = responses;
+      if (!this.allEventUsers.some(u => u.user.id === this.appSession.userId)) {
+        try {
+          const user = await this._profilesService.get(this.appSession.userId).toPromise();
+          this.allEventUsers.push(EventUserDto.fromJS({ user, type: EventUserType.Guest }));
+        } catch (err) {
+          console.error(err);
+        }
+      }
+      this.eventHost = this.allEventUsers.find(e => e.type === EventUserType.Host);
+      this.eventUser = this.allEventUsers.find(e => e.user.id === this.appSession.userId);
+      this._portalService.attendees = this.allEventUsers.filter(e => e.type !== EventUserType.Host);
+    });
+  }
+
+  async handleLiveAnswering(question: QuestionDto): Promise<void> {
+    await this.getHub(ANSWERING_LIVE_QUESTION_HUB_NAME).invoke('answerLiveQuestion', question);
+  }
+
+  async handleEndLiveAnswering(question: QuestionDto): Promise<void> {
+    await this.getHub(ANSWERING_LIVE_QUESTION_HUB_NAME).invoke('endAnswerLiveQuestion', question);
+  }
+
+  private createQuestion(question: QuestionDto): void {
+    if (!this.isHost) { return; }
+
+    const q = new QuestionDto();
+    q.body = 'Answered at <a href="!#" class="video-answered">12:00</a>';
+    q.referenceId = question.referenceId;
+    q.parentId = question.id;
+
+    this._questionsService.create(q)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(x => x);
   }
 
   private async initOffersAppStates() {
@@ -183,70 +270,6 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
     });
   }
 
-  handleSelectedPollMaximized(isMaximized: boolean): void {
-    if (this.selectedPoll) {
-      if (isMaximized) {
-        const modalSettings = this.defaultModalSettings as ModalOptions<PollComponent>;
-        modalSettings.class = 'modal-w-auto modal-dialog-centered';
-        modalSettings.initialState = {
-          poll: EventPollDto.fromJS({ ...this.selectedPoll }),
-          showBackButton: false,
-          isModal: true
-        };
-        this.pollWindowRef = this._modalService.show(PollComponent, modalSettings);
-      } else {
-        this.pollWindowRef?.hide();
-      }
-    }
-  }
-
-  onOfferClick(offer: ServiceOfferDto): void {
-    this._serviceOffersService.selectServiceOffer(offer);
-  }
-
-  onExitClick(): void {
-    if (this.preview) {
-      this._location.back();
-    } else {
-      this._router.navigate(['/app/dashboard/events']);
-    }
-  }
-
-  onShareVideoClick(): void {
-    this.shareVideosComponent.uploadFiles();
-  }
-
-  onShareWhiteboardClick(): void {
-    this.sharingWhiteboard = true;
-  }
-
-  async onRequestToSpeakClick(): Promise<void> {
-  }
-
-  async getEvent() {
-    this.pipeDestroy(this._eventsService.get(this.eventId), response => {
-      this.eventModel = response;
-      this._portalService.event = this.eventModel;
-    });
-  }
-
-  async getEventUsers() {
-    this.pipeDestroy(this._eventSessionsService.getUsers(this.eventId), async responses => {
-      this.allEventUsers = responses;
-      if (!this.allEventUsers.some(u => u.user.id === this.appSession.userId)) {
-        try {
-          const user = await this._profilesService.get(this.appSession.userId).toPromise();
-          this.allEventUsers.push(EventUserDto.fromJS({ user, type: EventUserType.Guest }));
-        } catch (err) {
-          console.error(err);
-        }
-      }
-      this.eventHost = this.allEventUsers.find(e => e.type === EventUserType.Host);
-      this.eventUser = this.allEventUsers.find(e => e.user.id === this.appSession.userId);
-      this._portalService.attendees = this.allEventUsers.filter(e => e.type !== EventUserType.Host);
-    });
-  }
-
   private async initLiveAnsweringQuestion(): Promise<void> {
     this.addHub(ANSWERING_LIVE_QUESTION_HUB_NAME, await this._hubService.getAnsweringLiveQuestionHub());
     this.getHub(ANSWERING_LIVE_QUESTION_HUB_NAME).on(HubEvent[HubEvent.AnsweringLiveQuestion], (question: QuestionDto) => {
@@ -260,24 +283,10 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
     this.startHubConnection(ANSWERING_LIVE_QUESTION_HUB_NAME);
   }
 
-  async handleLiveAnswering(question: QuestionDto): Promise<void> {
-    await this.getHub(ANSWERING_LIVE_QUESTION_HUB_NAME).invoke('answerLiveQuestion', question);
-  }
-
-  async handleEndLiveAnswering(question: QuestionDto): Promise<void> {
-    await this.getHub(ANSWERING_LIVE_QUESTION_HUB_NAME).invoke('endAnswerLiveQuestion', question);
-  }
-
-  private createQuestion(question: QuestionDto): void {
-    if (!this.isHost) { return; }
-
-    const q = new QuestionDto();
-    q.body = 'Answered at <a href="!#" class="video-answered">12:00</a>';
-    q.referenceId = question.referenceId;
-    q.parentId = question.id;
-
-    this._questionsService.create(q)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(x => x);
+  private getServiceFeatureFlags(): void {
+    const { id, creatorUserId } = this.eventModel || {};
+    this.pipeDestroy(this._servicesService.getFeatureFlags(id, creatorUserId), response => {
+      this._portalService.featureFlags = response;
+    });
   }
 }

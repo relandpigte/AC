@@ -25355,6 +25355,123 @@ export class ServicesServiceProxy {
         }
         return _observableOf<ServiceMetricsDto>(<any>null);
     }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    saveFeatureFlags(body: ServiceFeatureFlagDto | undefined): Observable<ServiceFeatureFlagDto> {
+        let url_ = this.baseUrl + "/api/services/app/Services/SaveFeatureFlags";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSaveFeatureFlags(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSaveFeatureFlags(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceFeatureFlagDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceFeatureFlagDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSaveFeatureFlags(response: HttpResponseBase): Observable<ServiceFeatureFlagDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServiceFeatureFlagDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceFeatureFlagDto>(<any>null);
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @param serviceOwnerId (optional) 
+     * @return Success
+     */
+    getFeatureFlags(referenceId: string | undefined, serviceOwnerId: number | undefined): Observable<ServiceFeatureFlagDto> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetFeatureFlags?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        if (serviceOwnerId === null)
+            throw new Error("The parameter 'serviceOwnerId' cannot be null.");
+        else if (serviceOwnerId !== undefined)
+            url_ += "serviceOwnerId=" + encodeURIComponent("" + serviceOwnerId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetFeatureFlags(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetFeatureFlags(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceFeatureFlagDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceFeatureFlagDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetFeatureFlags(response: HttpResponseBase): Observable<ServiceFeatureFlagDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServiceFeatureFlagDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceFeatureFlagDto>(<any>null);
+    }
 }
 
 @Injectable()
@@ -53886,6 +54003,101 @@ export enum ServiceExpertiseLevel {
     EntryLevel = 1,
     Intermediate = 2,
     Expert = 3,
+}
+
+export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
+    id: string;
+    creationTime: moment.Moment;
+    referenceId: string;
+    serviceType: ServicesType;
+    creatorUserId: number | undefined;
+    attendees: boolean;
+    chat: boolean;
+    activities: boolean;
+    questions: boolean;
+    offers: boolean;
+    handouts: boolean;
+    comments: boolean;
+    reviews: boolean;
+    settings: boolean;
+
+    constructor(data?: IServiceFeatureFlagDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.referenceId = _data["referenceId"];
+            this.serviceType = _data["serviceType"];
+            this.creatorUserId = _data["creatorUserId"];
+            this.attendees = _data["attendees"];
+            this.chat = _data["chat"];
+            this.activities = _data["activities"];
+            this.questions = _data["questions"];
+            this.offers = _data["offers"];
+            this.handouts = _data["handouts"];
+            this.comments = _data["comments"];
+            this.reviews = _data["reviews"];
+            this.settings = _data["settings"];
+        }
+    }
+
+    static fromJS(data: any): ServiceFeatureFlagDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServiceFeatureFlagDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["referenceId"] = this.referenceId;
+        data["serviceType"] = this.serviceType;
+        data["creatorUserId"] = this.creatorUserId;
+        data["attendees"] = this.attendees;
+        data["chat"] = this.chat;
+        data["activities"] = this.activities;
+        data["questions"] = this.questions;
+        data["offers"] = this.offers;
+        data["handouts"] = this.handouts;
+        data["comments"] = this.comments;
+        data["reviews"] = this.reviews;
+        data["settings"] = this.settings;
+        return data; 
+    }
+
+    clone(): ServiceFeatureFlagDto {
+        const json = this.toJSON();
+        let result = new ServiceFeatureFlagDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IServiceFeatureFlagDto {
+    id: string;
+    creationTime: moment.Moment;
+    referenceId: string;
+    serviceType: ServicesType;
+    creatorUserId: number | undefined;
+    attendees: boolean;
+    chat: boolean;
+    activities: boolean;
+    questions: boolean;
+    offers: boolean;
+    handouts: boolean;
+    comments: boolean;
+    reviews: boolean;
+    settings: boolean;
 }
 
 export class ServiceMapping implements IServiceMapping {

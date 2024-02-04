@@ -6,11 +6,13 @@
       </a>
     </li>
     <ng-container *ngFor="let item of menuItems">
-      <li *ngIf="item.name !== 'Separator' else separatorTemplate" [class.active]="activeMenuItem === item">
-        <a href="#" (click)="onMenuItemClick(item, $event)">
-          <span class="icon" [class]="item.className"></span>
-        </a>
-      </li>
+      <ng-container *ngIf="item.name !== 'Separator' else separatorTemplate">
+        <li *ngIf="isServiceFlag(item)" [class.active]="activeMenuItem === item">
+          <a href="#" (click)="onMenuItemClick(item, $event)">
+            <span class="icon" [class]="item.className"></span>
+          </a>
+        </li>
+      </ng-container>
     </ng-container>
   </ul>
 

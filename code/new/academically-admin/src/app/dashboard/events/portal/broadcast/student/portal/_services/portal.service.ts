@@ -3,7 +3,7 @@ import { HubConnection } from '@microsoft/signalr';
 import {
   EventDto,
   EventUserDto,
-  QuestionDto
+  QuestionDto, ServiceFeatureFlagDto
 } from '@shared/service-proxies/service-proxies';
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -24,6 +24,7 @@ export class PortalService {
   public grantedRequestToSpeak$: Observable<boolean>;
   public hub$: Observable<HubConnection>;
   public liveQuestion$: Observable<QuestionDto>;
+  public featureFlags$: Observable<ServiceFeatureFlagDto>;
 
   private _eventSubject: BehaviorSubject<EventDto>;
   private _attendeesSubject: BehaviorSubject<EventUserDto[]>;
@@ -38,6 +39,7 @@ export class PortalService {
   private _grantedRequestToSpeakSubject: BehaviorSubject<boolean>;
   private _hubSubject: BehaviorSubject<HubConnection>;
   private _liveQuestion: BehaviorSubject<QuestionDto>;
+  private _featureFlags: BehaviorSubject<ServiceFeatureFlagDto>;
 
   constructor() {
     this._eventSubject = new BehaviorSubject<EventDto>(undefined);
@@ -78,6 +80,9 @@ export class PortalService {
 
     this._liveQuestion = new BehaviorSubject<QuestionDto>(undefined);
     this.liveQuestion$ = this._liveQuestion.asObservable();
+
+    this._featureFlags = new BehaviorSubject<ServiceFeatureFlagDto>(undefined);
+    this.featureFlags$ = this._featureFlags.asObservable();
   }
 
   public set event(value: EventDto) {
@@ -130,5 +135,9 @@ export class PortalService {
 
   public set liveQuestion(value: QuestionDto) {
     this._liveQuestion.next(value);
+  }
+
+  public set featureFlags(value: ServiceFeatureFlagDto) {
+    this._featureFlags.next(value);
   }
 }

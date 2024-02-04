@@ -1,0 +1,41 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="relandpigte" id="1">
+        <createTable tableName="servicefeatureflags">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="ReferenceId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ServiceType" type="TINYINT">
+                <constraints nullable="false"/>
+			</column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="Attendees" type="boolean" valueBoolean="true"/>
+            <column name="Chat" type="boolean" valueBoolean="true"/>
+            <column name="Questions" type="boolean" valueBoolean="true"/>
+            <column name="Activities" type="boolean" valueBoolean="true"/>
+            <column name="Offers" type="boolean" valueBoolean="true"/>
+            <column name="Handouts" type="boolean" valueBoolean="true"/>
+            <column name="Comments" type="boolean" valueBoolean="true"/>
+            <column name="Reviews" type="boolean" valueBoolean="true"/>
+            <column name="Settings" type="boolean" valueBoolean="true"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="relandpigte" id="2">
+        <createIndex indexName="FK_ServiceFeatureFlags_Users_CreatorUserId_idx" tableName="servicefeatureflags">
+            <column name="CreatorUserId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="relandpigte" id="3">
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="servicefeatureflags" constraintName="FK_ServiceFeatureFlags_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

@@ -54,6 +54,7 @@ namespace Academically.Services.Services
         private readonly IUserAvailabilitiesAppService _userAvailabilitiesAppService;
         private readonly ITimeZonesAppService _timeZonesAppService;
         private readonly ISettingManager _settingManager;
+        private readonly IRepository<ServiceFeatureFlag, Guid> _serviceFeatureFlagRepository;
 
         private readonly List<Service2Dto> StaticServiceLevels = new List<Service2Dto>
             {
@@ -129,7 +130,7 @@ namespace Academically.Services.Services
             IRepository<Video, Guid> videosRepository,
             IUserAvailabilitiesAppService userAvailabilitiesAppService,
             ITimeZonesAppService timeZonesAppService,
-            ISettingManager settingManager)
+            ISettingManager settingManager, IRepository<ServiceFeatureFlag, Guid> serviceFeatureFlagRepository)
         {
             _servicesRepository = servicesRepository;
             _serviceMappingsRepository = serviceMappingsRepository;
@@ -152,6 +153,7 @@ namespace Academically.Services.Services
             _userAvailabilitiesAppService = userAvailabilitiesAppService;
             _timeZonesAppService = timeZonesAppService;
             _settingManager = settingManager;
+            _serviceFeatureFlagRepository = serviceFeatureFlagRepository;
         }
 
         public async Task TestEventNotifierToasters(string ids)
@@ -770,6 +772,22 @@ namespace Academically.Services.Services
                 OverallReview = await GetServicesReviews(userId, type)
             };
             return serviceMetrics;
+        }
+
+        public async Task<ServiceFeatureFlagDto> SaveFeatureFlags(ServiceFeatureFlagDto input)
+        {
+            var flags = ObjectMapper.Map<ServiceFeatureFlag>(input);
+            var serviceFlags = await _serviceFeatureFlagRepository.InsertOrUpdateAsync(flags);
+            return ObjectMapper.Map<ServiceFeatureFlagDto>(serviceFlags);
+        }
+        
+        public async Task<ServiceFeatureFlagDto> GetFeatureFlags(Guid referenceId, long serviceOwnerId)
+        {
+            return await _serviceFeatureFlagRepository.GetAll()
+                .Where(x => x.CreatorUserId == serviceOwnerId)
+                .Where(x => x.ReferenceId == referenceId)
+                .Select(x => ObjectMapper.Map<ServiceFeatureFlagDto>(x))
+                .FirstOrDefaultAsync();
         }
 
         private async Task<int> ServiceCreatedCount(long userId, ServicesType type)
