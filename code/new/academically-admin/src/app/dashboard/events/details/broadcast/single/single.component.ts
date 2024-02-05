@@ -38,6 +38,13 @@ export class SingleComponent extends AppComponentBase implements OnInit {
       infoText: 'Here 2, you can input all the details for your article. This information will be visible to potential clients, so keep it clear and informative.'
     },
     {
+      id: 'activities',
+      label: 'Activities',
+      icon: 'assets/img/service/create/pie-chart.svg',
+      iconHover: 'assets/img/service/create/pie-chart-hover.svg',
+      infoText: 'Use this section to add activities such as quizzes and polls for your attendees to complete during your event.'
+    },
+    {
       id: 'studio',
       label: 'Studio',
       icon: 'assets/img/service/create/clipboard.svg',
@@ -72,7 +79,7 @@ export class SingleComponent extends AppComponentBase implements OnInit {
     private _serviceCreateService: ServiceCreateService
   ) {
     super(injector);
-    this._serviceCreateService.setDefaultMenuItem(this.menuItems[0]);
+    this._serviceCreateService.setDefaultMenuItem(this.menuItems[2]);
     this._serviceCreateService.getDefaultMenuItem().subscribe(x => this.defaultMenuItem = x);
     route.paramMap.subscribe(paramMap => {
       if (paramMap.has('id')) {

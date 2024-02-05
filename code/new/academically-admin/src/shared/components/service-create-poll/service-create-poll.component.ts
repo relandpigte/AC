@@ -52,7 +52,7 @@ export class ServiceCreatePollComponent extends AppComponentBase implements OnIn
     @Input() serviceType: ServicesType;
     @Input() model = new CreateServicePollDto();
 
-    @Output() modelSaved = new EventEmitter();
+    @Output() modelSaved = new EventEmitter<any>();
 
     dragulaGroup = 'polls';
 
@@ -141,7 +141,7 @@ export class ServiceCreatePollComponent extends AppComponentBase implements OnIn
             .pipe(finalize(() => this.isLoading = false))
             .subscribe(res => {
                 this.isLoading = false;
-                this.modelSaved.emit();
+                this.modelSaved.emit(res);
                 this._modal.hide();
             });
         }

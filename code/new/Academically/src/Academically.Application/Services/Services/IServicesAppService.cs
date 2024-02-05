@@ -45,5 +45,15 @@ namespace Academically.Services.Services
         Task<ServiceReview> SaveServiceReview(CreateServiceReviewDto input);
         Task<ServiceReviewDto> GetUserReview(Guid referenceId);
         Task<ServiceReviewStats> GetServiceReviewStats(Guid referenceId);
+
+        // Service flags
+        Task<ServiceFeatureFlagDto> SaveFeatureFlags(ServiceFeatureFlagDto input);
+        Task<ServiceFeatureFlagDto> GetFeatureFlags(Guid referenceId, long serviceOwnerId);
+        
+        // Service activities
+        Task<IEnumerable<ServiceActivityDto>> GetActivities(Guid serviceId);
+        Task<ServiceActivityDto> GetActivity(Guid id);
+        Task<ServiceActivityDto> SaveActivity(CreateServiceActivityDto input);
+        Task UpdateServiceActivityOrder(UpdateServiceActivityOrder[] input);
     }
 }

@@ -1,0 +1,35 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="rpigte" id="1">
+        <createTable tableName="serviceactivities">
+            <column name="Id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="ReferenceId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ServiceId" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ActivityType" type="TINYINT">
+                <constraints nullable="false"/>
+			</column>
+            <column name="DisplayOrder" type="SMALLINT">
+                <constraints nullable="false"/>
+			</column>
+            <column name="CreationTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CreatorUserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="rpigte" id="2">
+        <createIndex indexName="FK_ServiceActivities_Users_CreatorUserId_idx" tableName="serviceactivities">
+            <column name="CreatorUserId"/>
+        </createIndex>
+        <addForeignKeyConstraint baseColumnNames="CreatorUserId" baseTableName="serviceactivities" constraintName="FK_ServiceActivities_Users_CreatorUserId" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="Id" referencedTableName="abpusers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

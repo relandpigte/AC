@@ -9,11 +9,13 @@ import { SettingsModule } from '@app/dashboard/events/details/broadcast/single/s
 import { ResourcesModule } from '@app/dashboard/events/details/broadcast/single/resources/resources.module';
 import { StudioModule } from '@app/dashboard/events/details/broadcast/single/studio/studio.module';
 import { OffersComponent } from '@app/dashboard/events/details/broadcast/single/offers/offers.component';
+import { ActivitiesComponent } from '@app/dashboard/events/details/broadcast/single/activities/activities.component';
 
 @NgModule({
   declarations: [
     SingleComponent,
-    OffersComponent
+    OffersComponent,
+    ActivitiesComponent
   ],
   imports: [
     CommonModule,

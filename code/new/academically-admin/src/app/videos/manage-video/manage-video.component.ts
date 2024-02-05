@@ -56,7 +56,7 @@ export class ManageVideoComponent extends AppComponentBase implements OnInit {
     private _serviceCreateService: ServiceCreateService
   ) {
     super(injector);
-    this._serviceCreateService.setDefaultMenuItem(this.menuItems[1]);
+    this._serviceCreateService.setDefaultMenuItem(this.menuItems[0]);
     this._serviceCreateService.getDefaultMenuItem().subscribe(x => this.defaultMenuItem = x);
     route.paramMap.subscribe(paramMap => {
       if (paramMap.has('id')) {

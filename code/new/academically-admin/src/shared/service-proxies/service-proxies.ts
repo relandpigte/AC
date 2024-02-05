@@ -25853,6 +25853,233 @@ export class ServicesServiceProxy {
         }
         return _observableOf<ServiceFeatureFlagDto>(<any>null);
     }
+
+    /**
+     * @param serviceId (optional) 
+     * @return Success
+     */
+    getActivities(serviceId: string | undefined): Observable<ServiceActivityDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetActivities?";
+        if (serviceId === null)
+            throw new Error("The parameter 'serviceId' cannot be null.");
+        else if (serviceId !== undefined)
+            url_ += "serviceId=" + encodeURIComponent("" + serviceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetActivities(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetActivities(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceActivityDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceActivityDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetActivities(response: HttpResponseBase): Observable<ServiceActivityDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(ServiceActivityDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceActivityDto[]>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getActivity(id: string | undefined): Observable<ServiceActivityDto> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetActivity?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetActivity(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetActivity(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceActivityDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceActivityDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetActivity(response: HttpResponseBase): Observable<ServiceActivityDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServiceActivityDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceActivityDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    saveActivity(body: CreateServiceActivityDto | undefined): Observable<ServiceActivityDto> {
+        let url_ = this.baseUrl + "/api/services/app/Services/SaveActivity";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSaveActivity(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSaveActivity(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceActivityDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceActivityDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSaveActivity(response: HttpResponseBase): Observable<ServiceActivityDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServiceActivityDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceActivityDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateServiceActivityOrder(body: UpdateServiceActivityOrder[] | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Services/UpdateServiceActivityOrder";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateServiceActivityOrder(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateServiceActivityOrder(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateServiceActivityOrder(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
 }
 
 @Injectable()
@@ -36360,6 +36587,12 @@ export enum AcceptanceType {
     PrivacyPolicy = 2,
 }
 
+/** 0 = Poll 1 = Quiz */
+export enum ActivityType {
+    Poll = 0,
+    Quiz = 1,
+}
+
 export class ApplicationInfoDto implements IApplicationInfoDto {
     version: string | undefined;
     releaseDate: moment.Moment;
@@ -43353,6 +43586,57 @@ export interface ICreateRoleDto {
     normalizedName: string | undefined;
     description: string | undefined;
     grantedPermissions: string[] | undefined;
+}
+
+export class CreateServiceActivityDto implements ICreateServiceActivityDto {
+    referenceId: string;
+    serviceId: string;
+    activityType: ActivityType;
+
+    constructor(data?: ICreateServiceActivityDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.referenceId = _data["referenceId"];
+            this.serviceId = _data["serviceId"];
+            this.activityType = _data["activityType"];
+        }
+    }
+
+    static fromJS(data: any): CreateServiceActivityDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateServiceActivityDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["referenceId"] = this.referenceId;
+        data["serviceId"] = this.serviceId;
+        data["activityType"] = this.activityType;
+        return data; 
+    }
+
+    clone(): CreateServiceActivityDto {
+        const json = this.toJSON();
+        let result = new CreateServiceActivityDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateServiceActivityDto {
+    referenceId: string;
+    serviceId: string;
+    activityType: ActivityType;
 }
 
 export class CreateServiceBookingDto implements ICreateServiceBookingDto {
@@ -54337,6 +54621,81 @@ export interface IService2Dto {
     description: string | undefined;
 }
 
+export class ServiceActivityDto implements IServiceActivityDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    referenceId: string;
+    serviceId: string;
+    activityType: ActivityType;
+    displayOrder: number;
+    quiz: ServiceQuizDto;
+    poll: ServicePollDto;
+
+    constructor(data?: IServiceActivityDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.referenceId = _data["referenceId"];
+            this.serviceId = _data["serviceId"];
+            this.activityType = _data["activityType"];
+            this.displayOrder = _data["displayOrder"];
+            this.quiz = _data["quiz"] ? ServiceQuizDto.fromJS(_data["quiz"]) : <any>undefined;
+            this.poll = _data["poll"] ? ServicePollDto.fromJS(_data["poll"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ServiceActivityDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServiceActivityDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["referenceId"] = this.referenceId;
+        data["serviceId"] = this.serviceId;
+        data["activityType"] = this.activityType;
+        data["displayOrder"] = this.displayOrder;
+        data["quiz"] = this.quiz ? this.quiz.toJSON() : <any>undefined;
+        data["poll"] = this.poll ? this.poll.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): ServiceActivityDto {
+        const json = this.toJSON();
+        let result = new ServiceActivityDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IServiceActivityDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    referenceId: string;
+    serviceId: string;
+    activityType: ActivityType;
+    displayOrder: number;
+    quiz: ServiceQuizDto;
+    poll: ServicePollDto;
+}
+
 export class ServiceBookingDto implements IServiceBookingDto {
     id: string;
     referenceId: string;
@@ -61614,6 +61973,53 @@ export interface IUpdateProjectDto {
     serviceLevel3: string | undefined;
     serviceNameLevel3: string | undefined;
     projectAvailabilities: ProjectAvailabilityDto[] | undefined;
+}
+
+export class UpdateServiceActivityOrder implements IUpdateServiceActivityOrder {
+    id: string;
+    displayOrder: number;
+
+    constructor(data?: IUpdateServiceActivityOrder) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.displayOrder = _data["displayOrder"];
+        }
+    }
+
+    static fromJS(data: any): UpdateServiceActivityOrder {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateServiceActivityOrder();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["displayOrder"] = this.displayOrder;
+        return data; 
+    }
+
+    clone(): UpdateServiceActivityOrder {
+        const json = this.toJSON();
+        let result = new UpdateServiceActivityOrder();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateServiceActivityOrder {
+    id: string;
+    displayOrder: number;
 }
 
 export class UpdateTopicDto implements IUpdateTopicDto {

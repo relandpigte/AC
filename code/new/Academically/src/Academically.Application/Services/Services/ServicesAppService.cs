@@ -20,6 +20,7 @@ using Academically.Extensions;
 using Academically.Services.StudentCourses;
 using System.Dynamic;
 using System.Linq.Dynamic.Core;
+using Abp.Application.Services.Dto;
 using Abp.Configuration;
 using Abp.Timing.Timezone;
 using Academically.Services.TimeZones;
@@ -55,6 +56,9 @@ namespace Academically.Services.Services
         private readonly ITimeZonesAppService _timeZonesAppService;
         private readonly ISettingManager _settingManager;
         private readonly IRepository<ServiceFeatureFlag, Guid> _serviceFeatureFlagRepository;
+        private readonly IRepository<ServiceActivity, Guid> _serviceActivityRepository;
+        private readonly IServicePollsAppService _servicePollsAppService;
+        private readonly IServiceQuizesAppService _serviceQuizesAppService;
 
         private readonly List<Service2Dto> StaticServiceLevels = new List<Service2Dto>
             {
@@ -130,7 +134,11 @@ namespace Academically.Services.Services
             IRepository<Video, Guid> videosRepository,
             IUserAvailabilitiesAppService userAvailabilitiesAppService,
             ITimeZonesAppService timeZonesAppService,
-            ISettingManager settingManager, IRepository<ServiceFeatureFlag, Guid> serviceFeatureFlagRepository)
+            ISettingManager settingManager,
+            IRepository<ServiceFeatureFlag, Guid> serviceFeatureFlagRepository,
+            IRepository<ServiceActivity, Guid> serviceActivityRepository,
+            IServicePollsAppService servicePollsAppService,
+            IServiceQuizesAppService serviceQuizesAppService)
         {
             _servicesRepository = servicesRepository;
             _serviceMappingsRepository = serviceMappingsRepository;
@@ -154,6 +162,9 @@ namespace Academically.Services.Services
             _timeZonesAppService = timeZonesAppService;
             _settingManager = settingManager;
             _serviceFeatureFlagRepository = serviceFeatureFlagRepository;
+            _serviceActivityRepository = serviceActivityRepository;
+            _servicePollsAppService = servicePollsAppService;
+            _serviceQuizesAppService = serviceQuizesAppService;
         }
 
         public async Task TestEventNotifierToasters(string ids)
@@ -788,6 +799,69 @@ namespace Academically.Services.Services
                 .Where(x => x.ReferenceId == referenceId)
                 .Select(x => ObjectMapper.Map<ServiceFeatureFlagDto>(x))
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<ServiceActivityDto>> GetActivities(Guid serviceId)
+        {
+            var activities = await _serviceActivityRepository.GetAll()
+                .Where(x => x.ServiceId == serviceId)
+                .OrderBy(x => x.DisplayOrder)
+                .Select(x => ObjectMapper.Map<ServiceActivityDto>(x))
+                .ToListAsync();
+
+            foreach (var activity in activities)
+            {
+                switch (activity.ActivityType)
+                {
+                    case ActivityType.Poll:
+                        activity.Poll = await _servicePollsAppService.GetAsync(new EntityDto<Guid>(activity.ReferenceId));
+                        break;
+                    case ActivityType.Quiz:
+                        activity.Quiz = await _serviceQuizesAppService.GetAsync(new EntityDto<Guid>(activity.ReferenceId));
+                        break;
+                }
+            }
+            return activities;
+        }
+
+        public async Task<ServiceActivityDto> GetActivity(Guid id)
+        {
+            var activity = await _serviceActivityRepository.GetAll()
+                .Where(x => x.Id == id)
+                .Select(x => ObjectMapper.Map<ServiceActivityDto>(x))
+                .SingleOrDefaultAsync();
+            
+            switch (activity.ActivityType)
+            {
+                case ActivityType.Poll:
+                    activity.Poll = await _servicePollsAppService.GetAsync(new EntityDto<Guid>(activity.ReferenceId));
+                    break;
+                case ActivityType.Quiz:
+                    activity.Quiz = await _serviceQuizesAppService.GetAsync(new EntityDto<Guid>(activity.ReferenceId));
+                    break;
+            }
+            return activity;
+        }
+
+        public async Task<ServiceActivityDto> SaveActivity(CreateServiceActivityDto input)
+        {
+            var activity = ObjectMapper.Map<ServiceActivity>(input);
+            activity.DisplayOrder = await _serviceActivityRepository.CountAsync(x => x.ServiceId == input.ServiceId);
+            
+            var id = await _serviceActivityRepository.InsertAndGetIdAsync(activity);
+            await CurrentUnitOfWork.SaveChangesAsync();
+            return await GetActivity(id);
+        }
+        
+        public async Task UpdateServiceActivityOrder(UpdateServiceActivityOrder[] input)
+        {
+            if (input == null) return;
+            foreach (var i in input)
+            {
+                var activity = await _serviceActivityRepository.GetAsync(i.Id);
+                ObjectMapper.Map(i, activity);
+                await _serviceActivityRepository.UpdateAsync(activity);
+            }
         }
 
         private async Task<int> ServiceCreatedCount(long userId, ServicesType type)
