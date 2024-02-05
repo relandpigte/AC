@@ -164,7 +164,7 @@
                                         *ngFor="let questionTypeOption of questionTypeOptions"
                                         [value]="questionTypeOption.value"
                                         class="dropdown-item cursor-pointer d-flex justify-content-start"
-                                        (click)="question.type = questionTypeOption.value">
+                                        (click)="changeQuestionType(question, questionTypeOption.value)">
                                         {{ questionTypeOption.label | localize }}
                                         </div>
                                     </div>
@@ -247,7 +247,7 @@
                                     {{ 'Click to add option' | localize }}
                                 </div>
                             </div>
-                            <div class="service-quiz-body-questions-item-options-item-explanation d-flex flex-column justify-content-center align-items-center gap-12 w100p no-drag no-next-drag">
+                            <div *ngIf="isQuestionAlreadyHasCorrectSelected(question)" class="service-quiz-body-questions-item-options-item-explanation d-flex flex-column justify-content-center align-items-center gap-12 w100p no-drag no-next-drag">
                                 <div class="d-flex justify-content-between align-items-center w100p">
                                     <div class="service-quiz-body-questions-item-options-item-explanation-label" [class.active]="question.isExplainAnswer">{{ 'Explain answer' | localize }}</div>
                                     <div class="service-quiz-body-questions-item-options-item-explanation-input">
