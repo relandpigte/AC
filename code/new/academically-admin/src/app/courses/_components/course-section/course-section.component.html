@@ -20,6 +20,7 @@
           (blur)="onBlurName()"
           autocomplete="off"
           [autofocus]="true"
+          [placeholder]="(courseSection.type === CourseSectionType.Module ? 'Name your module' : 'Name your lesson') | localize"
         />
       </ng-container>
     </div>

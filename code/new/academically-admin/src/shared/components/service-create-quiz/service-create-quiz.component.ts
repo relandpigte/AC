@@ -107,6 +107,7 @@ export class ServiceCreateQuizComponent extends AppComponentBase implements OnIn
         });
 
         this._dragulaService.dropModel(this.dragulaGroup).subscribe(args => {
+            args.targetModel.forEach(item => item.isCorrect = false);
         });
     }
 
@@ -161,6 +162,7 @@ export class ServiceCreateQuizComponent extends AppComponentBase implements OnIn
             this.model.serviceType = this.serviceType;
 
             this.model.serviceQuizQuestions.forEach((q, idx) => {
+                q.explanation = q.isExplainAnswer ? q.explanation : '';
                 q.displayOrder = idx + 1;
                 q.serviceQuizQuestionOptions.forEach((o, idx) => {
                     o.displayOrder = idx + 1;
@@ -257,6 +259,11 @@ export class ServiceCreateQuizComponent extends AppComponentBase implements OnIn
 
     isQuestionAlreadyHasCorrectSelected(question: CreateServiceQuizQuestionDto): boolean {
         return question.serviceQuizQuestionOptions?.some(o => o.isCorrect);
+    }
+
+    changeQuestionType(question: CreateServiceQuizQuestionDto, type: ServiceQuizQuestionType): void {
+        question.type = type;
+        question.serviceQuizQuestionOptions.forEach(o => o.isCorrect = false);
     }
 
     toggleOptionCorrect(question: CreateServiceQuizQuestionDto, option: CreateServiceQuizQuestionOptionDto): void {
