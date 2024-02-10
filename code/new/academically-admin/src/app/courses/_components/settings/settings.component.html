@@ -1,4 +1,110 @@
-<form class="form-horizontal" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Access' | localize }}
+    </h4>
+  </div>
+  <div class="card-body py-0">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+        <div class="list-group-item-left">
+          <h5 class="list-title">Public</h5>
+          <span class="list-description">
+            This article will be visible on your profile and explore page. Any user can purchase it.
+          </span>
+        </div>
+        <div class="list-group-item-right">
+          <div class="custom-control custom-switch ml-auto">
+            <input type="checkbox" class="custom-control-input" id="public-access" checked/>
+            <label class="custom-control-label" for="public-access"></label>
+          </div>
+        </div>
+      </li>
+      <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+        <div class="list-group-item-left">
+          <h5 class="list-title">Private</h5>
+          <span class="list-description">
+            This article will be hidden from your profile and explore page. Access would be via invite only
+          </span>
+        </div>
+        <div class="list-group-item-right">
+          <div class="custom-control custom-switch ml-auto">
+            <input type="checkbox" class="custom-control-input" id="private-access"/>
+            <label class="custom-control-label" for="private-access"></label>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Course progress' | localize }}
+    </h4>
+  </div>
+  <div class="card-body py-0">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+        <div class="list-group-item-left">
+          <h5 class="list-title">Lock lesson order</h5>
+          <span class="list-description">
+            Prevents students from skipping ahead
+          </span>
+        </div>
+        <div class="list-group-item-right">
+          <div class="custom-control custom-switch ml-auto">
+            <input type="checkbox" class="custom-control-input" id="lock-lesson-order" checked/>
+            <label class="custom-control-label" for="lock-lesson-order"></label>
+          </div>
+        </div>
+      </li>
+      <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+        <div class="list-group-item-left">
+          <h5 class="list-title">Mandatory activities</h5>
+          <span class="list-description">
+            Students need to complete activities before advancing to the next lesson
+          </span>
+        </div>
+        <div class="list-group-item-right">
+          <div class="custom-control custom-switch ml-auto">
+            <input type="checkbox" class="custom-control-input" id="mandatory-activities" checked/>
+            <label class="custom-control-label" for="mandatory-activities"></label>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Chat' | localize }}
+    </h4>
+  </div>
+  <div class="card-body py-0">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+        <div class="list-group-item-left">
+          <h5 class="list-title">Chat with instructor</h5>
+          <span class="list-description">
+            Allow students to send you messages from the course interface
+          </span>
+        </div>
+        <div class="list-group-item-right">
+          <div class="custom-control custom-switch ml-auto">
+            <input type="checkbox" class="custom-control-input" id="chat-with-instructor"/>
+            <label class="custom-control-label" for="chat-with-instructor"></label>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!--form class="form-horizontal" autocomplete="off" #form="ngForm" (ngSubmit)="onFormSubmit()">
   <div class="row">
     <div class="col-8">
       <div class="card">
@@ -306,4 +412,4 @@
       </div>
     </div>
   </div>
-</form>
+</form-->
