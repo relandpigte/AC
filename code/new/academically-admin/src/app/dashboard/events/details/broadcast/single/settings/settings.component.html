@@ -1,4 +1,612 @@
-<form class="form-horizontal" autocomplete="off" #form="ngForm">
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Access' | localize }}
+    </h4>
+  </div>
+  <div class="card-body py-0">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+        <div class="list-group-item-left">
+          <h5 class="list-title">Public</h5>
+          <span class="list-description">
+            This event will be visible on your profile and explore page. Any user can purchase it.
+          </span>
+        </div>
+        <div class="list-group-item-right">
+          <div class="custom-control custom-switch ml-auto">
+            <input type="checkbox" class="custom-control-input" id="public-access" checked/>
+            <label class="custom-control-label" for="public-access"></label>
+          </div>
+        </div>
+      </li>
+      <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+        <div class="list-group-item-left">
+          <h5 class="list-title">Private</h5>
+          <span class="list-description">
+            This event will be hidden from your profile and explore page. Access would be via invite only
+          </span>
+        </div>
+        <div class="list-group-item-right">
+          <div class="custom-control custom-switch ml-auto">
+            <input type="checkbox" class="custom-control-input" id="private-access"/>
+            <label class="custom-control-label" for="private-access"></label>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Recording' | localize }}
+    </h4>
+  </div>
+  <div class="card-body py-0">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+        <div class="list-group-item-left">
+          <h5 class="list-title">Record the session</h5>
+          <span class="list-description">
+            Record this event and make it available for download by the attendees
+          </span>
+        </div>
+        <div class="list-group-item-right">
+          <div class="custom-control custom-switch ml-auto">
+            <input type="checkbox" class="custom-control-input" id="chat-with-instructor" checked/>
+            <label class="custom-control-label" for="chat-with-instructor"></label>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Interactive tools' | localize }}
+    </h4>
+    <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+      <li class="nav-item">
+        <a
+          href="#it-audience-tab"
+          class="nav-link active"
+          data-toggle="tab"
+          aria-controls="it-audience-tab"
+          id="it-audience"
+        >
+          {{ 'Audience' | localize }}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          href="#it-cohost-tab"
+          class="nav-link"
+          data-toggle="tab"
+          aria-controls="it-cohost-tab"
+          id="it-cohost"
+        >
+          {{ 'co-host' | localize }}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body py-0">
+    <div class="tab-content">
+      <div class="tab-pane active" id="it-audience-tab" role="tabpanel" aria-labelledby="it-audience">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Microphone</h5>
+              <span class="list-description">
+                Allow audience members to access their microphone.
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input type="checkbox" class="custom-control-input" id="audience-microphone" checked/>
+                <label class="custom-control-label" for="audience-microphone"></label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Webcam</h5>
+              <span class="list-description">
+                Allow audience members to access their webcam.
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input type="checkbox" class="custom-control-input" id="audience-webcam" checked/>
+                <label class="custom-control-label" for="audience-webcam"></label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Raise hand</h5>
+              <span class="list-description">
+                Allow audience members to request to microphone and webcam if disabled.
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input type="checkbox" class="custom-control-input" id="audience-sharing"/>
+                <label class="custom-control-label" for="audience-sharing"></label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="tab-pane" id="it-cohost-tab" role="tabpanel" aria-labelledby="it-cohost">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Microphone</h5>
+              <span class="list-description">
+                Allow co-host to access their microphone.
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input type="checkbox" class="custom-control-input" id="cohost-microphone" checked/>
+                <label class="custom-control-label" for="cohost-microphone"></label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Webcam</h5>
+              <span class="list-description">
+                Allow co-host to access their webcam.
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input type="checkbox" class="custom-control-input" id="cohost-webcam" checked/>
+                <label class="custom-control-label" for="cohost-webcam"></label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Raise hand</h5>
+              <span class="list-description">
+                Allow co-host to request to microphone and webcam if disabled.
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input type="checkbox" class="custom-control-input" id="cohost-sharing"/>
+                <label class="custom-control-label" for="cohost-sharing"></label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Chat' | localize }}
+    </h4>
+    <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+      <li class="nav-item">
+        <a
+          href="#chat-audience-tab"
+          class="nav-link active"
+          data-toggle="tab"
+          aria-controls="chat-audience-tab"
+          id="chat-audience"
+        >
+          {{ 'Audience' | localize }}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          href="#chat-cohost-tab"
+          class="nav-link"
+          data-toggle="tab"
+          aria-controls="chat-cohost-tab"
+          id="chat-cohost"
+        >
+          {{ 'Co-host' | localize }}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body py-0">
+    <div class="tab-content">
+      <div class="tab-pane active" id="chat-audience-tab" role="tabpanel" aria-labelledby="chat-audience">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Public chat</h5>
+              <span class="list-description">
+                Allow audience members to add messages to the public chat area.
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input type="checkbox" class="custom-control-input" id="audience-public-chat" checked/>
+                <label class="custom-control-label" for="audience-public-chat"></label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Private chat</h5>
+              <span class="list-description">
+                Allow audience members to chat with other attendees privately.
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input type="checkbox" class="custom-control-input" id="audience-private-chat" checked/>
+                <label class="custom-control-label" for="audience-private-chat"></label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="tab-pane" id="chat-cohost-tab" role="tabpanel" aria-labelledby="chat-cohost">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Public chat</h5>
+              <span class="list-description">
+                Allow co-hosts to add messages to the public chat area.
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input type="checkbox" class="custom-control-input" id="cohost-public-chat" checked/>
+                <label class="custom-control-label" for="cohost-public-chat"></label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Private chat</h5>
+              <span class="list-description">
+                Allow co-hosts to chat with other attendees privately.
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input type="checkbox" class="custom-control-input" id="cohost-private-chat" checked/>
+                <label class="custom-control-label" for="cohost-private-chat"></label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Questions' | localize }}
+    </h4>
+    <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+      <li class="nav-item">
+        <a
+          href="#questions-audience-tab"
+          class="nav-link active"
+          data-toggle="tab"
+          aria-controls="questions-audience-tab"
+          id="questions-audience"
+        >
+          {{ 'Audience' | localize }}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          href="#questions-cohost-tab"
+          class="nav-link"
+          data-toggle="tab"
+          aria-controls="questions-cohost-tab"
+          id="questions-cohost"
+        >
+          {{ 'Co-host' | localize }}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body py-0">
+    <div class="tab-content">
+      <div class="tab-pane active" id="questions-audience-tab" role="tabpanel" aria-labelledby="questions-audience">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Ask questions</h5>
+              <span class="list-description">
+                Allow audience members to ask questions
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input type="checkbox" class="custom-control-input" id="audience-ask-questions" checked/>
+                <label class="custom-control-label" for="audience-ask-questions"></label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Respond to questions</h5>
+              <span class="list-description">
+                Allow audience members to respond to questions
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input type="checkbox" class="custom-control-input" id="audience-respond-to-questions" checked/>
+                <label class="custom-control-label" for="audience-respond-to-questions"></label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="tab-pane" id="questions-cohost-tab" role="tabpanel" aria-labelledby="questions-cohost">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Answer questions live</h5>
+              <span class="list-description">
+                Allow co-hosts to answer questions live
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input type="checkbox" class="custom-control-input" id="cohost-answer-live" checked/>
+                <label class="custom-control-label" for="cohost-answer-live"></label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Respond to questions</h5>
+              <span class="list-description">
+                Allow co-hosts to respond to questions
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input type="checkbox" class="custom-control-input" id="cohost-respond-questions" checked/>
+                <label class="custom-control-label" for="cohost-respond-questions"></label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Attendee moderation' | localize }}
+    </h4>
+    <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+      <li class="nav-item">
+        <a
+          href="#moderation-cohost-tab"
+          class="nav-link active"
+          data-toggle="tab"
+          aria-controls="moderation-cohost-tab"
+          id="moderation-cohost"
+        >
+          {{ 'Co-host' | localize }}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body py-0">
+    <div class="tab-content">
+      <div class="tab-pane active" id="moderation-cohost-tab" role="tabpanel" aria-labelledby="moderation-cohost">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Admit attendees</h5>
+              <span class="list-description">
+                Allow co-hosts to admit attendees
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input type="checkbox" class="custom-control-input" id="cohost-admit-attendees" checked/>
+                <label class="custom-control-label" for="cohost-admit-attendees"></label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Remove attendees</h5>
+              <span class="list-description">
+                Allow co-hosts to remove attendees
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input type="checkbox" class="custom-control-input" id="cohost-remove-attendees" checked/>
+                <label class="custom-control-label" for="cohost-remove-attendees"></label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Lower hand</h5>
+              <span class="list-description">
+                Allow co-hosts to lower the hand of attendees
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input type="checkbox" class="custom-control-input" id="cohost-lower-hand"/>
+                <label class="custom-control-label" for="cohost-lower-hand"></label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Manage attendee roles</h5>
+              <span class="list-description">
+                Allow co-hosts to upgrade audience members to, or downgrade from presenter status
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input type="checkbox" class="custom-control-input" id="cohost-manage-roles"/>
+                <label class="custom-control-label" for="cohost-manage-roles"></label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Activities' | localize }}
+    </h4>
+    <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+      <li class="nav-item">
+        <a
+          href="#activities-cohost-tab"
+          class="nav-link active"
+          data-toggle="tab"
+          aria-controls="activities-cohost-tab"
+          id="activities-cohost"
+        >
+          {{ 'Co-host' | localize }}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body py-0">
+    <div class="tab-content">
+      <div class="tab-pane active" id="activities-cohost-tab" role="tabpanel" aria-labelledby="activities-cohost">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Create activities</h5>
+              <span class="list-description">
+                Allow co-hosts to create and launch activities
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input type="checkbox" class="custom-control-input" id="cohost-create-activities"/>
+                <label class="custom-control-label" for="cohost-create-activities"></label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Offers' | localize }}
+    </h4>
+    <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+      <li class="nav-item">
+        <a
+          href="#offers-cohost-tab"
+          class="nav-link active"
+          data-toggle="tab"
+          aria-controls="offers-cohost-tab"
+          id="offers-cohost"
+        >
+          {{ 'Co-host' | localize }}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body py-0">
+    <div class="tab-content">
+      <div class="tab-pane active" id="offers-cohost-tab" role="tabpanel" aria-labelledby="offers-cohost">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Create offers</h5>
+              <span class="list-description">
+                Allow co-hosts to create offers
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input type="checkbox" class="custom-control-input" id="cohost-create-offers"/>
+                <label class="custom-control-label" for="cohost-create-offers"></label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Handouts' | localize }}
+    </h4>
+    <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+      <li class="nav-item">
+        <a
+          href="#handouts-cohost-tab"
+          class="nav-link active"
+          data-toggle="tab"
+          aria-controls="handouts-cohost-tab"
+          id="handouts-cohost"
+        >
+          {{ 'Co-host' | localize }}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body py-0">
+    <div class="tab-content">
+      <div class="tab-pane active" id="handouts-cohost-tab" role="tabpanel" aria-labelledby="handouts-cohost">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Add handouts</h5>
+              <span class="list-description">
+                Allow co-hosts to add handouts
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input type="checkbox" class="custom-control-input" id="cohost-add-handouts"/>
+                <label class="custom-control-label" for="cohost-add-handouts"></label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--form class="form-horizontal" autocomplete="off" #form="ngForm">
   <div class="row">
     <div class="col-8" [loader]="isLoading">
 
@@ -555,4 +1163,4 @@
 
     </div>
   </div>
-</form>
+</form-->

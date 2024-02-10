@@ -63,7 +63,6 @@ export class SingleComponent extends AppComponentBase implements OnInit {
       label: 'Settings',
       icon: 'assets/img/service/create/settings.svg',
       iconHover: 'assets/img/service/create/settings-hover.svg',
-      infoText: 'Here 4, you can input all the details for your article. This information will be visible to potential clients, so keep it clear and informative.'
     },
   ];
 
@@ -79,7 +78,7 @@ export class SingleComponent extends AppComponentBase implements OnInit {
     private _serviceCreateService: ServiceCreateService
   ) {
     super(injector);
-    this._serviceCreateService.setDefaultMenuItem(this.menuItems[0]);
+    this._serviceCreateService.setDefaultMenuItem(this.menuItems[5]);
     this._serviceCreateService.getDefaultMenuItem().subscribe(x => this.defaultMenuItem = x);
     route.paramMap.subscribe(paramMap => {
       if (paramMap.has('id')) {
