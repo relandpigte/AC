@@ -22,7 +22,7 @@ export class ServiceCardActivityComponent extends AppComponentBase implements On
   get activityDuration(): string {
     const seconds = this.isPoll ? this.activity?.poll?.duration : this.activity?.quiz?.duration;
     const duration = moment.duration(seconds, 'seconds');
-    return duration.minutes().toString() + ' mins';
+    return duration.asMinutes().toString() + ' mins';
   }
   get activityQuestions(): string {
     const questions = this.isPoll ? this.activity?.poll?.servicePollQuestions?.length : this.activity?.quiz?.serviceQuizQuestions?.length;

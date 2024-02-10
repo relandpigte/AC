@@ -1,0 +1,28 @@
+<div class="activities-wrapper">
+  <div class="activities-header d-flex align-items-center">
+    <div class="activities-header-wrapper flex-grow-1">
+      <h3 class="activities-title">Add activities</h3>
+      <div class="activities-description">
+        Create quizzes or polls for your students to complete alongside your article.
+      </div>
+    </div>
+    <div class="dropdown activities-dropdown">
+      <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {{ 'Add' | localize | titlecase }}
+      </button>
+      <div class="dropdown-menu dropdown-menu-right">
+        <a (click)="onAddQuiz()" href="javascript: void(0)" class="dropdown-item">{{ 'Quiz' | localize | titlecase }}</a>
+        <a (click)="onAddPoll()" href="javascript: void(0)" class="dropdown-item">{{ 'Poll' | localize | titlecase }}</a>
+      </div>
+    </div>
+  </div>
+  <div class="activities-content" *ngIf="isActivitiesAvailable else noActivities" [dragula]="activityGroup" [(dragulaModel)]="activities">
+    <app-service-card-activity *ngFor="let activity of activities" [activity]="activity"></app-service-card-activity>
+  </div>
+</div>
+
+<ng-template #noActivities>
+  <div class="activities-empty bg-white text-center">
+    {{ 'No Activities' | localize }}
+  </div>
+</ng-template>

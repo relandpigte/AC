@@ -39,6 +39,13 @@ export class SingleArticleComponent extends AppComponentBase implements OnInit {
       infoText: 'Here, you can input all the details for your article. This information will be visible to potential clients, so keep it clear and informative.'
     },
     {
+      id: 'activities',
+      label: 'Activities',
+      icon: 'assets/img/service/create/pie-chart.svg',
+      iconHover: 'assets/img/service/create/pie-chart-hover.svg',
+      infoText: 'Use this section to add activities such as quizzes and polls for your attendees to complete during your event.'
+    },
+    {
       id: 'offers',
       label: 'Offers',
       icon: 'assets/img/service/create/shopping.svg',
