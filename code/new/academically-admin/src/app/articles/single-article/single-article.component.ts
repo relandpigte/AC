@@ -43,7 +43,7 @@ export class SingleArticleComponent extends AppComponentBase implements OnInit {
       label: 'Activities',
       icon: 'assets/img/service/create/pie-chart.svg',
       iconHover: 'assets/img/service/create/pie-chart-hover.svg',
-      infoText: 'Use this section to add activities such as quizzes and polls for your attendees to complete during your event.'
+      infoText: 'Use this section to add activities such as quizzes and polls for those who purchase your article to complete.'
     },
     {
       id: 'offers',

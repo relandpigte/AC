@@ -8,10 +8,12 @@ import { DetailsModule } from '@app/dashboard/coaching/single/details/details.mo
 import { SettingsModule } from '@app/dashboard/coaching/single/settings/settings.module';
 import { StudioModule } from '@app/dashboard/coaching/single/studio/studio.module';
 import { ResourcesModule } from '@app/dashboard/coaching/single/resources/resources.module';
+import { ActivitiesComponent } from '@app/dashboard/coaching/single/activities/activities.component';
 
 @NgModule({
   declarations: [
-    SingleComponent
+    SingleComponent,
+    ActivitiesComponent
     ],
   imports: [
     CommonModule,
