@@ -3,6 +3,7 @@ using Abp.AutoMapper;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using System;
+using System.Collections.Generic;
 
 namespace Academically.Services.Coachings.Dto
 {
@@ -16,5 +17,9 @@ namespace Academically.Services.Coachings.Dto
         public Guid? LanguageId { get; set; }
         public PricingType? PricingType { get; set; }
         public decimal? Price { get; set; }
+        public int? CancellationPeriod { get; set; }
+        public int SessionLength { get; set; }
+        public IEnumerable<Guid> Topics { get; set; }
+        public IEnumerable<string> NewTopics { get; set; }
     }
 }

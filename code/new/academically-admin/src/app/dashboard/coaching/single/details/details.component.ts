@@ -1,8 +1,14 @@
-import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { finalize, takeUntil } from 'rxjs/operators';
+import * as _ from 'lodash';
+
 import { CoachingService } from '@app/dashboard/coaching/_services/coaching.service';
 import { DefaultFile, DocumentUploaderComponent } from '@app/_shared/components/document-uploader/document-uploader.component';
 import { UploadService } from '@app/_shared/services/upload.service';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
+import { AutoSaveComponentBase } from '@shared/auto-save-component-base';
+import { TopicSorting } from '@shared/components/topic/topic.component';
+import { SelectOption } from '@shared/components/service-create-quiz/service-create-quiz.component';
 import {
   DocumentDto,
   CoachingsServiceProxy,
@@ -11,13 +17,11 @@ import {
   PricingType,
   SpokenLanguageDto,
   SpokenLanguagesServiceProxy,
-  UpdateCoachingDto,
   DocumentType,
   CoachingDto,
+  KeywordSearchStrategy,
+  DisciplineTaxonomiesServiceProxy
 } from '@shared/service-proxies/service-proxies';
-import { finalize, takeUntil } from 'rxjs/operators';
-import { AutoSaveComponentBase } from '@shared/auto-save-component-base';
-import * as _ from 'lodash';
 
 @Component({
   selector: 'app-details',
@@ -26,6 +30,7 @@ import * as _ from 'lodash';
 })
 export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
   @ViewChild(DocumentUploaderComponent, { static: true }) documentUploader: DocumentUploaderComponent;
+  @ViewChild('priceEl', { static: true }) priceInput: ElementRef;
 
   coaching: CoachingDto;
 
@@ -36,7 +41,7 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
   defaultFile: DefaultFile;
   languages: SpokenLanguageDto[] = [];
 
-  model = new UpdateCoachingDto();
+  model = new CoachingDto();
   isLoading = false;
   isUploadingImage = false;
   allowedImageExtensions = fileUploadConfiguration.allowedImageExtensions;
@@ -44,7 +49,18 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
   CoachingType = CoachingType;
   thumbnailDocument = new DocumentDto();
 
-  get coachingType(): CoachingType { return this.coaching.type ?? CoachingType.Single; }
+  topicsChoices: any[] = [];
+  isLoadingTopics = false;
+  selectedTopics: { id: string, name: string }[] = [];
+  newSelectedTopics: { id: string, name: string }[] = [];
+
+  cancelPolicyTimeSelection = [...Array(25).keys()];
+
+  sessionLengthOptions: SelectOption[] = [
+    { value: 1800, label: '30 minutes' },
+    { value: 2700, label: '45 minutes' },
+    { value: 3600, label: '60 minutes' },
+  ];
 
   constructor(
     injector: Injector,
@@ -52,9 +68,13 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
     private _coachingsService: CoachingsServiceProxy,
     private _spokenLanguagesService: SpokenLanguagesServiceProxy,
     private _uploadService: UploadService,
+    private _taxonomyService: DisciplineTaxonomiesServiceProxy
   ) {
     super(injector);
   }
+
+  get coachingType(): CoachingType { return this.coaching.type ?? CoachingType.Single; }
+  get isServiceFree(): boolean { return PricingType.Free === this.model?.pricingType; }
 
   ngOnInit(): void {
     this._coachingService.coachingCreated$
@@ -66,21 +86,21 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
         }
       });
 
-    this.getLanguages();
-    this.documentUploader.filesChanged.subscribe((files: FileParameter[]) => {
-      if (files && files.length) {
-        this.coachingThumbnailDocument = files[0];
-        this.uploadThumbnail();
-      } else {
-        this.coachingThumbnailDocument = undefined;
-        if (!this.defaultFile || !this.defaultFile.name) {
-          this.deleteThumbnail();
-        }
-      }
-    });
-    this.documentUploader.defaultFileRemoved.subscribe(() => {
-      this.deleteThumbnail();
-    });
+    // this.getLanguages();
+    // this.documentUploader.filesChanged.subscribe((files: FileParameter[]) => {
+    //   if (files && files.length) {
+    //     this.coachingThumbnailDocument = files[0];
+    //     this.uploadThumbnail();
+    //   } else {
+    //     this.coachingThumbnailDocument = undefined;
+    //     if (!this.defaultFile || !this.defaultFile.name) {
+    //       this.deleteThumbnail();
+    //     }
+    //   }
+    // });
+    // this.documentUploader.defaultFileRemoved.subscribe(() => {
+    //   this.deleteThumbnail();
+    // });
   }
 
   onCategoryKeyDown(e: KeyboardEvent): void {
@@ -101,6 +121,37 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
       this.categories.splice(index, 1);
     }
     this.updateCategories();
+  }
+
+  updateModelForTopics(): void {
+    this.model.topics = this.selectedTopics.filter(t => t.id).map(t => t.id) ?? [];
+    this.model.newTopics = this.newSelectedTopics.map(t => t.name);
+  }
+
+  handleTopicsModelUpdate(data: any): void {
+    const { selected, newSelected } = data;
+    this.selectedTopics = selected;
+    this.newSelectedTopics = newSelected;
+    this.updateModelForTopics();
+  }
+
+  handleTopicsKeywordUpdate(data: any): void {
+    const { keyword, showLoading } = data;
+    this._taxonomyService.getAllLastChildren(keyword, KeywordSearchStrategy.StartsWith, true, TopicSorting.Popular, undefined)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(topics => this.topicsChoices = topics.filter(t => !this.selectedTopics.some(x => x.id === t.id)));
+  }
+
+  onPricingClick(): void {
+    setTimeout((): void => {
+      if (this.model.pricingType === PricingType.Free) {
+        this.model.price = undefined;
+      } else {
+        this.priceInput.nativeElement.focus();
+        this.priceInput.nativeElement.select();
+        this.priceInput.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+      }
+    }, 200);
   }
 
   private getLanguages(): void {
@@ -151,7 +202,7 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
     if (!_.isNil(this.model.price) && !_.isNumber(this.model.price)) {
       return;
     }
-    this._coachingsService.update(this.model)
+    this._coachingsService.updateDetails(this.model)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         this._coachingService.coachingCreated = response;
@@ -177,6 +228,16 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
           this.thumbnailDocument = response.thumbnailDocument;
           this.setDefaultFile();
         }
+
+        // let's reset the selected topics here
+        this.selectedTopics = response?.coachingTopics?.map(e => {
+          return { id: e.disciplineTaxonomy.id, name: e.disciplineTaxonomy.name };
+        }) ?? [];
+        this.newSelectedTopics = [];
+
+        // add fresh topics to the model
+        this.updateModelForTopics();
+
         this.modelToSave = this.model;
         this.initAutoSave(this.updateDetails);
       });

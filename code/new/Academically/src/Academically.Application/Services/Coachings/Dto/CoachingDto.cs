@@ -10,6 +10,7 @@ using Academically.Users.Dto;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Academically.Services.Articles.Dto;
 using Academically.Services.Services.Dto;
 
 namespace Academically.Services.Coachings.Dto
@@ -106,6 +107,9 @@ namespace Academically.Services.Coachings.Dto
 
         public IEnumerable<CoachingDto> Children { get; set; }
         public int PopularityWeight { get; set; }
+        
+        public int? CancellationPeriod { get; set; }
+        public int SessionLength { get; set; }
 
         [NotMapped]
         public bool IsSaved { get; set; }
@@ -124,5 +128,13 @@ namespace Academically.Services.Coachings.Dto
         
         [NotMapped]
         public ServiceBookingDto ServiceBooking { get; set; }
+        
+        public IEnumerable<CoachingTopicDto> CoachingTopics { get; set; }
+        
+        [NotMapped]
+        public IEnumerable<Guid> Topics { get; set; }
+
+        [NotMapped]
+        public IEnumerable<string> NewTopics { get; set; }
     }
 }

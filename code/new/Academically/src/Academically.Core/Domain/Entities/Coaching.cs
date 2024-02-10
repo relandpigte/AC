@@ -103,7 +103,12 @@ namespace Academically.Domain.Entities
         public virtual User CreatorUser { get; set; }
 
         public virtual ICollection<Coaching> Children { get; set; }
-
+        
+        public virtual ICollection<CoachingTopic> CoachingTopics { get; set; }
+        
+        public int? CancellationPeriod { get; set; }
+        public int SessionLength { get; set; }
+        
         public Coaching()
         {
             Status = CoachingStatus.Draft;

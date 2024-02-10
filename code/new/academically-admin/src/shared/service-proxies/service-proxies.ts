@@ -5557,6 +5557,62 @@ export class CoachingsServiceProxy {
      * @param body (optional) 
      * @return Success
      */
+    updateDetails(body: UpdateCoachingDto | undefined): Observable<CoachingDto> {
+        let url_ = this.baseUrl + "/api/services/app/Coachings/UpdateDetails";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateDetails(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateDetails(<any>response_);
+                } catch (e) {
+                    return <Observable<CoachingDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CoachingDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateDetails(response: HttpResponseBase): Observable<CoachingDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CoachingDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CoachingDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
     create(body: CreateCoachingDto | undefined): Observable<CoachingDto> {
         let url_ = this.baseUrl + "/api/services/app/Coachings/Create";
         url_ = url_.replace(/[?&]$/, "");
@@ -39108,12 +39164,17 @@ export class CoachingDto implements ICoachingDto {
     creatorUser: UserDto;
     children: CoachingDto[] | undefined;
     popularityWeight: number;
+    cancellationPeriod: number | undefined;
+    sessionLength: number;
     isSaved: boolean;
     isPurchased: boolean;
     purchased: UserDto[] | undefined;
     hasReviewed: boolean;
     isCancelled: boolean;
     serviceBooking: ServiceBookingDto;
+    coachingTopics: CoachingTopicDto[] | undefined;
+    topics: string[] | undefined;
+    newTopics: string[] | undefined;
 
     constructor(data?: ICoachingDto) {
         if (data) {
@@ -39217,6 +39278,8 @@ export class CoachingDto implements ICoachingDto {
                     this.children.push(CoachingDto.fromJS(item));
             }
             this.popularityWeight = _data["popularityWeight"];
+            this.cancellationPeriod = _data["cancellationPeriod"];
+            this.sessionLength = _data["sessionLength"];
             this.isSaved = _data["isSaved"];
             this.isPurchased = _data["isPurchased"];
             if (Array.isArray(_data["purchased"])) {
@@ -39227,6 +39290,21 @@ export class CoachingDto implements ICoachingDto {
             this.hasReviewed = _data["hasReviewed"];
             this.isCancelled = _data["isCancelled"];
             this.serviceBooking = _data["serviceBooking"] ? ServiceBookingDto.fromJS(_data["serviceBooking"]) : <any>undefined;
+            if (Array.isArray(_data["coachingTopics"])) {
+                this.coachingTopics = [] as any;
+                for (let item of _data["coachingTopics"])
+                    this.coachingTopics.push(CoachingTopicDto.fromJS(item));
+            }
+            if (Array.isArray(_data["topics"])) {
+                this.topics = [] as any;
+                for (let item of _data["topics"])
+                    this.topics.push(item);
+            }
+            if (Array.isArray(_data["newTopics"])) {
+                this.newTopics = [] as any;
+                for (let item of _data["newTopics"])
+                    this.newTopics.push(item);
+            }
         }
     }
 
@@ -39330,6 +39408,8 @@ export class CoachingDto implements ICoachingDto {
                 data["children"].push(item.toJSON());
         }
         data["popularityWeight"] = this.popularityWeight;
+        data["cancellationPeriod"] = this.cancellationPeriod;
+        data["sessionLength"] = this.sessionLength;
         data["isSaved"] = this.isSaved;
         data["isPurchased"] = this.isPurchased;
         if (Array.isArray(this.purchased)) {
@@ -39340,6 +39420,21 @@ export class CoachingDto implements ICoachingDto {
         data["hasReviewed"] = this.hasReviewed;
         data["isCancelled"] = this.isCancelled;
         data["serviceBooking"] = this.serviceBooking ? this.serviceBooking.toJSON() : <any>undefined;
+        if (Array.isArray(this.coachingTopics)) {
+            data["coachingTopics"] = [];
+            for (let item of this.coachingTopics)
+                data["coachingTopics"].push(item.toJSON());
+        }
+        if (Array.isArray(this.topics)) {
+            data["topics"] = [];
+            for (let item of this.topics)
+                data["topics"].push(item);
+        }
+        if (Array.isArray(this.newTopics)) {
+            data["newTopics"] = [];
+            for (let item of this.newTopics)
+                data["newTopics"].push(item);
+        }
         return data; 
     }
 
@@ -39439,12 +39534,17 @@ export interface ICoachingDto {
     creatorUser: UserDto;
     children: CoachingDto[] | undefined;
     popularityWeight: number;
+    cancellationPeriod: number | undefined;
+    sessionLength: number;
     isSaved: boolean;
     isPurchased: boolean;
     purchased: UserDto[] | undefined;
     hasReviewed: boolean;
     isCancelled: boolean;
     serviceBooking: ServiceBookingDto;
+    coachingTopics: CoachingTopicDto[] | undefined;
+    topics: string[] | undefined;
+    newTopics: string[] | undefined;
 }
 
 export class CoachingDtoPagedResultDto implements ICoachingDtoPagedResultDto {
@@ -39981,6 +40081,69 @@ export enum CoachingStatus {
     Draft = 0,
     Published = 1,
     Archived = 2,
+}
+
+export class CoachingTopicDto implements ICoachingTopicDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    coachingId: string;
+    disciplineTaxonomyId: string;
+    disciplineTaxonomy: DisciplineTaxonomyDto;
+
+    constructor(data?: ICoachingTopicDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.coachingId = _data["coachingId"];
+            this.disciplineTaxonomyId = _data["disciplineTaxonomyId"];
+            this.disciplineTaxonomy = _data["disciplineTaxonomy"] ? DisciplineTaxonomyDto.fromJS(_data["disciplineTaxonomy"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CoachingTopicDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CoachingTopicDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["coachingId"] = this.coachingId;
+        data["disciplineTaxonomyId"] = this.disciplineTaxonomyId;
+        data["disciplineTaxonomy"] = this.disciplineTaxonomy ? this.disciplineTaxonomy.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): CoachingTopicDto {
+        const json = this.toJSON();
+        let result = new CoachingTopicDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICoachingTopicDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    coachingId: string;
+    disciplineTaxonomyId: string;
+    disciplineTaxonomy: DisciplineTaxonomyDto;
 }
 
 /** 0 = Single 1 = Series */
@@ -54981,6 +55144,10 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
     referenceId: string;
     serviceType: ServicesType;
     attendees: boolean;
+    attendeesCanViewAudience: boolean;
+    attendeesCanAdmitAudience: boolean;
+    attendeesCanKickAudience: boolean;
+    attendeesPromoteAudience: boolean;
     chat: boolean;
     chatAudiencePublic: boolean;
     chatAudiencePrivate: boolean;
@@ -55010,6 +55177,7 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
     interactiveToolsAudienceSharing: boolean;
     interactiveToolsAudienceRaiseHand: boolean;
     interactiveToolsAudienceLowerHand: boolean;
+    recordingAllowAudience: boolean;
 
     constructor(data?: IServiceFeatureFlagDto) {
         if (data) {
@@ -55028,6 +55196,10 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
             this.referenceId = _data["referenceId"];
             this.serviceType = _data["serviceType"];
             this.attendees = _data["attendees"];
+            this.attendeesCanViewAudience = _data["attendeesCanViewAudience"];
+            this.attendeesCanAdmitAudience = _data["attendeesCanAdmitAudience"];
+            this.attendeesCanKickAudience = _data["attendeesCanKickAudience"];
+            this.attendeesPromoteAudience = _data["attendeesPromoteAudience"];
             this.chat = _data["chat"];
             this.chatAudiencePublic = _data["chatAudiencePublic"];
             this.chatAudiencePrivate = _data["chatAudiencePrivate"];
@@ -55057,6 +55229,7 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
             this.interactiveToolsAudienceSharing = _data["interactiveToolsAudienceSharing"];
             this.interactiveToolsAudienceRaiseHand = _data["interactiveToolsAudienceRaiseHand"];
             this.interactiveToolsAudienceLowerHand = _data["interactiveToolsAudienceLowerHand"];
+            this.recordingAllowAudience = _data["recordingAllowAudience"];
         }
     }
 
@@ -55075,6 +55248,10 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
         data["referenceId"] = this.referenceId;
         data["serviceType"] = this.serviceType;
         data["attendees"] = this.attendees;
+        data["attendeesCanViewAudience"] = this.attendeesCanViewAudience;
+        data["attendeesCanAdmitAudience"] = this.attendeesCanAdmitAudience;
+        data["attendeesCanKickAudience"] = this.attendeesCanKickAudience;
+        data["attendeesPromoteAudience"] = this.attendeesPromoteAudience;
         data["chat"] = this.chat;
         data["chatAudiencePublic"] = this.chatAudiencePublic;
         data["chatAudiencePrivate"] = this.chatAudiencePrivate;
@@ -55104,6 +55281,7 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
         data["interactiveToolsAudienceSharing"] = this.interactiveToolsAudienceSharing;
         data["interactiveToolsAudienceRaiseHand"] = this.interactiveToolsAudienceRaiseHand;
         data["interactiveToolsAudienceLowerHand"] = this.interactiveToolsAudienceLowerHand;
+        data["recordingAllowAudience"] = this.recordingAllowAudience;
         return data; 
     }
 
@@ -55122,6 +55300,10 @@ export interface IServiceFeatureFlagDto {
     referenceId: string;
     serviceType: ServicesType;
     attendees: boolean;
+    attendeesCanViewAudience: boolean;
+    attendeesCanAdmitAudience: boolean;
+    attendeesCanKickAudience: boolean;
+    attendeesPromoteAudience: boolean;
     chat: boolean;
     chatAudiencePublic: boolean;
     chatAudiencePrivate: boolean;
@@ -55151,6 +55333,7 @@ export interface IServiceFeatureFlagDto {
     interactiveToolsAudienceSharing: boolean;
     interactiveToolsAudienceRaiseHand: boolean;
     interactiveToolsAudienceLowerHand: boolean;
+    recordingAllowAudience: boolean;
 }
 
 export class ServiceMapping implements IServiceMapping {
@@ -60351,6 +60534,10 @@ export class UpdateCoachingDto implements IUpdateCoachingDto {
     languageId: string | undefined;
     pricingType: PricingType;
     price: number | undefined;
+    cancellationPeriod: number | undefined;
+    sessionLength: number;
+    topics: string[] | undefined;
+    newTopics: string[] | undefined;
 
     constructor(data?: IUpdateCoachingDto) {
         if (data) {
@@ -60371,6 +60558,18 @@ export class UpdateCoachingDto implements IUpdateCoachingDto {
             this.languageId = _data["languageId"];
             this.pricingType = _data["pricingType"];
             this.price = _data["price"];
+            this.cancellationPeriod = _data["cancellationPeriod"];
+            this.sessionLength = _data["sessionLength"];
+            if (Array.isArray(_data["topics"])) {
+                this.topics = [] as any;
+                for (let item of _data["topics"])
+                    this.topics.push(item);
+            }
+            if (Array.isArray(_data["newTopics"])) {
+                this.newTopics = [] as any;
+                for (let item of _data["newTopics"])
+                    this.newTopics.push(item);
+            }
         }
     }
 
@@ -60391,6 +60590,18 @@ export class UpdateCoachingDto implements IUpdateCoachingDto {
         data["languageId"] = this.languageId;
         data["pricingType"] = this.pricingType;
         data["price"] = this.price;
+        data["cancellationPeriod"] = this.cancellationPeriod;
+        data["sessionLength"] = this.sessionLength;
+        if (Array.isArray(this.topics)) {
+            data["topics"] = [];
+            for (let item of this.topics)
+                data["topics"].push(item);
+        }
+        if (Array.isArray(this.newTopics)) {
+            data["newTopics"] = [];
+            for (let item of this.newTopics)
+                data["newTopics"].push(item);
+        }
         return data; 
     }
 
@@ -60411,6 +60622,10 @@ export interface IUpdateCoachingDto {
     languageId: string | undefined;
     pricingType: PricingType;
     price: number | undefined;
+    cancellationPeriod: number | undefined;
+    sessionLength: number;
+    topics: string[] | undefined;
+    newTopics: string[] | undefined;
 }
 
 export class UpdateCoachingPresenterTypeDto implements IUpdateCoachingPresenterTypeDto {

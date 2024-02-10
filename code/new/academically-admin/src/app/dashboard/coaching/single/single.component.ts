@@ -28,7 +28,7 @@ export class SingleComponent extends AppComponentBase implements OnInit {
       label: 'Details',
       icon: 'assets/img/service/create/list.svg',
       iconHover: 'assets/img/service/create/list-hover.svg',
-      infoText: 'Here, you can input all the details for your article. This information will be visible to potential clients, so keep it clear and informative.'
+      infoText: 'Here, you can input all the details for your session. This information will be visible to potential clients, so keep it clear and informative.'
     },
     {
       id: 'activities',

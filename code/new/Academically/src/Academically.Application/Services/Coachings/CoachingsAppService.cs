@@ -37,6 +37,7 @@ namespace Academically.Services.Coachings
         private readonly IRepository<ServiceBooking, Guid> _serviceBooking;
         private readonly IRepository<ServiceReview, Guid> _serviceReviewRepository;
         private readonly IRepository<ServiceBooking, Guid> _serviceBookingRepository;
+        private readonly IRepository<DisciplineTaxonomy, Guid> _disciplineTaxonomyRepository;
 
         public CoachingsAppService(
             RoleManager roleManager,
@@ -48,8 +49,7 @@ namespace Academically.Services.Coachings
             IDocumentsDomainService documentsDomainService,
             IRepository<ServiceBooking, Guid> serviceBooking,
             IRepository<ServiceReview, Guid> serviceReviewRepository,
-            IRepository<ServiceBooking, Guid> serviceBookingRepository
-            ) : base(repository)
+            IRepository<ServiceBooking, Guid> serviceBookingRepository, IRepository<DisciplineTaxonomy, Guid> disciplineTaxonomyRepository) : base(repository)
         {
             LocalizationSourceName = AcademicallyConsts.LocalizationSourceName;
 
@@ -62,6 +62,7 @@ namespace Academically.Services.Coachings
             _serviceBooking = serviceBooking;
             _serviceReviewRepository = serviceReviewRepository;
             _serviceBookingRepository = serviceBookingRepository;
+            _disciplineTaxonomyRepository = disciplineTaxonomyRepository;
         }
 
         protected override IQueryable<Coaching> CreateFilteredQuery(PagedCoachingResultRequestDto input)
@@ -96,6 +97,8 @@ namespace Academically.Services.Coachings
                     .ThenInclude(e => e.CoverPhotoDocument)
                 .Include(e => e.CreatorUser)
                     .ThenInclude(e => e.ProfilePictureDocument)
+                .Include(e => e.CoachingTopics)
+                    .ThenInclude(c => c.DisciplineTaxonomy)
                 .Select(e => ObjectMapper.Map<CoachingDto>(e))
                 .FirstOrDefaultAsync();
 
@@ -547,6 +550,51 @@ namespace Academically.Services.Coachings
 
             var created = await Repository.InsertAsync(existing);
             return ObjectMapper.Map<CoachingDto>(created);
+        }
+        
+        public async Task<CoachingDto> UpdateDetails(UpdateCoachingDto input)
+        {
+            var coaching = await Repository.GetAll()
+                .Include(e => e.CoachingTopics)
+                .Where(c => c.Id == input.Id)
+                .SingleOrDefaultAsync();
+            
+            ObjectMapper.Map(input, coaching);
+            
+            var topicIds = input.Topics?.Count() > 0 ? input.Topics.ToList() : new List<Guid>();
+            if (input.NewTopics != null && input.NewTopics.Any())
+            {
+                var otherTopicParent = await _disciplineTaxonomyRepository.FirstOrDefaultAsync(x => x.Name == "Other Topics");
+                if (otherTopicParent != null)
+                {
+                    foreach (var newTopic in input.NewTopics)
+                    {
+                        var topicId = await _disciplineTaxonomyRepository.InsertAndGetIdAsync(new DisciplineTaxonomy
+                        {
+                            ParentId = otherTopicParent.Id,
+                            Name = newTopic
+                        });
+
+                        topicIds.Add(topicId);
+                    }
+                }
+            }
+
+            // clear all course's topics so we can add the ones that are retained/selected from the frontend side
+            coaching.CoachingTopics.Clear();
+            foreach (var topicId in topicIds)
+            {
+                coaching.CoachingTopics.Add(new CoachingTopic
+                {
+                    CoachingId = coaching.Id,
+                    DisciplineTaxonomyId = topicId,
+                    CreationTime = DateTime.Now,
+                    CreatorUserId = AbpSession.GetUserId()
+                });
+            }
+            
+            await Repository.UpdateAsync(coaching);
+            return ObjectMapper.Map<CoachingDto>(coaching);
         }
     }
 }

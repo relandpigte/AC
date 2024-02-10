@@ -25,5 +25,6 @@ namespace Academically.Services.Coachings
         Task<List<CoachingDto>> GetAllPurchasedCoaching(long creatorUserId);
         Task<List<CoachingDto>> GetAllSavedCoaching(long creatorUserId);
         Task<CoachingDto> Duplicate(Guid id);
+        Task<CoachingDto> UpdateDetails(UpdateCoachingDto input);
     }
 }
