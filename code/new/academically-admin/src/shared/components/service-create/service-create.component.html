@@ -46,7 +46,7 @@
 
           <div class="row justify-content-between align-items-center mb-5">
             <div class="col-12">
-              <div *ngIf="displayInfoText" class="service-alert alert alert-secondary d-flex align-items-start gap-24" role="alert">
+              <div *ngIf="displayInfoText && activeInfoText" class="service-alert alert alert-secondary d-flex align-items-start gap-24" role="alert">
                 <span class="flex-grow-1">{{ activeInfoText }}</span>
                 <a class="service-alert-close ml-auto" href="javascript: void(0);" (click)="onCloseInfoText()">
                   <img src="assets/img/service/create/close.svg" alt="Close">

@@ -57,7 +57,6 @@ export class SingleArticleComponent extends AppComponentBase implements OnInit {
       label: 'Settings',
       icon: 'assets/img/service/create/settings.svg',
       iconHover: 'assets/img/service/create/settings-hover.svg',
-      infoText: 'Here 4, you can input all the details for your article. This information will be visible to potential clients, so keep it clear and informative.'
     },
   ];
 
