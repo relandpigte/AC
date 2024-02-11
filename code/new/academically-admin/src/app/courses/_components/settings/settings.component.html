@@ -15,7 +15,7 @@
         </div>
         <div class="list-group-item-right">
           <div class="custom-control custom-switch ml-auto">
-            <input type="checkbox" class="custom-control-input" id="public-access" checked/>
+            <input type="checkbox" class="custom-control-input" id="public-access" (change)="toggleVisibility()" [checked]="model.isVisible"/>
             <label class="custom-control-label" for="public-access"></label>
           </div>
         </div>
@@ -29,7 +29,7 @@
         </div>
         <div class="list-group-item-right">
           <div class="custom-control custom-switch ml-auto">
-            <input type="checkbox" class="custom-control-input" id="private-access"/>
+            <input type="checkbox" class="custom-control-input" id="private-access" (change)="toggleVisibility()" [checked]="!model.isVisible"/>
             <label class="custom-control-label" for="private-access"></label>
           </div>
         </div>
@@ -55,7 +55,7 @@
         </div>
         <div class="list-group-item-right">
           <div class="custom-control custom-switch ml-auto">
-            <input type="checkbox" class="custom-control-input" id="lock-lesson-order" checked/>
+            <input type="checkbox" class="custom-control-input" id="lock-lesson-order" [(ngModel)]="flags.courseLockLessonOrder"/>
             <label class="custom-control-label" for="lock-lesson-order"></label>
           </div>
         </div>
@@ -69,7 +69,7 @@
         </div>
         <div class="list-group-item-right">
           <div class="custom-control custom-switch ml-auto">
-            <input type="checkbox" class="custom-control-input" id="mandatory-activities" checked/>
+            <input type="checkbox" class="custom-control-input" id="mandatory-activities" [(ngModel)]="flags.courseMandatoryActivity"/>
             <label class="custom-control-label" for="mandatory-activities"></label>
           </div>
         </div>
@@ -95,7 +95,7 @@
         </div>
         <div class="list-group-item-right">
           <div class="custom-control custom-switch ml-auto">
-            <input type="checkbox" class="custom-control-input" id="chat-with-instructor"/>
+            <input type="checkbox" class="custom-control-input" id="chat-with-instructor" [(ngModel)]="flags.chat"/>
             <label class="custom-control-label" for="chat-with-instructor"></label>
           </div>
         </div>

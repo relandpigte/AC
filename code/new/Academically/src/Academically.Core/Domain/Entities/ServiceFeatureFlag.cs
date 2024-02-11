@@ -57,6 +57,9 @@ public class ServiceFeatureFlag : CreationAuditedEntity<Guid>
     public bool InteractiveToolsAudienceLowerHand { get; set; }
     
     public bool RecordingAllowAudience { get; set; }
+    
+    public bool CourseLockLessonOrder { get; set; }
+    public bool CourseMandatoryActivity { get; set; }
 
     [ForeignKey("CreatorUserId")]
     public User CreatorUser { get; set; }

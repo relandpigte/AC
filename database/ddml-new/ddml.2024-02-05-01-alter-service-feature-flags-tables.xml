@@ -82,5 +82,27 @@
             <append value=" AFTER Comments"/>
         </modifySql>
     </changeSet>
+
+    <changeSet author="r.pigte" id="7">
+        <preConditions onFail="MARK_RAN">
+           <not>
+                <columnExists tableName="servicefeatureflags" columnName="CourseLockLessonOrder" />
+            </not>
+        </preConditions>
+        <addColumn tableName="servicefeatureflags">
+           <column name="CourseLockLessonOrder" type="boolean" defaultValueBoolean="true" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="r.pigte" id="8">
+        <preConditions onFail="MARK_RAN">
+           <not>
+                <columnExists tableName="servicefeatureflags" columnName="CourseMandatoryActivity" />
+            </not>
+        </preConditions>
+        <addColumn tableName="servicefeatureflags">
+           <column name="CourseMandatoryActivity" type="boolean" defaultValueBoolean="true" />
+        </addColumn>
+    </changeSet>
     
 </databaseChangeLog>

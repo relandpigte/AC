@@ -55174,6 +55174,8 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
     interactiveToolsAudienceRaiseHand: boolean;
     interactiveToolsAudienceLowerHand: boolean;
     recordingAllowAudience: boolean;
+    courseLockLessonOrder: boolean;
+    courseMandatoryActivity: boolean;
 
     constructor(data?: IServiceFeatureFlagDto) {
         if (data) {
@@ -55227,6 +55229,8 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
             this.interactiveToolsAudienceRaiseHand = _data["interactiveToolsAudienceRaiseHand"];
             this.interactiveToolsAudienceLowerHand = _data["interactiveToolsAudienceLowerHand"];
             this.recordingAllowAudience = _data["recordingAllowAudience"];
+            this.courseLockLessonOrder = _data["courseLockLessonOrder"];
+            this.courseMandatoryActivity = _data["courseMandatoryActivity"];
         }
     }
 
@@ -55280,6 +55284,8 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
         data["interactiveToolsAudienceRaiseHand"] = this.interactiveToolsAudienceRaiseHand;
         data["interactiveToolsAudienceLowerHand"] = this.interactiveToolsAudienceLowerHand;
         data["recordingAllowAudience"] = this.recordingAllowAudience;
+        data["courseLockLessonOrder"] = this.courseLockLessonOrder;
+        data["courseMandatoryActivity"] = this.courseMandatoryActivity;
         return data; 
     }
 
@@ -55333,6 +55339,8 @@ export interface IServiceFeatureFlagDto {
     interactiveToolsAudienceRaiseHand: boolean;
     interactiveToolsAudienceLowerHand: boolean;
     recordingAllowAudience: boolean;
+    courseLockLessonOrder: boolean;
+    courseMandatoryActivity: boolean;
 }
 
 export class ServiceMapping implements IServiceMapping {

@@ -58,4 +58,6 @@ public class ServiceFeatureFlagDto : CreationAuditedEntityDto<Guid>
     
     public bool RecordingAllowAudience { get; set; }
     
+    public bool CourseLockLessonOrder { get; set; }
+    public bool CourseMandatoryActivity { get; set; }
 }
