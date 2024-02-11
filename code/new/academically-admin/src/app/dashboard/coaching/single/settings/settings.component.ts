@@ -7,12 +7,13 @@ import {
   QuestionType,
   UpdateCoachingSettingsDto,
   ServiceDelayType,
-  DayOfWeek,
+  DayOfWeek, ServicesServiceProxy, ServiceFeatureFlagDto, ServicesType,
 } from '@shared/service-proxies/service-proxies';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { takeUntil } from 'rxjs/operators';
 import { CoachingService } from '@app/dashboard/coaching/_services/coaching.service';
 import * as _ from 'lodash';
+import { switchMap } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-settings',
@@ -24,6 +25,7 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
   model = new UpdateCoachingSettingsDto();
   isLoading = false;
   coachingType = CoachingType.Single;
+  flags = new ServiceFeatureFlagDto();
 
   CoachingReplayType = CoachingReplayType;
   QuestionType = QuestionType;
@@ -33,6 +35,7 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
     injector: Injector,
     private _coachingService: CoachingService,
     private _coachingsService: CoachingsServiceProxy,
+    private _servicesService: ServicesServiceProxy
   ) {
     super(injector);
   }
@@ -44,14 +47,26 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
         if (response && response.id && !this.id && this.id !== response.id) {
           this.id = response.id;
           this.getCoaching();
+
+          this.flags.init({
+            referenceId: response.id,
+            serviceType: ServicesType.Coaching,
+            creatorUserId: this.currentUserId
+          });
+          this.getServiceFlags();
         }
       });
+  }
+
+  toggleVisibility(): void {
+    this.model.visible = !this.model.visible;
   }
 
   private saveCoaching(): void {
     this._coachingsService.updateSettings(this.model)
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(() => {});
+      .pipe(switchMap(() => this._servicesService.saveFeatureFlags(this.flags)))
+      .subscribe(flags => this.flags.init(flags));
   }
 
   private getCoaching(): void {
@@ -63,9 +78,18 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
         this.coachingType = response.type;
 
         setTimeout(() => {
-          this.modelToSave = this.model;
+          this.modelToSave = [this.model, this.flags];
           this.initAutoSave(this.saveCoaching);
         });
       });
+  }
+
+  private getServiceFlags(): void {
+    this.pipeDestroy(this._servicesService.getFeatureFlags(this.id), response => {
+      if (_.isEmpty(response)) {
+        return;
+      }
+      this.flags.init(response);
+    });
   }
 }
