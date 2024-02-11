@@ -15,7 +15,7 @@
         </div>
         <div class="list-group-item-right">
           <div class="custom-control custom-switch ml-auto">
-            <input type="checkbox" class="custom-control-input" id="public-access" checked/>
+            <input (change)="toggleVisibility()" type="checkbox" class="custom-control-input" id="public-access" [checked]="model.isVisible"/>
             <label class="custom-control-label" for="public-access"></label>
           </div>
         </div>
@@ -29,7 +29,7 @@
         </div>
         <div class="list-group-item-right">
           <div class="custom-control custom-switch ml-auto">
-            <input type="checkbox" class="custom-control-input" id="private-access"/>
+            <input (change)="toggleVisibility()" type="checkbox" class="custom-control-input" id="private-access" [checked]="!model.isVisible" />
             <label class="custom-control-label" for="private-access"></label>
           </div>
         </div>
@@ -55,7 +55,7 @@
         </div>
         <div class="list-group-item-right">
           <div class="custom-control custom-radio mr-n2">
-            <input type="radio" name="isVisible" id="comment-visible" class="custom-control-input" checked>
+            <input [(ngModel)]="flags.commentSetting" [value]="CommentSetting.Visible" type="radio" name="isVisible" id="comment-visible" class="custom-control-input">
             <label class="custom-control-label" for="comment-visible"></label>
           </div>
         </div>
@@ -69,7 +69,7 @@
         </div>
         <div class="list-group-item-right">
           <div class="custom-control custom-radio mr-n2">
-            <input type="radio" name="isVisible" id="comment-locked" class="custom-control-input">
+            <input [(ngModel)]="flags.commentSetting" [value]="CommentSetting.Locked" type="radio" name="isVisible" id="comment-locked" class="custom-control-input">
             <label class="custom-control-label" for="comment-locked"></label>
           </div>
         </div>
@@ -83,7 +83,7 @@
         </div>
         <div class="list-group-item-right">
           <div class="custom-control custom-radio mr-n2">
-            <input type="radio" name="isVisible" id="comment-hidden" class="custom-control-input">
+            <input [(ngModel)]="flags.commentSetting" [value]="CommentSetting.Hidden" type="radio" name="isVisible" id="comment-hidden" class="custom-control-input">
             <label class="custom-control-label" for="comment-hidden"></label>
           </div>
         </div>

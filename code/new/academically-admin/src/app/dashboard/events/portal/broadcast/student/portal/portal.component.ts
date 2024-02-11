@@ -287,8 +287,8 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
   }
 
   private getServiceFeatureFlags(): void {
-    const { id, creatorUserId } = this.eventModel || {};
-    this.pipeDestroy(this._servicesService.getFeatureFlags(id, creatorUserId), response => {
+    const { id } = this.eventModel || {};
+    this.pipeDestroy(this._servicesService.getFeatureFlags(id), response => {
       this._portalService.featureFlags = response;
     });
   }

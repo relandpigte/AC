@@ -792,10 +792,9 @@ namespace Academically.Services.Services
             return ObjectMapper.Map<ServiceFeatureFlagDto>(serviceFlags);
         }
         
-        public async Task<ServiceFeatureFlagDto> GetFeatureFlags(Guid referenceId, long serviceOwnerId)
+        public async Task<ServiceFeatureFlagDto> GetFeatureFlags(Guid referenceId)
         {
             return await _serviceFeatureFlagRepository.GetAll()
-                .Where(x => x.CreatorUserId == serviceOwnerId)
                 .Where(x => x.ReferenceId == referenceId)
                 .Select(x => ObjectMapper.Map<ServiceFeatureFlagDto>(x))
                 .FirstOrDefaultAsync();

@@ -66,5 +66,21 @@
            <column name="RecordingAllowAudience" type="boolean" defaultValueBoolean="true" />
         </addColumn>
     </changeSet>
+
+    <changeSet author="r.pigte" id="6">
+        <preConditions onFail="MARK_RAN">
+           <not>
+                <columnExists tableName="servicefeatureflags" columnName="CommentSetting" />
+            </not>
+        </preConditions>
+        <addColumn tableName="servicefeatureflags">
+            <column name="CommentSetting" type="INT(10)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <modifySql>
+            <append value=" AFTER Comments"/>
+        </modifySql>
+    </changeSet>
     
 </databaseChangeLog>
