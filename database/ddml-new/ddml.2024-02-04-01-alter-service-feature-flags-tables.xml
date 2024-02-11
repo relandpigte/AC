@@ -290,5 +290,156 @@
         </modifySql>
     </changeSet>
 
+    <changeSet author="rpigte" id="23">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="servicefeatureflags" columnName="ActivitiesAudienceCanAdd" />
+        </preConditions>
+        <renameColumn tableName="servicefeatureflags" oldColumnName="ActivitiesAudienceCanAdd" newColumnName="ActivitiesCohostCanAdd" columnDataType="BIGINT" />
+    </changeSet>
 
+    <changeSet author="rpigte" id="24">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="servicefeatureflags" columnName="QuestionsAudienceCanAnswerLive" />
+        </preConditions>
+        <renameColumn tableName="servicefeatureflags" oldColumnName="QuestionsAudienceCanAnswerLive" newColumnName="QuestionsCohostCanAnswerLive" columnDataType="BIGINT" />
+    </changeSet>
+
+    <changeSet author="rpigte" id="25">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="servicefeatureflags" columnName="QuestionsAudienceCanVote" />
+        </preConditions>
+        <renameColumn tableName="servicefeatureflags" oldColumnName="QuestionsAudienceCanVote" newColumnName="QuestionsCohostCanRespond" columnDataType="BIGINT" />
+    </changeSet>
+
+    <changeSet author="r.pigte" id="26">
+        <preConditions onFail="MARK_RAN">
+           <not>
+                <columnExists tableName="servicefeatureflags" columnName="ChatCohostPrivate" />
+            </not>
+        </preConditions>
+        <addColumn tableName="servicefeatureflags">
+           <column name="ChatCohostPrivate" type="boolean" defaultValueBoolean="true" />
+        </addColumn>
+        <modifySql>
+            <append value=" AFTER Chat"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="r.pigte" id="27">
+        <preConditions onFail="MARK_RAN">
+           <not>
+                <columnExists tableName="servicefeatureflags" columnName="ChatCohostPublic" />
+            </not>
+        </preConditions>
+        <addColumn tableName="servicefeatureflags">
+           <column name="ChatCohostPublic" type="boolean" defaultValueBoolean="true" />
+        </addColumn>
+        <modifySql>
+            <append value=" AFTER Chat"/>
+        </modifySql>
+    </changeSet>
+
+
+
+
+    <changeSet author="r.pigte" id="28">
+        <preConditions onFail="MARK_RAN">
+           <not>
+                <columnExists tableName="servicefeatureflags" columnName="InteractiveToolsCohostMicrophone" />
+            </not>
+        </preConditions>
+        <addColumn tableName="servicefeatureflags">
+           <column name="InteractiveToolsCohostMicrophone" type="boolean" defaultValueBoolean="true" />
+        </addColumn>
+        <modifySql>
+            <append value=" AFTER InteractiveTools"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="r.pigte" id="29">
+        <preConditions onFail="MARK_RAN">
+           <not>
+                <columnExists tableName="servicefeatureflags" columnName="InteractiveToolsCohostWebCam" />
+            </not>
+        </preConditions>
+        <addColumn tableName="servicefeatureflags">
+           <column name="InteractiveToolsCohostWebCam" type="boolean" defaultValueBoolean="true" />
+        </addColumn>
+        <modifySql>
+            <append value=" AFTER InteractiveTools"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="r.pigte" id="30">
+        <preConditions onFail="MARK_RAN">
+           <not>
+                <columnExists tableName="servicefeatureflags" columnName="InteractiveToolsCohostRaiseHand" />
+            </not>
+        </preConditions>
+        <addColumn tableName="servicefeatureflags">
+           <column name="InteractiveToolsCohostRaiseHand" type="boolean" defaultValueBoolean="true" />
+        </addColumn>
+        <modifySql>
+            <append value=" AFTER InteractiveTools"/>
+        </modifySql>
+    </changeSet>
+
+    
+    <changeSet author="rpigte" id="31">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="servicefeatureflags" columnName="OffersAudienceCanCreate" />
+        </preConditions>
+        <renameColumn tableName="servicefeatureflags" oldColumnName="OffersAudienceCanCreate" newColumnName="OffersCohostCanAdd" columnDataType="BIGINT" />
+    </changeSet>
+
+    <changeSet author="rpigte" id="32">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="servicefeatureflags" columnName="HandoutsAudienceCanAdd" />
+        </preConditions>
+        <renameColumn tableName="servicefeatureflags" oldColumnName="HandoutsAudienceCanAdd" newColumnName="HandoutsCohostCanAdd" columnDataType="BIGINT" />
+    </changeSet>
+
+    <changeSet author="r.pigte" id="33">
+        <preConditions onFail="MARK_RAN">
+           <not>
+                <columnExists tableName="servicefeatureflags" columnName="ModerationCohostCanAdmitAttendees" />
+            </not>
+        </preConditions>
+        <addColumn tableName="servicefeatureflags">
+           <column name="ModerationCohostCanAdmitAttendees" type="boolean" defaultValueBoolean="true" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="r.pigte" id="34">
+        <preConditions onFail="MARK_RAN">
+           <not>
+                <columnExists tableName="servicefeatureflags" columnName="ModerationCohostCanRemoveAttendees" />
+            </not>
+        </preConditions>
+        <addColumn tableName="servicefeatureflags">
+           <column name="ModerationCohostCanRemoveAttendees" type="boolean" defaultValueBoolean="true" />
+        </addColumn>
+    </changeSet>
+    
+    <changeSet author="r.pigte" id="35">
+        <preConditions onFail="MARK_RAN">
+           <not>
+                <columnExists tableName="servicefeatureflags" columnName="ModerationCohostCanLowerAttendeesHand" />
+            </not>
+        </preConditions>
+        <addColumn tableName="servicefeatureflags">
+           <column name="ModerationCohostCanLowerAttendeesHand" type="boolean" defaultValueBoolean="true" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="r.pigte" id="36">
+        <preConditions onFail="MARK_RAN">
+           <not>
+                <columnExists tableName="servicefeatureflags" columnName="ModerationCohostManageAtendeeRoles" />
+            </not>
+        </preConditions>
+        <addColumn tableName="servicefeatureflags">
+           <column name="ModerationCohostManageAtendeeRoles" type="boolean" defaultValueBoolean="true" />
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

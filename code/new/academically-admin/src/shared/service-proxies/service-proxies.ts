@@ -55146,20 +55146,22 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
     chat: boolean;
     chatAudiencePublic: boolean;
     chatAudiencePrivate: boolean;
+    chatCohostPublic: boolean;
+    chatCohostPrivate: boolean;
     activities: boolean;
-    activitiesAudienceCanAdd: boolean;
+    activitiesCohostCanAdd: boolean;
     activitiesAudienceCanParticipate: boolean;
     activitiesAudienceCanViewResult: boolean;
     questions: boolean;
-    questionsAudienceCanVote: boolean;
+    questionsCohostCanRespond: boolean;
     questionsAudienceCanAsk: boolean;
     questionsAudienceCanRespond: boolean;
-    questionsAudienceCanAnswerLive: boolean;
+    questionsCohostCanAnswerLive: boolean;
     offers: boolean;
-    offersAudienceCanCreate: boolean;
+    offersCohostCanAdd: boolean;
     offersAudienceCanPurchase: boolean;
     handouts: boolean;
-    handoutsAudienceCanAdd: boolean;
+    handoutsCohostCanAdd: boolean;
     handoutsAudienceCanShare: boolean;
     handoutsAudienceCanDownload: boolean;
     comments: boolean;
@@ -55173,9 +55175,16 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
     interactiveToolsAudienceSharing: boolean;
     interactiveToolsAudienceRaiseHand: boolean;
     interactiveToolsAudienceLowerHand: boolean;
+    interactiveToolsCohostMicrophone: boolean;
+    interactiveToolsCohostWebCam: boolean;
+    interactiveToolsCohostRaiseHand: boolean;
     recordingAllowAudience: boolean;
     courseLockLessonOrder: boolean;
     courseMandatoryActivity: boolean;
+    moderationCohostCanAdmitAttendees: boolean;
+    moderationCohostCanRemoveAttendees: boolean;
+    moderationCohostCanLowerAttendeesHand: boolean;
+    moderationCohostManageAtendeeRoles: boolean;
 
     constructor(data?: IServiceFeatureFlagDto) {
         if (data) {
@@ -55201,20 +55210,22 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
             this.chat = _data["chat"];
             this.chatAudiencePublic = _data["chatAudiencePublic"];
             this.chatAudiencePrivate = _data["chatAudiencePrivate"];
+            this.chatCohostPublic = _data["chatCohostPublic"];
+            this.chatCohostPrivate = _data["chatCohostPrivate"];
             this.activities = _data["activities"];
-            this.activitiesAudienceCanAdd = _data["activitiesAudienceCanAdd"];
+            this.activitiesCohostCanAdd = _data["activitiesCohostCanAdd"];
             this.activitiesAudienceCanParticipate = _data["activitiesAudienceCanParticipate"];
             this.activitiesAudienceCanViewResult = _data["activitiesAudienceCanViewResult"];
             this.questions = _data["questions"];
-            this.questionsAudienceCanVote = _data["questionsAudienceCanVote"];
+            this.questionsCohostCanRespond = _data["questionsCohostCanRespond"];
             this.questionsAudienceCanAsk = _data["questionsAudienceCanAsk"];
             this.questionsAudienceCanRespond = _data["questionsAudienceCanRespond"];
-            this.questionsAudienceCanAnswerLive = _data["questionsAudienceCanAnswerLive"];
+            this.questionsCohostCanAnswerLive = _data["questionsCohostCanAnswerLive"];
             this.offers = _data["offers"];
-            this.offersAudienceCanCreate = _data["offersAudienceCanCreate"];
+            this.offersCohostCanAdd = _data["offersCohostCanAdd"];
             this.offersAudienceCanPurchase = _data["offersAudienceCanPurchase"];
             this.handouts = _data["handouts"];
-            this.handoutsAudienceCanAdd = _data["handoutsAudienceCanAdd"];
+            this.handoutsCohostCanAdd = _data["handoutsCohostCanAdd"];
             this.handoutsAudienceCanShare = _data["handoutsAudienceCanShare"];
             this.handoutsAudienceCanDownload = _data["handoutsAudienceCanDownload"];
             this.comments = _data["comments"];
@@ -55228,9 +55239,16 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
             this.interactiveToolsAudienceSharing = _data["interactiveToolsAudienceSharing"];
             this.interactiveToolsAudienceRaiseHand = _data["interactiveToolsAudienceRaiseHand"];
             this.interactiveToolsAudienceLowerHand = _data["interactiveToolsAudienceLowerHand"];
+            this.interactiveToolsCohostMicrophone = _data["interactiveToolsCohostMicrophone"];
+            this.interactiveToolsCohostWebCam = _data["interactiveToolsCohostWebCam"];
+            this.interactiveToolsCohostRaiseHand = _data["interactiveToolsCohostRaiseHand"];
             this.recordingAllowAudience = _data["recordingAllowAudience"];
             this.courseLockLessonOrder = _data["courseLockLessonOrder"];
             this.courseMandatoryActivity = _data["courseMandatoryActivity"];
+            this.moderationCohostCanAdmitAttendees = _data["moderationCohostCanAdmitAttendees"];
+            this.moderationCohostCanRemoveAttendees = _data["moderationCohostCanRemoveAttendees"];
+            this.moderationCohostCanLowerAttendeesHand = _data["moderationCohostCanLowerAttendeesHand"];
+            this.moderationCohostManageAtendeeRoles = _data["moderationCohostManageAtendeeRoles"];
         }
     }
 
@@ -55256,20 +55274,22 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
         data["chat"] = this.chat;
         data["chatAudiencePublic"] = this.chatAudiencePublic;
         data["chatAudiencePrivate"] = this.chatAudiencePrivate;
+        data["chatCohostPublic"] = this.chatCohostPublic;
+        data["chatCohostPrivate"] = this.chatCohostPrivate;
         data["activities"] = this.activities;
-        data["activitiesAudienceCanAdd"] = this.activitiesAudienceCanAdd;
+        data["activitiesCohostCanAdd"] = this.activitiesCohostCanAdd;
         data["activitiesAudienceCanParticipate"] = this.activitiesAudienceCanParticipate;
         data["activitiesAudienceCanViewResult"] = this.activitiesAudienceCanViewResult;
         data["questions"] = this.questions;
-        data["questionsAudienceCanVote"] = this.questionsAudienceCanVote;
+        data["questionsCohostCanRespond"] = this.questionsCohostCanRespond;
         data["questionsAudienceCanAsk"] = this.questionsAudienceCanAsk;
         data["questionsAudienceCanRespond"] = this.questionsAudienceCanRespond;
-        data["questionsAudienceCanAnswerLive"] = this.questionsAudienceCanAnswerLive;
+        data["questionsCohostCanAnswerLive"] = this.questionsCohostCanAnswerLive;
         data["offers"] = this.offers;
-        data["offersAudienceCanCreate"] = this.offersAudienceCanCreate;
+        data["offersCohostCanAdd"] = this.offersCohostCanAdd;
         data["offersAudienceCanPurchase"] = this.offersAudienceCanPurchase;
         data["handouts"] = this.handouts;
-        data["handoutsAudienceCanAdd"] = this.handoutsAudienceCanAdd;
+        data["handoutsCohostCanAdd"] = this.handoutsCohostCanAdd;
         data["handoutsAudienceCanShare"] = this.handoutsAudienceCanShare;
         data["handoutsAudienceCanDownload"] = this.handoutsAudienceCanDownload;
         data["comments"] = this.comments;
@@ -55283,9 +55303,16 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
         data["interactiveToolsAudienceSharing"] = this.interactiveToolsAudienceSharing;
         data["interactiveToolsAudienceRaiseHand"] = this.interactiveToolsAudienceRaiseHand;
         data["interactiveToolsAudienceLowerHand"] = this.interactiveToolsAudienceLowerHand;
+        data["interactiveToolsCohostMicrophone"] = this.interactiveToolsCohostMicrophone;
+        data["interactiveToolsCohostWebCam"] = this.interactiveToolsCohostWebCam;
+        data["interactiveToolsCohostRaiseHand"] = this.interactiveToolsCohostRaiseHand;
         data["recordingAllowAudience"] = this.recordingAllowAudience;
         data["courseLockLessonOrder"] = this.courseLockLessonOrder;
         data["courseMandatoryActivity"] = this.courseMandatoryActivity;
+        data["moderationCohostCanAdmitAttendees"] = this.moderationCohostCanAdmitAttendees;
+        data["moderationCohostCanRemoveAttendees"] = this.moderationCohostCanRemoveAttendees;
+        data["moderationCohostCanLowerAttendeesHand"] = this.moderationCohostCanLowerAttendeesHand;
+        data["moderationCohostManageAtendeeRoles"] = this.moderationCohostManageAtendeeRoles;
         return data; 
     }
 
@@ -55311,20 +55338,22 @@ export interface IServiceFeatureFlagDto {
     chat: boolean;
     chatAudiencePublic: boolean;
     chatAudiencePrivate: boolean;
+    chatCohostPublic: boolean;
+    chatCohostPrivate: boolean;
     activities: boolean;
-    activitiesAudienceCanAdd: boolean;
+    activitiesCohostCanAdd: boolean;
     activitiesAudienceCanParticipate: boolean;
     activitiesAudienceCanViewResult: boolean;
     questions: boolean;
-    questionsAudienceCanVote: boolean;
+    questionsCohostCanRespond: boolean;
     questionsAudienceCanAsk: boolean;
     questionsAudienceCanRespond: boolean;
-    questionsAudienceCanAnswerLive: boolean;
+    questionsCohostCanAnswerLive: boolean;
     offers: boolean;
-    offersAudienceCanCreate: boolean;
+    offersCohostCanAdd: boolean;
     offersAudienceCanPurchase: boolean;
     handouts: boolean;
-    handoutsAudienceCanAdd: boolean;
+    handoutsCohostCanAdd: boolean;
     handoutsAudienceCanShare: boolean;
     handoutsAudienceCanDownload: boolean;
     comments: boolean;
@@ -55338,9 +55367,16 @@ export interface IServiceFeatureFlagDto {
     interactiveToolsAudienceSharing: boolean;
     interactiveToolsAudienceRaiseHand: boolean;
     interactiveToolsAudienceLowerHand: boolean;
+    interactiveToolsCohostMicrophone: boolean;
+    interactiveToolsCohostWebCam: boolean;
+    interactiveToolsCohostRaiseHand: boolean;
     recordingAllowAudience: boolean;
     courseLockLessonOrder: boolean;
     courseMandatoryActivity: boolean;
+    moderationCohostCanAdmitAttendees: boolean;
+    moderationCohostCanRemoveAttendees: boolean;
+    moderationCohostCanLowerAttendeesHand: boolean;
+    moderationCohostManageAtendeeRoles: boolean;
 }
 
 export class ServiceMapping implements IServiceMapping {

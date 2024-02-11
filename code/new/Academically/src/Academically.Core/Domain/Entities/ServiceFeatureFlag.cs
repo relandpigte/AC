@@ -21,24 +21,26 @@ public class ServiceFeatureFlag : CreationAuditedEntity<Guid>
     public bool Chat { get; set; }
     public bool ChatAudiencePublic { get; set; }
     public bool ChatAudiencePrivate { get; set; }
+    public bool ChatCohostPublic { get; set; }
+    public bool ChatCohostPrivate { get; set; }
     
     public bool Activities { get; set; }
-    public bool ActivitiesAudienceCanAdd { get; set; }
+    public bool ActivitiesCohostCanAdd { get; set; }
     public bool ActivitiesAudienceCanParticipate { get; set; }
     public bool ActivitiesAudienceCanViewResult { get; set; }
     
     public bool Questions { get; set; }
-    public bool QuestionsAudienceCanVote { get; set; }
+    public bool QuestionsCohostCanRespond { get; set; }
     public bool QuestionsAudienceCanAsk { get; set; }
     public bool QuestionsAudienceCanRespond { get; set; }
-    public bool QuestionsAudienceCanAnswerLive { get; set; }
+    public bool QuestionsCohostCanAnswerLive { get; set; }
     
     public bool Offers { get; set; }
-    public bool OffersAudienceCanCreate { get; set; }
+    public bool OffersCohostCanAdd { get; set; }
     public bool OffersAudienceCanPurchase { get; set; }
     
     public bool Handouts { get; set; }
-    public bool HandoutsAudienceCanAdd { get; set; }
+    public bool HandoutsCohostCanAdd { get; set; }
     public bool HandoutsAudienceCanShare { get; set; }
     public bool HandoutsAudienceCanDownload { get; set; }
     
@@ -55,11 +57,19 @@ public class ServiceFeatureFlag : CreationAuditedEntity<Guid>
     public bool InteractiveToolsAudienceSharing { get; set; }
     public bool InteractiveToolsAudienceRaiseHand { get; set; }
     public bool InteractiveToolsAudienceLowerHand { get; set; }
+    public bool InteractiveToolsCohostMicrophone { get; set; }
+    public bool InteractiveToolsCohostWebCam { get; set; }
+    public bool InteractiveToolsCohostRaiseHand { get; set; }
     
     public bool RecordingAllowAudience { get; set; }
     
     public bool CourseLockLessonOrder { get; set; }
     public bool CourseMandatoryActivity { get; set; }
+    
+    public bool ModerationCohostCanAdmitAttendees { get; set; }
+    public bool ModerationCohostCanRemoveAttendees { get; set; }
+    public bool ModerationCohostCanLowerAttendeesHand { get; set; }
+    public bool ModerationCohostManageAtendeeRoles { get; set; }
 
     [ForeignKey("CreatorUserId")]
     public User CreatorUser { get; set; }

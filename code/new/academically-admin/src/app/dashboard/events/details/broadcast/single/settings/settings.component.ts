@@ -9,12 +9,13 @@ import {
   UpdateEventSettingsDto,
   ServiceDelayType,
   EventRecursionType,
-  DayOfWeek,
+  DayOfWeek, ServiceFeatureFlagDto, ServicesServiceProxy, ServicesType,
 } from '@shared/service-proxies/service-proxies';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { takeUntil } from 'rxjs/operators';
 import { EventService } from '@app/dashboard/events/_services/event.service';
 import * as _ from 'lodash';
+import { switchMap } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-settings',
@@ -45,12 +46,13 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
   scheduleTimeValues: {key: number, value: string}[] = [];
   scheduleWeekValues: DayOfWeek[] = [];
   scheduleMonthsValues: Date[];
-  test: string;
+  flags = new ServiceFeatureFlagDto();
 
   constructor(
     injector: Injector,
     private _eventService: EventService,
     private _eventsService: EventsServiceProxy,
+    private _servicesService: ServicesServiceProxy
   ) {
     super(injector);
     this.datePickerConfig = new BsDatepickerConfig();
@@ -65,8 +67,19 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
         if (response && response.id && !this.id && this.id !== response.id) {
           this.id = response.id;
           this.getEvent();
+
+          this.flags.init({
+            referenceId: response.id,
+            serviceType: ServicesType.Event,
+            creatorUserId: this.currentUserId
+          });
+          this.getServiceFlags();
         }
       });
+  }
+
+  toggleVisibility(): void {
+    this.model.visible = !this.model.visible;
   }
 
   checkScheduleWeekInclusion(dow: DayOfWeek): boolean {
@@ -183,9 +196,8 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
 
     this._eventsService.updateSettings(this.model)
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(response => {
-        // do nothing
-      });
+      .pipe(switchMap(() => this._servicesService.saveFeatureFlags(this.flags)))
+      .subscribe(flags => this.flags.init(flags));
   }
 
   private getEvent(): void {
@@ -246,7 +258,7 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
         }
 
         setTimeout(() => {
-          this.modelToSave = this.model;
+          this.modelToSave = [this.model, this.flags];
           this.initAutoSave(this.saveEvent);
         });
       });
@@ -283,5 +295,14 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
     } else {
       this.model.sessionDaysOfMonth = undefined;
     }
+  }
+
+  private getServiceFlags(): void {
+    this.pipeDestroy(this._servicesService.getFeatureFlags(this.id), response => {
+      if (_.isEmpty(response)) {
+        return;
+      }
+      this.flags.init(response);
+    });
   }
 }
