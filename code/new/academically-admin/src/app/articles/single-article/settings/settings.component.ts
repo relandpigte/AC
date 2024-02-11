@@ -1,8 +1,8 @@
-import { Component, OnInit, Injector } from '@angular/core';
-import { CommentSetting, ArticleType, ArticlesServiceProxy, UpdateArticleSettingsDto, DelayType } from '@shared/service-proxies/service-proxies';
+import { Component, Injector, OnInit } from '@angular/core';
+import { ArticlesServiceProxy, ArticleType, CommentSetting, DelayType, ServiceFeatureFlagDto, ServicesServiceProxy, ServicesType, UpdateArticleSettingsDto } from '@shared/service-proxies/service-proxies';
 import { Router } from '@angular/router';
 import { ArticleService } from '@app/articles/_services/article.service';
-import { takeUntil, finalize } from 'rxjs/operators';
+import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import * as _ from 'lodash';
 import { AutoSaveComponentBase } from '@shared/auto-save-component-base';
@@ -15,22 +15,24 @@ import { AutoSaveComponentBase } from '@shared/auto-save-component-base';
 export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
   id: string;
   model = new UpdateArticleSettingsDto();
-  CommentSetting = CommentSetting;
+  flags = new ServiceFeatureFlagDto();
   isLoading = false;
   ArticleType = ArticleType;
   DelayType = DelayType;
   hasParent = false;
-
   articleType: ArticleType;
+
   lastArticleValue: string;
   specificDateValue: Date;
   datePickerConfig: BsDatepickerConfig;
+  readonly CommentSetting = CommentSetting;
 
   constructor(
     injector: Injector,
     private _router: Router,
     private _articlesService: ArticlesServiceProxy,
     private _articleService: ArticleService,
+    private _servicesService: ServicesServiceProxy
   ) {
     super(injector);
     this.datePickerConfig = new BsDatepickerConfig();
@@ -39,15 +41,27 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
     this.datePickerConfig.minDate = new Date();
   }
 
+
   ngOnInit(): void {
     this._articleService.articleCreated$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         if (response && response.id && this.id !== response.id) {
           this.id = response.id;
+          this.flags.init({
+            referenceId: response.id,
+            serviceType: ServicesType.Article,
+            creatorUserId: this.currentUserId,
+            commentSettings: CommentSetting.Visible
+          });
           this.getArticle();
+          this.getServiceFlags();
         }
       });
+  }
+
+  toggleVisibility(): void {
+    this.model.isVisible = !this.model.isVisible;
   }
 
   onBackClick(): void {
@@ -95,9 +109,10 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
 
     this._articlesService.updateSettings(this.model)
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(response => {
-        // do nothing
-      });
+      .pipe(switchMap(() => {
+        return this._servicesService.saveFeatureFlags(this.flags);
+      }))
+      .subscribe(flags => this.flags.init(flags));
   }
 
   private getArticle(): void {
@@ -128,9 +143,18 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
             this.lastArticleValue = this.model.delayValue;
             break;
         }
-        this.modelToSave = this.model;
+        this.modelToSave = [this.model, this.flags];
         this.initAutoSave(this.updateSettings);
       });
+  }
+
+  private getServiceFlags(): void {
+    this.pipeDestroy(this._servicesService.getFeatureFlags(this.id), response => {
+      if (_.isEmpty(response)) {
+        return;
+      }
+      this.flags.init(response);
+    });
   }
 }
 

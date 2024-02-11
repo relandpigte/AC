@@ -15,7 +15,7 @@
         </div>
         <div class="list-group-item-right">
           <div class="custom-control custom-switch ml-auto">
-            <input type="checkbox" class="custom-control-input" id="public-access" checked/>
+            <input (change)="toggleVisibility()" type="checkbox" class="custom-control-input" id="public-access" [checked]="model.visible"/>
             <label class="custom-control-label" for="public-access"></label>
           </div>
         </div>
@@ -29,7 +29,7 @@
         </div>
         <div class="list-group-item-right">
           <div class="custom-control custom-switch ml-auto">
-            <input type="checkbox" class="custom-control-input" id="private-access"/>
+            <input (change)="toggleVisibility()" type="checkbox" class="custom-control-input" id="private-access" [checked]="!model.visible"/>
             <label class="custom-control-label" for="private-access"></label>
           </div>
         </div>
@@ -55,7 +55,7 @@
         </div>
         <div class="list-group-item-right">
           <div class="custom-control custom-switch ml-auto">
-            <input type="checkbox" class="custom-control-input" id="chat-with-instructor" checked/>
+            <input [(ngModel)]="flags.recordingAllowAudience" type="checkbox" class="custom-control-input" id="chat-with-instructor" checked/>
             <label class="custom-control-label" for="chat-with-instructor"></label>
           </div>
         </div>
@@ -81,7 +81,7 @@
         </div>
         <div class="list-group-item-right">
           <div class="custom-control custom-switch ml-auto">
-            <input type="checkbox" class="custom-control-input" id="microphone" checked/>
+            <input [(ngModel)]="flags.interactiveToolsAudienceMicrophone" type="checkbox" class="custom-control-input" id="microphone" checked/>
             <label class="custom-control-label" for="microphone"></label>
           </div>
         </div>
@@ -95,7 +95,7 @@
         </div>
         <div class="list-group-item-right">
           <div class="custom-control custom-switch ml-auto">
-            <input type="checkbox" class="custom-control-input" id="webcam" checked/>
+            <input [(ngModel)]="flags.interactiveToolsAudienceWebCam" type="checkbox" class="custom-control-input" id="webcam" checked/>
             <label class="custom-control-label" for="webcam"></label>
           </div>
         </div>
@@ -109,7 +109,7 @@
         </div>
         <div class="list-group-item-right">
           <div class="custom-control custom-switch ml-auto">
-            <input type="checkbox" class="custom-control-input" id="sharing"/>
+            <input [(ngModel)]="flags.interactiveToolsAudienceSharing" type="checkbox" class="custom-control-input" id="sharing"/>
             <label class="custom-control-label" for="sharing"></label>
           </div>
         </div>

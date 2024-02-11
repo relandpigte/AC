@@ -48,7 +48,7 @@ namespace Academically.Services.Services
 
         // Service flags
         Task<ServiceFeatureFlagDto> SaveFeatureFlags(ServiceFeatureFlagDto input);
-        Task<ServiceFeatureFlagDto> GetFeatureFlags(Guid referenceId, long serviceOwnerId);
+        Task<ServiceFeatureFlagDto> GetFeatureFlags(Guid referenceId);
         
         // Service activities
         Task<IEnumerable<ServiceActivityDto>> GetActivities(Guid serviceId);

@@ -66,5 +66,43 @@
            <column name="RecordingAllowAudience" type="boolean" defaultValueBoolean="true" />
         </addColumn>
     </changeSet>
+
+    <changeSet author="r.pigte" id="6">
+        <preConditions onFail="MARK_RAN">
+           <not>
+                <columnExists tableName="servicefeatureflags" columnName="CommentSetting" />
+            </not>
+        </preConditions>
+        <addColumn tableName="servicefeatureflags">
+            <column name="CommentSetting" type="INT(10)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <modifySql>
+            <append value=" AFTER Comments"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="r.pigte" id="7">
+        <preConditions onFail="MARK_RAN">
+           <not>
+                <columnExists tableName="servicefeatureflags" columnName="CourseLockLessonOrder" />
+            </not>
+        </preConditions>
+        <addColumn tableName="servicefeatureflags">
+           <column name="CourseLockLessonOrder" type="boolean" defaultValueBoolean="true" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="r.pigte" id="8">
+        <preConditions onFail="MARK_RAN">
+           <not>
+                <columnExists tableName="servicefeatureflags" columnName="CourseMandatoryActivity" />
+            </not>
+        </preConditions>
+        <addColumn tableName="servicefeatureflags">
+           <column name="CourseMandatoryActivity" type="boolean" defaultValueBoolean="true" />
+        </addColumn>
+    </changeSet>
     
 </databaseChangeLog>

@@ -45,6 +45,7 @@ public class ServiceFeatureFlag : CreationAuditedEntity<Guid>
     public bool Comments { get; set; }
     public bool CommentsAudienceCanAdd { get; set; }
     public bool CommentsAudienceCanReact { get; set; }
+    public CommentSetting CommentSetting { get; set; }
     
     public bool Reviews { get; set; }
     public bool Settings { get; set; }
@@ -56,6 +57,9 @@ public class ServiceFeatureFlag : CreationAuditedEntity<Guid>
     public bool InteractiveToolsAudienceLowerHand { get; set; }
     
     public bool RecordingAllowAudience { get; set; }
+    
+    public bool CourseLockLessonOrder { get; set; }
+    public bool CourseMandatoryActivity { get; set; }
 
     [ForeignKey("CreatorUserId")]
     public User CreatorUser { get; set; }

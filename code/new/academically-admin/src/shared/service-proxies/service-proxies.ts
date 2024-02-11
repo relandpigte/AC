@@ -25851,19 +25851,14 @@ export class ServicesServiceProxy {
 
     /**
      * @param referenceId (optional) 
-     * @param serviceOwnerId (optional) 
      * @return Success
      */
-    getFeatureFlags(referenceId: string | undefined, serviceOwnerId: number | undefined): Observable<ServiceFeatureFlagDto> {
+    getFeatureFlags(referenceId: string | undefined): Observable<ServiceFeatureFlagDto> {
         let url_ = this.baseUrl + "/api/services/app/Services/GetFeatureFlags?";
         if (referenceId === null)
             throw new Error("The parameter 'referenceId' cannot be null.");
         else if (referenceId !== undefined)
             url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
-        if (serviceOwnerId === null)
-            throw new Error("The parameter 'serviceOwnerId' cannot be null.");
-        else if (serviceOwnerId !== undefined)
-            url_ += "serviceOwnerId=" + encodeURIComponent("" + serviceOwnerId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -55170,6 +55165,7 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
     comments: boolean;
     commentsAudienceCanAdd: boolean;
     commentsAudienceCanReact: boolean;
+    commentSetting: CommentSetting;
     reviews: boolean;
     settings: boolean;
     interactiveToolsAudienceMicrophone: boolean;
@@ -55178,6 +55174,8 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
     interactiveToolsAudienceRaiseHand: boolean;
     interactiveToolsAudienceLowerHand: boolean;
     recordingAllowAudience: boolean;
+    courseLockLessonOrder: boolean;
+    courseMandatoryActivity: boolean;
 
     constructor(data?: IServiceFeatureFlagDto) {
         if (data) {
@@ -55222,6 +55220,7 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
             this.comments = _data["comments"];
             this.commentsAudienceCanAdd = _data["commentsAudienceCanAdd"];
             this.commentsAudienceCanReact = _data["commentsAudienceCanReact"];
+            this.commentSetting = _data["commentSetting"];
             this.reviews = _data["reviews"];
             this.settings = _data["settings"];
             this.interactiveToolsAudienceMicrophone = _data["interactiveToolsAudienceMicrophone"];
@@ -55230,6 +55229,8 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
             this.interactiveToolsAudienceRaiseHand = _data["interactiveToolsAudienceRaiseHand"];
             this.interactiveToolsAudienceLowerHand = _data["interactiveToolsAudienceLowerHand"];
             this.recordingAllowAudience = _data["recordingAllowAudience"];
+            this.courseLockLessonOrder = _data["courseLockLessonOrder"];
+            this.courseMandatoryActivity = _data["courseMandatoryActivity"];
         }
     }
 
@@ -55274,6 +55275,7 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
         data["comments"] = this.comments;
         data["commentsAudienceCanAdd"] = this.commentsAudienceCanAdd;
         data["commentsAudienceCanReact"] = this.commentsAudienceCanReact;
+        data["commentSetting"] = this.commentSetting;
         data["reviews"] = this.reviews;
         data["settings"] = this.settings;
         data["interactiveToolsAudienceMicrophone"] = this.interactiveToolsAudienceMicrophone;
@@ -55282,6 +55284,8 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
         data["interactiveToolsAudienceRaiseHand"] = this.interactiveToolsAudienceRaiseHand;
         data["interactiveToolsAudienceLowerHand"] = this.interactiveToolsAudienceLowerHand;
         data["recordingAllowAudience"] = this.recordingAllowAudience;
+        data["courseLockLessonOrder"] = this.courseLockLessonOrder;
+        data["courseMandatoryActivity"] = this.courseMandatoryActivity;
         return data; 
     }
 
@@ -55326,6 +55330,7 @@ export interface IServiceFeatureFlagDto {
     comments: boolean;
     commentsAudienceCanAdd: boolean;
     commentsAudienceCanReact: boolean;
+    commentSetting: CommentSetting;
     reviews: boolean;
     settings: boolean;
     interactiveToolsAudienceMicrophone: boolean;
@@ -55334,6 +55339,8 @@ export interface IServiceFeatureFlagDto {
     interactiveToolsAudienceRaiseHand: boolean;
     interactiveToolsAudienceLowerHand: boolean;
     recordingAllowAudience: boolean;
+    courseLockLessonOrder: boolean;
+    courseMandatoryActivity: boolean;
 }
 
 export class ServiceMapping implements IServiceMapping {
