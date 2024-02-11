@@ -39,10 +39,18 @@ export abstract class AppHubBase implements OnDestroy {
     }
 
     // default send signal method via direct signalr connection
-    protected async sendSignal<TObject>(key:string, userIds: number[], signalData: SignalData<TObject>, callback?: () => void): Promise<void> {
+    protected async sendSignal<TObject>(key:string, groups: (number | string)[], signalData: SignalData<TObject>, callback?: () => void): Promise<void> {
         if (!this.hubs?.has(key)) return;
         const sSignalData = JSON.stringify(signalData);
-        await this.hubs.get(key).invoke(DEFAULT_SEND_METHOD, userIds, sSignalData)
+        await this.hubs.get(key).invoke(DEFAULT_SEND_METHOD, groups, sSignalData)
+          .then(() => {
+            if (callback) callback();
+          });
+    }
+
+    protected async sendRawSignal(key:string, groups: (number | string)[], signalData: string, callback?: () => void): Promise<void> {
+        if (!this.hubs?.has(key)) return;
+        await this.hubs.get(key).invoke(DEFAULT_SEND_METHOD, groups, signalData)
           .then(() => {
             if (callback) callback();
           });

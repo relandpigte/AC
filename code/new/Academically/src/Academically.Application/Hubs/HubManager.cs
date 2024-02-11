@@ -67,6 +67,7 @@ namespace Academically.Hubs
         Task NotifyUsersForEventPollLaunched(EventPollDto poll);
         Task NotifyUsersForEventPollClosed(EventPollDto poll);
         Task NotifyUsersForEventPollShared(EventPollDto poll);
+        Task NotifyUsersForEventSettingsUpdated(ServiceFeatureFlagDto settings);
     }
 
     public class HubManager : IHubManager
@@ -96,6 +97,7 @@ namespace Academically.Hubs
         private readonly IHubContext<QuestionsReactionsHub> _questionsReactionsHub;
         private readonly IHubContext<ServiceOffersHub> _serviceOffersHub;
         private readonly IHubContext<EventPollsHub> _eventPollsHub;
+        private readonly IHubContext<EventSettingsHub> _eventSettingsHub;
 
         public HubManager(IHubContext<UserTopicsHub> userTopicsHub,
             IHubContext<PostsHub> postsHub,
@@ -113,7 +115,8 @@ namespace Academically.Hubs
             IHubContext<QuestionsHub> questionHub,
             IHubContext<QuestionsReactionsHub> questionsReactionsHub,
             IHubContext<ServiceOffersHub> serviceOffersHub,
-            IHubContext<EventPollsHub> eventPollsHub)
+            IHubContext<EventPollsHub> eventPollsHub,
+            IHubContext<EventSettingsHub> eventSettingsHub)
         {
             _userTopicsHub = userTopicsHub;
             _postsHub = postsHub;
@@ -131,6 +134,7 @@ namespace Academically.Hubs
             _questionsReactionsHub = questionsReactionsHub;
             _serviceOffersHub = serviceOffersHub;
             _eventPollsHub = eventPollsHub;
+            _eventSettingsHub = eventSettingsHub;
         }
 
         public async Task NotifyUsersForPostCreated(PostDto post)
@@ -257,7 +261,7 @@ namespace Academically.Hubs
             {
                 await _reactionsHub.Clients.Group(ReactionsGroup).SendAsync(nameof(HubEvent.ReactionCreated), reaction);
             }
-            
+
         }
 
         public async Task NotifyUsersForReactionUpdated(ReactionDto reaction)
@@ -370,7 +374,7 @@ namespace Academically.Hubs
             await _channelsHub.Clients.Group(AllChannels).SendAsync(nameof(HubEvent.ChannelUnarchive), channel);
             await _channelsHub.Clients.Group($"ch-{channel.Id}").SendAsync(nameof(HubEvent.ChannelUnarchive), channel);
         }
-        
+
         public async Task NotifyUsersForNewUserActivities(UserStatusLogDto statusLog)
         {
             await _newUserLoggedInHub.Clients.Group(AllUserStatusLogs).SendAsync(nameof(HubEvent.NewUserLoggedIn), statusLog);
@@ -397,19 +401,19 @@ namespace Academically.Hubs
             await _questionHub.Clients.Group(QuestionsReactionsGroup).SendAsync(nameof(HubEvent.QuestionUpdated), question);
             await _questionHub.Clients.Group(question.ReferenceId).SendAsync(nameof(HubEvent.QuestionCreated), question);
         }
-        
+
         public async Task NotifyUsersForQuestionUpdated(QuestionDto question)
         {
             await _questionHub.Clients.Group(QuestionsReactionsGroup).SendAsync(nameof(HubEvent.QuestionUpdated), question);
             await _questionHub.Clients.Group(question.ReferenceId).SendAsync(nameof(HubEvent.QuestionUpdated), question);
         }
-        
+
         public async Task NotifyUsersForQuestionDeleted(QuestionDto question)
         {
             await _questionHub.Clients.Group(QuestionsReactionsGroup).SendAsync(nameof(HubEvent.QuestionDeleted), question);
             await _questionHub.Clients.Group(question.ReferenceId).SendAsync(nameof(HubEvent.QuestionDeleted), question);
         }
-        
+
         public async Task NotifyUsersForQuestionReactionCreated(QuestionReactionDto reaction)
         {
             await _questionsReactionsHub.Clients.Group(QuestionsReactionsGroup).SendAsync(nameof(HubEvent.QuestionReactionCreated), reaction);
@@ -421,7 +425,7 @@ namespace Academically.Hubs
             await _questionsReactionsHub.Clients.Group(QuestionsReactionsGroup).SendAsync(nameof(HubEvent.QuestionReactionUpdated), reaction);
             await _questionsReactionsHub.Clients.Group($"{reaction.ReferenceId}").SendAsync(nameof(HubEvent.QuestionReactionUpdated), reaction);
         }
-        
+
         public async Task NotifyUsersForQuestionReactionDeleted(QuestionReactionDto reaction)
         {
             await _questionsReactionsHub.Clients.Group(QuestionsReactionsGroup).SendAsync(nameof(HubEvent.QuestionReactionDeleted), reaction);
@@ -481,6 +485,11 @@ namespace Academically.Hubs
         public async Task NotifyUsersForEventPollShared(EventPollDto poll)
         {
             await _eventPollsHub.Clients.Group($"{poll.EventId}").SendAsync(nameof(HubEvent.EventPollShared), poll);
+        }
+
+        public async Task NotifyUsersForEventSettingsUpdated(ServiceFeatureFlagDto settings)
+        {
+            await _eventSettingsHub.Clients.Group($"{settings.ReferenceId}").SendAsync("receiveSignal", settings);
         }
     }
 }
