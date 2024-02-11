@@ -114,7 +114,7 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
     this.onAddEditCourseSectionClick(courseSection.type, courseSection, CourseEllipseState.Rename);
   }
 
-  addSection(courseSection) {
+  addSection({ courseSection, isSilent = false }) {
     this.isLoading = true;
     this._courseSectionsService.create(courseSection)
       .pipe(
@@ -123,7 +123,7 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
           this.isLoading = false;
         })
       ).subscribe(() => {
-        this.notify.success(this.l('SavedSuccessfully'));
+        if (!isSilent) this.notify.success(this.l('SavedSuccessfully'));
         this.getCourseSections();
       });
     // this.onAddEditCourseSectionClick(this.courseSectionType.Lesson, courseSection);

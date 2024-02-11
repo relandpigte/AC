@@ -45,9 +45,9 @@ export class CourseSectionComponent extends AppComponentBase implements OnInit {
   get offersCount(): number { return this.courseSection?.['offers']?.length || 0; }
 
   onBlurName() {
-    if (this.nameInput) {
+    if (this.nameInput || this.courseSection.id) {
       this.courseSection.name = this.nameInput;
-      this.addSection.emit(this.courseSection);
+      this.addSection.emit({ courseSection: this.courseSection, isSilent: !this.nameInput });
     } else {
       this.removeTemporary.emit(this.courseSection);
     }
@@ -77,8 +77,8 @@ export class CourseSectionComponent extends AppComponentBase implements OnInit {
     this.deleteSection.emit(id);
   }
 
-  onAddCourseSectionClick(courseSectionUnit) {
-    this.addSection.emit(courseSectionUnit);
+  onAddCourseSectionClick(courseSectionObj) {
+    this.addSection.emit(courseSectionObj);
   }
 
   addTemporarySection(type: CourseSectionType): void {
