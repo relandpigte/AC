@@ -5,7 +5,7 @@ import { PortalService } from '@app/dashboard/events/portal/broadcast/student/po
 import * as rtc from 'rtc-lib';
 import { AppComponentBase } from './app-component-base';
 import { SignalData } from './app-hub-base';
-import { EventDto, EventUserDto, EventUserType, EventsServiceProxy } from './service-proxies/service-proxies';
+import { EventDto, EventUserDto, EventUserType, EventsServiceProxy, ServiceFeatureFlagDto } from './service-proxies/service-proxies';
 import { ModalDialogOptions, ModalDialogService } from './services/modal-dialog.service';
 
 export interface PortalProperties {
@@ -46,6 +46,8 @@ export enum ConferenceAction {
 }
 
 export const EVENT_SESSIONS_HUB_NAME = 'eventSessionsHub';
+export const EVENT_SETTINGS_HUB_NAME = 'eventSettingsHub';
+export const EVENT_USER_SETTINGS_HUB_NAME = 'eventUserSettingsHub';
 
 @Injectable()
 export abstract class AppComponentPortalBase extends AppComponentBase implements OnDestroy {
@@ -103,7 +105,7 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
     async initPortal(props: PortalProperties) {
         this.props = props;
         this.subscribeToPortalEvents();
-        await this.initHub();
+        await this.initHubs();
         this.initPortalViewProperties();
         this.isPortalInitialized = true;
     }
@@ -131,13 +133,29 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
         });
     }
 
-    private async initHub(): Promise<void> {
+    private async initHubs(): Promise<void> {
+        await this.initEventSessionHub();
+        await this.initEventSettingsHub();
+        await this.initEventUserSettingsHub();
+    }
+
+    private async initEventSessionHub(): Promise<void> {
         this.addHub(EVENT_SESSIONS_HUB_NAME, await this._hubService.getEventSessionsHub({ 'userId': this.appSession.userId }));
         this.startHubConnection(EVENT_SESSIONS_HUB_NAME, () => {
             this.hubConnected = true;
             this.initRoom();
             this.handleHubEvents();
         });
+    }
+
+    private async initEventSettingsHub(): Promise<void> {
+        this.addHub(EVENT_SETTINGS_HUB_NAME, await this._hubService.getEventSettingsHub({ 'referenceId': this.eventId }));
+        this.startHubConnection(EVENT_SETTINGS_HUB_NAME);
+    }
+
+    private async initEventUserSettingsHub(): Promise<void> {
+        this.addHub(EVENT_USER_SETTINGS_HUB_NAME, await this._hubService.getEventSettingsHub({ 'userId': this.appSession.userId, 'referenceId': this.eventId }));
+        this.startHubConnection(EVENT_USER_SETTINGS_HUB_NAME);
     }
 
     private initRoom(): void {
@@ -188,6 +206,12 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
     }
 
     private handleHubEvents(): void {
+        this.handleEventSessionHubEvents();
+        this.handleEventSettingsHubEvents();
+        this.handleEventUserSettingsHubEvents();
+    }
+
+    private handleEventSessionHubEvents(): void {
         this.receiveSignal(EVENT_SESSIONS_HUB_NAME, async (sSignalData: string) => {
             const signalData = new SignalData();
             Object.assign(signalData, JSON.parse(sSignalData));
@@ -247,6 +271,20 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
                     }
                     break;
             }
+        });
+    }
+
+    private handleEventSettingsHubEvents(): void {
+        this.receiveSignal(EVENT_SETTINGS_HUB_NAME, async (sSignalData: string) => {
+            const settings = ServiceFeatureFlagDto.fromJS(sSignalData);
+            this._portalService.featureFlags = settings;
+        });
+    }
+
+    private handleEventUserSettingsHubEvents(): void {
+        this.receiveSignal(EVENT_USER_SETTINGS_HUB_NAME, async (sSignalData: string) => {
+            const settings = ServiceFeatureFlagDto.fromJS(sSignalData);
+            this._portalService.featureFlags = settings;
         });
     }
 

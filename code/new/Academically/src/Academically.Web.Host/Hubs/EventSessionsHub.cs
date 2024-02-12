@@ -28,11 +28,11 @@ namespace Academically.Web.Host.Hubs
             return;
         }
 
-        public async Task SendSignal(IEnumerable<long> userIds, string data)
+        public async Task SendSignal(IEnumerable<string> groups, string data)
         {
-            foreach (var userId in userIds)
+            foreach (var group in groups)
             {
-                await Clients.Group(userId.ToString()).SendAsync("receiveSignal", data);
+                await Clients.Group(group).SendAsync("receiveSignal", data);
             }
         }
     }

@@ -26,6 +26,10 @@ export class HubService {
     return this.getHub('eventSessions', Utils.generateUrlParams(params), callback);
   }
 
+  public getEventSettingsHub(params?: Record<string, any>): Promise<any> {
+    return this.getHub('eventSettings', Utils.generateUrlParams(params));
+  }
+
   public getQuestionsHub(params?: Record<string, any>): Promise<any> {
     return this.getHub('questions', Utils.generateUrlParams(params));
   }
