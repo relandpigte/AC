@@ -25,7 +25,6 @@ import { takeUntil } from 'rxjs/operators';
 import { PollComponent } from './_components/polls/_components/poll/poll.component';
 import { PortalPollService } from './_components/polls/_services/portal-poll.service';
 import { ShareVideosComponent } from './_components/share-videos/share-videos.component';
-import { PortalService } from './_services/portal.service';
 
 export const ANSWERING_LIVE_QUESTION_HUB_NAME = 'answeringLiveQuestionHub';
 
@@ -60,7 +59,6 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
     private _route: ActivatedRoute,
     private _location: Location,
     private _router: Router,
-    private _portalService: PortalService,
     private _portalPollService: PortalPollService,
     private _eventSessionsService: EventSessionsServiceProxy,
     private _eventPollsService: EventPollsServiceProxy,
