@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { ArticleDto } from '@shared/service-proxies/service-proxies';
+import { ArticleDto, CommentSetting } from '@shared/service-proxies/service-proxies';
 
 @Injectable({
   providedIn: 'root'
@@ -8,9 +8,11 @@ import { ArticleDto } from '@shared/service-proxies/service-proxies';
 export class ArticleService {
   public articleCreated$: Observable<ArticleDto>;
   public articleSave$: Observable<boolean>;
+  public articleCommentSetting$: Observable<CommentSetting>;
 
   private _articleCreatedSubject: BehaviorSubject<ArticleDto>;
   private _articleSaveSubject: BehaviorSubject<boolean>;
+  private _articleCommentSettingSubject: BehaviorSubject<CommentSetting>;
 
   constructor() {
     this._articleCreatedSubject = new BehaviorSubject<ArticleDto>(undefined);
@@ -18,6 +20,9 @@ export class ArticleService {
 
     this._articleSaveSubject = new BehaviorSubject<boolean>(false);
     this.articleSave$ = this._articleSaveSubject.asObservable();
+
+    this._articleCommentSettingSubject = new BehaviorSubject<CommentSetting>(undefined);
+    this.articleCommentSetting$ = this._articleCommentSettingSubject.asObservable();
   }
 
   public set articleCreated(value: ArticleDto) {
@@ -26,5 +31,9 @@ export class ArticleService {
 
   public set articleSave(value: boolean) {
     this._articleSaveSubject.next(value);
+  }
+
+  public set articleCommentSetting(value: CommentSetting) {
+    this._articleCommentSettingSubject.next(value);
   }
 }

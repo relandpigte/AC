@@ -52,7 +52,7 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
             referenceId: response.id,
             serviceType: ServicesType.Article,
             creatorUserId: this.currentUserId,
-            commentSettings: CommentSetting.Visible
+            commentSetting: CommentSetting.Visible
           });
           this.getArticle();
           this.getServiceFlags();

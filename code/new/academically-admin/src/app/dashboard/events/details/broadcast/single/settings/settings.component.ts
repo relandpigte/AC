@@ -71,7 +71,16 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
           this.flags.init({
             referenceId: response.id,
             serviceType: ServicesType.Event,
-            creatorUserId: this.currentUserId
+            creatorUserId: this.currentUserId,
+            attendees: true,
+            chat: true,
+            activities: true,
+            questions: true,
+            offers: true,
+            handouts: true,
+            comments: true,
+            settings: true,
+            reviews: true
           });
           this.getServiceFlags();
         }
