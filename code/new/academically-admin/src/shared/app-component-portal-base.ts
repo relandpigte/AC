@@ -1,4 +1,4 @@
-import { ElementRef, Injectable, Injector, OnDestroy, QueryList } from '@angular/core';
+import { ElementRef, Injectable, Injector, OnDestroy, OnInit, QueryList } from '@angular/core';
 import { HubService } from '@app/_shared/services/hub.service';
 import { SelectedMachineDevice } from '@app/dashboard/events/portal/broadcast/student/portal/_components/device-settings/device-settings.component';
 import { PortalService } from '@app/dashboard/events/portal/broadcast/student/portal/_services/portal.service';
@@ -7,6 +7,8 @@ import { AppComponentBase } from './app-component-base';
 import { SignalData } from './app-hub-base';
 import { EventDto, EventUserDto, EventUserType, EventsServiceProxy, ServiceFeatureFlagDto } from './service-proxies/service-proxies';
 import { ModalDialogOptions, ModalDialogService } from './services/modal-dialog.service';
+import { Observable, combineLatest, of, zip } from 'rxjs';
+import { mergeMap, switchMap } from 'rxjs/operators';
 
 export interface PortalProperties {
     serverProps: PortalServierProperties;
@@ -45,12 +47,16 @@ export enum ConferenceAction {
     PingHost,
 }
 
+export interface ServiceFeatureFlagMapping {
+    [key: string]: { [type in EventUserType]?: string[] };
+};
+
 export const EVENT_SESSIONS_HUB_NAME = 'eventSessionsHub';
 export const EVENT_SETTINGS_HUB_NAME = 'eventSettingsHub';
 export const EVENT_USER_SETTINGS_HUB_NAME = 'eventUserSettingsHub';
 
 @Injectable()
-export abstract class AppComponentPortalBase extends AppComponentBase implements OnDestroy {
+export abstract class AppComponentPortalBase extends AppComponentBase implements OnInit, OnDestroy {
     _hubService: HubService;
     _portalService: PortalService;
     _modalDialogService: ModalDialogService;
@@ -62,6 +68,7 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
 
     eventId: string;
     eventModel = new EventDto();
+    eventSettings = new ServiceFeatureFlagDto();
 
     eventHost = new EventUserDto();
     eventUser = new EventUserDto();
@@ -96,6 +103,13 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
     get eventHostUserId(): number { return this.eventHost.user.id; }
     get otherEventUserIds(): number[] { return this.allEventUsers.filter(e => e.user.id !== this.eventUser.user.id).map(e => e.user.id); }
     get isHost(): boolean { return this.eventModel?.creatorUserId === this.appSession.userId; }
+
+    async ngOnInit() {
+        this.pipeDestroy(this._portalService.featureFlags$, flags => {
+            this.eventSettings.init(flags);
+            setTimeout(() => this.cdr.detectChanges());
+        });
+    }
 
     async ngOnDestroy() {
         // this.disconnectTrack(this.presenterStream);

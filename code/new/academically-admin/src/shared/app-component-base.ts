@@ -1,4 +1,4 @@
-import { ElementRef, Injectable, Injector, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, ElementRef, Injectable, Injector, OnDestroy, inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { UploadService } from '@app/_shared/services/upload.service';
 import { AppConsts } from '@shared/AppConsts';
@@ -42,6 +42,7 @@ export abstract class AppComponentBase extends AppHubBase implements OnDestroy {
 
   localizationSourceName = AppConsts.localization.defaultLocalizationSourceName;
 
+  cdr: ChangeDetectorRef;
   sanitizer: DomSanitizer;
   localization: LocalizationService;
   permission: PermissionCheckerService;
@@ -61,6 +62,7 @@ export abstract class AppComponentBase extends AppHubBase implements OnDestroy {
 
   constructor(injector: Injector) {
     super();
+    this.cdr = injector.get(ChangeDetectorRef);
     this.sanitizer = injector.get(DomSanitizer);
     this.localization = injector.get(LocalizationService);
     this.permission = injector.get(PermissionCheckerService);

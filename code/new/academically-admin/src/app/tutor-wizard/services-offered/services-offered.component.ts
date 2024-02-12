@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, ViewChild } from '@angular/core';
+import { Component, Injector, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ServicesComponent } from '@app/profile/services/services.component';
 import { AppComponentBase } from '@shared/app-component-base';
@@ -33,7 +33,6 @@ export class ServicesOfferedComponent extends AppComponentBase {
     private _tutorApplicationService: TutorApplicationServiceProxy,
     private _tutorWizardService: TutorWizardServiceProxy,
     private _becomeATutorService: BecomeATutorService,
-    private cdr: ChangeDetectorRef,
     private _appSession: AppSessionService
   ) {
     super(injector);

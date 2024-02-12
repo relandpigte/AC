@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HubConnection } from '@microsoft/signalr';
-import {
-  EventDto,
-  EventUserDto,
-  QuestionDto, ServiceFeatureFlagDto
-} from '@shared/service-proxies/service-proxies';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { ServiceFeatureFlagMapping } from '@shared/app-component-portal-base';
+import { EventDto, EventUserDto, EventUserType, QuestionDto, ServiceFeatureFlagDto } from '@shared/service-proxies/service-proxies';
+import { BehaviorSubject, Observable, combineLatest, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +23,7 @@ export class PortalService {
   public hub$: Observable<HubConnection>;
   public liveQuestion$: Observable<QuestionDto>;
   public featureFlags$: Observable<ServiceFeatureFlagDto>;
+  public specificFeatureFlag$:  { [key: string]: Observable<boolean> } = {};
 
   private _eventSubject: BehaviorSubject<EventDto>;
   private _attendeesSubject: BehaviorSubject<EventUserDto[]>;
@@ -40,6 +39,7 @@ export class PortalService {
   private _hubSubject: BehaviorSubject<HubConnection>;
   private _liveQuestion: BehaviorSubject<QuestionDto>;
   private _featureFlags: BehaviorSubject<ServiceFeatureFlagDto>;
+  private _specificFeatureFlag: { [key: string]: BehaviorSubject<boolean> } = {};
 
   constructor() {
     this._eventSubject = new BehaviorSubject<EventDto>(undefined);
@@ -83,6 +83,12 @@ export class PortalService {
 
     this._featureFlags = new BehaviorSubject<ServiceFeatureFlagDto>(undefined);
     this.featureFlags$ = this._featureFlags.asObservable();
+
+    Object.keys(ServiceFeatureFlagDto.fromJS({})).forEach(k => {
+      k = k.toLowerCase();
+      this._specificFeatureFlag[k] = new BehaviorSubject<boolean>(false);
+      this.specificFeatureFlag$[k] = this._specificFeatureFlag[k].asObservable();
+    });
   }
 
   public set event(value: EventDto) {
@@ -139,5 +145,21 @@ export class PortalService {
 
   public set featureFlags(value: ServiceFeatureFlagDto) {
     this._featureFlags.next(value);
+    Object.keys(value).forEach(k => this._specificFeatureFlag[k.toLowerCase()].next(value[k]));
+  }
+
+  public getEventUserType(id: number): EventUserType {
+    const user = this._attendeesSubject.value?.find(u => u.user.id === id);
+    return user?.type;
+  }
+
+  public getSpecificFeatureFlag$(mapping: ServiceFeatureFlagMapping, key: string, userId: number): Observable<boolean> {
+    const type = this.getEventUserType(userId);
+    const flags = mapping[key]?.[type ?? EventUserType.Audience];
+    if (flags?.length) {
+        return combineLatest(flags.map(flag => this.specificFeatureFlag$[flag.toLowerCase()] ?? of(false)))
+            .pipe(switchMap(flags => of(flags.some(flag => flag))));
+    }
+    return of(false);
   }
 }

@@ -1,8 +1,8 @@
 import { Location } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Injector, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { AppComponentPortalBase } from '@shared/app-component-portal-base';
+import { AppComponentPortalBase, ServiceFeatureFlagMapping } from '@shared/app-component-portal-base';
 import {
   EventPollDto,
   EventPollsServiceProxy,
@@ -12,7 +12,7 @@ import {
   HubEvent,
   ProfilesServiceProxy,
   QuestionDto,
-  QuestionsServiceProxy, ServiceFeatureFlagDto,
+  QuestionsServiceProxy,
   ServiceOfferDto,
   ServicesServiceProxy
 } from '@shared/service-proxies/service-proxies';
@@ -25,20 +25,44 @@ import { takeUntil } from 'rxjs/operators';
 import { PollComponent } from './_components/polls/_components/poll/poll.component';
 import { PortalPollService } from './_components/polls/_services/portal-poll.service';
 import { ShareVideosComponent } from './_components/share-videos/share-videos.component';
-import { PortalService } from './_services/portal.service';
+import { Observable } from 'rxjs';
 
 export const ANSWERING_LIVE_QUESTION_HUB_NAME = 'answeringLiveQuestionHub';
+
+const enum PortalFeatures {
+  Microphone = 'microphone',
+  Webcam = 'webcam',
+  ShareContent = 'shareContent',
+}
 
 @Component({
   selector: 'app-portal',
   templateUrl: './portal.component.html',
   styleUrls: ['./portal.component.less'],
-  animations: [appModuleAnimation()],
+  animations: [appModuleAnimation()]
 })
 export class PortalComponent extends AppComponentPortalBase implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('presenterVideoEl') presenterVideoEl: ElementRef;
   @ViewChildren('attendeeVideos') attendeeVideosEl: QueryList<ElementRef>;
   @ViewChild(ShareVideosComponent) shareVideosComponent: ShareVideosComponent;
+
+  featureToServiceFeatureFlags: ServiceFeatureFlagMapping = {
+    [PortalFeatures.Microphone]: {
+      [EventUserType.Audience]: ['InteractiveTools', 'interactiveToolsAudienceMicrophone'],
+      [EventUserType.Guest]: ['InteractiveTools', 'interactiveToolsAudienceMicrophone'],
+      [EventUserType.CoHost]: ['InteractiveTools', 'interactiveToolsCohostMicrophone'],
+    },
+    [PortalFeatures.Webcam]: {
+      [EventUserType.Audience]: ['InteractiveTools', 'interactiveToolsAudienceWebCam'],
+      [EventUserType.Guest]: ['InteractiveTools', 'interactiveToolsAudienceWebCam'],
+      [EventUserType.CoHost]: ['InteractiveTools', 'interactiveToolsCohostWebCam'],
+    },
+    [PortalFeatures.ShareContent]: {
+      [EventUserType.Audience]: ['InteractiveTools', 'InteractiveToolsAudienceSharing'],
+      [EventUserType.Guest]: ['InteractiveTools', 'InteractiveToolsAudienceSharing'],
+      [EventUserType.CoHost]: ['InteractiveTools'],
+    },
+  };
 
   offersStateService: ServiceOffersStateService;
   selectedOffer: ServiceOfferDto;
@@ -53,14 +77,13 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
 
   preview = false;
   showSidebar = true;
-  flags = new ServiceFeatureFlagDto();
 
   constructor(
     injector: Injector,
+    private _cdr: ChangeDetectorRef,
     private _route: ActivatedRoute,
     private _location: Location,
     private _router: Router,
-    private _portalService: PortalService,
     private _portalPollService: PortalPollService,
     private _eventSessionsService: EventSessionsServiceProxy,
     private _eventPollsService: EventPollsServiceProxy,
@@ -71,16 +94,20 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
     private _questionsService: QuestionsServiceProxy
   ) {
     super(injector);
-    this.pipeDestroy(this._portalService.featureFlags$, flags => this.flags.init(flags));
   }
+
+  get event$() { return this._portalService.event$; }
 
   get offersStateId(): string { return 'offers-event'; }
   get pollsStateId(): string { return 'polls-event'; }
 
-  get isAudienceMicrophoneEnabled(): boolean { return this.isStudent && this.flags?.interactiveToolsAudienceMicrophone; }
-  get isAudienceWebCamEnabled(): boolean { return this.isStudent && this.flags?.interactiveToolsAudienceWebCam; }
+  get isMicrophoneEnabled$(): Observable<boolean> { return this._portalService.getSpecificFeatureFlag$(this.featureToServiceFeatureFlags, PortalFeatures.Microphone, this.appSession.userId); }
+  get isWebCamEnabled$(): Observable<boolean> { return this._portalService.getSpecificFeatureFlag$(this.featureToServiceFeatureFlags, PortalFeatures.Webcam, this.appSession.userId); }
+  get isShareEnabled$(): Observable<boolean> { return this._portalService.getSpecificFeatureFlag$(this.featureToServiceFeatureFlags, PortalFeatures.ShareContent, this.appSession.userId); }
 
   async ngOnInit() {
+    await super.ngOnInit();
+
     // routings
     this.pipeDestroy(this._route.paramMap, (paramMap) => {
       if (paramMap.has('invitation-id')) {

@@ -1,8 +1,10 @@
-import { Component, OnInit, Injector, Input, ChangeDetectorRef, OnChanges, SimpleChanges } from '@angular/core';
-import { AppComponentBase } from '@shared/app-component-base';
+import { ChangeDetectorRef, Component, Injector, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ServiceFeatureFlagDto } from '@shared/service-proxies/service-proxies';
 import { PortalService } from '@app/dashboard/events/portal/broadcast/student/portal/_services/portal.service';
+import { AppComponentBase } from '@shared/app-component-base';
+import { ServiceFeatureFlagMapping } from '@shared/app-component-portal-base';
+import { EventUserType } from '@shared/service-proxies/service-proxies';
+import { Observable } from 'rxjs';
 
 class MenuItem {
   name: string;
@@ -23,16 +25,58 @@ export class SidebarComponent extends AppComponentBase implements OnInit, OnChan
   @Input() hidden = false;
   @Input() isHost: boolean;
 
-  flags = new ServiceFeatureFlagDto();
   eventId: string;
   MenuItem = MenuItem;
   menuItems: MenuItem[] = [];
   activeMenuItem: MenuItem;
 
+  menuItemToServiceFeatureFlags: ServiceFeatureFlagMapping = {
+    'Attendees': {
+      [EventUserType.Audience]: ['attendees'],
+      [EventUserType.Guest]: [''],
+      [EventUserType.CoHost]: [''],
+    },
+    'Chat': {
+      [EventUserType.Audience]: ['chat', 'chatAudiencePrivate', 'chatAudiencePublic'],
+      [EventUserType.Guest]: ['chat', 'chatAudiencePrivate', 'chatAudiencePublic'],
+      [EventUserType.CoHost]: ['chat', 'chatCohostPublic', 'chatCohostPrivate'],
+    },
+    'Comments': {
+      [EventUserType.Audience]: ['comments', 'commentsAudienceCanReact', 'commentsAudienceCanAdd'],
+      [EventUserType.Guest]: ['comments', 'commentsAudienceCanReact', 'commentsAudienceCanAdd'],
+      [EventUserType.CoHost]: ['comments', 'commentSetting'],
+    },
+    'Questions': {
+      [EventUserType.Audience]: ['questions', 'questionsAudienceCanRespond', 'questionsAudienceCanAsk'],
+      [EventUserType.Guest]: ['questions', 'questionsAudienceCanRespond', 'questionsAudienceCanAsk'],
+      [EventUserType.CoHost]: ['questions', 'questionsCohostCanAnswerLive', 'questionsCohostCanRespond'],
+    },
+    'Activities': {
+      [EventUserType.Audience]: [''],
+      [EventUserType.Guest]: [''],
+      [EventUserType.CoHost]: [''],
+    },
+    'Handouts': {
+      [EventUserType.Audience]: [''],
+      [EventUserType.Guest]: [''],
+      [EventUserType.CoHost]: [''],
+    },
+    'Offers': {
+      [EventUserType.Audience]: [''],
+      [EventUserType.Guest]: [''],
+      [EventUserType.CoHost]: [''],
+    },
+    'Reviews': {
+      [EventUserType.Audience]: [''],
+      [EventUserType.Guest]: [''],
+      [EventUserType.CoHost]: [''],
+    },
+  };
+
   constructor(
     injector: Injector,
     route: ActivatedRoute,
-    portalService: PortalService,
+    private _portalService: PortalService,
     private _cdr: ChangeDetectorRef
   ) {
     super(injector);
@@ -41,7 +85,6 @@ export class SidebarComponent extends AppComponentBase implements OnInit, OnChan
         this.eventId = paramMap.get('event-id');
       }
     });
-    this.pipeDestroy(portalService.featureFlags$, flags => this.flags.init(flags));
   }
 
   ngOnInit(): void {
@@ -63,14 +106,6 @@ export class SidebarComponent extends AppComponentBase implements OnInit, OnChan
     this._cdr.detectChanges();
   }
 
-  isServiceFlag(menuItem: MenuItem): boolean {
-    const isFlagged = this.flags[menuItem.name.toLowerCase()];
-    if (isFlagged === undefined) {
-      return true;
-    }
-    return isFlagged;
-  }
-
   private constructMenu(): void {
     this.menuItems.push(new MenuItem('Separator'));
     this.menuItems.push(new MenuItem('Overview', 'home'));
@@ -83,5 +118,13 @@ export class SidebarComponent extends AppComponentBase implements OnInit, OnChan
     this.menuItems.push(new MenuItem('Offers', 'shopping-bag'));
     this.menuItems.push(new MenuItem('Reviews', 'star'));
     this.activeMenuItem = this.menuItems[1];
+  }
+
+  isMenuItemEnabled$(menuItem: MenuItem): Observable<boolean> {
+    return this._portalService.getSpecificFeatureFlag$(
+      this.menuItemToServiceFeatureFlags,
+      menuItem.name,
+      this.appSession.userId
+    );
   }
 }

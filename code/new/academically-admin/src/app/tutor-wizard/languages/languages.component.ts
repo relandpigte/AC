@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, ViewChild } from '@angular/core';
+import { Component, Injector, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { SpokenLanguagesComponent } from '@app/profile/spoken-languages/spoken-languages.component';
 import { AppComponentBase } from '@shared/app-component-base';
@@ -33,7 +33,6 @@ export class LanguagesComponent extends AppComponentBase {
     private _tutorApplicationService: TutorApplicationServiceProxy,
     private _becomeATutorService: BecomeATutorService,
     private _tutorWizardService: TutorWizardServiceProxy,
-    private cdr: ChangeDetectorRef,
     private _appSession: AppSessionService
   ) {
     super(injector);

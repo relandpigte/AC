@@ -3,7 +3,7 @@
 
 <div class="h-100" [@routerTransition]>
   <div [class.sidebar-hidden]="!showSidebar" class="main-content position-relative h-100">
-    <nav *ngIf="eventModel" class="navbar navbar-expand-lg navbar-light" id="topnav">
+    <nav *ngIf="event$ | async" class="navbar navbar-expand-lg navbar-light" id="topnav">
       <div class="mx-3 w-100 d-flex justify-content-between align-items-center">
         <a class="navbar-brand text-left pt-0" href="javascript:;">
           <div class="d-flex">
@@ -87,11 +87,11 @@
         <app-share-videos (shareVideo)="onShareVideo($event)" (unshareVideo)="onUnshareVideo()"></app-share-videos>
       </div>
       <div class="presentation-controls bg-white">
-        <button class="btn btn-sm btn-outline-primary mx-2" [disabled]="!isAudienceMicrophoneEnabled">
+        <button class="btn btn-sm btn-outline-primary mx-2" [disabled]="!(isMicrophoneEnabled$ | async)">
           <i class="fe fe-mic"></i>
         </button>
 
-        <button class="btn btn-sm btn-outline-primary mx-2" [disabled]="!isAudienceWebCamEnabled">
+        <button class="btn btn-sm btn-outline-primary mx-2" [disabled]="!(isWebCamEnabled$ | async)">
           <i class="fe fe-camera"></i>
         </button>
 
@@ -111,7 +111,7 @@
         </button>
 
         <div class="dropup">
-          <button [disabled]="!isHost || !hubConnected || !eventStarted" type="button"
+          <button [disabled]="!isHost || !hubConnected || !eventStarted || !(isShareEnabled$ | async)" type="button"
             class="btn btn-sm btn-outline-primary mx-2" data-toggle="dropdown" aria-expanded="false">
             <i class="fe fe-monitor"></i>
           </button>
