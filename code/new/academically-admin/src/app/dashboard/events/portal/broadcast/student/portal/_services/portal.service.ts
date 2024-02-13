@@ -160,6 +160,6 @@ export class PortalService {
         return combineLatest(flags.map(flag => this.specificFeatureFlag$[flag.toLowerCase()] ?? of(false)))
             .pipe(switchMap(flags => of(flags.some(flag => flag))));
     }
-    return of(false);
+    return of(true);
   }
 }

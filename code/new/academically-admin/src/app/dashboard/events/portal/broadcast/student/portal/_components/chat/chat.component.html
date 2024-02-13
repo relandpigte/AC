@@ -1,13 +1,13 @@
 <div class="sidebar-chat d-flex flex-column h-100p">
     <ul class="chat-nav nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link active"  data-toggle="tab" href="#public-chat" role="tab"
+        <li *ngIf="isTabItemEnabled$(0) | async" class="nav-item">
+            <a class="nav-link" [class.active]="selectedChannelType === 0" #publicTab data-toggle="tab" href="#public-chat" role="tab"
                aria-controls="open-container" aria-selected="true" (click)="handleTabClick(0)">
                 {{ 'Public' | localize }}
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" #privateTab data-toggle="tab" href="#private-chat" role="tab"
+        <li *ngIf="isTabItemEnabled$(1) | async" class="nav-item">
+            <a class="nav-link" [class.active]="selectedChannelType === 1" #privateTab data-toggle="tab" href="#private-chat" role="tab"
                aria-controls="answered-container" aria-selected="true" (click)="handleTabClick(1)">
                 {{ 'Private' | localize }}
             </a>
@@ -15,7 +15,7 @@
     </ul>
 
     <div class="chat-tab tab-content flex-grow-1">
-        <div *ngIf="selectedChannelType === 0" class="tab-pane fade show active" id="public-chat" role="tabpanel">
+        <div *ngIf="selectedChannelType === 0" class="tab-pane fade" [ngClass]="{'show active': selectedChannelType === 0}" id="public-chat" role="tabpanel">
             <div class="chat-container d-flex flex-column h-100p">
                 <div class="chat-conversation flex-grow-1" style="height: 0;">
                     <ng-container *ngIf="publicChannel else noMessages">
@@ -37,7 +37,7 @@
             </div>
         </div>
 
-        <div *ngIf="selectedChannelType === 1" class="tab-pane fade" id="private-chat" role="tabpanel">
+        <div *ngIf="selectedChannelType === 1" class="tab-pane fade" [ngClass]="{'show active': selectedChannelType === 1}" id="private-chat" role="tabpanel">
             <div class="chat-container d-flex flex-column h-100p">
                 <ng-container *ngIf="!selectedChannel && !replyingToUser">
                     <div class="chat-recipients flex-grow-1 p-0" style="height: 0">

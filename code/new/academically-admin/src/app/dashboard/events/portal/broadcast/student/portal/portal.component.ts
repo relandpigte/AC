@@ -34,7 +34,6 @@ const enum PortalFeatures {
   Webcam = 'webcam',
   ShareContent = 'shareContent',
 }
-
 @Component({
   selector: 'app-portal',
   templateUrl: './portal.component.html',
@@ -101,9 +100,9 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
   get offersStateId(): string { return 'offers-event'; }
   get pollsStateId(): string { return 'polls-event'; }
 
-  get isMicrophoneEnabled$(): Observable<boolean> { return this._portalService.getSpecificFeatureFlag$(this.featureToServiceFeatureFlags, PortalFeatures.Microphone, this.appSession.userId); }
-  get isWebCamEnabled$(): Observable<boolean> { return this._portalService.getSpecificFeatureFlag$(this.featureToServiceFeatureFlags, PortalFeatures.Webcam, this.appSession.userId); }
-  get isShareEnabled$(): Observable<boolean> { return this._portalService.getSpecificFeatureFlag$(this.featureToServiceFeatureFlags, PortalFeatures.ShareContent, this.appSession.userId); }
+  get isMicrophoneEnabled$(): Observable<boolean> { return this._portalService.getSpecificFeatureFlag$(this.featureToServiceFeatureFlags, PortalFeatures.Microphone, this.currentUserId); }
+  get isWebCamEnabled$(): Observable<boolean> { return this._portalService.getSpecificFeatureFlag$(this.featureToServiceFeatureFlags, PortalFeatures.Webcam, this.currentUserId); }
+  get isShareEnabled$(): Observable<boolean> { return this._portalService.getSpecificFeatureFlag$(this.featureToServiceFeatureFlags, PortalFeatures.ShareContent, this.currentUserId); }
 
   async ngOnInit() {
     await super.ngOnInit();

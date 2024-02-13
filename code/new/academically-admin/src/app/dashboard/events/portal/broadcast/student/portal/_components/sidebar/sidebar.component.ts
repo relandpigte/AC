@@ -1,10 +1,11 @@
-import { ChangeDetectorRef, Component, Injector, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Injector, Input, OnChanges, OnDestroy, OnInit, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PortalService } from '@app/dashboard/events/portal/broadcast/student/portal/_services/portal.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ServiceFeatureFlagMapping } from '@shared/app-component-portal-base';
 import { EventUserType } from '@shared/service-proxies/service-proxies';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { pairwise, takeUntil } from 'rxjs/operators';
 
 class MenuItem {
   name: string;
@@ -21,7 +22,8 @@ class MenuItem {
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.less']
 })
-export class SidebarComponent extends AppComponentBase implements OnInit, OnChanges {
+export class SidebarComponent extends AppComponentBase implements OnInit, OnDestroy, OnChanges {
+  @ViewChildren('menuItem') menuItemsRef: QueryList<ElementRef>;
   @Input() hidden = false;
   @Input() isHost: boolean;
 
@@ -32,9 +34,9 @@ export class SidebarComponent extends AppComponentBase implements OnInit, OnChan
 
   menuItemToServiceFeatureFlags: ServiceFeatureFlagMapping = {
     'Attendees': {
-      [EventUserType.Audience]: ['attendees'],
-      [EventUserType.Guest]: [''],
-      [EventUserType.CoHost]: [''],
+      [EventUserType.Audience]: ['attendees', 'AttendeesCanViewAudience'],
+      [EventUserType.Guest]: ['attendees', 'AttendeesCanViewAudience'],
+      [EventUserType.CoHost]: ['attendees', 'AttendeesCanViewAudience', 'AttendeesPromoteAudience', 'AttendeesCanKickAudience', 'AttendeesCanAdmitAudience'],
     },
     'Chat': {
       [EventUserType.Audience]: ['chat', 'chatAudiencePrivate', 'chatAudiencePublic'],
@@ -52,26 +54,28 @@ export class SidebarComponent extends AppComponentBase implements OnInit, OnChan
       [EventUserType.CoHost]: ['questions', 'questionsCohostCanAnswerLive', 'questionsCohostCanRespond'],
     },
     'Activities': {
-      [EventUserType.Audience]: [''],
-      [EventUserType.Guest]: [''],
-      [EventUserType.CoHost]: [''],
+      [EventUserType.Audience]: ['Activities', 'ActivitiesAudienceCanViewResult', 'ActivitiesAudienceCanParticipate'],
+      [EventUserType.Guest]: ['Activities', 'ActivitiesAudienceCanViewResult', 'ActivitiesAudienceCanParticipate'],
+      [EventUserType.CoHost]: ['Activities', 'ActivitiesCohostCanAdd'],
     },
     'Handouts': {
-      [EventUserType.Audience]: [''],
-      [EventUserType.Guest]: [''],
-      [EventUserType.CoHost]: [''],
+      [EventUserType.Audience]: ['Handouts', 'HandoutsAudienceCanDownload', 'HandoutsAudienceCanShare'],
+      [EventUserType.Guest]: ['Handouts', 'HandoutsAudienceCanDownload', 'HandoutsAudienceCanShare'],
+      [EventUserType.CoHost]: ['Handouts', 'HandoutsCohostCanAdd'],
     },
     'Offers': {
-      [EventUserType.Audience]: [''],
-      [EventUserType.Guest]: [''],
-      [EventUserType.CoHost]: [''],
+      [EventUserType.Audience]: ['Offers', 'OffersAudienceCanPurchase'],
+      [EventUserType.Guest]: ['Offers', 'OffersAudienceCanPurchase'],
+      [EventUserType.CoHost]: ['Offers', 'OffersCohostCanAdd'],
     },
     'Reviews': {
-      [EventUserType.Audience]: [''],
-      [EventUserType.Guest]: [''],
-      [EventUserType.CoHost]: [''],
+      [EventUserType.Audience]: ['Reviews'],
+      [EventUserType.Guest]: ['Reviews'],
+      [EventUserType.CoHost]: ['Reviews'],
     },
   };
+
+  unsubscribe$ = new Subject();
 
   constructor(
     injector: Injector,
@@ -89,6 +93,12 @@ export class SidebarComponent extends AppComponentBase implements OnInit, OnChan
 
   ngOnInit(): void {
     this.constructMenu();
+    this.listenToMenuChanges();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -118,6 +128,21 @@ export class SidebarComponent extends AppComponentBase implements OnInit, OnChan
     this.menuItems.push(new MenuItem('Offers', 'shopping-bag'));
     this.menuItems.push(new MenuItem('Reviews', 'star'));
     this.activeMenuItem = this.menuItems[1];
+  }
+
+  private listenToMenuChanges() {
+    this.menuItems.forEach(menuItem => {
+      this.isMenuItemEnabled$(menuItem)
+        .pipe(takeUntil(this.unsubscribe$))
+        .pipe(pairwise())
+        .subscribe(([prev, next]) => {
+          if (prev !== next && next === false) {
+            if (this.activeMenuItem.name !== 'Overview') {
+              this.menuItemsRef.find(m => m.nativeElement.id === 'Overview')?.nativeElement?.click();
+            }
+          }
+        });
+    });
   }
 
   isMenuItemEnabled$(menuItem: MenuItem): Observable<boolean> {

@@ -1,35 +1,51 @@
-import { ChangeDetectorRef, Component, Injector, Input, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { HubService } from '@app/_shared/services/hub.service';
+import { ElementRef } from '@node_modules/@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
+import { ServiceFeatureFlagMapping } from '@shared/app-component-portal-base';
 import {
   AvailableServiceDto,
   ChannelDto,
   ChatsServiceProxy,
   CreateChannelInputDto,
+  EventUserType,
   EventUsersResponseDto,
   PostsServiceProxy,
   UserDto,
   UserServiceProxy
 } from '@shared/service-proxies/service-proxies';
-import { distinctUntilChanged, skip, takeUntil } from 'rxjs/operators';
 import { ChannelsStateService, channelsType } from '@shared/services/channels-state.service';
 import { ChatService, NotificationType } from '@shared/services/chat.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
-import { HubService } from '@app/_shared/services/hub.service';
-import { BehaviorSubject } from 'rxjs';
 import { StateUpdateType } from '@shared/services/state-base.service';
-import * as moment from 'moment';
 import * as _ from 'lodash';
-import { ElementRef } from '@node_modules/@angular/core';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { distinctUntilChanged, pairwise, skip, takeUntil } from 'rxjs/operators';
+import { PortalService } from '../../_services/portal.service';
 
 @Component({
   selector: 'app-sidebar-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.less']
 })
-export class ChatComponent extends AppComponentBase implements OnInit, OnDestroy {
+export class ChatComponent extends AppComponentBase implements OnInit, AfterViewInit, OnDestroy {
   @Input() referenceId: string;
 
+  @ViewChild('publicTab', { read: ElementRef }) publicTab: ElementRef<HTMLAnchorElement>;
   @ViewChild('privateTab', { read: ElementRef }) privateTab: ElementRef<HTMLAnchorElement>;
+
+  tabToServiceFeatureFlags: ServiceFeatureFlagMapping = {
+    'Private': {
+      [EventUserType.Audience]: ['chat', 'chatAudiencePrivate'],
+      [EventUserType.Guest]: ['chat', 'chatAudiencePrivate'],
+      [EventUserType.CoHost]: ['chat', 'chatCohostPrivate'],
+    },
+    'Public': {
+      [EventUserType.Audience]: ['chat', 'chatAudiencePublic'],
+      [EventUserType.Guest]: ['chat', 'chatAudiencePublic'],
+      [EventUserType.CoHost]: ['chat', 'chatCohostPublic'],
+    },
+  }
 
   referenceService: AvailableServiceDto;
   channelsStateService: ChannelsStateService;
@@ -55,6 +71,8 @@ export class ChatComponent extends AppComponentBase implements OnInit, OnDestroy
 
   currentUserBlocker: number[] = [];
 
+  unsubscribe$ = new Subject<void>();
+
   constructor(
     injector: Injector,
     private _cdr: ChangeDetectorRef,
@@ -63,6 +81,7 @@ export class ChatComponent extends AppComponentBase implements OnInit, OnDestroy
     private _chatService: ChatService,
     private _chatsService: ChatsServiceProxy,
     private _userService: UserServiceProxy,
+    private _portalService: PortalService,
     private _renderer: Renderer2
   ) {
     super(injector);
@@ -71,8 +90,6 @@ export class ChatComponent extends AppComponentBase implements OnInit, OnDestroy
       .pipe(takeUntil(this.destroyed$))
       .pipe(skip(1))
       .subscribe(async selectedChannelType => {
-        this.selectedChannelType = selectedChannelType;
-
         await this.channelsStateService.updateServiceParams({
           type: channelsType.reference,
           args: selectedChannelType === 0 ? [this.referenceId] : [this.referenceId, true]
@@ -81,6 +98,8 @@ export class ChatComponent extends AppComponentBase implements OnInit, OnDestroy
         this.channels = this.channelsStateService.getAllChannels();
         this.totalChannelsCount = this.channelsStateService.totalChannelsCount;
         this.privateChannels = this.channels?.filter(c => c.referenceId === null);
+
+        this.selectedChannelType = selectedChannelType;
       });
 
     this._chatService.replyingToUser$
@@ -130,10 +149,42 @@ export class ChatComponent extends AppComponentBase implements OnInit, OnDestroy
     this.getEventUsers();
     this.getBlockedUsersIds();
     this.getCurrentUserBlockers();
+    this.listenToTabChanges();
+  }
+
+  ngAfterViewInit() {
+    // we set the selected tab manually by clicking on it if they're displayed
+    setTimeout(() => {
+      this.privateTab?.nativeElement?.click();
+      this.publicTab?.nativeElement?.click();
+    }, 1000);
   }
 
   async ngOnDestroy() {
-      await this.channelsStateService?.stop();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+    await this.channelsStateService?.stop();
+  }
+
+  private listenToTabChanges() {
+    [0, 1].forEach(t => this.isTabItemEnabled$(t)
+        .pipe(takeUntil(this.unsubscribe$))
+        .pipe(pairwise())
+        .subscribe(([prev, next]) => {
+          if (prev !== next && next === false) {
+            if (t === 0) this.privateTab.nativeElement.click();
+            else this.publicTab.nativeElement.click();
+          }
+        })
+    );
+  }
+
+  isTabItemEnabled$(channelType: number): Observable<boolean> {
+    return this._portalService.getSpecificFeatureFlag$(
+      this.tabToServiceFeatureFlags,
+      channelType === 0 ? 'Public' : 'Private',
+      this.currentUserId
+    );
   }
 
   handleAddRecipient(user: UserDto): void {
