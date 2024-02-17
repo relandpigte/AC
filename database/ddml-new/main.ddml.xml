@@ -227,4 +227,6 @@
 	<include file="ddml-new/ddml.2024-02-05-01-alter-service-feature-flags-tables.xml" />
 	<include file="ddml-new/ddml.2024-02-10-01-create-coaching-topics-table.xml" />
 	<include file="ddml-new/ddml.2024-02-10-01-alter-coaching-table.xml" />
+	<include file="ddml-new/ddml.2024-02-17-01-create-service-presentations-tables.xml" />
+	<include file="ddml-new/ddml.2024-02-17-01-create-service-handouts-tables.xml" />
 </databaseChangeLog>

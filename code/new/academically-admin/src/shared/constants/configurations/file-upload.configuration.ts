@@ -89,6 +89,22 @@ export const fileUploadConfiguration = {
     '.wav',
     '.ogg',
   ],
+  docExtension: [
+    '.pdf',
+    '.doc',
+    '.docx',
+    '.ppt',
+    '.pptx',
+    '.odt',
+    '.xls',
+    '.xlsx',
+    '.ods',
+    '.txt',
+  ],
+  otherExtensions: [
+    '.zip',
+    '.gzip'
+  ],
   maxFileSize: 5242880,
   folders: {
     video: 'videos',

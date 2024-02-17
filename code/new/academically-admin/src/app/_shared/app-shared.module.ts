@@ -118,6 +118,8 @@ import { ServiceCreateQuizComponent } from '@shared/components/service-create-qu
 import { ServiceCardOfferComponent } from '@shared/components/service-card-offer/service-card-offer.component';
 import { CreateServiceComponent } from '@shared/modals/create-service/create-service.component';
 import { ServiceCardActivityComponent } from '@shared/components/service-card-activity/service-card-activity.component';
+import { ServiceCardHandoutsComponent } from '@shared/components/service-card-handouts/service-card-handouts.component';
+import { ServiceCardPresentationComponent } from '@shared/components/service-card-presentation/service-card-presentation.component';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -215,7 +217,9 @@ FullCalendarModule.registerPlugins([
     ServiceCreateQuizComponent,
     ServiceCardOfferComponent,
     CreateServiceComponent,
-    ServiceCardActivityComponent
+    ServiceCardActivityComponent,
+    ServiceCardHandoutsComponent,
+    ServiceCardPresentationComponent
   ],
   imports: [
     CommonModule,
@@ -346,7 +350,9 @@ FullCalendarModule.registerPlugins([
     ServiceCreateQuizComponent,
     ServiceCardOfferComponent,
     CreateServiceComponent,
-    ServiceCardActivityComponent
+    ServiceCardActivityComponent,
+    ServiceCardHandoutsComponent,
+    ServiceCardPresentationComponent
   ],
 })
 export class AppSharedModule { }

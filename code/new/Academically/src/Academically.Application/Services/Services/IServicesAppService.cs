@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Academically.Domain.Entities;
+using Academically.Services.Coachings.Dto;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Academically.Services.Services
 {
@@ -55,5 +57,13 @@ namespace Academically.Services.Services
         Task<ServiceActivityDto> GetActivity(Guid id);
         Task<ServiceActivityDto> SaveActivity(CreateServiceActivityDto input);
         Task UpdateServiceActivityOrder(UpdateServiceActivityOrder[] input);
+        
+        // Service Presentations
+        Task SaveServicePresentationAsync([FromForm] CreateServicePresentationsDto input);
+        Task<IEnumerable<ServicePresentationDto>> GetAllServicePresentationAsync(Guid referenceId);
+        
+        // Service Handouts
+        Task SaveServiceHandoutAsync([FromForm] CreateServiceHandoutsDto input);
+        Task<IEnumerable<ServiceHandoutDto>> GetAllServiceHandoutsAsync(Guid referenceId);
     }
 }

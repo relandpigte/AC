@@ -13,6 +13,8 @@
 		mov,
 		txt,
 		ppt,
-		pptx
+		pptx,
+		zip,
+		gzip
 	}
 }

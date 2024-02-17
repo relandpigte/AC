@@ -1,0 +1,25 @@
+<div class="presentation d-flex align-items-center justify-content-between" [class.border-top]="!isFirst">
+  <div class="presentation-left-content d-flex align-items-center">
+    <div class="presentation-left-content-icons text-center">
+      <img [src]="getFileIcon(fileType)" alt="Video" />
+    </div>
+    <div class="presentation-left-content-details d-flex flex-column gap-4">
+      <h6>{{ fileName | titlecase }}</h6>
+      <div class="presentation-left-content-details-info">
+        {{ formatBytes(fileSize) }} {{ fileType | uppercase }}
+      </div>
+    </div>
+  </div>
+  <div class="presentation-right-content">
+    <div class="presentation-right-content-actions">
+      <div class="dropdown">
+        <a href="javascript:void(0);" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <img src="assets/img/service/video/icon-ellipsis.svg" alt="Actions">
+        </a>
+        <div class="dropdown-menu dropdown-menu-right">
+          <a href="javascript:void(0)" class="dropdown-item">Remove</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

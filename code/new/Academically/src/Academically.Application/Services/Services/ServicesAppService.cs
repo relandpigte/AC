@@ -19,15 +19,18 @@ using Academically.Domain.Services.Documents;
 using Academically.Extensions;
 using Academically.Services.StudentCourses;
 using System.Dynamic;
+using System.IO;
 using System.Linq.Dynamic.Core;
 using Abp.Application.Services.Dto;
 using Abp.Configuration;
 using Abp.Timing.Timezone;
+using Academically.Services.Coachings.Dto;
 using Academically.Services.TimeZones;
 using Academically.Services.TimeZones.Dto;
 using Academically.Services.UserAvailabilities;
 using Academically.Services.UserAvailabilities.Dto;
 using Academically.Services.UserFollowers;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Academically.Services.Services
@@ -59,6 +62,8 @@ namespace Academically.Services.Services
         private readonly IRepository<ServiceActivity, Guid> _serviceActivityRepository;
         private readonly IServicePollsAppService _servicePollsAppService;
         private readonly IServiceQuizesAppService _serviceQuizesAppService;
+        private readonly IRepository<ServicePresentation, Guid> _servicePresentationRepository;
+        private readonly IRepository<ServiceHandout, Guid> _serviceHandoutRepository;
 
         private readonly List<Service2Dto> StaticServiceLevels = new List<Service2Dto>
             {
@@ -138,7 +143,9 @@ namespace Academically.Services.Services
             IRepository<ServiceFeatureFlag, Guid> serviceFeatureFlagRepository,
             IRepository<ServiceActivity, Guid> serviceActivityRepository,
             IServicePollsAppService servicePollsAppService,
-            IServiceQuizesAppService serviceQuizesAppService)
+            IServiceQuizesAppService serviceQuizesAppService,
+            IRepository<ServicePresentation, Guid> servicePresentationRepository,
+            IRepository<ServiceHandout, Guid> serviceHandoutRepository)
         {
             _servicesRepository = servicesRepository;
             _serviceMappingsRepository = serviceMappingsRepository;
@@ -165,6 +172,8 @@ namespace Academically.Services.Services
             _serviceActivityRepository = serviceActivityRepository;
             _servicePollsAppService = servicePollsAppService;
             _serviceQuizesAppService = serviceQuizesAppService;
+            _servicePresentationRepository = servicePresentationRepository;
+            _serviceHandoutRepository = serviceHandoutRepository;
         }
 
         public async Task TestEventNotifierToasters(string ids)
@@ -861,6 +870,76 @@ namespace Academically.Services.Services
                 ObjectMapper.Map(i, activity);
                 await _serviceActivityRepository.UpdateAsync(activity);
             }
+        }
+        
+        public async Task SaveServicePresentationAsync([FromForm] CreateServicePresentationsDto input)
+        {
+            if (input.Attachments == null || !input.Attachments.Any()) return;
+            
+            var fileExtensionList = input.Attachments.Select(a => Path.GetExtension(a.FileName)[1..]).ToList();
+            foreach (var f in fileExtensionList)
+            {
+                var isValidExtension = Enum.IsDefined(typeof(AttachmentType), f.ToLower());
+                if (!isValidExtension) throw new InvalidOperationException("Invalid File Extension!");
+            }
+
+            var userId = AbpSession.GetUserId();
+            foreach (var attachment in input.Attachments)
+            {
+                var document = await _documentsDomainService.CreateAsync(userId, attachment, DocumentType.General);
+                await _servicePresentationRepository.InsertAsync(new ServicePresentation
+                {
+                    ReferenceId = input.ReferenceId,
+                    ServiceType = input.ServiceType,
+                    DocumentId = document.Id,
+                    DisplayOrder = await _servicePresentationRepository.CountAsync(x => x.ReferenceId == input.ReferenceId)
+                });
+            }
+        }
+
+        public async Task<IEnumerable<ServicePresentationDto>> GetAllServicePresentationAsync(Guid referenceId)
+        {
+            return await _servicePresentationRepository.GetAll()
+                .AsNoTracking()
+                .Include(x => x.Document)
+                .Where(x => x.ReferenceId == referenceId)
+                .Select(x => ObjectMapper.Map<ServicePresentationDto>(x))
+                .ToListAsync();
+        }
+        
+        public async Task SaveServiceHandoutAsync([FromForm] CreateServiceHandoutsDto input)
+        {
+            if (input.Attachments == null || !input.Attachments.Any()) return;
+            
+            var fileExtensionList = input.Attachments.Select(a => Path.GetExtension(a.FileName)[1..]).ToList();
+            foreach (var f in fileExtensionList)
+            {
+                var isValidExtension = Enum.IsDefined(typeof(AttachmentType), f.ToLower());
+                if (!isValidExtension) throw new InvalidOperationException("Invalid File Extension!");
+            }
+
+            var userId = AbpSession.GetUserId();
+            foreach (var attachment in input.Attachments)
+            {
+                var document = await _documentsDomainService.CreateAsync(userId, attachment, DocumentType.General);
+                await _serviceHandoutRepository.InsertAsync(new ServiceHandout
+                {
+                    ReferenceId = input.ReferenceId,
+                    ServiceType = input.ServiceType,
+                    DocumentId = document.Id,
+                    DisplayOrder = await _serviceHandoutRepository.CountAsync(x => x.ReferenceId == input.ReferenceId)
+                });
+            }
+        }
+
+        public async Task<IEnumerable<ServiceHandoutDto>> GetAllServiceHandoutsAsync(Guid referenceId)
+        {
+            return await _serviceHandoutRepository.GetAll()
+                .AsNoTracking()
+                .Include(x => x.Document)
+                .Where(x => x.ReferenceId == referenceId)
+                .Select(x => ObjectMapper.Map<ServiceHandoutDto>(x))
+                .ToListAsync();
         }
 
         private async Task<int> ServiceCreatedCount(long userId, ServicesType type)
