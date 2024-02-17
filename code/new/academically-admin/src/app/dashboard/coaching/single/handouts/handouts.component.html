@@ -1,0 +1,27 @@
+<div class="row handouts">
+  <div class="col">
+    <div class="handouts-title">Add handouts</div>
+    <div class="handouts-description">Upload any files you want to share with your students.</div>
+    <div class="handouts-uploader">
+      <div class="card">
+        <div class="card-body p-0" [loader]="isLoading">
+          <div class="handouts-uploader-dropbox" [class.no-files]="!isAttachments">
+            <app-document-uploader
+              [largeImagePreview]="true"
+              [allowedExtensions]="allowedExtensions"
+              [placeholderHeight]="'80px'"
+              [maxFileSize]="-1"
+              [maxFiles]="20"
+              [hidePreview]="true"
+              (filesChanged)="onFileChanged($event)"
+            ></app-document-uploader>
+          </div>
+
+          <div *ngIf="isAttachments" class="handouts-uploader-listings">
+            <app-handouts-detail *ngFor="let attachment of attachments; first as isFirst" [isFirst]="isFirst" [data]="attachment"></app-handouts-detail>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

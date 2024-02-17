@@ -26259,6 +26259,134 @@ export class ServicesServiceProxy {
         }
         return _observableOf<ServicePresentationDto[]>(<any>null);
     }
+
+    /**
+     * @param referenceId (optional) 
+     * @param serviceType (optional) 
+     * @param attachments (optional) 
+     * @return Success
+     */
+    saveServiceHandout(referenceId: string | undefined, serviceType: ServicesType | undefined, attachments: FileParameter[] | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Services/SaveServiceHandout";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (referenceId === null || referenceId === undefined) {
+            // do nothing
+        } else
+            content_.append("ReferenceId", referenceId.toString());
+        if (serviceType === null || serviceType === undefined) {
+            // do nothing
+        } else
+            content_.append("ServiceType", serviceType.toString());
+        if (attachments === null || attachments === undefined) {
+            // do nothing
+        } else
+            attachments.forEach(item_ => content_.append("Attachments", item_.data, item_.fileName ? item_.fileName : "Attachments") );
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSaveServiceHandout(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSaveServiceHandout(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSaveServiceHandout(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param referenceId (optional) 
+     * @return Success
+     */
+    getAllServiceHandouts(referenceId: string | undefined): Observable<ServiceHandoutDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetAllServiceHandouts?";
+        if (referenceId === null)
+            throw new Error("The parameter 'referenceId' cannot be null.");
+        else if (referenceId !== undefined)
+            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllServiceHandouts(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllServiceHandouts(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceHandoutDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceHandoutDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAllServiceHandouts(response: HttpResponseBase): Observable<ServiceHandoutDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(ServiceHandoutDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceHandoutDto[]>(<any>null);
+    }
 }
 
 @Injectable()
@@ -55505,6 +55633,81 @@ export interface IServiceFeatureFlagDto {
     moderationCohostCanRemoveAttendees: boolean;
     moderationCohostCanLowerAttendeesHand: boolean;
     moderationCohostManageAtendeeRoles: boolean;
+}
+
+export class ServiceHandoutDto implements IServiceHandoutDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number;
+    referenceId: string;
+    serviceType: ServicesType;
+    displayOrder: number | undefined;
+    creatorUser: UserDto;
+    documentId: string;
+    document: DocumentDto;
+
+    constructor(data?: IServiceHandoutDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.referenceId = _data["referenceId"];
+            this.serviceType = _data["serviceType"];
+            this.displayOrder = _data["displayOrder"];
+            this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
+            this.documentId = _data["documentId"];
+            this.document = _data["document"] ? DocumentDto.fromJS(_data["document"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ServiceHandoutDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServiceHandoutDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["referenceId"] = this.referenceId;
+        data["serviceType"] = this.serviceType;
+        data["displayOrder"] = this.displayOrder;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
+        data["documentId"] = this.documentId;
+        data["document"] = this.document ? this.document.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): ServiceHandoutDto {
+        const json = this.toJSON();
+        let result = new ServiceHandoutDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IServiceHandoutDto {
+    id: string;
+    creationTime: moment.Moment;
+    creatorUserId: number;
+    referenceId: string;
+    serviceType: ServicesType;
+    displayOrder: number | undefined;
+    creatorUser: UserDto;
+    documentId: string;
+    document: DocumentDto;
 }
 
 export class ServiceMapping implements IServiceMapping {

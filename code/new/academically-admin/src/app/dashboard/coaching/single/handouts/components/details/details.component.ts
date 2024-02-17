@@ -4,11 +4,11 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 
 @Component({
-  selector: 'app-presentation-detail',
+  selector: 'app-handouts-detail',
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.less']
 })
-export class PresentationDetailsComponent extends AppComponentBase implements OnInit {
+export class HandoutsDetailsComponent extends AppComponentBase implements OnInit {
   @Input() isFirst: boolean;
   @Input() data: ServicePresentationDto;
 

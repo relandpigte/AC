@@ -8,11 +8,11 @@ using Academically.Users.Dto;
 
 namespace Academically.Services.Services.Dto;
 
-[AutoMapFrom(typeof(ServicePresentation))]
-public class ServicePresentationDto : CreationAuditedEntity<Guid>
+[AutoMapFrom(typeof(ServiceHandout))]
+public class ServiceHandoutDto : CreationAuditedEntity<Guid>
 {
     public Guid ReferenceId { get; set; }
-    public ServicesType ServiceType { get; set; }
+    public ServicesType? ServiceType { get; set; }
     public int? DisplayOrder { get; set; }
     
     public long CreatorUserId { get; set; }

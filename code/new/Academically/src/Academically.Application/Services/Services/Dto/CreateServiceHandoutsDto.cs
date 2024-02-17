@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace Academically.Services.Services.Dto;
 
-public class CreateServicePresentationsDto
+public class CreateServiceHandoutsDto
 {
     public Guid ReferenceId { get; set; }
-    public ServicesType ServiceType { get; set; }
+    public ServicesType? ServiceType { get; set; }
     public IEnumerable<IFormFile> Attachments { get; set; }
 }

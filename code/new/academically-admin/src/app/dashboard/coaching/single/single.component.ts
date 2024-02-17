@@ -44,6 +44,12 @@ export class SingleComponent extends AppComponentBase implements OnInit {
       infoText: 'Use this section to add activities such as quizzes and polls for your students to complete during your coaching session.'
     },
     {
+      id: 'handouts',
+      label: 'Handouts',
+      icon: 'assets/img/service/create/folder.svg',
+      iconHover: 'assets/img/service/create/folder-hover.svg',
+    },
+    {
       id: 'settings',
       label: 'Settings',
       icon: 'assets/img/service/create/settings.svg',
@@ -83,7 +89,7 @@ export class SingleComponent extends AppComponentBase implements OnInit {
     private _serviceCreateService: ServiceCreateService
   ) {
     super(injector);
-    this._serviceCreateService.setDefaultMenuItem(this.menuItems[1]);
+    this._serviceCreateService.setDefaultMenuItem(this.menuItems[3]);
     this._serviceCreateService.getDefaultMenuItem().subscribe(x => this.defaultMenuItem = x);
     route.paramMap.subscribe(paramMap => {
       if (paramMap.has('id')) {

@@ -63,6 +63,7 @@ namespace Academically.Services.Services
         private readonly IServicePollsAppService _servicePollsAppService;
         private readonly IServiceQuizesAppService _serviceQuizesAppService;
         private readonly IRepository<ServicePresentation, Guid> _servicePresentationRepository;
+        private readonly IRepository<ServiceHandout, Guid> _serviceHandoutRepository;
 
         private readonly List<Service2Dto> StaticServiceLevels = new List<Service2Dto>
             {
@@ -143,7 +144,8 @@ namespace Academically.Services.Services
             IRepository<ServiceActivity, Guid> serviceActivityRepository,
             IServicePollsAppService servicePollsAppService,
             IServiceQuizesAppService serviceQuizesAppService,
-            IRepository<ServicePresentation, Guid> servicePresentationRepository)
+            IRepository<ServicePresentation, Guid> servicePresentationRepository,
+            IRepository<ServiceHandout, Guid> serviceHandoutRepository)
         {
             _servicesRepository = servicesRepository;
             _serviceMappingsRepository = serviceMappingsRepository;
@@ -171,6 +173,7 @@ namespace Academically.Services.Services
             _servicePollsAppService = servicePollsAppService;
             _serviceQuizesAppService = serviceQuizesAppService;
             _servicePresentationRepository = servicePresentationRepository;
+            _serviceHandoutRepository = serviceHandoutRepository;
         }
 
         public async Task TestEventNotifierToasters(string ids)
@@ -901,6 +904,41 @@ namespace Academically.Services.Services
                 .Include(x => x.Document)
                 .Where(x => x.ReferenceId == referenceId)
                 .Select(x => ObjectMapper.Map<ServicePresentationDto>(x))
+                .ToListAsync();
+        }
+        
+        public async Task SaveServiceHandoutAsync([FromForm] CreateServiceHandoutsDto input)
+        {
+            if (input.Attachments == null || !input.Attachments.Any()) return;
+            
+            var fileExtensionList = input.Attachments.Select(a => Path.GetExtension(a.FileName)[1..]).ToList();
+            foreach (var f in fileExtensionList)
+            {
+                var isValidExtension = Enum.IsDefined(typeof(AttachmentType), f.ToLower());
+                if (!isValidExtension) throw new InvalidOperationException("Invalid File Extension!");
+            }
+
+            var userId = AbpSession.GetUserId();
+            foreach (var attachment in input.Attachments)
+            {
+                var document = await _documentsDomainService.CreateAsync(userId, attachment, DocumentType.General);
+                await _serviceHandoutRepository.InsertAsync(new ServiceHandout
+                {
+                    ReferenceId = input.ReferenceId,
+                    ServiceType = input.ServiceType,
+                    DocumentId = document.Id,
+                    DisplayOrder = await _serviceHandoutRepository.CountAsync(x => x.ReferenceId == input.ReferenceId)
+                });
+            }
+        }
+
+        public async Task<IEnumerable<ServiceHandoutDto>> GetAllServiceHandoutsAsync(Guid referenceId)
+        {
+            return await _serviceHandoutRepository.GetAll()
+                .AsNoTracking()
+                .Include(x => x.Document)
+                .Where(x => x.ReferenceId == referenceId)
+                .Select(x => ObjectMapper.Map<ServiceHandoutDto>(x))
                 .ToListAsync();
         }
 

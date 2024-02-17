@@ -58,8 +58,12 @@ namespace Academically.Services.Services
         Task<ServiceActivityDto> SaveActivity(CreateServiceActivityDto input);
         Task UpdateServiceActivityOrder(UpdateServiceActivityOrder[] input);
         
-        // Service Presentation
+        // Service Presentations
         Task SaveServicePresentationAsync([FromForm] CreateServicePresentationsDto input);
         Task<IEnumerable<ServicePresentationDto>> GetAllServicePresentationAsync(Guid referenceId);
+        
+        // Service Handouts
+        Task SaveServiceHandoutAsync([FromForm] CreateServiceHandoutsDto input);
+        Task<IEnumerable<ServiceHandoutDto>> GetAllServiceHandoutsAsync(Guid referenceId);
     }
 }
