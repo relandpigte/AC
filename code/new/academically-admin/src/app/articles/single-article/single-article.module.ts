@@ -10,13 +10,15 @@ import { DetailsModule } from '@app/articles/single-article/details/details.modu
 import { SettingsModule } from '@app/articles/single-article/settings/settings.module';
 import { OffersComponent } from './offers/offers.component';
 import { ActivitiesComponent } from '@app/articles/single-article/activities/activities.component';
+import { HandoutsComponent } from '@app/articles/single-article/handouts/handouts.component';
 
 
 @NgModule({
   declarations: [
     SingleArticleComponent,
     OffersComponent,
-    ActivitiesComponent
+    ActivitiesComponent,
+    HandoutsComponent
   ],
   imports: [
     CommonModule,

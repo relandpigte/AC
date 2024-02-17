@@ -46,6 +46,13 @@ export class SingleArticleComponent extends AppComponentBase implements OnInit {
       infoText: 'Use this section to add activities such as quizzes and polls for those who purchase your article to complete.'
     },
     {
+      id: 'handouts',
+      label: 'Handouts',
+      icon: 'assets/img/service/create/folder.svg',
+      iconHover: 'assets/img/service/create/folder-hover.svg',
+      infoText: 'Use this section to add handouts such for those who purchase your article to download.'
+    },
+    {
       id: 'offers',
       label: 'Offers',
       icon: 'assets/img/service/create/shopping.svg',
