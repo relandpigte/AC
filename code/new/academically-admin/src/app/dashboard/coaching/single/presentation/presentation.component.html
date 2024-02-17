@@ -1,11 +1,11 @@
-<div class="row videos">
+<div class="row presentation">
   <div class="col">
-    <div class="videos-title">Add presentation materials</div>
-    <div class="videos-description">Upload videos, images or PDF’s to present during your event.</div>
-    <div class="videos-uploader">
+    <div class="presentation-title">Add presentation materials</div>
+    <div class="presentation-description">Upload videos, images or PDF’s to present during your session.</div>
+    <div class="presentation-uploader">
       <div class="card">
         <div class="card-body p-0" [loader]="isLoading">
-          <div class="videos-uploader-dropbox" [class.no-files]="!isAttachments">
+          <div class="presentation-uploader-dropbox" [class.no-files]="!isAttachments">
             <app-document-uploader
               [largeImagePreview]="true"
               [allowedExtensions]="allowedExtensions"
@@ -17,8 +17,8 @@
             ></app-document-uploader>
           </div>
 
-          <div *ngIf="isAttachments" class="videos-uploader-listings">
-            <app-presentation-detail *ngFor="let attachment of attachments; first as isFirst" [isFirst]="isFirst" [data]="attachment"></app-presentation-detail>
+          <div *ngIf="isAttachments" class="presentation-uploader-listings">
+            <app-service-card-presentation *ngFor="let attachment of attachments; first as isFirst" [isFirst]="isFirst" [data]="attachment"></app-service-card-presentation>
           </div>
         </div>
       </div>

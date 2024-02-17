@@ -11,9 +11,7 @@ import { ResourcesModule } from '@app/dashboard/coaching/single/resources/resour
 import { ActivitiesComponent } from '@app/dashboard/coaching/single/activities/activities.component';
 import { OffersComponent } from '@app/dashboard/coaching/single/offers/offers.component';
 import { PresentationComponent } from '@app/dashboard/coaching/single/presentation/presentation.component';
-import { PresentationDetailsComponent } from '@app/dashboard/coaching/single/presentation/components/details/details.component';
 import { HandoutsComponent } from '@app/dashboard/coaching/single/handouts/handouts.component';
-import { HandoutsDetailsComponent } from '@app/dashboard/coaching/single/handouts/components/details/details.component';
 
 @NgModule({
   declarations: [
@@ -21,9 +19,7 @@ import { HandoutsDetailsComponent } from '@app/dashboard/coaching/single/handout
     ActivitiesComponent,
     OffersComponent,
     PresentationComponent,
-    PresentationDetailsComponent,
-    HandoutsComponent,
-    HandoutsDetailsComponent
+    HandoutsComponent
   ],
   imports: [
     CommonModule,

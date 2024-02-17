@@ -32,6 +32,7 @@ import {
   VideoType
 } from './service-proxies/service-proxies';
 import { PubSubService } from './services/pub-sub.service';
+import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 
 @Injectable()
 export abstract class AppComponentBase extends AppHubBase implements OnDestroy {
@@ -436,6 +437,19 @@ export abstract class AppComponentBase extends AppHubBase implements OnDestroy {
       str = str.toString();
     }
     return str.replace( /(<([^>]+)>)/ig, '');
+  }
+
+  getFileIcon(fileType: string): string {
+    if (fileUploadConfiguration.allowedImageExtensions.includes(fileType.replace(/^/, '.'))) {
+      return '/assets/img/service/icons/image.svg';
+    }
+    if (fileUploadConfiguration.videoExtensions.includes(fileType.replace(/^/, '.'))) {
+      return '/assets/img/service/icons/video.svg';
+    }
+    if (fileUploadConfiguration.docExtension.includes(fileType.replace(/^/, '.'))) {
+      return '/assets/img/service/icons/document.svg';
+    }
+    return '/assets/img/service/icons/folder.svg';
   }
 
   protected chunkArrayInGroups(arr, size) {

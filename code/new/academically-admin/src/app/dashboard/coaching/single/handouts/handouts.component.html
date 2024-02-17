@@ -18,7 +18,7 @@
           </div>
 
           <div *ngIf="isAttachments" class="handouts-uploader-listings">
-            <app-handouts-detail *ngFor="let attachment of attachments; first as isFirst" [isFirst]="isFirst" [data]="attachment"></app-handouts-detail>
+            <app-service-card-handouts *ngFor="let attachment of attachments; first as isFirst" [isFirst]="isFirst" [data]="attachment"></app-service-card-handouts>
           </div>
         </div>
       </div>
