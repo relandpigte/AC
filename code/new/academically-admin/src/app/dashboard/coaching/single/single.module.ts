@@ -10,12 +10,16 @@ import { StudioModule } from '@app/dashboard/coaching/single/studio/studio.modul
 import { ResourcesModule } from '@app/dashboard/coaching/single/resources/resources.module';
 import { ActivitiesComponent } from '@app/dashboard/coaching/single/activities/activities.component';
 import { OffersComponent } from '@app/dashboard/coaching/single/offers/offers.component';
+import { PresentationComponent } from '@app/dashboard/coaching/single/presentation/presentation.component';
+import { DetailsComponent } from '@app/dashboard/coaching/single/presentation/components/details/details.component';
 
 @NgModule({
   declarations: [
     SingleComponent,
     ActivitiesComponent,
-    OffersComponent
+    OffersComponent,
+    PresentationComponent,
+    DetailsComponent
   ],
   imports: [
     CommonModule,

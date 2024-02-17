@@ -30,6 +30,13 @@ export class SingleComponent extends AppComponentBase implements OnInit {
       infoText: 'Here, you can input all the details for your session. This information will be visible to potential clients, so keep it clear and informative.'
     },
     {
+      id: 'presenting',
+      label: 'Presenting',
+      icon: 'assets/img/service/create/presentation.svg',
+      iconHover: 'assets/img/service/create/presentation-hover.svg',
+      infoText: 'Use this section upload material to present during your coaching session.'
+    },
+    {
       id: 'activities',
       label: 'Activities',
       icon: 'assets/img/service/create/pie-chart.svg',
@@ -76,7 +83,7 @@ export class SingleComponent extends AppComponentBase implements OnInit {
     private _serviceCreateService: ServiceCreateService
   ) {
     super(injector);
-    this._serviceCreateService.setDefaultMenuItem(this.menuItems[0]);
+    this._serviceCreateService.setDefaultMenuItem(this.menuItems[1]);
     this._serviceCreateService.getDefaultMenuItem().subscribe(x => this.defaultMenuItem = x);
     route.paramMap.subscribe(paramMap => {
       if (paramMap.has('id')) {
