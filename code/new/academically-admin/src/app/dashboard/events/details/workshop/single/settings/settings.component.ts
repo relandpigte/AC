@@ -1,10 +1,21 @@
 import { Component, Injector, OnInit } from '@angular/core';
-import { EventService } from '@app/dashboard/events/_services/event.service';
 import { AutoSaveComponentBase } from '@shared/auto-save-component-base';
-import { DayOfWeek, EventFrequencyType, EventRecursionType, EventReplayType, EventsServiceProxy, EventType, QuestionType, ServiceDelayType, UpdateEventSettingsDto } from '@shared/service-proxies/service-proxies';
-import * as _ from 'lodash';
+import {
+  EventFrequencyType,
+  EventReplayType,
+  EventsServiceProxy,
+  EventType,
+  QuestionType,
+  UpdateEventSettingsDto,
+  ServiceDelayType,
+  EventRecursionType,
+  DayOfWeek, ServiceFeatureFlagDto, ServicesServiceProxy, ServicesType,
+} from '@shared/service-proxies/service-proxies';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { takeUntil } from 'rxjs/operators';
+import { EventService } from '@app/dashboard/events/_services/event.service';
+import * as _ from 'lodash';
+import { switchMap } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-settings',
@@ -15,31 +26,33 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
   id: string;
   model = new UpdateEventSettingsDto();
   isLoading = false;
-  workshopType = EventType.Single;
-
   datePickerConfig: BsDatepickerConfig;
+  eventType = EventType.Single;
   minTimesPerDay = 1;
   maxTimesPerDay = 5;
-  workshopDateTime: Date;
+
+  EventFrequencyType = EventFrequencyType;
+  EventReplayType = EventReplayType;
+  QuestionType = QuestionType;
+  EventType = EventType;
+  DelayType = ServiceDelayType;
+  EventRecursionType = EventRecursionType;
+  DayOfWeek = DayOfWeek;
+
+  eventDateTime: Date;
   endDate: Date;
-  lastWorkshopValue: string;
+  lastEventValue: string;
   specificDateValue: Date;
-  scheduleTimeValues: string[] = [];
+  scheduleTimeValues: {key: number, value: string}[] = [];
   scheduleWeekValues: DayOfWeek[] = [];
   scheduleMonthsValues: Date[];
-
-  WorkshopFrequencyType = EventFrequencyType;
-  WorkshopReplayType = EventReplayType;
-  QuestionType = QuestionType;
-  WorkshopType = EventType;
-  DelayType = ServiceDelayType;
-  WorkshopRecursionType = EventRecursionType;
-  DayOfWeek = DayOfWeek;
+  flags = new ServiceFeatureFlagDto();
 
   constructor(
     injector: Injector,
-    private _workshopService: EventService,
-    private _workshopsService: EventsServiceProxy,
+    private _eventService: EventService,
+    private _eventsService: EventsServiceProxy,
+    private _servicesService: ServicesServiceProxy
   ) {
     super(injector);
     this.datePickerConfig = new BsDatepickerConfig();
@@ -48,34 +61,54 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
-    this._workshopService.eventCreated$
+    this._eventService.eventCreated$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
         if (response && response.id && !this.id && this.id !== response.id) {
           this.id = response.id;
-          this.getWorkshop();
+          this.getEvent();
+
+          this.flags.init({
+            referenceId: response.id,
+            serviceType: ServicesType.Event,
+            creatorUserId: this.currentUserId,
+            attendees: true,
+            chat: true,
+            activities: true,
+            questions: true,
+            offers: true,
+            handouts: true,
+            comments: true,
+            settings: true,
+            reviews: true
+          });
+          this.getServiceFlags();
         }
       });
   }
 
-  checkScheduleWeekInclusion(dow: DayOfWeek): boolean {
-    return this.scheduleWeekValues?.includes(dow);
+  toggleVisibility(): void {
+    this.model.visible = !this.model.visible;
   }
 
-  onWorkshopDateTimeChange(): void {
-    if (this.workshopDateTime) {
-      this.model.eventDateTime = this.convertDateToMoment(this.workshopDateTime);
+  checkScheduleWeekInclusion(dow: DayOfWeek): boolean {
+    return this.scheduleWeekValues.includes(dow);
+  }
+
+  onEventDateTimeChange(): void {
+    if (this.eventDateTime) {
+      this.model.eventDateTime = this.convertDateToMoment(this.eventDateTime);
     }
   }
 
-  onWorkshopEndDateChange(): void {
+  onEventEndDateChange(): void {
     if (this.endDate) {
       this.model.endDate = this.convertDateToMoment(this.endDate);
     }
   }
 
   onDripTypeChange(): void {
-    this.lastWorkshopValue = undefined;
+    this.lastEventValue = undefined;
     this.specificDateValue = undefined;
   }
 
@@ -109,13 +142,12 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
   }
 
   onDayOfWeekSelectionChange(dow: DayOfWeek): void {
-    if (this.scheduleWeekValues?.includes(dow)) {
+    if (this.scheduleWeekValues.includes(dow)) {
       const index = this.scheduleWeekValues.findIndex(e => e === dow);
       if (index >= 0) {
         this.scheduleWeekValues.splice(dow);
       }
     } else {
-      this.scheduleWeekValues = this.scheduleWeekValues ?? [];
       this.scheduleWeekValues.push(dow);
     }
     this.convertSessionWeeks();
@@ -144,7 +176,7 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
     }
   }
 
-  private saveWorkshop(): void {
+  private saveEvent(): void {
     if (!_.isNumber(this.model.duration)) {
       return;
     }
@@ -161,25 +193,31 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
         }
         break;
       default:
-        this.model.delayValue = this.lastWorkshopValue;
+        this.model.delayValue = this.lastEventValue;
         break;
     }
 
-    this._workshopsService.updateSettings(this.model)
+    let convertedSessionTimesArray = [];
+    this.scheduleTimeValues.forEach(element => {
+      convertedSessionTimesArray.push(element.value);
+    });
+    this.model.sessionTimes = JSON.stringify(convertedSessionTimesArray);
+
+    this._eventsService.updateSettings(this.model)
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(() => {});
+      .pipe(switchMap(() => this._servicesService.saveFeatureFlags(this.flags)))
+      .subscribe(flags => this.flags.init(flags));
   }
 
-  private getWorkshop(): void {
-    this._workshopsService.get(this.id)
+  private getEvent(): void {
+    this._eventsService.get(this.id)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
-        this.workshopType = response.type;
+        this.eventType = response.type;
         this.model.init(response);
-        this.workshopType = response.type;
-
+        this.eventType = response.type;
         if (response.eventDateTime) {
-          this.workshopDateTime = this.convertMomentToDate(response.eventDateTime);
+          this.eventDateTime = this.convertMomentToDate(response.eventDateTime);
         }
         if (response.endDate) {
           this.endDate = this.convertMomentToDate(response.endDate);
@@ -196,7 +234,7 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
               }
               break;
             default:
-              this.lastWorkshopValue = this.model.delayValue;
+              this.lastEventValue = this.model.delayValue;
               break;
           }
         } else {
@@ -204,7 +242,14 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
         }
 
         if (this.model.sessionTimes) {
-          this.scheduleTimeValues = JSON.parse(this.model.sessionTimes);
+          const sessionTimesArray = JSON.parse(this.model.sessionTimes);
+          let counter: number = 0;
+          sessionTimesArray.forEach(element => {
+            this.scheduleTimeValues.push({key: counter, value: element});
+            counter++;
+          });
+          // this.scheduleTimeValues = JSON.parse(this.model.sessionTimes);
+
         }
 
         if (this.model.sessionDaysOfWeek) {
@@ -222,8 +267,8 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
         }
 
         setTimeout(() => {
-          this.modelToSave = this.model;
-          this.initAutoSave(this.saveWorkshop);
+          this.modelToSave = [this.model, this.flags];
+          this.initAutoSave(this.saveEvent);
         });
       });
   }
@@ -233,9 +278,9 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
     this.scheduleTimeValues = [];
     for (let index = 0; index < this.model.timesPerDay; index++) {
       if (tempScheduleTimeValues[index]) {
-        this.scheduleTimeValues.push(tempScheduleTimeValues[index]);
+        this.scheduleTimeValues.push({ key:index, value: tempScheduleTimeValues[index].value});
       } else {
-        this.scheduleTimeValues.push('10:00 AM');
+        this.scheduleTimeValues.push({ key: index, value: '10:00 AM'});
       }
     }
 
@@ -259,5 +304,14 @@ export class SettingsComponent extends AutoSaveComponentBase implements OnInit {
     } else {
       this.model.sessionDaysOfMonth = undefined;
     }
+  }
+
+  private getServiceFlags(): void {
+    this.pipeDestroy(this._servicesService.getFeatureFlags(this.id), response => {
+      if (_.isEmpty(response)) {
+        return;
+      }
+      this.flags.init(response);
+    });
   }
 }

@@ -1,8 +1,616 @@
-<form class="form-horizontal" autocomplete="off" #form="ngForm">
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Access' | localize }}
+    </h4>
+  </div>
+  <div class="card-body py-0">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+        <div class="list-group-item-left">
+          <h5 class="list-title">Public</h5>
+          <span class="list-description">
+            This event will be visible on your profile and explore page. Any user can purchase it.
+          </span>
+        </div>
+        <div class="list-group-item-right">
+          <div class="custom-control custom-switch ml-auto">
+            <input type="checkbox" class="custom-control-input" id="public-access" (change)="toggleVisibility()" [checked]="model.visible"/>
+            <label class="custom-control-label" for="public-access"></label>
+          </div>
+        </div>
+      </li>
+      <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+        <div class="list-group-item-left">
+          <h5 class="list-title">Private</h5>
+          <span class="list-description">
+            This event will be hidden from your profile and explore page. Access would be via invite only
+          </span>
+        </div>
+        <div class="list-group-item-right">
+          <div class="custom-control custom-switch ml-auto">
+            <input type="checkbox" class="custom-control-input" id="private-access" (change)="toggleVisibility()" [checked]="!model.visible" />
+            <label class="custom-control-label" for="private-access"></label>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Recording' | localize }}
+    </h4>
+  </div>
+  <div class="card-body py-0">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+        <div class="list-group-item-left">
+          <h5 class="list-title">Record the session</h5>
+          <span class="list-description">
+            Record this event and make it available for download by the attendees
+          </span>
+        </div>
+        <div class="list-group-item-right">
+          <div class="custom-control custom-switch ml-auto">
+            <input [(ngModel)]="flags.recordingAllowAudience" type="checkbox" class="custom-control-input" id="chat-with-instructor" checked/>
+            <label class="custom-control-label" for="chat-with-instructor"></label>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Interactive tools' | localize }}
+    </h4>
+    <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+      <li class="nav-item">
+        <a
+          href="#it-audience-tab"
+          class="nav-link active"
+          data-toggle="tab"
+          aria-controls="it-audience-tab"
+          id="it-audience"
+        >
+          {{ 'Audience' | localize }}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          href="#it-cohost-tab"
+          class="nav-link"
+          data-toggle="tab"
+          aria-controls="it-cohost-tab"
+          id="it-cohost"
+        >
+          {{ 'Co-host' | localize }}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body py-0">
+    <div class="tab-content">
+      <div class="tab-pane active" id="it-audience-tab" role="tabpanel" aria-labelledby="it-audience">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Microphone</h5>
+              <span class="list-description">
+                Allow audience members to access their microphone.
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input [(ngModel)]="flags.interactiveToolsAudienceMicrophone" type="checkbox" class="custom-control-input" id="audience-microphone" checked/>
+                <label class="custom-control-label" for="audience-microphone"></label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Webcam</h5>
+              <span class="list-description">
+                Allow audience members to access their webcam.
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input  [(ngModel)]="flags.interactiveToolsAudienceWebCam" type="checkbox" class="custom-control-input" id="audience-webcam" checked/>
+                <label class="custom-control-label" for="audience-webcam"></label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Raise hand</h5>
+              <span class="list-description">
+                Allow audience members to request to microphone and webcam if disabled.
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input [(ngModel)]="flags.interactiveToolsAudienceRaiseHand" type="checkbox" class="custom-control-input" id="audience-sharing"/>
+                <label class="custom-control-label" for="audience-sharing"></label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="tab-pane" id="it-cohost-tab" role="tabpanel" aria-labelledby="it-cohost">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Microphone</h5>
+              <span class="list-description">
+                Allow co-host to access their microphone.
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input [(ngModel)]="flags.interactiveToolsCohostMicrophone" type="checkbox" class="custom-control-input" id="cohost-microphone" checked/>
+                <label class="custom-control-label" for="cohost-microphone"></label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Webcam</h5>
+              <span class="list-description">
+                Allow co-host to access their webcam.
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input [(ngModel)]="flags.interactiveToolsCohostWebCam" type="checkbox" class="custom-control-input" id="cohost-webcam" checked/>
+                <label class="custom-control-label" for="cohost-webcam"></label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Raise hand</h5>
+              <span class="list-description">
+                Allow co-host to request to microphone and webcam if disabled.
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input [(ngModel)]="flags.interactiveToolsCohostRaiseHand" type="checkbox" class="custom-control-input" id="cohost-sharing"/>
+                <label class="custom-control-label" for="cohost-sharing"></label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Chat' | localize }}
+    </h4>
+    <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+      <li class="nav-item">
+        <a
+          href="#chat-audience-tab"
+          class="nav-link active"
+          data-toggle="tab"
+          aria-controls="chat-audience-tab"
+          id="chat-audience"
+        >
+          {{ 'Audience' | localize }}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          href="#chat-cohost-tab"
+          class="nav-link"
+          data-toggle="tab"
+          aria-controls="chat-cohost-tab"
+          id="chat-cohost"
+        >
+          {{ 'Co-host' | localize }}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body py-0">
+    <div class="tab-content">
+      <div class="tab-pane active" id="chat-audience-tab" role="tabpanel" aria-labelledby="chat-audience">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Public chat</h5>
+              <span class="list-description">
+                Allow audience members to add messages to the public chat area.
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input [(ngModel)]="flags.chatAudiencePublic" type="checkbox" class="custom-control-input" id="audience-public-chat" />
+                <label class="custom-control-label" for="audience-public-chat"></label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Private chat</h5>
+              <span class="list-description">
+                Allow audience members to chat with other attendees privately.
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input [(ngModel)]="flags.chatAudiencePrivate" type="checkbox" class="custom-control-input" id="audience-private-chat" checked/>
+                <label class="custom-control-label" for="audience-private-chat"></label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="tab-pane" id="chat-cohost-tab" role="tabpanel" aria-labelledby="chat-cohost">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Public chat</h5>
+              <span class="list-description">
+                Allow co-hosts to add messages to the public chat area.
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input [(ngModel)]="flags.chatCohostPublic" type="checkbox" class="custom-control-input" id="cohost-public-chat" checked/>
+                <label class="custom-control-label" for="cohost-public-chat"></label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Private chat</h5>
+              <span class="list-description">
+                Allow co-hosts to chat with other attendees privately.
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input [(ngModel)]="flags.chatCohostPrivate" type="checkbox" class="custom-control-input" id="cohost-private-chat" checked/>
+                <label class="custom-control-label" for="cohost-private-chat"></label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Questions' | localize }}
+    </h4>
+    <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+      <li class="nav-item">
+        <a
+          href="#questions-audience-tab"
+          class="nav-link active"
+          data-toggle="tab"
+          aria-controls="questions-audience-tab"
+          id="questions-audience"
+        >
+          {{ 'Audience' | localize }}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          href="#questions-cohost-tab"
+          class="nav-link"
+          data-toggle="tab"
+          aria-controls="questions-cohost-tab"
+          id="questions-cohost"
+        >
+          {{ 'Co-host' | localize }}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body py-0">
+    <div class="tab-content">
+      <div class="tab-pane active" id="questions-audience-tab" role="tabpanel" aria-labelledby="questions-audience">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Ask questions</h5>
+              <span class="list-description">
+                Allow audience members to ask questions
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input [(ngModel)]="flags.questionsAudienceCanAsk" type="checkbox" class="custom-control-input" id="audience-ask-questions" checked/>
+                <label class="custom-control-label" for="audience-ask-questions"></label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Respond to questions</h5>
+              <span class="list-description">
+                Allow audience members to respond to questions
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input [(ngModel)]="flags.questionsAudienceCanRespond" type="checkbox" class="custom-control-input" id="audience-respond-to-questions" checked/>
+                <label class="custom-control-label" for="audience-respond-to-questions"></label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="tab-pane" id="questions-cohost-tab" role="tabpanel" aria-labelledby="questions-cohost">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Answer questions live</h5>
+              <span class="list-description">
+                Allow co-hosts to answer questions live
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input [(ngModel)]="flags.questionsCohostCanAnswerLive" type="checkbox" class="custom-control-input" id="cohost-answer-live" checked/>
+                <label class="custom-control-label" for="cohost-answer-live"></label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Respond to questions</h5>
+              <span class="list-description">
+                Allow co-hosts to respond to questions
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input [(ngModel)]="flags.questionsCohostCanRespond" type="checkbox" class="custom-control-input" id="cohost-respond-questions" checked/>
+                <label class="custom-control-label" for="cohost-respond-questions"></label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Attendee moderation' | localize }}
+    </h4>
+    <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+      <li class="nav-item">
+        <a
+          href="#moderation-cohost-tab"
+          class="nav-link active"
+          data-toggle="tab"
+          aria-controls="moderation-cohost-tab"
+          id="moderation-cohost"
+        >
+          {{ 'Co-host' | localize }}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body py-0">
+    <div class="tab-content">
+      <div class="tab-pane active" id="moderation-cohost-tab" role="tabpanel" aria-labelledby="moderation-cohost">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Admit attendees</h5>
+              <span class="list-description">
+                Allow co-hosts to admit attendees
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input [(ngModel)]="flags.moderationCohostCanAdmitAttendees" type="checkbox" class="custom-control-input" id="cohost-admit-attendees" checked/>
+                <label class="custom-control-label" for="cohost-admit-attendees"></label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Remove attendees</h5>
+              <span class="list-description">
+                Allow co-hosts to remove attendees
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input [(ngModel)]="flags.moderationCohostCanRemoveAttendees" type="checkbox" class="custom-control-input" id="cohost-remove-attendees" checked/>
+                <label class="custom-control-label" for="cohost-remove-attendees"></label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Lower hand</h5>
+              <span class="list-description">
+                Allow co-hosts to lower the hand of attendees
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input [(ngModel)]="flags.moderationCohostCanLowerAttendeesHand" type="checkbox" class="custom-control-input" id="cohost-lower-hand"/>
+                <label class="custom-control-label" for="cohost-lower-hand"></label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Manage attendee roles</h5>
+              <span class="list-description">
+                Allow co-hosts to upgrade audience members to, or downgrade from presenter status
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input [(ngModel)]="flags.moderationCohostManageAtendeeRoles" type="checkbox" class="custom-control-input" id="cohost-manage-roles"/>
+                <label class="custom-control-label" for="cohost-manage-roles"></label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Activities' | localize }}
+    </h4>
+    <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+      <li class="nav-item">
+        <a
+          href="#activities-cohost-tab"
+          class="nav-link active"
+          data-toggle="tab"
+          aria-controls="activities-cohost-tab"
+          id="activities-cohost"
+        >
+          {{ 'Co-host' | localize }}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body py-0">
+    <div class="tab-content">
+      <div class="tab-pane active" id="activities-cohost-tab" role="tabpanel" aria-labelledby="activities-cohost">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Create activities</h5>
+              <span class="list-description">
+                Allow co-hosts to create and launch activities
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input [(ngModel)]="flags.activitiesCohostCanAdd" type="checkbox" class="custom-control-input" id="cohost-create-activities"/>
+                <label class="custom-control-label" for="cohost-create-activities"></label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Offers' | localize }}
+    </h4>
+    <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+      <li class="nav-item">
+        <a
+          href="#offers-cohost-tab"
+          class="nav-link active"
+          data-toggle="tab"
+          aria-controls="offers-cohost-tab"
+          id="offers-cohost"
+        >
+          {{ 'Co-host' | localize }}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body py-0">
+    <div class="tab-content">
+      <div class="tab-pane active" id="offers-cohost-tab" role="tabpanel" aria-labelledby="offers-cohost">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Create offers</h5>
+              <span class="list-description">
+                Allow co-hosts to create offers
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input [(ngModel)]="flags.offersCohostCanAdd" type="checkbox" class="custom-control-input" id="cohost-create-offers"/>
+                <label class="custom-control-label" for="cohost-create-offers"></label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Handouts' | localize }}
+    </h4>
+    <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+      <li class="nav-item">
+        <a
+          href="#handouts-cohost-tab"
+          class="nav-link active"
+          data-toggle="tab"
+          aria-controls="handouts-cohost-tab"
+          id="handouts-cohost"
+        >
+          {{ 'Co-host' | localize }}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body py-0">
+    <div class="tab-content">
+      <div class="tab-pane active" id="handouts-cohost-tab" role="tabpanel" aria-labelledby="handouts-cohost">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+            <div class="list-group-item-left">
+              <h5 class="list-title">Add handouts</h5>
+              <span class="list-description">
+                Allow co-hosts to add handouts
+              </span>
+            </div>
+            <div class="list-group-item-right">
+              <div class="custom-control custom-switch ml-auto">
+                <input [(ngModel)]="flags.handoutsCohostCanAdd" type="checkbox" class="custom-control-input" id="cohost-add-handouts"/>
+                <label class="custom-control-label" for="cohost-add-handouts"></label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--form class="form-horizontal" autocomplete="off" #form="ngForm">
   <div class="row">
     <div class="col-8" [loader]="isLoading">
 
-      <div *ngIf="workshopType === WorkshopType.Series" class="card">
+      <div *ngIf="eventType === EventType.Series" class="card">
         <div class="card-header border-bottom-0">
           <h4 class="card-header-title">
             {{ 'Delay' | localize | titlecase }}
@@ -14,17 +622,17 @@
 
               <div class="form-group delay-form mb-3">
                 <div class="custom-control custom-radio mr-3">
-                  <input type="radio" id="lastWorkshop" name="delayType" class="custom-control-input"
+                  <input type="radio" id="lastEvent" name="delayType" class="custom-control-input"
                     [value]="DelayType.LastItem" [(ngModel)]="model.delayType" (change)="onDripTypeChange()">
-                  <label class="custom-control-label" for="lastWorkshop"></label>
+                  <label class="custom-control-label" for="lastEvent"></label>
                 </div>
-                <label for="lastWorkshop">
-                  <b>{{ 'LastWorkshop' | localize }}</b> - {{ 'WorkshopDelayed' | localize }}
+                <label for="lastEvent">
+                  <b>{{ 'LastEvent' | localize }}</b> - {{ 'EventDelayed' | localize }}
                 </label>
-                <input type="number" [(ngModel)]="lastWorkshopValue" id="lastWorkshopValue" name="lastWorkshopValue"
+                <input type="number" [(ngModel)]="lastEventValue" id="lastEventValue" name="lastEventValue"
                   class="form-control form-control-sm inline-form-control mx-3"
                   [disabled]="model.delayType !== DelayType.LastItem" [min]="0" />
-                {{ 'DaysFromLastWorkshop' | localize | lowercase }}
+                {{ 'DaysFromLastEvent' | localize | lowercase }}
               </div>
 
               <div class="form-group delay-form">
@@ -34,7 +642,7 @@
                   <label class="custom-control-label" for="specificDate"></label>
                 </div>
                 <label for="specificDate">
-                  <b>{{ 'SpecificDate' | localize }}</b> - {{ 'WorkshopAvailableOn' | localize }}
+                  <b>{{ 'SpecificDate' | localize }}</b> - {{ 'EventAvailableOn' | localize }}
                 </label>
 
                 <div class="input-group input-group-merge input-group-sm  inline-form-control x3 mx-3"
@@ -55,7 +663,7 @@
                 <div class="custom-control custom-radio mr-3">
                   <input type="radio" id="immediate" name="delayType" class="custom-control-input"
                     [value]="DelayType.Immediate" [(ngModel)]="model.delayType" (change)="onDripTypeChange()">
-                  <label class="custom-control-label" for="lastWorkshop"></label>
+                  <label class="custom-control-label" for="lastEvent"></label>
                 </div>
                 <label for="immediate">
                   <b>{{ 'Immediate' | localize }}</b> - {{ 'AvailableImmediately' | localize }}
@@ -67,7 +675,7 @@
         </div>
       </div>
 
-      <div class="card" *ngIf="workshopType === WorkshopType.Single">
+      <div class="card" *ngIf="eventType === EventType.Single">
         <div class="card-header">
           <h4 class="card-header-title">
             {{ 'DateAndTime' | localize }}
@@ -83,7 +691,7 @@
             <div class="form-group col-4">
               <div class="custom-control custom-radio">
                 <input [(ngModel)]="model.frequencyType" type="radio" id="singleFrequencyType" name="frequencyType"
-                  [value]="WorkshopFrequencyType.Single" class="custom-control-input" />
+                  [value]="EventFrequencyType.Single" class="custom-control-input" />
                 <label class="custom-control-label" for="singleFrequencyType"></label>
                 <label class="custom-control-caption mb-0" for="singleFrequencyType">
                   {{ 'SingleDateAndTime' | localize }}
@@ -93,7 +701,7 @@
             <div class="form-group col-4">
               <div class="custom-control custom-radio">
                 <input [(ngModel)]="model.frequencyType" type="radio" id="recurringFrequencyType" name="frequencyType"
-                  [value]="WorkshopFrequencyType.Recurring" class="custom-control-input" />
+                  [value]="EventFrequencyType.Recurring" class="custom-control-input" />
                 <label class="custom-control-label" for="recurringFrequencyType"></label>
                 <label class="custom-control-caption mb-0" for="recurringFrequencyType">
                   {{ 'RecurringTimes' | localize }}
@@ -101,14 +709,14 @@
               </div>
             </div>
           </div>
-          <ng-container *ngIf="model.frequencyType === WorkshopFrequencyType.Single; else recurringWorkshopTemplate">
+          <ng-container *ngIf="model.frequencyType === EventFrequencyType.Single; else recurringEventTemplate">
             <div class="form-row">
-              <div class="form-group col-3 mb-0">
-                <label class="col-form-label" for="startTime">{{ 'WorkshopDate' | localize}}</label>
-                <div class="input-group input-group-merge" (click)="workshopDateDp.show()">
-                  <input [(ngModel)]="workshopDateTime" [bsConfig]="datePickerConfig" bsDatepicker
-                    class="form-control form-control-appended" type="text" id="workshopDate" name="workshopDate"
-                    #workshopDateDp="bsDatepicker" (bsValueChange)="onWorkshopDateTimeChange()" />
+              <div class="form-group col-4 mb-0">
+                <label class="col-form-label" for="startTime">{{ 'EventDate' | localize}}</label>
+                <div class="input-group input-group-merge" (click)="eventDateDp.show()">
+                  <input [(ngModel)]="eventDateTime" [bsConfig]="datePickerConfig" bsDatepicker
+                    class="form-control form-control-appended" type="text" id="eventDate" name="eventDate"
+                    #eventDateDp="bsDatepicker" (bsValueChange)="onEventDateTimeChange()" />
                   <div class="input-group-append">
                     <div class="input-group-text">
                       <span class="fas fa-calendar"></span>
@@ -116,27 +724,22 @@
                   </div>
                 </div>
               </div>
-              <div class="form-group col-3 mb-0">
-                <label class="col-form-label" for="workshopTime">{{ 'WorkshopTime' | localize}}</label>
-                <p-calendar [(ngModel)]="workshopDateTime" [timeOnly]="true" [hourFormat]="12" [styleClass]="'w-100'"
-                  [inputStyleClass]="'form-control'" id="workshopTime" name="workshopTime"
-                  (onSelect)="onWorkshopDateTimeChange()">
+              <div class="form-group col-4 mb-0">
+                <label class="col-form-label" for="eventTime">{{ 'EventTime' | localize}}</label>
+                <p-calendar [(ngModel)]="eventDateTime" [timeOnly]="true" [hourFormat]="12" [styleClass]="'w-100'"
+                  [inputStyleClass]="'form-control'" id="eventTime" name="eventTime"
+                  (onSelect)="onEventDateTimeChange()">
                 </p-calendar>
               </div>
-              <div class="form-group col-3 mb-0">
+              <div class="form-group col-4 mb-0">
                 <label class="col-form-label" for="duration">{{ 'DurationInMinutesQuote' | localize}}</label>
                 <input [(ngModel)]="model.duration" class="form-control" type="number" id="duration" name="duration"
-                  step="30" />
-              </div>
-              <div class="form-group col-3 mb-0">
-                <label class="col-form-label" for="numberOfAttendees">{{ 'NumberOfAttendees' | localize}}</label>
-                <input [(ngModel)]="model.numberOfAttendees" class="form-control" type="number" id="numberOfAttendees" name="numberOfAttendees"
                   step="30" />
               </div>
             </div>
           </ng-container>
 
-          <ng-template #recurringWorkshopTemplate>
+          <ng-template #recurringEventTemplate>
 
             <div class="form-row form-row-sm">
               <div class="form-group col-4 d-flex align-items-center">
@@ -147,20 +750,20 @@
               <div class="form-group col-4">
                 <select [(ngModel)]="model.recursionType" name="recursionType" id="recursionType"
                   class="form-control recursion-type" (change)="onRecursionTypeChange()">
-                  <option [ngValue]="WorkshopRecursionType.Daily">
+                  <option [ngValue]="EventRecursionType.Daily">
                     {{ 'Daily' | localize }}
                   </option>
-                  <option [ngValue]="WorkshopRecursionType.Weekly">
+                  <option [ngValue]="EventRecursionType.Weekly">
                     {{ 'Weekly' | localize }}
                   </option>
-                  <option [ngValue]="WorkshopRecursionType.Monthly">
+                  <option [ngValue]="EventRecursionType.Monthly">
                     {{ 'Monthly' | localize }}
                   </option>
                 </select>
               </div>
             </div>
 
-            <div *ngIf="model.recursionType === WorkshopRecursionType.Weekly" class="form-row form-row-sm">
+            <div *ngIf="model.recursionType === EventRecursionType.Weekly" class="form-row form-row-sm">
               <div class="form-group col-4 d-flex align-items-center">
                 <label class="col-form-label font-weight-bold p-0">
                   {{ 'On' | localize }}
@@ -235,7 +838,7 @@
               </div>
             </div>
 
-            <div *ngIf="model.recursionType === WorkshopRecursionType.Monthly" class=" form-row form-row-sm">
+            <div *ngIf="model.recursionType === EventRecursionType.Monthly" class=" form-row form-row-sm">
               <div class="form-group col-4 d-flex align-items-center">
                 <label class="col-form-label font-weight-bold p-0">
                   {{ 'On' | localize }}
@@ -266,14 +869,14 @@
             <div class="sessions">
               <div *ngFor="let scheduleTime of scheduleTimeValues; let i = index" class="form-row form-row-sm">
                 <div *ngIf="(i + 1) <= maxTimesPerDay" class="form-group col-6 offset-4">
-                  <label for="time_{{i}}" class="col-form-label p-0 mr-5 align-items-center session-time-label">
+                  <label for="time{{i}}" class="col-form-label p-0 mr-5 align-items-center session-time-label">
                     {{ 'Session' | localize }} {{ i + 1 }}
                   </label>
                   <div class="session-time">
                     <div class="input-group input-group-merge">
-                      <p-calendar [(ngModel)]="scheduleTimeValues[i]" id="time_{{i}}" name="time_{{i}}"
+                      <p-calendar [(ngModel)]="scheduleTimeValues[i].value" id="time{{i}}" name="time{{i}}"
                         [timeOnly]="true" [hourFormat]="12" [class]="'form-control form-control-appended'"
-                        [dataType]="'string'" (onSelect)="onSessionTimeChange()">
+                        [dataType]="'string'" (onSelect)="onSessionTimeChange()" (onInput)="onSessionTimeChange()">
                       </p-calendar>
                       <div class="input-group-append">
                         <span class="input-group-text">
@@ -296,10 +899,10 @@
               </div>
               <div class="form-group col-8">
                 <div class="session-date">
-                  <div class="input-group input-group-merge" (click)="workshopDateDp.show()">
-                    <input [(ngModel)]="workshopDateTime" [bsConfig]="datePickerConfig" bsDatepicker
-                      class="form-control form-control-appended" type="text" id="workshopDate" name="workshopDate"
-                      #workshopDateDp="bsDatepicker" (bsValueChange)="onWorkshopDateTimeChange()" />
+                  <div class="input-group input-group-merge" (click)="eventDateDp.show()">
+                    <input [(ngModel)]="eventDateTime" [bsConfig]="datePickerConfig" bsDatepicker
+                      class="form-control form-control-appended" type="text" id="eventDate" name="eventDate"
+                      #eventDateDp="bsDatepicker" (bsValueChange)="onEventDateTimeChange()" />
                     <div class="input-group-append">
                       <div class="input-group-text">
                         <i class="fe fe-calendar"></i>
@@ -323,7 +926,7 @@
                   <div class="input-group input-group-merge" (click)="endDateDp.show()">
                     <input [(ngModel)]="endDate" [bsConfig]="datePickerConfig" bsDatepicker
                       class="form-control form-control-appended" type="text" id="endDate" name="endDate"
-                      #endDateDp="bsDatepicker" (bsValueChange)="onWorkshopEndDateChange()" />
+                      #endDateDp="bsDatepicker" (bsValueChange)="onEventEndDateChange()" />
                     <div class="input-group-append">
                       <div class="input-group-text">
                         <i class="fe fe-calendar"></i>
@@ -337,55 +940,41 @@
             <hr class="mt-0">
 
             <div class="form-row form-row-sm">
-              <div class="form-group col-4 d-flex align-items-center">
+              <div class="form-group mb-0 col-4 d-flex align-items-center">
                 <label class="col-form-label font-weight-bold p-0">
                   {{ 'DurationInMinutesQuote' | localize }}
                 </label>
               </div>
-              <div class="form-group col-8">
+              <div class="form-group mb-0 col-8">
                 <input [(ngModel)]="model.duration" name="duration" id="duration" type="number"
                   class="form-control duration">
-              </div>
-            </div>
-
-            <hr class="mt-0">
-
-            <div class="form-row form-row-sm">
-              <div class="form-group mb-0 col-4 d-flex align-items-center">
-                <label class="col-form-label font-weight-bold p-0">
-                  {{ 'NumberOfAttendees' | localize }}
-                </label>
-              </div>
-              <div class="form-group mb-0 col-8">
-                <input [(ngModel)]="model.numberOfAttendees" name="numberOfAttendees" id="numberOfAttendees" type="number"
-                  class="form-control number-of-attendees">
               </div>
             </div>
           </ng-template>
         </div>
       </div>
 
-      <div class="card" *ngIf="workshopType === WorkshopType.Single">
+      <div class="card" *ngIf="eventType === EventType.Single">
         <div class="card-header">
           <h4 class="card-header-title">
-            {{ 'WorkshopReplay' | localize }}
+            {{ 'EventReplay' | localize }}
           </h4>
         </div>
         <div class="card-body">
           <div class="custom-control custom-radio">
             <input [(ngModel)]="model.replayType" type="radio" id="recordReplayType" name="replayType"
-              [value]="WorkshopReplayType.Record" class="custom-control-input" />
+              [value]="EventReplayType.Record" class="custom-control-input" />
             <label class="custom-control-label" for="recordReplayType"></label>
             <label class="custom-control-caption" for="recordReplayType">
-              {{ 'RecordWorkshopDescription' | localize }}
+              {{ 'RecordEventDescription' | localize }}
             </label>
           </div>
           <div class="custom-control custom-radio">
             <input [(ngModel)]="model.replayType" type="radio" id="dontRecordReplayType" name="replayType"
-              [value]="WorkshopReplayType.DontRecord" class="custom-control-input" />
+              [value]="EventReplayType.DontRecord" class="custom-control-input" />
             <label class="custom-control-label" for="dontRecordReplayType"></label>
             <label class="custom-control-caption mb-0" for="dontRecordReplayType">
-              {{ 'DontRecordWorkshopDescription' | localize }}
+              {{ 'DontRecordEventDescription' | localize }}
             </label>
           </div>
         </div>
@@ -501,7 +1090,7 @@
       <div class="card">
         <div class="card-header">
           <h4 class="card-header-title">
-            {{ 'WorkshopVisibility' | localize }}
+            {{ 'EventVisibility' | localize }}
           </h4>
         </div>
         <div class="card-body">
@@ -538,20 +1127,20 @@
       <div class="card">
         <div class="card-header">
           <h4 class="card-header-title">
-            {{ 'WorkshopAccess' | localize }}
+            {{ 'EventAccess' | localize }}
           </h4>
         </div>
         <div class="card-body">
           <div class="row">
             <div class="col">
               <h4 class="mb-1">{{ 'Open' | localize }}</h4>
-              <span class="text-muted small">{{ 'OpenWorkshopAccessDescription' | localize }}</span>
+              <span class="text-muted small">{{ 'OpenEventAccessDescription' | localize }}</span>
             </div>
             <div class="col-auto d-flex align-items-center">
               <div class="custom-control custom-radio mr-n2">
-                <input [(ngModel)]="model.opened" type="radio" name="opened" id="openWorkshop" [value]="true"
+                <input [(ngModel)]="model.opened" type="radio" name="opened" id="openEvent" [value]="true"
                   class="custom-control-input">
-                <label class="custom-control-label" for="openWorkshop"></label>
+                <label class="custom-control-label" for="openEvent"></label>
               </div>
             </div>
           </div>
@@ -559,13 +1148,13 @@
           <div class="row">
             <div class="col">
               <h4 class="mb-1">{{ 'Closed' | localize }}</h4>
-              <span class="text-muted small">{{ 'ClosedWorkshopAccessDescription' | localize }}</span>
+              <span class="text-muted small">{{ 'ClosedEventAccessDescription' | localize }}</span>
             </div>
             <div class="col-auto d-flex align-items-center">
               <div class="custom-control custom-radio mr-n2">
-                <input [(ngModel)]="model.opened" type="radio" name="opened" id="closedWorkshop" [value]="false"
+                <input [(ngModel)]="model.opened" type="radio" name="opened" id="closedEvent" [value]="false"
                   class="custom-control-input">
-                <label class="custom-control-label" for="closedWorkshop"></label>
+                <label class="custom-control-label" for="closedEvent"></label>
               </div>
             </div>
           </div>
@@ -574,4 +1163,4 @@
 
     </div>
   </div>
-</form>
+</form-->

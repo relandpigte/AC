@@ -72,19 +72,8 @@
     <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
       <li class="nav-item">
         <a
-          href="#it-audience-tab"
-          class="nav-link active"
-          data-toggle="tab"
-          aria-controls="it-audience-tab"
-          id="it-audience"
-        >
-          {{ 'Audience' | localize }}
-        </a>
-      </li>
-      <li class="nav-item">
-        <a
           href="#it-cohost-tab"
-          class="nav-link"
+          class="nav-link active"
           data-toggle="tab"
           aria-controls="it-cohost-tab"
           id="it-cohost"
@@ -96,53 +85,7 @@
   </div>
   <div class="card-body py-0">
     <div class="tab-content">
-      <div class="tab-pane active" id="it-audience-tab" role="tabpanel" aria-labelledby="it-audience">
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
-            <div class="list-group-item-left">
-              <h5 class="list-title">Microphone</h5>
-              <span class="list-description">
-                Allow audience members to access their microphone.
-              </span>
-            </div>
-            <div class="list-group-item-right">
-              <div class="custom-control custom-switch ml-auto">
-                <input [(ngModel)]="flags.interactiveToolsAudienceMicrophone" type="checkbox" class="custom-control-input" id="audience-microphone" checked/>
-                <label class="custom-control-label" for="audience-microphone"></label>
-              </div>
-            </div>
-          </li>
-          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
-            <div class="list-group-item-left">
-              <h5 class="list-title">Webcam</h5>
-              <span class="list-description">
-                Allow audience members to access their webcam.
-              </span>
-            </div>
-            <div class="list-group-item-right">
-              <div class="custom-control custom-switch ml-auto">
-                <input  [(ngModel)]="flags.interactiveToolsAudienceWebCam" type="checkbox" class="custom-control-input" id="audience-webcam" checked/>
-                <label class="custom-control-label" for="audience-webcam"></label>
-              </div>
-            </div>
-          </li>
-          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
-            <div class="list-group-item-left">
-              <h5 class="list-title">Raise hand</h5>
-              <span class="list-description">
-                Allow audience members to request to microphone and webcam if disabled.
-              </span>
-            </div>
-            <div class="list-group-item-right">
-              <div class="custom-control custom-switch ml-auto">
-                <input [(ngModel)]="flags.interactiveToolsAudienceRaiseHand" type="checkbox" class="custom-control-input" id="audience-sharing"/>
-                <label class="custom-control-label" for="audience-sharing"></label>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div class="tab-pane" id="it-cohost-tab" role="tabpanel" aria-labelledby="it-cohost">
+      <div class="tab-pane active" id="it-cohost-tab" role="tabpanel" aria-labelledby="it-cohost">
         <ul class="list-group list-group-flush">
           <li class="list-group-item d-flex align-items-center justify-content-between px-0">
             <div class="list-group-item-left">
@@ -237,20 +180,6 @@
               <div class="custom-control custom-switch ml-auto">
                 <input [(ngModel)]="flags.chatAudiencePublic" type="checkbox" class="custom-control-input" id="audience-public-chat" />
                 <label class="custom-control-label" for="audience-public-chat"></label>
-              </div>
-            </div>
-          </li>
-          <li class="list-group-item d-flex align-items-center justify-content-between px-0">
-            <div class="list-group-item-left">
-              <h5 class="list-title">Private chat</h5>
-              <span class="list-description">
-                Allow audience members to chat with other attendees privately.
-              </span>
-            </div>
-            <div class="list-group-item-right">
-              <div class="custom-control custom-switch ml-auto">
-                <input [(ngModel)]="flags.chatAudiencePrivate" type="checkbox" class="custom-control-input" id="audience-private-chat" checked/>
-                <label class="custom-control-label" for="audience-private-chat"></label>
               </div>
             </div>
           </li>

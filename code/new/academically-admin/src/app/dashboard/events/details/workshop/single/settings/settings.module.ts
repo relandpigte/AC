@@ -4,6 +4,7 @@ import { SettingsRoutingModule } from './settings-routing.module';
 import { SharedModule } from '@shared/shared.module';
 import { AppSharedModule } from '@app/_shared/app-shared.module';
 import { SettingsComponent } from './settings.component';
+import { CommentsModule } from '@app/_shared/modules/comments/comments.module';
 @NgModule({
   declarations: [
     SettingsComponent,
@@ -13,6 +14,7 @@ import { SettingsComponent } from './settings.component';
     SettingsRoutingModule,
     SharedModule,
     AppSharedModule,
+    CommentsModule,
   ],
   exports: [
     SettingsComponent,
