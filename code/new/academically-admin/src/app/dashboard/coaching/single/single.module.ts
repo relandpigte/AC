@@ -9,12 +9,14 @@ import { SettingsModule } from '@app/dashboard/coaching/single/settings/settings
 import { StudioModule } from '@app/dashboard/coaching/single/studio/studio.module';
 import { ResourcesModule } from '@app/dashboard/coaching/single/resources/resources.module';
 import { ActivitiesComponent } from '@app/dashboard/coaching/single/activities/activities.component';
+import { OffersComponent } from '@app/dashboard/coaching/single/offers/offers.component';
 
 @NgModule({
   declarations: [
     SingleComponent,
-    ActivitiesComponent
-    ],
+    ActivitiesComponent,
+    OffersComponent
+  ],
   imports: [
     CommonModule,
     SingleRoutingModule,

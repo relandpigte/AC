@@ -2,7 +2,6 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/app-component-base';
-import { AppConsts } from '@shared/AppConsts';
 import { CoachingDto, CoachingsServiceProxy, CoachingStatus, ServicesType } from '@shared/service-proxies/service-proxies';
 import { takeUntil } from 'rxjs/operators';
 import { CoachingService } from '../_services/coaching.service';
@@ -49,6 +48,13 @@ export class SingleComponent extends AppComponentBase implements OnInit {
       icon: 'assets/img/service/create/layers.svg',
       iconHover: 'assets/img/service/create/layers-hover.svg',
       infoText: 'Here 2, you can input all the details for your article. This information will be visible to potential clients, so keep it clear and informative.'
+    },
+    {
+      id: 'offers',
+      label: 'Offers',
+      icon: 'assets/img/service/create/shopping.svg',
+      iconHover: 'assets/img/service/create/shopping-hover.svg',
+      infoText: 'Upsell additional products or services to your students by creating exclusive discounts and limited-time offers.'
     },
     {
       id: 'studio',

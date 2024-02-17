@@ -26,9 +26,6 @@ import { ActivitiesComponent } from '@app/articles/single-article/activities/act
     ContentModule,
     DetailsModule,
     SettingsModule,
-  ],
-  exports: [
-    OffersComponent
   ]
 })
 export class SingleArticleModule { }
