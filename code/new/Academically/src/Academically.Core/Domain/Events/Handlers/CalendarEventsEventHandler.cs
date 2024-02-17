@@ -8,12 +8,11 @@ using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 using Abp.Localization;
+using Academically.Application.Shared.Dto;
+using Academically.Application.Shared.Services;
 using Academically.Authorization.Users;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
-using Microsoft.EntityFrameworkCore;
-using SourceCloud.Core.Services;
-using SourceCloud.Core.Services.Email;
 
 namespace Academically.Domain.Events.Handlers
 {

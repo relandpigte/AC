@@ -16,7 +16,6 @@ using Academically.Services.Profiles.Dto;
 using Academically.Users.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SourceCloud.Core.Services.Locations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,9 +25,9 @@ using Abp.Runtime.Session;
 using Academically.Services.Courses;
 using Academically.Services.Ratings;
 using Academically.Services.Services.Dto;
-using Academically.Services.TutorApplications;
 using Academically.Services.UserFollowers;
-using Microsoft.VisualBasic;
+using Academically.Application.Shared.Services;
+using Academically.Application.Shared.Dto;
 
 namespace Academically.Services.Profiles
 {

@@ -12,6 +12,8 @@ using Abp.Notifications;
 using Abp.Timing;
 using Abp.Timing.Timezone;
 using Abp.UI;
+using Academically.Application.Shared.Dto;
+using Academically.Application.Shared.Services;
 using Academically.Authorization.Users;
 using Academically.Configuration;
 using Academically.Domain.Entities;
@@ -23,8 +25,6 @@ using Academically.Notifications;
 using Academically.Services.CalendarEvents.Dto;
 using Academically.Services.Projects.Dto;
 using Microsoft.EntityFrameworkCore;
-using SourceCloud.Core.Services;
-using SourceCloud.Core.Services.Email;
 
 namespace Academically.Services.CalendarEvents
 {

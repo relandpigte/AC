@@ -1,5 +1,5 @@
-﻿using Academically.Authorization.Users;
-using SourceCloud.Core.Services;
+﻿using Academically.Application.Shared.Services;
+using Academically.Authorization.Users;
 using System.Threading.Tasks;
 
 namespace Academically.Services.Payments

@@ -1,7 +1,7 @@
 ﻿using Abp.Application.Services;
+using Academically.Application.Shared.Dto;
 using Academically.Services.Profiles.Dto;
 using Academically.Users.Dto;
-using SourceCloud.Core.Services.Locations;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

@@ -5,10 +5,10 @@ using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 using Abp.Localization;
 using Abp.Timing;
+using Academically.Application.Shared.Services;
 using Academically.Authorization.Users;
 using Academically.Domain.Entities;
 using Newtonsoft.Json;
-using SourceCloud.Core.Services;
 
 namespace Academically.Domain.Events.Handlers
 {
@@ -39,11 +39,9 @@ namespace Academically.Domain.Events.Handlers
         private async Task SendVerificationCode(string recipient, string code)
         {
             var message = L("PhoneNumberVerificationSmsMessage", code);
-#if !DEBUG
             dynamic recipientNo = JsonConvert.DeserializeObject(recipient);
 
             await _smsService.SendAsync(AcademicallyConsts.DefaultSmsSender, recipientNo.internationalNumber.Value, message);
-#endif
         }
     }
 }

@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Academically.Domain.Entities;
 using Academically.Domain.Services.Documents;
 using Academically.Services.Documents.Dto;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Academically.Services.Documents
 {
@@ -39,13 +41,13 @@ namespace Academically.Services.Documents
             return ObjectMapper.Map<DocumentDto>(document);
         }
 
-        public async Task<DocumentDto> CreateAsync(DocumentDto input, Guid? referenceId)
+        public async Task<DocumentDto> CreateAsync([FromForm] CreateDocumentDto input)
         {
-            input.CreatorUserId = AbpSession.UserId.Value;
-            var document = ObjectMapper.Map<Document>(input);
-            await _documentsDomainService.CreateAsync(document, referenceId);
-            input.Id = document.Id;
-            return input;
+            input.Document.CreatorUserId = AbpSession.UserId.Value;
+            var document = ObjectMapper.Map<Document>(input.Document);
+            await _documentsDomainService.CreateAsync(document, input.ReferenceId, input.File);
+            input.Document.Id = document.Id;
+            return input.Document;
         }
 
         public async Task DeleteAsync(Guid id, Guid? referenceId)

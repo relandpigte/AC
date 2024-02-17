@@ -3,6 +3,7 @@ using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.IO.Extensions;
 using Abp.Timing;
+using Academically.Application.Shared.Services;
 using Academically.Authorization;
 using Academically.Configuration;
 using Academically.Domain.Entities;
@@ -11,7 +12,6 @@ using Academically.Services.UserQualifications.Dto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SourceCloud.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -129,7 +129,7 @@ namespace Academically.Services.UserQualifications
                     using (var stream = documentToUpload.OpenReadStream())
                     {
                         var fileBytes = stream.GetAllBytes();
-                        await _fileManagerService.UploadAsync(fileName, documentToUpload.ContentType, fileBytes, folder, true);
+                        await _fileManagerService.UploadAsync(fileName, fileBytes, folder, true);
                     }
                     userQualificationDocuments.Add(new UserQualificationDocument()
                     {

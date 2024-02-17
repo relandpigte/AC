@@ -3,9 +3,9 @@ using Abp.Domain.Uow;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 using Abp.Localization;
+using Academically.Application.Shared.Services;
 using Academically.Configuration;
 using Academically.Domain.Entities;
-using SourceCloud.Core.Services;
 using System.Threading.Tasks;
 
 namespace Academically.Domain.Events.Handlers

@@ -10999,26 +10999,64 @@ export class DocumentsServiceProxy {
     }
 
     /**
+     * @param document_Name (optional) 
+     * @param document_OriginalFileName (optional) 
+     * @param document_FileType (optional) 
+     * @param document_DocumentType (optional) 
+     * @param document_Size (optional) 
+     * @param document_CreatorUserId (optional) 
+     * @param document_Id (optional) 
      * @param referenceId (optional) 
-     * @param body (optional) 
+     * @param file (optional) 
      * @return Success
      */
-    create(referenceId: string | undefined, body: DocumentDto | undefined): Observable<DocumentDto> {
-        let url_ = this.baseUrl + "/api/services/app/Documents/Create?";
-        if (referenceId === null)
-            throw new Error("The parameter 'referenceId' cannot be null.");
-        else if (referenceId !== undefined)
-            url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+    create(document_Name: string | undefined, document_OriginalFileName: string | undefined, document_FileType: string | undefined, document_DocumentType: DocumentType | undefined, document_Size: number | undefined, document_CreatorUserId: number | undefined, document_Id: string | undefined, referenceId: string | undefined, file: FileParameter | undefined): Observable<DocumentDto> {
+        let url_ = this.baseUrl + "/api/services/app/Documents/Create";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
+        const content_ = new FormData();
+        if (document_Name === null || document_Name === undefined) {
+            // do nothing
+        } else
+            content_.append("Document.Name", document_Name.toString());
+        if (document_OriginalFileName === null || document_OriginalFileName === undefined) {
+            // do nothing
+        } else
+            content_.append("Document.OriginalFileName", document_OriginalFileName.toString());
+        if (document_FileType === null || document_FileType === undefined) {
+            // do nothing
+        } else
+            content_.append("Document.FileType", document_FileType.toString());
+        if (document_DocumentType === null || document_DocumentType === undefined) {
+            // do nothing
+        } else
+            content_.append("Document.DocumentType", document_DocumentType.toString());
+        if (document_Size === null || document_Size === undefined) {
+            // do nothing
+        } else
+            content_.append("Document.Size", document_Size.toString());
+        if (document_CreatorUserId === null || document_CreatorUserId === undefined) {
+            // do nothing
+        } else
+            content_.append("Document.CreatorUserId", document_CreatorUserId.toString());
+        if (document_Id === null || document_Id === undefined) {
+            // do nothing
+        } else
+            content_.append("Document.Id", document_Id.toString());
+        if (referenceId === null || referenceId === undefined) {
+            // do nothing
+        } else
+            content_.append("ReferenceId", referenceId.toString());
+        if (file === null || file === undefined) {
+            // do nothing
+        } else
+            content_.append("File", file.data, file.fileName ? file.fileName : "File");
 
         let options_ : any = {
             body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Content-Type": "application/json-patch+json",
                 "Accept": "text/plain"
             })
         };

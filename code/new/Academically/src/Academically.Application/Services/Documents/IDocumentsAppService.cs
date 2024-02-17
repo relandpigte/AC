@@ -10,7 +10,7 @@ namespace Academically.Services.Documents
         Task<string> GetSecuredUrl(Guid id);
         Task<string> GetProfilePictureUrl(long userId);
         Task<DocumentDto> GetAsync(Guid id);
-        Task<DocumentDto> CreateAsync(DocumentDto input, Guid? referenceId);
+        Task<DocumentDto> CreateAsync(CreateDocumentDto input);
         Task DeleteAsync(Guid id, Guid? referenceId);
     }
 }

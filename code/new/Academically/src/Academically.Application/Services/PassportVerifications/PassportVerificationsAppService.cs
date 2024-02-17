@@ -3,13 +3,13 @@ using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.IO.Extensions;
 using Abp.Timing;
+using Academically.Application.Shared.Services;
 using Academically.Authorization;
 using Academically.Configuration;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Services.PassportVerifications.Dto;
 using Microsoft.AspNetCore.Mvc;
-using SourceCloud.Core.Services;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -44,7 +44,7 @@ namespace Academically.Services.PassportVerifications
             using (var stream = input.PassportPhoto.OpenReadStream())
             {
                 var fileBytes = stream.GetAllBytes();
-                await _fileManagerService.UploadAsync(fileName, input.PassportPhoto.ContentType, fileBytes, folder, true);
+                await _fileManagerService.UploadAsync(fileName, fileBytes, folder, true);
             }
             var document = new Document()
             {

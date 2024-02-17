@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.IO.Extensions;
 using Abp.Timing;
+using Academically.Application.Shared.Services;
 using Academically.Configuration;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Microsoft.AspNetCore.Http;
-using SourceCloud.Core.Services;
 
 namespace Academically.Domain.Services.Documents
 {
@@ -49,7 +49,7 @@ namespace Academically.Domain.Services.Documents
 
         public string GetBaseDirectory()
         {
-            return _fileManagerService.GetDirectoryUrl();
+            return _fileManagerService.GetRootPath();
         }
 
         public async Task<string> GetFileUrlAsync(Document document)
@@ -60,7 +60,9 @@ namespace Academically.Domain.Services.Documents
             }
 
             var (folder, isSecured) = await GetFolderAsync(document.CreatorUserId.Value, document.DocumentType);
-            return _fileManagerService.GetFileUrl(document.Name, folder, isSecured);
+            if (isSecured)
+                return _fileManagerService.GeneratePreSignedURL(document.Name, folder);
+            return _fileManagerService.GeneratePublicFileUrl(document.Name, folder);
         }
 
         public async Task<string> GetFileUrlAsync(Guid id)
@@ -74,16 +76,21 @@ namespace Academically.Domain.Services.Documents
             return await _documentsRepository.GetAsync(id);
         }
 
-        public async Task<Document> CreateAsync(long userId, IFormFile file, DocumentType documentType)
+        private async Task<bool> UploadFile(long userId, string fileName, IFormFile file, DocumentType documentType)
         {
             var (folder, isSecured) = await GetFolderAsync(userId, documentType);
-            string fileName = $"{Clock.Now.Ticks}{Path.GetExtension(file.FileName)}";
             using (var stream = file.OpenReadStream())
             {
                 var fileBytes = stream.GetAllBytes();
-                await _fileManagerService.UploadAsync(fileName, file.ContentType, fileBytes, folder, isSecured);
+                await _fileManagerService.UploadAsync(fileName, fileBytes, folder, isSecured);
             }
+            return true;
+        }
 
+        public async Task<Document> CreateAsync(long userId, IFormFile file, DocumentType documentType)
+        {
+            string fileName = $"{Clock.Now.Ticks}{Path.GetExtension(file.FileName)}";
+            await this.UploadFile(userId, fileName, file, documentType);
             var document = new Document()
             {
                 Name = fileName,
@@ -97,8 +104,14 @@ namespace Academically.Domain.Services.Documents
             return await _documentsRepository.InsertAsync(document);
         }
 
-        public async Task CreateAsync(Document document, Guid? referenceId)
+        public async Task CreateAsync(Document document, Guid? referenceId, IFormFile? file)
         {
+            if (file != null)
+            {
+                string fileName = $"{Clock.Now.Ticks}{Path.GetExtension(file.FileName)}";
+                await this.UploadFile(document.CreatorUserId.Value, fileName, file, document.DocumentType);
+                document.Name = fileName;
+            }
             await _documentsRepository.InsertAsync(document);
             if (referenceId.HasValue)
             {
@@ -209,7 +222,7 @@ namespace Academically.Domain.Services.Documents
                         break;
                 }
             }
-            await _documentsRepository.DeleteAsync(id);
+            await this.DeleteAsync(id);
         }
 
         private async Task<(string folder, bool isSecured)> GetFolderAsync(long userId, DocumentType documentType)

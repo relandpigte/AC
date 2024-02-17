@@ -19,7 +19,11 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Academically.Application\Academically.Application.csproj" />
+    <ProjectReference Include="..\Academically.Aws\Academically.Aws.csproj" />
     <ProjectReference Include="..\Academically.EntityFrameworkCore\Academically.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\Academically.Location\Academically.Location.csproj" />
+    <ProjectReference Include="..\Academically.Payment\Academically.Payment.csproj" />
+    <ProjectReference Include="..\Academically.Sms\Academically.Sms.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />

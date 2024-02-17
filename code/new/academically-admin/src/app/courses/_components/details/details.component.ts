@@ -120,6 +120,7 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
       } else {
         this.courseImageDocument = undefined;
       }
+      this.onAutoSave();
     });
   }
 

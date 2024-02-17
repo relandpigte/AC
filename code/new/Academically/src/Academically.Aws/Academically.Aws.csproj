@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Academically.Application.Shared\Academically.Application.Shared.csproj" />
+    <ProjectReference Include="..\Academically.Core\Academically.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Abp" Version="7.0.0" />
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.3.101" />
+    <PackageReference Include="AWSSDK.S3" Version="3.5.9.7" />
+    <PackageReference Include="AWSSDK.SimpleEmail" Version="3.5.0.77" />
+  </ItemGroup>
+
+</Project>

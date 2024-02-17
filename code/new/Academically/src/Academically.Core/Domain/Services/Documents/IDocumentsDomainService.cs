@@ -14,7 +14,7 @@ namespace Academically.Domain.Services.Documents
         Task<string> GetFileUrlAsync(Guid id);
         Task<Document> GetAsync(Guid id);
         Task<Document> CreateAsync(long userId, IFormFile file, DocumentType documentType);
-        Task CreateAsync(Document document, Guid? referenceId);
+        Task CreateAsync(Document document, Guid? referenceId, IFormFile? file);
         Task DeleteAsync(Guid id);
         Task DeleteReferenceAsync(Guid id, Guid? referenceId);
     }

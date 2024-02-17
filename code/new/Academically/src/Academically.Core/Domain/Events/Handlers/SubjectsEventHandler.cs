@@ -6,12 +6,12 @@ using Abp.Domain.Repositories;
 using Abp.Events.Bus.Entities;
 using Abp.Events.Bus.Handlers;
 using Abp.Localization;
+using Academically.Application.Shared.Services;
 using Academically.Authorization.Roles;
 using Academically.Authorization.Users;
 using Academically.Configuration;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
-using SourceCloud.Core.Services;
 
 namespace Academically.Domain.Events.Handlers
 {

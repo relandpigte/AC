@@ -13,16 +13,13 @@ using Academically.Services.Explore.Dto;
 using Academically.Services.Posts.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Abp.Collections.Extensions;
 using Abp.Runtime.Session;
 using Academically.Users.Dto;
-using Academically.Services.Videos.Dto;
 
 namespace Academically.Services.Articles
 {

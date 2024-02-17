@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Abp;
@@ -16,13 +15,9 @@ using Academically.Domain;
 using Academically.Domain.Entities;
 using Academically.Domain.Enums;
 using Academically.Domain.Services.Documents;
-using Academically.Services.Comments;
 using Academically.Services.Notifications.Dto;
-using Academically.Services.Posts;
 using Academically.Users.Dto;
-using Amazon.SimpleEmail.Model;
 using Microsoft.EntityFrameworkCore;
-using static System.Collections.Specialized.BitVector32;
 
 namespace Academically.Services.Notifications
 {

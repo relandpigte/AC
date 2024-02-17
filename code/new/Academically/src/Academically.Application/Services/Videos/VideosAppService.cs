@@ -16,16 +16,12 @@ using Academically.Domain.Services.Documents;
 using Academically.Domain.Views;
 using Academically.EntityFrameworkCore.Repositories.Explore;
 using Academically.Extensions;
-using Academically.Services.Coachings.Dto;
-using Academically.Services.Courses.Dto;
-using Academically.Services.Events.Dto;
 using Academically.Services.Explore.Dto;
 using Academically.Services.Posts.Dto;
 using Academically.Services.Videos.Dto;
 using Academically.Users.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Stripe;
 
 namespace Academically.Services.Videos
 {

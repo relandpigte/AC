@@ -29,12 +29,9 @@
     <Folder Include="Notifications\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SourceCloud.Provider.Aws\SourceCloud.Provider.Aws.csproj" />
-    <ProjectReference Include="..\SourceCloud.Provider.ITagg\SourceCloud.Provider.ITagg.csproj" />
-    <ProjectReference Include="..\SourceCloud.Provider.Stripe\SourceCloud.Provider.Stripe.csproj" />
-    <ProjectReference Include="..\SourceCloud.Provider.GetAddress\SourceCloud.Provider.GetAddress.csproj" />
+    <None Remove="Notifications\" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Notifications\" />
+    <ProjectReference Include="..\Academically.Application.Shared\Academically.Application.Shared.csproj" />
   </ItemGroup>
 </Project>
