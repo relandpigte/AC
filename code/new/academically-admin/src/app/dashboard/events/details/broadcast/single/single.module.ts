@@ -10,12 +10,14 @@ import { ResourcesModule } from '@app/dashboard/events/details/broadcast/single/
 import { StudioModule } from '@app/dashboard/events/details/broadcast/single/studio/studio.module';
 import { OffersComponent } from '@app/dashboard/events/details/broadcast/single/offers/offers.component';
 import { ActivitiesComponent } from '@app/dashboard/events/details/broadcast/single/activities/activities.component';
+import { HandoutsComponent } from '@app/dashboard/events/details/broadcast/single/handouts/handouts.component';
 
 @NgModule({
   declarations: [
     SingleComponent,
     OffersComponent,
-    ActivitiesComponent
+    ActivitiesComponent,
+    HandoutsComponent
   ],
   imports: [
     CommonModule,

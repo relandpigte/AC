@@ -45,6 +45,13 @@ export class SingleComponent extends AppComponentBase implements OnInit {
       infoText: 'Use this section to add activities such as quizzes and polls for your attendees to complete during your event.'
     },
     {
+      id: 'handouts',
+      label: 'Handouts',
+      icon: 'assets/img/service/create/folder.svg',
+      iconHover: 'assets/img/service/create/folder-hover.svg',
+      infoText: 'Use this section to add handouts for your attendees to download during your event.'
+    },
+    {
       id: 'studio',
       label: 'Studio',
       icon: 'assets/img/service/create/clipboard.svg',
