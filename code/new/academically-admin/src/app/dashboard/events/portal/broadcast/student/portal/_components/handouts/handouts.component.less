@@ -1,3 +1,33 @@
+:host {
+    &::ng-deep {
+        app-document-uploader {
+            .document-uploader {
+                height: 100%;
+                width: 100%;
+                color: #FFF;
+                text-align: center;
+                font-size: 15px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 0%;
+                letter-spacing: -0.15px;
+                padding: unset;
+                background-color: unset;
+                border: 0;
+                cursor: pointer;
+
+                &:hover {
+                    color: #FFF;
+                }
+
+                .document-input-label {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}
+
 .no-handouts {
     color: #282828;
     text-align: center;
@@ -83,20 +113,5 @@
     }
 
     .actions {
-        button {
-            display: flex;
-            width: 295px;
-            height: 34px;
-            justify-content: center;
-            align-items: center;
-            flex-shrink: 0;
-            color: #FFF;
-            text-align: center;
-            font-size: 15px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: 0%;
-            letter-spacing: -0.15px;
-        }
     }
 }

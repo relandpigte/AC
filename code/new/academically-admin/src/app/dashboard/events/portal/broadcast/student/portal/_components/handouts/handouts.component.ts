@@ -1,14 +1,16 @@
-import { ChangeDetectorRef, Component, Injector, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Injector, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { HubService } from '@app/_shared/services/hub.service';
 import { UploadService } from '@app/_shared/services/upload.service';
 import { AppComponentBase } from '@shared/app-component-base';
+import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
 import { FileUtils } from '@shared/helpers/file-utils';
-import { ServiceHandoutDto, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { FileParameter, ServiceHandoutDto, ServicesServiceProxy, ServicesType } from '@shared/service-proxies/service-proxies';
+import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { ServiceHandoutsStateService } from '@shared/services/service-handouts-state.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
-import { BehaviorSubject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, Observable, combineLatest, of } from 'rxjs';
+import { filter, finalize, switchMap, takeUntil } from 'rxjs/operators';
 
 export enum PollSignalAction {
   PollStarted = 100,
@@ -26,6 +28,12 @@ export enum PollSignalAction {
 export class HandoutsComponent extends AppComponentBase implements OnInit, OnDestroy {
   serviceHandoutsStateService: ServiceHandoutsStateService;
 
+  allowedExtensions = [
+    ...fileUploadConfiguration.videoExtensions,
+    ...fileUploadConfiguration.allowedFileExtensions,
+    ...fileUploadConfiguration.otherExtensions
+  ];
+
   @Input() referenceId: string;
   @Input() isHost = false;
 
@@ -33,12 +41,17 @@ export class HandoutsComponent extends AppComponentBase implements OnInit, OnDes
   totalHandoutsCount = 0;
 
   isDownloadingFileMap$: { [key: string]: BehaviorSubject<boolean> } = {};
+  isDeletingHandoutMap$: { [key: string]: BehaviorSubject<boolean> } = {};
+  isSharingHandoutMap$: { [key: string]: BehaviorSubject<boolean> } = {};
+
   isLoadingList$ = new BehaviorSubject<boolean>(true);
+  isSavingHandout$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     injector: Injector,
     private _cdr: ChangeDetectorRef,
     private _hubService: HubService,
+    private _modalDialogService: ModalDialogService,
     private _uploadService: UploadService,
     private _servicesService: ServicesServiceProxy
   ) {
@@ -123,5 +136,42 @@ export class HandoutsComponent extends AppComponentBase implements OnInit, OnDes
     anchor.click();
     this.isDownloadingFileMap$[handout.id].next(false);
     this._cdr.detectChanges();
+  }
+
+  onShareClick(handout: ServiceHandoutDto): void {
+    if (!(handout.id in this.isSharingHandoutMap$)) this.isSharingHandoutMap$[handout.id] = new BehaviorSubject<boolean>(false);
+    this.isSharingHandoutMap$[handout.id].next(true);
+    this._servicesService.shareServiceHandout(handout.id)
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this.isSharingHandoutMap$[handout.id].next(false)))
+      .subscribe(() => {});
+  }
+
+  onDeleteClick(handout: ServiceHandoutDto): void {
+    const options: ModalDialogOptions = {
+      title: 'Delete this handout?',
+      text: 'If you are sure to delete the handout, this is an irreversible action',
+      btnConfirmText: 'Delete',
+      btnCancelText: 'Cancel',
+      confirmCb: (): void => {
+        if (!(handout.id in this.isDeletingHandoutMap$)) this.isDeletingHandoutMap$[handout.id] = new BehaviorSubject<boolean>(false);
+        this.isDeletingHandoutMap$[handout.id].next(true);
+        this._servicesService.deleteServiceHandout(handout.id)
+          .pipe(takeUntil(this.destroyed$))
+          .pipe(finalize(() => this.isDeletingHandoutMap$[handout.id].next(false)))
+          .subscribe(() => {});
+      }
+    };
+    this._modalDialogService.showConfirmDialog(options);
+  }
+
+  onFileChanged(files: FileParameter[]): void {
+    if (!files) return;
+    this.isSavingHandout$.next(true)
+    const file = files.pop();
+    this._servicesService.saveServiceHandout(this.referenceId, ServicesType.Event, [file])
+      .pipe(takeUntil(this.destroyed$))
+      .pipe(finalize(() => this.isSavingHandout$.next(false)))
+      .subscribe(() => {});
   }
 }

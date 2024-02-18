@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="handouts">
+    <div class="handouts slick-scroll">
       <ng-container *ngIf="handouts?.length > 0; else noHandouts" >
         <div *ngFor="let handout of handouts" class="handout d-flex justify-content-center align-items-center custom-card-border custom-card-shadow">
             <div class="handout-icon">
@@ -10,21 +10,24 @@
                 <div class="handout-info-size">{{ formatBytes(handout.document.size) }} {{ getHandoutFileType(handout) | uppercase }}</div>
             </div>
             <div class="handout-action d-flex justify-content-center align-items-center gap-5">
-                <div *ngIf="isOwnedByCurrentUser(handout)" class="handout-action-share cursor-pointer">
-                    <img *ngIf="!isAlreadyShared(handout)" src="/assets/img/events/share-active.svg" alt="Handout" />
+                <div *ngIf="isOwnedByCurrentUser(handout)" class="handout-action-share ">
+                    <ng-container *ngIf="!isAlreadyShared(handout)" >
+                      <img *ngIf="!(isSharingHandoutMap$[handout.id] | async)" class="cursor-pointer" (click)="onShareClick(handout)" src="/assets/img/events/share-active.svg" alt="Share Handout" />
+                      <i *ngIf="isSharingHandoutMap$[handout.id] | async" class="fas fa-circle-notch fa-spin"></i>
+                    </ng-container>
                     <img *ngIf="isAlreadyShared(handout)" src="/assets/img/events/share-inactive.svg" alt="Handout" />
                 </div>
-                <div *ngIf="!isOwnedByCurrentUser(handout)" class="handout-action-download d-flex justify-content-center align-items-center cursor-pointer" (click)="onDownloadClick(handout)">
-                    <img *ngIf="!(isDownloadingFileMap$[handout.id] | async)" src="/assets/img/events/download-active.svg" alt="Handout" />
+                <div *ngIf="!isOwnedByCurrentUser(handout)" class="handout-action-download d-flex justify-content-center align-items-center" (click)="onDownloadClick(handout)">
+                    <img *ngIf="!(isDownloadingFileMap$[handout.id] | async)" class="cursor-pointer" src="/assets/img/events/download-active.svg" alt="Download Handout" />
                     <i *ngIf="isDownloadingFileMap$[handout.id] | async" class="fas fa-circle-notch fa-spin"></i>
                 </div>
                 <div *ngIf="isOwnedByCurrentUser(handout)" class="dropdown d-flex justify-content-center align-items-center">
-                    <a class="dropdown-ellipses dropdown-toggle" href="#" role=" button" data-toggle="dropdown"
+                    <a class="dropdown-ellipses dropdown-toggle" href="#" role=" button" data-toggle="dropdown" [ngClass]="{ 'disabled-container disabled-events': (isDeletingHandoutMap$[handout.id] | async) }"
                       aria-haspopup="true" aria-expanded="false">
                       <i class="fe fe-more-vertical"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="button-basic">
-                      <li role="menuitem">
+                      <li role="menuitem" (click)="onDeleteClick(handout)">
                         <a class="dropdown-item" href="javascript:void(0)">
                           {{ 'Delete' | localize }}
                         </a>
@@ -42,8 +45,18 @@
     </div>
 
     <div *ngIf="isHost" class="actions">
-      <button class="btn btn-block btn-primary" (click)="onAddHandoutClick()">
-        {{ 'Add handout' | localize }}
-      </button>
+      <app-document-uploader
+        class="btn btn-primary d-flex justify-content-center align-items-center w-100 h-34-px"
+        [ngClass]="{ 'disabled-container disabled-events': (isSavingHandout$ | async) }"
+        [cropImages]="false"
+        [previewImages]="false"
+        [largeImagePreview]="false"
+        [hidePreview]="true"
+        [allowedExtensions]="allowedExtensions"
+        [placeholderHeight]="'100%'"
+        [maxFileSize]="-1"
+        noFilePlaceholder="Add handout"
+        (filesChanged)="onFileChanged($event)"
+      ></app-document-uploader>
     </div>
   </div>

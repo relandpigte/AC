@@ -32,6 +32,8 @@ using Academically.Services.UserAvailabilities.Dto;
 using Academically.Services.UserFollowers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Academically.Authorization.Users;
+using System.Net.Mail;
 
 namespace Academically.Services.Services
 {
@@ -935,6 +937,36 @@ namespace Academically.Services.Services
                     DisplayOrder = await _serviceHandoutRepository.CountAsync(x => x.ReferenceId == input.ReferenceId)
                 });
             }
+        }
+
+        public async Task DeleteServiceHandoutAsync(Guid id)
+        {
+            var handout = await _serviceHandoutRepository.GetAll()
+               .AsNoTracking()
+               .Include(x => x.Document)
+               .Where(x => x.Id == id)
+               .SingleOrDefaultAsync();
+
+            if (handout != null)
+            {
+                await _documentsDomainService.DeleteAsync(handout.Document.Id);
+                await _serviceHandoutRepository.DeleteAsync(id);
+            }
+
+        }
+
+        public async Task ShareServiceHandoutAsync(Guid id)
+        {
+            var handout = await _serviceHandoutRepository.GetAll()
+               .Include(x => x.Document)
+               .Where(x => x.Id == id)
+               .SingleOrDefaultAsync();
+
+            if (handout != null)
+            {
+                handout.ShareTime = Clock.Now;
+            }
+
         }
 
         public async Task<IEnumerable<ServiceHandoutDto>> GetAllServiceHandoutsAsync(Guid referenceId)

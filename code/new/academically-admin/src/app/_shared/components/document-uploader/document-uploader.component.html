@@ -8,7 +8,7 @@
     </span>
   </label>
   <input #documentUploader [disabled]="loadingImageCropper" (change)="onFileChange($event)" [accept]="allowedExtensions"
-    class="document-input" type="file" name="DocumentUploader" id="DocumentUploader">
+    class="document-input offscreen" type="file" name="DocumentUploader" id="DocumentUploader">
 </div>
 <ng-container *ngIf="!hidePreview">
   <ul *ngIf="(files && files.length > 0) || defaultFile" class="list-group mt-2 document-uploader-preview">

@@ -26420,6 +26420,110 @@ export class ServicesServiceProxy {
     }
 
     /**
+     * @param id (optional) 
+     * @return Success
+     */
+    deleteServiceHandout(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Services/DeleteServiceHandout?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteServiceHandout(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteServiceHandout(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDeleteServiceHandout(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    shareServiceHandout(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Services/ShareServiceHandout?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processShareServiceHandout(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processShareServiceHandout(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processShareServiceHandout(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    /**
      * @param referenceId (optional) 
      * @return Success
      */
@@ -46206,7 +46310,7 @@ export interface IDocumentDto {
     creatorUserId: number;
 }
 
-/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage 13 = CourseAssignment 14 = Video 15 = VideoThumbnail 16 = ArticleThumbnail 17 = CourseSectionImage 18 = EventThumbnail 19 = EventResource 20 = Project 21 = CoachingThumbnail 22 = CoachingResource 23 = WorkshopThumbnail 24 = WorkshopResource 25 = PostAttachment 26 = ChannelMessageAttachment */
+/** 0 = General 1 = ProfilePicture 2 = CoverPhoto 3 = Qualification 4 = Passport 5 = Education 6 = PhotoId 7 = Reference 8 = DbsCertificate 9 = IntroVideo 10 = Conversation 11 = CourseImage 12 = CourseSectionPage 13 = CourseAssignment 14 = Video 15 = VideoThumbnail 16 = ArticleThumbnail 17 = CourseSectionImage 18 = EventThumbnail 19 = EventResource 20 = Project 21 = CoachingThumbnail 22 = CoachingResource 23 = WorkshopThumbnail 24 = WorkshopResource 25 = PostAttachment 26 = ChannelMessageAttachment 27 = ServiceHandouts 28 = ServicePresentations */
 export enum DocumentType {
     General = 0,
     ProfilePicture = 1,
@@ -46235,6 +46339,8 @@ export enum DocumentType {
     WorkshopResource = 24,
     PostAttachment = 25,
     ChannelMessageAttachment = 26,
+    ServiceHandouts = 27,
+    ServicePresentations = 28,
 }
 
 export class EditOtherUserSpokenLanguageDto implements IEditOtherUserSpokenLanguageDto {
@@ -55800,6 +55906,7 @@ export class ServiceHandoutDto implements IServiceHandoutDto {
     creatorUser: UserDto;
     documentId: string;
     document: DocumentDto;
+    documentUrl: string | undefined;
 
     constructor(data?: IServiceHandoutDto) {
         if (data) {
@@ -55822,6 +55929,7 @@ export class ServiceHandoutDto implements IServiceHandoutDto {
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
             this.documentId = _data["documentId"];
             this.document = _data["document"] ? DocumentDto.fromJS(_data["document"]) : <any>undefined;
+            this.documentUrl = _data["documentUrl"];
         }
     }
 
@@ -55844,6 +55952,7 @@ export class ServiceHandoutDto implements IServiceHandoutDto {
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         data["documentId"] = this.documentId;
         data["document"] = this.document ? this.document.toJSON() : <any>undefined;
+        data["documentUrl"] = this.documentUrl;
         return data; 
     }
 
@@ -55866,6 +55975,7 @@ export interface IServiceHandoutDto {
     creatorUser: UserDto;
     documentId: string;
     document: DocumentDto;
+    documentUrl: string | undefined;
 }
 
 export class ServiceMapping implements IServiceMapping {
@@ -56476,6 +56586,7 @@ export class ServicePresentationDto implements IServicePresentationDto {
     creatorUser: UserDto;
     documentId: string;
     document: DocumentDto;
+    documentUrl: string | undefined;
 
     constructor(data?: IServicePresentationDto) {
         if (data) {
@@ -56497,6 +56608,7 @@ export class ServicePresentationDto implements IServicePresentationDto {
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
             this.documentId = _data["documentId"];
             this.document = _data["document"] ? DocumentDto.fromJS(_data["document"]) : <any>undefined;
+            this.documentUrl = _data["documentUrl"];
         }
     }
 
@@ -56518,6 +56630,7 @@ export class ServicePresentationDto implements IServicePresentationDto {
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         data["documentId"] = this.documentId;
         data["document"] = this.document ? this.document.toJSON() : <any>undefined;
+        data["documentUrl"] = this.documentUrl;
         return data; 
     }
 
@@ -56539,6 +56652,7 @@ export interface IServicePresentationDto {
     creatorUser: UserDto;
     documentId: string;
     document: DocumentDto;
+    documentUrl: string | undefined;
 }
 
 export class ServicePurchaseDto implements IServicePurchaseDto {
