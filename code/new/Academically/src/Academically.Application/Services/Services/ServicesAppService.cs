@@ -886,7 +886,7 @@ namespace Academically.Services.Services
             var userId = AbpSession.GetUserId();
             foreach (var attachment in input.Attachments)
             {
-                var document = await _documentsDomainService.CreateAsync(userId, attachment, DocumentType.General);
+                var document = await _documentsDomainService.CreateAsync(userId, attachment, DocumentType.ServicePresentations);
                 await _servicePresentationRepository.InsertAsync(new ServicePresentation
                 {
                     ReferenceId = input.ReferenceId,
@@ -899,12 +899,17 @@ namespace Academically.Services.Services
 
         public async Task<IEnumerable<ServicePresentationDto>> GetAllServicePresentationAsync(Guid referenceId)
         {
-            return await _servicePresentationRepository.GetAll()
+            var presentations = await _servicePresentationRepository.GetAll()
                 .AsNoTracking()
                 .Include(x => x.Document)
                 .Where(x => x.ReferenceId == referenceId)
                 .Select(x => ObjectMapper.Map<ServicePresentationDto>(x))
                 .ToListAsync();
+            
+            foreach (var presentation in presentations)
+                presentation.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(presentation.DocumentId);
+
+            return presentations;
         }
         
         public async Task SaveServiceHandoutAsync([FromForm] CreateServiceHandoutsDto input)
@@ -921,7 +926,7 @@ namespace Academically.Services.Services
             var userId = AbpSession.GetUserId();
             foreach (var attachment in input.Attachments)
             {
-                var document = await _documentsDomainService.CreateAsync(userId, attachment, DocumentType.General);
+                var document = await _documentsDomainService.CreateAsync(userId, attachment, DocumentType.ServiceHandouts);
                 await _serviceHandoutRepository.InsertAsync(new ServiceHandout
                 {
                     ReferenceId = input.ReferenceId,
@@ -934,12 +939,17 @@ namespace Academically.Services.Services
 
         public async Task<IEnumerable<ServiceHandoutDto>> GetAllServiceHandoutsAsync(Guid referenceId)
         {
-            return await _serviceHandoutRepository.GetAll()
+            var handouts = await _serviceHandoutRepository.GetAll()
                 .AsNoTracking()
                 .Include(x => x.Document)
                 .Where(x => x.ReferenceId == referenceId)
                 .Select(x => ObjectMapper.Map<ServiceHandoutDto>(x))
                 .ToListAsync();
+
+            foreach (var handout in handouts)
+                handout.DocumentUrl = await _documentsDomainService.GetFileUrlAsync(handout.DocumentId);
+
+            return handouts;
         }
 
         public async Task<ServiceHandoutDto> GetServiceHandoutAsync(Guid id)

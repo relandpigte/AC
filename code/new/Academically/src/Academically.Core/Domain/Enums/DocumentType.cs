@@ -28,6 +28,8 @@
         WorkshopThumbnail,
         WorkshopResource,
         PostAttachment,
-        ChannelMessageAttachment
+        ChannelMessageAttachment,
+        ServiceHandouts,
+        ServicePresentations
     }
 }
