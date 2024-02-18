@@ -31,7 +31,7 @@ export class ServiceChatComponent extends AppComponentBase {
   }
 
   get recipient(): UserDto { return this.service?.creatorUser; }
-  get recipientProfile(): string { return this.getProfilePictureUrl(this.recipient?.profilePictureDocument); }
+  get recipientProfile() { return this.getProfilePictureUrl(this.recipient?.profilePictureDocument); }
   get recipientName(): string { return this.recipient.fullName; }
   get messageTo(): string { return this.l('MessageTo', this.recipient?.name); }
   get serviceName(): string { return this.service?.name; }

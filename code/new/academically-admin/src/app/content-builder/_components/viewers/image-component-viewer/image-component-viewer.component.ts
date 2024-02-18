@@ -17,7 +17,7 @@ export class ImageComponentViewerComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  getFileUrl(): string {
-    return this._uploadService.getFileUrl(this.component.imageDocument);
+  async getFileUrl(): Promise<string> {
+    return await this._uploadService.getFileUrl(this.component.imageDocument);
   }
 }

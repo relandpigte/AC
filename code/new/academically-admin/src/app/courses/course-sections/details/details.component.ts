@@ -68,12 +68,12 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
       }
     });
 
-    this._courseSectionService.courseSectionCreated$.subscribe(courseSection => {
+    this._courseSectionService.courseSectionCreated$.subscribe(async courseSection => {
       if (courseSection) {
         this.model.init(courseSection);
         if (courseSection.imageDocument) {
           this.imageDocument = courseSection.imageDocument;
-          this.setDefaultFile();
+          await this.setDefaultFile();
         }
         if (this.model.categories && this.model.categories.trim()) {
           this.categories = this.model.categories.split(',');
@@ -137,11 +137,11 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
     if (this.courseSectionImageDocument) {
       this._uploadService.upload(this.courseSectionImageDocument.data, DocumentType.CourseSectionImage, this.model.id)
         .pipe(takeUntil(this.destroyed$))
-        .subscribe(response => {
+        .subscribe(async response => {
           this.model.imageDocumentId = response.id;
           this.imageDocument = response;
           this.documentUploader.files = [];
-          this.setDefaultFile();
+          await this.setDefaultFile();
           this.updateDetails();
         });
     } else {
@@ -173,10 +173,10 @@ export class DetailsComponent extends AppComponentBase implements OnInit {
       });
   }
 
-  private setDefaultFile(): void {
+  private async setDefaultFile(): Promise<void> {
     this.defaultFile = new DefaultFile();
     this.defaultFile.name = this.imageDocument.originalFileName;
-    this.defaultFile.url = this._uploadService.getFileUrl(this.imageDocument);
+    this.defaultFile.url = await this._uploadService.getFileUrl(this.imageDocument);
     this.defaultFile.size = this.imageDocument.size;
     this.documentUploader.defaultFile = this.defaultFile;
   }

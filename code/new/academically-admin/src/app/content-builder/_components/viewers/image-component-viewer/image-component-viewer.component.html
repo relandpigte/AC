@@ -1,4 +1,4 @@
-<ng-container *ngTemplateOutlet="imageTemplate; context: { url: getFileUrl() }"></ng-container>
+<ng-container *ngTemplateOutlet="imageTemplate; context: { url: (getFileUrl() | async) }"></ng-container>
 <ng-template #imageTemplate let-url="url">
   <img *ngIf="url" class="image-preview" alt="preview" [src]="url" />
   <p *ngIf="!url" class="py-2 m-0 text-center text-muted font-italic">

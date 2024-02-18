@@ -1,14 +1,13 @@
-import { Component, OnInit, Injector, ViewChild, ElementRef, Input, OnDestroy } from '@angular/core';
+import { Component, ElementRef, Injector, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
-import { PortalService } from '../../_services/portal.service';
-import { PollTab, PortalPollService } from './_services/portal-poll.service';
 import { EventPollDto, EventPollsServiceProxy } from '@shared/service-proxies/service-proxies';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { PollComponent } from './_components/poll/poll.component';
 import { EventPollsStateService, pollsType } from '@shared/services/event-polls-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
-import { HubService } from '@app/_shared/services/hub.service';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { takeUntil } from 'rxjs/operators';
+import { PortalService } from '../../_services/portal.service';
+import { PollTab, PortalPollService } from './_services/portal-poll.service';
 
 export enum PollSignalAction {
   PollStarted = 100,

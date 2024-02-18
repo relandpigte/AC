@@ -2,7 +2,7 @@
   <div class="avatar-group">
     <div *ngFor="let model of models" class="avatar avatar-sm" [tooltip]="model.creatorUser.fullName"
       [container]="'body'">
-      <img [src]="getProfilePictureUrl(model.creatorUser.profilePictureDocument)" alt="..."
+      <img [src]="getProfilePictureUrl(model.creatorUser.profilePictureDocument) | async" alt="..."
         class="avatar-img rounded-circle">
     </div>
     <div *ngIf="limitDiff > 0" class="avatar avatar-sm">

@@ -1,6 +1,5 @@
 <app-device-settings *ngIf="showDeviceSettings" (joinRoom)="showDeviceSettings = false; onLobbyEntered($event)">
 </app-device-settings>
-
 <div class="h-100" [@routerTransition]>
   <div [class.sidebar-hidden]="!showSidebar" class="main-content position-relative h-100">
     <nav *ngIf="event$ | async" class="navbar navbar-expand-lg navbar-light" id="topnav">
@@ -8,7 +7,7 @@
         <a class="navbar-brand text-left pt-0" href="javascript:;">
           <div class="d-flex">
             <div class="avatar avatar-4by3">
-              <img [src]="getServiceImageUrl(eventModel.thumbnailDocument)" alt="..." class="avatar-img rounded">
+              <img [src]="getServiceImageUrl(eventModel.thumbnailDocument) | async" alt="..." class="avatar-img rounded">
             </div>
             <div class="navbar-brand-header ml-3 mr-n3">
               <h6 class="header-pretitle">

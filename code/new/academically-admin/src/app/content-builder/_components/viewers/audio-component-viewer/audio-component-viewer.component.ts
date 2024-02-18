@@ -17,7 +17,7 @@ export class AudioComponentViewerComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  getFileUrl(): string {
-    return this._uploadService.getFileUrl(this.component.audioDocument);
+  async getFileUrl(): Promise<string> {
+    return await this._uploadService.getFileUrl(this.component.audioDocument);
   }
 }

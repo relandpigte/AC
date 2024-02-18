@@ -48,9 +48,9 @@ export class TutorPortalComponent extends AppComponentBase implements OnInit {
   private getArticle(): void {
     this._articlesService.get(this.id)
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(response => {
+      .subscribe(async response => {
         this._tutorPortalService.article = response;
-        this.thumbnailUrl = this._uploadService.getFileUrl(response.thumbnailDocument);
+        this.thumbnailUrl = await this._uploadService.getFileUrl(response.thumbnailDocument);
       });
   }
 }

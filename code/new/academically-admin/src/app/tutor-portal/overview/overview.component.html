@@ -235,7 +235,7 @@
     <div class="row">
       <div class="col-auto">
         <div class="avatar avatar-4by3 img-section">
-          <img [src]="getServiceImageUrl(lesson.imageDocument)" alt="..." class="avatar-img rounded">
+          <img [src]="getServiceImageUrl(lesson.imageDocument) | async" alt="..." class="avatar-img rounded">
         </div>
       </div>
       <div class="col d-flex align-items-center pl-0">

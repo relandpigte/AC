@@ -13,7 +13,7 @@
                 <div class="row align-items-center">
                   <div class="col-auto">
                     <a href="#!" class="avatar">
-                      <img [src]="getProfilePictureUrl(model.creatorUser.profilePictureDocument)" alt="..."
+                      <img [src]="getProfilePictureUrl(model.creatorUser.profilePictureDocument) | async" alt="..."
                         class="avatar-img rounded-circle">
                     </a>
                   </div>

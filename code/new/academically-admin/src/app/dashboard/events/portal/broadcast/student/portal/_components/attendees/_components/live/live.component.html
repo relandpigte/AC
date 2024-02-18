@@ -16,7 +16,7 @@
         <div class="row">
           <div class="col flex-y-center">
             <div class="avatar avatar-sm d-inline-block me-2">
-              <img [src]="getProfilePictureUrl(model.creatorUser.profilePictureDocument)" alt="..."
+              <img [src]="getProfilePictureUrl(model.creatorUser.profilePictureDocument) | async" alt="..."
                 class="avatar-img rounded-circle">
             </div>
             <p class="m-0 ml-3">
@@ -101,7 +101,7 @@
             <div class="avatar avatar-sm d-inline-block me-2">
               <img
                 *ngIf="coHost.user.profilePictureDocument && coHost.user.profilePictureDocument.id else noProfilePictureTemplate"
-                [src]="getProfilePictureUrl(coHost.user.profilePictureDocument)" alt="..."
+                [src]="getProfilePictureUrl(coHost.user.profilePictureDocument) | async" alt="..."
                 class="avatar-img rounded-circle">
               <ng-template #noProfilePictureTemplate>
                 <span class="avatar-title rounded-circle">
@@ -197,7 +197,7 @@
             <div class="avatar avatar-sm d-inline-block me-2">
               <img
                 *ngIf="guest.user.profilePictureDocument && guest.user.profilePictureDocument.id else noProfilePictureTemplate"
-                [src]="getProfilePictureUrl(guest.user.profilePictureDocument)" alt="..."
+                [src]="getProfilePictureUrl(guest.user.profilePictureDocument) | async" alt="..."
                 class="avatar-img rounded-circle">
               <ng-template #noProfilePictureTemplate>
                 <span class="avatar-title rounded-circle">
@@ -292,7 +292,7 @@
         <div class="row">
           <div class="col flex-y-center">
             <div class="avatar avatar-sm d-inline-block me-2">
-              <img [src]="getProfilePictureUrl(audience.user.profilePictureDocument)" alt="..."
+              <img [src]="getProfilePictureUrl(audience.user.profilePictureDocument) | async" alt="..."
                 class="avatar-img rounded-circle">
             </div>
             <p class="m-0 ml-3">

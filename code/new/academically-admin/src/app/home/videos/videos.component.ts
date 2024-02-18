@@ -68,8 +68,8 @@ export class VideosComponent extends PagedListingComponentBase<VideoDto> impleme
       )
       .subscribe((result: VideoDtoPagedResultDto) => {
         this.videos = result.items;
-        _.each(this.videos, video => {
-          this.thumbnailUrls[video.id] = this._uploadService.getFileUrl(video.thumbnailDocument);
+        _.each(this.videos, async video => {
+          this.thumbnailUrls[video.id] = await this._uploadService.getFileUrl(video.thumbnailDocument);
         });
         this.showPaging(result, pageNumber);
       });

@@ -16,10 +16,16 @@ export class UploadService {
     private _documentsService: DocumentsServiceProxy,
   ) { }
 
-  getFileUrl(document: DocumentDto): string {
+  async getFileData(document: DocumentDto): Promise<string> {
     if (document) {
-      const key = this.getKey(document.creatorUserId, document.name, document.documentType);
-      return `https://${this._configuration.bucket}.s3.${this._configuration.region}.amazonaws.com/${key}`;
+      return await this._documentsService.download(document.id).toPromise();
+    }
+    return '';
+  }
+
+  async getFileUrl(document: DocumentDto): Promise<string> {
+    if (document) {
+      return await this._documentsService.getSecuredUrl(document.id).toPromise();
     }
     return '';
   }

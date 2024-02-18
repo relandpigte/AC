@@ -39,7 +39,7 @@ export class UserAvatarComponent extends AppComponentBase implements OnInit {
 
   get isDefaultAvatar(): boolean { return this.type === AvatarType.Default; }
   get userFullName(): string { return this.data?.fullName; }
-  get userProfilePicture(): string { return this.data?.profilePictureUrl ?? this.getProfilePictureUrl(this.data?.profilePictureDocument); }
+  get userProfilePicture() { return this.data?.profilePictureUrl ?? this.getProfilePictureUrl(this.data?.profilePictureDocument); }
   get avatarWidth(): number { return this.width ?? DEFAULT_AVATAR_WIDTH; }
   get avatarHeight(): number { return this.height ?? DEFAULT_AVATAR_HEIGHT; }
   get isUserOnline(): boolean { return this.onlineUsers?.some(u => u.id === this.data?.id); }

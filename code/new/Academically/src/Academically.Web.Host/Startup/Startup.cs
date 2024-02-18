@@ -184,6 +184,7 @@ namespace Academically.Web.Host.Startup
                 endpoints.MapHub<ServiceOffersHub>("/signalr-serviceOffersHub");
                 endpoints.MapHub<EventPollsHub>("/signalr-eventPollsHub");
                 endpoints.MapHub<EventsHub>("/signalr-eventsHub");
+                endpoints.MapHub<ServiceHandoutsHub>("/signalr-serviceHandoutsHub");
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
             });

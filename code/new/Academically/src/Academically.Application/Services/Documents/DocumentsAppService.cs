@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Academically.Application.Shared.Services;
 using Academically.Domain.Entities;
 using Academically.Domain.Services.Documents;
 using Academically.Services.Documents.Dto;
@@ -17,6 +18,12 @@ namespace Academically.Services.Documents
             )
         {
             _documentsDomainService = documentsDomainService;
+        }
+
+        public async Task<string> DownloadAsync(Guid id)
+        {
+            var data = await _documentsDomainService.GetFileDataAsync(id);
+            return Convert.ToBase64String(data);
         }
 
         public async Task<string> GetSecuredUrl(Guid id)

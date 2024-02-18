@@ -8,7 +8,7 @@
         >
             <img
                 class="avatar-img rounded-circle"
-                [src]="isBlocked ? 'assets/img/anonymous.png': userProfilePicture"
+                [src]="isBlocked ? 'assets/img/anonymous.png': (userProfilePicture | async)"
                 [alt]="userFullName"
                 [style.width.px]="avatarWidth"
                 [style.height.px]="avatarHeight"

@@ -29,7 +29,7 @@
                         <div class="d-flex align-items-center gap-15">
                             <div class="item-avatar">
                                 <div class="avatar avatar-sm">
-                                    <img [src]="getProfilePictureUrl(student.profilePictureDocument)" alt="..." class="avatar-img rounded-circle">
+                                    <img [src]="getProfilePictureUrl(student.profilePictureDocument) | async" alt="..." class="avatar-img rounded-circle">
                                 </div>
                             </div>
                             <div class="item-content">
@@ -51,7 +51,7 @@
                         <div class="d-flex align-items-center gap-15">
                             <div class="item-avatar">
                                 <div class="avatar avatar-sm">
-                                    <img [src]="getProfilePictureUrl(student.profilePictureDocument)" alt="..." class="avatar-img rounded-circle">
+                                    <img [src]="getProfilePictureUrl(student.profilePictureDocument) | async" alt="..." class="avatar-img rounded-circle">
                                 </div>
                             </div>
                             <div class="item-content">

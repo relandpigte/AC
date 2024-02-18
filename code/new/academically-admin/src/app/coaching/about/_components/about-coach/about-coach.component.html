@@ -1,7 +1,7 @@
 <div class="card custom-card-border custom-card-shadow">
     <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.LandingRightAuthor"></app-shimmer>
     <div class="card-body text-center">
-        <img [alt]="profileFullName" class="avatar-img rounded-circle" [src]="profilePictureUrl" />
+        <img [alt]="profileFullName" class="avatar-img rounded-circle" [src]="profilePictureUrl | async" />
         <h5 class="card-title">{{ profileFullName }}</h5>
         <p class="card-text">{{ profileAboutText }}</p>
         <a href="#" class="btn btn-light btn-sm">Coach</a>

@@ -2,7 +2,7 @@
   <div *ngFor="let workshop of workshops" class="col-12 col-md-6 col-xl-4 p-0">
     <div class="card mx-0 m-md-1">
       <a href="#!visit" (click)="$event.preventDefault();">
-        <img [src]="getServiceImageUrl(workshop.thumbnailDocument)" alt="..." class="card-img-top">
+        <img [src]="getServiceImageUrl(workshop.thumbnailDocument) | async" alt="..." class="card-img-top">
       </a>
       <div class="card-body">
         <div class="row align-items-center">

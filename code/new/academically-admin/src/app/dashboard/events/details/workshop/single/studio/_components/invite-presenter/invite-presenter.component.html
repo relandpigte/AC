@@ -50,7 +50,7 @@
               <div class="row align-items-center">
                 <div class="col-auto">
                   <a class="avatar">
-                    <img [src]="getProfilePictureUrl(user.profilePictureDocument)" alt="..."
+                    <img [src]="getProfilePictureUrl(user.profilePictureDocument) | async" alt="..."
                       class="avatar-img rounded-circle">
                   </a>
                 </div>

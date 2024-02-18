@@ -47,10 +47,10 @@ export class PdfComponentEditorComponent extends AppComponentBase implements OnI
               this.isLoading = false;
             }),
           )
-          .subscribe(response => {
+          .subscribe(async response => {
             this.pdfComponentContent.pdfDocument = response;
             this.documentUploader.files = [];
-            this.setDefaultFile();
+            await this.setDefaultFile();
           });
       } else {
         this.pdfComponentContent.pdfDocument = undefined;
@@ -74,10 +74,10 @@ export class PdfComponentEditorComponent extends AppComponentBase implements OnI
     });
   }
 
-  private setDefaultFile(): void {
+  private async setDefaultFile(): Promise<void> {
     this.defaultFile = new DefaultFile();
     this.defaultFile.name = this.pdfComponentContent.pdfDocument.originalFileName;
-    this.defaultFile.url = this._uploadService.getFileUrl(this.pdfComponentContent.pdfDocument);
+    this.defaultFile.url = await this._uploadService.getFileUrl(this.pdfComponentContent.pdfDocument);
     this.defaultFile.size = this.pdfComponentContent.pdfDocument.size;
     this.documentUploader.defaultFile = this.defaultFile;
   }

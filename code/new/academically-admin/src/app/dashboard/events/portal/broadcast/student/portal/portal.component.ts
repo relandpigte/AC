@@ -17,6 +17,7 @@ import {
   ServicesServiceProxy
 } from '@shared/service-proxies/service-proxies';
 import { EventPollsStateService, pollsType } from '@shared/services/event-polls-state.service';
+import { ServiceHandoutsStateService } from '@shared/services/service-handouts-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { ServiceOffersStateService, offersType } from '@shared/services/service-offers-state.service';
 import { ServiceOffersService } from '@shared/services/service-offers.service';
@@ -24,6 +25,7 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { takeUntil } from 'rxjs/operators';
 import { PollComponent } from './_components/polls/_components/poll/poll.component';
 import { PortalPollService } from './_components/polls/_services/portal-poll.service';
+import { PortalHandoutService } from './_components/handouts/_services/portal-handout.service';
 import { ShareVideosComponent } from './_components/share-videos/share-videos.component';
 import { Observable } from 'rxjs';
 
@@ -70,6 +72,9 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
   pollWindowRef: any;
   selectedPoll: EventPollDto;
 
+  serviceHandoutsStateService: ServiceHandoutsStateService;
+  newHandoutsCount: number;
+
   liveQuestion: QuestionDto;
 
   invitationId: string;
@@ -84,6 +89,7 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
     private _location: Location,
     private _router: Router,
     private _portalPollService: PortalPollService,
+    private _portalHandoutService: PortalHandoutService,
     private _eventSessionsService: EventSessionsServiceProxy,
     private _eventPollsService: EventPollsServiceProxy,
     private _profilesService: ProfilesServiceProxy,
@@ -99,6 +105,7 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
 
   get offersStateId(): string { return 'offers-event'; }
   get pollsStateId(): string { return 'polls-event'; }
+  get handoutsStateId(): string { return 'handouts-event'; }
 
   get isMicrophoneEnabled$(): Observable<boolean> { return this._portalService.getSpecificFeatureFlag$(this.featureToServiceFeatureFlags, PortalFeatures.Microphone, this.currentUserId); }
   get isWebCamEnabled$(): Observable<boolean> { return this._portalService.getSpecificFeatureFlag$(this.featureToServiceFeatureFlags, PortalFeatures.Webcam, this.currentUserId); }
@@ -129,8 +136,12 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
     this.pipeDestroy(this._portalPollService.pollSelected$, poll => this.selectedPoll = poll);
     this.pipeDestroy(this._portalPollService.pollSelectedMaximized$, isMaximized => this.handleSelectedPollMaximized(isMaximized));
 
+    // handouts
+    this.pipeDestroy(this._portalHandoutService.newHandountsCount$, count => this.newHandoutsCount = count);
+
     await this.initOffersAppStates();
     await this.initPollsAppStates();
+    await this.initHandoutsAppStates();
     await this.initLiveAnsweringQuestion();
   }
 
@@ -298,6 +309,24 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
           }
           break;
       }
+    });
+  }
+
+  private async initHandoutsAppStates() {
+    const appStateConfig: AppStateConfig = {
+      [this.handoutsStateId]: {
+        update: { referenceId: this.eventId }
+      }
+    };
+    const appStateServices: AppStateServices = {
+      [this.handoutsStateId]: {
+        type: ServiceHandoutsStateService,
+        args: [this.appSession, this._hubService, this._servicesService]
+      }
+    };
+    await this.pubSubService.start(this, appStateConfig, appStateServices);
+    this.serviceHandoutsStateService = this.pubSubService.getStateService<ServiceHandoutsStateService>(this.handoutsStateId);
+    this.serviceHandoutsStateService.handouts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
     });
   }
 

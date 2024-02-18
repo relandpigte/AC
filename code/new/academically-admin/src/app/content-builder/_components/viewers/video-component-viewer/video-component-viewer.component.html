@@ -1,4 +1,4 @@
-<ng-container *ngTemplateOutlet="imageTemplate; context: { url: getFileUrl() }"></ng-container>
+<ng-container *ngTemplateOutlet="imageTemplate; context: { url: (getFileUrl() | async) }"></ng-container>
 <ng-template #imageTemplate let-url="url">
   <video *ngIf="!component.isUrl && url" [src]="url" autoplay controls class="video-preview">
   </video>

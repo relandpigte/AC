@@ -48,10 +48,10 @@ export class OfficeComponentEditorComponent extends AppComponentBase implements 
               this.isLoading = false;
             }),
           )
-          .subscribe(response => {
+          .subscribe(async response => {
             this.officeComponentContent.officeDocument = response;
             this.documentUploader.files = [];
-            this.setDefaultFile();
+            await this.setDefaultFile();
           });
       } else {
         this.officeComponentContent.officeDocument = undefined;
@@ -75,10 +75,10 @@ export class OfficeComponentEditorComponent extends AppComponentBase implements 
     });
   }
 
-  private setDefaultFile(): void {
+  private async setDefaultFile(): Promise<void> {
     this.defaultFile = new DefaultFile();
     this.defaultFile.name = this.officeComponentContent.officeDocument.originalFileName;
-    this.defaultFile.url = this._uploadService.getFileUrl(this.officeComponentContent.officeDocument);
+    this.defaultFile.url = await this._uploadService.getFileUrl(this.officeComponentContent.officeDocument);
     this.defaultFile.size = this.officeComponentContent.officeDocument.size;
     this.documentUploader.defaultFile = this.defaultFile;
   }

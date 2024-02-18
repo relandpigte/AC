@@ -52,4 +52,14 @@ export class FileUtils {
         }
         return true;
     }
+
+    static base64toBlob(base64: string, type: string): Blob {
+        var byteString = atob(base64);
+        var ab = new ArrayBuffer(byteString.length);
+        var ia = new Uint8Array(ab);
+        for (var i = 0, end = byteString.length, asc = 0 <= end; asc ? i <= end : i >= end; asc ? i++ : i--) {
+          ia[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([ab], { type });
+    };
 }

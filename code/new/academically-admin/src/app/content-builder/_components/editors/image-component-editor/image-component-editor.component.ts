@@ -50,10 +50,10 @@ export class ImageComponentEditorComponent extends AppComponentBase implements O
               this.isLoading = false;
             }),
           )
-          .subscribe(response => {
+          .subscribe(async response => {
             this.imageComponentContent.imageDocument = response;
             this.documentUploader.files = [];
-            this.setDefaultFile();
+            await this.setDefaultFile();
           });
       } else {
         this.imageComponentContent.imageDocument = undefined;
@@ -77,10 +77,10 @@ export class ImageComponentEditorComponent extends AppComponentBase implements O
     });
   }
 
-  private setDefaultFile(): void {
+  private async setDefaultFile(): Promise<void> {
     this.defaultFile = new DefaultFile();
     this.defaultFile.name = this.imageComponentContent.imageDocument.originalFileName;
-    this.defaultFile.url = this._uploadService.getFileUrl(this.imageComponentContent.imageDocument);
+    this.defaultFile.url = await this._uploadService.getFileUrl(this.imageComponentContent.imageDocument);
     this.defaultFile.size = this.imageComponentContent.imageDocument.size;
     this.documentUploader.defaultFile = this.defaultFile;
   }

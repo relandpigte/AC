@@ -1,0 +1,49 @@
+<div class="container">
+    <div class="handouts">
+      <ng-container *ngIf="handouts?.length > 0; else noHandouts" >
+        <div *ngFor="let handout of handouts" class="handout d-flex justify-content-center align-items-center custom-card-border custom-card-shadow">
+            <div class="handout-icon">
+                <img [src]="getFileIcon(getHandoutFileType(handout))" alt="Handout" />
+            </div>
+            <div class="handout-info flex-grow-1 d-flex flex-column justify-content-center align-items-start gap-1">
+                <div class="handout-info-name wrap-text">{{ handout.document.originalFileName }}</div>
+                <div class="handout-info-size">{{ formatBytes(handout.document.size) }} {{ getHandoutFileType(handout) | uppercase }}</div>
+            </div>
+            <div class="handout-action d-flex justify-content-center align-items-center gap-5">
+                <div *ngIf="isOwnedByCurrentUser(handout)" class="handout-action-share cursor-pointer">
+                    <img *ngIf="!isAlreadyShared(handout)" src="/assets/img/events/share-active.svg" alt="Handout" />
+                    <img *ngIf="isAlreadyShared(handout)" src="/assets/img/events/share-inactive.svg" alt="Handout" />
+                </div>
+                <div *ngIf="!isOwnedByCurrentUser(handout)" class="handout-action-download d-flex justify-content-center align-items-center cursor-pointer" (click)="onDownloadClick(handout)">
+                    <img *ngIf="!(isDownloadingFileMap$[handout.id] | async)" src="/assets/img/events/download-active.svg" alt="Handout" />
+                    <i *ngIf="isDownloadingFileMap$[handout.id] | async" class="fas fa-circle-notch fa-spin"></i>
+                </div>
+                <div *ngIf="isOwnedByCurrentUser(handout)" class="dropdown d-flex justify-content-center align-items-center">
+                    <a class="dropdown-ellipses dropdown-toggle" href="#" role=" button" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">
+                      <i class="fe fe-more-vertical"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="button-basic">
+                      <li role="menuitem">
+                        <a class="dropdown-item" href="javascript:void(0)">
+                          {{ 'Delete' | localize }}
+                        </a>
+                      </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+      </ng-container>
+      <ng-template #noHandouts>
+        <div class="no-handouts text-center">
+            {{ 'No handouts' | localize }}
+        </div>
+      </ng-template>
+    </div>
+
+    <div *ngIf="isHost" class="actions">
+      <button class="btn btn-block btn-primary" (click)="onAddHandoutClick()">
+        {{ 'Add handout' | localize }}
+      </button>
+    </div>
+  </div>

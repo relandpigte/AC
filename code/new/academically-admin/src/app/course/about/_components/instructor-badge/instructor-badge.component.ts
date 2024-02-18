@@ -24,7 +24,7 @@ export class InstructorBadgeComponent extends AppComponentBase implements OnInit
     super(injector);
   }
 
-  get profilePictureUrl(): string { return this.getProfilePictureUrl(this.data?.creatorUser?.profilePictureDocument); }
+  get profilePictureUrl() { return this.getProfilePictureUrl(this.data?.creatorUser?.profilePictureDocument); }
   get isLoading$() { return this._landingPageService.isLoading$; }
   get ownerName(): string { return this.data?.creatorUser?.fullName; }
   get ownerAbout() { return this.removeHTMLTags(this.data?.creatorUser?.about); }

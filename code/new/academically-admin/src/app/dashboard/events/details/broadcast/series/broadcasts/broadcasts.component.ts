@@ -81,8 +81,8 @@ export class BroadcastsComponent extends PagedListingComponentBase<EventDto> imp
       )
       .subscribe((result: EventDtoPagedResultDto) => {
         this.events = result.items;
-        _.each(this.events, event => {
-          this.thumbnailUrls[event.id] = this._uploadService.getFileUrl(event.thumbnailDocument);
+        _.each(this.events, async event => {
+          this.thumbnailUrls[event.id] = await this._uploadService.getFileUrl(event.thumbnailDocument);
         });
         this.showPaging(result, pageNumber);
       });

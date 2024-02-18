@@ -49,6 +49,10 @@
         EventPollLaunched,
         EventPollClosed,
         EventPollShared,
+        ServiceHandoutCreated,
+        ServiceHandoutUpdated,
+        ServiceHandoutDeleted,
+        ServiceHandoutShared,
         UpcomingEvent
     }
 }

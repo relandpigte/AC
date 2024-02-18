@@ -6,7 +6,7 @@
             <div class="col-auto">
               <a href="#!visit" class="avatar avatar-lg avatar-4by3"
                 (click)="$event.preventDefault(); onVisitArticleClick(article)">
-                <img [src]="getServiceImageUrl(article.thumbnailDocument)" alt="..." class="avatar-img rounded">
+                <img [src]="getServiceImageUrl(article.thumbnailDocument) | async" alt="..." class="avatar-img rounded">
               </a>
             </div>
             <div class="col ml-n2">

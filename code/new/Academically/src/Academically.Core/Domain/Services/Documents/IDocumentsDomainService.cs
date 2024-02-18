@@ -10,6 +10,7 @@ namespace Academically.Domain.Services.Documents
     public interface IDocumentsDomainService : IDomainService
     {
         string GetBaseDirectory();
+        Task<byte[]> GetFileDataAsync(Guid id);
         Task<string> GetFileUrlAsync(Document document);
         Task<string> GetFileUrlAsync(Guid id);
         Task<Document> GetAsync(Guid id);

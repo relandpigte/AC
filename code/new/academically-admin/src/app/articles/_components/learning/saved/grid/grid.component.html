@@ -2,7 +2,7 @@
     <div *ngFor="let studentArticle of models" class="col-12 col-md-6 col-xl-4 p-0">
       <div class="card">
         <a href="#!visit"  (click)="$event.preventDefault();">
-          <img [src]="getServiceImageUrl(studentArticle.article.thumbnailDocument)" alt="..." class="card-img-top">
+          <img [src]="getServiceImageUrl(studentArticle.article.thumbnailDocument) | async" alt="..." class="card-img-top">
         </a>
         <div class="card-body">
           <div class="row align-items-center">

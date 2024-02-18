@@ -30,12 +30,12 @@ export class VideoComponentEditorComponent extends AppComponentBase implements O
   @Input() set component(value: VideoComponentContent) {
     this.videoComponentContent = value;
     if (!this.videoComponentContent.isUrl) {
-      setTimeout(() => {
+      setTimeout(async () => {
         this.documentUploader.files = [];
         this.documentUploader.defaultFile = undefined;
         this.initUploader();
         if (this.videoComponentContent.videoDocument) {
-          this.setDefaultFile();
+          await this.setDefaultFile();
         }
       });
     }
@@ -46,12 +46,12 @@ export class VideoComponentEditorComponent extends AppComponentBase implements O
 
   onIsUrlToggle(): void {
     if (!this.videoComponentContent.isUrl) {
-      setTimeout(() => {
+      setTimeout(async () => {
         this.documentUploader.files = [];
         this.documentUploader.defaultFile = undefined;
         this.initUploader();
         if (this.videoComponentContent.videoDocument) {
-          this.setDefaultFile();
+          await this.setDefaultFile();
         }
       });
     }
@@ -69,10 +69,10 @@ export class VideoComponentEditorComponent extends AppComponentBase implements O
               this.isLoading = false;
             }),
           )
-          .subscribe(response => {
+          .subscribe(async response => {
             this.videoComponentContent.videoDocument = response;
             this.documentUploader.files = [];
-            this.setDefaultFile();
+            await this.setDefaultFile();
           });
       } else {
         this.videoComponentContent.videoDocument = undefined;
@@ -96,10 +96,10 @@ export class VideoComponentEditorComponent extends AppComponentBase implements O
     });
   }
 
-  private setDefaultFile(): void {
+  private async setDefaultFile(): Promise<void> {
     this.defaultFile = new DefaultFile();
     this.defaultFile.name = this.videoComponentContent.videoDocument.originalFileName;
-    this.defaultFile.url = this._uploadService.getFileUrl(this.videoComponentContent.videoDocument);
+    this.defaultFile.url = await this._uploadService.getFileUrl(this.videoComponentContent.videoDocument);
     this.defaultFile.size = this.videoComponentContent.videoDocument.size;
     this.documentUploader.defaultFile = this.defaultFile;
   }

@@ -33,6 +33,7 @@ import {
 } from './service-proxies/service-proxies';
 import { PubSubService } from './services/pub-sub.service';
 import { fileUploadConfiguration } from '@shared/constants/configurations/file-upload.configuration';
+import { memoize } from 'lodash';
 
 @Injectable()
 export abstract class AppComponentBase extends AppHubBase implements OnDestroy {
@@ -116,7 +117,7 @@ export abstract class AppComponentBase extends AppHubBase implements OnDestroy {
     return this.permission.isGranted(permissionName);
   }
 
-  getProfilePicture(fileNameOrUrl: string, userId?: number): string {
+  getProfilePicture = memoize((fileNameOrUrl: string, userId?: number): string => {
     if (fileNameOrUrl) {
       if (this.isValidUrl(fileNameOrUrl)) {
         return fileNameOrUrl;
@@ -125,16 +126,16 @@ export abstract class AppComponentBase extends AppHubBase implements OnDestroy {
       }
     }
     return 'assets/img/anonymous.png';
-  }
+  });
 
-  getProfilePictureFromDocument(document?: DocumentDto, userId?: number): string {
+  getProfilePictureFromDocument = memoize((document?: DocumentDto, userId?: number): string => {
     if (document) {
       return this.getProfilePicture(document.name, userId);
     }
     return this.getProfilePicture('');
-  }
+  });
 
-  getCoverPhoto(coverPhotoUrl: string, userId?: number): string {
+  getCoverPhoto = memoize((coverPhotoUrl: string, userId?: number): string => {
     if (coverPhotoUrl) {
       if (this.isValidUrl(coverPhotoUrl)) {
         return coverPhotoUrl;
@@ -144,32 +145,32 @@ export abstract class AppComponentBase extends AppHubBase implements OnDestroy {
       }
     }
     return 'assets/themes/dashkit/img/covers/profile-cover-1.jpg';
-  }
+  });
 
-  getServiceImageUrl(document: DocumentDto): string {
-    const imageUrl = this.uploadService.getFileUrl(document);
+  getServiceImageUrl = memoize(async (document: DocumentDto): Promise<string> => {
+    const imageUrl = await this.uploadService.getFileUrl(document);
     if (imageUrl) {
       return imageUrl;
     }
     return '/assets/themes/dashkit/img/avatars/projects/project-1.jpg';
-  }
+  });
 
-  getProfilePictureUrl(document?: DocumentDto): string {
+  getProfilePictureUrl = memoize(async (document?: DocumentDto): Promise<string> => {
     if (document) {
-      const imageUrl = this.uploadService.getFileUrl(document);
+      const imageUrl = await this.uploadService.getFileUrl(document);
       if (imageUrl) {
         return imageUrl;
       }
     }
     return 'assets/img/anonymous.png';
-  }
+  });
 
-  getCoverPhotoFromDocument(document?: DocumentDto, userId?: number): string {
+  getCoverPhotoFromDocument = memoize((document?: DocumentDto, userId?: number): string => {
     if (document) {
       return this.getCoverPhoto(document.name, userId);
     }
     return this.getCoverPhoto('');
-  }
+  });
 
   convertToUserDate(date: Date): Date {
     return abp.timing.convertToUserTimezone(date);

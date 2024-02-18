@@ -27,7 +27,7 @@
             <div class="row align-items-center">
               <div class="col-auto">
                 <a href="#!" class="avatar">
-                  <img [src]="getProfilePictureUrl(forum.creatorUser.profilePictureDocument)" alt="..."
+                  <img [src]="getProfilePictureUrl(forum.creatorUser.profilePictureDocument) | async" alt="..."
                     class="avatar-img rounded-circle">
                 </a>
               </div>
@@ -123,7 +123,7 @@
               <div class="row">
                 <div class="col-auto">
                   <a class="avatar avatar-sm" href="profile-posts.html">
-                    <img [src]="getProfilePictureUrl(reply.creatorUser.profilePictureDocument)" alt="..."
+                    <img [src]="getProfilePictureUrl(reply.creatorUser.profilePictureDocument) | async" alt="..."
                       class="avatar-img rounded-circle">
                   </a>
                 </div>

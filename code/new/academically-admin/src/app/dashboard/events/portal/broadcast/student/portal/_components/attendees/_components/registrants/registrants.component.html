@@ -29,7 +29,7 @@
         <div class="row">
           <div class="col flex-y-center">
             <div class="avatar avatar-sm d-inline-block me-2">
-              <img [src]="getProfilePictureUrl(waitingUser.user.profilePictureDocument)" alt="..."
+              <img [src]="getProfilePictureUrl(waitingUser.user.profilePictureDocument) | async" alt="..."
                 class="avatar-img rounded-circle">
             </div>
             <p class="m-0 ml-3">
@@ -49,7 +49,7 @@
         <div class="row">
           <div class="col flex-y-center">
             <div class="avatar avatar-sm d-inline-block me-2">
-              <img [src]="getProfilePictureUrl(lobbyUser.user.profilePictureDocument)" alt="..."
+              <img [src]="getProfilePictureUrl(lobbyUser.user.profilePictureDocument) | async" alt="..."
                 class="avatar-img rounded-circle">
             </div>
             <p class="m-0 ml-3">
@@ -100,7 +100,7 @@
         <div class="row">
           <div class="col flex-y-center">
             <div class="avatar avatar-sm d-inline-block me-2">
-              <img [src]="getProfilePictureUrl(attendee.user.profilePictureDocument)" alt="..."
+              <img [src]="getProfilePictureUrl(attendee.user.profilePictureDocument) | async" alt="..."
                 class="avatar-img rounded-circle">
             </div>
             <p class="m-0 ml-3">

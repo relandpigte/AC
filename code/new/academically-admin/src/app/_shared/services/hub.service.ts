@@ -86,6 +86,10 @@ export class HubService {
     return await this.getHub(`eventPolls`, Utils.generateUrlParams(params));
   }
 
+  public async getServiceHandoutsHub(params?: Record<string, any>): Promise<any> {
+    return await this.getHub(`serviceHandouts`, Utils.generateUrlParams(params));
+  }
+
   public async getEventsHub(params?: Record<string, any>): Promise<any> {
     return await this.getHub(`events`, Utils.generateUrlParams(params));
   }

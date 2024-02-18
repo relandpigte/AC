@@ -106,14 +106,14 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
       this._servicesService.getServiceReviewStats(this._id),
     ])
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(([article, review, reviewStats]) => {
+      .subscribe(async ([article, review, reviewStats]) => {
         this.model = article;
         this.ownReview = review;
 
         this._previewService.article = article;
         this._serviceData.serviceReview = review;
         this._serviceData.serviceReviewStats = reviewStats;
-        this.thumbnailUrl = this._uploadService.getFileUrl(article.thumbnailDocument);
+        this.thumbnailUrl = await this._uploadService.getFileUrl(article.thumbnailDocument);
         if (!this.isPreview) {
           this.getStudentArticle();
         }

@@ -9,7 +9,7 @@
                         <div class="poster-name">{{ question.creatorUser.fullName }}</div>
                         <div class="poster-avatar">
                             <a class="avatar avatar-xs" href="#!" (click)="$event.preventDefault();">
-                                <img [src]="getProfilePictureUrl(question.creatorUser.profilePictureDocument)" alt="..."
+                                <img [src]="getProfilePictureUrl(question.creatorUser.profilePictureDocument) | async" alt="..."
                                      class="avatar-img rounded-circle"/>
                             </a>
                         </div>

@@ -32,6 +32,7 @@
       <app-sidebar-questions *ngSwitchCase="'Questions'"></app-sidebar-questions>
       <app-polls *ngSwitchCase="'Activities'" [referenceId]="eventId"></app-polls>
       <app-sidebar-chat *ngSwitchCase="'Chat'" [referenceId]="eventId"></app-sidebar-chat>
+      <app-handouts *ngSwitchCase="'Handouts'" [referenceId]="eventId" [isHost]="isHost"></app-handouts>
     </div>
   </div>
 </div>

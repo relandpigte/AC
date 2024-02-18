@@ -79,8 +79,8 @@ export class CoachingsComponent extends PagedListingComponentBase<CoachingDto> i
       )
       .subscribe((result: CoachingDtoPagedResultDto) => {
         this.coachings = result.items;
-        _.each(this.coachings, coaching => {
-          this.thumbnailUrls[coaching.id] = this._uploadService.getFileUrl(coaching.thumbnailDocument);
+        _.each(this.coachings, async coaching => {
+          this.thumbnailUrls[coaching.id] = await this._uploadService.getFileUrl(coaching.thumbnailDocument);
         });
         this.showPaging(result, pageNumber);
       });

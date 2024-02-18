@@ -45,9 +45,9 @@ export class TutorPortalComponent extends AppComponentBase implements OnInit {
   private getEvent(): void {
     this._eventsService.get(this.id)
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(response => {
+      .subscribe(async response => {
         this._tutorPortalService.event = response;
-        this.thumbnailUrl = this._uploadService.getFileUrl(response.thumbnailDocument);
+        this.thumbnailUrl = await this._uploadService.getFileUrl(response.thumbnailDocument);
       });
   }
 }

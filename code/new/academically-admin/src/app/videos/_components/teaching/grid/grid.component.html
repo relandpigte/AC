@@ -2,7 +2,7 @@
     <div *ngFor="let video of videos" class="col-12 col-md-6 col-xl-4 p-0">
       <div class="card">
         <a href="#!visit" (click)="$event.preventDefault(); onVisitVideoClick(video)">
-          <img [src]="getServiceImageUrl(video.thumbnailDocument)" alt="..." class="card-img-top">
+          <img [src]="getServiceImageUrl(video.thumbnailDocument) | async" alt="..." class="card-img-top">
         </a>
         <div class="card-body">
           <div class="row align-items-center">

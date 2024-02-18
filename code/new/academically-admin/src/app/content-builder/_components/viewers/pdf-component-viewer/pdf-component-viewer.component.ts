@@ -17,9 +17,9 @@ export class PdfComponentViewerComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  getFileUrl(): string {
+  async getFileUrl(): Promise<string> {
     if (this.component.pdfDocument) {
-      return `https://docs.google.com/viewer?url=${this._uploadService.getFileUrl(this.component.pdfDocument)}&embedded=true`;
+      return `https://docs.google.com/viewer?url=${await this._uploadService.getFileUrl(this.component.pdfDocument)}&embedded=true`;
     }
     return '';
   }

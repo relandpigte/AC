@@ -34,6 +34,7 @@ import { CoHostsComponent } from './_components/settings/_components/co-hosts/co
 import { ShareVideosComponent } from './_components/share-videos/share-videos.component';
 import { PortalTempComponent } from './_components/portal-temp/portal-temp.component';
 import { QuestionsComponent } from './_components/questions/questions.component';
+import { HandoutsComponent } from './_components/handouts/handouts.component';
 import { PollsComponent } from './_components/polls/polls.component';
 import { PollsQueueComponent } from './_components/polls/_components/polls-queue/polls-queue.component';
 import { PollsOpenComponent } from './_components/polls/_components/polls-open/polls-open.component';
@@ -78,6 +79,7 @@ import { LiveQuestionCardComponent } from './_components/questions/components/li
     PollsOpenComponent,
     PollsClosedComponent,
     PollComponent,
+    HandoutsComponent,
     ChatComponent,
     CommentsComponent,
     LiveQuestionCardComponent,

@@ -942,6 +942,16 @@ namespace Academically.Services.Services
                 .ToListAsync();
         }
 
+        public async Task<ServiceHandoutDto> GetServiceHandoutAsync(Guid id)
+        {
+            return await _serviceHandoutRepository.GetAll()
+                .AsNoTracking()
+                .Include(x => x.Document)
+                .Where(x => x.Id == id)
+                .Select(x => ObjectMapper.Map<ServiceHandoutDto>(x))
+                .SingleOrDefaultAsync();
+        }
+
         private async Task<int> ServiceCreatedCount(long userId, ServicesType type)
         {
             var serviceCreated = type switch

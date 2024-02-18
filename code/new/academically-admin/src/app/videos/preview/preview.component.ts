@@ -103,20 +103,20 @@ export class PreviewComponent extends AppComponentBase implements OnInit {
       this._servicesService.getServiceReviewStats(this._id),
     ])
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(([video, review, reviewStats]) => {
+      .subscribe(async ([video, review, reviewStats]) => {
         this.model = video;
         this.ownReview = review;
 
         this._previewService.video = video;
         this._serviceData.serviceReview = review;
         this._serviceData.serviceReviewStats = reviewStats;
-        this.thumbnailUrl = this._uploadService.getFileUrl(video.thumbnailDocument);
+        this.thumbnailUrl = await this._uploadService.getFileUrl(video.thumbnailDocument);
         if (!this.isPreview) {
           this.getStudentVideo();
         }
-        setTimeout(() => {
+        setTimeout(async () => {
           const video = (this.videoEl.nativeElement as HTMLVideoElement);
-          video.src = this._uploadService.getFileUrl(this.model.document);
+          video.src = await this._uploadService.getFileUrl(this.model.document);
           video.load();
           video.play();
         });

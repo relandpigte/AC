@@ -14,7 +14,8 @@ public class ServiceHandoutDto : CreationAuditedEntity<Guid>
     public Guid ReferenceId { get; set; }
     public ServicesType? ServiceType { get; set; }
     public int? DisplayOrder { get; set; }
-    
+    public DateTime? ShareTime { get; set; }
+
     public long CreatorUserId { get; set; }
     public UserDto CreatorUser { get; set; }
     

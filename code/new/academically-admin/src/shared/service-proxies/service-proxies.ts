@@ -10834,6 +10834,62 @@ export class DocumentsServiceProxy {
      * @param id (optional) 
      * @return Success
      */
+    download(id: string | undefined): Observable<string> {
+        let url_ = this.baseUrl + "/api/services/app/Documents/Download?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDownload(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDownload(<any>response_);
+                } catch (e) {
+                    return <Observable<string>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<string>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDownload(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<string>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
     getSecuredUrl(id: string | undefined): Observable<string> {
         let url_ = this.baseUrl + "/api/services/app/Documents/GetSecuredUrl?";
         if (id === null)
@@ -26424,6 +26480,62 @@ export class ServicesServiceProxy {
             }));
         }
         return _observableOf<ServiceHandoutDto[]>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getServiceHandout(id: string | undefined): Observable<ServiceHandoutDto> {
+        let url_ = this.baseUrl + "/api/services/app/Services/GetServiceHandout?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetServiceHandout(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetServiceHandout(<any>response_);
+                } catch (e) {
+                    return <Observable<ServiceHandoutDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ServiceHandoutDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetServiceHandout(response: HttpResponseBase): Observable<ServiceHandoutDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServiceHandoutDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ServiceHandoutDto>(<any>null);
     }
 }
 
@@ -50096,7 +50208,7 @@ export interface IGroupedPermissionDtoListResultDto {
     items: GroupedPermissionDto[] | undefined;
 }
 
-/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted 18 = ChannelMessageCreated 19 = ChannelMessageUpdated 20 = ChannelMessageDeleted 21 = ChannelMemberTyping 22 = ChannelArchive 23 = ChannelUnarchive 24 = NewUserLoggedIn 25 = NotificationCreated 26 = NotificationUpdated 27 = NotificationDeleted 28 = QuestionCreated 29 = QuestionUpdated 30 = QuestionDeleted 31 = QuestionReactionCreated 32 = QuestionReactionUpdated 33 = QuestionReactionDeleted 34 = ServiceOfferCreated 35 = ServiceOfferUpdated 36 = ServiceOfferDeleted 37 = ServiceOfferLaunched 38 = ServiceOfferClosed 39 = AnsweringLiveQuestion 40 = EndAnsweringLiveQuestion 41 = EventPollCreated 42 = EventPollUpdated 43 = EventPollDeleted 44 = EventPollLaunched 45 = EventPollClosed 46 = EventPollShared 47 = UpcomingEvent */
+/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted 18 = ChannelMessageCreated 19 = ChannelMessageUpdated 20 = ChannelMessageDeleted 21 = ChannelMemberTyping 22 = ChannelArchive 23 = ChannelUnarchive 24 = NewUserLoggedIn 25 = NotificationCreated 26 = NotificationUpdated 27 = NotificationDeleted 28 = QuestionCreated 29 = QuestionUpdated 30 = QuestionDeleted 31 = QuestionReactionCreated 32 = QuestionReactionUpdated 33 = QuestionReactionDeleted 34 = ServiceOfferCreated 35 = ServiceOfferUpdated 36 = ServiceOfferDeleted 37 = ServiceOfferLaunched 38 = ServiceOfferClosed 39 = AnsweringLiveQuestion 40 = EndAnsweringLiveQuestion 41 = EventPollCreated 42 = EventPollUpdated 43 = EventPollDeleted 44 = EventPollLaunched 45 = EventPollClosed 46 = EventPollShared 47 = ServiceHandoutCreated 48 = ServiceHandoutUpdated 49 = ServiceHandoutDeleted 50 = ServiceHandoutShared 51 = UpcomingEvent */
 export enum HubEvent {
     PostCreated = 0,
     PostUpdated = 1,
@@ -50145,7 +50257,11 @@ export enum HubEvent {
     EventPollLaunched = 44,
     EventPollClosed = 45,
     EventPollShared = 46,
-    UpcomingEvent = 47,
+    ServiceHandoutCreated = 47,
+    ServiceHandoutUpdated = 48,
+    ServiceHandoutDeleted = 49,
+    ServiceHandoutShared = 50,
+    UpcomingEvent = 51,
 }
 
 export class ICustomAttributeProvider implements IICustomAttributeProvider {
@@ -55680,6 +55796,7 @@ export class ServiceHandoutDto implements IServiceHandoutDto {
     referenceId: string;
     serviceType: ServicesType;
     displayOrder: number | undefined;
+    shareTime: moment.Moment | undefined;
     creatorUser: UserDto;
     documentId: string;
     document: DocumentDto;
@@ -55701,6 +55818,7 @@ export class ServiceHandoutDto implements IServiceHandoutDto {
             this.referenceId = _data["referenceId"];
             this.serviceType = _data["serviceType"];
             this.displayOrder = _data["displayOrder"];
+            this.shareTime = _data["shareTime"] ? moment(_data["shareTime"].toString()) : <any>undefined;
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
             this.documentId = _data["documentId"];
             this.document = _data["document"] ? DocumentDto.fromJS(_data["document"]) : <any>undefined;
@@ -55722,6 +55840,7 @@ export class ServiceHandoutDto implements IServiceHandoutDto {
         data["referenceId"] = this.referenceId;
         data["serviceType"] = this.serviceType;
         data["displayOrder"] = this.displayOrder;
+        data["shareTime"] = this.shareTime ? this.shareTime.toISOString() : <any>undefined;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         data["documentId"] = this.documentId;
         data["document"] = this.document ? this.document.toJSON() : <any>undefined;
@@ -55743,6 +55862,7 @@ export interface IServiceHandoutDto {
     referenceId: string;
     serviceType: ServicesType;
     displayOrder: number | undefined;
+    shareTime: moment.Moment | undefined;
     creatorUser: UserDto;
     documentId: string;
     document: DocumentDto;

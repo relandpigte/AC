@@ -65,5 +65,6 @@ namespace Academically.Services.Services
         // Service Handouts
         Task SaveServiceHandoutAsync([FromForm] CreateServiceHandoutsDto input);
         Task<IEnumerable<ServiceHandoutDto>> GetAllServiceHandoutsAsync(Guid referenceId);
+        Task<ServiceHandoutDto> GetServiceHandoutAsync(Guid id);
     }
 }

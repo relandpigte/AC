@@ -93,8 +93,8 @@ export class ProgramsComponent extends PagedListingComponentBase<EventDto> imple
       )
       .subscribe((result: EventDtoPagedResultDto) => {
         this.workshops = result.items;
-        _.each(this.workshops, workshop => {
-          this.thumbnailUrls[workshop.id] = this._uploadService.getFileUrl(workshop.thumbnailDocument);
+        _.each(this.workshops, async workshop => {
+          this.thumbnailUrls[workshop.id] = await this._uploadService.getFileUrl(workshop.thumbnailDocument);
         });
         this.showPaging(result, pageNumber);
       });

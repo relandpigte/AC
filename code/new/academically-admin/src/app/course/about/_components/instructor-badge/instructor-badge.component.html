@@ -2,7 +2,7 @@
     <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.LandingRightAuthor"></app-shimmer>
     <div class="card-body text-center">
         <img [alt]="ownerName" class="avatar-img rounded-circle"
-             [src]="getProfilePicture(profilePictureUrl)" />
+             [src]="getProfilePicture(profilePictureUrl | async)" />
         <h5 class="card-title">{{ ownerName }}</h5>
         <p class="card-text">{{ ownerAbout }}</p>
         <a href="#" class="btn btn-light btn-sm">Instructor</a>

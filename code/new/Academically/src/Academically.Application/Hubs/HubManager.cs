@@ -17,6 +17,8 @@ using Academically.Services.Notifications.Dto;
 using Academically.Services.Questions.Dto;
 using Academically.Services.Services.Dto;
 using Academically.Services.EventPolls.Dto;
+using Academically.Services.EventResources.Dto;
+using Academically.Services.CoachingResources.Dto;
 
 namespace Academically.Hubs
 {
@@ -67,6 +69,10 @@ namespace Academically.Hubs
         Task NotifyUsersForEventPollLaunched(EventPollDto poll);
         Task NotifyUsersForEventPollClosed(EventPollDto poll);
         Task NotifyUsersForEventPollShared(EventPollDto poll);
+        Task NotifyUsersForServiceHandoutCreated(ServiceHandoutDto resource);
+        Task NotifyUsersForServiceHandoutUpdated(ServiceHandoutDto resource);
+        Task NotifyUsersForServiceHandoutDeleted(ServiceHandoutDto resource);
+        Task NotifyUsersForServiceHandoutShared(ServiceHandoutDto resource);
         Task NotifyUsersForEventSettingsUpdated(ServiceFeatureFlagDto settings);
     }
 
@@ -97,6 +103,7 @@ namespace Academically.Hubs
         private readonly IHubContext<QuestionsReactionsHub> _questionsReactionsHub;
         private readonly IHubContext<ServiceOffersHub> _serviceOffersHub;
         private readonly IHubContext<EventPollsHub> _eventPollsHub;
+        private readonly IHubContext<ServiceHandoutsHub> _serviceHandoutsHub;
         private readonly IHubContext<EventSettingsHub> _eventSettingsHub;
 
         public HubManager(IHubContext<UserTopicsHub> userTopicsHub,
@@ -116,6 +123,7 @@ namespace Academically.Hubs
             IHubContext<QuestionsReactionsHub> questionsReactionsHub,
             IHubContext<ServiceOffersHub> serviceOffersHub,
             IHubContext<EventPollsHub> eventPollsHub,
+            IHubContext<ServiceHandoutsHub> serviceHandoutsHub,
             IHubContext<EventSettingsHub> eventSettingsHub)
         {
             _userTopicsHub = userTopicsHub;
@@ -134,6 +142,7 @@ namespace Academically.Hubs
             _questionsReactionsHub = questionsReactionsHub;
             _serviceOffersHub = serviceOffersHub;
             _eventPollsHub = eventPollsHub;
+            _serviceHandoutsHub = serviceHandoutsHub;
             _eventSettingsHub = eventSettingsHub;
         }
 
@@ -485,6 +494,26 @@ namespace Academically.Hubs
         public async Task NotifyUsersForEventPollShared(EventPollDto poll)
         {
             await _eventPollsHub.Clients.Group($"{poll.EventId}").SendAsync(nameof(HubEvent.EventPollShared), poll);
+        }
+
+        public async Task NotifyUsersForServiceHandoutCreated(ServiceHandoutDto resource)
+        {
+            await _serviceHandoutsHub.Clients.Group($"{resource.ReferenceId}").SendAsync(nameof(HubEvent.ServiceHandoutCreated), resource);
+        }
+
+        public async Task NotifyUsersForServiceHandoutUpdated(ServiceHandoutDto resource)
+        {
+            await _serviceHandoutsHub.Clients.Group($"{resource.ReferenceId}").SendAsync(nameof(HubEvent.ServiceHandoutUpdated), resource);
+        }
+
+        public async Task NotifyUsersForServiceHandoutDeleted(ServiceHandoutDto resource)
+        {
+            await _serviceHandoutsHub.Clients.Group($"{resource.ReferenceId}").SendAsync(nameof(HubEvent.ServiceHandoutDeleted), resource);
+        }
+
+        public async Task NotifyUsersForServiceHandoutShared(ServiceHandoutDto resource)
+        {
+            await _serviceHandoutsHub.Clients.Group($"{resource.ReferenceId}").SendAsync(nameof(HubEvent.ServiceHandoutShared), resource);
         }
 
         public async Task NotifyUsersForEventSettingsUpdated(ServiceFeatureFlagDto settings)

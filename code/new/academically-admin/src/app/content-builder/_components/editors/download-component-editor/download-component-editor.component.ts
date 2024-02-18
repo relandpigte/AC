@@ -48,10 +48,10 @@ export class DownloadComponentEditorComponent extends AppComponentBase implement
               this.isLoading = false;
             }),
           )
-          .subscribe(response => {
+          .subscribe(async response => {
             this.imageComponentContent.downloadDocument = response;
             this.documentUploader.files = [];
-            this.setDefaultFile();
+            await this.setDefaultFile();
           });
       } else {
         this.imageComponentContent.downloadDocument = undefined;
@@ -75,10 +75,10 @@ export class DownloadComponentEditorComponent extends AppComponentBase implement
     });
   }
 
-  private setDefaultFile(): void {
+  private async setDefaultFile(): Promise<void> {
     this.defaultFile = new DefaultFile();
     this.defaultFile.name = this.imageComponentContent.downloadDocument.originalFileName;
-    this.defaultFile.url = this._uploadService.getFileUrl(this.imageComponentContent.downloadDocument);
+    this.defaultFile.url = await this._uploadService.getFileUrl(this.imageComponentContent.downloadDocument);
     this.defaultFile.size = this.imageComponentContent.downloadDocument.size;
     this.documentUploader.defaultFile = this.defaultFile;
   }

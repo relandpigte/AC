@@ -13,6 +13,8 @@ public class ServiceHandout : CreationAuditedEntity<Guid>
     public Guid DocumentId { get; set; }
     public ServicesType? ServiceType { get; set; }
     public int? DisplayOrder { get; set; }
+    public DateTime? ShareTime { get; set; }
+
 
     [ForeignKey("CreatorUserId")]
     public virtual User CreatorUser { get; set; }

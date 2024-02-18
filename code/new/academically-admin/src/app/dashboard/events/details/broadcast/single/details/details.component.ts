@@ -236,11 +236,11 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
           this.isUploadingImage = false;
         })
       )
-      .subscribe(response => {
+      .subscribe(async response => {
         this.model.thumbnailDocumentId = response.id;
         this.thumbnailDocument = response;
         this.documentUploader.files = [];
-        this.setDefaultFile();
+        await this.setDefaultFile();
       });
   }
 
@@ -281,7 +281,7 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
           this.isLoading = false;
         })
       )
-      .subscribe(response => {
+      .subscribe(async response => {
         this.model.init(response);
         if (this.model.categories) {
           this.categories = this.model.categories.split(',');
@@ -289,7 +289,7 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
 
         if (response.thumbnailDocument) {
           this.thumbnailDocument = response.thumbnailDocument;
-          this.setDefaultFile();
+          await this.setDefaultFile();
         }
 
         if (response.eventDateTime) {
@@ -318,10 +318,10 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
       });
   }
 
-  private setDefaultFile(): void {
+  private async setDefaultFile(): Promise<void> {
     this.defaultFile = new DefaultFile();
     this.defaultFile.name = this.thumbnailDocument.originalFileName;
-    this.defaultFile.url = this._uploadService.getFileUrl(this.thumbnailDocument);
+    this.defaultFile.url = await this._uploadService.getFileUrl(this.thumbnailDocument);
     this.defaultFile.size = this.thumbnailDocument.size;
     this.documentUploader.defaultFile = this.defaultFile;
   }

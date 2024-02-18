@@ -77,7 +77,7 @@
                                     *ngFor="let user of joinedUsers | search: searchUser" (click)="handleAddRecipient(user)"
                                      class="user-list d-flex align-items-center cursor-pointer gap-10">
                                     <a class="avatar avatar-sm" href="javascript: void(0)">
-                                        <img [src]="getProfilePictureUrl(user.profilePictureDocument)" [alt]="user.fullName"
+                                        <img [src]="getProfilePictureUrl(user.profilePictureDocument) | async" [alt]="user.fullName"
                                              class="avatar-img rounded-circle">
                                     </a>
                                     <span>{{ user.fullName }}</span>
@@ -86,7 +86,7 @@
                                 <div *ngFor="let user of notJoinedUsers | search: searchUser" (click)="handleAddRecipient(user)"
                                      class="user-list d-flex align-items-center cursor-pointer gap-10">
                                     <a class="avatar avatar-sm" href="javascript: void(0)">
-                                        <img [src]="getProfilePictureUrl(user.profilePictureDocument)" [alt]="user.fullName"
+                                        <img [src]="getProfilePictureUrl(user.profilePictureDocument) | async" [alt]="user.fullName"
                                              class="avatar-img rounded-circle">
                                     </a>
                                     <span>{{ user.fullName }}</span>

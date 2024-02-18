@@ -113,7 +113,7 @@
                     <div class="avatar-group hide-empty">
                       <div *ngFor="let voterUser of getVoterUsers(question)" class="avatar avatar-xs">
                         <img *ngIf="voterUser.profilePictureDocument && voterUser.profilePictureDocument.id else
-                        noProfilePictureTemplate" [src]="getProfilePictureUrl(voterUser.profilePictureDocument)" alt="..."
+                        noProfilePictureTemplate" [src]="getProfilePictureUrl(voterUser.profilePictureDocument) | async" alt="..."
                           class="avatar-img rounded-circle">
                         <ng-template #noProfilePictureTemplate>
                           <span class="avatar-title rounded-circle" [tooltip]="voterUser.fullName">
@@ -202,7 +202,7 @@
             <div class="avatar-group hide-empty">
               <div *ngFor="let voterUser of getVoterUsers(question)" class="avatar avatar-xs">
                 <img *ngIf="voterUser.profilePictureDocument && voterUser.profilePictureDocument.id else
-                noProfilePictureTemplate" [src]="getProfilePictureUrl(voterUser.profilePictureDocument)" alt="..."
+                noProfilePictureTemplate" [src]="getProfilePictureUrl(voterUser.profilePictureDocument) | async" alt="..."
                   class="avatar-img rounded-circle">
                 <ng-template #noProfilePictureTemplate>
                   <span class="avatar-title rounded-circle" [tooltip]="voterUser.fullName">
@@ -268,7 +268,7 @@
                 <div class="avatar-group hide-empty">
                   <div *ngFor="let voterUser of getVoterUsers(question)" class="avatar avatar-xs">
                     <img *ngIf="voterUser.profilePictureDocument && voterUser.profilePictureDocument.id else
-                    noProfilePictureTemplate" [src]="getProfilePictureUrl(voterUser.profilePictureDocument)" alt="..."
+                    noProfilePictureTemplate" [src]="getProfilePictureUrl(voterUser.profilePictureDocument) | async" alt="..."
                       class="avatar-img rounded-circle">
                     <ng-template #noProfilePictureTemplate>
                       <span class="avatar-title rounded-circle" [tooltip]="voterUser.fullName">

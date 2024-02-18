@@ -17,9 +17,9 @@ export class OfficeComponentViewerComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  getFileUrl(): string {
+  async getFileUrl(): Promise<string> {
     if (this.component.officeDocument) {
-      return `https://view.officeapps.live.com/op/embed.aspx?src=${this._uploadService.getFileUrl(this.component.officeDocument)}`;
+      return `https://view.officeapps.live.com/op/embed.aspx?src=${await this._uploadService.getFileUrl(this.component.officeDocument)}`;
     }
     return '';
   }

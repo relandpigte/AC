@@ -4,7 +4,7 @@
             <div class="card-body">
                 <div class="card-body-header d-flex align-items-center gap-12">
                     <a class="avatar avatar-sm" href="javascript:void(0)">
-                        <img [src]="recipientProfile" [alt]="recipientName" class="avatar-img rounded-circle">
+                        <img [src]="recipientProfile | async" [alt]="recipientName" class="avatar-img rounded-circle">
                     </a>
                     <div class="event-name">
                         <h3 class="m-0 p-0">{{ messageTo }}</h3>

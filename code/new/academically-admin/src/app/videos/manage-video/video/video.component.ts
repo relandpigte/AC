@@ -143,18 +143,18 @@ export class VideoComponent extends AppComponentBase implements OnInit, OnDestro
           this.isLoading = false;
         })
       )
-      .subscribe(response => {
+      .subscribe(async response => {
         if (response.document) {
           this.document = response.document;
-          this.setDefaultFile();
+          await this.setDefaultFile();
         }
       });
   }
 
-  private setDefaultFile(): void {
+  private async setDefaultFile(): Promise<void> {
     this.defaultFile = new DefaultFile();
     this.defaultFile.name = this.document.originalFileName;
-    this.defaultFile.url = this._uploadService.getFileUrl(this.document);
+    this.defaultFile.url = await this._uploadService.getFileUrl(this.document);
     this.defaultFile.size = this.document.size;
     this.documentUploader.defaultFile = this.defaultFile;
   }

@@ -13,7 +13,7 @@
               </div>
               <ng-template #withThumbnailTemplate>
                 <div class="avatar avatar-4by3">
-                  <img [src]="getServiceImageUrl(studentArticle.article.thumbnailDocument)" alt="..."
+                  <img [src]="getServiceImageUrl(studentArticle.article.thumbnailDocument) | async" alt="..."
                     class="avatar-img rounded">
                 </div>
               </ng-template>

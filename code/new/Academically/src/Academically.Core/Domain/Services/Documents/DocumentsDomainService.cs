@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.IO.Extensions;
@@ -50,6 +52,13 @@ namespace Academically.Domain.Services.Documents
         public string GetBaseDirectory()
         {
             return _fileManagerService.GetRootPath();
+        }
+
+        public async Task<byte[]> GetFileDataAsync(Guid id)
+        {
+            var document = await _documentsRepository.GetAsync(id);
+            var (folder, isSecured) = await GetFolderAsync(document.CreatorUserId.Value, document.DocumentType);
+            return await _fileManagerService.DownloadAsync(document.Name, folder, isSecured);
         }
 
         public async Task<string> GetFileUrlAsync(Document document)

@@ -18,8 +18,8 @@ export class DownloadComponentViewerComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  getFileUrl(): string {
-    return this._uploadService.getFileUrl(this.component.downloadDocument);
+  async getFileUrl(): Promise<string> {
+    return await this._uploadService.getFileUrl(this.component.downloadDocument);
   }
 
   onDownloadClick(url: string): void {
