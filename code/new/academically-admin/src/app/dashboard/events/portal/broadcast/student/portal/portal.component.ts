@@ -137,7 +137,7 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
     this.pipeDestroy(this._portalPollService.pollSelectedMaximized$, isMaximized => this.handleSelectedPollMaximized(isMaximized));
 
     // handouts
-    this.pipeDestroy(this._portalHandoutService.newHandountsCount$, count => this.newHandoutsCount = count);
+    this.pipeDestroy(this._portalHandoutService.newHandoutsCount$, count => this.newHandoutsCount = count);
 
     await this.initOffersAppStates();
     await this.initPollsAppStates();
@@ -326,8 +326,7 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
     };
     await this.pubSubService.start(this, appStateConfig, appStateServices);
     this.serviceHandoutsStateService = this.pubSubService.getStateService<ServiceHandoutsStateService>(this.handoutsStateId);
-    this.serviceHandoutsStateService.handouts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
-    });
+    this.serviceHandoutsStateService.handouts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {});
   }
 
   private async initLiveAnsweringQuestion(): Promise<void> {

@@ -87,7 +87,7 @@ export class HandoutsComponent extends AppComponentBase implements OnInit, OnDes
         if (!event.data) return;
         switch (event.type) {
             case StateUpdateType.Add:
-              this.handouts = [event.data].concat(this.handouts);
+              this.handouts = this.handouts.concat([event.data]);
               this.totalHandoutsCount++;
               break;
             case StateUpdateType.Update:
@@ -96,7 +96,7 @@ export class HandoutsComponent extends AppComponentBase implements OnInit, OnDes
               } else {
                 const idx = this.handouts.findIndex(c => c.id === event.data.id);
                 this.handouts.splice(idx, 1);
-                this.handouts = [event.data].concat(this.handouts);
+                this.handouts = this.handouts.concat([event.data]);
               }
               break;
             case StateUpdateType.Delete:

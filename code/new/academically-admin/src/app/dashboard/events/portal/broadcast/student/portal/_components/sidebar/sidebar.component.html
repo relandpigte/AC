@@ -1,16 +1,19 @@
 <div [class.content-hidden]="hidden" class="sidebar bg-white">
   <ul class="sidebar-menu d-flex flex-column gap-20">
     <li class="sidebar-logo">
-      <a href="#!" (click)="$event.preventDefault();">
+      <a href="javascript:void(0)" (click)="$event.preventDefault();">
         <img src="assets/img/ac-logo-light.png" alt="Academically" />
       </a>
     </li>
     <ng-container *ngFor="let item of menuItems">
       <ng-container *ngIf="item.name !== 'Separator' else separatorTemplate">
-        <li *ngIf="isMenuItemEnabled$(item) | async" [class.active]="activeMenuItem === item">
-          <a #menuItem [id]="item.name" href="#" (click)="onMenuItemClick(item, $event)">
+        <li *ngIf="isMenuItemEnabled$(item) | async" class="position-relative" [class.active]="activeMenuItem === item">
+          <a #menuItem [id]="item.name" href="javascript:void(0);" (click)="onMenuItemClick(item, $event)">
             <span class="icon" [class]="item.className"></span>
           </a>
+          <div *ngIf="item.hasBadge && getMenuBadgeValue(item) && activeMenuItem !== item" class="sidebar-menu-item-badge d-flex justify-content-center align-items-center">
+            {{ getMenuBadgeValue(item) }}
+          </div>
         </li>
       </ng-container>
     </ng-container>

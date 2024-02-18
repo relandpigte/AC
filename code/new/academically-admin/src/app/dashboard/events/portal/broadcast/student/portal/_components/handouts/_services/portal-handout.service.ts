@@ -6,14 +6,15 @@ import { BehaviorSubject, Observable } from 'rxjs';
     providedIn: 'root'
 })
 export class PortalHandoutService {
-    public newHandountsCount$: Observable<number>;
+    public newHandoutsCount$: Observable<number>;
 
-    private _newHandountsCountSubject: BehaviorSubject<number>;
+    private _newHandoutsCountSubject: BehaviorSubject<number>;
 
     constructor() {
-        this._newHandountsCountSubject = new BehaviorSubject<number>(0);
-        this.newHandountsCount$ = this._newHandountsCountSubject.asObservable();
+        this._newHandoutsCountSubject = new BehaviorSubject<number>(0);
+        this.newHandoutsCount$ = this._newHandoutsCountSubject.asObservable();
     }
 
-    public set newHandountsCount(value: number) { this._newHandountsCountSubject.next(value); }
+    public set newHandoutsCount(value: number) { this._newHandoutsCountSubject.next(value); }
+    public get newHandoutsCountValue(): number { return this._newHandoutsCountSubject.value; }
 }

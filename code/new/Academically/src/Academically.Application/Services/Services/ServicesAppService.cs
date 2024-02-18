@@ -34,6 +34,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Academically.Authorization.Users;
 using System.Net.Mail;
+using Academically.Services.EventPolls.Dto;
 
 namespace Academically.Services.Services
 {
@@ -965,6 +966,7 @@ namespace Academically.Services.Services
             if (handout != null)
             {
                 handout.ShareTime = Clock.Now;
+                await this._hubManager.NotifyUsersForServiceHandoutShared(ObjectMapper.Map<ServiceHandoutDto>(handout));
             }
 
         }
@@ -975,6 +977,7 @@ namespace Academically.Services.Services
                 .AsNoTracking()
                 .Include(x => x.Document)
                 .Where(x => x.ReferenceId == referenceId)
+                .OrderBy(x => x.CreationTime)
                 .Select(x => ObjectMapper.Map<ServiceHandoutDto>(x))
                 .ToListAsync();
 
