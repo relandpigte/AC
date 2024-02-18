@@ -1,0 +1,8 @@
+<div class="handout-card card custom-card-border custom-card-shadow d-flex justify-content-center align-items-center no-wrap m-0" [ngClass]="[customClass]">
+    <ng-container *ngIf="isOwner">
+        You shared a handout
+    </ng-container>
+    <ng-container *ngIf="!isOwner">
+        {{ ownerFirstName | titlecase }} shared a handout
+    </ng-container>
+</div>

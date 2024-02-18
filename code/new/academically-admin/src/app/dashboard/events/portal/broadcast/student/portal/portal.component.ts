@@ -13,6 +13,7 @@ import {
   ProfilesServiceProxy,
   QuestionDto,
   QuestionsServiceProxy,
+  ServiceHandoutDto,
   ServiceOfferDto,
   ServicesServiceProxy
 } from '@shared/service-proxies/service-proxies';
@@ -74,6 +75,7 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
 
   serviceHandoutsStateService: ServiceHandoutsStateService;
   newHandoutsCount: number;
+  newHandouts: (ServiceHandoutDto & { customClass?: string })[] = [];
 
   liveQuestion: QuestionDto;
 
@@ -138,6 +140,20 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
 
     // handouts
     this.pipeDestroy(this._portalHandoutService.newHandoutsCount$, count => this.newHandoutsCount = count);
+    this.pipeDestroy(this._portalHandoutService.newHandout$, data => {
+      if (!data) return;
+      const handout = data as ServiceHandoutDto & { customClass?: string };
+      setTimeout(() => {
+        handout.customClass = 'hiding';
+        this._cdr.detectChanges();
+        setTimeout(() => {
+          this.newHandouts = this.newHandouts.filter(h => h.id !== handout.id);
+          this._cdr.detectChanges();
+        }, 1000);
+      }, 15000);
+      this.newHandouts.push(handout);
+      this._cdr.detectChanges();
+    });
 
     await this.initOffersAppStates();
     await this.initPollsAppStates();

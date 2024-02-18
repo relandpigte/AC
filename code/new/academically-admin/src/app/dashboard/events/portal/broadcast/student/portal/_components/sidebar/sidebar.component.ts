@@ -142,13 +142,18 @@ export class SidebarComponent extends AppComponentBase implements OnInit, OnDest
     await this.pubSubService.start(this, appStateConfig, appStateServices);
     this.serviceHandoutsStateService = this.pubSubService.getStateService<ServiceHandoutsStateService>(this.handoutsStateId);
     this.serviceHandoutsStateService.handouts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
-      if (!event.data || this.activeMenuItem.name === 'Handouts') return;
+      if (!event.data) return;
       switch (event.type) {
         case 'shared':
-          this._portalHandoutService.newHandoutsCount = this._portalHandoutService.newHandoutsCountValue + 1;
+          this._portalHandoutService.newHandout = event.data;
+          if (this.activeMenuItem.name !== 'Handouts') {
+            this._portalHandoutService.newHandoutsCount = this._portalHandoutService.newHandoutsCountValue + 1;
+          }
           break;
         case 'delete':
-          this._portalHandoutService.newHandoutsCount = this._portalHandoutService.newHandoutsCountValue > 0 ? this._portalHandoutService.newHandoutsCountValue - 1 : 0;
+          if (this.activeMenuItem.name !== 'Handouts') {
+            this._portalHandoutService.newHandoutsCount = this._portalHandoutService.newHandoutsCountValue > 0 ? this._portalHandoutService.newHandoutsCountValue - 1 : 0;
+          }
           break;
       }
       this._cdr.detectChanges();

@@ -137,6 +137,14 @@
       </div>
     </div>
 
+    <div *ngIf="newHandouts.length > 0" class="handout-floater d-flex flex-column-reverse justify-content-end align-items-center gap-20">
+      <app-handout-card *ngFor="let handout of newHandouts" [handout]="handout" ></app-handout-card>
+    </div>
+
+    <div *ngIf="!isHost && selectedOffer" class="event-floater">
+      <app-offer-card [offer]="selectedOffer" [canClose]="true" (onClose)="selectedOffer=null"  (onClick)="onOfferClick($event)"></app-offer-card>
+    </div>
+
     <div *ngIf="!isHost && selectedOffer" class="event-floater">
       <app-offer-card [offer]="selectedOffer" [canClose]="true" (onClose)="selectedOffer=null"  (onClick)="onOfferClick($event)"></app-offer-card>
     </div>

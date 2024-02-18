@@ -992,6 +992,7 @@ namespace Academically.Services.Services
             return await _serviceHandoutRepository.GetAll()
                 .AsNoTracking()
                 .Include(x => x.Document)
+                .Include(x => x.CreatorUser)
                 .Where(x => x.Id == id)
                 .Select(x => ObjectMapper.Map<ServiceHandoutDto>(x))
                 .SingleOrDefaultAsync();
