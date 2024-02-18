@@ -20,4 +20,5 @@ public class ServiceHandoutDto : CreationAuditedEntity<Guid>
     
     public Guid DocumentId { get; set; }
     public DocumentDto Document { get; set; }
+    public string DocumentUrl { get; set; }
 }

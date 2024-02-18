@@ -315,6 +315,14 @@ namespace Academically.Domain.Services.Documents
                     folder = await SettingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_WorkshopThumbnails);
                     isSecured = false;
                     break;
+                case DocumentType.ServiceHandouts:
+                    folder = await SettingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_ServiceHandouts);
+                    isSecured = false;
+                    break;
+                case DocumentType.ServicePresentations:
+                    folder = await SettingManager.GetSettingValueAsync(AppSettingNames.Aws_S3_Folders_ServicePresentations);
+                    isSecured = false;
+                    break;
                 default:
                     folder = string.Empty;
                     isSecured = false;
