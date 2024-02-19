@@ -20,7 +20,7 @@ export class ServiceCardOfferComponent extends AppComponentBase {
   }
 
   get serviceName(): string {  return this.offer?.service?.name; }
-  get serviceType(): string { return ServiceCardUtils.getServiceTypeName(this.offer?.service?.serviceType).toLowerCase(); }
+  get serviceType(): string { return ServiceCardUtils.getServiceTypeName(this.offer?.service?.serviceType)?.toLowerCase(); }
   get serviceUnit(): number { return this.offer?.unitLimit ?? 0; }
   get servicePriceOrig(): number { return this.offer?.service?.price ?? 0; }
   get isArticle(): boolean { return this.serviceType === 'article'; }
@@ -42,6 +42,6 @@ export class ServiceCardOfferComponent extends AppComponentBase {
     }
     return moment.duration(duration, 'days').hours() ?? 0;
   }
-  get thumbnailUrl(): string {return this.offer.service.thumbnailImageUrl || '/assets/img/service/event-placeholder.png'; }
+  get thumbnailUrl(): string {return this.offer?.service?.thumbnailImageUrl || '/assets/img/service/event-placeholder.png'; }
   get coachThumbnailUrl(): string { return this.offer?.service?.creatorUser?.profilePictureUrl; }
 }
