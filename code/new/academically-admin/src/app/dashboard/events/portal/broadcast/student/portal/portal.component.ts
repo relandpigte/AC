@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentPortalBase, ServiceFeatureFlagMapping } from '@shared/app-component-portal-base';
 import {
+  EventCategory,
   EventPollDto,
   EventPollsServiceProxy,
   EventSessionsServiceProxy,
@@ -14,7 +15,8 @@ import {
   QuestionDto,
   QuestionsServiceProxy,
   ServiceOfferDto,
-  ServicesServiceProxy
+  ServicesServiceProxy,
+  ServicesType
 } from '@shared/service-proxies/service-proxies';
 import { EventPollsStateService, pollsType } from '@shared/services/event-polls-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
@@ -187,11 +189,9 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, A
     setTimeout(() => {
       handoutEvent.customClass = 'hiding';
       this._cdr.detectChanges();
-      console.error('@@@ 1 toasters left: ', this.newHandouts, handoutEvent.handout.id);
       setTimeout(() => {
         this.newHandouts = this.newHandouts.filter(h => h.handout?.id !== handoutEvent.handout?.id);
         this._cdr.detectChanges();
-        console.error('@@@ 2 toasters left: ', this.newHandouts, this.newHandouts, handoutEvent.handout.id);
       }, 1000);
     }, 15000);
 
@@ -227,6 +227,7 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, A
       this.eventModel = response;
       this._portalService.event = this.eventModel;
       this.getServiceFeatureFlags();
+      this.serviceType = response.category === EventCategory.Broadcast ? ServicesType.Event : ServicesType.Workshop;
     });
   }
 

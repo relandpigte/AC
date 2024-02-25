@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HubConnection } from '@microsoft/signalr';
 import { ServiceFeatureFlagMapping } from '@shared/app-component-portal-base';
 import { EventDto, EventUserDto, EventUserType, QuestionDto, ServiceFeatureFlagDto } from '@shared/service-proxies/service-proxies';
-import { BehaviorSubject, Observable, combineLatest, of } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, combineLatest, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 @Injectable({
@@ -20,6 +20,7 @@ export class PortalService {
   public grantRequestToSpeak$: Observable<EventUserDto>;
   public declineRequestToSpeak$: Observable<EventUserDto>;
   public grantedRequestToSpeak$: Observable<boolean>;
+  public kickUser$: Observable<EventUserDto>;
   public hub$: Observable<HubConnection>;
   public liveQuestion$: Observable<QuestionDto>;
   public featureFlags$: Observable<ServiceFeatureFlagDto>;
@@ -36,6 +37,7 @@ export class PortalService {
   private _grantRequestToSpeakSubject: BehaviorSubject<EventUserDto>;
   private _declineRequestToSpeakSubject: BehaviorSubject<EventUserDto>;
   private _grantedRequestToSpeakSubject: BehaviorSubject<boolean>;
+  private _kickUserSubject: Subject<EventUserDto>;
   private _hubSubject: BehaviorSubject<HubConnection>;
   private _liveQuestion: BehaviorSubject<QuestionDto>;
   private _featureFlags: BehaviorSubject<ServiceFeatureFlagDto>;
@@ -74,6 +76,9 @@ export class PortalService {
 
     this._grantedRequestToSpeakSubject = new BehaviorSubject<boolean>(undefined);
     this.grantedRequestToSpeak$ = this._grantedRequestToSpeakSubject.asObservable();
+
+    this._kickUserSubject = new BehaviorSubject<EventUserDto>(undefined);
+    this.kickUser$ = this._kickUserSubject.asObservable();
 
     this._hubSubject = new BehaviorSubject<HubConnection>(undefined);
     this.hub$ = this._hubSubject.asObservable();
@@ -133,6 +138,10 @@ export class PortalService {
 
   public set grantedRequestToSpeak(value: boolean) {
     this._grantedRequestToSpeakSubject.next(value);
+  }
+
+  public set kickUser(value: EventUserDto) {
+    this._kickUserSubject.next(value);
   }
 
   public set hub(value: HubConnection) {

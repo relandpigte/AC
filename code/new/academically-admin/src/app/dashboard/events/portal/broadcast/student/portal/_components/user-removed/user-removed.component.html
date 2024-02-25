@@ -1,0 +1,12 @@
+<div class="h-100" [@routerTransition]>
+    <div class="main-content position-relative d-flex flex-column justify-content-center align-items-center h-100">
+        <div class="main-content-img">
+            <img src="assets/img/events/wave.svg" alt="You were removed from the session." />
+        </div>
+        <div class="main-content-title">{{ 'Portal.RemovedUser.Title' | localize: serviceTypeName }}</div>
+        <div class="main-content-subtitle">{{ 'Portal.RemovedUser.Subtitle' | localize }}</div>
+        <div class="main-content-actions">
+            <button class="btn btn-primary" (click)="goToDashboard()">{{ 'Portal.RemovedUser.Actions.GoToDashboard' | localize }}</button>
+        </div>
+    </div>
+</div>

@@ -70,4 +70,8 @@ export class LiveComponent extends AppComponentBase implements OnInit {
       }
     });
   }
+
+  removeUser(user: EventUserDto): void {
+    this._portalService.kickUser = user;
+  }
 }

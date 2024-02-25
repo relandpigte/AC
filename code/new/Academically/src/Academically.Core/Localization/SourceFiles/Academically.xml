@@ -2127,8 +2127,17 @@
 	<text name="Service.Quiz.Question.Type.MultipleResponse">Multiple choice</text>
 	  
     <!-- Handouts -->
-	<text name="Handouts.Event.Shared.Owner">You shared a handout</text>
-	<text name="Handouts.Event.Shared.Attendee">{0} shared a handout</text>
-	<text name="Handouts.Event.Deleted.Owner">You deleted a handout</text>
+	<text name="Portal.Handouts.Shared.Owner">You shared a handout</text>
+	<text name="Portal.Handouts.Shared.Attendee">{0} shared a handout</text>
+	<text name="Portal.Handouts.Deleted.Owner">You deleted a handout</text>
+	  
+	<!-- Portal -->
+	<text name="Portal.Participants.Actions.RemoveUser">Remove user</text>
+	<text name="Portal.Participants.Kick.Title">Remove this user</text>
+	<text name="Portal.Participants.Kick.Body">Are you sure you want to remove this user from the {0}? This is an irreversible action.</text>
+	<text name="Portal.RemovedUser.Title">You were removed from the {0}</text>
+	<text name="Portal.RemovedUser.Subtitle">You are not able to rejoin</text>
+	<text name="Portal.RemovedUser.Actions.GoToDashboard">Go to dashboard</text>
+
   </texts>
 </localizationDictionary>

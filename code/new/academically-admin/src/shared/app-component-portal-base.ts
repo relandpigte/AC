@@ -5,10 +5,11 @@ import { PortalService } from '@app/dashboard/events/portal/broadcast/student/po
 import * as rtc from 'rtc-lib';
 import { AppComponentBase } from './app-component-base';
 import { SignalData } from './app-hub-base';
-import { EventDto, EventUserDto, EventUserType, EventsServiceProxy, ServiceFeatureFlagDto } from './service-proxies/service-proxies';
+import { EventDto, EventUserDto, EventUserType, EventsServiceProxy, ServiceFeatureFlagDto, ServicesType } from './service-proxies/service-proxies';
 import { ModalDialogOptions, ModalDialogService } from './services/modal-dialog.service';
 import { Observable, combineLatest, of, zip } from 'rxjs';
 import { mergeMap, switchMap } from 'rxjs/operators';
+import { ServiceCardUtils } from './helpers/service-card-utils';
 
 export interface PortalProperties {
     serverProps: PortalServierProperties;
@@ -45,6 +46,8 @@ export enum ConferenceAction {
     AdmitGuest,
     LobbyEntered,
     PingHost,
+    LeaveEvent,
+    Kicked,
 }
 
 export interface ServiceFeatureFlagMapping {
@@ -66,6 +69,7 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
     private room: rtc.Room;
     private selectedMachineDevice: SelectedMachineDevice;
 
+    serviceType: ServicesType;
     eventId: string;
     eventModel = new EventDto();
     eventSettings = new ServiceFeatureFlagDto();
@@ -76,6 +80,7 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
     joiningEventUsers: EventUserDto[] = [];
     attendees: { [key: string]: PortalAttendeeProperties } = {};
 
+    isRemoved = true;
     isPortalInitialized = false;
     hubConnected = false;
     eventStarting = false;
@@ -143,8 +148,13 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
         // guest admissions
         this.pipeDestroy(this._portalService.admitGuest$, async (guestUser: EventUserDto) => {
             if (guestUser) {
-                await this.sendSignal(EVENT_SESSIONS_HUB_NAME, this.otherEventUserIds, new SignalData(ConferenceAction.AdmitGuest, guestUser));
+                await this.sendSignal(EVENT_SESSIONS_HUB_NAME, [guestUser.user.id], new SignalData(ConferenceAction.AdmitGuest, guestUser));
             }
+        });
+
+        // user removal
+        this.pipeDestroy(this._portalService.kickUser$, async (user: EventUserDto) => {
+            if (user) this.onKickUser(user)
         });
     }
 
@@ -247,8 +257,23 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
                 case ConferenceAction.JoinEvent:
                     console.log('@@@ receiveSignal - JoinEvent');
                     this.joiningEventUsers.push(eventUserObj);
+                    this.attendees[eventUserObj.user.id] = {
+                        user: eventUserObj,
+                        isAdmitted: true,
+                        isCurrentUser: eventUserObj.user.id === this.eventUser.user.id
+                    };
                     this._portalService.attendeeJoined = eventUserObj;
-                    this.attendees[eventUserObj.user.id] = { ...this.attendees[eventUserObj.user.id], isAdmitted: true };
+                    break;
+
+                case ConferenceAction.LeaveEvent:
+                    console.log('@@@ receiveSignal - LeaveEvent');
+                    delete this.attendees[eventUserObj.user.id];
+                    this._portalService.attendeeLeft = eventUserObj;
+                    break;
+
+                case ConferenceAction.Kicked:
+                    console.log('@@@ receiveSignal - Kicked');
+                    await this.leaveRoom(true);
                     break;
 
                 case ConferenceAction.GuestJoined:
@@ -269,10 +294,8 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
 
                 case ConferenceAction.AdmitGuest:
                     console.log('@@@ receiveSignal - AdmitGuest');
-                    if (eventUserObj.user.id === this.eventUser.user.id) {
-                        await this.joinRoom();
-                        this.eventJoined = true;
-                    }
+                    await this.joinRoom();
+                    this.eventJoined = true;
                     break;
 
                 case ConferenceAction.LobbyEntered:
@@ -286,6 +309,7 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
                     }
                     break;
             }
+            this.cdr.detectChanges();
         });
     }
 
@@ -304,32 +328,31 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
     }
 
     private async joinRoom(): Promise<void> {
-        const eventUserId = this.eventUser.user.id;
-        const allOtherAttendeeIds = this.allEventUsers.filter(e => e.user.id !== eventUserId).map(e => e.user.id);
-        await this.sendSignal(EVENT_SESSIONS_HUB_NAME, allOtherAttendeeIds, new SignalData(ConferenceAction.JoinEvent, this.eventUser));
         await this.room.connect();
+        await this.sendSignal(EVENT_SESSIONS_HUB_NAME, this.otherEventUserIds, new SignalData(ConferenceAction.JoinEvent, this.eventUser));
     }
 
-    private async leaveRoom(): Promise<void> {
+    private async leaveRoom(isKicked = false): Promise<void> {
         // reset flags
         this.eventStarted = false;
         this.eventJoined = false;
         this.waiting = false;
 
-        // let all attendees leave
-        Object.values(this.attendees).forEach(a => {
-            this._portalService.attendeeLeft = a.user;
-        });
-        this.attendees = {};
-
         // stop all streams and leave room
         this.streams.forEach(s => s.getTracks('both').forEach(s => s.stop()));
         this.room.leave();
 
-        // reset room
-        this.initRoom();
-        this.props.viewProps.presenterVideoEl.nativeElement.load();
-        this.onLobbyEntered(this.selectedMachineDevice);
+        // inform all users that you left the room
+        await this.sendSignal(EVENT_SESSIONS_HUB_NAME, this.otherEventUserIds, new SignalData(ConferenceAction.LeaveEvent, this.eventUser));
+
+        // reset room ???
+        if (!isKicked) {
+            this.initRoom();
+            this.props.viewProps.presenterVideoEl.nativeElement.load();
+            this.onLobbyEntered(this.selectedMachineDevice);
+        } else {
+            this.isRemoved = true;
+        }
     }
 
     private disconnectTrack(stream: MediaStream): void {
@@ -440,6 +463,18 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
             confirmCb: async () => {
                 const userIds = this.allEventUsers.map(e => e.user.id);
                 this.sendSignal(EVENT_SESSIONS_HUB_NAME, userIds, new SignalData(ConferenceAction.EndEvent));
+            }
+        };
+        this._modalDialogService.showConfirmDialog(options);
+    }
+
+    async onKickUser(eventUser: EventUserDto): Promise<void> {
+        if (this.isPortalRtcNotInitialized()) return;
+        const options: ModalDialogOptions = {
+            title: this.l('Portal.Participants.Kick.Title'),
+            text: this.l('Portal.Participants.Kick.Body', ServiceCardUtils.getServiceTypeObject(this.serviceType)),
+            confirmCb: async () => {
+                this.sendSignal(EVENT_SESSIONS_HUB_NAME, [eventUser.user.id], new SignalData(ConferenceAction.Kicked));
             }
         };
         this._modalDialogService.showConfirmDialog(options);

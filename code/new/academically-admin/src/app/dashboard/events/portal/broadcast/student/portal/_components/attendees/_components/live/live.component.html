@@ -138,6 +138,10 @@
                 <a href="#!visit" class="dropdown-item text-transform-none" (click)="$event.preventDefault();">
                   <small>{{ 'BandAttendee' | localize }}</small>
                 </a>
+                <div class="dropdown-divider"></div>
+                <a href="javascript:void(0)" class="dropdown-item text-transform-none text-danger" (click)="removeUser(coHost);">
+                  <small>{{ 'Portal.Participants.Actions.RemoveUser' | localize }}</small>
+                </a>
               </div>
             </div>
           </div>
@@ -235,6 +239,10 @@
                 <a href="#!visit" class="dropdown-item text-transform-none" (click)="$event.preventDefault();">
                   <small>{{ 'BandAttendee' | localize }}</small>
                 </a>
+                <div class="dropdown-divider"></div>
+                <a href="javascript:void(0)" class="dropdown-item text-transform-none text-danger" (click)="removeUser(guest);">
+                  <small>{{ 'Portal.Participants.Actions.RemoveUser' | localize }}</small>
+                </a>
               </div>
             </div>
           </div>
@@ -324,6 +332,10 @@
                 </a>
                 <a href="#!visit" class="dropdown-item text-transform-none" (click)="$event.preventDefault();">
                   <small>{{ 'BandAttendee' | localize }}</small>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="javascript:void(0)" class="dropdown-item text-transform-none text-danger" (click)="removeUser(audience);">
+                  <small>{{ 'Portal.Participants.Actions.RemoveUser' | localize }}</small>
                 </a>
               </div>
             </div>
