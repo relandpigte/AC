@@ -148,6 +148,8 @@ export class PortalService {
     Object.keys(value).forEach(k => this._specificFeatureFlag[k.toLowerCase()].next(value[k]));
   }
 
+  public get attendeeList(): EventUserDto[] { return this._attendeesSubject.value; }
+
   public getEventUserType(id: number): EventUserType {
     const user = this._attendeesSubject.value?.find(u => u.user.id === id);
     return user?.type;

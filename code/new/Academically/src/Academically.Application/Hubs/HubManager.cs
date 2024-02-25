@@ -19,6 +19,8 @@ using Academically.Services.Services.Dto;
 using Academically.Services.EventPolls.Dto;
 using Academically.Services.EventResources.Dto;
 using Academically.Services.CoachingResources.Dto;
+using System.Collections;
+using System.Linq;
 
 namespace Academically.Hubs
 {
@@ -72,7 +74,6 @@ namespace Academically.Hubs
         Task NotifyUsersForServiceHandoutCreated(ServiceHandoutDto resource);
         Task NotifyUsersForServiceHandoutUpdated(ServiceHandoutDto resource);
         Task NotifyUsersForServiceHandoutDeleted(ServiceHandoutDto resource);
-        Task NotifyUsersForServiceHandoutShared(ServiceHandoutDto resource);
         Task NotifyUsersForEventSettingsUpdated(ServiceFeatureFlagDto settings);
     }
 
@@ -498,22 +499,23 @@ namespace Academically.Hubs
 
         public async Task NotifyUsersForServiceHandoutCreated(ServiceHandoutDto resource)
         {
-            await _serviceHandoutsHub.Clients.Group($"{resource.ReferenceId}").SendAsync(nameof(HubEvent.ServiceHandoutCreated), resource);
+            var possibleGroups = (new string[] { resource.ReferenceId.ToString(), resource.UserId.ToString() }).Where(x => !string.IsNullOrEmpty(x)).ToArray();
+            var group = String.Join("-", possibleGroups);
+            await _serviceHandoutsHub.Clients.Group(group).SendAsync(nameof(HubEvent.ServiceHandoutCreated), resource);
         }
 
         public async Task NotifyUsersForServiceHandoutUpdated(ServiceHandoutDto resource)
         {
-            await _serviceHandoutsHub.Clients.Group($"{resource.ReferenceId}").SendAsync(nameof(HubEvent.ServiceHandoutUpdated), resource);
+            var possibleGroups = (new string[] { resource.ReferenceId.ToString(), resource.UserId.ToString() }).Where(x => !string.IsNullOrEmpty(x)).ToArray();
+            var group = String.Join("-", possibleGroups);
+            await _serviceHandoutsHub.Clients.Group(group).SendAsync(nameof(HubEvent.ServiceHandoutUpdated), resource);
         }
 
         public async Task NotifyUsersForServiceHandoutDeleted(ServiceHandoutDto resource)
         {
-            await _serviceHandoutsHub.Clients.Group($"{resource.ReferenceId}").SendAsync(nameof(HubEvent.ServiceHandoutDeleted), resource);
-        }
-
-        public async Task NotifyUsersForServiceHandoutShared(ServiceHandoutDto resource)
-        {
-            await _serviceHandoutsHub.Clients.Group($"{resource.ReferenceId}").SendAsync(nameof(HubEvent.ServiceHandoutShared), resource);
+            var possibleGroups = (new string[] { resource.ReferenceId.ToString(), resource.UserId.ToString() }).Where(x => !string.IsNullOrEmpty(x)).ToArray();
+            var group = String.Join("-", possibleGroups);
+            await _serviceHandoutsHub.Clients.Group(group).SendAsync(nameof(HubEvent.ServiceHandoutDeleted), resource);
         }
 
         public async Task NotifyUsersForEventSettingsUpdated(ServiceFeatureFlagDto settings)

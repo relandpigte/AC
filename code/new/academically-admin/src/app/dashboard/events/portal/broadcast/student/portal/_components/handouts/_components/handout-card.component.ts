@@ -20,12 +20,12 @@ export class HandoutCardComponent extends AppComponentBase {
     @Input() handout: PortalHandoutEventData;
 
     protected readonly ownerEventToTextKeyMap: { [key in StateUpdateType]?: string } = {
-        [StateUpdateType.Share]: 'Handouts.Event.Shared.Owner',
+        [StateUpdateType.Update]: 'Handouts.Event.Shared.Owner',
         [StateUpdateType.Delete]: 'Handouts.Event.Deleted.Owner',
     };
 
     protected readonly attendeeEventToTextKeyMap: { [key in StateUpdateType]?: string } = {
-        [StateUpdateType.Share]: 'Handouts.Event.Shared.Attendee',
+        [StateUpdateType.Add]: 'Handouts.Event.Shared.Attendee',
     }
 
     constructor(

@@ -326,8 +326,8 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, A
   private async initHandoutsAppStates() {
     const appStateConfig: AppStateConfig = {
       [PortalServiceStateIds['handouts']]: {
-        load: [this.eventId],
-        update: { referenceId: this.eventId },
+        load: [this.eventId, this.appSession.userId],
+        update: { referenceId: this.eventId, userId: this.appSession.userId },
       }
     };
     const appStateServices: AppStateServices = {
@@ -341,9 +341,11 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, A
     this.pipeDestroy(this.serviceHandoutsStateService.handouts$, event => {
       if (!event.data) return;
       switch (event.type) {
-        case StateUpdateType.Share:
+        case StateUpdateType.Add:
+          if (event.data.creatorUserId === this.appSession.userId) return;
           this.handleHandoutEventsForToaster({ handout: event.data, event: event.type });
           break;
+        case StateUpdateType.Update:
         case StateUpdateType.Delete:
           if (event.data.creatorUserId !== this.appSession.userId) return;
           this.handleHandoutEventsForToaster({ handout: event.data, event: event.type });

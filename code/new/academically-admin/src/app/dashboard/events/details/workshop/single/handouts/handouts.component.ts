@@ -54,7 +54,7 @@ export class HandoutsComponent extends AppComponentBase implements OnInit {
   }
 
   private getAllServiceHandouts(): void {
-    this._servicesService.getAllServiceHandouts(this.id)
+    this._servicesService.getAllServiceHandouts(this.id, this.appSession.userId)
       .pipe(takeUntil(this.destroyed$))
       .subscribe(attachments => this.attachments = attachments);
   }

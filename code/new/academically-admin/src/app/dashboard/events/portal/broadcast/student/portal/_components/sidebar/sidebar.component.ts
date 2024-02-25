@@ -122,7 +122,7 @@ export class SidebarComponent extends AppComponentBase implements OnInit, AfterV
     this.pipeDestroy(this.serviceHandoutsStateService.handouts$, event => {
       if (this.activeMenuItem.name === 'Handouts') return;
       switch (event.type) {
-        case StateUpdateType.Share:
+        case StateUpdateType.Add:
           this.menuBadgesSource['Handouts'] = [].concat(this.menuBadgesSource['Handouts'] ?? []).concat(event.data.id);
           break;
         case StateUpdateType.Delete:

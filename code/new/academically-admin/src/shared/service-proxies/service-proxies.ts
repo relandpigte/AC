@@ -26473,9 +26473,10 @@ export class ServicesServiceProxy {
 
     /**
      * @param id (optional) 
+     * @param body (optional) 
      * @return Success
      */
-    shareServiceHandout(id: string | undefined): Observable<void> {
+    shareServiceHandout(id: string | undefined, body: number[] | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/Services/ShareServiceHandout?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
@@ -26483,10 +26484,14 @@ export class ServicesServiceProxy {
             url_ += "id=" + encodeURIComponent("" + id) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(body);
+
         let options_ : any = {
+            body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
             })
         };
 
@@ -26525,14 +26530,19 @@ export class ServicesServiceProxy {
 
     /**
      * @param referenceId (optional) 
+     * @param userId (optional) 
      * @return Success
      */
-    getAllServiceHandouts(referenceId: string | undefined): Observable<ServiceHandoutDto[]> {
+    getAllServiceHandouts(referenceId: string | undefined, userId: number | undefined): Observable<ServiceHandoutDto[]> {
         let url_ = this.baseUrl + "/api/services/app/Services/GetAllServiceHandouts?";
         if (referenceId === null)
             throw new Error("The parameter 'referenceId' cannot be null.");
         else if (referenceId !== undefined)
             url_ += "referenceId=" + encodeURIComponent("" + referenceId) + "&";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -50314,7 +50324,7 @@ export interface IGroupedPermissionDtoListResultDto {
     items: GroupedPermissionDto[] | undefined;
 }
 
-/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted 18 = ChannelMessageCreated 19 = ChannelMessageUpdated 20 = ChannelMessageDeleted 21 = ChannelMemberTyping 22 = ChannelArchive 23 = ChannelUnarchive 24 = NewUserLoggedIn 25 = NotificationCreated 26 = NotificationUpdated 27 = NotificationDeleted 28 = QuestionCreated 29 = QuestionUpdated 30 = QuestionDeleted 31 = QuestionReactionCreated 32 = QuestionReactionUpdated 33 = QuestionReactionDeleted 34 = ServiceOfferCreated 35 = ServiceOfferUpdated 36 = ServiceOfferDeleted 37 = ServiceOfferLaunched 38 = ServiceOfferClosed 39 = AnsweringLiveQuestion 40 = EndAnsweringLiveQuestion 41 = EventPollCreated 42 = EventPollUpdated 43 = EventPollDeleted 44 = EventPollLaunched 45 = EventPollClosed 46 = EventPollShared 47 = ServiceHandoutCreated 48 = ServiceHandoutUpdated 49 = ServiceHandoutDeleted 50 = ServiceHandoutShared 51 = UpcomingEvent */
+/** 0 = PostCreated 1 = PostUpdated 2 = PostDeleted 3 = UserTopicCreated 4 = UserTopicUpdated 5 = UserTopicDeleted 6 = ServiceCreated 7 = ServiceUpdated 8 = ServiceDeleted 9 = CommentCreated 10 = CommentUpdated 11 = CommentDeleted 12 = CommentReactionCreated 13 = CommentReactionUpdated 14 = CommentReactionDeleted 15 = ReactionCreated 16 = ReactionUpdated 17 = ReactionDeleted 18 = ChannelMessageCreated 19 = ChannelMessageUpdated 20 = ChannelMessageDeleted 21 = ChannelMemberTyping 22 = ChannelArchive 23 = ChannelUnarchive 24 = NewUserLoggedIn 25 = NotificationCreated 26 = NotificationUpdated 27 = NotificationDeleted 28 = QuestionCreated 29 = QuestionUpdated 30 = QuestionDeleted 31 = QuestionReactionCreated 32 = QuestionReactionUpdated 33 = QuestionReactionDeleted 34 = ServiceOfferCreated 35 = ServiceOfferUpdated 36 = ServiceOfferDeleted 37 = ServiceOfferLaunched 38 = ServiceOfferClosed 39 = AnsweringLiveQuestion 40 = EndAnsweringLiveQuestion 41 = EventPollCreated 42 = EventPollUpdated 43 = EventPollDeleted 44 = EventPollLaunched 45 = EventPollClosed 46 = EventPollShared 47 = ServiceHandoutCreated 48 = ServiceHandoutUpdated 49 = ServiceHandoutDeleted 50 = UpcomingEvent */
 export enum HubEvent {
     PostCreated = 0,
     PostUpdated = 1,
@@ -50366,8 +50376,7 @@ export enum HubEvent {
     ServiceHandoutCreated = 47,
     ServiceHandoutUpdated = 48,
     ServiceHandoutDeleted = 49,
-    ServiceHandoutShared = 50,
-    UpcomingEvent = 51,
+    UpcomingEvent = 50,
 }
 
 export class ICustomAttributeProvider implements IICustomAttributeProvider {
@@ -55903,6 +55912,8 @@ export class ServiceHandoutDto implements IServiceHandoutDto {
     serviceType: ServicesType;
     displayOrder: number | undefined;
     shareTime: moment.Moment | undefined;
+    userId: number | undefined;
+    user: UserDto;
     creatorUser: UserDto;
     documentId: string;
     document: DocumentDto;
@@ -55926,6 +55937,8 @@ export class ServiceHandoutDto implements IServiceHandoutDto {
             this.serviceType = _data["serviceType"];
             this.displayOrder = _data["displayOrder"];
             this.shareTime = _data["shareTime"] ? moment(_data["shareTime"].toString()) : <any>undefined;
+            this.userId = _data["userId"];
+            this.user = _data["user"] ? UserDto.fromJS(_data["user"]) : <any>undefined;
             this.creatorUser = _data["creatorUser"] ? UserDto.fromJS(_data["creatorUser"]) : <any>undefined;
             this.documentId = _data["documentId"];
             this.document = _data["document"] ? DocumentDto.fromJS(_data["document"]) : <any>undefined;
@@ -55949,6 +55962,8 @@ export class ServiceHandoutDto implements IServiceHandoutDto {
         data["serviceType"] = this.serviceType;
         data["displayOrder"] = this.displayOrder;
         data["shareTime"] = this.shareTime ? this.shareTime.toISOString() : <any>undefined;
+        data["userId"] = this.userId;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
         data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : <any>undefined;
         data["documentId"] = this.documentId;
         data["document"] = this.document ? this.document.toJSON() : <any>undefined;
@@ -55972,6 +55987,8 @@ export interface IServiceHandoutDto {
     serviceType: ServicesType;
     displayOrder: number | undefined;
     shareTime: moment.Moment | undefined;
+    userId: number | undefined;
+    user: UserDto;
     creatorUser: UserDto;
     documentId: string;
     document: DocumentDto;

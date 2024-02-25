@@ -1,7 +1,9 @@
 ﻿using Abp.AspNetCore.SignalR.Hubs;
 using Abp.Dependency;
+using Castle.Core.Resource;
 using Microsoft.AspNetCore.SignalR;
 using System;
+using System.Collections;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,10 +14,14 @@ namespace Academically.Hubs
         public override async Task OnConnectedAsync()
         {
             var referenceId = Context.GetHttpContext().Request.Query["referenceId"].FirstOrDefault();
+            var userId = Context.GetHttpContext().Request.Query["userId"].FirstOrDefault();
 
-            if (!string.IsNullOrWhiteSpace(referenceId))
+            var possibleGroups = (new string[] { referenceId, userId }).Where(x => !string.IsNullOrEmpty(x)).ToArray();
+            var group = String.Join("-", possibleGroups);
+
+            if (!string.IsNullOrWhiteSpace(group))
             {
-                await Groups.AddToGroupAsync(Context.ConnectionId, referenceId);
+                await Groups.AddToGroupAsync(Context.ConnectionId, group);
             }
 
             await base.OnConnectedAsync();

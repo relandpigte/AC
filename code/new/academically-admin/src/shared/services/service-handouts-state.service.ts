@@ -13,6 +13,8 @@ export class ServiceHandoutsStateService extends StateServiceBase {
     handouts$: Subject<StateUpdate<ServiceHandoutDto>> = new Subject();
     loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
+    fns = { ['all']: 'getAllServiceHandouts' };
+
     getAllHandouts = () => Array.from(this.handouts.values()).filter(h => this.canViewHandout(h));
 
     constructor(
@@ -26,7 +28,7 @@ export class ServiceHandoutsStateService extends StateServiceBase {
     async loadData(component: any, userId: number) {
         this.loading$.next(true);
         try {
-          const handouts = await this._servicesService.getAllServiceHandouts(this.loadArgs[0]).toPromise();
+          const handouts = await this._servicesService[this.fns['all']](...this.loadArgs).toPromise();
           this.handouts = Utils.toMap(handouts);
           this.totalHandoutsCount = handouts.length;
         } catch (err) {
@@ -41,7 +43,6 @@ export class ServiceHandoutsStateService extends StateServiceBase {
             this.getHub(SERVICE_HANDOUTS_HUB_NAME).off(HubEvent[HubEvent.ServiceHandoutCreated], this.handleUpsertHandouts);
             this.getHub(SERVICE_HANDOUTS_HUB_NAME).off(HubEvent[HubEvent.ServiceHandoutUpdated], this.handleUpsertHandouts);
             this.getHub(SERVICE_HANDOUTS_HUB_NAME).off(HubEvent[HubEvent.ServiceHandoutDeleted], this.handleDeleteHandouts);
-            this.getHub(SERVICE_HANDOUTS_HUB_NAME).off(HubEvent[HubEvent.ServiceHandoutShared], this.handleSharedHandouts);
             this.stopHubConnection(SERVICE_HANDOUTS_HUB_NAME);
         }
     }
@@ -52,7 +53,6 @@ export class ServiceHandoutsStateService extends StateServiceBase {
             this.getHub(SERVICE_HANDOUTS_HUB_NAME).on(HubEvent[HubEvent.ServiceHandoutCreated], this.handleUpsertHandouts);
             this.getHub(SERVICE_HANDOUTS_HUB_NAME).on(HubEvent[HubEvent.ServiceHandoutUpdated], this.handleUpsertHandouts);
             this.getHub(SERVICE_HANDOUTS_HUB_NAME).on(HubEvent[HubEvent.ServiceHandoutDeleted], this.handleDeleteHandouts);
-            this.getHub(SERVICE_HANDOUTS_HUB_NAME).on(HubEvent[HubEvent.ServiceHandoutShared], this.handleSharedHandouts);
             this.startHubConnection(SERVICE_HANDOUTS_HUB_NAME);
         } catch (err) {
             console.error(err);
@@ -70,7 +70,7 @@ export class ServiceHandoutsStateService extends StateServiceBase {
         try {
             const updated = await this._servicesService.getServiceHandout(handout.id).toPromise();
             if (this.canViewHandout(updated)) {
-                this.updateFromMap(this.handouts, Utils.toObjectMap([updated], (o) => o.id, (p) => p), this.handouts$);
+                this.updateFromMap(this.handouts, Utils.toObjectMap([updated], (o) => o.id, (p) => p), this.handouts$, true);
             } else {
                 this.handleDeleteHandouts(handout);
             }
@@ -86,24 +86,11 @@ export class ServiceHandoutsStateService extends StateServiceBase {
         this.loading$.next(false);
     }
 
-    handleSharedHandouts = async (handout: ServiceHandoutDto) => {
-        if (!this.canViewHandout(handout)) return;
-        this.loading$.next(true);
-        try {
-            const shared = await this._servicesService.getServiceHandout(handout.id).toPromise();
-            this.updateFromMap(this.handouts, Utils.toObjectMap([shared], (o) => o.id, (p) => p), this.handouts$);
-            this.handouts$.next({ data: shared, type: StateUpdateType.Share, silent: false });
-        } catch (err) {
-            console.error(err);
-        }
-        this.loading$.next(false);
-    }
-
     async updateServiceParams(params: { args: any[] | undefined }) {
         this.loading$.next(true);
         this.actionArgs['load'] = params.args;
         try {
-          const handouts = await this._servicesService.getAllServiceHandouts(this.loadArgs[0]).toPromise();
+          const handouts = await this._servicesService[this.fns['all']](...this.loadArgs).toPromise();
           this.handouts = Utils.toMap(handouts);
           this.totalHandoutsCount = handouts.length;
         } catch (err) {

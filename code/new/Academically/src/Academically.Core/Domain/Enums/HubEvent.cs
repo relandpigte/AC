@@ -52,7 +52,6 @@
         ServiceHandoutCreated,
         ServiceHandoutUpdated,
         ServiceHandoutDeleted,
-        ServiceHandoutShared,
         UpcomingEvent
     }
 }

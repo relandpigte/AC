@@ -11,6 +11,7 @@ import { StateUpdateType } from '@shared/services/state-base.service';
 import { BehaviorSubject } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { PortalServiceStateIds } from '../../portal.component';
+import { PortalService } from '../../_services/portal.service';
 
 export enum PollSignalAction {
   PollStarted = 100,
@@ -50,7 +51,7 @@ export class HandoutsComponent extends AppComponentBase implements AfterViewInit
   constructor(
     injector: Injector,
     private _cdr: ChangeDetectorRef,
-    private _hubService: HubService,
+    private _portalService: PortalService,
     private _modalDialogService: ModalDialogService,
     private _uploadService: UploadService,
     private _servicesService: ServicesServiceProxy
@@ -109,7 +110,7 @@ export class HandoutsComponent extends AppComponentBase implements AfterViewInit
     const fileData = await this._uploadService.getFileData(handout.document);
     const blob = await FileUtils.base64toBlob(fileData, handout.document.fileType);
     const blobUrl = window.URL.createObjectURL(blob);
-    var anchor = document.createElement('a');
+    const anchor = document.createElement('a');
     anchor.classList.add('offscreen');
     anchor.download = handout.document.originalFileName;
     anchor.href = blobUrl;
@@ -121,7 +122,7 @@ export class HandoutsComponent extends AppComponentBase implements AfterViewInit
   onShareClick(handout: ServiceHandoutDto): void {
     if (!(handout.id in this.isSharingHandoutMap$)) this.isSharingHandoutMap$[handout.id] = new BehaviorSubject<boolean>(false);
     this.isSharingHandoutMap$[handout.id].next(true);
-    this._servicesService.shareServiceHandout(handout.id)
+    this._servicesService.shareServiceHandout(handout.id, this._portalService.attendeeList.map(a => a.user.id))
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this.isSharingHandoutMap$[handout.id].next(false)))
       .subscribe(() => {});

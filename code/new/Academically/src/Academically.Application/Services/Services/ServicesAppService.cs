@@ -35,6 +35,7 @@ using Microsoft.AspNetCore.SignalR;
 using Academically.Authorization.Users;
 using System.Net.Mail;
 using Academically.Services.EventPolls.Dto;
+using System.Reflection.Metadata;
 
 namespace Academically.Services.Services
 {
@@ -935,6 +936,7 @@ namespace Academically.Services.Services
                     ReferenceId = input.ReferenceId,
                     ServiceType = input.ServiceType,
                     DocumentId = document.Id,
+                    UserId = userId,
                     DisplayOrder = await _serviceHandoutRepository.CountAsync(x => x.ReferenceId == input.ReferenceId)
                 });
             }
@@ -950,13 +952,19 @@ namespace Academically.Services.Services
 
             if (handout != null)
             {
-                await _documentsDomainService.DeleteAsync(handout.Document.Id);
+                var connectedHandoutsCount = await _serviceHandoutRepository.GetAll()
+                    .AsNoTracking()
+                    .Where(x => x.DocumentId == handout.DocumentId)
+                    .Where(x => x.Id != handout.Id)
+                    .CountAsync();
+
+                if (connectedHandoutsCount == 0)
+                    await _documentsDomainService.DeleteAsync(handout.Document.Id);
                 await _serviceHandoutRepository.DeleteAsync(id);
             }
-
         }
 
-        public async Task ShareServiceHandoutAsync(Guid id)
+        public async Task ShareServiceHandoutAsync(Guid id, List<long> userIds)
         {
             var handout = await _serviceHandoutRepository.GetAll()
                .Include(x => x.Document)
@@ -966,17 +974,30 @@ namespace Academically.Services.Services
             if (handout != null)
             {
                 handout.ShareTime = Clock.Now;
-                await this._hubManager.NotifyUsersForServiceHandoutShared(ObjectMapper.Map<ServiceHandoutDto>(handout));
             }
 
+            foreach (var userId in userIds)
+            {
+                await _serviceHandoutRepository.InsertAsync(new ServiceHandout
+                {
+                    ReferenceId = handout.ReferenceId,
+                    ServiceType = handout.ServiceType,
+                    DocumentId = handout.DocumentId,
+                    DisplayOrder = handout.DisplayOrder,
+                    ShareTime = handout.ShareTime,
+                    CreatorUserId = handout.CreatorUserId,
+                    UserId = userId,
+                });
+            }
         }
 
-        public async Task<IEnumerable<ServiceHandoutDto>> GetAllServiceHandoutsAsync(Guid referenceId)
+        public async Task<IEnumerable<ServiceHandoutDto>> GetAllServiceHandoutsAsync(Guid referenceId, long? userId)
         {
             var handouts = await _serviceHandoutRepository.GetAll()
                 .AsNoTracking()
                 .Include(x => x.Document)
                 .Where(x => x.ReferenceId == referenceId)
+                .WhereIf(userId.HasValue, x => x.UserId == userId)
                 .OrderBy(x => x.CreationTime)
                 .Select(x => ObjectMapper.Map<ServiceHandoutDto>(x))
                 .ToListAsync();
