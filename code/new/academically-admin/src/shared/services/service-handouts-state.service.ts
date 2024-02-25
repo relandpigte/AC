@@ -2,8 +2,8 @@ import { HubService } from '@app/_shared/services/hub.service';
 import { AppSessionService } from '@shared/session/app-session.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { Utils } from '../helpers/utils';
-import { EventPollDto, EventPollStatus, EventPollsServiceProxy, HubEvent, ServiceHandoutDto, ServiceOfferDto, ServiceOfferStatus, ServicesServiceProxy } from '../service-proxies/service-proxies';
-import { StateServiceBase, StateUpdate } from './state-base.service';
+import { HubEvent, ServiceHandoutDto, ServicesServiceProxy } from '../service-proxies/service-proxies';
+import { StateServiceBase, StateUpdate, StateUpdateType } from './state-base.service';
 
 const SERVICE_HANDOUTS_HUB_NAME = 'serviceHandoutsHub';
 export class ServiceHandoutsStateService extends StateServiceBase {
@@ -92,7 +92,7 @@ export class ServiceHandoutsStateService extends StateServiceBase {
         try {
             const shared = await this._servicesService.getServiceHandout(handout.id).toPromise();
             this.updateFromMap(this.handouts, Utils.toObjectMap([shared], (o) => o.id, (p) => p), this.handouts$);
-            this.handouts$.next({ data: shared, type: 'shared', silent: false });
+            this.handouts$.next({ data: shared, type: StateUpdateType.Share, silent: false });
         } catch (err) {
             console.error(err);
         }

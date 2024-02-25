@@ -1,15 +1,15 @@
-import { ChangeDetectorRef, Component, ElementRef, Injector, Input, OnChanges, OnDestroy, OnInit, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Injector, Input, OnChanges, OnInit, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PortalService } from '@app/dashboard/events/portal/broadcast/student/portal/_services/portal.service';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ServiceFeatureFlagMapping } from '@shared/app-component-portal-base';
-import { EventUserType, ServicesServiceProxy } from '@shared/service-proxies/service-proxies';
-import { Observable, Subject } from 'rxjs';
-import { pairwise, takeUntil } from 'rxjs/operators';
-import { PortalHandoutService } from '../handouts/_services/portal-handout.service';
-import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
+import { EventUserType } from '@shared/service-proxies/service-proxies';
 import { ServiceHandoutsStateService } from '@shared/services/service-handouts-state.service';
-import { HubService } from '@app/_shared/services/hub.service';
+import { Observable } from 'rxjs';
+import { pairwise, takeUntil } from 'rxjs/operators';
+import { PortalServiceStateIds } from '../../portal.component';
+import { StateUpdateType } from '@shared/services/state-base.service';
+
 class MenuItem {
   name: string;
   className: string;
@@ -27,7 +27,7 @@ class MenuItem {
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.less']
 })
-export class SidebarComponent extends AppComponentBase implements OnInit, OnDestroy, OnChanges {
+export class SidebarComponent extends AppComponentBase implements OnInit, AfterViewInit, OnChanges {
   @ViewChildren('menuItem') menuItemsRef: QueryList<ElementRef>;
   @Input() hidden = false;
   @Input() isHost: boolean;
@@ -37,7 +37,8 @@ export class SidebarComponent extends AppComponentBase implements OnInit, OnDest
   menuItems: MenuItem[] = [];
   activeMenuItem: MenuItem;
 
-  menuBadges: { [key: string]: number } = {};
+  menuBadgesSource: { [key: string]: any[] } = {};
+
   menuItemToServiceFeatureFlags: ServiceFeatureFlagMapping = {
     'Attendees': {
       [EventUserType.Audience]: ['attendees', 'AttendeesCanViewAudience'],
@@ -83,15 +84,10 @@ export class SidebarComponent extends AppComponentBase implements OnInit, OnDest
 
   serviceHandoutsStateService: ServiceHandoutsStateService;
 
-  unsubscribe$ = new Subject();
-
   constructor(
     injector: Injector,
     route: ActivatedRoute,
     private _portalService: PortalService,
-    private _portalHandoutService: PortalHandoutService,
-    private _hubService: HubService,
-    private _servicesService: ServicesServiceProxy,
     private _cdr: ChangeDetectorRef
   ) {
     super(injector);
@@ -102,20 +98,9 @@ export class SidebarComponent extends AppComponentBase implements OnInit, OnDest
     });
   }
 
-  get handoutsStateId(): string { return 'handouts-event'; }
-
   async ngOnInit() {
     this.constructMenu();
     this.listenToMenuChanges();
-
-    // handouts
-    this.pipeDestroy(this._portalHandoutService.newHandoutsCount$, count => this.menuBadges['Handouts'] = count);
-    await this.initHandoutsAppStates();
-  }
-
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -127,33 +112,21 @@ export class SidebarComponent extends AppComponentBase implements OnInit, OnDest
     }
   }
 
+  async ngAfterViewInit() {
+    // handouts
+    setTimeout(async () => await this.initHandoutsAppStates());
+  }
+
   private async initHandoutsAppStates() {
-    const appStateConfig: AppStateConfig = {
-      [this.handoutsStateId]: {
-        update: { referenceId: this.eventId }
-      }
-    };
-    const appStateServices: AppStateServices = {
-      [this.handoutsStateId]: {
-        type: ServiceHandoutsStateService,
-        args: [this.appSession, this._hubService, this._servicesService]
-      }
-    };
-    await this.pubSubService.start(this, appStateConfig, appStateServices);
-    this.serviceHandoutsStateService = this.pubSubService.getStateService<ServiceHandoutsStateService>(this.handoutsStateId);
-    this.serviceHandoutsStateService.handouts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
-      if (!event.data) return;
+    this.serviceHandoutsStateService = this.pubSubService.getStateService<ServiceHandoutsStateService>(PortalServiceStateIds['handouts']);
+    this.pipeDestroy(this.serviceHandoutsStateService.handouts$, event => {
+      if (this.activeMenuItem.name === 'Handouts') return;
       switch (event.type) {
-        case 'shared':
-          this._portalHandoutService.newHandout = event.data;
-          if (this.activeMenuItem.name !== 'Handouts') {
-            this._portalHandoutService.newHandoutsCount = this._portalHandoutService.newHandoutsCountValue + 1;
-          }
+        case StateUpdateType.Share:
+          this.menuBadgesSource['Handouts'] = [].concat(this.menuBadgesSource['Handouts'] ?? []).concat(event.data.id);
           break;
-        case 'delete':
-          if (this.activeMenuItem.name !== 'Handouts') {
-            this._portalHandoutService.newHandoutsCount = this._portalHandoutService.newHandoutsCountValue > 0 ? this._portalHandoutService.newHandoutsCountValue - 1 : 0;
-          }
+        case StateUpdateType.Delete:
+          this.menuBadgesSource['Handouts'] = this.menuBadgesSource['Handouts']?.filter(id => id !== event.data.id);
           break;
       }
       this._cdr.detectChanges();
@@ -167,11 +140,10 @@ export class SidebarComponent extends AppComponentBase implements OnInit, OnDest
     this._cdr.detectChanges();
   }
 
-  resetMenuItemBadge(menuItem: MenuItem): void {
-    switch(menuItem.name) {
+  private resetMenuItemBadge(menuItem: MenuItem): void {
+    switch (menuItem.name) {
       case 'Handouts':
-        this.menuBadges['Handouts'] = 0;
-        this._portalHandoutService.newHandoutsCount = 0;
+        this.menuBadgesSource['Handouts'] = [];
         break;
     }
   }
@@ -193,7 +165,7 @@ export class SidebarComponent extends AppComponentBase implements OnInit, OnDest
   private listenToMenuChanges() {
     this.menuItems.forEach(menuItem => {
       this.isMenuItemEnabled$(menuItem)
-        .pipe(takeUntil(this.unsubscribe$))
+        .pipe(takeUntil(this.destroyed$))
         .pipe(pairwise())
         .subscribe(([prev, next]) => {
           if (prev !== next && next === false) {
@@ -214,6 +186,7 @@ export class SidebarComponent extends AppComponentBase implements OnInit, OnDest
   }
 
   getMenuBadgeValue(menuItem: MenuItem): string {
-    return this.menuBadges[menuItem.name] > 0 ? this.menuBadges[menuItem.name] > 9 ? '9+' : this.menuBadges[menuItem.name].toString() : null;
+    const count = this.menuBadgesSource[menuItem.name]?.length ?? 0;
+    return count > 0 ? count > 9 ? '9+' : count.toString() : null;
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, Injector, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input } from '@angular/core';
 import { HubService } from '@app/_shared/services/hub.service';
 import { UploadService } from '@app/_shared/services/upload.service';
 import { AppComponentBase } from '@shared/app-component-base';
@@ -6,11 +6,11 @@ import { fileUploadConfiguration } from '@shared/constants/configurations/file-u
 import { FileUtils } from '@shared/helpers/file-utils';
 import { FileParameter, ServiceHandoutDto, ServicesServiceProxy, ServicesType } from '@shared/service-proxies/service-proxies';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
-import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
 import { ServiceHandoutsStateService } from '@shared/services/service-handouts-state.service';
 import { StateUpdateType } from '@shared/services/state-base.service';
-import { BehaviorSubject, Observable, combineLatest, of } from 'rxjs';
-import { filter, finalize, switchMap, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
+import { PortalServiceStateIds } from '../../portal.component';
 
 export enum PollSignalAction {
   PollStarted = 100,
@@ -25,7 +25,7 @@ export enum PollSignalAction {
   templateUrl: './handouts.component.html',
   styleUrls: ['./handouts.component.less']
 })
-export class HandoutsComponent extends AppComponentBase implements OnInit, OnDestroy {
+export class HandoutsComponent extends AppComponentBase implements AfterViewInit {
   serviceHandoutsStateService: ServiceHandoutsStateService;
 
   allowedExtensions = [
@@ -58,53 +58,33 @@ export class HandoutsComponent extends AppComponentBase implements OnInit, OnDes
     super(injector);
   }
 
-  async ngOnInit() {
-    await this.initServiceHandoutsStateService();
+  async ngAfterViewInit() {
+    setTimeout(async () => await this.initServiceHandoutsStateService());
   }
-
-  async ngOnDestroy() {
-    await this.serviceHandoutsStateService?.stop();
-  }
-
-  get serviceHandoutsStateId(): string { return 'service-handouts-event'; }
 
   private async initServiceHandoutsStateService() {
-    const appStateConfig: AppStateConfig = {
-      [this.serviceHandoutsStateId]: {
-        load: [this.referenceId],
-        update: { referenceId: this.referenceId }
-      }
-    };
-    const appStateServices: AppStateServices = {
-      [this.serviceHandoutsStateId]: {
-        type: ServiceHandoutsStateService,
-        args: [this.appSession, this._hubService, this._servicesService]
-      }
-    };
-    await this.pubSubService.start(this, appStateConfig, appStateServices);
-    this.serviceHandoutsStateService = this.pubSubService.getStateService<ServiceHandoutsStateService>(this.serviceHandoutsStateId);
+    this.serviceHandoutsStateService = this.pubSubService.getStateService<ServiceHandoutsStateService>(PortalServiceStateIds['handouts']);
     this.serviceHandoutsStateService.handouts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
-        if (!event.data) return;
-        switch (event.type) {
-            case StateUpdateType.Add:
-              this.handouts = this.handouts.concat([event.data]);
-              this.totalHandoutsCount++;
-              break;
-            case StateUpdateType.Update:
-              if (event.silent) {
-                this.handouts = this.handouts.map(c => c.id === event.data.id ? event.data : c);
-              } else {
-                const idx = this.handouts.findIndex(c => c.id === event.data.id);
-                this.handouts.splice(idx, 1);
-                this.handouts = this.handouts.concat([event.data]);
-              }
-              break;
-            case StateUpdateType.Delete:
-              this.handouts = this.handouts.filter(c => c.id != event.data.id);
-              this.totalHandoutsCount--;
-              break;
+      switch (event.type) {
+        case StateUpdateType.Add:
+          this.handouts = this.handouts.concat([event.data]);
+          this.totalHandoutsCount++;
+          break;
+        case StateUpdateType.Update:
+          if (event.silent) {
+            this.handouts = this.handouts.map(c => c.id === event.data.id ? event.data : c);
+          } else {
+            const idx = this.handouts.findIndex(c => c.id === event.data.id);
+            this.handouts.splice(idx, 1);
+            this.handouts = this.handouts.concat([event.data]);
           }
-          this._cdr.detectChanges();
+          break;
+        case StateUpdateType.Delete:
+          this.handouts = this.handouts.filter(c => c.id != event.data.id);
+          this.totalHandoutsCount--;
+          break;
+      }
+      this._cdr.detectChanges();
     });
     this.handouts = this.serviceHandoutsStateService.getAllHandouts();
     this.totalHandoutsCount = this.serviceHandoutsStateService.totalHandoutsCount;

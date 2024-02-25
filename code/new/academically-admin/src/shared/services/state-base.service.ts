@@ -12,6 +12,7 @@ export enum StateUpdateType {
     Add = 'add',
     Update = 'update',
     Delete = 'delete',
+    Share = 'share',
     Silent = 'silent'
 }
 

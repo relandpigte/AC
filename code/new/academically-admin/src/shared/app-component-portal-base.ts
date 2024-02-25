@@ -112,6 +112,7 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
     }
 
     async ngOnDestroy() {
+        super.ngOnDestroy();
         // this.disconnectTrack(this.presenterStream);
         // this.disconnectTrack(this.attendeeStream);
     }
@@ -338,7 +339,7 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
                 track.stop();
                 setTimeout(() => {
                     stream.removeTrack(track);
-                    console.log('audo track removed');
+                    console.log('audio track removed');
                 }, 500);
             });
             stream.getVideoTracks().forEach(track => {

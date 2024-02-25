@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Injector, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Injector, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentPortalBase, ServiceFeatureFlagMapping } from '@shared/app-component-portal-base';
@@ -13,24 +13,29 @@ import {
   ProfilesServiceProxy,
   QuestionDto,
   QuestionsServiceProxy,
-  ServiceHandoutDto,
   ServiceOfferDto,
   ServicesServiceProxy
 } from '@shared/service-proxies/service-proxies';
 import { EventPollsStateService, pollsType } from '@shared/services/event-polls-state.service';
-import { ServiceHandoutsStateService } from '@shared/services/service-handouts-state.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
+import { ServiceHandoutsStateService } from '@shared/services/service-handouts-state.service';
 import { ServiceOffersStateService, offersType } from '@shared/services/service-offers-state.service';
 import { ServiceOffersService } from '@shared/services/service-offers.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { PollComponent } from './_components/polls/_components/poll/poll.component';
 import { PortalPollService } from './_components/polls/_services/portal-poll.service';
-import { PortalHandoutService } from './_components/handouts/_services/portal-handout.service';
 import { ShareVideosComponent } from './_components/share-videos/share-videos.component';
-import { Observable } from 'rxjs';
+import { StateUpdateType } from '@shared/services/state-base.service';
+import { PortalHandoutEventData } from './_components/handouts/_components/handout-card.component';
 
 export const ANSWERING_LIVE_QUESTION_HUB_NAME = 'answeringLiveQuestionHub';
+
+export const PortalServiceStateIds = {
+  'offers': 'offers-states',
+  'polls': 'polls-states',
+  'handouts': 'handouts-states',
+};
 
 const enum PortalFeatures {
   Microphone = 'microphone',
@@ -43,7 +48,7 @@ const enum PortalFeatures {
   styleUrls: ['./portal.component.less'],
   animations: [appModuleAnimation()]
 })
-export class PortalComponent extends AppComponentPortalBase implements OnInit, OnDestroy, AfterViewInit {
+export class PortalComponent extends AppComponentPortalBase implements OnInit, AfterViewInit {
   @ViewChild('presenterVideoEl') presenterVideoEl: ElementRef;
   @ViewChildren('attendeeVideos') attendeeVideosEl: QueryList<ElementRef>;
   @ViewChild(ShareVideosComponent) shareVideosComponent: ShareVideosComponent;
@@ -74,8 +79,7 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
   selectedPoll: EventPollDto;
 
   serviceHandoutsStateService: ServiceHandoutsStateService;
-  newHandoutsCount: number;
-  newHandouts: (ServiceHandoutDto & { customClass?: string })[] = [];
+  newHandouts: PortalHandoutEventData[] = [];
 
   liveQuestion: QuestionDto;
 
@@ -91,7 +95,6 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
     private _location: Location,
     private _router: Router,
     private _portalPollService: PortalPollService,
-    private _portalHandoutService: PortalHandoutService,
     private _eventSessionsService: EventSessionsServiceProxy,
     private _eventPollsService: EventPollsServiceProxy,
     private _profilesService: ProfilesServiceProxy,
@@ -104,10 +107,6 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
   }
 
   get event$() { return this._portalService.event$; }
-
-  get offersStateId(): string { return 'offers-event'; }
-  get pollsStateId(): string { return 'polls-event'; }
-  get handoutsStateId(): string { return 'handouts-event'; }
 
   get isMicrophoneEnabled$(): Observable<boolean> { return this._portalService.getSpecificFeatureFlag$(this.featureToServiceFeatureFlags, PortalFeatures.Microphone, this.currentUserId); }
   get isWebCamEnabled$(): Observable<boolean> { return this._portalService.getSpecificFeatureFlag$(this.featureToServiceFeatureFlags, PortalFeatures.Webcam, this.currentUserId); }
@@ -138,23 +137,6 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
     this.pipeDestroy(this._portalPollService.pollSelected$, poll => this.selectedPoll = poll);
     this.pipeDestroy(this._portalPollService.pollSelectedMaximized$, isMaximized => this.handleSelectedPollMaximized(isMaximized));
 
-    // handouts
-    this.pipeDestroy(this._portalHandoutService.newHandoutsCount$, count => this.newHandoutsCount = count);
-    this.pipeDestroy(this._portalHandoutService.newHandout$, data => {
-      if (!data) return;
-      const handout = data as ServiceHandoutDto & { customClass?: string };
-      setTimeout(() => {
-        handout.customClass = 'hiding';
-        this._cdr.detectChanges();
-        setTimeout(() => {
-          this.newHandouts = this.newHandouts.filter(h => h.id !== handout.id);
-          this._cdr.detectChanges();
-        }, 1000);
-      }, 15000);
-      this.newHandouts.push(handout);
-      this._cdr.detectChanges();
-    });
-
     await this.initOffersAppStates();
     await this.initPollsAppStates();
     await this.initHandoutsAppStates();
@@ -179,6 +161,7 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
     super.ngOnDestroy();
     await this.pollsStateService?.stop();
     await this.offersStateService?.stop();
+    await this.serviceHandoutsStateService?.stop();
   }
 
   handleSelectedPollMaximized(isMaximized: boolean): void {
@@ -196,6 +179,22 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
         this.pollWindowRef?.hide();
       }
     }
+  }
+
+  handleHandoutEventsForToaster(handoutEvent: PortalHandoutEventData) {
+    if (!handoutEvent) return;
+
+    setTimeout(() => {
+      handoutEvent.customClass = 'hiding';
+      this._cdr.detectChanges();
+      setTimeout(() => {
+        this.newHandouts = this.newHandouts.filter(h => h.handout?.id !== handoutEvent.handout?.id && h.event !== handoutEvent.event);
+        this._cdr.detectChanges();
+      }, 1000);
+    }, 15000);
+
+    this.newHandouts.push(handoutEvent);
+    this._cdr.detectChanges();
   }
 
   onOfferClick(offer: ServiceOfferDto): void {
@@ -262,30 +261,26 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
     q.referenceId = question.referenceId;
     q.parentId = question.id;
 
-    this._questionsService.create(q)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(x => x);
+    this.pipeDestroy(this._questionsService.create(q), x => x);
   }
 
   private async initOffersAppStates() {
     const appStateConfig: AppStateConfig = {
-      [this.offersStateId]: {
+      [PortalServiceStateIds['offers']]: {
         update: { referenceId: this.eventId }
       }
     };
     const appStateServices: AppStateServices = {
-      [this.offersStateId]: {
+      [PortalServiceStateIds['offers']]: {
         type: ServiceOffersStateService,
         args: [offersType.opened, this.appSession, this._hubService, this._servicesService]
       }
     };
     await this.pubSubService.start(this, appStateConfig, appStateServices);
-    this.offersStateService = this.pubSubService.getStateService<ServiceOffersStateService>(this.offersStateId);
-    this.offersStateService.offers$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
+    this.offersStateService = this.pubSubService.getStateService<ServiceOffersStateService>(PortalServiceStateIds['offers']);
+    this.pipeDestroy(this.offersStateService.offers$, event => {
       switch (event.type) {
         case 'launched':
-          this.selectedOffer = event.data;
-          break;
         case 'closed':
           this.selectedOffer = event.data;
           break;
@@ -295,19 +290,19 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
 
   private async initPollsAppStates() {
     const appStateConfig: AppStateConfig = {
-      [this.pollsStateId]: {
+      [PortalServiceStateIds['polls']]: {
         update: { referenceId: this.eventId }
       }
     };
     const appStateServices: AppStateServices = {
-      [this.pollsStateId]: {
+      [PortalServiceStateIds['polls']]: {
         type: EventPollsStateService,
         args: [pollsType.all, this.appSession, this._hubService, this._eventPollsService]
       }
     };
     await this.pubSubService.start(this, appStateConfig, appStateServices);
-    this.pollsStateService = this.pubSubService.getStateService<EventPollsStateService>(this.pollsStateId);
-    this.pollsStateService.polls$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
+    this.pollsStateService = this.pubSubService.getStateService<EventPollsStateService>(PortalServiceStateIds['polls']);
+    this.pipeDestroy(this.pollsStateService.polls$, event => {
       if (this.selectedPoll?.id === event?.data?.id) {
         this._portalPollService.pollSelected = event.data;
       }
@@ -330,19 +325,31 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, O
 
   private async initHandoutsAppStates() {
     const appStateConfig: AppStateConfig = {
-      [this.handoutsStateId]: {
-        update: { referenceId: this.eventId }
+      [PortalServiceStateIds['handouts']]: {
+        load: [this.eventId],
+        update: { referenceId: this.eventId },
       }
     };
     const appStateServices: AppStateServices = {
-      [this.handoutsStateId]: {
+      [PortalServiceStateIds['handouts']]: {
         type: ServiceHandoutsStateService,
         args: [this.appSession, this._hubService, this._servicesService]
       }
     };
     await this.pubSubService.start(this, appStateConfig, appStateServices);
-    this.serviceHandoutsStateService = this.pubSubService.getStateService<ServiceHandoutsStateService>(this.handoutsStateId);
-    this.serviceHandoutsStateService.handouts$.pipe(takeUntil(this.destroyed$)).subscribe(event => {});
+    this.serviceHandoutsStateService = this.pubSubService.getStateService<ServiceHandoutsStateService>(PortalServiceStateIds['handouts']);
+    this.pipeDestroy(this.serviceHandoutsStateService.handouts$, event => {
+      if (!event.data) return;
+      switch (event.type) {
+        case StateUpdateType.Share:
+          this.handleHandoutEventsForToaster({ handout: event.data, event: event.type });
+          break;
+        case StateUpdateType.Delete:
+          if (event.data.creatorUserId !== this.appSession.userId) return;
+          this.handleHandoutEventsForToaster({ handout: event.data, event: event.type });
+          break;
+      }
+    });
   }
 
   private async initLiveAnsweringQuestion(): Promise<void> {
