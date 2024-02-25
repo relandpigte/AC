@@ -187,9 +187,11 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, A
     setTimeout(() => {
       handoutEvent.customClass = 'hiding';
       this._cdr.detectChanges();
+      console.error('@@@ 1 toasters left: ', this.newHandouts, handoutEvent.handout.id);
       setTimeout(() => {
-        this.newHandouts = this.newHandouts.filter(h => h.handout?.id !== handoutEvent.handout?.id && h.event !== handoutEvent.event);
+        this.newHandouts = this.newHandouts.filter(h => h.handout?.id !== handoutEvent.handout?.id);
         this._cdr.detectChanges();
+        console.error('@@@ 2 toasters left: ', this.newHandouts, this.newHandouts, handoutEvent.handout.id);
       }, 1000);
     }, 15000);
 
