@@ -3,12 +3,13 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { Utils } from '../helpers/utils';
 import { HubEvent, UserServiceProxy, UserStatus, UserStatusLogDto } from '../service-proxies/service-proxies';
 import { StateServiceBase, StateUpdate } from './state-base.service';
-import { take } from 'rxjs/operators';
+
+import * as moment from 'moment';
 
 export enum userStatusType {
   all = 'all',
 }
-
+export const USER_STATUS_ONLINE_THRESHOLD = 900_000;
 const USER_AVATAR_HUB_NAME = 'userAvatarHub';
 
 export class UserAvatarStateService extends StateServiceBase {
@@ -29,17 +30,20 @@ export class UserAvatarStateService extends StateServiceBase {
     super();
   }
 
-  createUserStatusReportLog = (status: UserStatus): void => {
-    this._userService.createUserStatusLog(status)
-      .pipe(take(1))
-      .subscribe();
-  }
-
-  getUserStatusLog = (): UserStatusLogDto[] => Array.from(this.userStatusLog.values());
+  getUserStatusLogValues = (): UserStatusLogDto[] => Array.from(this.userStatusLog.values());
+  reportUserStatusReportLog = (status: UserStatus) => { this._userService.createUserStatusLog(status).subscribe(); }
+  isUserOnline = (userId: number): boolean => {
+    if (this.userStatusLog.has(userId.toString())) {
+      const now = moment();
+      const userStatusLog = this.userStatusLog.get(userId.toString());
+      return userStatusLog.status === UserStatus.Online && now.diff(userStatusLog.creationTime) < USER_STATUS_ONLINE_THRESHOLD;
+    }
+    return false;
+  };
 
   handleNewLoggedInUsers = async (userStatusLog: UserStatusLogDto): Promise<void> => {
     this.loading$.next(true);
-    this.updateFromMap(this.userStatusLog, Utils.toObjectMap([userStatusLog], (c) => c.id, (p) => p), this.userStatusLog$);
+    this.updateFromMap(this.userStatusLog, Utils.toObjectMap([userStatusLog], (c) => c.creatorUserId, (p) => p), this.userStatusLog$);
     this.loading$.next(false);
   }
 
@@ -47,7 +51,7 @@ export class UserAvatarStateService extends StateServiceBase {
     this.loading$.next(true);
     try {
       const userStatusLog = await this._userService[this.fns[this.type ?? userStatusType.all]](...this.loadArgs).toPromise();
-      this.userStatusLog = Utils.toMap(userStatusLog);
+      this.userStatusLog = Utils.toMap<UserStatusLogDto, UserStatusLogDto>(userStatusLog, u => u.creatorUserId.toString());
     } catch (err) {
       console.error(err);
     }

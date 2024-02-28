@@ -1,9 +1,11 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { HubService } from '@app/_shared/services/hub.service';
 import { AppComponentBase } from '@shared/app-component-base';
+import { ChatMessageInfoComponent } from '@shared/components/chat-message-info/chat-message-info.component';
+import { AvatarType } from '@shared/components/user-avatar/user-avatar.component';
 import { ServiceCardUtils } from '@shared/helpers/service-card-utils';
 import { ServiceCard } from '@shared/models/service-card.model';
-import { ChannelDto, ChannelMessageDto, ChatsServiceProxy, UserDto, MatchedChannelDto, UserStatus, UserServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ChannelDto, ChannelMessageDto, ChatsServiceProxy, MatchedChannelDto, UserDto } from '@shared/service-proxies/service-proxies';
 import { ChannelMessagesStateService } from '@shared/services/channel-messages-state.service';
 import { ChatService, NotificationType } from '@shared/services/chat.service';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
@@ -12,21 +14,16 @@ import { StateUpdateType } from '@shared/services/state-base.service';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { BehaviorSubject, combineLatest, of, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, combineLatest, of } from 'rxjs';
 import { debounceTime, switchMap, takeUntil } from 'rxjs/operators';
-import { UserAvatarService } from '@shared/services/user-avatar.service';
-import { ChatMessageInfoComponent } from '@shared/components/chat-message-info/chat-message-info.component';
-import { AvatarType } from '@shared/components/user-avatar/user-avatar.component';
-import { UserAvatarStateService } from '@shared/services/user-avatar-state.service';
 
 @Component({
   selector: 'app-chat-conversation',
   templateUrl: './chat-conversation.component.html',
   styleUrls: ['./chat-conversation.component.less']
 })
-export class ChatConversationComponent extends AppComponentBase implements OnInit, OnChanges, OnDestroy {
+export class ChatConversationComponent extends AppComponentBase implements OnInit, OnChanges {
   channelMessagesStateService: ChannelMessagesStateService;
-  userAvatarStateService: UserAvatarStateService;
 
   @ViewChild('scrollContent', { static: true }) content?: ElementRef<HTMLDivElement>;
   @ViewChild('scrollWrapper', { static: true }) wrapper?: ElementRef<HTMLDivElement>;
@@ -65,12 +62,8 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
   isLoadingMessages$ = new BehaviorSubject<boolean>(true);
   seenMessagesTrigger$ = new Subject();
 
-  onlineUsers: UserDto[] = [];
-  inactiveUsers: UserDto[] = [];
   avatarType = AvatarType;
   sendToUser: UserDto;
-
-  timer: any;
 
   constructor(
     injector: Injector,
@@ -81,8 +74,6 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
     private _chatsService: ChatsServiceProxy,
     private _modalService: BsModalService,
     private _modalDialogService: ModalDialogService,
-    private _userAvatarService: UserAvatarService,
-    private _userService: UserServiceProxy
   ) {
     super(injector);
   }
@@ -111,8 +102,6 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
   get recipientName(): string { return this.replyingToUser?.name; }
   get isMutedChannel() { return this.mutedUserChannelIds?.includes(this.channel?.id); }
 
-  get loggedInUserStateId(): string { return 'onlineUsers'; }
-
   async ngOnInit(): Promise<void> {
     this._chatService.selectedMatchedChannel$
       .pipe(takeUntil(this.destroyed$))
@@ -133,13 +122,6 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
       .pipe(takeUntil(this.destroyed$))
       .subscribe(() => this.handleSeenMessages());
 
-    this._userAvatarService.getUserStatusLog()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(data => {
-        this.onlineUsers = this._userAvatarService.getAllUserLogByStatus(UserStatus.Online, data);
-        this.inactiveUsers = this._userAvatarService.getAllUserLogByStatus(UserStatus.Away, data);
-      });
-
     this._chatService.replyingToUser$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(user => this.sendToUser = user);
@@ -150,17 +132,11 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
   async ngOnChanges(changes: SimpleChanges) {
     if ('channel' in changes && this.channel) {
       await this.initChannelMessagesAppStates();
-      await this.initUserAvatarAppState();
       await this.channelMessagesStateService.updateServiceParams({ type: undefined, args: [this.selectedChannelId, this.referenceId, this.isPrivateChat] });
       this.channelMessages = this.channelMessagesStateService.getAllChannelMessages();
       this.totalChannelMessagesCount = this.channelMessagesStateService.totalChannelMessagesCount;
       if (this.selectedMatchedChannel) this.initSearchResults();
     }
-  }
-
-  async ngOnDestroy() {
-    await this.userAvatarStateService?.stop();
-    await this.userAvatarStateService?.stop();
   }
 
   handleBackToChannelsList(): void {
@@ -356,37 +332,5 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
       if (this.selectedMatchedCount === 0) this.selectedMatchedCount = this.selectedMatchedChannel.matchCount;
       this._chatService.selectedMatchedCount$.next(this.selectedMatchedCount);
     }
-  }
-
-  private async initUserAvatarAppState(): Promise<void> {
-    const appStateConfig: AppStateConfig = {
-      [this.loggedInUserStateId]: {
-        load: [this.appSession.userId],
-        update: {}
-      }
-    };
-    const appStateServices: AppStateServices = {
-      [this.loggedInUserStateId]: {
-        type: UserAvatarStateService,
-        args: [this._hubService, this._userService]
-      }
-    };
-    await this.pubSubService.start(this, appStateConfig, appStateServices);
-    this.userAvatarStateService = this.pubSubService.getStateService<UserAvatarStateService>(this.loggedInUserStateId);
-    this.userAvatarStateService.userStatusLog$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
-      switch (event.type) {
-        case StateUpdateType.Add:
-          if (this.timer) { clearTimeout(this.timer); }
-          if (event.data.status === UserStatus.Online) {
-            this.timer = setTimeout(() => {
-              this.userAvatarStateService.createUserStatusReportLog(UserStatus.Offline);
-            }, 900000);
-          }
-          this._userAvatarService.addUserStatusLog(event.data);
-          break;
-      }
-      this._cdr.detectChanges();
-    });
-    this._userAvatarService.setUserStatusLogs(this.userAvatarStateService.getUserStatusLog());
   }
 }

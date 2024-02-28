@@ -7,6 +7,7 @@ import {
     TenantLoginInfoDto,
     UserLoginInfoDto
 } from '@shared/service-proxies/service-proxies';
+import { AppConsts } from '@shared/AppConsts';
 
 @Injectable()
 export class AppSessionService {

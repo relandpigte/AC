@@ -11,7 +11,11 @@ import {
   AutoAuthenticateModel,
   AutoAuthenticateType,
   TokenAuthServiceProxy,
+  UserStatus,
 } from '@shared/service-proxies/service-proxies';
+import { PubSubService } from '@shared/services/pub-sub.service';
+import { UserAvatarStateService } from '@shared/services/user-avatar-state.service';
+import { USER_STATUS_STATE_ID } from '@app/app.component';
 
 @Injectable()
 export class AppAuthService {
@@ -23,6 +27,7 @@ export class AppAuthService {
   constructor(
     private _tokenAuthService: TokenAuthServiceProxy,
     private _accountsService: AccountServiceProxy,
+    private _pubSubService: PubSubService,
     private _router: Router,
     private _utilsService: UtilsService,
     private _tokenService: TokenService,
@@ -32,6 +37,9 @@ export class AppAuthService {
   }
 
   logout(reload?: boolean): void {
+    const userAvatarStateService = this._pubSubService.getStateService<UserAvatarStateService>(USER_STATUS_STATE_ID);
+    userAvatarStateService.reportUserStatusReportLog(UserStatus.Offline);
+
     abp.auth.clearToken();
     abp.utils.setCookieValue(
       AppConsts.authorization.encryptedAuthTokenName,

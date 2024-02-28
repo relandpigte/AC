@@ -1,7 +1,8 @@
-import { NgModule } from '@angular/core';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { Injector, NgModule } from '@angular/core';
+import { CustomRequestInterceptor } from '@shared/interceptors/custom-request.interceptor';
 import { AbpHttpInterceptor } from 'abp-ng2-module';
-
+import { AppInitializer } from 'app-initializer';
 import * as ApiServiceProxies from './service-proxies';
 
 @NgModule({
@@ -89,7 +90,8 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.ServiceDiscussionServiceProxy,
         ApiServiceProxies.ServicePollsServiceProxy,
         ApiServiceProxies.ServiceQuizesServiceProxy,
-        { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
+        { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: CustomRequestInterceptor, multi: true, deps: [Injector, AppInitializer] },
     ]
 })
 export class ServiceProxyModule  { }

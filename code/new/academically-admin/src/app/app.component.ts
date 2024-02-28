@@ -1,29 +1,27 @@
-import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { LayoutStoreService } from '@shared/layout/layout-store.service';
 import { UpsertPostComponent } from '@shared/modals/upsert-post/upsert-post.component';
-import { PostsServiceProxy, SharedType, UserStatus } from '@shared/service-proxies/service-proxies';
+import { PostsServiceProxy, SharedType, UserServiceProxy, UserStatus } from '@shared/service-proxies/service-proxies';
 import { CommunityPostService, ItemToShare } from '@shared/services/community-post.service';
 import { ModalDialogService } from '@shared/services/modal-dialog.service';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { NgcCookieConsentService } from 'ngx-cookieconsent';
-import { NavigationEnd, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { UserAvatarService } from '@shared/services/user-avatar.service';
 import { AppStateConfig, AppStateServices } from '@shared/services/pub-sub.service';
-import { UserAvatarStateService } from '@shared/services/user-avatar-state.service';
-import { takeUntil } from '@node_modules/rxjs/operators';
 import { StateUpdateType } from '@shared/services/state-base.service';
+import { USER_STATUS_ONLINE_THRESHOLD, UserAvatarStateService } from '@shared/services/user-avatar-state.service';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { HubService } from './_shared/services/hub.service';
+
+export const USER_STATUS_STATE_ID = 'usersStatusState';
 
 @Component({
   templateUrl: './app.component.html'
 })
 export class AppComponent extends AppComponentBase implements OnInit, OnDestroy {
-  timer: any;
   sidebarExpanded: boolean;
-  userAvatarStateService: UserAvatarStateService;
 
-  private navigationSubscription: Subscription;
+  private userAvatarInterval: any;
+  private userAvatarStateService: UserAvatarStateService;
 
   constructor(
     injector: Injector,
@@ -33,14 +31,14 @@ export class AppComponent extends AppComponentBase implements OnInit, OnDestroy 
     private _layoutStore: LayoutStoreService,
     private _communityPostService: CommunityPostService,
     private _postService: PostsServiceProxy,
-    private ccService: NgcCookieConsentService,
     private _router: Router,
-    private _userAvatarService: UserAvatarService
+    private _hubService: HubService,
+    private _userService: UserServiceProxy,
   ) {
     super(injector);
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.renderer.addClass(document.body, 'sidebar-mini');
 
     abp.event.on('abp.notifications.received', (userNotification) => {
@@ -67,21 +65,45 @@ export class AppComponent extends AppComponentBase implements OnInit, OnDestroy 
     });
 
     this.listenToNewItemsToShare();
+
+    await this.initUserAvatarAppState();
     this.listenAndCreateUserStatus();
   }
 
   ngOnDestroy(): void {
-    this.navigationSubscription.unsubscribe();
+    this.userAvatarStateService?.stop();
   }
 
+  // user avatars [start]
   private listenAndCreateUserStatus(): void {
-    this._userAvatarService.createUserStatusReportLog(UserStatus.Online);
-    this.navigationSubscription = this._router.events.subscribe((event) => {
+    this.userAvatarStateService.reportUserStatusReportLog(UserStatus.Online);
+    this.pipeDestroy(this._router.events, event => {
       if (event instanceof NavigationEnd) {
-        this._userAvatarService.createUserStatusReportLog(UserStatus.Online);
+        this.userAvatarStateService.reportUserStatusReportLog(UserStatus.Online);
       }
     });
   }
+
+  private async initUserAvatarAppState(): Promise<void> {
+    const appStateConfig: AppStateConfig = {
+      [USER_STATUS_STATE_ID]: { load: [], update: {} }
+    };
+    const appStateServices: AppStateServices = {
+      [USER_STATUS_STATE_ID]: { type: UserAvatarStateService, args: [this._hubService, this._userService] }
+    };
+    await this.pubSubService.start(this, appStateConfig, appStateServices);
+    this.userAvatarStateService = this.pubSubService.getStateService<UserAvatarStateService>(USER_STATUS_STATE_ID);
+    this.pipeDestroy(this.userAvatarStateService.userStatusLog$, event => {
+      if (event.type === StateUpdateType.Add) {
+          if (event.data.status === UserStatus.Online && event.data.creatorUserId === this.appSession.userId) {
+            if (this.userAvatarInterval) clearTimeout(this.userAvatarInterval);
+            this.userAvatarInterval = setTimeout(() => this.userAvatarStateService.reportUserStatusReportLog(UserStatus.Offline), USER_STATUS_ONLINE_THRESHOLD);
+          }
+      }
+      this.cdr.detectChanges();
+    });
+  }
+  // user avatars [end]
 
   private listenToNewItemsToShare(): void {
     this._communityPostService.newItemToShare$.subscribe(item => this.askToShareToTimeline(item));

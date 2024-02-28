@@ -338,11 +338,15 @@ namespace Academically.Users
         public async Task<List<UserStatusLogDto>> GetAllUserStatusLogs()
         {
             var result = new List<UserStatusLogDto>();
-            var statusLogs = await _userStatusLog.GetAll()
-                .Include(us => us.CreatorUser)
-                .OrderByDescending(us => us.CreationTime)
-                .Select(us => ObjectMapper.Map<UserStatusLogDto>(us))
+            var list = await _userStatusLog.GetAll()
+                .Include(s => s.CreatorUser)
+                .Select(s => ObjectMapper.Map<UserStatusLogDto>(s))
                 .ToListAsync();
+
+            var statusLogs = list
+                .GroupBy(s => s.CreatorUserId)
+                .Select(group => group.OrderByDescending(g => g.CreationTime).First())
+                .ToList();
 
             foreach (var logs in statusLogs)
             {
