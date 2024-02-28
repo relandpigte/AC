@@ -6872,6 +6872,14 @@ ngx-quill@11.1.0:
   dependencies:
     tslib "^1.10.0"
 
+ngx-split-view@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/ngx-split-view/-/ngx-split-view-1.0.1.tgz#eceb46f73caef64ce7c2c3fb24098eae1abf39fd"
+  integrity sha512-xmbXdVkBON8T9Cz6NQi7MdGRrGWo5M2aMchfFbgDbsYWyuBhpI6/JK+rYZLbOpXGOkcXU/q88jjIuUnWFR+CBg==
+  dependencies:
+    split.js "^1.6.2"
+    tslib "^1.10.0"
+
 nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
@@ -9152,6 +9160,11 @@ split-string@^3.0.1, split-string@^3.0.2:
   integrity sha512-NzNVhJDYpwceVVii8/Hu6DKfD2G+NrQHlS/V/qgv763EYudVwEcMQNxd2lh+0VrUByXN/oJkl5grOhYWvQUYiw==
   dependencies:
     extend-shallow "^3.0.0"
+
+split.js@^1.6.2:
+  version "1.6.5"
+  resolved "https://registry.yarnpkg.com/split.js/-/split.js-1.6.5.tgz#f7f61da1044c9984cb42947df4de4fadb5a3f300"
+  integrity sha512-mPTnGCiS/RiuTNsVhCm9De9cCAUsrNFFviRbADdKiiV+Kk8HKp/0fWu7Kr8pi3/yBmsqLFHuXGT9UUZ+CNLwFw==
 
 sprintf-js@^1.1.2:
   version "1.1.2"
