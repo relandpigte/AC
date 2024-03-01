@@ -4,7 +4,7 @@ import { Utils } from '@shared/helpers/utils';
 import { ChannelDto, ChannelMemberDto, ChatsServiceProxy, MatchedChannelDto, SearchByKeywordResponseDto, UserDto } from '@shared/service-proxies/service-proxies';
 import { ChatService } from '@shared/services/chat.service';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
-import { filter, finalize, switchMap, takeUntil } from 'rxjs/operators';
+import { filter, finalize, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-search-keyword',

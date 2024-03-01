@@ -107,7 +107,7 @@ export class ChatConversationComponent extends AppComponentBase implements OnIni
       .pipe(takeUntil(this.destroyed$))
       .subscribe(channel => {
         this.selectedMatchedChannel = channel;
-        this._chatService.selectedMatchedCount$.next(1);
+        this._chatService.selectedMatchedCount$.next(channel ? 1 : -1);
       });
 
     this._chatService.selectedMatchedCount$

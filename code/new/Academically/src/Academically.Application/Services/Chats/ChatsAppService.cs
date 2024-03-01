@@ -588,7 +588,7 @@ namespace Academically.Services.Chats
             var channelIds = matchedChannels.Select(c => c.Channel.Id).ToList();
             var users = await this._channelMemberRepository.GetAll()
                 .Include(m => m.User)
-                .Where(m => channelIds.Contains(m.ChannelId))
+                .Where(m => m.User.Name.ToLower().Contains(keyword.ToLower()) || m.User.Surname.ToLower().Contains(keyword.ToLower()))
                 .Where(m => m.UserId != AbpSession.UserId.Value)
                 .Select(m => ObjectMapper.Map<UserDto>(m.User))
                 .ToListAsync();
