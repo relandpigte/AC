@@ -63,6 +63,7 @@
     "ngx-pagination": "^5.0.0",
     "ngx-pipes": "^2.7.5",
     "ngx-quill": "11.1.0",
+    "ngx-split-view": "^1.0.1",
     "primeicons": "^4.1.0",
     "primeng": "^11.3.1",
     "push.js": "1.0.12",

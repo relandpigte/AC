@@ -1,0 +1,230 @@
+.interface {
+  &-header {
+    height: 96px;
+    padding: 24px;
+
+    &-right {
+      &-status {
+        .status {
+          font-size: 16px;
+          font-weight: 600;
+          color: #12263F;
+
+          &.live {
+            &::before {
+              content: "";
+              width: 8px;
+              height: 8px;
+              background-color: #CC525F;
+              border-radius: 50%;
+            }
+          }
+        }
+
+        .time {
+          font-size: 12px;
+          font-weight: 400;
+          color: #6E84A3;
+        }
+      }
+
+      .btn {
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #12263F;
+        height: 48px;
+
+        &.users {
+          border: 1px solid #EDF2F9;
+          width: 74px;
+        }
+
+        &.recording {
+          background-color: #EDF2F9;
+          width: 183px;
+        }
+
+        &.end-stream {
+          &:hover {
+            background-color: transparent;
+          }
+        }
+      }
+    }
+
+    .header {
+      &-pretitle {
+        margin: 0 0 3px;
+        font-size: 10px;
+        font-weight: 600;
+        color: #6E84A3;
+      }
+
+      &-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin: 0;
+        color: #12263F;
+      }
+    }
+  }
+
+  &-layout {
+    height: calc(100vh - 192px);
+    padding-left: 24px;
+    padding-right: 24px;
+
+    .gutter {
+
+      &:hover {
+        .inner {
+          display: block;
+          cursor: col-resize;
+        }
+      }
+
+      .inner {
+        width: 1px;
+        height: 100%;
+        background: #2C7BE5;
+        margin: 0 auto;
+        position: relative;
+        display: none;
+
+        &::before {
+          content: "";
+          width: 0;
+          height: 0;
+          border-top: 5px solid transparent;
+          border-bottom: 5px solid transparent;
+          border-right: 5px solid #2C7BE5;
+          display: inline-block;
+          position: absolute;
+          left: -8px;
+          top: 45%;
+        }
+
+        &::after {
+          content: "";
+          width: 0;
+          height: 0;
+          border-top: 5px solid transparent;
+          border-bottom: 5px solid transparent;
+          border-left: 5px solid #2C7BE5;
+          display: inline-block;
+          position: absolute;
+          right: -8px;
+          top: 45%;
+        }
+      }
+
+
+    }
+  }
+
+  &-content {
+    height: 100%;
+
+    &-presenter {
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+
+      img {
+        border-radius: 10px;
+        object-fit: cover;
+        object-position: center;
+        width: 100%;
+        aspect-ratio: 16/9;
+        height: calc(100vh - 192px);
+      }
+
+      video {
+        border-radius: 10px;
+        object-fit: cover;
+        object-position: center;
+        height: calc(100vh - 192px);
+        width: 100%;
+        aspect-ratio: 16/9;
+      }
+
+      .name {
+        font-size: 14px;
+        font-weight: 400;
+        color: #FFFFFF;
+        position: absolute;
+        bottom: 8px;
+        left: 12px;
+      }
+    }
+  }
+
+  &-footer {
+    height: 96px;
+    padding: 24px;
+    z-index: 1;
+
+    &-left,
+    &-right,
+    &-center {
+      .btn {
+        border-radius: 10px;
+        border: 1px solid #E4EBF6;
+        height: 48px;
+        min-width: 48px;
+        padding: 0;
+        position: relative;
+
+        .badge {
+          font-size: 10px;
+          font-weight: 400;
+          height: 16px;
+          border-radius: 6px;
+          color: #FFFFFF;
+          position: absolute;
+          top: -5px;
+          right: -5px;
+        }
+
+        &-leave {
+          background-color: #E63757;
+          border-radius: 10px;
+          height: 48px;
+          padding: 8px;
+        }
+
+        &-exit {
+          color: #FFFFFF;
+          font-size: 16px;
+          font-weight: 600;
+        }
+
+        &-separator {
+          height: 24px;
+          width: 1px;
+          background-color: rgba(0, 0, 0, 0.3);
+          margin-left: 16px;
+          margin-right: 8px;
+        }
+
+        &-option {
+          border-radius: 10px;
+          border: 1px solid #E4EBF6;
+          height: 48px;
+          min-width: 48px;
+          padding: 0;
+        }
+      }
+    }
+  }
+
+  &-features {
+    width: 343px;
+    margin: 0 0 0 24px;
+  }
+}
+
+.icon {
+
+}

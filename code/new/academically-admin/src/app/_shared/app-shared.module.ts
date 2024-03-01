@@ -120,6 +120,9 @@ import { CreateServiceComponent } from '@shared/modals/create-service/create-ser
 import { ServiceCardActivityComponent } from '@shared/components/service-card-activity/service-card-activity.component';
 import { ServiceCardHandoutsComponent } from '@shared/components/service-card-handouts/service-card-handouts.component';
 import { ServiceCardPresentationComponent } from '@shared/components/service-card-presentation/service-card-presentation.component';
+import { ServiceInterfaceComponent } from '@shared/components/service-interface/service-interface.component';
+import { SplitViewModule } from 'ngx-split-view';
+import { ServiceInterfaceSidebarComponent } from '@shared/components/service-interface/components/sidebar/sidebar.component';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -219,7 +222,9 @@ FullCalendarModule.registerPlugins([
     CreateServiceComponent,
     ServiceCardActivityComponent,
     ServiceCardHandoutsComponent,
-    ServiceCardPresentationComponent
+    ServiceCardPresentationComponent,
+    ServiceInterfaceComponent,
+    ServiceInterfaceSidebarComponent
   ],
   imports: [
     CommonModule,
@@ -246,7 +251,8 @@ FullCalendarModule.registerPlugins([
     EmojiModule,
     RouterModule,
     NgPipesModule,
-    FullCalendarModule
+    FullCalendarModule,
+    SplitViewModule
   ],
   exports: [
     SharedModule,
@@ -352,7 +358,9 @@ FullCalendarModule.registerPlugins([
     CreateServiceComponent,
     ServiceCardActivityComponent,
     ServiceCardHandoutsComponent,
-    ServiceCardPresentationComponent
+    ServiceCardPresentationComponent,
+    ServiceInterfaceComponent,
+    ServiceInterfaceSidebarComponent
   ],
 })
 export class AppSharedModule { }

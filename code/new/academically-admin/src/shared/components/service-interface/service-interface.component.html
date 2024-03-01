@@ -1,0 +1,136 @@
+<div class="interface-wrapper">
+  <header class="interface-header w-100p d-flex align-items-center justify-content-between">
+    <div class="interface-header-left">
+      <h6 class="header-pretitle">{{ eventCategoryName }}</h6>
+      <h3 class="header-title">{{ serviceName }}</h3>
+    </div>
+    <div class="interface-header-right d-flex align-items-center gap-16">
+      <div class="interface-header-right-status d-flex flex-column gap-4 text-right">
+        <span class="status live d-flex align-items-center gap-8">Live</span>
+        <span class="time">01:23</span>
+      </div>
+      <button class="btn btn-light recording d-flex align-items-center gap-8">
+        <img src="assets/img/interface/icon-control/disc.svg" alt="Start recording">
+        <span>Start recording</span>
+      </button>
+      <button *ngIf="!liveStatus" (click)="onChangeStatus(true)" class="btn btn-primary start-stream d-flex align-items-center gap-8 text-white">
+        <img width="32" src="assets/img/interface/icon-control/radio-start.svg" alt="Start streaming">
+        <span>Go live</span>
+      </button>
+      <button *ngIf="liveStatus" (click)="onChangeStatus(false)" class="btn btn-outline-danger end-stream d-flex align-items-center gap-8 text-danger">
+        <img width="32" src="assets/img/interface/icon-control/radio-end.svg" alt="Start streaming">
+        <span>End stream</span>
+      </button>
+      <button class="btn btn-outline-light users d-flex align-items-center gap-8">
+        <img src="assets/img/interface/icon-control/users.svg" alt="Users">
+        <span>5</span>
+      </button>
+    </div>
+  </header>
+  <div class="interface-layout w-100p d-flex">
+    <split-view [gutterSize]="interfaceLayout === InterfaceLayout.Spotlight ? 0 : 24" [expandToMin]="true">
+      <app-service-interface-sidebar *ngIf="interfaceLayout === InterfaceLayout.LeftSidebar" splitPane [minSize]="150" [splitRatio]="1"></app-service-interface-sidebar>
+      <main class="interface-content" splitPane [splitRatio]="4">
+        <div class="interface-content-presenter">
+          <img src="assets/img/interface/sample/host-avatar.png" alt="...">
+          <span class="name">Jason Dagohoy</span>
+        </div>
+      </main>
+      <app-service-interface-sidebar *ngIf="interfaceLayout === InterfaceLayout.RightSidebar" splitPane [minSize]="150" [splitRatio]="1"></app-service-interface-sidebar>
+      <div *gutterTemplate class="gutter">
+        <div class="inner"></div>
+      </div>
+    </split-view>
+    <div class="card interface-features flex-shrink-0 d-flex flex-column h-100p">
+      <ng-content></ng-content>
+    </div>
+  </div>
+  <footer class="interface-footer w-100p fixed-bottom d-flex align-items-center justify-content-between">
+    <div class="interface-footer-left d-flex align-items-center gap-16">
+      <div class="btn-group btn-option" role="group">
+        <a href="javascript: void(0);" class="d-flex align-items-center justify-content-center w-100p" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <img width="32" src="assets/img/interface/icon-control/layout-right.svg" alt="Left Sidebar">
+        </a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="javascript: void(0)" (click)="onChangeLayout(InterfaceLayout.LeftSidebar)">Left Sidebar</a>
+          <a class="dropdown-item" href="javascript: void(0)" (click)="onChangeLayout(InterfaceLayout.RightSidebar)">Right Sidebar</a>
+          <a class="dropdown-item" href="javascript: void(0)" (click)="onChangeLayout(InterfaceLayout.Spotlight)">Spotlight</a>
+        </div>
+      </div>
+      <button class="btn">
+        <img src="assets/img/interface/icon-control/brb.svg" alt="Brb">
+      </button>
+      <button class="btn">
+        <img src="assets/img/interface/icon-control/bg-blur.svg" alt="Background blur">
+      </button>
+    </div>
+
+    <div class="interface-footer-center d-flex align-items-center gap-16">
+      <button class="btn" *ngIf="!microphoneDisabled" (click)="microphoneDisabled = true">
+        <img width="32" src="assets/img/interface/icon-control/mic.svg" alt="Microphone">
+      </button>
+      <button class="btn btn-danger text-white" *ngIf="microphoneDisabled" (click)="microphoneDisabled = false">
+        <img width="32" src="assets/img/interface/icon-control/mic-off.svg" alt="Microphone">
+      </button>
+
+      <button class="btn" *ngIf="!videoDisabled" (click)="videoDisabled = true">
+        <img width="32" src="assets/img/interface/icon-control/video.svg" alt="Video">
+      </button>
+      <button class="btn btn-danger text-white" *ngIf="videoDisabled" (click)="videoDisabled = false">
+        <img width="32" src="assets/img/interface/icon-control/video-off.svg" alt="Video">
+      </button>
+
+      <button class="btn">
+        <img src="assets/img/interface/icon-control/share.svg" alt="Share">
+      </button>
+
+      <div class="btn-group btn-option" role="group">
+        <a href="javascript: void(0);" class="d-flex align-items-center justify-content-center w-100p" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <img src="assets/img/interface/icon-control/more-vertical-black.svg" alt="Options">
+        </a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="#">Dropdown link</a>
+          <a class="dropdown-item" href="#">Dropdown link</a>
+        </div>
+      </div>
+
+      <div class="btn-group btn-leave d-flex align-items-center" role="group">
+        <button type="button" class="btn btn-exit border-0 d-flex align-items-center gap-8" (click)="onExitRoom()">
+          <img src="assets/img/interface/icon-control/lougout.svg" alt="Leave">
+          <span>Leave</span>
+        </button>
+
+        <div class="btn-separator"></div>
+
+        <div class="btn-group" role="group">
+          <a href="javascript: void(0);" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img src="assets/img/interface/icon-control/more-vertical-white.svg" alt="More">
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="#">Dropdown link</a>
+            <a class="dropdown-item" href="#">Dropdown link</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="interface-footer-right d-flex align-items-center gap-16">
+      <button class="btn">
+        <span class="badge bg-primary unread-count">1</span>
+        <img src="assets/img/interface/icon-menu/message.svg" alt="Chat">
+      </button>
+      <button class="btn">
+        <img src="assets/img/interface/icon-menu/question.svg" alt="Question">
+      </button>
+      <button class="btn">
+        <img src="assets/img/interface/icon-menu/activities.svg" alt="Activities">
+      </button>
+      <button class="btn">
+        <img src="assets/img/interface/icon-menu/handouts.svg" alt="Handouts">
+      </button>
+      <button class="btn">
+        <img src="assets/img/interface/icon-menu/offers.svg" alt="Offers">
+      </button>
+    </div>
+  </footer>
+</div>
