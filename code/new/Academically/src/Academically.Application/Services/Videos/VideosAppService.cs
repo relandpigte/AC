@@ -457,8 +457,8 @@ namespace Academically.Services.Videos
                     && e.Type == ReactionType.Like);
                 vid.VideoCount = vid.Children.Count();
 
-                var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == vid.Id.ToString() && s.CreatorUserId == this.AbpSession.UserId);
-                vid.IsSaved = savedService != null;
+                var savedList = await _savedServiceRepository.GetAll().AsNoTracking().Where(s => s.ReferenceId.ToString() == vid.Id.ToString()).ToListAsync();
+                vid.IsSaved = savedList.Any(s => s.CreatorUserId == AbpSession.GetUserId());
 
                 var purchasedService = await this._servicePurchasesRepository.FirstOrDefaultAsync(p => p.ReferenceId.ToString() == vid.Id.ToString() && p.CreatorUserId == this.AbpSession.UserId);
                 vid.IsPurchased = purchasedService != null;

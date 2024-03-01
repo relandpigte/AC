@@ -341,8 +341,8 @@ namespace Academically.Services.Articles
                 if (article.CreatorUser.ProfilePictureDocumentId.HasValue)
                     article.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(article.CreatorUser.ProfilePictureDocumentId.Value);
 
-                var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == article.Id.ToString() && s.CreatorUserId == this.AbpSession.UserId);
-                article.IsSaved = savedService != null;
+                var savedList = await _savedServiceRepository.GetAll().AsNoTracking().Where(s => s.ReferenceId.ToString() == article.Id.ToString()).ToListAsync();
+                article.IsSaved = savedList.Any(s => s.CreatorUserId == AbpSession.GetUserId());
 
                 var purchasedService = await this._servicePurchasesRepository.FirstOrDefaultAsync(p => p.ReferenceId.ToString() == article.Id.ToString() && p.CreatorUserId == this.AbpSession.UserId);
                 article.IsPurchased = purchasedService != null;

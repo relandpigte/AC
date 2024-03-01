@@ -162,9 +162,10 @@ namespace Academically.Services.Events
 
             var eventReview = await _serviceReviewRepository.FirstOrDefaultAsync(r => r.ReferenceId == result.Id && r.CreatorUserId == AbpSession.GetUserId());
             result.HasReviewed = eventReview != null;
-            
-            var savedService = await _savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == result.Id.ToString());
-            result.IsSaved = savedService != null;
+
+            var savedList = await _savedServiceRepository.GetAll().AsNoTracking().Where(s => s.ReferenceId.ToString() == result.Id.ToString()).ToListAsync();
+            result.IsSaved = savedList.Any(s => s.CreatorUserId == AbpSession.GetUserId());
+            result.NumberOfInterested = savedList.Where(s => s.CreatorUserId != result.CreatorUserId).Count();
             
             return result;
         }
@@ -274,8 +275,8 @@ namespace Academically.Services.Events
                 if (vid.CreatorUser.ProfilePictureDocumentId.HasValue)
                     vid.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(vid.CreatorUser.ProfilePictureDocumentId.Value);
 
-                var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == vid.Id.ToString() && s.CreatorUserId == this.AbpSession.UserId);
-                vid.IsSaved = savedService != null;
+                var savedList = await _savedServiceRepository.GetAll().AsNoTracking().Where(s => s.ReferenceId.ToString() == vid.Id.ToString()).ToListAsync();
+                vid.IsSaved = savedList.Any(s => s.CreatorUserId == AbpSession.GetUserId());
 
                 var purchasedService = await this._servicePurchasesRepository.FirstOrDefaultAsync(p => p.ReferenceId.ToString() == vid.Id.ToString() && p.CreatorUserId == this.AbpSession.UserId);
                 vid.IsPurchased = purchasedService != null;

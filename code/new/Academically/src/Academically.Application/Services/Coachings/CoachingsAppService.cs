@@ -117,9 +117,9 @@ namespace Academically.Services.Coachings
             var servicePurchase = await _servicePurchasesRepository
                 .FirstOrDefaultAsync(p => p.ReferenceId.ToString() == result.Id.ToString() && p.CreatorUserId == AbpSession.GetUserId());
             result.IsPurchased = servicePurchase != null;
-            
-            var savedService = await _savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == result.Id.ToString());
-            result.IsSaved = savedService != null;
+
+            var savedList = await _savedServiceRepository.GetAll().AsNoTracking().Where(s => s.ReferenceId.ToString() == result.Id.ToString()).ToListAsync();
+            result.IsSaved = savedList.Any(s => s.CreatorUserId == AbpSession.GetUserId());
             
             var serviceReview = await _serviceReviewRepository.FirstOrDefaultAsync(r => r.ReferenceId == result.Id && r.CreatorUserId == AbpSession.GetUserId());
             result.HasReviewed = serviceReview != null;
@@ -256,8 +256,8 @@ namespace Academically.Services.Coachings
                     if (coaching.CreatorUser.ProfilePictureDocumentId.HasValue)
                         coaching.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(coaching.CreatorUser.ProfilePictureDocumentId.Value);
 
-                    var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == coaching.Id.ToString());
-                    coaching.IsSaved = savedService != null;
+                    var savedList = await _savedServiceRepository.GetAll().AsNoTracking().Where(s => s.ReferenceId.ToString() == coaching.Id.ToString()).ToListAsync();
+                    coaching.IsSaved = savedList.Any(s => s.CreatorUserId == AbpSession.GetUserId());
 
                     var purchasedService = await this._servicePurchasesRepository.FirstOrDefaultAsync(p => p.ReferenceId.ToString() == coaching.Id.ToString() && p.CreatorUserId == this.AbpSession.UserId);
                     coaching.IsPurchased = purchasedService != null;
@@ -291,8 +291,8 @@ namespace Academically.Services.Coachings
                 if (coaching.CreatorUser.ProfilePictureDocumentId.HasValue)
                     coaching.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(coaching.CreatorUser.ProfilePictureDocumentId.Value);
 
-                var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == coaching.Id.ToString() && s.CreatorUserId == this.AbpSession.UserId);
-                coaching.IsSaved = savedService != null;
+                var savedList = await _savedServiceRepository.GetAll().AsNoTracking().Where(s => s.ReferenceId.ToString() == coaching.Id.ToString()).ToListAsync();
+                coaching.IsSaved = savedList.Any(s => s.CreatorUserId == AbpSession.GetUserId());
 
                 var purchasedService = await this._servicePurchasesRepository.FirstOrDefaultAsync(p => p.ReferenceId.ToString() == coaching.Id.ToString() && p.CreatorUserId == this.AbpSession.UserId);
                 coaching.IsPurchased = purchasedService != null;
@@ -323,8 +323,8 @@ namespace Academically.Services.Coachings
                 if (popular.CreatorUser.ProfilePictureDocumentId.HasValue)
                     popular.CreatorUser.ProfilePictureUrl = await _documentsDomainService.GetFileUrlAsync(popular.CreatorUser.ProfilePictureDocumentId.Value);
 
-                var savedService = await this._savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == popular.Id.ToString());
-                popular.IsSaved = savedService != null;
+                var savedList = await _savedServiceRepository.GetAll().AsNoTracking().Where(s => s.ReferenceId.ToString() == popular.Id.ToString()).ToListAsync();
+                popular.IsSaved = savedList.Any(s => s.CreatorUserId == AbpSession.GetUserId());
 
                 var purchasedService = await this._servicePurchasesRepository.FirstOrDefaultAsync(p => p.ReferenceId.ToString() == popular.Id.ToString() && p.CreatorUserId == this.AbpSession.UserId);
                 popular.IsPurchased = purchasedService != null;
@@ -464,9 +464,9 @@ namespace Academically.Services.Coachings
                 
                 var serviceReview = await _serviceReviewRepository.FirstOrDefaultAsync(r => r.ReferenceId == item.Id && r.CreatorUserId == AbpSession.GetUserId());
                 item.HasReviewed = serviceReview != null;
-                
-                var savedService = await _savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == item.Id.ToString());
-                item.IsSaved = savedService != null;
+
+                var savedList = await _savedServiceRepository.GetAll().AsNoTracking().Where(s => s.ReferenceId.ToString() == item.Id.ToString()).ToListAsync();
+                item.IsSaved = savedList.Any(s => s.CreatorUserId == AbpSession.GetUserId());
                 
                 item.ServiceBooking = await _serviceBookingRepository.GetAll()
                     .Where(x => x.CreatorUserId == AbpSession.GetUserId())
@@ -531,9 +531,9 @@ namespace Academically.Services.Coachings
                 
                 var serviceReview = await _serviceReviewRepository.FirstOrDefaultAsync(r => r.ReferenceId == item.Id && r.CreatorUserId == AbpSession.GetUserId());
                 item.HasReviewed = serviceReview != null;
-                
-                var savedService = await _savedServiceRepository.FirstOrDefaultAsync(s => s.ReferenceId.ToString() == item.Id.ToString());
-                item.IsSaved = savedService != null;
+
+                var savedList = await _savedServiceRepository.GetAll().AsNoTracking().Where(s => s.ReferenceId.ToString() == item.Id.ToString()).ToListAsync();
+                item.IsSaved = savedList.Any(s => s.CreatorUserId == AbpSession.GetUserId());
             }
             return output;
         }

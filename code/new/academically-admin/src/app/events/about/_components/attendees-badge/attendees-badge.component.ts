@@ -24,6 +24,7 @@ export class AttendeesBadgeComponent extends AppComponentBase implements OnInit 
   get isLoading$() { return this._landingPageService.isLoading$; }
   get attendeesTotal(): number { return this.data?.purchased?.length; }
   get attendeesLimit(): number { return this.data?.numberOfAttendees; }
+  get interested(): number { return this.data?.numberOfInterested; }
   get attendees(): UserDto[] { return this.data?.purchased; }
   get isWorkShop(): boolean { return this.data?.category === EventCategory.Workshop; }
 

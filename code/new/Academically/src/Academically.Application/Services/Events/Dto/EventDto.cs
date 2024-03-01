@@ -109,6 +109,7 @@ namespace Academically.Services.Events.Dto
         public bool AudienceEnableHandoutsTab { get; set; }
         public bool AutoAdmitAttendees { get; set; }
         public int? NumberOfAttendees { get; set; }
+        public int? NumberOfInterested { get; set; }
         public long CreatorUserId { get; set; }
 
         public string ThumbnailImageUrl { get; set; }
