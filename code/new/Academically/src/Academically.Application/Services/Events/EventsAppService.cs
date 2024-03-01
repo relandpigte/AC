@@ -51,6 +51,7 @@ namespace Academically.Services.Events
         private readonly IExploreRepository _exploreRepository;
         private readonly IRepository<ServiceReview, Guid> _serviceReviewRepository;
         private readonly IRepository<DisciplineTaxonomy, Guid> _disciplineTaxonomyRepository;
+        private readonly IRepository<ServiceBooking, Guid> _serviceBookingRepository;
 
         public EventsAppService(
             RoleManager roleManager,
@@ -66,7 +67,10 @@ namespace Academically.Services.Events
             IRepository<ServicePurchase, Guid> servicePurchasesRepository,
             IDocumentsDomainService documentsDomainService,
             IExploreRepository exploreRepository,
-            IRepository<ServiceReview, Guid> serviceReviewRepository, IRepository<DisciplineTaxonomy, Guid> disciplineTaxonomyRepository) : base(repository)
+            IRepository<ServiceReview, Guid> serviceReviewRepository,
+            IRepository<DisciplineTaxonomy, Guid> disciplineTaxonomyRepository,
+            IRepository<ServiceBooking, Guid> serviceBookingRepository
+        ) : base(repository)
         {
             LocalizationSourceName = AcademicallyConsts.LocalizationSourceName;
 
@@ -84,6 +88,7 @@ namespace Academically.Services.Events
             _exploreRepository = exploreRepository;
             _serviceReviewRepository = serviceReviewRepository;
             _disciplineTaxonomyRepository = disciplineTaxonomyRepository;
+            _serviceBookingRepository = serviceBookingRepository;
         }
 
         protected override IQueryable<Event> CreateFilteredQuery(PagedEventResultRequestDto input)
@@ -326,16 +331,36 @@ namespace Academically.Services.Events
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IEnumerable<AvailableServiceDto>> GetEventsSchedule(long? creatorUserId, ScheduledServiceType? type)
         {
-            return await Repository.GetAll()
-                .WhereIf(creatorUserId.HasValue, x => x.CreatorUserId == creatorUserId)
-                .WhereIf(!creatorUserId.HasValue, x => x.CreatorUserId == this.AbpSession.UserId)
-                .WhereIf(type.HasValue && type == ScheduledServiceType.Upcoming, e => e.EventDateTime >= Clock.Now)
-                .WhereIf(type.HasValue && type == ScheduledServiceType.Past, e => e.EventDateTime < Clock.Now)
-                .WhereIf(type.HasValue && type == ScheduledServiceType.Cancelled, e => e.EventDateTime < Clock.Now)
-                .Include(e => e.CreatorUser)
+            var now = Clock.Now;
+            var bookings = await this._serviceBookingRepository.GetAll()
+                .AsNoTracking()
+                .WhereIf(creatorUserId.HasValue, b => b.OwnerId == creatorUserId) // get all bookings for owner's services
+                .WhereIf(!creatorUserId.HasValue, b => b.CreatorUserId == this.AbpSession.UserId) // get all bookings made by the user
+                .WhereIf(type.HasValue && type == ScheduledServiceType.Upcoming, b => b.CancellationTime == null && b.BookingDateTime >= now)
+                .WhereIf(type.HasValue && type == ScheduledServiceType.Past, b => b.CancellationTime == null && b.BookingDateTime < now)
+                .WhereIf(type.HasValue && type == ScheduledServiceType.Cancelled, b => b.CancellationTime != null)
+                .ToListAsync();
+
+            var bookedServiceIds = bookings.Select(b => b.ReferenceId).ToList();
+            var services = await Repository.GetAll()
+                .Include(c => c.CreatorUser)
+                .WhereIf(bookedServiceIds.Count > 0, x => bookedServiceIds.Contains(x.Id))
                 .AsNoTracking()
                 .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
                 .ToListAsync();
+
+            var schedules = new List<AvailableServiceDto>();
+            foreach (var booking in bookings)
+            {
+                var service = services.Where(s => s.Id == booking.ReferenceId).SingleOrDefault();
+                if (service != null)
+                {
+                    service.EventDateTime = booking.BookingDateTime;
+                    schedules.Add(service);
+                }
+            }
+
+            return schedules;
         }
 
         public async Task<PagedResultDto<EventDto>> GetEventSchedules(PagedEventScheduleResultRequestDto input)

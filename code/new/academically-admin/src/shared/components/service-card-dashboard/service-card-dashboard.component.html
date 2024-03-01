@@ -18,7 +18,7 @@
 
             <div *ngIf="sanitizedOptions?.isShowImages" [class]="cardType + '-thumbnail-wrapper'" class="position-relative" [style.margin-right.px]="20">
                 <a href="javascript:void(0)" class="avatar avatar-lg avatar-4by3">
-                    <img [src]="images[0].src" alt="..." class="avatar-img rounded">
+                    <img [src]="images[0].src ? images[0].src : 'assets/img/img-placeholder.png'" alt="..." class="avatar-img rounded">
                 </a>
 
                 <div *ngIf="this.sanitizedOptions?.isShowQuickPreview" [class]="cardType + '-thumbnail-preview'" class="d-flex align-items-center w-100 h-100">

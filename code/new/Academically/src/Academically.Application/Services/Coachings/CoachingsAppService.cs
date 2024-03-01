@@ -363,34 +363,32 @@ namespace Academically.Services.Coachings
             var bookings = await this._serviceBookingRepository.GetAll()
                 .AsNoTracking()
                 .WhereIf(creatorUserId.HasValue, b => b.OwnerId == creatorUserId)
-                .WhereIf(!creatorUserId.HasValue, b => b.OwnerId == this.AbpSession.UserId)
+                .WhereIf(!creatorUserId.HasValue, b => b.CreatorUserId == this.AbpSession.UserId)
                 .WhereIf(type.HasValue && type == ScheduledServiceType.Upcoming, b => b.CancellationTime == null && b.BookingDateTime >= now)
                 .WhereIf(type.HasValue && type == ScheduledServiceType.Past, b => b.CancellationTime == null && b.BookingDateTime < now)
                 .WhereIf(type.HasValue && type == ScheduledServiceType.Cancelled, b => b.CancellationTime != null)
                 .ToListAsync();
 
-            var bookingIds = bookings.Select(b => b.ReferenceId).ToList();
-
+            var bookedServiceIds = bookings.Select(b => b.ReferenceId).ToList();
             var services = await Repository.GetAll()
-                .Where(w => w.ParentId == null && w.Visible.Value && w.Status == CoachingStatus.Published)
-                .WhereIf(creatorUserId.HasValue, x => x.CreatorUserId == creatorUserId)
-                .WhereIf(!creatorUserId.HasValue, x => x.CreatorUserId == this.AbpSession.UserId)
-                .WhereIf(bookings.Count > 0, x => bookingIds.Contains(x.Id))
                 .Include(c => c.CreatorUser)
+                .WhereIf(bookedServiceIds.Count > 0, x => bookedServiceIds.Contains(x.Id))
                 .AsNoTracking()
                 .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))
                 .ToListAsync();
 
-            foreach (var service in services)
+            var schedules = new List<AvailableServiceDto>();
+            foreach (var booking in bookings)
             {
-                var booking = bookings.Where(b => b.ReferenceId == service.Id).FirstOrDefault();
-                if (booking != null)
+                var service = services.Where(s => s.Id == booking.ReferenceId).SingleOrDefault();
+                if (service != null)
                 {
                     service.EventDateTime = booking.BookingDateTime;
+                    schedules.Add(service);
                 }
             }
 
-            return services;
+            return schedules;
         }
 
         public async Task<IEnumerable<AvailableServiceDto>> GetBookingScheduled(long? ownerId, ScheduledServiceType? type)
