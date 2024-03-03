@@ -38,7 +38,7 @@ export class OffersComponent extends AppComponentBase implements OnInit, OnDestr
     this._portalService.event$
       .pipe(takeUntil(this.destroyed$))
       .subscribe(response => {
-        this.isHost = response.creatorUserId === this.appSession.userId;
+        this.isHost = response?.creatorUserId === this.appSession.userId;
         this.activeTab = this.isHost ? OffersTabs.Queued : OffersTabs.Open;
       });
 

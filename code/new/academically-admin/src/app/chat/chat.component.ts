@@ -72,7 +72,7 @@ export class ChatComponent extends AppComponentBase implements OnInit, OnDestroy
       .subscribe(async selectedChannelType => {
         this.selectedChannelType = selectedChannelType;
 
-        await this.channelsStateService.updateServiceParams({
+        await this.channelsStateService?.updateServiceParams({
           type: selectedChannelType === 0 ? channelsType.inbox : channelsType.archived,
           args: [this.appSession.userId]
         });

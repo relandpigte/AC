@@ -1,3 +1,19 @@
+<!--<app-service-interface-->
+<!--  [model]="eventModel"-->
+<!--  [interfaceMenu]="interfaceMenu"-->
+<!--  (onExit)="onExitClick()"-->
+<!--  (onSelectMenu)="selectedInterfaceMenu = $event"-->
+<!--&gt;-->
+<!--  <ng-container [ngSwitch]="selectedInterfaceMenu?.name">-->
+<!--    <app-attendees *ngSwitchCase="'Attendees'"></app-attendees>-->
+<!--    <app-offers *ngSwitchCase="'Offers'" [referenceId]="eventId"></app-offers>-->
+<!--    <app-sidebar-questions *ngSwitchCase="'Questions'"></app-sidebar-questions>-->
+<!--    <app-polls *ngSwitchCase="'Activities'" [referenceId]="eventId"></app-polls>-->
+<!--    <app-sidebar-chat *ngSwitchCase="'Chat'" [referenceId]="eventId"></app-sidebar-chat>-->
+<!--    <app-handouts *ngSwitchCase="'Handouts'" [referenceId]="eventId" [isHost]="isHost"></app-handouts>-->
+<!--  </ng-container>-->
+<!--</app-service-interface>-->
+
 <app-user-removed *ngIf="isRemoved" [serviceType]="serviceType"></app-user-removed>
 <ng-container *ngIf="!isRemoved">
   <app-device-settings *ngIf="showDeviceSettings" (joinRoom)="showDeviceSettings = false; onLobbyEntered($event)">

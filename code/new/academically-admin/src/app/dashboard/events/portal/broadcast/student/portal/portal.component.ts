@@ -30,6 +30,7 @@ import { PortalPollService } from './_components/polls/_services/portal-poll.ser
 import { ShareVideosComponent } from './_components/share-videos/share-videos.component';
 import { StateUpdateType } from '@shared/services/state-base.service';
 import { PortalHandoutEventData } from './_components/handouts/_components/handout-card.component';
+import { InterfaceMenu } from '@shared/components/service-interface/service-interface.component';
 
 export const ANSWERING_LIVE_QUESTION_HUB_NAME = 'answeringLiveQuestionHub';
 
@@ -90,6 +91,9 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, A
   preview = false;
   showSidebar = true;
 
+  interfaceMenu: InterfaceMenu[] = [];
+  selectedInterfaceMenu: InterfaceMenu;
+
   constructor(
     injector: Injector,
     private _cdr: ChangeDetectorRef,
@@ -143,6 +147,8 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, A
     await this.initPollsAppStates();
     await this.initHandoutsAppStates();
     await this.initLiveAnsweringQuestion();
+
+    this.constructMenu();
   }
 
   ngAfterViewInit(): void {
@@ -375,5 +381,15 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, A
     this.pipeDestroy(this._servicesService.getFeatureFlags(id), response => {
       this._portalService.featureFlags = response;
     });
+  }
+
+  private constructMenu(): void {
+    this.interfaceMenu = [
+      new InterfaceMenu('Chat', 'assets/img/interface/icon-menu/message.svg', null, 5),
+      new InterfaceMenu('Questions', 'assets/img/interface/icon-menu/question.svg'),
+      new InterfaceMenu('Activities', 'assets/img/interface/icon-menu/activities.svg'),
+      new InterfaceMenu('Handouts', 'assets/img/interface/icon-menu/handouts.svg'),
+      new InterfaceMenu('Offers', 'assets/img/interface/icon-menu/offers.svg')
+    ];
   }
 }

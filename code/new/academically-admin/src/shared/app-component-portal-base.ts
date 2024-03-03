@@ -80,7 +80,7 @@ export abstract class AppComponentPortalBase extends AppComponentBase implements
     joiningEventUsers: EventUserDto[] = [];
     attendees: { [key: string]: PortalAttendeeProperties } = {};
 
-    isRemoved = true;
+    isRemoved = false;
     isPortalInitialized = false;
     hubConnected = false;
     eventStarting = false;
