@@ -21,7 +21,11 @@
         <img width="32" src="assets/img/interface/icon-control/radio-end.svg" alt="Start streaming">
         <span>End stream</span>
       </button>
-      <button class="btn btn-outline-light users d-flex align-items-center gap-8">
+      <button
+        class="btn btn-outline-light users d-flex align-items-center gap-8"
+        (click)="onToggleAttendees()"
+        [class.active]="selectedInterfaceMenu?.name == 'Attendees'"
+      >
         <img src="assets/img/interface/icon-control/users.svg" alt="Users">
         <span>5</span>
       </button>
@@ -30,7 +34,7 @@
   <div class="interface-layout w-100p d-flex">
     <split-view [gutterSize]="interfaceLayout === InterfaceLayout.Spotlight ? 0 : 24" [expandToMin]="true">
       <app-service-interface-sidebar *ngIf="interfaceLayout === InterfaceLayout.LeftSidebar" splitPane [minSize]="150" [splitRatio]="1"></app-service-interface-sidebar>
-      <main class="interface-content" splitPane [splitRatio]="4">
+      <main class="interface-content" splitPane [splitRatio]="4" [minSize]="250">
         <div class="interface-content-presenter">
           <img src="assets/img/interface/sample/host-avatar.png" alt="...">
           <span class="name">Jason Dagohoy</span>
@@ -41,8 +45,22 @@
         <div class="inner"></div>
       </div>
     </split-view>
-    <div class="card interface-features flex-shrink-0 d-flex flex-column h-100p">
-      <ng-content></ng-content>
+    <div class="card interface-features flex-shrink-0 d-flex flex-column h-100p" *ngIf="showFeatureContent">
+      <div class="card-header">
+        <h4 class="card-header-title flex-grow-1 row align-items-center m-0">
+          {{ selectedFeatureTitle | localize | titlecase }}
+        </h4>
+        <div class="ml-auto">
+          <button type="button" class="close" aria-label="Close" (click)="onCloseFeatureContent()">
+            <span aria-hidden="true">
+              <img src="assets/img/service/create/close.svg" alt="Close">
+            </span>
+          </button>
+        </div>
+      </div>
+      <div class="interface-features-content flex-grow-1">
+        <ng-content></ng-content>
+      </div>
     </div>
   </div>
   <footer class="interface-footer w-100p fixed-bottom d-flex align-items-center justify-content-between">
@@ -115,21 +133,14 @@
     </div>
 
     <div class="interface-footer-right d-flex align-items-center gap-16">
-      <button class="btn">
-        <span class="badge bg-primary unread-count">1</span>
-        <img src="assets/img/interface/icon-menu/message.svg" alt="Chat">
-      </button>
-      <button class="btn">
-        <img src="assets/img/interface/icon-menu/question.svg" alt="Question">
-      </button>
-      <button class="btn">
-        <img src="assets/img/interface/icon-menu/activities.svg" alt="Activities">
-      </button>
-      <button class="btn">
-        <img src="assets/img/interface/icon-menu/handouts.svg" alt="Handouts">
-      </button>
-      <button class="btn">
-        <img src="assets/img/interface/icon-menu/offers.svg" alt="Offers">
+      <button
+        class="btn"
+        [class.active]="selectedInterfaceMenu?.name == im.name"
+        *ngFor="let im of interfaceMenu"
+        (click)="onSelectInterfaceMenu(im)"
+      >
+        <span *ngIf="!!im.unreadCount" class="badge bg-primary unread-count">{{ im.unreadCount }}</span>
+        <img [src]="im.iconLight" [alt]="im.name">
       </button>
     </div>
   </footer>

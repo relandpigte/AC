@@ -38,6 +38,19 @@
         &.users {
           border: 1px solid #EDF2F9;
           width: 74px;
+          outline: 0 none;
+          box-shadow: 0 0 0;
+
+          &:active,
+          &:hover,
+          &.active {
+            color: #2C7BE5;
+            background-color: #EDF2F9;
+
+            img {
+              filter: invert(39%) sepia(77%) saturate(2310%) hue-rotate(200deg) brightness(94%) contrast(90%);
+            }
+          }
         }
 
         &.recording {
@@ -175,6 +188,19 @@
         min-width: 48px;
         padding: 0;
         position: relative;
+        outline: 0 none;
+        box-shadow: 0 0 0;
+
+        &:active,
+        &:hover,
+        &.active {
+          color: #2C7BE5;
+          background-color: #EDF2F9;
+
+          img {
+            filter: invert(39%) sepia(77%) saturate(2310%) hue-rotate(200deg) brightness(94%) contrast(90%);
+          }
+        }
 
         .badge {
           font-size: 10px;
@@ -222,9 +248,19 @@
   &-features {
     width: 343px;
     margin: 0 0 0 24px;
+    border-radius: 10px;
+    -webkit-animation: fadeInRight 1s cubic-bezier(0.23, 1, 0.32, 1);
+    animation: fadeInRight 1s cubic-bezier(0.23, 1, 0.32, 1);
   }
 }
 
-.icon {
-
+@keyframes fadeInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
