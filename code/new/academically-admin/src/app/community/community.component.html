@@ -62,7 +62,7 @@
                     ></app-community-side-card>
                 </div>
 
-                <div *ngIf="recommendedCourses?.length" [style.marginTop.px]="24">
+                <div *ngIf="(isLoading$ | async) || hasValidItemsList(recommendedCourses)" [style.marginTop.px]="24">
                     <app-community-side-card
                         header="Recommended courses"
                         [isLoading]="isLoading$ | async"
@@ -73,7 +73,7 @@
                     ></app-community-side-card>
                 </div>
 
-                <div *ngIf="recommendedCoachings?.length" [style.marginTop.px]="24">
+                <div *ngIf="(isLoading$ | async) || hasValidItemsList(recommendedCoachings)" [style.marginTop.px]="24">
                     <app-community-side-card
                         header="Recommended coaching"
                         [isLoading]="isLoading$ | async"
@@ -84,7 +84,7 @@
                     ></app-community-side-card>
                 </div>
 
-                <div *ngIf="recommendedArticles?.length" [style.marginTop.px]="24">
+                <div *ngIf="(isLoading$ | async) || hasValidItemsList(recommendedArticles)" [style.marginTop.px]="24">
                     <app-community-side-card
                         header="Recommended articles"
                         [isLoading]="isLoading$ | async"
@@ -95,7 +95,7 @@
                     ></app-community-side-card>
                 </div>
 
-                <div *ngIf="recommendedEvents?.length" [style.marginTop.px]="24">
+                <div *ngIf="(isLoading$ | async) || hasValidItemsList(recommendedEvents)" [style.marginTop.px]="24">
                     <app-community-side-card
                         header="Recommended events"
                         [isLoading]="isLoading$ | async"
@@ -106,7 +106,7 @@
                     ></app-community-side-card>
                 </div>
 
-                <div *ngIf="recommendedTutorials?.length" [style.marginTop.px]="24">
+                <div *ngIf="(isLoading$ | async) || hasValidItemsList(recommendedTutorials)" [style.marginTop.px]="24">
                     <app-community-side-card
                         header="Recommended tutorials"
                         [isLoading]="isLoading$ | async"
@@ -161,7 +161,7 @@
                 </ng-template>
 
                 <ng-template #recommendedCoursesTemplate let-item="item">
-                    <div class="course d-flex flex-row flex-nowrap gap-15">
+                    <div class="course d-flex flex-row flex-nowrap gap-15 cursor-pointer">
                         <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.SideCardThumbnail"></app-shimmer>
                         <div class="course-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
                             <div class="course-thumbnail bg-center flex-grow-1" [alt]="item.name" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>
@@ -174,7 +174,7 @@
                 </ng-template>
 
                 <ng-template #recommendedCoachingsTemplate let-item="item">
-                    <div class="coaching d-flex flex-row flex-nowrap gap-15">
+                    <div class="coaching d-flex flex-row flex-nowrap gap-15 cursor-pointer">
                         <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.SideCardAvatar"></app-shimmer>
                         <div class="coaching-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
                             <img [src]="getProfilePicture(item.creatorUser.profilePictureUrl)" class="avatar avatar-sm avatar-img rounded-circle" alt="profile" />
@@ -187,7 +187,7 @@
                 </ng-template>
 
                 <ng-template #recommendedArticlesTemplate let-item="item">
-                    <div class="article d-flex flex-column flex-nowrap gap-2">
+                    <div class="article d-flex flex-column flex-nowrap gap-2 cursor-pointer">
                         <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.SideCardDouble"></app-shimmer>
                         <div class="article-name line-clamp-2">{{ item.name }}</div>
                         <div class="article-description wrap-text">{{ item.description }}</div>
@@ -195,7 +195,7 @@
                 </ng-template>
 
                 <ng-template #recommendedEventsTemplate let-item="item">
-                    <div class="event d-flex flex-row flex-nowrap gap-15">
+                    <div class="event d-flex flex-row flex-nowrap gap-15 cursor-pointer">
                         <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.SideCardThumbnail"></app-shimmer>
                         <div class="event-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
                             <div class="event-thumbnail bg-center flex-grow-1" [alt]="item.name" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>
@@ -208,7 +208,7 @@
                 </ng-template>
 
                 <ng-template #recommendedTutorialsTemplate let-item="item">
-                    <div class="tutorial d-flex flex-row flex-nowrap">
+                    <div class="tutorial d-flex flex-row flex-nowrap cursor-pointer">
                         <app-shimmer [show]="isLoading$ | async" [shimmerType]="shimmerType.SideCardThumbnail"></app-shimmer>
                         <div class="tutorial-left d-flex flex-column flex-nowrap justify-content-center align-items-center">
                             <div class="tutorial-thumbnail bg-center flex-grow-1" [alt]="item.name" [ngStyle]="{ 'background-image': 'url(\'' + getCourseThumbnail(item) + '\')' }" ></div>

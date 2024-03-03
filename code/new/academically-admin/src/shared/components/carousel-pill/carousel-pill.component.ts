@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Injector, Input, Output, OnChanges, SimpleChanges, ElementRef, ViewChild, OnDestroy, AfterViewInit, HostListener } from "@angular/core";
+import { Component, ElementRef, EventEmitter, HostListener, Injector, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from "@angular/core";
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from "@shared/enums/shimmer/shimmer-type.enum";
 import { Utils } from "@shared/helpers/utils";
@@ -11,7 +11,7 @@ import * as _ from 'lodash';
     templateUrl: './carousel-pill.component.html',
     styleUrls: ['./carousel-pill.component.less']
 })
-export class CarouselPillComponent extends AppComponentBase implements AfterViewInit, OnChanges, OnDestroy {
+export class CarouselPillComponent extends AppComponentBase implements OnChanges, OnDestroy {
 
     @ViewChild("carouselContainer") carouselContainer: ElementRef<HTMLElement>;
     carouselInstance: KeenSliderInstance = null;
@@ -46,17 +46,15 @@ export class CarouselPillComponent extends AppComponentBase implements AfterView
     isAboveProgress(progress: number): boolean { return this.carouselInstance.track.details.progress >= progress; }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes.choices?.previousValue !== changes.choices?.currentValue && this.choices?.length) {
-            this.initCarousel();
+      if ('isLoading' in changes && !this.isLoading) {
+        if (this.choices?.length) {
+          this.initCarousel();
         }
+      }
 
-        if ('choices' in changes && !_.isEqual(changes.choices.previousValue, changes.choices.currentValue)) {
-            this.handleSelectAll();
-        }
-    }
-
-    ngAfterViewInit(): void {
-        this.initCarousel();
+      if ('choices' in changes && !_.isEqual(changes.choices.previousValue, changes.choices.currentValue)) {
+          this.handleSelectAll();
+      }
     }
 
     ngOnDestroy() {
@@ -105,13 +103,13 @@ export class CarouselPillComponent extends AppComponentBase implements AfterView
 
     handleSelectAll(): void {
         this.selected = [];
-        this.onSelect.emit(this.choices);
+        this.onSelect.emit(undefined);
     }
 
     handleSelectPill(i: string): void {
         if (this.selected.includes(i)) this.selected = _.remove(this.selected, x => x != i);
         else this.selected.push(i);
         this.selected = _.uniq(this.selected);
-        this.onSelect.emit(this.selected.length ? this.selected : this.choices);
+        this.onSelect.emit(this.selected.length ? this.selected : undefined);
     }
 }

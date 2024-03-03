@@ -16422,6 +16422,7 @@ export class PostsServiceProxy {
     3 = Shared
      * @param parentId (optional) 
      * @param creationTime (optional) 
+     * @param topicIds (optional) 
      * @param postSort (optional) 0 = Relevant
     
     1 = Latest
@@ -16432,7 +16433,7 @@ export class PostsServiceProxy {
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAllPostsPaged(type: PostType | undefined, parentId: string | undefined, creationTime: moment.Moment | undefined, postSort: PostSort | undefined, notificationId: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PostDtoPagedResultDto> {
+    getAllPostsPaged(type: PostType | undefined, parentId: string | undefined, creationTime: moment.Moment | undefined, topicIds: string[] | undefined, postSort: PostSort | undefined, notificationId: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PostDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Posts/GetAllPostsPaged?";
         if (type === null)
             throw new Error("The parameter 'type' cannot be null.");
@@ -16446,6 +16447,10 @@ export class PostsServiceProxy {
             throw new Error("The parameter 'creationTime' cannot be null.");
         else if (creationTime !== undefined)
             url_ += "CreationTime=" + encodeURIComponent(creationTime ? "" + creationTime.toJSON() : "") + "&";
+        if (topicIds === null)
+            throw new Error("The parameter 'topicIds' cannot be null.");
+        else if (topicIds !== undefined)
+            topicIds && topicIds.forEach(item => { url_ += "TopicIds=" + encodeURIComponent("" + item) + "&"; });
         if (postSort === null)
             throw new Error("The parameter 'postSort' cannot be null.");
         else if (postSort !== undefined)

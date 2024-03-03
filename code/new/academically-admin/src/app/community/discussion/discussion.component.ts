@@ -410,6 +410,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
             type: undefined,
             parentId: this.discussionId,
             creationTime: undefined,
+            topicIds: undefined,
             postSort: this.postSort,
             notificationId: this.notificationId ?? undefined,
         });
@@ -443,7 +444,7 @@ export class DiscussionComponent extends AppComponentBase implements OnInit, OnD
         // we don't need to display loader when loading more items.
         // this.postsStateService.loading$.next(true);
         const lastPostCreationTime = this.children?.[this.children.length - 1]?.creationTime;
-        this._postsService.getAllPostsPaged(undefined, undefined, lastPostCreationTime, this.postSort, undefined, 0, MAX_POSTS_TO_LOAD)
+        this._postsService.getAllPostsPaged(undefined, undefined, lastPostCreationTime, undefined, this.postSort, undefined, 0, MAX_POSTS_TO_LOAD)
             .subscribe(posts => {
               this.postsStateService.pushMorePosts(posts.items);
               this.children = this.postsStateService.getAllPosts();

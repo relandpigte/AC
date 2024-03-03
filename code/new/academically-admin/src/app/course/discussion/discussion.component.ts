@@ -139,7 +139,7 @@ export class CourseDiscussionComponent extends AppComponentBase implements OnIni
 
   onLoadMore(): void {
     const lastPostCreationTime = this.children?.[this.children.length - 1]?.creationTime;
-    this._postsService.getAllPostsPaged(undefined, undefined, lastPostCreationTime, this.postSort, undefined, 0, MAX_POSTS_TO_LOAD)
+    this._postsService.getAllPostsPaged(undefined, undefined, lastPostCreationTime, undefined, this.postSort, undefined, 0, MAX_POSTS_TO_LOAD)
       .subscribe(posts => {
         this.postsStateService.pushMorePosts(posts.items);
         this.children = this.postsStateService.getAllPosts();

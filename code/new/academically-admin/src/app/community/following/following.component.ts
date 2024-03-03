@@ -58,6 +58,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
 
   selectedFiltering: PostFiltering = PostFiltering.All;
   selectedSorting: PostSorting = PostSorting.Latest;
+  selectedTopicIds: string[];
 
   constructor(
     injector: Injector,
@@ -125,7 +126,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     this.loadInfiniteData(this._coursesService, 'getByDates', [this.appSession.userId, undefined, undefined, undefined, DateGrains.Aged30, 0, 4], 'recommendedCourses');
     await this.initPostsAppStates();
     this.handleFilteringTopic();
-    this.isLoading$.pipe(takeUntil(this.destroyed$)).subscribe(isLoading => this._communityService.setIsLoading(isLoading));
+    this.pipeDestroy(this.isLoading$, isLoading => this._communityService.setIsLoading(isLoading));
   }
 
   async ngOnDestroy() {
@@ -157,13 +158,23 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
   }
 
    handleFilteringTopic(): void {
-    this._communityService.getSelectedTopics().subscribe(async value => {
-      this.posts = await this.postsStateService.getPostsByTopic(value);
+    this.pipeDestroy(this._communityService.getSelectedTopics(), async topics => {
+      this.selectedTopicIds = topics?.map(t => t.disciplineTaxonomyId);
+      await this.postsStateService.updateServiceParams({
+        type: this.postTypeFilter,
+        parentId: undefined,
+        creationTime: undefined,
+        topicIds: this.selectedTopicIds ?? undefined,
+        postSort: this.postSort,
+        notificationId: undefined
+      }, true);
+      this.posts = this.postsStateService.getAllPosts();
+      this.totalPostsCount = this.postsStateService.totalPostsCount;
     });
   }
 
   private async initPostsAppStates() {
-    const appStateConfig: AppStateConfig = { [this.postsStateId]: { load: [undefined, undefined, undefined, this.postSort, undefined, 0, MAX_POSTS_TO_LOAD], update: true } };
+    const appStateConfig: AppStateConfig = { [this.postsStateId]: { load: [undefined, undefined, undefined, this.selectedTopicIds, this.postSort, undefined, 0, MAX_POSTS_TO_LOAD], update: true } };
     const appStateServices: AppStateServices = { [this.postsStateId]: { type: PostsStateService, args: [this.appSession, this._hubService, this._postsService] } };
     await this.pubSubService.start(this, appStateConfig, appStateServices);
     this.postsStateService = this.pubSubService.getStateService<PostsStateService>(this.postsStateId);
@@ -254,6 +265,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
       type: this.postTypeFilter,
       parentId: undefined,
       creationTime: undefined,
+      topicIds: this.selectedTopicIds,
       postSort: this.postSort,
       notificationId: undefined
     }, true);
@@ -267,6 +279,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
       type: this.postTypeFilter,
       parentId: undefined,
       creationTime: undefined,
+      topicIds: this.selectedTopicIds,
       postSort: this.postSort,
       notificationId: undefined
     }, true);
@@ -282,7 +295,7 @@ export class FollowingComponent extends AppComponentBase implements OnInit, OnDe
     // we don't need to display loader when loading more items.
     // this.postsStateService.loading$.next(true);
     const lastPostCreationTime = this.posts?.[this.posts.length - 1]?.creationTime;
-    this._postsService.getAllPostsPaged(undefined, undefined, lastPostCreationTime, this.postSort, undefined, 0, MAX_POSTS_TO_LOAD)
+    this._postsService.getAllPostsPaged(undefined, undefined, lastPostCreationTime, this.selectedTopicIds, this.postSort, undefined, 0, MAX_POSTS_TO_LOAD)
         .subscribe(posts => {
           this.postsStateService.pushMorePosts(posts.items);
           this.posts = this.postsStateService.getAllPosts();

@@ -120,10 +120,10 @@ export class PostsStateService extends StateServiceBase {
     this.newPosts = new Map();
   }
 
-  async updateServiceParams(params: { type: PostType | undefined, parentId: string | undefined, creationTime: moment.Moment | undefined, postSort: PostSort | undefined, notificationId: string | undefined }, isSilent = false) {
+  async updateServiceParams(params: { type: PostType | undefined, parentId: string | undefined, creationTime: moment.Moment | undefined, topicIds: string[] | undefined, postSort: PostSort | undefined, notificationId: string | undefined }, isSilent = false) {
     this.loading$.next(!isSilent);
     const existingArgs = this.actionArgs['load'];
-    this.actionArgs['load'] = [params.type, params.parentId, params.creationTime, params.postSort, params.notificationId, existingArgs[5], existingArgs[6]];
+    this.actionArgs['load'] = [params.type, params.parentId, params.creationTime, params.topicIds, params.postSort, params.notificationId, existingArgs[6], existingArgs[7]];
     try {
       const posts = await this._postsService[this.fns[this.type ?? pageType.all]](...this.loadArgs).toPromise();
       this.posts = Utils.toMap(posts.items);

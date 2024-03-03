@@ -182,7 +182,8 @@ namespace Academically.Services.Posts
                                    .WhereIf(request.Type.HasValue, p => p.Type == request.Type)
                                    .WhereIf(request.ParentId.HasValue, p => p.ParentId == request.ParentId)
                                    .WhereIf(!request.ParentId.HasValue, p => p.ParentId == null || (p.IsPublic && p.Parent.CreatorUserId == AbpSession.GetUserId()))
-                                   .WhereIf(request.CreationTime.HasValue, p => p.CreationTime < request.CreationTime);
+                                   .WhereIf(request.CreationTime.HasValue, p => p.CreationTime < request.CreationTime)
+                                   .WhereIf(request.TopicIds != null, p => p.PostTopics.Any(x => request.TopicIds.Contains(x.DisciplineTaxonomyId.ToString())));
 
             var totalCount = await query.CountAsync();
             var test = await query.ToListAsync();

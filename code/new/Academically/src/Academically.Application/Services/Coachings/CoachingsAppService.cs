@@ -372,6 +372,9 @@ namespace Academically.Services.Coachings
             var bookedServiceIds = bookings.Select(b => b.ReferenceId).ToList();
             var services = await Repository.GetAll()
                 .Include(c => c.CreatorUser)
+                .Where(s => s.Visible == true)
+                .Where(s => s.Opened == true)
+                .Where(s => s.Status == CoachingStatus.Published)
                 .WhereIf(bookedServiceIds.Count > 0, x => bookedServiceIds.Contains(x.Id))
                 .AsNoTracking()
                 .Select(e => ObjectMapper.Map<AvailableServiceDto>(e))

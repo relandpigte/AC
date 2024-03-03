@@ -542,10 +542,11 @@ export abstract class AppComponentBase extends AppHubBase implements OnDestroy {
   }
 
   randomNonZero = (max, min = 1) => Math.floor(Math.random() * (max - min)) + min;
+  hasValidItemsList = (items: any[]): boolean => items && items.length > 0 && !items.some(i => !i.id);
 
   generateRandomCourse(): CourseDto {
     var course = new CourseDto();
-    var id = this.uuidv4();
+    var id = null;
 
     course.id = id;
     course.type = CourseType.Standard;
@@ -566,7 +567,7 @@ export abstract class AppComponentBase extends AppHubBase implements OnDestroy {
 
   generateRandomArticle(): ArticleDto {
     var article = new ArticleDto();
-    var id = this.uuidv4();
+    var id = null;
 
     article.id = id;
     article.type = ArticleType.SingleArticle;
@@ -585,7 +586,7 @@ export abstract class AppComponentBase extends AppHubBase implements OnDestroy {
 
   generateRandomCoaching(): CoachingDto {
     var coaching = new CoachingDto();
-    var id = this.uuidv4();
+    var id = null;
 
     coaching.id = id;
     coaching.type = CoachingType.Single;
@@ -606,7 +607,7 @@ export abstract class AppComponentBase extends AppHubBase implements OnDestroy {
 
   generateRandomEvent(category?: EventCategory): EventDto {
     var event = new EventDto;
-    var id = this.uuidv4();
+    var id = null;
 
     event.id = id;
     event.category = category ?? this.randomNonZero(1, 0);
@@ -631,7 +632,7 @@ export abstract class AppComponentBase extends AppHubBase implements OnDestroy {
 
   generateRandomTutorial(): VideoDto {
     var video = new VideoDto;
-    var id = this.uuidv4();
+    var id = null;
 
     video.id = id;
     video.categories = 'Tutorials, Videos';
@@ -655,7 +656,7 @@ export abstract class AppComponentBase extends AppHubBase implements OnDestroy {
 
   generateRandomSpace(): any {
     let space: any = {};
-    var id = this.uuidv4();
+    var id = null;
 
     space.id = id;
     space.categories = 'Tutorials, Videos';
@@ -678,7 +679,7 @@ export abstract class AppComponentBase extends AppHubBase implements OnDestroy {
   }
 
   generateRandomUser(): UserDto {
-    var id = this.uuidv4();
+    var id = null;
     var user = new UserDto();
     user.id = this.randomNonZero(200);
     user.name = 'Test User1';
@@ -735,9 +736,15 @@ export abstract class AppComponentBase extends AppHubBase implements OnDestroy {
 
   private deepSearch(object, key) {
     if (!(object instanceof Array)) object = [object];
+    let values: any;
     for (const o of object)
-      if (key in o) return o[key]
-      else return this.deepSearch(Object.values(o), key);
+      if (key in o) {
+        if (o[key] instanceof Array) values = [...(values ?? []), ...o[key]];
+        else values = (values ?? 0) + o[key];
+      } else {
+        return this.deepSearch(Object.values(o), key);
+      }
+    return values;
   }
 
   scrollToMiddleHighlightedComment(): void {
