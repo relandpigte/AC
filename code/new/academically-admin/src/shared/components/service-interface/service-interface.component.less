@@ -36,7 +36,7 @@
         height: 48px;
 
         &.users {
-          border: 1px solid #EDF2F9;
+          border: 1px solid #E4EBF6;
           width: 74px;
           outline: 0 none;
           box-shadow: 0 0 0;
@@ -141,6 +141,7 @@
       width: 100%;
       overflow: hidden;
       position: relative;
+      height: calc(100vh - 192px);
 
       .event-not-started {
         height: calc(100vh - 192px);
@@ -199,7 +200,8 @@
         outline: 0 none;
         box-shadow: 0 0 0;
 
-        &.active:not(.btn-exit, .btn-mic, .btn-video) {
+        &:hover:not(.btn-exit, .btn-mic-disabled, .btn-video-disabled),
+        &.active:not(.btn-exit, .btn-mic-disabled, .btn-video-disabled) {
           color: #2C7BE5;
           background-color: #EDF2F9;
 
@@ -246,6 +248,16 @@
           height: 48px;
           min-width: 48px;
           padding: 0;
+
+          &:hover,
+          &.active{
+            color: #2C7BE5;
+            background-color: #EDF2F9;
+
+            img {
+              filter: invert(39%) sepia(77%) saturate(2310%) hue-rotate(200deg) brightness(94%) contrast(90%);
+            }
+          }
         }
       }
     }
@@ -331,9 +343,58 @@
     }
 
     &-footer {
+      &-left,
+      &-right {
+        .btn {
+          border: 1px solid #2A415E;
+
+          img {
+            filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
+          }
+
+          &:hover:not(.btn-exit, .btn-mic-disabled, .btn-video-disabled),
+          &.active:not(.btn-exit, .btn-mic-disabled, .btn-video-disabled) {
+            color: #FFFFFF;
+            background-color: #152E4D;
+
+            img {
+              filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
+            }
+          }
+
+          &-option {
+            border: 1px solid #2A415E;
+
+            img {
+              filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
+            }
+
+            &:hover,
+            &.active {
+              color: #FFFFFF;
+              background-color: #152E4D;
+
+              img {
+                filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
+              }
+            }
+          }
+        }
+      }
+
       &-center {
         .btn {
           border: 1px solid #2A415E;
+
+          &:hover:not(.btn-exit, .btn-mic-disabled, .btn-video-disabled),
+          &.active:not(.btn-exit, .btn-mic-disabled, .btn-video-disabled) {
+            color: #FFFFFF;
+            background-color: #152E4D;
+
+            img {
+              filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
+            }
+          }
 
           &-mic-enabled,
           &-video-enabled,
@@ -351,45 +412,12 @@
                 filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
               }
             }
-          }
-        }
-      }
 
-      &-left,
-      &-right {
-        .btn {
-          border: 1px solid #2A415E;
+            &:hover,
+            &.active {
+              color: #FFFFFF;
+              background-color: #152E4D;
 
-          & > img {
-            filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
-          }
-
-          &.active:not(.btn-exit, .btn-mic, .btn-video) {
-            background-color: #152E4D;
-
-            img {
-              filter: invert(100%) sepia(95%) saturate(0%) hue-rotate(135deg) brightness(105%) contrast(104%);
-            }
-          }
-
-            //&-leave {
-            //  .btn {
-            //    img {
-            //      filter: invert(100%) sepia(4%) saturate(0%) hue-rotate(279deg) brightness(104%) contrast(100%) !important;
-            //    }
-            //  }
-            //}
-
-          &-mic-disabled {
-            img {
-              filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
-            }
-          }
-
-          &-option {
-            border: 1px solid #2A415E;
-
-            a {
               img {
                 filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
               }
@@ -397,6 +425,42 @@
           }
         }
       }
+
+      //&-left,
+      //&-center,
+      //&-right {
+      //  .btn {
+      //    border: 1px solid #2A415E;
+      //
+      //    & > img {
+      //      filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
+      //    }
+      //
+      //    &.active:not(.btn-exit, .btn-mic, .btn-video) {
+      //      background-color: #152E4D;
+      //
+      //      img {
+      //        filter: invert(100%) sepia(95%) saturate(0%) hue-rotate(135deg) brightness(105%) contrast(104%);
+      //      }
+      //    }
+      //
+      //    &-mic-disabled {
+      //      img {
+      //        filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
+      //      }
+      //    }
+      //
+      //    &-option {
+      //      border: 1px solid #2A415E;
+      //
+      //      a {
+      //        img {
+      //          filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
+      //        }
+      //      }
+      //    }
+      //  }
+      //}
     }
   }
 }
