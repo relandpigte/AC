@@ -9,16 +9,21 @@
         <span class="status live d-flex align-items-center gap-8">Live</span>
         <span class="time">01:23</span>
       </div>
-      <button class="btn btn-light recording d-flex align-items-center gap-8">
-        <img src="assets/img/interface/icon-control/disc.svg" alt="Start recording">
+
+      <button *ngIf="!recordingStatus" (click)="onChangeRecordingStatus(true)" class="btn btn-light recording start-recording d-flex align-items-center gap-8">
+        <img src="assets/img/interface/icon-control/recording-start.svg" alt="Start recording">
         <span>Start recording</span>
       </button>
+      <button *ngIf="recordingStatus" (click)="onChangeRecordingStatus(false)" class="btn btn-light recording end-recording d-flex align-items-center btn-outline-danger text-danger gap-8">
+        <img src="assets/img/interface/icon-control/recording-end.svg" alt="End recording">
+        <span>End recording</span>
+      </button>
 
-      <button *ngIf="!eventStarted && isHost" (click)="onChangeStatus(true)" class="btn btn-primary start-stream d-flex align-items-center gap-8 text-white">
+      <button *ngIf="!eventStarted && isHost" (click)="onChangeStatus(true)" class="btn stream btn-primary start-stream d-flex align-items-center gap-8 text-white">
         <img width="32" src="assets/img/interface/icon-control/radio-start.svg" alt="Start streaming">
         <span>{{ 'Go live' | localize }}</span>
       </button>
-      <button *ngIf="eventStarted && isHost" (click)="onChangeStatus(false)" class="btn btn-outline-danger end-stream d-flex align-items-center gap-8 text-danger">
+      <button *ngIf="eventStarted && isHost" (click)="onChangeStatus(false)" class="btn stream btn-outline-danger end-stream d-flex align-items-center gap-8 text-danger">
         <img width="32" src="assets/img/interface/icon-control/radio-end.svg" alt="Start streaming">
         <span>{{ 'End stream' | localize }}</span>
       </button>
@@ -39,7 +44,7 @@
     </div>
   </header>
   <div class="interface-layout w-100p d-flex">
-    <split-view [gutterSize]="interfaceLayout === InterfaceLayout.Spotlight ? 0 : 24" [expandToMin]="true">
+    <split-view [gutterSize]="isSpotLightView ? 0 : 24" [class.flex-grow-1]="isSpotLightView">
       <app-service-interface-sidebar *ngIf="interfaceLayout === InterfaceLayout.LeftSidebar" splitPane [minSize]="150" [splitRatio]="1"></app-service-interface-sidebar>
       <main class="interface-content" splitPane [splitRatio]="4" [minSize]="250">
         <div class="interface-content-presenter">

@@ -56,6 +56,7 @@ export class ServiceInterfaceComponent extends AppComponentBase implements OnIni
   microphoneDisabled = false;
   videoDisabled = false;
   liveStatus = false;
+  recordingStatus = false;
   interfaceLayout: InterfaceLayout = InterfaceLayout.RightSidebar;
 
   selectedInterfaceMenu: InterfaceMenu;
@@ -79,6 +80,7 @@ export class ServiceInterfaceComponent extends AppComponentBase implements OnIni
   get showFeatureContent(): boolean { return !_.isEmpty(this.selectedInterfaceMenu); }
   get selectedFeatureTitle(): string { return this.selectedInterfaceMenu?.name; }
   get totalAttendees(): number { return this.admittedAttendees?.length ?? 0; }
+  get isSpotLightView(): boolean { return  this.interfaceLayout === InterfaceLayout.Spotlight; }
 
   ngOnInit(): void {
   }
@@ -97,6 +99,10 @@ export class ServiceInterfaceComponent extends AppComponentBase implements OnIni
     } else {
       this.onEndEvent.next();
     }
+  }
+
+  onChangeRecordingStatus(status: boolean): void {
+    this.recordingStatus = status;
   }
 
   onChangeLayout(layout: InterfaceLayout): void {
