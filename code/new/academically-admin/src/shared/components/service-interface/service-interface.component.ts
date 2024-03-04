@@ -11,6 +11,8 @@ import { ColorScheme } from '@shared/enums/theme-settings/color-scheme.enum';
 export enum InterfaceLayout {
   LeftSidebar,
   RightSidebar,
+  TopBar,
+  BottomBar,
   Spotlight,
   Grid,
   Fullscreen
@@ -81,6 +83,7 @@ export class ServiceInterfaceComponent extends AppComponentBase implements OnIni
   get selectedFeatureTitle(): string { return this.selectedInterfaceMenu?.name; }
   get totalAttendees(): number { return this.admittedAttendees?.length ?? 0; }
   get isSpotLightView(): boolean { return  this.interfaceLayout === InterfaceLayout.Spotlight; }
+  get isVerticalLayout(): boolean { return this.interfaceLayout === (InterfaceLayout.TopBar || InterfaceLayout.BottomBar); }
 
   ngOnInit(): void {
   }

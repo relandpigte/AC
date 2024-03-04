@@ -45,7 +45,12 @@
   </header>
   <div class="interface-layout w-100p d-flex">
     <split-view [gutterSize]="isSpotLightView ? 0 : 24" [class.flex-grow-1]="isSpotLightView">
-      <app-service-interface-sidebar *ngIf="interfaceLayout === InterfaceLayout.LeftSidebar" splitPane [minSize]="150" [splitRatio]="1"></app-service-interface-sidebar>
+      <app-service-interface-sidebar
+        *ngIf="interfaceLayout === InterfaceLayout.LeftSidebar"
+        splitPane
+        [minSize]="150"
+        [splitRatio]="1"
+      ></app-service-interface-sidebar>
       <main class="interface-content" splitPane [splitRatio]="4" [minSize]="250">
         <div class="interface-content-presenter">
           <!--img src="assets/img/interface/sample/host-avatar.png" alt="..."-->
@@ -58,8 +63,13 @@
           <span class="name">Jason Dagohoy</span>
         </div>
       </main>
-      <app-service-interface-sidebar *ngIf="interfaceLayout === InterfaceLayout.RightSidebar" splitPane [minSize]="150" [splitRatio]="1"></app-service-interface-sidebar>
-      <div *gutterTemplate class="gutter">
+      <app-service-interface-sidebar
+        *ngIf="interfaceLayout === InterfaceLayout.RightSidebar"
+        splitPane
+        [minSize]="150"
+        [splitRatio]="1"
+      ></app-service-interface-sidebar>
+      <div *gutterTemplate [class.gutter-horizontal]="!isVerticalLayout" [class.gutter-vertical]="isVerticalLayout">
         <div class="inner"></div>
       </div>
     </split-view>
@@ -88,8 +98,8 @@
           <img width="32" src="assets/img/interface/icon-control/layout-right.svg" alt="Left Sidebar">
         </a>
         <div class="dropdown-menu">
-          <a class="dropdown-item" href="javascript: void(0)" (click)="onChangeLayout(InterfaceLayout.LeftSidebar)">Left Sidebar</a>
           <a class="dropdown-item" href="javascript: void(0)" (click)="onChangeLayout(InterfaceLayout.RightSidebar)">Right Sidebar</a>
+          <a class="dropdown-item" href="javascript: void(0)" (click)="onChangeLayout(InterfaceLayout.LeftSidebar)">Left Sidebar</a>
           <a class="dropdown-item" href="javascript: void(0)" (click)="onChangeLayout(InterfaceLayout.Spotlight)">Spotlight</a>
         </div>
       </div>

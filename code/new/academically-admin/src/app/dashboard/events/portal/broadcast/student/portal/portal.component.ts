@@ -161,7 +161,7 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, A
         stunServerUrl: 'stun:stun.innovailable.eu',
       },
       viewProps: {
-        presenterVideoEl: this.presenterVideoEl,
+        presenterVideoEl: this.serviceInterfaceComponent?.presenterVideoEl,
         attendeeVideosEl: this.attendeeVideosEl
       }
     });
