@@ -293,20 +293,29 @@
             }
 
             &.active {
-              color: #2C7BE5;
-              background-color: #EDF2F9;
+              color: #FFFFFF;
+              background-color: #152E4D;
 
               img {
-                filter: invert(39%) sepia(77%) saturate(2310%) hue-rotate(200deg) brightness(94%) contrast(90%);
+                filter: invert(100%) sepia(95%) saturate(0%) hue-rotate(135deg) brightness(105%) contrast(104%);
               }
             }
           }
 
           &.recording {
             background-color: #1E3A5C;
+            color: #FFFFFF;
 
             img {
-              filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
+              filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(55deg) brightness(103%) contrast(102%);
+            }
+          }
+
+          &.end-recording {
+            border: 1px solid #E63757;
+
+            img {
+              filter: invert(28%) sepia(39%) saturate(4787%) hue-rotate(332deg) brightness(97%) contrast(86%);
             }
           }
 
@@ -324,27 +333,59 @@
     }
 
     &-footer {
-      &-left,
-      &-right,
       &-center {
         .btn {
           border: 1px solid #2A415E;
 
-          //&-mic,
-          //&-video {
-          //  img {
-          //    filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
-          //  }
-          //}
+          &-mic-enabled,
+          &-video-enabled,
+          &-share{
+            & > img {
+              filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
+            }
+          }
+
+          &-option {
+            border: 1px solid #2A415E;
+
+            a {
+              img {
+                filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
+              }
+            }
+          }
+        }
+      }
+
+      &-left,
+      &-right {
+        .btn {
+          border: 1px solid #2A415E;
+
+          & > img {
+            filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
+          }
+
+          &.active:not(.btn-exit, .btn-mic, .btn-video) {
+            background-color: #152E4D;
+
+            img {
+              filter: invert(100%) sepia(95%) saturate(0%) hue-rotate(135deg) brightness(105%) contrast(104%);
+            }
+          }
+
+            //&-leave {
+            //  .btn {
+            //    img {
+            //      filter: invert(100%) sepia(4%) saturate(0%) hue-rotate(279deg) brightness(104%) contrast(100%) !important;
+            //    }
+            //  }
+            //}
 
           &-mic-disabled {
             img {
               filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
             }
-          }
-
-          img {
-            filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
           }
 
           &-option {
