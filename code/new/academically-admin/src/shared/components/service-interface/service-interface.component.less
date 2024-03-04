@@ -41,8 +41,6 @@
           outline: 0 none;
           box-shadow: 0 0 0;
 
-          &:active,
-          &:hover,
           &.active {
             color: #2C7BE5;
             background-color: #EDF2F9;
@@ -137,12 +135,23 @@
   }
 
   &-content {
-    height: 100%;
+    height: calc(100vh - 192px);
+    overflow: hidden;
 
     &-presenter {
       width: 100%;
       overflow: hidden;
       position: relative;
+
+      .event-not-started {
+        height: calc(100vh - 192px);
+        text-align: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border-radius: 10px;
+      }
 
       img {
         border-radius: 10px;
@@ -191,9 +200,7 @@
         outline: 0 none;
         box-shadow: 0 0 0;
 
-        &:active,
-        &:hover,
-        &.active {
+        &.active:not(.btn-exit, .btn-mic, .btn-video) {
           color: #2C7BE5;
           background-color: #EDF2F9;
 
@@ -251,6 +258,108 @@
     border-radius: 10px;
     -webkit-animation: fadeInRight 1s cubic-bezier(0.23, 1, 0.32, 1);
     animation: fadeInRight 1s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+}
+
+.theme-dark {
+  .interface {
+    &-header {
+      .header {
+        &-title {
+          color: #FFFFFF;
+        }
+      }
+
+      &-right {
+        &-status {
+          .status {
+            color: #FFFFFF;
+          }
+
+          .time {
+            font-size: 12px;
+            font-weight: 400;
+            color: #6E84A3;
+          }
+        }
+
+        .btn {
+          color: #FFFFFF;
+
+          &.users {
+            border: 1px solid #2A415E;
+
+            img {
+              filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
+            }
+
+            &.active {
+              color: #2C7BE5;
+              background-color: #EDF2F9;
+
+              img {
+                filter: invert(39%) sepia(77%) saturate(2310%) hue-rotate(200deg) brightness(94%) contrast(90%);
+              }
+            }
+          }
+
+          &.recording {
+            background-color: #1E3A5C;
+
+            img {
+              filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
+            }
+          }
+
+          &.end-stream {
+            &:hover {
+              background-color: transparent;
+            }
+          }
+        }
+      }
+    }
+
+    &-features {
+      background-color: #152E4D;
+    }
+
+    &-footer {
+      &-left,
+      &-right,
+      &-center {
+        .btn {
+          border: 1px solid #2A415E;
+
+          //&-mic,
+          //&-video {
+          //  img {
+          //    filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
+          //  }
+          //}
+
+          &-mic-disabled {
+            img {
+              filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
+            }
+          }
+
+          img {
+            filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
+          }
+
+          &-option {
+            border: 1px solid #2A415E;
+
+            a {
+              img {
+                filter: invert(100%) sepia(0%) saturate(116%) hue-rotate(235deg) brightness(109%) contrast(107%);
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 

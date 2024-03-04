@@ -1,9 +1,12 @@
-import { Component, Injector, ElementRef, ViewChild, Output, Input, ChangeDetectorRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, Injector, ElementRef, ViewChild, Output, Input, ChangeDetectorRef, OnInit, QueryList, ViewChildren, OnChanges, SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import * as _ from 'lodash';
 
 import { AppComponentBase } from '@shared/app-component-base';
 import { EventCategory } from '@shared/service-proxies/service-proxies';
+import { ThemeManagerService } from '@shared/services/theme-manager.service';
+import { IThemeSetting } from '@shared/interfaces/theme-setting.interface';
+import { ColorScheme } from '@shared/enums/theme-settings/color-scheme.enum';
 
 export enum InterfaceLayout {
   LeftSidebar,
@@ -32,16 +35,23 @@ export class InterfaceMenu {
   templateUrl: './service-interface.component.html',
   styleUrls: ['./service-interface.component.less']
 })
-export class ServiceInterfaceComponent extends AppComponentBase implements OnInit {
+export class ServiceInterfaceComponent extends AppComponentBase implements OnInit, OnChanges {
   @ViewChild('presenterVideoEl') presenterVideoEl: ElementRef;
   @ViewChildren('attendeeVideos') attendeeVideosEl: QueryList<ElementRef>;
 
   @Input() model: any;
+  @Input() isHost: boolean;
+  @Input() eventJoined: boolean;
+  @Input() eventStarted: boolean;
+  @Input() waiting: boolean;
   @Input() admittedAttendees: any;
   @Input() interfaceMenu: InterfaceMenu[] = [];
 
-  @Output() onExit: Subject<any> = new Subject<any>();
-  @Output() onSelectMenu: Subject<any> = new Subject<any>();
+  @Output() onExit = new Subject<any>();
+  @Output() onSelectMenu = new Subject<InterfaceMenu>();
+  @Output() onStartEvent = new Subject<any>();
+  @Output() onEndEvent = new Subject<any>();
+  @Output() onJoin = new Subject<any>();
 
   microphoneDisabled = false;
   videoDisabled = false;
@@ -50,18 +60,30 @@ export class ServiceInterfaceComponent extends AppComponentBase implements OnIni
 
   selectedInterfaceMenu: InterfaceMenu;
   showAttendees = false;
+  themeSettings: IThemeSetting;
+  currentTheme: string;
 
   readonly InterfaceLayout = InterfaceLayout;
-  constructor(injector: Injector, private _cdr: ChangeDetectorRef) {
+  constructor(
+    injector: Injector,
+    _themeSettingsService: ThemeManagerService,
+    private _cdr: ChangeDetectorRef
+  ) {
     super(injector);
+    this.themeSettings = _themeSettingsService.getConfiguration();
+    this.currentTheme = this.themeSettings.colorScheme.replace('.min.css', '');
   }
 
   get serviceName(): string { return this.model?.name; }
   get eventCategoryName(): string { return EventCategory[this.model?.category]; }
   get showFeatureContent(): boolean { return !_.isEmpty(this.selectedInterfaceMenu); }
   get selectedFeatureTitle(): string { return this.selectedInterfaceMenu?.name; }
+  get totalAttendees(): number { return this.admittedAttendees?.length ?? 0; }
 
   ngOnInit(): void {
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
   }
 
   onExitRoom(): void {
@@ -70,6 +92,11 @@ export class ServiceInterfaceComponent extends AppComponentBase implements OnIni
 
   onChangeStatus(status: boolean): void {
     this.liveStatus = status;
+    if (status) {
+      this.onStartEvent.next();
+    } else {
+      this.onEndEvent.next();
+    }
   }
 
   onChangeLayout(layout: InterfaceLayout): void {
@@ -95,5 +122,9 @@ export class ServiceInterfaceComponent extends AppComponentBase implements OnIni
       this.selectedInterfaceMenu = new InterfaceMenu('Attendees');
       this.onSelectMenu.next(this.selectedInterfaceMenu);
     }
+  }
+
+  onJoinEvent(): void {
+    this.onJoin.next();
   }
 }

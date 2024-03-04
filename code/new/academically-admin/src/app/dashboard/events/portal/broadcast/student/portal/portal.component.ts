@@ -30,7 +30,7 @@ import { PortalPollService } from './_components/polls/_services/portal-poll.ser
 import { ShareVideosComponent } from './_components/share-videos/share-videos.component';
 import { StateUpdateType } from '@shared/services/state-base.service';
 import { PortalHandoutEventData } from './_components/handouts/_components/handout-card.component';
-import { InterfaceMenu } from '@shared/components/service-interface/service-interface.component';
+import { InterfaceMenu, ServiceInterfaceComponent } from '@shared/components/service-interface/service-interface.component';
 
 export const ANSWERING_LIVE_QUESTION_HUB_NAME = 'answeringLiveQuestionHub';
 
@@ -55,6 +55,8 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, A
   @ViewChild('presenterVideoEl') presenterVideoEl: ElementRef;
   @ViewChildren('attendeeVideos') attendeeVideosEl: QueryList<ElementRef>;
   @ViewChild(ShareVideosComponent) shareVideosComponent: ShareVideosComponent;
+
+  @ViewChild(ServiceInterfaceComponent) serviceInterfaceComponent: ServiceInterfaceComponent;
 
   featureToServiceFeatureFlags: ServiceFeatureFlagMapping = {
     [PortalFeatures.Microphone]: {
@@ -159,7 +161,7 @@ export class PortalComponent extends AppComponentPortalBase implements OnInit, A
         stunServerUrl: 'stun:stun.innovailable.eu',
       },
       viewProps: {
-        presenterVideoEl: this.presenterVideoEl,
+        presenterVideoEl: this.serviceInterfaceComponent?.presenterVideoEl,
         attendeeVideosEl: this.attendeeVideosEl
       }
     });

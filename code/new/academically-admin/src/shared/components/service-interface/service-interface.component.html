@@ -1,4 +1,4 @@
-<div class="interface-wrapper">
+<div class="interface-wrapper" [class]="currentTheme">
   <header class="interface-header w-100p d-flex align-items-center justify-content-between">
     <div class="interface-header-left">
       <h6 class="header-pretitle">{{ eventCategoryName }}</h6>
@@ -13,21 +13,28 @@
         <img src="assets/img/interface/icon-control/disc.svg" alt="Start recording">
         <span>Start recording</span>
       </button>
-      <button *ngIf="!liveStatus" (click)="onChangeStatus(true)" class="btn btn-primary start-stream d-flex align-items-center gap-8 text-white">
+
+      <button *ngIf="!eventStarted && isHost" (click)="onChangeStatus(true)" class="btn btn-primary start-stream d-flex align-items-center gap-8 text-white">
         <img width="32" src="assets/img/interface/icon-control/radio-start.svg" alt="Start streaming">
-        <span>Go live</span>
+        <span>{{ 'Go live' | localize }}</span>
       </button>
-      <button *ngIf="liveStatus" (click)="onChangeStatus(false)" class="btn btn-outline-danger end-stream d-flex align-items-center gap-8 text-danger">
+      <button *ngIf="eventStarted && isHost" (click)="onChangeStatus(false)" class="btn btn-outline-danger end-stream d-flex align-items-center gap-8 text-danger">
         <img width="32" src="assets/img/interface/icon-control/radio-end.svg" alt="Start streaming">
-        <span>End stream</span>
+        <span>{{ 'End stream' | localize }}</span>
       </button>
+
+      <button *ngIf="!isHost && !eventJoined" (click)="onJoinEvent()" class="btn btn-primary start-stream d-flex align-items-center gap-8 text-white" [disabled]="!eventStarted || waiting">
+        <img width="32" src="assets/img/interface/icon-control/radio-start.svg" alt="Start streaming">
+        <span>Join</span>
+      </button>
+
       <button
         class="btn btn-outline-light users d-flex align-items-center gap-8"
         (click)="onToggleAttendees()"
         [class.active]="selectedInterfaceMenu?.name == 'Attendees'"
       >
         <img src="assets/img/interface/icon-control/users.svg" alt="Users">
-        <span>5</span>
+        <span>{{ '5' }}</span>
       </button>
     </div>
   </header>
@@ -36,7 +43,13 @@
       <app-service-interface-sidebar *ngIf="interfaceLayout === InterfaceLayout.LeftSidebar" splitPane [minSize]="150" [splitRatio]="1"></app-service-interface-sidebar>
       <main class="interface-content" splitPane [splitRatio]="4" [minSize]="250">
         <div class="interface-content-presenter">
-          <img src="assets/img/interface/sample/host-avatar.png" alt="...">
+          <!--img src="assets/img/interface/sample/host-avatar.png" alt="..."-->
+          <div *ngIf="(!eventStarted || !eventJoined) && !isHost" class="event-not-started border">
+            <h1>{{ 'WelcomeToTheLobby' | localize }}</h1>
+            <h4 *ngIf="!waiting">{{ 'WaitingForHostToStartEvent' | localize }}</h4>
+            <h4 *ngIf="waiting">{{ 'WaitingForHostToAdmitEvent' | localize }}</h4>
+          </div>
+          <video class="presenter-video" #presenterVideoEl autoplay playsinline></video>
           <span class="name">Jason Dagohoy</span>
         </div>
       </main>
@@ -84,17 +97,17 @@
     </div>
 
     <div class="interface-footer-center d-flex align-items-center gap-16">
-      <button class="btn" *ngIf="!microphoneDisabled" (click)="microphoneDisabled = true">
+      <button class="btn btn-mic" *ngIf="!microphoneDisabled" (click)="microphoneDisabled = true">
         <img width="32" src="assets/img/interface/icon-control/mic.svg" alt="Microphone">
       </button>
-      <button class="btn btn-danger text-white" *ngIf="microphoneDisabled" (click)="microphoneDisabled = false">
+      <button class="btn btn-mic-disabled btn-danger text-white" *ngIf="microphoneDisabled" (click)="microphoneDisabled = false">
         <img width="32" src="assets/img/interface/icon-control/mic-off.svg" alt="Microphone">
       </button>
 
-      <button class="btn" *ngIf="!videoDisabled" (click)="videoDisabled = true">
+      <button class="btn btn-video" *ngIf="!videoDisabled" (click)="videoDisabled = true">
         <img width="32" src="assets/img/interface/icon-control/video.svg" alt="Video">
       </button>
-      <button class="btn btn-danger text-white" *ngIf="videoDisabled" (click)="videoDisabled = false">
+      <button class="btn btn-video btn-danger text-white" *ngIf="videoDisabled" (click)="videoDisabled = false">
         <img width="32" src="assets/img/interface/icon-control/video-off.svg" alt="Video">
       </button>
 
