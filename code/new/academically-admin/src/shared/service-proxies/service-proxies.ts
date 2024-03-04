@@ -55719,6 +55719,8 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
     moderationCohostCanRemoveAttendees: boolean;
     moderationCohostCanLowerAttendeesHand: boolean;
     moderationCohostManageAtendeeRoles: boolean;
+    videoLockOrder: boolean;
+    videoMandatoryActivity: boolean;
 
     constructor(data?: IServiceFeatureFlagDto) {
         if (data) {
@@ -55783,6 +55785,8 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
             this.moderationCohostCanRemoveAttendees = _data["moderationCohostCanRemoveAttendees"];
             this.moderationCohostCanLowerAttendeesHand = _data["moderationCohostCanLowerAttendeesHand"];
             this.moderationCohostManageAtendeeRoles = _data["moderationCohostManageAtendeeRoles"];
+            this.videoLockOrder = _data["videoLockOrder"];
+            this.videoMandatoryActivity = _data["videoMandatoryActivity"];
         }
     }
 
@@ -55847,6 +55851,8 @@ export class ServiceFeatureFlagDto implements IServiceFeatureFlagDto {
         data["moderationCohostCanRemoveAttendees"] = this.moderationCohostCanRemoveAttendees;
         data["moderationCohostCanLowerAttendeesHand"] = this.moderationCohostCanLowerAttendeesHand;
         data["moderationCohostManageAtendeeRoles"] = this.moderationCohostManageAtendeeRoles;
+        data["videoLockOrder"] = this.videoLockOrder;
+        data["videoMandatoryActivity"] = this.videoMandatoryActivity;
         return data; 
     }
 
@@ -55911,6 +55917,8 @@ export interface IServiceFeatureFlagDto {
     moderationCohostCanRemoveAttendees: boolean;
     moderationCohostCanLowerAttendeesHand: boolean;
     moderationCohostManageAtendeeRoles: boolean;
+    videoLockOrder: boolean;
+    videoMandatoryActivity: boolean;
 }
 
 export class ServiceHandoutDto implements IServiceHandoutDto {

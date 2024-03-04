@@ -1,226 +1,306 @@
-<form class="form-horizontal" autocomplete="off" #form="ngForm">
-  <div class="row">
-    <div class="col-8" [loader]="isLoading">
-
-      <div *ngIf="hasParent" class="card">
-        <div class="card-header border-bottom-0">
-          <h4 class="card-header-title">
-            {{ 'Delay' | localize | titlecase }}
-          </h4>
-        </div>
-        <div class="card-body pt-0">
-          <div class="card border mb-0">
-            <div class="card-body">
-
-              <div *ngIf="allDelaysVisible" class="form-group delay-form mb-3">
-                <div class="custom-control custom-radio mr-3">
-                  <input type="radio" id="lastVideo" name="delayType" class="custom-control-input"
-                    [value]="DelayType.LastItem" [(ngModel)]="model.delayType" (change)="onDripTypeChange()">
-                  <label class="custom-control-label" for="lastVideo"></label>
-                </div>
-                <label for="lastVideo">
-                  <b>{{ 'LastVideo' | localize }}</b> - {{ 'VideoDelayed' | localize }}
-                </label>
-                <input type="number" [(ngModel)]="lastVideoValue" id="lastVideoValue" name="lastVideoValue"
-                  class="form-control form-control-sm inline-form-control mx-3"
-                  [disabled]="model.delayType !== DelayType.LastItem" [min]="0" />
-                {{ 'DaysFromLastVideo' | localize | lowercase }}
-              </div>
-
-              <div class="form-group delay-form">
-                <div class="custom-control custom-radio mr-3">
-                  <input type="radio" id="specificDate" name="delayType" class="custom-control-input"
-                    [value]="DelayType.SpecificDate" [(ngModel)]="model.delayType" (change)="onDripTypeChange()">
-                  <label class="custom-control-label" for="specificDate"></label>
-                </div>
-                <label for="specificDate">
-                  <b>{{ 'SpecificDate' | localize }}</b> - {{ 'VideoAvailableOn' | localize }}
-                </label>
-
-                <div class="input-group input-group-merge input-group-sm  inline-form-control x3 mx-3"
-                  (click)="dp.show()">
-                  <input [(ngModel)]="specificDateValue" id="specificDateValue" name="specificDateValue" type="text"
-                    class="form-control form-control-appended" #dateOfBirthModel="ngModel" #dateOfBirthEl
-                    #dp="bsDatepicker" bsDatepicker [bsConfig]="datePickerConfig" readonly
-                    [disabled]="model.delayType !== DelayType.SpecificDate" (bsValueChange)="onSpecificDateChange()" />
-                  <div class="input-group-append">
-                    <div class="input-group-text">
-                      <span class="fas fa-calendar"></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div *ngIf="allDelaysVisible" class="form-group delay-form mt-3">
-                <div class="custom-control custom-radio mr-3">
-                  <input type="radio" id="immediate" name="delayType" class="custom-control-input"
-                    [value]="DelayType.Immediate" [(ngModel)]="model.delayType" (change)="onDripTypeChange()">
-                  <label class="custom-control-label" for="lastVideo"></label>
-                </div>
-                <label for="immediate">
-                  <b>{{ 'Immediate' | localize }}</b> - {{ 'AvailableImmediately' | localize }}
-                </label>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" *ngIf="videoType && videoType === VideoType.SingleVideo">
-        <div class="card-header border-0">
-          <label class="col-form-label pb-0" for="name">{{ 'Comments' | localize}}</label>
-        </div>
-        <div class="card-body pt-0">
-          <div class="card border">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <p>
-                    <b>{{ 'Visible' | localize}}: </b>
-                    {{ 'VisibleCommentDescription' | localize | lowercase }}
-                  </p>
-                </div>
-                <div class="col-auto min-w-50px">
-                  <div class="custom-control custom-radio d-inline">
-                    <input type="radio" class="custom-control-input" id="commentVisible" name="comment"
-                      [(ngModel)]="model.commentSetting" [value]="CommentSetting.Visible" />
-                    <label class="custom-control-label" for="commentVisible"></label>
-                  </div>
-                </div>
-              </div>
-              <div class="row align-items-center">
-                <div class="col">
-                  <p class="mb-0 pl-5" [class.text-muted]="model.commentSetting !== CommentSetting.Visible">
-                    <b>{{ 'CommendModeration' | localize }}: </b>
-                    <span class="text-muted">
-                      {{ 'CommentModerationDescription' | localize | lowercase }}
-                    </span>
-                  </p>
-                </div>
-                <div class="col-auto">
-                  <div class="custom-control custom-switch">
-                    <input [(ngModel)]="model.commentModeration" id="isPublic" name="isPublic" type="checkbox"
-                      class="custom-control-input" [disabled]="model.commentSetting !== CommentSetting.Visible">
-                    <label class="custom-control-label" for="isPublic"></label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card border mb-0">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <p>
-                    <b>{{ 'Hidden' | localize }}: </b>
-                    <span class="text-muted">
-                      {{ 'VideoCommentHiddenDescription' | localize }}
-                    </span>
-                  </p>
-                </div>
-                <div class="col-auto min-w-50px">
-                  <div class="custom-control custom-radio d-inline">
-                    <input type="radio" class="custom-control-input" id="commentHidden" name="comment"
-                      [(ngModel)]="model.commentSetting" [value]="CommentSetting.Hidden" />
-                    <label class="custom-control-label" for="commentHidden"></label>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <p class="mb-0">
-                    <b>{{'Locked' | localize }}: </b>
-                    <span class="text-muted">
-                      {{ 'VideoCommentLockedDescription' | localize }}
-                    </span>
-                  </p>
-                </div>
-                <div class="col-auto min-w-50px">
-                  <div class="custom-control custom-radio d-inline">
-                    <input type="radio" class="custom-control-input" id="commentLocked" name="comment"
-                      [(ngModel)]="model.commentSetting" [value]="CommentSetting.Locked" />
-                    <label class="custom-control-label" for="commentLocked"></label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header border-0">
-          <label class="col-form-label pb-0" for="name">{{ 'CustomUrl' | localize}}</label>
-        </div>
-        <div class="card-body pt-0">
-          <div class="form-group required mb-0 d-flex align-items-center">
-            <a href="javascript:;">
-              www.scholarpro.com/
-            </a>
-            <input [(ngModel)]="model.customUrl" #nameModel="ngModel" #nameEl class="form-control" type="text" id="name"
-              name="name" [placeholder]="'CustomUrl' | localize | lowercase" />
-          </div>
-        </div>
-      </div>
-
-    </div>
-    <div class="col-4">
-
-      <div class="card" [loader]="isLoading">
-        <div class="card-header">
-          <h4 class="card-header-title">
-            {{ 'VideoVisibility' | localize }}
-          </h4>
-        </div>
-        <div class="card-body">
-
-          <div class="list-group list-group-flush my-n3">
-            <div class="list-group-item">
-              <div class="row align-items-center">
-                <div class="col ms-n2">
-                  <h4 class="mb-1">
-                    <span>{{'Visible' | localize}}</span>
-                  </h4>
-
-                  <p class="card-text small text-muted">
-                    {{ 'VideoVisible' | localize }}
-                  </p>
-                </div>
-                <div class="col-auto">
-                  <div class="custom-control custom-radio d-inline">
-                    <input type="radio" class="custom-control-input" id="videoVisible" name="videoVisible"
-                      [(ngModel)]="model.isVisible" [value]="true" />
-                    <label class="custom-control-label" for="videoVisible"></label>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="list-group-item">
-              <div class="row align-items-center">
-                <div class="col ms-n2">
-                  <h4 class="mb-1">
-                    <span>{{'Invisible' | localize }}</span>
-                  </h4>
-
-                  <p class="card-text small text-muted">
-                    {{ 'VideoInvisible' | localize }}
-                  </p>
-                </div>
-                <div class="col-auto">
-                  <div class="custom-control custom-radio d-inline">
-                    <input type="radio" class="custom-control-input" id="videoInvisible" name="videoVisible"
-                      [(ngModel)]="model.isVisible" [value]="false" />
-                    <label class="custom-control-label" for="videoInvisible"></label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Access' | localize | titlecase }}
+    </h4>
   </div>
-</form>
+  <div class="card-body py-0">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+        <div class="list-group-item-left">
+          <h5 class="list-title">Public</h5>
+          <span class="list-description">
+            This article will be visible on your profile and explore page. Any user can purchase it.
+          </span>
+        </div>
+        <div class="list-group-item-right">
+          <div class="custom-control custom-switch ml-auto">
+            <input (change)="toggleVisibility()" type="checkbox" class="custom-control-input" id="public-access" [checked]="model.isVisible"/>
+            <label class="custom-control-label" for="public-access"></label>
+          </div>
+        </div>
+      </li>
+      <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+        <div class="list-group-item-left">
+          <h5 class="list-title">Private</h5>
+          <span class="list-description">
+            This article will be hidden from your profile and explore page. Access would be via invite only
+          </span>
+        </div>
+        <div class="list-group-item-right">
+          <div class="custom-control custom-switch ml-auto">
+            <input (change)="toggleVisibility()" type="checkbox" class="custom-control-input" id="private-access" [checked]="!model.isVisible" />
+            <label class="custom-control-label" for="private-access"></label>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="card border-0">
+  <div class="card-header">
+    <h4 class="card-header-title">
+      {{ 'Tutorial progress' | localize | titlecase }}
+    </h4>
+  </div>
+  <div class="card-body py-0">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+        <div class="list-group-item-left">
+          <h5 class="list-title">Lock video order</h5>
+          <span class="list-description">
+            Prevents students from skipping ahead
+          </span>
+        </div>
+        <div class="list-group-item-right">
+          <div class="custom-control custom-switch ml-auto">
+            <input [(ngModel)]="flags.videoLockOrder" type="checkbox" class="custom-control-input" id="lock-video-order"/>
+            <label class="custom-control-label" for="lock-video-order"></label>
+          </div>
+        </div>
+      </li>
+      <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+        <div class="list-group-item-left">
+          <h5 class="list-title">Mandatory activities</h5>
+          <span class="list-description">
+            Students need to complete activities before advancing to the next video
+          </span>
+        </div>
+        <div class="list-group-item-right">
+          <div class="custom-control custom-switch ml-auto">
+            <input [(ngModel)]="flags.videoMandatoryActivity" type="checkbox" class="custom-control-input" id="mandatory-activities" />
+            <label class="custom-control-label" for="mandatory-activities"></label>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!--<form class="form-horizontal" autocomplete="off" #form="ngForm">-->
+<!--  <div class="row">-->
+<!--    <div class="col-8" [loader]="isLoading">-->
+
+<!--      <div *ngIf="hasParent" class="card">-->
+<!--        <div class="card-header border-bottom-0">-->
+<!--          <h4 class="card-header-title">-->
+<!--            {{ 'Delay' | localize | titlecase }}-->
+<!--          </h4>-->
+<!--        </div>-->
+<!--        <div class="card-body pt-0">-->
+<!--          <div class="card border mb-0">-->
+<!--            <div class="card-body">-->
+
+<!--              <div *ngIf="allDelaysVisible" class="form-group delay-form mb-3">-->
+<!--                <div class="custom-control custom-radio mr-3">-->
+<!--                  <input type="radio" id="lastVideo" name="delayType" class="custom-control-input"-->
+<!--                    [value]="DelayType.LastItem" [(ngModel)]="model.delayType" (change)="onDripTypeChange()">-->
+<!--                  <label class="custom-control-label" for="lastVideo"></label>-->
+<!--                </div>-->
+<!--                <label for="lastVideo">-->
+<!--                  <b>{{ 'LastVideo' | localize }}</b> - {{ 'VideoDelayed' | localize }}-->
+<!--                </label>-->
+<!--                <input type="number" [(ngModel)]="lastVideoValue" id="lastVideoValue" name="lastVideoValue"-->
+<!--                  class="form-control form-control-sm inline-form-control mx-3"-->
+<!--                  [disabled]="model.delayType !== DelayType.LastItem" [min]="0" />-->
+<!--                {{ 'DaysFromLastVideo' | localize | lowercase }}-->
+<!--              </div>-->
+
+<!--              <div class="form-group delay-form">-->
+<!--                <div class="custom-control custom-radio mr-3">-->
+<!--                  <input type="radio" id="specificDate" name="delayType" class="custom-control-input"-->
+<!--                    [value]="DelayType.SpecificDate" [(ngModel)]="model.delayType" (change)="onDripTypeChange()">-->
+<!--                  <label class="custom-control-label" for="specificDate"></label>-->
+<!--                </div>-->
+<!--                <label for="specificDate">-->
+<!--                  <b>{{ 'SpecificDate' | localize }}</b> - {{ 'VideoAvailableOn' | localize }}-->
+<!--                </label>-->
+
+<!--                <div class="input-group input-group-merge input-group-sm  inline-form-control x3 mx-3"-->
+<!--                  (click)="dp.show()">-->
+<!--                  <input [(ngModel)]="specificDateValue" id="specificDateValue" name="specificDateValue" type="text"-->
+<!--                    class="form-control form-control-appended" #dateOfBirthModel="ngModel" #dateOfBirthEl-->
+<!--                    #dp="bsDatepicker" bsDatepicker [bsConfig]="datePickerConfig" readonly-->
+<!--                    [disabled]="model.delayType !== DelayType.SpecificDate" (bsValueChange)="onSpecificDateChange()" />-->
+<!--                  <div class="input-group-append">-->
+<!--                    <div class="input-group-text">-->
+<!--                      <span class="fas fa-calendar"></span>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+
+<!--              <div *ngIf="allDelaysVisible" class="form-group delay-form mt-3">-->
+<!--                <div class="custom-control custom-radio mr-3">-->
+<!--                  <input type="radio" id="immediate" name="delayType" class="custom-control-input"-->
+<!--                    [value]="DelayType.Immediate" [(ngModel)]="model.delayType" (change)="onDripTypeChange()">-->
+<!--                  <label class="custom-control-label" for="lastVideo"></label>-->
+<!--                </div>-->
+<!--                <label for="immediate">-->
+<!--                  <b>{{ 'Immediate' | localize }}</b> - {{ 'AvailableImmediately' | localize }}-->
+<!--                </label>-->
+<!--              </div>-->
+
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="card" *ngIf="videoType && videoType === VideoType.SingleVideo">-->
+<!--        <div class="card-header border-0">-->
+<!--          <label class="col-form-label pb-0" for="name">{{ 'Comments' | localize}}</label>-->
+<!--        </div>-->
+<!--        <div class="card-body pt-0">-->
+<!--          <div class="card border">-->
+<!--            <div class="card-body">-->
+<!--              <div class="row">-->
+<!--                <div class="col">-->
+<!--                  <p>-->
+<!--                    <b>{{ 'Visible' | localize}}: </b>-->
+<!--                    {{ 'VisibleCommentDescription' | localize | lowercase }}-->
+<!--                  </p>-->
+<!--                </div>-->
+<!--                <div class="col-auto min-w-50px">-->
+<!--                  <div class="custom-control custom-radio d-inline">-->
+<!--                    <input type="radio" class="custom-control-input" id="commentVisible" name="comment"-->
+<!--                      [(ngModel)]="model.commentSetting" [value]="CommentSetting.Visible" />-->
+<!--                    <label class="custom-control-label" for="commentVisible"></label>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="row align-items-center">-->
+<!--                <div class="col">-->
+<!--                  <p class="mb-0 pl-5" [class.text-muted]="model.commentSetting !== CommentSetting.Visible">-->
+<!--                    <b>{{ 'CommendModeration' | localize }}: </b>-->
+<!--                    <span class="text-muted">-->
+<!--                      {{ 'CommentModerationDescription' | localize | lowercase }}-->
+<!--                    </span>-->
+<!--                  </p>-->
+<!--                </div>-->
+<!--                <div class="col-auto">-->
+<!--                  <div class="custom-control custom-switch">-->
+<!--                    <input [(ngModel)]="model.commentModeration" id="isPublic" name="isPublic" type="checkbox"-->
+<!--                      class="custom-control-input" [disabled]="model.commentSetting !== CommentSetting.Visible">-->
+<!--                    <label class="custom-control-label" for="isPublic"></label>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          <div class="card border mb-0">-->
+<!--            <div class="card-body">-->
+<!--              <div class="row">-->
+<!--                <div class="col">-->
+<!--                  <p>-->
+<!--                    <b>{{ 'Hidden' | localize }}: </b>-->
+<!--                    <span class="text-muted">-->
+<!--                      {{ 'VideoCommentHiddenDescription' | localize }}-->
+<!--                    </span>-->
+<!--                  </p>-->
+<!--                </div>-->
+<!--                <div class="col-auto min-w-50px">-->
+<!--                  <div class="custom-control custom-radio d-inline">-->
+<!--                    <input type="radio" class="custom-control-input" id="commentHidden" name="comment"-->
+<!--                      [(ngModel)]="model.commentSetting" [value]="CommentSetting.Hidden" />-->
+<!--                    <label class="custom-control-label" for="commentHidden"></label>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="row">-->
+<!--                <div class="col">-->
+<!--                  <p class="mb-0">-->
+<!--                    <b>{{'Locked' | localize }}: </b>-->
+<!--                    <span class="text-muted">-->
+<!--                      {{ 'VideoCommentLockedDescription' | localize }}-->
+<!--                    </span>-->
+<!--                  </p>-->
+<!--                </div>-->
+<!--                <div class="col-auto min-w-50px">-->
+<!--                  <div class="custom-control custom-radio d-inline">-->
+<!--                    <input type="radio" class="custom-control-input" id="commentLocked" name="comment"-->
+<!--                      [(ngModel)]="model.commentSetting" [value]="CommentSetting.Locked" />-->
+<!--                    <label class="custom-control-label" for="commentLocked"></label>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="card">-->
+<!--        <div class="card-header border-0">-->
+<!--          <label class="col-form-label pb-0" for="name">{{ 'CustomUrl' | localize}}</label>-->
+<!--        </div>-->
+<!--        <div class="card-body pt-0">-->
+<!--          <div class="form-group required mb-0 d-flex align-items-center">-->
+<!--            <a href="javascript:;">-->
+<!--              www.scholarpro.com/-->
+<!--            </a>-->
+<!--            <input [(ngModel)]="model.customUrl" #nameModel="ngModel" #nameEl class="form-control" type="text" id="name"-->
+<!--              name="name" [placeholder]="'CustomUrl' | localize | lowercase" />-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--    </div>-->
+<!--    <div class="col-4">-->
+
+<!--      <div class="card" [loader]="isLoading">-->
+<!--        <div class="card-header">-->
+<!--          <h4 class="card-header-title">-->
+<!--            {{ 'VideoVisibility' | localize }}-->
+<!--          </h4>-->
+<!--        </div>-->
+<!--        <div class="card-body">-->
+
+<!--          <div class="list-group list-group-flush my-n3">-->
+<!--            <div class="list-group-item">-->
+<!--              <div class="row align-items-center">-->
+<!--                <div class="col ms-n2">-->
+<!--                  <h4 class="mb-1">-->
+<!--                    <span>{{'Visible' | localize}}</span>-->
+<!--                  </h4>-->
+
+<!--                  <p class="card-text small text-muted">-->
+<!--                    {{ 'VideoVisible' | localize }}-->
+<!--                  </p>-->
+<!--                </div>-->
+<!--                <div class="col-auto">-->
+<!--                  <div class="custom-control custom-radio d-inline">-->
+<!--                    <input type="radio" class="custom-control-input" id="videoVisible" name="videoVisible"-->
+<!--                      [(ngModel)]="model.isVisible" [value]="true" />-->
+<!--                    <label class="custom-control-label" for="videoVisible"></label>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+
+<!--            <div class="list-group-item">-->
+<!--              <div class="row align-items-center">-->
+<!--                <div class="col ms-n2">-->
+<!--                  <h4 class="mb-1">-->
+<!--                    <span>{{'Invisible' | localize }}</span>-->
+<!--                  </h4>-->
+
+<!--                  <p class="card-text small text-muted">-->
+<!--                    {{ 'VideoInvisible' | localize }}-->
+<!--                  </p>-->
+<!--                </div>-->
+<!--                <div class="col-auto">-->
+<!--                  <div class="custom-control custom-radio d-inline">-->
+<!--                    <input type="radio" class="custom-control-input" id="videoInvisible" name="videoVisible"-->
+<!--                      [(ngModel)]="model.isVisible" [value]="false" />-->
+<!--                    <label class="custom-control-label" for="videoInvisible"></label>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</form>-->

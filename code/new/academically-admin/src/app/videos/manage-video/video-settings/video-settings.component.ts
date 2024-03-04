@@ -10,13 +10,14 @@ import {
   VideoDto,
   VideosServiceProxy,
   VideoStatus,
-  VideoType
+  VideoType, ServiceFeatureFlagDto, ServicesType, ServicesServiceProxy
 } from '@shared/service-proxies/service-proxies';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { VideoService } from '@app/videos/_services/video.service';
 import * as _ from 'lodash';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { AutoSaveComponentBase } from '@shared/auto-save-component-base';
+import { switchMap } from '@node_modules/rxjs/operators';
 
 @Component({
   selector: 'app-video-settings',
@@ -40,11 +41,14 @@ export class VideoSettingsComponent extends AutoSaveComponentBase implements OnI
   parentId: string;
   delayStatus = new GetDelayStatusDto();
 
+  flags = new ServiceFeatureFlagDto();
+
   constructor(
     injector: Injector,
     private _router: Router,
     private _videosService: VideosServiceProxy,
     private _videoService: VideoService,
+    private _servicesService: ServicesServiceProxy
   ) {
     super(injector);
     this.datePickerConfig = new BsDatepickerConfig();
@@ -63,9 +67,21 @@ export class VideoSettingsComponent extends AutoSaveComponentBase implements OnI
       .subscribe(response => {
         if (response && response.id && this.id !== response.id) {
           this.id = response.id;
+          this.flags.init({
+            referenceId: response.id,
+            serviceType: ServicesType.Tutorial,
+            creatorUserId: this.currentUserId,
+            videoLockOrder: true,
+            videoMandatoryActivity: true
+          });
           this.getVideo();
+          this.getServiceFlags();
         }
       });
+  }
+
+  toggleVisibility(): void {
+    this.model.isVisible = !this.model.isVisible;
   }
 
   onBackClick(): void {
@@ -107,9 +123,10 @@ export class VideoSettingsComponent extends AutoSaveComponentBase implements OnI
 
     this._videosService.updateSettings(this.model)
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(response => {
-        // do nothing
-      });
+      .pipe(switchMap(() => {
+        return this._servicesService.saveFeatureFlags(this.flags);
+      }))
+      .subscribe(flags => this.flags.init(flags));
   }
 
   private getVideo(): void {
@@ -149,7 +166,7 @@ export class VideoSettingsComponent extends AutoSaveComponentBase implements OnI
           this.parentId = response.parentId;
           this.getDelayStatus();
         }
-        this.modelToSave = this.model;
+        this.modelToSave = [this.model, this.flags];
         this.initAutoSave(this.updateSettings);
       });
   }
@@ -162,6 +179,15 @@ export class VideoSettingsComponent extends AutoSaveComponentBase implements OnI
       .subscribe(response => {
         this.delayStatus = response;
       });
+  }
+
+  private getServiceFlags(): void {
+    this.pipeDestroy(this._servicesService.getFeatureFlags(this.id), response => {
+      if (_.isEmpty(response)) {
+        return;
+      }
+      this.flags.init(response);
+    });
   }
 }
 

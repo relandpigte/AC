@@ -70,4 +70,7 @@ public class ServiceFeatureFlagDto : CreationAuditedEntityDto<Guid>
     public bool ModerationCohostCanRemoveAttendees { get; set; }
     public bool ModerationCohostCanLowerAttendeesHand { get; set; }
     public bool ModerationCohostManageAtendeeRoles { get; set; }
+    
+    public bool VideoLockOrder { get; set; }
+    public bool VideoMandatoryActivity { get; set; }
 }

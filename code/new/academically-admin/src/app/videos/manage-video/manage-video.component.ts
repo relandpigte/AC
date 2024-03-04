@@ -41,7 +41,6 @@ export class ManageVideoComponent extends AppComponentBase implements OnInit {
       label: 'Settings',
       icon: 'assets/img/service/create/settings.svg',
       iconHover: 'assets/img/service/create/settings-hover.svg',
-      infoText: 'Here, you can input all the settings for your tutorial. This information will be visible to potential clients, so keep it clear and informative.'
     },
   ];
 

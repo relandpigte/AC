@@ -70,6 +70,9 @@ public class ServiceFeatureFlag : CreationAuditedEntity<Guid>
     public bool ModerationCohostCanRemoveAttendees { get; set; }
     public bool ModerationCohostCanLowerAttendeesHand { get; set; }
     public bool ModerationCohostManageAtendeeRoles { get; set; }
+    
+    public bool VideoLockOrder { get; set; }
+    public bool VideoMandatoryActivity { get; set; }
 
     [ForeignKey("CreatorUserId")]
     public User CreatorUser { get; set; }
