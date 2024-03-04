@@ -113,9 +113,16 @@ export class ServiceInterfaceComponent extends AppComponentBase implements OnIni
     this._cdr.detectChanges();
   }
 
-  onSelectInterfaceMenu(menu: InterfaceMenu): void {
-    this.selectedInterfaceMenu = menu;
-    this.onSelectMenu.next(menu);
+  onSelectInterfaceMenu(menu: InterfaceMenu, e: any): void {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!_.isEmpty(this.selectedInterfaceMenu) && this.selectedInterfaceMenu.name === menu.name) {
+      this.selectedInterfaceMenu = null;
+      this.onSelectMenu.next(null);
+    } else {
+      this.selectedInterfaceMenu = menu;
+      this.onSelectMenu.next(menu);
+    }
   }
 
   onCloseFeatureContent(): void {

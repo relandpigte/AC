@@ -154,10 +154,11 @@ export class ChatComponent extends AppComponentBase implements OnInit, AfterView
 
   ngAfterViewInit() {
     // we set the selected tab manually by clicking on it if they're displayed
-    setTimeout(() => {
-      this.privateTab?.nativeElement?.click();
-      this.publicTab?.nativeElement?.click();
-    }, 1000);
+    // Causing the redirection when click on interface (disabling for now)
+    // setTimeout(() => {
+    //   this.privateTab?.nativeElement?.click();
+    //   this.publicTab?.nativeElement?.click();
+    // }, 1000);
   }
 
   async ngOnDestroy() {

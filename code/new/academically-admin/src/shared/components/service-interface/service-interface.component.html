@@ -165,7 +165,7 @@
         class="btn"
         [class.active]="selectedInterfaceMenu?.name == im.name"
         *ngFor="let im of interfaceMenu"
-        (click)="onSelectInterfaceMenu(im)"
+        (click)="onSelectInterfaceMenu(im, $event)"
       >
         <span *ngIf="!!im.unreadCount" class="badge bg-primary unread-count">{{ im.unreadCount }}</span>
         <img [src]="im.iconLight" [alt]="im.name">
