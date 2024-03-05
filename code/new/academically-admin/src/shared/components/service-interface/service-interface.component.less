@@ -56,6 +56,10 @@
           width: 183px;
         }
 
+        &.end-recording {
+          background-color: transparent;
+        }
+
         &.end-stream {
           &:hover {
             background-color: transparent;
@@ -200,7 +204,11 @@
         outline: 0 none;
         box-shadow: 0 0 0;
 
-        &:hover:not(.btn-exit, .btn-mic-disabled, .btn-video-disabled),
+        &:hover:not(.btn-exit, .btn-mic-disabled, .btn-video-disabled) {
+          color: #2C7BE5;
+          background-color: #EDF2F9;
+        }
+
         &.active:not(.btn-exit, .btn-mic-disabled, .btn-video-disabled) {
           color: #2C7BE5;
           background-color: #EDF2F9;
@@ -249,7 +257,11 @@
           min-width: 48px;
           padding: 0;
 
-          &:hover,
+          &:hover {
+            color: #2C7BE5;
+            background-color: #EDF2F9;
+          }
+
           &.active{
             color: #2C7BE5;
             background-color: #EDF2F9;
