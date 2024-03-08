@@ -745,8 +745,8 @@ namespace Academically.Services.Events
                     .ThenInclude(e => e.ProfilePictureDocument)
                 .Where(e => purchases.Contains(e.Id))
                 .Where(e => e.Status == EventStatus.Published)
-                .WhereIf(scheduledServiceType == ScheduledServiceType.Upcoming, x => x.EventDateTimeEnd > DateTime.UtcNow)
-                .WhereIf(scheduledServiceType == ScheduledServiceType.Past, x => x.EventDateTimeEnd < DateTime.UtcNow)
+                .WhereIf(scheduledServiceType == ScheduledServiceType.Upcoming, x => x.EventDateTimeEnd > DateTime.Now)
+                .WhereIf(scheduledServiceType == ScheduledServiceType.Past, x => x.EventDateTimeEnd < DateTime.Now)
                 .Select(e => ObjectMapper.Map<EventDto>(e))
                 .ToListAsync();
 
