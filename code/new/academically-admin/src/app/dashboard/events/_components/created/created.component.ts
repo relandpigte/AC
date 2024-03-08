@@ -12,10 +12,11 @@ import {
   EventDto,
   EventsServiceProxy,
   EventStatus,
-  EventType
+  EventType, ScheduledServiceType
 } from '@shared/service-proxies/service-proxies';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
+import { forkJoin } from '@node_modules/rxjs';
 
 type CreatedTab = 'upcoming' | 'past' | 'draft' | 'cancelled';
 
@@ -33,14 +34,13 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
   isLoading = true;
   shimmerType = ShimmerType;
 
+  activeTab: CreatedTab = 'upcoming';
+  readonly CoachingStatus = CoachingStatus;
   readonly EventStatus = EventStatus;
   protected readonly fns = {
     [EventStatus.Draft]: 'draftEvents',
     [EventStatus.Published]: 'upcomingEvents',
   };
-
-  activeTab: CreatedTab = 'upcoming';
-
   constructor(
     injector: Injector,
     private _dashboardPageService: DashboardPagesService,
@@ -126,25 +126,17 @@ export class CreatedComponent extends AppComponentBase implements OnInit {
 
   private initEvents(): void {
     this._dashboardPageService.setIsLoading(true);
-    this._eventsService.getAll(
-      undefined,
-      this.appSession.userId,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined
-    )
+    forkJoin([
+      this._eventsService.getCreatedEventsByUser(ScheduledServiceType.Upcoming),
+      this._eventsService.getCreatedEventsByUser(ScheduledServiceType.Past),
+      this._eventsService.getCreatedEventsByUser(ScheduledServiceType.Draft),
+    ])
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this._dashboardPageService.setIsLoading(false)))
-      .subscribe(events => {
-        this.upcomingEvents = events?.items?.filter(e => moment().isBefore(e.eventDateTime) && e.status !== 0);
-        this.pastEvents = events?.items?.filter(e => moment().isAfter(e.eventDateTime));
-        this.draftEvents = events?.items?.filter(e => e.status === 0);
+      .subscribe(([upcoming, past, draft]): void => {
+        this.upcomingEvents = upcoming;
+        this.pastEvents = past;
+        this.draftEvents = draft;
       });
   }
-
-  protected readonly CoachingStatus = CoachingStatus;
 }

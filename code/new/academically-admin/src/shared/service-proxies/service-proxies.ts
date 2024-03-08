@@ -5216,6 +5216,8 @@ export class CoachingsServiceProxy {
     1 = Past
     
     2 = Cancelled
+    
+    3 = Draft
      * @return Success
      */
     getBookingScheduled(ownerId: number | undefined, type: ScheduledServiceType | undefined): Observable<AvailableServiceDto[]> {
@@ -14386,6 +14388,8 @@ export class EventsServiceProxy {
     1 = Past
     
     2 = Cancelled
+    
+    3 = Draft
      * @return Success
      */
     getEnrolledEventsByUser(scheduledServiceType: ScheduledServiceType | undefined): Observable<EventDto[]> {
@@ -14419,6 +14423,75 @@ export class EventsServiceProxy {
     }
 
     protected processGetEnrolledEventsByUser(response: HttpResponseBase): Observable<EventDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(EventDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<EventDto[]>(<any>null);
+    }
+
+    /**
+     * @param scheduledServiceType (optional) 0 = Upcoming
+    
+    1 = Past
+    
+    2 = Cancelled
+    
+    3 = Draft
+     * @return Success
+     */
+    getCreatedEventsByUser(scheduledServiceType: ScheduledServiceType | undefined): Observable<EventDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Events/GetCreatedEventsByUser?";
+        if (scheduledServiceType === null)
+            throw new Error("The parameter 'scheduledServiceType' cannot be null.");
+        else if (scheduledServiceType !== undefined)
+            url_ += "scheduledServiceType=" + encodeURIComponent("" + scheduledServiceType) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCreatedEventsByUser(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCreatedEventsByUser(<any>response_);
+                } catch (e) {
+                    return <Observable<EventDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<EventDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetCreatedEventsByUser(response: HttpResponseBase): Observable<EventDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -17228,6 +17301,8 @@ export class PostsServiceProxy {
     1 = Past
     
     2 = Cancelled
+    
+    3 = Draft
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
@@ -54950,11 +55025,12 @@ export interface IRuntimeTypeHandle {
     value: IntPtr;
 }
 
-/** 0 = Upcoming 1 = Past 2 = Cancelled */
+/** 0 = Upcoming 1 = Past 2 = Cancelled 3 = Draft */
 export enum ScheduledServiceType {
     Upcoming = 0,
     Past = 1,
     Cancelled = 2,
+    Draft = 3,
 }
 
 export class SearchByKeywordResponseDto implements ISearchByKeywordResponseDto {

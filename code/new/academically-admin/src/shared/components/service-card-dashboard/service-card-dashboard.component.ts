@@ -116,7 +116,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
   get isDraft(): boolean {return this.sanitized?.status?.type === 'draft'; }
   get isArchive(): boolean { return this.sanitized?.status?.type === 'archived'; }
   get isPublished(): boolean { return this.sanitized?.status?.type === 'published'; }
-  get isExpired(): boolean { return this.sanitized?.dates?.startDate?.isBefore(moment()); }
+  get isExpired(): boolean { return this.data?.eventDateTimeEnd?.isBefore(moment()); }
   get isUpcoming(): boolean { return this.sanitized?.dates?.startDate?.isAfter(moment()); }
   get hasReviewed(): boolean { return this.data?.hasReviewed; }
   get sessionDuration(): string { return humanizeDuration(this.composition.durationInSec * 1000); }
@@ -134,7 +134,7 @@ export class ServiceCardDashboardComponent extends AppComponentBase implements O
       'StartingFrom',
       moment(this.sanitized?.dates?.startDate)?.format('dddd, DD MMMM YYYY'),
       moment(this.sanitized?.dates?.startDate)?.format('HH:mm'),
-      moment(this.sanitized?.dates?.startDate)?.add(this.data?.duration || 30, 'minutes')?.format('HH:mm')
+      moment(this.data?.eventDateTimeEnd)?.format('HH:mm')
     );
   }
 

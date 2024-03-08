@@ -738,6 +738,7 @@ namespace Academically.Services.Events
                 .Select(p => p.ReferenceId)
                 .ToListAsync();
 
+            var now = Clock.Now;
             var events = await Repository.GetAll()
                 .Include(e => e.CreatorUser)
                     .ThenInclude(e => e.CoverPhotoDocument)
@@ -745,8 +746,25 @@ namespace Academically.Services.Events
                     .ThenInclude(e => e.ProfilePictureDocument)
                 .Where(e => purchases.Contains(e.Id))
                 .Where(e => e.Status == EventStatus.Published)
-                .WhereIf(scheduledServiceType == ScheduledServiceType.Upcoming, x => x.EventDateTimeEnd > DateTime.Now)
-                .WhereIf(scheduledServiceType == ScheduledServiceType.Past, x => x.EventDateTimeEnd < DateTime.Now)
+                .WhereIf(scheduledServiceType == ScheduledServiceType.Upcoming, x => x.EventDateTimeEnd > now)
+                .WhereIf(scheduledServiceType == ScheduledServiceType.Past, x => x.EventDateTimeEnd < now)
+                .Select(e => ObjectMapper.Map<EventDto>(e))
+                .ToListAsync();
+
+            return await GetEventDetailsAsync(events);
+        }
+        
+        public async Task<IEnumerable<EventDto>> GetCreatedEventsByUser(ScheduledServiceType scheduledServiceType)
+        { 
+            var now = Clock.Now;
+            var events = await Repository.GetAll()
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.CoverPhotoDocument)
+                .Include(e => e.CreatorUser)
+                    .ThenInclude(e => e.ProfilePictureDocument)
+                .WhereIf(scheduledServiceType == ScheduledServiceType.Upcoming, x => x.EventDateTimeEnd > now && x.Status == EventStatus.Published)
+                .WhereIf(scheduledServiceType == ScheduledServiceType.Past, x => x.EventDateTimeEnd < now && x.Status == EventStatus.Published)
+                .WhereIf(scheduledServiceType == ScheduledServiceType.Draft, x => x.Status == EventStatus.Draft)
                 .Select(e => ObjectMapper.Map<EventDto>(e))
                 .ToListAsync();
 
