@@ -163,6 +163,7 @@ export class CommunityDiscussionsComponent extends AppComponentBase implements O
   get stateComments(): CommentDto[] { return this.parentId ? this.commentsStateService.getAllComments() : this.commentsStateService.getAllCommentsReversed(); }
 
   get uploadAllowedExt(): string[] { return [...this.imageExtensions, ...this.fileExtensions, ...this.videoExtensions]; }
+  get hasOneComment(): boolean { return this.totalCommentsCount === 1; }
   async ngOnInit(): Promise<void> {
     await this.initCommentsAppStates();
     this.initSubscriptions();

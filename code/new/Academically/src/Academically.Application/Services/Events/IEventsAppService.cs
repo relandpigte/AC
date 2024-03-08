@@ -35,7 +35,7 @@ namespace Academically.Services.Events
         Task RemovePresenterAsync(Guid eventPresenterId);
         Task UnsaveAsync(Guid studentEventId);
         Task UpdateAutoAdmit(Guid id, bool autoAdmitAttendees);
-        Task<IEnumerable<EventDto>> GetEnrolledEventsByUser();
+        Task<IEnumerable<EventDto>> GetEnrolledEventsByUser(ScheduledServiceType scheduledServiceType);
         Task<List<EventDto>> GetAllSavedEvents(long creatorUserId);
         Task<EventDto> Duplicate(Guid id);
     }

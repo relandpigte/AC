@@ -730,7 +730,7 @@ namespace Academically.Services.Events
             await Repository.DeleteAsync(input.Id);
         }
         
-        public async Task<IEnumerable<EventDto>> GetEnrolledEventsByUser()
+        public async Task<IEnumerable<EventDto>> GetEnrolledEventsByUser(ScheduledServiceType scheduledServiceType)
         { 
             var purchases = await _servicePurchasesRepository.GetAll()
                 .Where(p => p.Type == ServicesType.Workshop || p.Type == ServicesType.Event)
@@ -744,6 +744,9 @@ namespace Academically.Services.Events
                 .Include(e => e.CreatorUser)
                     .ThenInclude(e => e.ProfilePictureDocument)
                 .Where(e => purchases.Contains(e.Id))
+                .Where(e => e.Status == EventStatus.Published)
+                .WhereIf(scheduledServiceType == ScheduledServiceType.Upcoming, x => x.EventDateTimeEnd > DateTime.UtcNow)
+                .WhereIf(scheduledServiceType == ScheduledServiceType.Past, x => x.EventDateTimeEnd < DateTime.UtcNow)
                 .Select(e => ObjectMapper.Map<EventDto>(e))
                 .ToListAsync();
 

@@ -171,7 +171,7 @@
                 <!-- Comment Body | END -->
 
                 <!-- Comment Actions | START -->
-                <div class="comment-actions justify-content-start align-items-center gap-10 p-10">
+                <div class="comment-actions justify-content-start align-items-center gap-10 p-10" [class.mb-0]="hasOneComment">
                   <app-reaction
                       [referenceId]="comment.id"
                       [reactionGroup]="reactionGroup"

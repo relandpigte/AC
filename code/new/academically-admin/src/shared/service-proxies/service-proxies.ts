@@ -14381,10 +14381,19 @@ export class EventsServiceProxy {
     }
 
     /**
+     * @param scheduledServiceType (optional) 0 = Upcoming
+    
+    1 = Past
+    
+    2 = Cancelled
      * @return Success
      */
-    getEnrolledEventsByUser(): Observable<EventDto[]> {
-        let url_ = this.baseUrl + "/api/services/app/Events/GetEnrolledEventsByUser";
+    getEnrolledEventsByUser(scheduledServiceType: ScheduledServiceType | undefined): Observable<EventDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Events/GetEnrolledEventsByUser?";
+        if (scheduledServiceType === null)
+            throw new Error("The parameter 'scheduledServiceType' cannot be null.");
+        else if (scheduledServiceType !== undefined)
+            url_ += "scheduledServiceType=" + encodeURIComponent("" + scheduledServiceType) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

@@ -6,13 +6,13 @@ import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ShimmerType } from '@shared/enums/shimmer/shimmer-type.enum';
 import { DashboardPagesService } from '@shared/services/dashboard-pages.service';
-import { EventCategory, EventDto, EventsServiceProxy, ServiceBookingDto, ServicesServiceProxy, UserAvailabilitiesServiceProxy, UserAvailabilityDto } from '@shared/service-proxies/service-proxies';
+import { EventDto, EventsServiceProxy, ScheduledServiceType, ServiceBookingDto, ServicesServiceProxy, UserAvailabilitiesServiceProxy, UserAvailabilityDto } from '@shared/service-proxies/service-proxies';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { BookingServiceComponent } from '@shared/components/booking-service/booking-service.component';
 import { ModalDialogOptions, ModalDialogService } from '@shared/services/modal-dialog.service';
 import { LeaveReviewComponent } from '@shared/modals/leave-review/leave-review.component';
 import { LeaveReviewConfirmationComponent } from '@shared/modals/leave-review-confirmation/leave-review-confirmation.component';
-import { BehaviorSubject, of, forkJoin, combineLatest } from 'rxjs';
+import { BehaviorSubject, combineLatest, forkJoin, of } from 'rxjs';
 
 enum PurchasedTabs {
   Upcoming = 'upcoming',
@@ -73,12 +73,15 @@ export class PurchasedComponent extends AppComponentBase implements OnInit {
 
   private initStudentEvents(): void {
     this._dashboardPageService.setIsLoading(true);
-    this._eventsService.getEnrolledEventsByUser()
+    forkJoin([
+      this._eventsService.getEnrolledEventsByUser(ScheduledServiceType.Upcoming),
+      this._eventsService.getEnrolledEventsByUser(ScheduledServiceType.Past)
+    ])
       .pipe(takeUntil(this.destroyed$))
       .pipe(finalize(() => this._dashboardPageService.setIsLoading(false)))
-      .subscribe(events => {
-        this.upcomingEvents = events?.filter(e => moment().isBefore(e.eventDateTime) && e.status !== 0);
-        this.pastEvents = events?.filter(e => moment().isAfter(e.eventDateTime));
+      .subscribe(([upcoming, past]): void => {
+        this.upcomingEvents = upcoming;
+        this.pastEvents = past;
       });
   }
 
