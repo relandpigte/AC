@@ -156,7 +156,7 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
       this.model.languageId,
       this.model.pricingType,
       this.courseImageDocument,
-      this.model.type,
+      this.model.type in CourseType ? this.model.type : undefined,
       this.model.price,
       this.model.numberOfPlaces,
       this.model.startDate,
@@ -173,10 +173,9 @@ export class DetailsComponent extends AutoSaveComponentBase implements OnInit {
         this.isAutoSaving = false;
       })
     )
-      .subscribe((updatedCourse) => {
-        this._courseService.course = updatedCourse;
-        if (!silent) this.notify.success(this.l('SavedSuccessfully'));
-      });
+    .subscribe(() => {
+      if (!silent) this.notify.success(this.l('SavedSuccessfully'));
+    });
   }
 
   onCategoryKeyDown(e: KeyboardEvent): void {

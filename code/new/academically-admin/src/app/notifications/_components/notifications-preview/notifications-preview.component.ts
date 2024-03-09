@@ -142,7 +142,7 @@ export class NotificationsPreviewComponent extends AppComponentBase implements O
   }
 
   getDominantUser(notification: NotificationDto): UserDto {
-    return notification.actors?.[0]?.user;
+    return notification.actors?.[notification.actors.length - 1]?.user;
   }
 
   isNotificationForBooking(notification: NotificationDto): boolean {
