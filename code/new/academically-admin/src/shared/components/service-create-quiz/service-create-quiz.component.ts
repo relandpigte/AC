@@ -84,8 +84,6 @@ export class ServiceCreateQuizComponent extends AppComponentBase implements OnIn
     ServiceQuizQuestionType = ServiceQuizQuestionType;
     ServiceQuizQuestionTypeToLabel = ServiceQuizQuestionTypeToLabel;
 
-    textareaLineNumbers: { [id: string]: number } = {};
-
     constructor(
         injector: Injector,
         private _elRef: ElementRef,
@@ -134,22 +132,11 @@ export class ServiceCreateQuizComponent extends AppComponentBase implements OnIn
         this._modal.hide();
     }
 
-    getTextareaLine(id: string) {
-        if (!(id in this.textareaLineNumbers)) this.textareaLineNumbers[id] = 1;
-        return this.textareaLineNumbers[id];
-    }
-
     adjustTextareaLines(id: string) {
         const textarea = this._elRef.nativeElement.querySelector(`#${id}`) as HTMLTextAreaElement;
         if (textarea) {
-            if (!(id in this.textareaLineNumbers)) {
-                this.textareaLineNumbers[id] = 1;
-            }
-            setTimeout(() => {
-                if (textarea.clientHeight < textarea.scrollHeight) {
-                    this.textareaLineNumbers[id] += 1;
-                }
-            });
+            textarea.style.height = 'auto';
+            textarea.style.height = `${textarea.scrollHeight}px`;
         }
     }
 

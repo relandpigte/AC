@@ -103,6 +103,7 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
   get isStandardStructure(): boolean { return this.selectedStructure === CourseStructure.Standard; }
 
   addTemporarySection(type: CourseSectionType): void {
+    if (this.courseSections.some(c => c.name === '' || c.children.some(s => s.name === ''))) return;
     this.courseSections.push(CourseSectionDto.fromJS({
       courseId: this.courseId,
       displayOrder: (maxBy(this.courseSections, s => s?.displayOrder)?.displayOrder ?? 0) + 1,
@@ -130,22 +131,30 @@ export class CurriculumComponent extends AppComponentBase implements OnInit, OnD
   }
 
   onCourseStructureClick(structure: CourseStructure): void {
-    this._modalDialogService.showConfirmDialog({
-      title: this.l(CourseStructureToTitle[structure]),
-      text: this.l(CourseStructureToBody[structure]),
-      confirmCb: (): void => {
-        this.isLoading = false;
-        this._courseSectionsService.flatCourseCurriculum(this.courseId, structure)
-          .pipe(
-            takeUntil(this.destroyed$),
-            finalize(() => this.isLoading = false),
-            switchMap(() => this._courseSectionsService.getAll(this.courseId)),
-          ).subscribe(courseSections => {
-            this.courseSections = courseSections;
-          });
+    if (this.courseSections.some(c => c.name !== '' || c.children.some(s => s.name !== ''))) {
+      this._modalDialogService.showConfirmDialog({
+        title: this.l(CourseStructureToTitle[structure]),
+        text: this.l(CourseStructureToBody[structure]),
+        confirmCb: (): void => {
+          this.performCourseStructureChange(structure);
+        }
+      });
+    } else {
+      this.performCourseStructureChange(structure);
+    }
+  }
+
+  private performCourseStructureChange(structure: CourseStructure) {
+    this.isLoading = false;
+    this._courseSectionsService.flatCourseCurriculum(this.courseId, structure)
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => this.isLoading = false),
+        switchMap(() => this._courseSectionsService.getAll(this.courseId)),
+      ).subscribe(courseSections => {
+        this.courseSections = courseSections;
         this.selectedStructure = structure;
-      }
-    });
+      });
   }
 
   onAddEditCourseSectionClick(courseSectionType: CourseSectionType, courseSection?:

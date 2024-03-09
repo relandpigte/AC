@@ -197,8 +197,10 @@ namespace Academically.Services.CourseSections
             var displayOrder = 1;
             foreach (var courseSection in courseSections)
             {
-                if (courseSection.Type == CourseSectionType.Lesson)
+                if (courseSection.Type == CourseSectionType.Lesson && courseSection.Name != "")
+                {
                     courseSection.DisplayOrder = displayOrder++;
+                }
                 else
                     await this._courseSectionsRepository.DeleteAsync(courseSection);
             }
@@ -217,8 +219,21 @@ namespace Academically.Services.CourseSections
 
                 foreach (var courseSection in courseSections)
                 {
-                    courseSection.ParentId = newModule.Id;
+                    if (courseSection.Name != "")
+                        courseSection.ParentId = newModule.Id;
                 }
+            }
+            else
+            {
+                await _courseSectionsRepository.InsertAsync(new CourseSection()
+                {
+                    Name = "",
+                    CourseId = id,
+                    DisplayOrder = displayOrder,
+                    Type = CourseSectionType.Lesson,
+                    CreatorUserId = this.AbpSession.UserId,
+                    CreationTime = Clock.Now,
+                });
             }
 
             return true;

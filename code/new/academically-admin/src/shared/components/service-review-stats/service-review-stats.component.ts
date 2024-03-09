@@ -35,6 +35,7 @@ export class ServiceReviewStatsComponent extends AppComponentBase implements OnI
   get overallRatings(): number { return this.data?.overallRatings; }
 
   ngOnInit(): void {
+    this.data = this._serviceData.getServiceReviewStatsValue();
     this._serviceData.serviceReviewStats$.pipe(takeUntil(this.destroyed$)).subscribe(x => this.data = x);
   }
 }

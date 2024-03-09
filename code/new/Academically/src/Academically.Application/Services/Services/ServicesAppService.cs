@@ -560,7 +560,8 @@ namespace Academically.Services.Services
 
         private static DateTime? ConvertBookingDateTimezoneToLocal(string coachTimezoneId, string userTimezoneId, DateTime date)
         {
-            return coachTimezoneId == userTimezoneId ? date : TimezoneHelper.Convert(date, coachTimezoneId, userTimezoneId);
+            
+            return coachTimezoneId == userTimezoneId ? date : TimezoneHelper.Convert(DateTime.SpecifyKind(date, DateTimeKind.Unspecified), coachTimezoneId, userTimezoneId);
         }
 
         private static bool CheckAvailabilitySchedule(DateTime date, UserAvailabilitySetting availabilitySettings)
