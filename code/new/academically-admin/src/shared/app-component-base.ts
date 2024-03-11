@@ -285,7 +285,7 @@ export abstract class AppComponentBase extends AppHubBase implements OnDestroy {
           if (n <= 6) {
             return `${n}d`;
           }
-          return `${weeks}w`;
+          return weeks < 1 ? `1w` : `${weeks}w`;
         },
         M:  `${weeks}w`,
         MM: `${weeks}w`,
