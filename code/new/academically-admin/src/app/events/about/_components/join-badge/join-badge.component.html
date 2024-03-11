@@ -2,7 +2,7 @@
     <div class="card-body">
         <ng-container *ngIf="!eventFinished else rateEvent">
             <div class="schedule">
-                <h6 class="schedule-title text-center">{{ 'TimeToStart' | localize | uppercase }}</h6>
+                <h6 class="schedule-title text-center">{{ 'StartIn' | localize | uppercase }}</h6>
                 <span class="schedule-countdown d-block w-100 text-center">{{ countdown }}</span>
                 <span class="schedule-timeline text-uppercase d-block w-100 text-center">{{ timeline }}</span>
                 <button class="btn btn-primary w-100" (click)="handleJoinClick()">{{ 'Join' | localize }}</button>
