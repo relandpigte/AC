@@ -69,7 +69,7 @@
                     <a *ngFor="let notification of notifications; let idx = index" class="notification-item list-group-item text-reset cursor-pointer" (click)="onNotificationClick(notification)">
                         <div class="d-flex gap-10">
                             <div class="notification-avatar avatar avatar-sm flex-grow-1">
-                                <img *ngIf="getDominantUser(notification); else avatarPlaceHolderTemplate" class="avatar-img rounded-circle" [src]="getDominantUser(notification).profilePictureUrl" alt="...">
+                                <img *ngIf="getDominantUser(notification).profilePictureUrl; else avatarPlaceHolderTemplate" class="avatar-img rounded-circle" [src]="getDominantUser(notification).profilePictureUrl" alt="...">
                             </div>
                             <div class="notification-content">
                                 <div *ngIf="isShowOldSchedule(notification)" class="schedule-old">{{ getOldBookingSchedule(notification) | uppercase }}</div>
@@ -98,7 +98,7 @@
                     <a *ngFor="let notification of unreadNotifications; let idx = index" class="notification-item list-group-item text-reset" (click)="onNotificationClick(notification)">
                         <div class="d-flex gap-10">
                             <div class="notification-avatar avatar avatar-sm flex-grow-1">
-                                <img *ngIf="getDominantUser(notification); else avatarPlaceHolderTemplate" class="avatar-img rounded-circle" [src]="getDominantUser(notification).profilePictureUrl" alt="...">
+                                <img *ngIf="getDominantUser(notification).profilePictureUrl; else avatarPlaceHolderTemplate" class="avatar-img rounded-circle" [src]="getDominantUser(notification).profilePictureUrl" alt="...">
                             </div>
                             <div class="notification-content">
                                 <p [innerHTML]="notification.formattedNotification" class="line-clamp-3"></p>

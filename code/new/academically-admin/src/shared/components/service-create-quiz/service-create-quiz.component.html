@@ -266,13 +266,13 @@
                                 </div>
                                 <div *ngIf="question.isExplainAnswer" class="service-quiz-body-questions-item-options-item-explanation-text w100p">
                                     <textarea
-                                        [rows]="getTextareaLine('explain-text-' + question.id)"
+                                        [rows]="1"
                                         [(ngModel)]="question.explanation"
-                                        class="form-control noresize slick-scroll"
+                                        class="form-control noresize autoresize"
                                         [id]="'explain-text-' + question.id"
                                         [name]="'explain-text-' + question.id"
                                         [placeholder]="'Input your explanation here...' | localize"
-                                        (keypress)="adjustTextareaLines('explain-text-' + question.id)"
+                                        (input)="adjustTextareaLines('explain-text-' + question.id)"
                                         [autofocus]="true">
                                     </textarea>
                                 </div>

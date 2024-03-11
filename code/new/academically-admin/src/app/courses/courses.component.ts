@@ -35,14 +35,14 @@ export class CoursesComponent extends AppComponentBase implements OnInit, OnDest
       label: 'Details',
       icon: 'assets/img/service/create/list.svg',
       iconHover: 'assets/img/service/create/list-hover.svg',
-      infoText: 'Here, you can input all the details for your article. This information will be visible to potential clients, so keep it clear and informative.'
+      infoText: 'Here, you can input all the details for your course. This information will be visible to potential clients, so keep it clear and informative.'
     },
     {
       id: 'curriculum',
       label: 'Curriculum',
       icon: 'assets/img/service/create/layers.svg',
       iconHover: 'assets/img/service/create/layers-hover.svg',
-      infoText: 'Here 2, you can input all the details for your article. This information will be visible to potential clients, so keep it clear and informative.'
+      infoText: 'Select either a mini course or standard course structure, then create the learning path for your course by adding lessons or modules. You can rearrange the order using the drag handle.'
     },
     {
       id: 'settings',

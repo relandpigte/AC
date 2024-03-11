@@ -76,6 +76,10 @@ export class ServiceDataService {
     this._serviceBooking.next(value);
   }
 
+  public getServiceReviewStatsValue() {
+    return this._serviceReviewStats.value;
+  }
+
   createServiceDiscussion(serviceId: string, serviceType: ServicesType, userId: number): void {
     this._postsService.create(
       `Discussion for ${ServicesType[serviceType]}: ${serviceId}`,

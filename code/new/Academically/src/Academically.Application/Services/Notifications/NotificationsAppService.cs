@@ -609,11 +609,11 @@ namespace Academically.Services.Notifications
             {
                 var actor1 = await this._usersRepository.FirstOrDefaultAsync(notification.Actors.ElementAt(0).UserId);
                 var actor2 = await this._usersRepository.FirstOrDefaultAsync(notification.Actors.ElementAt(1).UserId);
-                return $"<span>{textinfo.ToTitleCase(actor1.FullName)}</span> and <span>{textinfo.ToTitleCase(actor2.FullName)}</span>";
+                return $"<span>{textinfo.ToTitleCase(actor2.FullName)}</span> and <span>{textinfo.ToTitleCase(actor1.FullName)}</span>";
             }
             else
             {
-                var actor = await this._usersRepository.FirstOrDefaultAsync(notification.Actors.ElementAt(0).UserId);
+                var actor = await this._usersRepository.FirstOrDefaultAsync(notification.Actors.Last().UserId);
                 return $"<span>{textinfo.ToTitleCase(actor.FullName)}</span> and <span>{notification.Actors.Count - 1} others</span>";
             }
         }
