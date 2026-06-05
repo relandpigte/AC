@@ -17,13 +17,13 @@
     },
     "Academically.Web.Host": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "http://localhost:6365/",
+      "applicationUrl": "http://localhost:21025/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:21025/"
+      "dotnetRunMessages": true
     },
     "API Watch": {
       "commandName": "Executable",
